@@ -1,0 +1,337 @@
+.wrap {
+ 	margin:0 auto;
+	height: 86%;
+ }
+em {
+    font-style: italic;
+}
+.header {
+	min-height: 50px;
+	background: #3AA8FF;
+	color: #fff;
+}
+.header a {
+	color: #fff;
+}
+.header  img {
+    float: left; 
+    margin-top: 5px;
+    margin-left: 30px;
+}
+.logo  img {
+    float: left;
+	width:40px;
+    margin-top: 5px;
+    margin-left: 30px;
+}
+.header a.sitename {
+	width: 160px;
+	float: left;
+	line-height: 48px;
+    text-align: left;
+    text-indent: 15px;
+    font-weight: normal;
+    font-size: 21px;
+}
+
+.header-right {
+    line-height: 50px;
+    padding-right: 20px;
+}
+
+.member {
+
+}
+.nav-myclass{
+    border:1px solid #fff;
+    padding: 3px 10px;
+    border-radius: 5px;
+    margin-left: 10px;
+}
+.quit {
+    display: inline-block;
+    padding: 0 15px;
+}
+
+.login {
+	height: 50px; 
+	line-height: 50px;
+	margin-right: 30px;
+}
+ 
+
+
+.apps-lump {
+    position: relative;
+    width: 245px;
+    height: 240px; 
+    display: inline-block;
+    background: rgba(255,255,255,.9);
+    margin: 0 30px 30px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+}
+.apps-icon {
+    width: 70px;
+    height: 70px;
+    margin-top: 40px;
+    margin-left: 85px;
+    border-radius: 50%;
+}
+.icon-dblue {
+    border: solid 2px #3899ec;
+}
+.apps-icon i {
+    width: 100%;
+    float: left;
+    text-align: center;
+    font-size: 36px;
+    line-height: 36px;
+    margin-top: 16px;
+}
+.apps-title {
+    width: 100%; 
+    text-align: center;
+    font-size: 20px;
+    margin: 15px 0 10px 0;
+}
+ 
+.apps-btns {
+    /*position: absolute;
+    left: 66px;
+    bottom: 30px;*/
+
+    margin-top: 15px;
+    opacity: 0.6; 
+    text-align: center; 
+}
+.apps-btns:hover {
+	opacity: 1;
+}
+.btn-blue-lg {
+    border: solid 1px #3899ec;
+    color: #fff !important;
+    background: #3899ec;
+}
+
+ 
+.f-gray {
+    color: #71737b !important;
+}
+.f12 {
+    font-size: 12px !important;
+}
+.btn-yellow-lg, .btn-blue-lg, .btn-gray-lg, .btn-blue-line, .btn-gray-line, .btn-yellow {
+    display: inline-block;
+    height: 36px;
+    line-height: 34px;
+    border-radius: 3px;
+    padding: 0 28px;
+    transition: background-color 0.3s !important; 
+}
+
+
+.nav {
+    background: #fff;
+    min-height: 50px;
+    line-height: 50px;
+    border-bottom: 1px solid #dedede1;
+    text-align: center;
+}
+
+
+.nav a {
+    display: inline-block;
+    padding: 0 15px;
+}
+.nav a.on {
+    border-bottom: 2px solid #3899ec;
+}
+
+
+/* tab */
+
+.tab li {
+    display: inline-block;
+    width: 120px;
+}
+.tab li a {
+    line-height: 36px;
+    display: inline-block;
+    font-size: 16px;
+}
+.tab li a.on {
+    border-bottom: 2px solid #3899ec;
+    font-weight: bold;
+}
+
+span.tag {
+    display: inline-block;
+    margin-right: 20px;
+    border:1px dashed #ddd;
+    padding: 0 10px;
+    font-size: 16px;
+}
+span.tagon {
+    border:1px dashed #348FD4;
+    background: #EAF7FF;
+}
+span.tag i {
+    font-style: normal;
+}
+
+span.tag:hover {
+    background: #f0f6f9;
+    border:1px dashed #348FD4;
+    cursor: pointer;
+}
+span.tag:hover i {
+    color: #348FD4;
+    font-weight: bold;
+}
+
+.tx {
+    width: 30px;
+    height: 30px;
+    border-radius: 20px;
+    overflow: visible;
+}
+
+.main {
+    border:1px solid #ddd;
+    margin:50px;
+    background: #fff;
+    padding: 50px;
+}
+
+.main-nob {
+    border:0px solid #fff;
+    margin:50px; 
+    padding: 50px;
+}
+
+
+.mb-item {
+    display: inline-block;
+    margin:10px 20px;
+}
+
+
+/**/
+.class-item {
+    width: 280px;
+    height: 130px;
+    border-radius: 10px;
+    background: #fff;
+    display: block;
+    float: left;
+    margin-right: 20px;
+    cursor: pointer;
+    position: relative;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+.class-item:hover {
+    box-shadow: 0 0 10px #ddd;
+}
+.icon-my {
+    display: block;
+    width: 32px;
+    height: 32px;  
+    position: absolute;
+    right: 0;
+    top:0;
+}
+.icon-my img {
+    width: 100%;
+}
+.class-item i {
+    display: block;
+    width: 60px;
+    height: 60px;
+    margin-top: 36px;
+    margin-left: 20px;
+    float: left;
+    background: #f5f5f5;
+    font-size:32px;
+    line-height: 60px;
+    text-align: center;
+    border-radius: 40px;
+
+}
+.class-item h3 {
+    margin-top: 28px;
+    text-align: left; 
+    text-indent: 2em;
+    margin-bottom: 10px;
+}
+.class-item p {
+    text-indent: 2.5em;
+    text-align: left;
+    color: #888;
+}
+.class-add  {
+    width: 200px;
+    height: 70px;
+    border-radius: 10px;
+    background: #fff;
+    display: block;
+    float: left;
+    cursor: pointer;
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+.class-add i {
+    font-style: normal;
+    font-size: 24px;
+    margin-top: 10px;
+    display: block;
+    float: left;
+    height: 50px;
+    width: 50px;
+    text-align: center;
+    background: #3AA8FF;
+    line-height: 50px;
+    color: #069;
+    margin-left: 10px;
+    border-radius: 25px;
+    color: #fff;
+}
+.class-add:hover {
+    box-shadow: 0 0 10px #ddd;
+}
+.class-add p {
+    line-height: 70px;
+}
+
+
+.form-item {
+    width: 100%;
+    min-width: 680px; 
+    text-align: left;
+    min-height: 30px;
+    padding: 15px 0;
+    border-bottom: 1px dashed #eee;
+    margin-bottom: 10px;
+    vertical-align: middle;
+}
+
+.form-item label {
+    width: 160px; 
+    display: inline-block;
+    text-align: left; 
+    vertical-align: middle;
+}
+.form-label-bok {
+    vertical-align: top;
+    width: 160px; 
+    display: inline-block;
+    line-height: 50px;
+}
+.input-block {
+    display: inline-block;
+}
+.input-block p {
+    color: #aaa;
+}
