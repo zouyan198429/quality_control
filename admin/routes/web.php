@@ -11,8 +11,8 @@
 |
 */
 // welcome
-Route::get('/', 'IndexController@welcome');
-
+//Route::get('/welcome', 'IndexController@welcome');
+Route::get('/', 'IndexController@index');// 首页
 //Route::get('/aaa', function () {
 //    echo 'aaa';
 //    // return view('welcome');
