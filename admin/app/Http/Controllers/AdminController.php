@@ -37,6 +37,9 @@ class AdminController extends BaseController
         // $this->operate_staff_id_history = $this->user_id;
         // $company_id = config('public.company_id');
         $this->company_id =  $company_id;//'99999';//
+        $this->own_organize_id = $this->initOwnOrganizeId();// 组织id--登录者是企业的自己的id
+        $this->organize_id = $userInfo['company_id'] ?? 0;
+        $this->personal_id = $this->initPersonalId();// 0;// $userInfo['id'] ?? 0;;// 个人id--最底层登录人员id
 
         $real_name = $userInfo['real_name'] ?? '';
         $this->reDataArr['baseArr']['real_name'] = $real_name;

@@ -81,8 +81,8 @@ class SmsCodeController extends BasicController
 
     /**
      * @OA\Get(
-     *     path="/api/admin/QualityControl/sms_code/ajax_info",
-     *     tags={"短信管理-验证码"},
+     *     path="/api/admin/sms_code/ajax_info",
+     *     tags={"大后台-短信管理-验证码"},
      *     summary="验证码--详情",
      *     description="根据单个id,查询详情记录......",
      *     operationId="adminQualityControlSmsCodeAjax_info",
@@ -114,8 +114,8 @@ class SmsCodeController extends BasicController
 
     /**
      * @OA\Post(
-     *     path="/api/admin/QualityControl/sms_code/ajax_save",
-     *     tags={"短信管理-验证码"},
+     *     path="/api/admin/sms_code/ajax_save",
+     *     tags={"大后台-短信管理-验证码"},
      *     summary="验证码--新加/修改",
      *     description="根据单个id,新加/修改记录(id>0:修改；id=0:新加)......",
      *     operationId="adminQualityControlSmsCodeAjax_save",
@@ -165,8 +165,8 @@ class SmsCodeController extends BasicController
 
     /**
      * @OA\Get(
-     *     path="/api/admin/QualityControl/sms_code/ajax_alist",
-     *     tags={"短信管理-验证码"},
+     *     path="/api/admin/sms_code/ajax_alist",
+     *     tags={"大后台-短信管理-验证码"},
      *     summary="验证码--列表",
      *     description="验证码--列表......",
      *     operationId="adminQualityControlSmsCodeAjax_alist",
@@ -240,8 +240,8 @@ class SmsCodeController extends BasicController
 
     /**
      * @OA\Post(
-     *     path="/api/admin/QualityControl/sms_code/ajax_del",
-     *     tags={"短信管理-验证码"},
+     *     path="/api/admin/sms_code/ajax_del",
+     *     tags={"大后台-短信管理-验证码"},
      *     summary="验证码--删除",
      *     description="根据单个id,删除记录......",
      *     operationId="adminQualityControlSmsCodeAjax_del",

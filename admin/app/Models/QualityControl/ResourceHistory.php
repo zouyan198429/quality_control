@@ -73,4 +73,20 @@ class ResourceHistory extends Resource
      * @var string
      */
     protected $table = 'resource_history';
+
+    /**
+     * 获取资源模块使用-二维
+     */
+    public function resourceModules()
+    {
+        return $this->hasMany('App\Models\QualityControl\ResourceModule', 'resource_id_history', 'id');
+    }
+
+    /**
+     * 获取所属资源--一维
+     */
+    public function resource()
+    {
+        return $this->belongsTo('App\Models\QualityControl\Resource', 'resource_id', 'id');
+    }
 }

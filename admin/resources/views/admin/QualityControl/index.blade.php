@@ -94,7 +94,7 @@
         <div class="layui-side-scroll">
           {{--<div class="layui-logo" lay-href="{{ url('layui/home/console') }}">--}}
           <div class="layui-logo" lay-href="{{ url('/help/index.html') }}">
-            <span>小狗工具-大后台</span>
+            <span>质量认证认可协会-大后台</span>
           </div>
 
           <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
@@ -122,32 +122,64 @@
                 <i class="layui-icon layui-icon-component"></i>
                 <cite>会员管理</cite>
               </a>
-              <dl class="layui-nav-child">
-                <dd>
-                  <a lay-href="{{ url('admin/dogtools/teacher') }}">老师</a>
-                </dd>
-              </dl>
-              <dl class="layui-nav-child">
-                <dd>
-                  <a lay-href="{{ url('admin/dogtools/classes') }}">班级</a>
-                </dd>
-              </dl>
-              <dl class="layui-nav-child">
-                <dd>
-                  <a lay-href="{{ url('admin/dogtools/students') }}">学生</a>
-                </dd>
-              </dl>
                 <dl class="layui-nav-child">
                     <dd>
-                        <a lay-href="{{ url('admin/dogtools/class_labels') }}">标签</a>
+                        <a lay-href="{{ url('admin/company') }}?company_grade=1">非会员单位</a>
                     </dd>
                 </dl>
                 <dl class="layui-nav-child">
                     <dd>
-                        <a lay-href="{{ url('admin/dogtools/teacher_templates') }}">老师作品</a>
+                        <a lay-href="{{ url('admin/company') }}?company_grade=2">会员单位</a>
+                    </dd>
+                </dl>
+                <dl class="layui-nav-child">
+                    <dd>
+                        <a lay-href="{{ url('admin/company') }}?company_grade=4">理事单位</a>
+                    </dd>
+                </dl>
+                <dl class="layui-nav-child">
+                    <dd>
+                        <a lay-href="{{ url('admin/company') }}?company_grade=8">常务理事单位</a>
+                    </dd>
+                </dl>
+                <dl class="layui-nav-child">
+                    <dd>
+                        <a lay-href="{{ url('admin/company') }}?company_grade=16">理事长单位</a>
+                    </dd>
+                </dl>
+              <dl class="layui-nav-child">
+                <dd>
+                  <a lay-href="{{ url('admin/user') }}">人员列表</a>
+                </dd>
+              </dl>
+                <dl class="layui-nav-child">
+                    <dd>
+                        <a lay-href="{{ url('admin/user') }}">个人会员</a>
+{{--                        没有所属企业的会员--}}
                     </dd>
                 </dl>
             </li>
+              <li data-name="user" class="layui-nav-item">
+                  <a href="javascript:;" lay-tips="能力验证" lay-direction="2">
+                      <i class="layui-icon layui-icon-component"></i>
+                      <cite>能力验证</cite>
+                  </a>
+                  <dl class="layui-nav-child">
+                      <dd>
+                          <a lay-href="javascript:void(0);">项目管理</a>
+                      </dd>
+                  </dl>
+                  <dl class="layui-nav-child">
+                      <dd>
+                          <a lay-href="javascript:void(0);">用户报名</a>
+                      </dd>
+                  </dl>
+                  <dl class="layui-nav-child">
+                      <dd>
+                          <a lay-href="{{ url('admin/ability_type') }}?company_grade=4">领域管理</a>
+                      </dd>
+                  </dl>
+              </li>
             <li data-name="user" class="layui-nav-item">
               <a href="javascript:;" lay-tips="基础设置" lay-direction="2">
                 <i class="layui-icon layui-icon-user"></i>
@@ -155,19 +187,28 @@
               </a>
               <dl class="layui-nav-child">
                 <dd>
-                  <a lay-href="{{ url('admin/dogtools/staff') }}">管理员管理</a>
+                  <a lay-href="{{ url('admin/staff') }}">管理员管理</a>
                 </dd>
                   <dd>
-                      <a lay-href="{{ url('admin/dogtools/template_type') }}">模板库分类管理</a>
+{{--                      <a lay-href="{{ url('admin/company') }}">企业管理</a>--}}
+{{--                  </dd>--}}
+{{--                  <dd>--}}
+{{--                      <a lay-href="{{ url('admin/user') }}">个人会员</a>--}}
+{{--                  </dd>--}}
+                  <dd>
+                      <a lay-href="{{ url('admin/industry') }}">企业行业管理</a>
                   </dd>
                   <dd>
-                      <a lay-href="{{ url('admin/dogtools/templates') }}">模板库管理</a>
+                      <a lay-href="{{ url('admin/citys') }}">城市管理</a>
                   </dd>
                   <dd>
-                      <a lay-href="{{ url('admin/dogtools/teacher_roles') }}">老师角色管理</a>
+                      <a lay-href="{{ url('admin/company_certificate_type') }}">资质证书类型</a>
                   </dd>
+{{--                  <dd>--}}
+{{--                      <a lay-href="{{ url('admin/ability_type') }}">能力验证行业分类</a>--}}
+{{--                  </dd>--}}
                   <dd>
-                      <a lay-href="{{ url('admin/dogtools/sms_code') }}">短信日志管理</a>
+                      <a lay-href="{{ url('admin/sms_code') }}">短信日志管理</a>
                   </dd>
               </dl>
             </li>

@@ -8,7 +8,7 @@ use App\Services\Request\CommonRequest;
 use App\Services\Tool;
 use Illuminate\Http\Request;
 
-class CompanyCertificateTypeController extends WorksController
+class CompanyCertificateTypeController extends BasicController
 {
     /**
      * 首页
@@ -71,20 +71,20 @@ class CompanyCertificateTypeController extends WorksController
 
     /**
      * @OA\Get(
-     *     path="/api/admin/QualityControl/rrr_dddd/ajax_info",
-     *     tags={"用户信息-资质证书类型"},
+     *     path="/api/admin/company_certificate_type/ajax_info",
+     *     tags={"大后台-用户信息-资质证书类型"},
      *     summary="资质证书类型--详情",
      *     description="根据单个id,查询详情记录......",
      *     operationId="adminQualityControlCompanyCertificateTypeAjax_info",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_rrr_dddd_id_required"),
-     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_info_rrr_dddd"),
+     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_company_certificate_type_id_required"),
+     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_info_company_certificate_type"),
      *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
      *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
-     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_rrr_dddd"}
+     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_company_certificate_type"}
      */
     /**
      * ajax获得详情数据
@@ -104,20 +104,20 @@ class CompanyCertificateTypeController extends WorksController
 
     /**
      * @OA\Post(
-     *     path="/api/admin/QualityControl/rrr_dddd/ajax_save",
-     *     tags={"用户信息-资质证书类型"},
+     *     path="/api/admin/company_certificate_type/ajax_save",
+     *     tags={"大后台-用户信息-资质证书类型"},
      *     summary="资质证书类型--新加/修改",
      *     description="根据单个id,新加/修改记录(id>0:修改；id=0:新加)......",
      *     operationId="adminQualityControlCompanyCertificateTypeAjax_save",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_rrr_dddd_id_required"),
+     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_company_certificate_type_id_required"),
      *     @OA\Response(response=200,ref="#/components/responses/common_Response_modify"),
      *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
      *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
-     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_rrr_dddd"}
+     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_company_certificate_type"}
      */
 
     /**
@@ -155,20 +155,20 @@ class CompanyCertificateTypeController extends WorksController
 
     /**
      * @OA\Get(
-     *     path="/api/admin/QualityControl/rrr_dddd/ajax_alist",
-     *     tags={"用户信息-资质证书类型"},
+     *     path="/api/admin/company_certificate_type/ajax_alist",
+     *     tags={"大后台-用户信息-资质证书类型"},
      *     summary="资质证书类型--列表",
      *     description="资质证书类型--列表......",
      *     operationId="adminQualityControlCompanyCertificateTypeAjax_alist",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_rrr_dddd_id_optional"),
-     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_list_rrr_dddd"),
+     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_company_certificate_type_id_optional"),
+     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_list_company_certificate_type"),
      *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
      *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
-     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_rrr_dddd"}
+     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_company_certificate_type"}
      */
     /**
      * ajax获得列表数据
@@ -226,20 +226,20 @@ class CompanyCertificateTypeController extends WorksController
 
     /**
      * @OA\Post(
-     *     path="/api/admin/QualityControl/rrr_dddd/ajax_del",
-     *     tags={"用户信息-资质证书类型"},
+     *     path="/api/admin/company_certificate_type/ajax_del",
+     *     tags={"大后台-用户信息-资质证书类型"},
      *     summary="资质证书类型--删除",
      *     description="根据单个id,删除记录......",
      *     operationId="adminQualityControlCompanyCertificateTypeAjax_del",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_rrr_dddd_id_required"),
+     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_company_certificate_type_id_required"),
      *     @OA\Response(response=200,ref="#/components/responses/common_Response_del"),
      *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
      *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
-     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_rrr_dddd"}
+     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_company_certificate_type"}
      */
     /**
      * 子帐号管理-删除

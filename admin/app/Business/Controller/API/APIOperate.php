@@ -156,6 +156,28 @@ class APIOperate extends BaseBusiness
     }
 
     /**
+     * 删除数据---根据条件
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param string $model_name 模型名称 为空，则用对象的属性
+     * @param string $queryParams 条件数组/json字符
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  array 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function delRecordByQuery(Request $request, Controller $controller, $model_name = '', $queryParams = [], $notLog = 0){
+        $company_id = $controller->company_id;
+
+        // 获得对象
+        static::requestGetObj($request, $controller,$modelObj);
+
+        $resultDatas = $modelObj::delByQuery($company_id, $model_name, $queryParams, $notLog);
+
+        return $resultDatas;
+    }
+
+    /**
      * 根据id获得单条数据
      *
      * @param Request $request 请求信息

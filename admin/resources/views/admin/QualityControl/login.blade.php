@@ -4,7 +4,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>登入 - layuiAdmin</title>
+  <title>登入 - 质量认证认可协会</title>
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -19,7 +19,7 @@
     <div class="layadmin-user-login-main">
       <div class="layadmin-user-login-box layadmin-user-login-header">
         <h2>大后台</h2>
-        <p>小狗工具</p>
+        <p>质量认证认可协会</p>
       </div>
       <form class="am-form" action="#"  method="post"  id="addForm">
       <div class="layadmin-user-login-box layadmin-user-login-body layui-form">

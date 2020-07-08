@@ -74,4 +74,32 @@ class StaffExtend extends BasePublicModel
      */
     protected $table = 'staff_extend';
 
+    // 拥有者类型1平台2企业4个人
+    public $adminTypeArr = [
+        '1' => '平台',
+        '2' => '企业',
+        '4' => '个人',
+    ];
+
+    // 表里没有的字段
+    protected $appends = ['admin_type_text'];
+
+
+    /**
+     * 获取用户的类型文字
+     *
+     * @return string
+     */
+    public function getAdminTypeTextAttribute()
+    {
+        return $this->adminTypeArr[$this->admin_type] ?? '';
+    }
+
+    /**
+     * 获取对应的人员--一维
+     */
+    public function staff()
+    {
+        return $this->belongsTo('App\Models\RunBuy\Staff', 'staff_id', 'id')->withDefault();
+    }
 }

@@ -8,12 +8,33 @@ use App\Services\Tool;
 
 class BasicController extends WorksController
 {
+    // 每一种登录项的唯一标识【大后台：adimn; 企业：company;用户：user】,每一种后台控制器父类，修改成自己的唯一值
+    //        用途，如加入到登录状态session中，就可以一个浏览器同时登录多个后台。--让每一个后台session的键都唯一，不串（重）
+    public $siteLoginUniqueKey = 'admin';
+    public $user_type = 1;// 登录用户所属的后台类型  1平台2企业4个人
+
+    // 获得当前登录状态者的 是组织id
+    public function initOwnOrganizeId(){
+        // $userInfo = $this->user_info;
+        return 0;// $this->user_id; 真正的企业后台用这个值 ； $userInfo['company_id'] ?? 0; 真正的个人后台用这个值 ；个人用0比较对
+    }
+
+    // 获得个人id--最底层登录人员id，如果是个人登录的话，否则为0
+    // 各后台可重写此方法，特别是个人后台中心
+    public function initPersonalId(){
+        return 0;// $this->user_id; 真正的个人后台用这个值
+    }
 
     // 重购方法
+
+
     // 获取
-    public function getUserInfo(){
+    //  -  $siteLoginUniqueKey 指定就使用指定的，没有，则使用设置的 每一种登录项的唯一标识【大后台：adimn; 企业：company;用户：user】,每一种后台控制器父类，修改成自己的唯一值
+    //
+    public function getUserInfo($siteLoginUniqueKey = ''){
+        if(empty($siteLoginUniqueKey)) $siteLoginUniqueKey = $this->siteLoginUniqueKey;
         $staff_id = Tool::getSession($this->redisKey, $this->save_session,
-            config('public.sessionKey'), config('public.sessionRedisTye'));
+            config('public.sessionKey') . $siteLoginUniqueKey, config('public.sessionRedisTye'));
         if(!is_numeric($staff_id)) throws('登录失效，请重新登录！');
         $userInfo = $this->getStaffInfo($staff_id);
 //        $userInfo = CTAPIStaffBusiness::getInfoDataBase(\request(), $this,'', $staff_id, [], '', 1);
@@ -23,7 +44,7 @@ class BasicController extends WorksController
             throws('用户名信息不存在！');
         }
 
-        if($userInfo['admin_type'] != 1 ){
+        if($userInfo['admin_type'] != $this->user_type ){
             $this->delUserInfo();
             throws('非法访问！');
         }
@@ -31,9 +52,18 @@ class BasicController extends WorksController
             $this->delUserInfo();
             throws('用户已冻结！');
         }
+
+        if($userInfo['open_status'] == 1 ){
+            $this->delUserInfo();
+            throws('审核中，请耐心等待！');
+        }
+        if($userInfo['open_status'] == 4 ){
+            $this->delUserInfo();
+            throws('审核未通过！');
+        }
         if($userInfo['open_status'] != 2 ){
             $this->delUserInfo();
-            throws('用户非审核通过！');
+            throws('非审核通过！');
         }
         return $userInfo;
     }
@@ -49,7 +79,7 @@ class BasicController extends WorksController
 //            throws('用户名信息不存在！');
 //        }
 //
-//        if($userInfo['admin_type'] != 1 ){
+//        if($userInfo['admin_type'] != $this->user_type ){
 //            $this->delUserInfo();
 //            throws('非法访问！');
 //        }
@@ -58,9 +88,18 @@ class BasicController extends WorksController
 //            $this->delUserInfo();
 //            throws('用户已冻结！');
 //        }
+
+//        if($userInfo['open_status'] == 1 ){
+//            $this->delUserInfo();
+//            throws('审核中，请耐心等待！');
+//        }
+//        if($userInfo['open_status'] == 4 ){
+//            $this->delUserInfo();
+//            throws('审核未通过！');
+//        }
 //        if($userInfo['open_status'] != 2 ){
 //            $this->delUserInfo();
-//            throws('用户非审核通过！');
+//            throws('非审核通过！');
 //        }
         return $userInfo;
     }

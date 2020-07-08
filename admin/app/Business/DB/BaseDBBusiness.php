@@ -3,9 +3,9 @@
 namespace App\Business\DB;
 
 use App\Business\BaseBusiness;
-use App\Business\DB\RunBuy\ResourceDBBusiness;
-use App\Business\DB\RunBuy\StaffDBBusiness;
-use App\Business\DB\RunBuy\StaffHistoryDBBusiness;
+use App\Business\DB\QualityControl\ResourceDBBusiness;
+use App\Business\DB\QualityControl\StaffDBBusiness;
+use App\Business\DB\QualityControl\StaffHistoryDBBusiness;
 use App\Services\DB\CommonDB;
 use App\Services\Request\CommonRequest;
 use App\Services\Tool;
@@ -902,8 +902,8 @@ class BaseDBBusiness extends BaseBusiness
      * @param int $operate_staff_id 操作人id
      * @param int $operate_staff_id_history 操作人历史id
      * @param int $operate_type 操作类型 主要用1，2-一般不用，一般会在使用之前判断是不是应该用此来获取
-     *                              1 [默认]必须要获得[下面代码也要用] $operate_staff_id_history 操作人历史id;
-     *                              2 当前对象有这个字段就获取或只有调用的地方会用到 $operate_staff_id_history 操作人历史id;
+     *                              1 [默认]必须要获得[下面代码也要用] $operate_staff_id_history 操作人历史id;--肯定要获取到
+     *                              2 当前对象有这个字段就获取或只有调用的地方会用到 $operate_staff_id_history 操作人历史id;--不一定要获取
      * @return  mixed 单条数据 - -维数组 为0 新加，返回新的对象数组[-维],  > 0 ：修改对应的记录，返回true
      * @author zouyan(305463219@qq.com)
      */
@@ -919,6 +919,9 @@ class BaseDBBusiness extends BaseBusiness
         // 2 [默认]当前对象有这个字段就获取或只有调用的地方会用到
         // 且 没有有操作员工历史id 字段 operate_staff_id_history
         if( ($operate_type & 2) == 2 && ($ownProperty & 4) != 4) $needStaffIdHistory = false;
+
+        // 进行优化 ：如果传入值　<= 0 且 源数据是一维数组  且有 历史下标值 且值 > 0 , 则直接可以使用此值，不用再去查询了
+        if($operate_staff_id_history <= 0 && isset($saveData['operate_staff_id_history']) && is_numeric($saveData['operate_staff_id_history']) && $saveData['operate_staff_id_history'] > 0) $operate_staff_id_history = $saveData['operate_staff_id_history'];
 
         if ($needStaffIdHistory && $operate_staff_id_history <= 0) $operate_staff_id_history = static::getStaffHistoryId($operate_staff_id);
 

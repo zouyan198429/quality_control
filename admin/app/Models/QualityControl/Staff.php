@@ -23,7 +23,7 @@ class Staff extends BasePublicModel
 
 //    public static $cacheSimple = 'U';// 表名简写,为空，则使用表名
 
-    public static $cacheVersion = '';// 内容随意改[可0{空默认为0}开始自增]- 如果运行过程中，有直接对表记录进行修改，增加或修改字段名，则修改此值，使表记录的相关缓存过期。
+    public static $cacheVersion = 'v1';// 内容随意改[可0{空默认为0}开始自增]- 如果运行过程中，有直接对表记录进行修改，增加或修改字段名，则修改此值，使表记录的相关缓存过期。
     // $cacheExcludeFields 为空：则缓存所有字段值；排除字段可能是大小很大的字段，不适宜进行缓存
     public static $cacheExcludeFields = [];// 表字段中排除字段; 有值：要小心，如果想获取的字段有在排除字段中的，则不能使用缓存
 
@@ -98,6 +98,12 @@ class Staff extends BasePublicModel
         '4' => '个人',
     ];
 
+    // 是否完善资料1待完善2已完善
+    public $isPerfectArr = [
+        '1' => '待完善',
+        '2' => '已完善',
+    ];
+
     // 是否超级帐户2否1是
     public $issuperArr = [
         '2' => '普通帐户',
@@ -124,9 +130,64 @@ class Staff extends BasePublicModel
         '2' => '女',
     ];
 
-    // 表里没有的字段
-    protected $appends = ['admin_type_text', 'issuper_text', 'open_status_text', 'account_status_text', 'sex_text'];
+    // 企业--是否独立法人1独立法人 2非独立法人
+    public $companyIsLegalPersionArr = [
+        '1' => '独立法人',
+        '2' => '非独立法人',
+    ];
 
+    // 企业--企业类型1检测机构、2生产企业
+    public $companyTypeArr = [
+        '1' => '检测机构',
+        '2' => '生产企业',
+    ];
+
+    // 企业--企业性质1企业法人 、2企业非法人、3事业法人、4事业非法人、5社团法人、6社团非法人、7机关法人、8机关非法人、9其它机构、10民办非企业单位、11个体 、12工会法人
+    public $companyPropArr = [
+        '1' => '企业法人',
+        '2' => '企业非法人',
+        '3' => '事业法人',
+        '4' => '事业非法人',
+        '5' => '社团法人',
+        '6' => '社团非法人',
+        '7' => '机关法人',
+        '8' => '机关非法人',
+        '9' => '其它机构',
+        '10' => '民办非企业单位',
+        '11' => '个体',
+        '12' => '工会法人',
+    ];
+
+    // 企业--单位人数1、1-20、2、20-100、3、100-500、4、500以上
+    public $companyPeoplesNumArr = [
+        '1' => '1-20',
+        '2' => '20-100',
+        '3' => '100-500',
+        '4' => '500以上',
+    ];
+
+    // 企业--会员等级1非会员  2会员  4理事  8常务理事   16理事长
+    public $companyGradeArr = [
+        '1' => '非会员',
+        '2' => '会员',
+        '4' => '理事',
+        '8' => '常务理事',
+        '16' => '理事长',
+    ];
+
+    // 表里没有的字段
+    protected $appends = ['is_perfect_text', 'admin_type_text', 'issuper_text', 'open_status_text', 'account_status_text', 'sex_text', 'company_is_legal_persion_text'
+        , 'company_type_text', 'company_prop_text', 'company_peoples_num_text', 'company_grade_text'];
+
+    /**
+     * 获取用户的是否完善资料文字
+     *
+     * @return string
+     */
+    public function getIsPerfectTextAttribute()
+    {
+        return $this->isPerfectArr[$this->is_perfect] ?? '';
+    }
 
     /**
      * 获取用户的类型文字
@@ -179,10 +240,172 @@ class Staff extends BasePublicModel
     }
 
     /**
+     * 获取是否独立法人文字
+     *
+     * @return string
+     */
+    public function getCompanyIsLegalPersionTextAttribute()
+    {
+        return $this->companyIsLegalPersionArr[$this->company_is_legal_persion] ?? '';
+    }
+
+    /**
+     * 获取企业类型文字
+     *
+     * @return string
+     */
+    public function getCompanyTypeTextAttribute()
+    {
+        return $this->companyTypeArr[$this->company_type] ?? '';
+    }
+
+    /**
+     * 获取企业性质文字
+     *
+     * @return string
+     */
+    public function getCompanyPropTextAttribute()
+    {
+        return $this->companyPropArr[$this->company_prop] ?? '';
+    }
+
+    /**
+     * 获取单位人数文字
+     *
+     * @return string
+     */
+    public function getCompanyPeoplesNumTextAttribute()
+    {
+        return $this->companyPeoplesNumArr[$this->company_peoples_num] ?? '';
+    }
+
+    /**
+     * 获取会员等级文字
+     *
+     * @return string
+     */
+    public function getCompanyGradeTextAttribute()
+    {
+        return $this->companyGradeArr[$this->company_grade] ?? '';
+    }
+
+    /**
+     * 获取资源分类-二维
+     */
+    public function resourceTypeSelfs()
+    {
+        return $this->hasMany('App\Models\QualityControl\ResourceTypeSelf', 'ower_id', 'id');
+    }
+
+    /**
+     * 获取资源分类历史-二维
+     */
+    public function resourceTypeSelfHistorys()
+    {
+        return $this->hasMany('App\Models\QualityControl\ResourceTypeSelfHistory', 'ower_id', 'id');
+    }
+
+    /**
+     * 获取资源-二维
+     */
+    public function resources()
+    {
+        return $this->hasMany('App\Models\QualityControl\Resource', 'ower_id', 'id');
+    }
+
+    /**
+     * 获取资源历史-二维
+     */
+    public function resourceHistorys()
+    {
+        return $this->hasMany('App\Models\QualityControl\ResourceHistory', 'ower_id', 'id');
+    }
+
+    /**
      * 获取验证码-二维
      */
     public function smsCodes()
     {
         return $this->hasMany('App\Models\QualityControl\SmsCode', 'staff_id', 'id');
+    }
+
+    /**
+     * 获取历史-二维
+     */
+    public function staffHistorys()
+    {
+        return $this->hasMany('App\Models\QualityControl\StaffHistory', 'staff_id', 'id');
+    }
+
+    /**
+     * 获取注册记录-二维
+     */
+    public function regLogs()
+    {
+        return $this->hasMany('App\Models\QualityControl\RegLog', 'staff_id', 'id');
+    }
+
+    /**
+     * 获取企业资质证书-二维
+     */
+    public function companyCertificates()
+    {
+        return $this->hasMany('App\Models\QualityControl\CompanyCertificate', 'company_id', 'id');
+    }
+
+    /**
+     * 获取能力验证操作日志-二维
+     */
+    public function alilityJoinLogs()
+    {
+        return $this->hasMany('App\Models\QualityControl\AbilityJoinLogs', 'staff_id', 'id');
+    }
+
+    /**
+     * 获取能力验证报名项-二维
+     */
+    public function abilityJoinItems()
+    {
+        return $this->hasMany('App\Models\QualityControl\AbilityJoinItems', 'staff_id', 'id');
+    }
+
+    /**
+     * 获取能力验证报名-二维
+     */
+    public function abilityJoins()
+    {
+        return $this->hasMany('App\Models\QualityControl\AbilityJoin', 'staff_id', 'id');
+    }
+
+    /**
+     * 获取城市-一维
+     */
+    public function city()
+    {
+        return $this->belongsTo('App\Models\QualityControl\Citys', 'city_id', 'id');
+    }
+
+    /**
+     * 获取行业-一维
+     */
+    public function industry()
+    {
+        return $this->belongsTo('App\Models\QualityControl\Industry', 'company_industry_id', 'id');
+    }
+
+    /**
+     * 获取关联到的扩展信息---一维
+     */
+    public function extend()
+    {
+        return $this->hasOne('App\Models\RunBuy\StaffExtend', 'staff_id', 'id');
+    }
+
+    /**
+     * 获取关联到的企业开票配置信息---一维
+     */
+    public function companyBillingConfig()
+    {
+        return $this->hasOne('App\Models\RunBuy\CompanyBillingConfig', 'staff_id', 'id');
     }
 }

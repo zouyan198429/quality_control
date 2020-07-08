@@ -74,4 +74,28 @@ class CompanyCertificate extends BasePublicModel
      */
     protected $table = 'company_certificate';
 
+    /**
+     * 获取所属企业--一维
+     */
+    public function staff()
+    {
+        return $this->belongsTo('App\Models\QualityControl\Staff', 'company_id', 'id');
+    }
+
+    /**
+     * 获取所属资质证书类型--一维
+     */
+    public function type()
+    {
+        return $this->belongsTo('App\Models\QualityControl\CompanyCertificateType', 'type_id', 'id');
+    }
+
+    /**
+     * 获取所属资源--一维
+     */
+    public function resource()
+    {
+        return $this->belongsTo('App\Models\QualityControl\Resource', 'resource_id', 'id');
+    }
+
 }

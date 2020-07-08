@@ -49,6 +49,9 @@ class WorksController extends BaseController
         $this->operate_staff_id = $this->user_id;
         $this->operate_staff_id_history = $this->user_id;
         $this->company_id = $company_id;
+        $this->own_organize_id = $this->initOwnOrganizeId();// 组织id--登录者是企业的自己的id
+        $this->organize_id = $userInfo['company_id'] ?? 0;
+        $this->personal_id = $this->initPersonalId();// 0;// $userInfo['id'] ?? 0;;// 个人id--最底层登录人员id
 
 
         $this->admin_type = $userInfo['admin_type'] ?? 0;

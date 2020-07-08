@@ -8,7 +8,7 @@ use App\Services\Request\CommonRequest;
 use App\Services\Tool;
 use Illuminate\Http\Request;
 
-class AbilityJoinItemsSamplesMethodController extends WorksController
+class AbilityJoinItemsSamplesMethodController extends BasicController
 {
     /**
      * 首页
@@ -71,20 +71,20 @@ class AbilityJoinItemsSamplesMethodController extends WorksController
 
     /**
      * @OA\Get(
-     *     path="/api/admin/QualityControl/rrr_dddd/ajax_info",
-     *     tags={"能力验证-检测方法依据"},
+     *     path="/api/admin/ability_join_items_samples_method/ajax_info",
+     *     tags={"大后台-能力验证-检测方法依据"},
      *     summary="检测方法依据--详情",
      *     description="根据单个id,查询详情记录......",
      *     operationId="adminQualityControlAbilityJoinItemsSamplesMethodAjax_info",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_rrr_dddd_id_required"),
-     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_info_rrr_dddd"),
+     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_ability_join_items_samples_method_id_required"),
+     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_info_ability_join_items_samples_method"),
      *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
      *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
-     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_rrr_dddd"}
+     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_ability_join_items_samples_method"}
      */
     /**
      * ajax获得详情数据
@@ -104,20 +104,20 @@ class AbilityJoinItemsSamplesMethodController extends WorksController
 
     /**
      * @OA\Post(
-     *     path="/api/admin/QualityControl/rrr_dddd/ajax_save",
-     *     tags={"能力验证-检测方法依据"},
+     *     path="/api/admin/ability_join_items_samples_method/ajax_save",
+     *     tags={"大后台-能力验证-检测方法依据"},
      *     summary="检测方法依据--新加/修改",
      *     description="根据单个id,新加/修改记录(id>0:修改；id=0:新加)......",
      *     operationId="adminQualityControlAbilityJoinItemsSamplesMethodAjax_save",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_rrr_dddd_id_required"),
+     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_ability_join_items_samples_method_id_required"),
      *     @OA\Response(response=200,ref="#/components/responses/common_Response_modify"),
      *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
      *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
-     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_rrr_dddd"}
+     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_ability_join_items_samples_method"}
      */
 
     /**
@@ -155,20 +155,20 @@ class AbilityJoinItemsSamplesMethodController extends WorksController
 
     /**
      * @OA\Get(
-     *     path="/api/admin/QualityControl/rrr_dddd/ajax_alist",
-     *     tags={"能力验证-检测方法依据"},
+     *     path="/api/admin/ability_join_items_samples_method/ajax_alist",
+     *     tags={"大后台-能力验证-检测方法依据"},
      *     summary="检测方法依据--列表",
      *     description="检测方法依据--列表......",
      *     operationId="adminQualityControlAbilityJoinItemsSamplesMethodAjax_alist",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_rrr_dddd_id_optional"),
-     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_list_rrr_dddd"),
+     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_ability_join_items_samples_method_id_optional"),
+     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_list_ability_join_items_samples_method"),
      *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
      *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
-     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_rrr_dddd"}
+     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_ability_join_items_samples_method"}
      */
     /**
      * ajax获得列表数据
@@ -226,20 +226,20 @@ class AbilityJoinItemsSamplesMethodController extends WorksController
 
     /**
      * @OA\Post(
-     *     path="/api/admin/QualityControl/rrr_dddd/ajax_del",
-     *     tags={"能力验证-检测方法依据"},
+     *     path="/api/admin/ability_join_items_samples_method/ajax_del",
+     *     tags={"大后台-能力验证-检测方法依据"},
      *     summary="检测方法依据--删除",
      *     description="根据单个id,删除记录......",
      *     operationId="adminQualityControlAbilityJoinItemsSamplesMethodAjax_del",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_rrr_dddd_id_required"),
+     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_ability_join_items_samples_method_id_required"),
      *     @OA\Response(response=200,ref="#/components/responses/common_Response_del"),
      *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
      *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
-     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_rrr_dddd"}
+     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_ability_join_items_samples_method"}
      */
     /**
      * 子帐号管理-删除

@@ -263,6 +263,24 @@ use OpenApi\Annotations as OA;
  * ),
  *
  */
+
+/**
+ * 确认密码
+ * @OA\Parameter(
+ *      parameter="common_Parameter_repass",
+ *      name="repass",
+ *      description="确认密码",
+ *      required=true,
+ *      in="query",
+ *      deprecated=false,
+ *      @OA\Schema(
+ *          type="string",
+ *          minLength=6,
+ *          maxLength=20,
+ *      )
+ * ),
+ *
+ */
 class PublicParameter
 {
 

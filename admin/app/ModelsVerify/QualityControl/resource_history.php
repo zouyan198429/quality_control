@@ -69,6 +69,42 @@ class resource_history extends BaseDBVerify
      *
      */
 
+    //***********************字段查询***开始*******************************
+    // 上面字段对应的查询参数
+    /**
+     *
+     * 上面字段对应的查询参数--可填
+     * @ OA\Parameter(
+     *      parameter="Schema_QualityControl_resource_history_brand_name_optional",
+     *      name="type_name",
+     *      in="query",
+     *      description="类型名称",
+     *      required=false,
+     *      deprecated=false,
+     *      @ OA\Schema(ref="#/components/schemas/Schema_QualityControl_resource_history_brand_name")
+     * ),
+     *
+     *
+     */
+
+    /**
+     *
+     * 上面字段对应的查询参数--必填
+     * @ OA\Parameter(
+     *      parameter="Schema_QualityControl_resource_history_brand_name_required",
+     *      name="type_name",
+     *      in="query",
+     *      description="类型名称",
+     *      required=true,
+     *      deprecated=false,
+     *      @ OA\Schema(ref="#/components/schemas/Schema_QualityControl_resource_history_brand_name")
+     * ),
+     *
+     *
+     */
+    //***********************字段查询***结束****************************
+
+
     // 其它表会用到的属性字段
 
     /**
@@ -83,6 +119,73 @@ class resource_history extends BaseDBVerify
      *   minimum="0",
      *   example="1",
      * )
+     *
+     */
+
+
+    // id 类型 ---自已用的
+    /**
+     *
+     * 上面字段对应的查询参数--可填
+     * @OA\Parameter(
+     *      parameter="Schema_QualityControl_resource_history_id_optional",
+     *      name="id",
+     *      in="query",
+     *      description="模板库分类-id",
+     *      required=false,
+     *      deprecated=false,
+     *      @OA\Schema(ref="#/components/schemas/Schema_QualityControl_resource_history_id")
+     * ),
+     *
+     *
+     */
+
+    /**
+     *
+     * 上面字段对应的查询参数--必填
+     * @OA\Parameter(
+     *      parameter="Schema_QualityControl_resource_history_id_required",
+     *      name="id",
+     *      in="query",
+     *      description="模板库分类-id",
+     *      required=true,
+     *      deprecated=false,
+     *      @OA\Schema(ref="#/components/schemas/Schema_QualityControl_resource_history_id")
+     * ),
+     *
+     *
+     */
+
+    // **_id 类型 ---别的表引用的
+    /**
+     *
+     * 上面字段对应的查询参数--可填
+     * @OA\Parameter(
+     *      parameter="Schema_QualityControl_resource_history_id_optional_quote",
+     *      name="template_type_id",
+     *      in="query",
+     *      description="模板库分类-id",
+     *      required=false,
+     *      deprecated=false,
+     *      @OA\Schema(ref="#/components/schemas/Schema_QualityControl_resource_history_id")
+     * ),
+     *
+     *
+     */
+
+    /**
+     *
+     * 上面字段对应的查询参数--必填
+     * @OA\Parameter(
+     *      parameter="Schema_QualityControl_resource_history_id_required_quote",
+     *      name="template_type_id",
+     *      in="query",
+     *      description="模板库分类-id",
+     *      required=true,
+     *      deprecated=false,
+     *      @OA\Schema(ref="#/components/schemas/Schema_QualityControl_resource_history_id")
+     * ),
+     *
      *
      */
 
@@ -117,16 +220,16 @@ class resource_history extends BaseDBVerify
      *     @OA\Property(property="id", ref="#/components/schemas/common_Schema_id"),
      *     @OA\Property(property="resource_id", ref="#/components/schemas/Schema_QualityControl_resource_id"),
      *     @OA\Property(property="version_num", ref="#/components/schemas/common_Schema_version_num"),
-     *     @OA\Property(property="ower_type", ref="#/components/schemas/common_Schema_RunBuy_ower_type"),
-     *     @OA\Property(property="ower_type_text", ref="#/components/schemas/common_Schema_RunBuy_ower_type_text"),
-     *     @OA\Property(property="ower_id", ref="#/components/schemas/common_Schema_RunBuy_ower_id"),
-     *     @OA\Property(property="type_self_id", ref="#/components/schemas/Schema_RunBuy_resource_type_self_id"),
-     *     @OA\Property(property="type_self_id_history", ref="#/components/schemas/Schema_RunBuy_resource_type_self_history_id"),
-     *     @OA\Property(property="resource_name", ref="#/components/schemas/Schema_RunBuy_resource_resource_name"),
-     *     @OA\Property(property="resource_type", ref="#/components/schemas/Schema_RunBuy_resource_resource_type"),
-     *     @OA\Property(property="resource_type_text", ref="#/components/schemas/Schema_RunBuy_resource_resource_type_text"),
-     *     @OA\Property(property="resource_note", ref="#/components/schemas/Schema_RunBuy_resource_resource_note"),
-     *     @OA\Property(property="resource_url", ref="#/components/schemas/Schema_RunBuy_resource_resource_url"),
+     *     @OA\Property(property="ower_type", ref="#/components/schemas/common_Schema_QualityControl_ower_type"),
+     *     @OA\Property(property="ower_type_text", ref="#/components/schemas/common_Schema_QualityControl_ower_type_text"),
+     *     @OA\Property(property="ower_id", ref="#/components/schemas/common_Schema_QualityControl_ower_id"),
+     *     @OA\Property(property="type_self_id", ref="#/components/schemas/Schema_QualityControl_resource_type_self_id"),
+     *     @OA\Property(property="type_self_id_history", ref="#/components/schemas/Schema_QualityControl_resource_type_self_history_id"),
+     *     @OA\Property(property="resource_name", ref="#/components/schemas/Schema_QualityControl_resource_resource_name"),
+     *     @OA\Property(property="resource_type", ref="#/components/schemas/Schema_QualityControl_resource_resource_type"),
+     *     @OA\Property(property="resource_type_text", ref="#/components/schemas/Schema_QualityControl_resource_resource_type_text"),
+     *     @OA\Property(property="resource_note", ref="#/components/schemas/Schema_QualityControl_resource_resource_note"),
+     *     @OA\Property(property="resource_url", ref="#/components/schemas/Schema_QualityControl_resource_resource_url"),
      *     @OA\Property(property="operate_staff_id", ref="#/components/schemas/common_Schema_operate_staff_id"),
      *     @OA\Property(property="operate_staff_id_history", ref="#/components/schemas/common_Schema_operate_staff_id_history"),
      *     @OA\Property(property="created_at", ref="#/components/schemas/common_Schema_created_at"),

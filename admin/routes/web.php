@@ -184,18 +184,126 @@ Route::get('layui/set/user/info', 'Layui\Set\UserController@info');// 基本资�
 Route::get('layui/set/user/password', 'Layui\Set\UserController@password');// 修改密码 set/user/password.html
 // 授权  //www.layui.com/admin/#get
 
-// --- 小狗工具
+// --- 质量认证认可协会
 // -- 后台
+
 
 // 首页
 Route::get('admin/test', 'Admin\QualityControl\IndexController@test');// 测试
-Route::get('admin/index', 'Admin\QualityControl\IndexController@index');// 首页
-Route::get('admin', 'Admin\QualityControl\IndexController@index');
-Route::get('admin/login', 'Admin\QualityControl\IndexController@login');//login.html 登录
-Route::get('admin/logout', 'Admin\QualityControl\IndexController@logout');// 注销
-Route::get('admin/password', 'Admin\QualityControl\IndexController@password');//psdmodify.html 个人信息-修改密码
-Route::get('admin/info', 'Admin\QualityControl\IndexController@info');//myinfo.html 个人信息--显示
+Route::get('admin/index', 'Admin\QualityControl\IndexController@index');// 首页--ok
+Route::get('admin', 'Admin\QualityControl\IndexController@index');// --ok
+Route::get('admin/login', 'Admin\QualityControl\IndexController@login');//login.html 登录--ok
+Route::get('admin/logout', 'Admin\QualityControl\IndexController@logout');// 注销--ok
+Route::get('admin/password', 'Admin\QualityControl\IndexController@password');//psdmodify.html 个人信息-修改密码--ok
+Route::get('admin/info', 'Admin\QualityControl\IndexController@info');//myinfo.html 个人信息--显示--ok
 //Route::get('admin/down_drive', 'Admin\QualityControl\IndexController@down_drive');// 下载网页打印机驱动
+
+// 系统管理员
+Route::get('admin/staff', 'Admin\QualityControl\StaffController@index');// 列表
+Route::get('admin/staff/add/{id}', 'Admin\QualityControl\StaffController@add');// 添加
+// Route::get('admin/staff/select', 'Admin\QualityControl\StaffController@select');// 选择-弹窗
+Route::get('admin/staff/export', 'Admin\QualityControl\StaffController@export');// 导出
+Route::get('admin/staff/import_template', 'Admin\QualityControl\StaffController@import_template');// 导入模版
+
+// 企业帐号管理
+Route::get('admin/company', 'Admin\QualityControl\CompanyController@index');// 列表
+Route::get('admin/company/add/{id}', 'Admin\QualityControl\CompanyController@add');// 添加
+// Route::get('admin/company/select', 'Admin\QualityControl\CompanyController@select');// 选择-弹窗
+Route::get('admin/company/export', 'Admin\QualityControl\CompanyController@export');// 导出
+Route::get('admin/company/import_template', 'Admin\QualityControl\CompanyController@import_template');// 导入模版
+
+// 个从帐号管理
+Route::get('admin/user', 'Admin\QualityControl\UserController@index');// 列表
+Route::get('admin/user/add/{id}', 'Admin\QualityControl\UserController@add');// 添加
+// Route::get('admin/user/select', 'Admin\QualityControl\UserController@select');// 选择-弹窗
+Route::get('admin/user/export', 'Admin\QualityControl\UserController@export');// 导出
+Route::get('admin/user/import_template', 'Admin\QualityControl\UserController@import_template');// 导入模版
+
+// 行业[一级分类]
+Route::get('admin/industry', 'Admin\QualityControl\IndustryController@index');// 列表
+Route::get('admin/industry/add/{id}', 'Admin\QualityControl\IndustryController@add');// 添加
+// Route::get('admin/industry/select', 'Admin\QualityControl\IndustryController@select');// 选择-弹窗
+Route::get('admin/industry/export', 'Admin\QualityControl\IndustryController@export');// 导出
+Route::get('admin/industry/import_template', 'Admin\QualityControl\IndustryController@import_template');// 导入模版
+
+// 城市[一级分类]
+Route::get('admin/citys', 'Admin\QualityControl\CitysController@index');// 列表
+Route::get('admin/citys/add/{id}', 'Admin\QualityControl\CitysController@add');// 添加
+// Route::get('admin/citys/select', 'Admin\QualityControl\CitysController@select');// 选择-弹窗
+Route::get('admin/citys/export', 'Admin\QualityControl\CitysController@export');// 导出
+Route::get('admin/citys/import_template', 'Admin\QualityControl\CitysController@import_template');// 导入模版
+
+// 登录验证码 验证码
+Route::get('admin/sms_code', 'Admin\QualityControl\SmsCodeController@index');// 列表
+Route::get('admin/sms_code/add/{id}', 'Admin\QualityControl\SmsCodeController@add');// 添加
+// Route::get('admin/sms_code/select', 'Admin\QualityControl\SmsCodeController@select');// 选择-弹窗
+Route::get('admin/sms_code/export', 'Admin\QualityControl\SmsCodeController@export');// 导出
+Route::get('admin/sms_code/import_template', 'Admin\QualityControl\SmsCodeController@import_template');// 导入模版
+
+// 资质证书类型[一级分类]
+Route::get('admin/company_certificate_type', 'Admin\QualityControl\CompanyCertificateTypeController@index');// 列表
+Route::get('admin/company_certificate_type/add/{id}', 'Admin\QualityControl\CompanyCertificateTypeController@add');// 添加
+// Route::get('admin/company_certificate_type/select', 'Admin\QualityControl\CompanyCertificateTypeController@select');// 选择-弹窗
+Route::get('admin/company_certificate_type/export', 'Admin\QualityControl\CompanyCertificateTypeController@export');// 导出
+Route::get('admin/company_certificate_type/import_template', 'Admin\QualityControl\CompanyCertificateTypeController@import_template');// 导入模版
+
+// 能力验证行业分类[一级分类]
+Route::get('admin/ability_type', 'Admin\QualityControl\AbilityTypeController@index');// 列表
+Route::get('admin/ability_type/add/{id}', 'Admin\QualityControl\AbilityTypeController@add');// 添加
+// Route::get('admin/ability_type/select', 'Admin\QualityControl\AbilityTypeController@select');// 选择-弹窗
+Route::get('admin/ability_type/export', 'Admin\QualityControl\AbilityTypeController@export');// 导出
+Route::get('admin/ability_type/import_template', 'Admin\QualityControl\AbilityTypeController@import_template');// 导入模版
+
+// 企业后台 company
+Route::get('company/login', 'Company\QualityControl\IndexController@login');// login.html 登录
+Route::get('company/reg', 'Company\QualityControl\IndexController@reg');// 注册
+Route::get('company/perfect_company', 'Company\QualityControl\IndexController@perfect_company');// 注册-补充企业资料
+Route::get('company/user_company', 'Company\QualityControl\IndexController@user_company');// 注册-补充用户资料
+
+// 首页
+Route::get('company/test', 'Company\QualityControl\IndexController@test');// 测试
+Route::get('company/index', 'Company\QualityControl\IndexController@index');// 首页--ok
+Route::get('company', 'Company\QualityControl\IndexController@index');// --ok
+Route::get('company/login', 'Company\QualityControl\IndexController@login');//login.html 登录--ok
+Route::get('company/logout', 'Company\QualityControl\IndexController@logout');// 注销--ok
+Route::get('company/password', 'Company\QualityControl\IndexController@password');//psdmodify.html 个人信息-修改密码--ok
+Route::get('company/info', 'Company\QualityControl\IndexController@info');//myinfo.html 个人信息--显示--ok
+//Route::get('company/down_drive', 'Company\QualityControl\IndexController@down_drive');// 下载网页打印机驱动
+
+// 用户中心 user
+Route::get('user/login', 'User\QualityControl\IndexController@login');// login.html 登录
+Route::get('user/reg', 'User\QualityControl\IndexController@reg');// 注册
+Route::get('user/perfect_company', 'User\QualityControl\IndexController@perfect_company');// 注册-补充企业资料
+Route::get('user/user_company', 'User\QualityControl\IndexController@user_company');// 注册-补充用户资料
+
+// 首页
+Route::get('user/test', 'User\QualityControl\IndexController@test');// 测试
+Route::get('user/index', 'User\QualityControl\IndexController@index');// 首页--ok
+Route::get('user', 'User\QualityControl\IndexController@index');// --ok
+Route::get('user/login', 'User\QualityControl\IndexController@login');//login.html 登录--ok
+Route::get('user/logout', 'User\QualityControl\IndexController@logout');// 注销--ok
+Route::get('user/password', 'User\QualityControl\IndexController@password');//psdmodify.html 个人信息-修改密码--ok
+Route::get('user/info', 'User\QualityControl\IndexController@info');//myinfo.html 个人信息--显示--ok
+//Route::get('user/down_drive', 'User\QualityControl\IndexController@down_drive');// 下载网页打印机驱动
+
+
+// 前台 web
+Route::get('web/test', 'Web\QualityControl\HomeController@test');// 测试
+Route::get('web/login', 'Web\QualityControl\HomeController@login');// login.html 登录
+Route::get('web/reg', 'Web\QualityControl\HomeController@reg');// 注册
+Route::get('web/perfect_company', 'Web\QualityControl\HomeController@perfect_company');// 注册-补充企业资料
+Route::get('web/perfect_user', 'Web\QualityControl\HomeController@perfect_user');// 注册-补充用户资料
+Route::get('web/logout', 'Web\QualityControl\HomeController@logout');// 注销--ok
+
+// 首页
+//Route::get('web/test', 'Web\QualityControl\IndexController@test');// 测试
+//Route::get('web/index', 'Web\QualityControl\IndexController@index');// 首页--ok
+//Route::get('web', 'Web\QualityControl\IndexController@index');// --ok
+//Route::get('web/login', 'Web\QualityControl\IndexController@login');//login.html 登录--ok
+//Route::get('web/logout', 'Web\QualityControl\IndexController@logout');// 注销--ok
+//Route::get('web/password', 'Web\QualityControl\IndexController@password');//psdmodify.html 个人信息-修改密码--ok
+//Route::get('web/info', 'Web\QualityControl\IndexController@info');//myinfo.html 个人信息--显示--ok
+//Route::get('web/down_drive', 'Web\QualityControl\IndexController@down_drive');// 下载网页打印机驱动
 
 // Auth::routes();
 Auth::routes(['verify' => true]);

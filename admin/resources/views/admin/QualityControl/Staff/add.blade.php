@@ -45,13 +45,13 @@
                     <label><input type="radio" name="sex" value="2" @if (isset($info['sex']) && $info['sex'] == 2 ) checked @endif>女</label>
                 </td>
             </tr>
-            <tr>
-                <th>状态<span class="must">*</span></th>
-                <td  class="layui-input-block">
-                    <label><input type="radio" name="account_status" value="1" @if (isset($info['account_status']) && $info['account_status'] == 1 ) checked @endif>正常</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <label><input type="radio" name="account_status" value="2" @if (isset($info['account_status']) && $info['account_status'] == 2 ) checked @endif>冻结</label>
-                </td>
-            </tr>
+{{--            <tr>--}}
+{{--                <th>状态<span class="must">*</span></th>--}}
+{{--                <td  class="layui-input-block">--}}
+{{--                    <label><input type="radio" name="account_status" value="1" @if (isset($info['account_status']) && $info['account_status'] == 1 ) checked @endif>正常</label>&nbsp;&nbsp;&nbsp;&nbsp;--}}
+{{--                    <label><input type="radio" name="account_status" value="2" @if (isset($info['account_status']) && $info['account_status'] == 2 ) checked @endif>冻结</label>--}}
+{{--                </td>--}}
+{{--            </tr>--}}
             <tr>
                 <th>手机<span class="must">*</span></th>
                 <td>
@@ -102,9 +102,9 @@
 @include('public.dynamic_list_foot')
 
 <script type="text/javascript">
-    var SAVE_URL = "{{ url('api/admin/dogtools/staff/ajax_save') }}";// ajax保存记录地址
-    var LIST_URL = "{{url('admin/dogtools/staff')}}";//保存成功后跳转到的地址
+    var SAVE_URL = "{{ url('api/admin/staff/ajax_save') }}";// ajax保存记录地址
+    var LIST_URL = "{{url('admin/staff')}}";//保存成功后跳转到的地址
 </script>
-<script src="{{ asset('/js/admin/DogTools/Staff_edit.js') }}"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/Staff_edit.js') }}"  type="text/javascript"></script>
 </body>
 </html>

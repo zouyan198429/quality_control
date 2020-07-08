@@ -74,4 +74,128 @@ class AbilityJoinItems extends BasePublicModel
      */
     protected $table = 'ability_join_items';
 
+    // 拥有者类型1平台2企业4个人
+    public $adminTypeArr = [
+        '1' => '平台',
+        '2' => '企业',
+        '4' => '个人',
+    ];
+
+    // 状态(状态1已报名  2已取样  4已上传数据
+    //   8已判定【如果有有问题、不满意 --还可以再取样--进入已取样状态】
+    // 16已完成--不可再修改【打印证书后或大后台点《公布结果》】)
+    public $statusArr = [
+        '1' => '已报名',
+        '2' => '已取样',
+        '4' => '已传数据',
+        '8' => '已判定',
+        '16' => '已完成',
+    ];
+
+    // 验证结果1待判定 2满意、4有问题、8不满意   16满意【补测满意】
+    public $resultStatusArr = [
+        '1' => '待判定',
+        '2' => '满意',
+        '4' => '有问题',
+        '8' => '不满意',
+        '16' => '满意【补】',
+    ];
+
+    // 是否取样1待取样--未取 2已取样--已取
+    public $isSampleArr = [
+        '1' => '待取样',
+        '2' => '已取样',
+    ];
+
+    // 表里没有的字段
+    protected $appends = ['admin_type_text', 'status_text', 'result_status_text', 'is_sample_text'];
+
+
+    /**
+     * 获取用户的类型文字
+     *
+     * @return string
+     */
+    public function getAdminTypeTextAttribute()
+    {
+        return $this->adminTypeArr[$this->admin_type] ?? '';
+    }
+
+    /**
+     * 获取拥有者类型文字
+     *
+     * @return string
+     */
+    public function getStatusTextAttribute()
+    {
+        return $this->statusArr[$this->status] ?? '';
+    }
+
+    /**
+     * 获取验证结果文字
+     *
+     * @return string
+     */
+    public function getResultStatusTextAttribute()
+    {
+        return $this->resultStatusArr[$this->result_status] ?? '';
+    }
+
+    /**
+     * 获取是否取样文字
+     *
+     * @return string
+     */
+    public function getIsSampleTextAttribute()
+    {
+        return $this->isSampleArr[$this->is_sample] ?? '';
+    }
+
+    /**
+     * 获取能力验证操作日志-二维
+     */
+    public function abilityJoinLogs()
+    {
+        return $this->hasMany('App\Models\QualityControl\AbilityJoinLogs', 'ability_join_item_id', 'id');
+    }
+
+    /**
+     * 获取能力验证取样登记-二维
+     */
+    public function abilityJoinItemsSamples()
+    {
+        return $this->hasMany('App\Models\QualityControl\AbilityJoinItemsSamples', 'ability_join_item_id', 'id');
+    }
+
+    /**
+     * 获取所属帐号--一维
+     */
+    public function staff()
+    {
+        return $this->belongsTo('App\Models\QualityControl\Staff', 'staff_id', 'id');
+    }
+
+    /**
+     * 获取所属能力验证-一维
+     */
+    public function ability()
+    {
+        return $this->belongsTo('App\Models\QualityControl\Abilitys', 'ability_id', 'id');
+    }
+
+    /**
+     * 获取所属项目标准-一维
+     */
+    public function projectStandard()
+    {
+        return $this->belongsTo('App\Models\QualityControl\ProjectStandards', 'project_standard_id', 'id');
+    }
+
+    /**
+     * 获取所属能力验证报名-一维
+     */
+    public function abilityJoin()
+    {
+        return $this->belongsTo('App\Models\QualityControl\AbilityJoin', 'ability_join_id', 'id');
+    }
 }

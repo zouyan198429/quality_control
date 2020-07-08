@@ -153,7 +153,7 @@ class ImportExport
                 if( ($startRow + $chunkSize - 1) > $rowEnd ) break;
             }
         }
-        return $dataArr;
+        return static::nullToEmpty($dataArr);
         // $spreadsheet = $reader->load($fileName);// 载入excel表格
 
 
@@ -474,4 +474,29 @@ class ImportExport
 //$spreadsheet->disconnectWorksheets();
 //unset($spreadsheet);
 //    }
+
+// 遍历数据，将数据中的null，改为空
+    public static function nullToEmpty($params){
+        if(is_array($params)){
+            foreach($params as $k =>$v){
+                if(is_array($v)){
+//                    $func = __FUNCTION__;
+//                    $params[$k] = $func($v);
+                    $params[$k] = static::nullToEmpty($v);
+                }else{
+                    if(is_null($v)){
+                        $params[$k] = '';
+                    }
+                }
+            }
+            return $params;
+        }else{
+            if(is_null($params)){
+                return '';
+            }else{
+                return $params;
+            }
+        }
+
+    }
 }

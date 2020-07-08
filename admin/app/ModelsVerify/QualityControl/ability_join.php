@@ -113,6 +113,42 @@ class ability_join extends BaseDBVerify
      *
      */
 
+    //***********************字段查询***开始*******************************
+    // 上面字段对应的查询参数
+    /**
+     *
+     * 上面字段对应的查询参数--可填
+     * @ OA\Parameter(
+     *      parameter="Schema_QualityControl_ability_join_brand_name_optional",
+     *      name="type_name",
+     *      in="query",
+     *      description="类型名称",
+     *      required=false,
+     *      deprecated=false,
+     *      @ OA\Schema(ref="#/components/schemas/Schema_QualityControl_ability_join_brand_name")
+     * ),
+     *
+     *
+     */
+
+    /**
+     *
+     * 上面字段对应的查询参数--必填
+     * @ OA\Parameter(
+     *      parameter="Schema_QualityControl_ability_join_brand_name_required",
+     *      name="type_name",
+     *      in="query",
+     *      description="类型名称",
+     *      required=true,
+     *      deprecated=false,
+     *      @ OA\Schema(ref="#/components/schemas/Schema_QualityControl_ability_join_brand_name")
+     * ),
+     *
+     *
+     */
+    //***********************字段查询***结束****************************
+
+
     // 其它表会用到的属性字段
 
     /**
@@ -129,6 +165,74 @@ class ability_join extends BaseDBVerify
      * )
      *
      */
+
+
+    // id 类型 ---自已用的
+    /**
+     *
+     * 上面字段对应的查询参数--可填
+     * @OA\Parameter(
+     *      parameter="Schema_QualityControl_ability_join_id_optional",
+     *      name="id",
+     *      in="query",
+     *      description="模板库分类-id",
+     *      required=false,
+     *      deprecated=false,
+     *      @OA\Schema(ref="#/components/schemas/Schema_QualityControl_ability_join_id")
+     * ),
+     *
+     *
+     */
+
+    /**
+     *
+     * 上面字段对应的查询参数--必填
+     * @OA\Parameter(
+     *      parameter="Schema_QualityControl_ability_join_id_required",
+     *      name="id",
+     *      in="query",
+     *      description="模板库分类-id",
+     *      required=true,
+     *      deprecated=false,
+     *      @OA\Schema(ref="#/components/schemas/Schema_QualityControl_ability_join_id")
+     * ),
+     *
+     *
+     */
+
+    // **_id 类型 ---别的表引用的
+    /**
+     *
+     * 上面字段对应的查询参数--可填
+     * @OA\Parameter(
+     *      parameter="Schema_QualityControl_ability_join_id_optional_quote",
+     *      name="template_type_id",
+     *      in="query",
+     *      description="模板库分类-id",
+     *      required=false,
+     *      deprecated=false,
+     *      @OA\Schema(ref="#/components/schemas/Schema_QualityControl_ability_join_id")
+     * ),
+     *
+     *
+     */
+
+    /**
+     *
+     * 上面字段对应的查询参数--必填
+     * @OA\Parameter(
+     *      parameter="Schema_QualityControl_ability_join_id_required_quote",
+     *      name="template_type_id",
+     *      in="query",
+     *      description="模板库分类-id",
+     *      required=true,
+     *      deprecated=false,
+     *      @OA\Schema(ref="#/components/schemas/Schema_QualityControl_ability_join_id")
+     * ),
+     *
+     *
+     */
+
 
 
     //##################请求参数#######################################################

@@ -46,9 +46,9 @@
 @include('public.dynamic_list_foot')
 
 <script type="text/javascript">
-    var SAVE_URL = "{{ url('api/admin/dogtools/sms_code/ajax_save') }}";// ajax保存记录地址
-    var LIST_URL = "{{url('admin/dogtools/sms_code')}}";//保存成功后跳转到的地址
+    var SAVE_URL = "{{ url('api/admin/sms_code/ajax_save') }}";// ajax保存记录地址
+    var LIST_URL = "{{url('admin/sms_code')}}";//保存成功后跳转到的地址
 </script>
-<script src="{{ asset('/js/admin/DogTools/SmsCode_edit.js') }}"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/SmsCode_edit.js') }}"  type="text/javascript"></script>
 </body>
 </html>

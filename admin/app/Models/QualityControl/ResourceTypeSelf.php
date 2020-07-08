@@ -73,15 +73,11 @@ class ResourceTypeSelf extends BasePublicModel
      */
     protected $table = 'resource_type_self';
 
-    // 拥有者类型1平台2城市分站4城市代理8商家16店铺32快跑人员64用户
+    // 拥有者类型1平台2企业4个人
     public $owerTypeArr = [
         '1' => '平台',
-        '2' => '城市分站',
-        '4' => '城市代理',
-        '8' => '商家',
-        '16' => '店铺',
-        '32' => '快跑人员',
-        '64' => '用户',
+        '2' => '企业',
+        '4' => '个人',
     ];
 
     // 表里没有的字段
@@ -96,4 +92,29 @@ class ResourceTypeSelf extends BasePublicModel
     {
         return $this->owerTypeArr[$this->ower_type] ?? '';
     }
+
+    /**
+     * 获取资源-二维
+     */
+    public function resources()
+    {
+        return $this->hasMany('App\Models\QualityControl\Resource', 'type_self_id', 'id');
+    }
+
+    /**
+     * 获取历史-二维
+     */
+    public function historys()
+    {
+        return $this->hasMany('App\Models\QualityControl\ResourceTypeSelfHistory', 'type_self_id', 'id');
+    }
+
+    /**
+     * 获取拥有者的员工-一维
+     */
+    public function owerStaff()
+    {
+        return $this->belongsTo('App\Models\QualityControl\Staff', 'ower_id', 'id');
+    }
+
 }

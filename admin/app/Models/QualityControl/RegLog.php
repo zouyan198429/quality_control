@@ -74,4 +74,32 @@ class RegLog extends BasePublicModel
      */
     protected $table = 'reg_log';
 
+    // 拥有者类型1平台2企业4个人
+    public $adminTypeArr = [
+        '1' => '平台',
+        '2' => '企业',
+        '4' => '个人',
+    ];
+
+    // 表里没有的字段
+    protected $appends = ['admin_type_text'];
+
+    /**
+     * 获取用户的类型文字
+     *
+     * @return string
+     */
+    public function getAdminTypeTextAttribute()
+    {
+        return $this->adminTypeArr[$this->admin_type] ?? '';
+    }
+
+    /**
+     * 获取所属帐号--一维
+     */
+    public function staff()
+    {
+        return $this->belongsTo('App\Models\QualityControl\Staff', 'staff_id', 'id');
+    }
+
 }

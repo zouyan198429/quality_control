@@ -73,19 +73,27 @@ class Resource extends BasePublicModel
      */
     protected $table = 'resource';
 
-    // 拥有者类型1平台2城市分站4城市代理8商家16店铺32快跑人员64用户
+    // 拥有者类型1平台2企业4个人
     public $owerTypeArr = [
         '1' => '平台',
-        '2' => '城市分站',
-        '4' => '城市代理',
-        '8' => '商家',
-        '16' => '店铺',
-        '32' => '快跑人员',
-        '64' => '用户',
+        '2' => '企业',
+        '4' => '个人',
+    ];
+
+    // 资源类型1图片2excel
+    public $resourceTypeArr = [
+        '1' => '图片',
+        '2' => 'excel',
+    ];
+
+    // 所属栏目1普通上传 2 能力验证
+    public $columnTypeArr = [
+        '1' => '普通上传',
+        '2' => '能力验证',
     ];
 
     // 表里没有的字段
-    protected $appends = ['ower_type_text'];
+    protected $appends = ['ower_type_text', 'resource_type_text', 'column_type_text'];
 
     /**
      * 获取拥有者类型文字
@@ -98,10 +106,78 @@ class Resource extends BasePublicModel
     }
 
     /**
+     * 获取资源类型文字
+     *
+     * @return string
+     */
+    public function getResourceTypeTextAttribute()
+    {
+        return $this->resourceTypeArr[$this->resource_type] ?? '';
+    }
+
+    /**
+     * 获取所属栏目文字
+     *
+     * @return string
+     */
+    public function getColumnTypeTextAttribute()
+    {
+        return $this->columnTypeArr[$this->column_type] ?? '';
+    }
+
+    /**
      * 获取资源的历史-二维
      */
     public function resourceHistory()
     {
         return $this->hasMany('App\Models\QualityControl\ResourceHistory', 'resource_id', 'id');
+    }
+
+    /**
+     * 获取资源模块使用-二维
+     */
+    public function resourceModules()
+    {
+        return $this->hasMany('App\Models\QualityControl\ResourceModule', 'resource_id', 'id');
+    }
+
+    /**
+     * 获取企业资质证书-二维
+     */
+    public function companyCertificates()
+    {
+        return $this->hasMany('App\Models\QualityControl\CompanyCertificate', 'resource_id', 'id');
+    }
+
+    /**
+     * 获取能力验证类型-二维
+     */
+    public function abilityTypes()
+    {
+        return $this->hasMany('App\Models\QualityControl\AbilityType', 'resource_id', 'id');
+    }
+
+    /**
+     * 获取拥有者的员工-一维
+     */
+    public function owerStaff()
+    {
+        return $this->belongsTo('App\Models\QualityControl\Staff', 'ower_id', 'id');
+    }
+
+    /**
+     * 获取所属资源分类--一维
+     */
+    public function resourceTypeSelf()
+    {
+        return $this->belongsTo('App\Models\QualityControl\ResourceTypeSelf', 'type_self_id', 'id');
+    }
+
+    /**
+     * 获取所属资源分类历史--一维
+     */
+    public function resourceTypeSelfHistory()
+    {
+        return $this->belongsTo('App\Models\QualityControl\ResourceTypeSelfHistory', 'type_self_id_history', 'id');
     }
 }

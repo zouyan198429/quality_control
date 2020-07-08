@@ -74,4 +74,66 @@ class Abilitys extends BasePublicModel
      */
     protected $table = 'abilitys';
 
+
+    // 状态(1待开始 、2报名中、4进行中、8已结束 16 已取消【作废】)
+    public $statusArr = [
+        '1' => '待开始',
+        '2' => '报名中',
+        '4' => '进行中',
+        '8' => '已结束',
+        '16' => '已取消',
+    ];
+
+    // 是否公布结果1待公布  2已公布
+    public $isPublishArr = [
+        '1' => '待公布',
+        '2' => '已公布',
+    ];
+
+    // 表里没有的字段
+    protected $appends = ['status_text', 'is_publish_text'];
+
+    /**
+     * 获取拥有者类型文字
+     *
+     * @return string
+     */
+    public function getStatusTextAttribute()
+    {
+        return $this->statusArr[$this->status] ?? '';
+    }
+
+    /**
+     * 获取是否公布结果文字
+     *
+     * @return string
+     */
+    public function getIsPublishTextAttribute()
+    {
+        return $this->isPublishArr[$this->is_publish] ?? '';
+    }
+
+    /**
+     * 获取项目标准-二维
+     */
+    public function projectStandards()
+    {
+        return $this->hasMany('App\Models\QualityControl\ProjectStandards', 'ability_id', 'id');
+    }
+
+    /**
+     * 获取能力验证报名项-二维
+     */
+    public function abilityJoinItems()
+    {
+        return $this->hasMany('App\Models\QualityControl\AbilityJoinItems', 'ability_id', 'id');
+    }
+
+    /**
+     * 获取所属能力验证类型--一维
+     */
+    public function abilityType()
+    {
+        return $this->belongsTo('App\Models\QualityControl\AbilityType', 'ability_type_id', 'id');
+    }
 }

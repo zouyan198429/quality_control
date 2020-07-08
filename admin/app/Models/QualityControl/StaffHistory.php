@@ -72,4 +72,12 @@ class StaffHistory extends Staff
      * @var string
      */
     protected $table = 'staff_history';
+
+    /**
+     * 获取所属帐号--一维
+     */
+    public function staff()
+    {
+        return $this->belongsTo('App\Models\QualityControl\Staff', 'staff_id', 'id');
+    }
 }

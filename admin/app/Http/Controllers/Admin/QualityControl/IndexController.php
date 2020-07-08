@@ -46,12 +46,12 @@ class IndexController extends BasicController
      * @return mixed
      * @author zouyan(305463219@qq.com)
      */
-    public function ajax_captcha(Request $request)
-    {
-        $captchaParams = CaptchaCode::createCodeAPI(__CLASS__ . $request->ip(),'default');// app('captcha')->create('default', true);
-
-        return ajaxDataArr(1, $captchaParams, '');
-    }
+//    public function ajax_captcha(Request $request)
+//    {
+//        $captchaParams = CaptchaCode::createCodeAPI(__CLASS__ . $request->ip(),'default');// app('captcha')->create('default', true);
+//
+//        return ajaxDataArr(1, $captchaParams, '');
+//    }
 
     /**
      * api验证验证码信息是否正确
@@ -60,18 +60,18 @@ class IndexController extends BasicController
      * @return mixed
      * @author zouyan(305463219@qq.com)
      */
-    public function ajax_captcha_verify(Request $request)
-    {
-        $captcha_code = CommonRequest::get($request, 'captcha_code');
-        $captcha_key = CommonRequest::get($request, 'captcha_key');
-//        if(!captcha_api_check($captcha_code, $captcha_key)) {
-//            Cache::forget($captcha_key);
-//            return ajaxDataArr(0, null, '验证码错误');
-//        }
-//        Cache::forget($captcha_key);
-        CaptchaCode::captchaCheckAPI($captcha_code, $captcha_key, false, 1);
-        return ajaxDataArr(1, ['data' => 1], '验证码正确');
-    }
+//    public function ajax_captcha_verify(Request $request)
+//    {
+//        $captcha_code = CommonRequest::get($request, 'captcha_code');
+//        $captcha_key = CommonRequest::get($request, 'captcha_key');
+////        if(!captcha_api_check($captcha_code, $captcha_key)) {
+////            Cache::forget($captcha_key);
+////            return ajaxDataArr(0, null, '验证码错误');
+////        }
+////        Cache::forget($captcha_key);
+//        CaptchaCode::captchaCheckAPI($captcha_code, $captcha_key, false, 1);
+//        return ajaxDataArr(1, ['data' => 1], '验证码正确');
+//    }
 
     /**
      * 登陆
@@ -137,7 +137,7 @@ class IndexController extends BasicController
     /**
      * @OA\Post(
      *     path="/api/admin/ajax_login",
-     *     tags={"帐号注册登录"},
+     *     tags={"大后台-帐号注册登录"},
      *     summary="帐号密码登录",
      *     description="通过帐号、密码、图形验证码进行登录",
      *     operationId="adminIndexAjax_login",
@@ -145,14 +145,14 @@ class IndexController extends BasicController
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
      *     @OA\Parameter(ref="#/components/parameters/common_Parameter_admin_username"),
      *     @OA\Parameter(ref="#/components/parameters/common_Parameter_admin_password"),
-     *     @OA\Parameter(ref="#/components/parameters/Parameter_Object_RunBuy_captcha_captcha_key"),
-     *     @OA\Parameter(ref="#/components/parameters/Parameter_Object_RunBuy_captcha_captcha_code"),
-     *     @OA\Response(response=200,ref="#/components/responses/Response_RunBuy_info_staff_login"),
+     *     @OA\Parameter(ref="#/components/parameters/Parameter_Object_captcha_captcha_key"),
+     *     @OA\Parameter(ref="#/components/parameters/Parameter_Object_captcha_captcha_code"),
+     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_info_staff_login"),
      *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
      *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
-     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_RunBuy_multi_brands"}
+     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_multi_brands"}
      */
     /**
      * ajax保存数据
@@ -166,6 +166,20 @@ class IndexController extends BasicController
         // $this->InitParams($request);
         // $company_id = $this->company_id;
         return CTAPIStaffBusiness::loginCaptchaCode($request, $this,1, 1, 1);
+    }
+
+    /**
+     * ajax保存数据--手机验证码登录
+     *
+     * @param Request $request
+     * @return array
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_login_sms(Request $request)
+    {
+        // $this->InitParams($request);
+        // $company_id = $this->company_id;
+        return CTAPIStaffBusiness::loginCaptchaCode($request, $this,1, 2, 2);
     }
 
     /**
@@ -187,7 +201,7 @@ class IndexController extends BasicController
      * ajax修改密码
      *
      * @param int $id
-     * @return Response
+     * @return mixed Response
      * @author zouyan(305463219@qq.com)
      */
     public function ajax_password_save(Request $request)
@@ -200,12 +214,13 @@ class IndexController extends BasicController
      * ajax 修改设置
      *
      * @param int $id
-     * @return Response
+     * @return mixed
      * @author zouyan(305463219@qq.com)
      */
     public function ajax_info_save(Request $request)
     {
         $this->InitParams($request);
+        $user_info = $this->user_info;
 
         $id = $this->user_id;
         $company_id = $this->company_id;
@@ -217,7 +232,7 @@ class IndexController extends BasicController
         $qq_number = CommonRequest::get($request, 'qq_number');
 
         $saveData = [
-            'admin_type' => 1,
+            'admin_type' => $user_info['admin_type'],
             'admin_username' => $admin_username,
             'mobile' => $mobile,
             'real_name' => $real_name,

@@ -65,7 +65,7 @@ class SmsCode extends BasePublicModel
     // 4：有操作员工历史id 字段 operate_staff_id_history
     // 8：有操作日期字段 created_at timestamp
     // 16：有更新日期字段 updated_at  timestamp
-    public static $ownProperty = (2 | 8 | 16);// (1 | 2 | 4 | 8 | 16);
+    public static $ownProperty = (2 | 4 | 8 | 16);// (1 | 2 | 4 | 8 | 16);
 
     /**
      * 关联到模型的数据表

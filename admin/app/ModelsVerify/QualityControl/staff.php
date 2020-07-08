@@ -313,6 +313,42 @@ class staff extends BaseDBVerify
      *
      */
 
+    //***********************字段查询***开始*******************************
+    // 上面字段对应的查询参数
+    /**
+     *
+     * 上面字段对应的查询参数--可填
+     * @ OA\Parameter(
+     *      parameter="Schema_QualityControl_staff_brand_name_optional",
+     *      name="type_name",
+     *      in="query",
+     *      description="类型名称",
+     *      required=false,
+     *      deprecated=false,
+     *      @ OA\Schema(ref="#/components/schemas/Schema_QualityControl_staff_brand_name")
+     * ),
+     *
+     *
+     */
+
+    /**
+     *
+     * 上面字段对应的查询参数--必填
+     * @ OA\Parameter(
+     *      parameter="Schema_QualityControl_staff_brand_name_required",
+     *      name="type_name",
+     *      in="query",
+     *      description="类型名称",
+     *      required=true,
+     *      deprecated=false,
+     *      @ OA\Schema(ref="#/components/schemas/Schema_QualityControl_staff_brand_name")
+     * ),
+     *
+     *
+     */
+    //***********************字段查询***结束****************************
+
+
     /**
      * 用户类型1平台2老师4学生
      * @OA\Schema(
@@ -1786,6 +1822,48 @@ class staff extends BaseDBVerify
      * )
      */
 
+    // 有所有字段的对象
+    /**
+     * @OA\Schema(
+     *     schema="Schema_QualityControl_staff_obj_login",
+     *     title="人员",
+     *     description="人员列表",
+     *     required={},
+     *     @OA\Property(property="id", ref="#/components/schemas/common_Schema_id"),
+     *     @OA\Property(property="admin_type", ref="#/components/schemas/Schema_QualityControl_staff_admin_type"),
+     *     @OA\Property(property="admin_type_text", ref="#/components/schemas/Schema_QualityControl_staff_admin_type_text"),
+     *     @OA\Property(property="admin_username", ref="#/components/schemas/Schema_QualityControl_staff_admin_username"),
+     *     @OA\Property(property="admin_password", ref="#/components/schemas/Schema_QualityControl_staff_admin_password"),
+     *     @OA\Property(property="issuper", ref="#/components/schemas/Schema_QualityControl_staff_issuper"),
+     *     @OA\Property(property="issuper_text", ref="#/components/schemas/Schema_QualityControl_staff_issuper_text"),
+     *     @OA\Property(property="open_status", ref="#/components/schemas/Schema_QualityControl_staff_open_status"),
+     *     @OA\Property(property="open_status_text", ref="#/components/schemas/Schema_QualityControl_staff_open_status_text"),
+     *     @OA\Property(property="open_fail_reason", ref="#/components/schemas/Schema_QualityControl_staff_open_fail_reason"),
+     *     @OA\Property(property="account_status", ref="#/components/schemas/Schema_QualityControl_staff_account_status"),
+     *     @OA\Property(property="account_status_text", ref="#/components/schemas/Schema_QualityControl_staff_account_status_text"),
+     *     @OA\Property(property="frozen_fail_reason", ref="#/components/schemas/Schema_QualityControl_staff_frozen_fail_reason"),
+     *     @OA\Property(property="real_name", ref="#/components/schemas/Schema_QualityControl_staff_real_name"),
+     *     @OA\Property(property="sex", ref="#/components/schemas/Schema_QualityControl_staff_sex"),
+     *     @OA\Property(property="sex_text", ref="#/components/schemas/Schema_QualityControl_staff_sex_text"),
+     *     @OA\Property(property="tel", ref="#/components/schemas/Schema_QualityControl_staff_tel"),
+     *     @OA\Property(property="mobile", ref="#/components/schemas/Schema_QualityControl_staff_mobile"),
+     *     @OA\Property(property="qq_number", ref="#/components/schemas/Schema_QualityControl_staff_qq_number"),
+     *     @OA\Property(property="wechat", ref="#/components/schemas/Schema_QualityControl_staff_wechat"),
+     *     @OA\Property(property="email", ref="#/components/schemas/Schema_QualityControl_staff_email"),
+     *     @OA\Property(property="remarks", ref="#/components/schemas/Schema_QualityControl_staff_remarks"),
+     *     @OA\Property(property="firstlogintime", ref="#/components/schemas/Schema_QualityControl_staff_firstlogintime"),
+     *     @OA\Property(property="lastlogintime", ref="#/components/schemas/Schema_QualityControl_staff_lastlogintime"),
+     *     @OA\Property(property="create_class_num", ref="#/components/schemas/Schema_QualityControl_staff_create_class_num"),
+     *     @OA\Property(property="class_num", ref="#/components/schemas/Schema_QualityControl_staff_class_num"),
+     *     @OA\Property(property="work_num", ref="#/components/schemas/Schema_QualityControl_staff_work_num"),
+     *     @OA\Property(property="operate_staff_id", ref="#/components/schemas/common_Schema_operate_staff_id"),
+     *     @OA\Property(property="created_at", ref="#/components/schemas/common_Schema_created_at"),
+     *     @OA\Property(property="updated_at", ref="#/components/schemas/common_Schema_updated_at"),
+     *     @OA\Property(property="modifyTime", ref="#/components/schemas/common_Schema_modifyTime"),
+     *     @OA\Property(property="redisKey", ref="#/components/schemas/common_Schema_redisKey"),
+     * )
+     */
+
     //##################请求主体对象#######################################################
     /**
      * 单条记录请求体
@@ -1973,6 +2051,52 @@ class staff extends BaseDBVerify
      *                  property="result",
      *                  type="object",
      *                  @OA\Property(property="info",ref="#/components/schemas/Schema_QualityControl_staff_obj",),
+     *               ),
+     *              @OA\Property(property="errorMsg", ref="#/components/schemas/common_Schema_errorMsg"),
+     *              @OA\Xml(
+     *                  name="root",
+     *                  wrapped=true
+     *              ),
+     *         ),
+     *     )
+
+     *
+     * 登录返回
+     * {
+     *  "apistatus": "0:失败；1：成功",
+     *   "result": {
+     *          "id": "1",
+     *          "version_num": "1",
+     *          "history_id": "1",
+     *           ......
+     *          "addr": "城关镇北大街明珠馨苑",
+     *          "operate_staff_id": "1",
+     *          "operate_staff_id_history": "1",
+     *          "created_at": "2019-12-04 12:31:30",
+     *          "updated_at": "2019-12-04 12:31:30"
+     *   },
+     *  "errorMsg": "有错时的错误信息"
+     * }
+     *     @OA\Response(
+     *         response="Response_QualityControl_info_staff_login",
+     *         description="操作成功返回",
+     *         @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(property="apistatus", ref="#/components/schemas/common_Schema_apistatus"),
+     *              @OA\Property(
+     *                  property="result",
+     *                  type="object",
+     *                  ref="#/components/schemas/Schema_QualityControl_staff_obj_login",
+     *               ),
+     *              @OA\Property(property="errorMsg", ref="#/components/schemas/common_Schema_errorMsg"),
+     *        ),
+     *        @OA\XmlContent(
+     *              type="object",
+     *              @OA\Property(property="apistatus", ref="#/components/schemas/common_Schema_apistatus"),
+     *              @OA\Property(
+     *                  property="result",
+     *                  type="object",
+     *                  ref="#/components/schemas/Schema_QualityControl_staff_obj_login",
      *               ),
      *              @OA\Property(property="errorMsg", ref="#/components/schemas/common_Schema_errorMsg"),
      *              @OA\Xml(

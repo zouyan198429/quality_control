@@ -127,6 +127,31 @@ function getAttrVal(obj, attr, emptyReDefautl, defaultVal) {
     return defaultVal;
 }
 
+// 通过新对象{} 来 对源对象追加或覆盖属性
+// obj 源对象  {} 是引用传参，对象值会同时追或覆盖--直接用，不用去取返回的对象
+// appendObj 新对象  追加或覆盖属性
+//     {
+//         duration:0,
+//         currentTime:0,
+//         paused:0,
+//         buffered:0,
+//     }
+// isCover 如果属性已存在，是否覆盖 true: 覆盖--[默认]， false: 不覆盖-原值不变
+function objAppendProps(obj, appendObj, isCover) {
+    if(isCover !== false){
+        isCover = isCover || true;
+    }
+    if(typeof obj === "object"){
+        for(var prop_key in appendObj) {
+            // console.log('prop_key:' + prop_key, isHasAttr(obj, prop_key));
+            if(isHasAttr(obj, prop_key) && !isCover){
+                continue;
+            }
+            obj[prop_key] = appendObj[prop_key];
+        }
+    }
+    return obj;
+}
 
 /* 格式化金额 */
 function price_format(price){

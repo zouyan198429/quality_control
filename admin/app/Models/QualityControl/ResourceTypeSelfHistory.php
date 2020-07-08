@@ -72,4 +72,20 @@ class ResourceTypeSelfHistory extends ResourceTypeSelf
      * @var string
      */
     protected $table = 'resource_type_self_history';
+
+    /**
+     * 获取资源-二维
+     */
+    public function resources()
+    {
+        return $this->hasMany('App\Models\QualityControl\Resource', 'type_self_id_history', 'id');
+    }
+
+    /**
+     * 获取所属帐号--一维
+     */
+    public function resourcTtypeSelf()
+    {
+        return $this->belongsTo('App\Models\QualityControl\ResourceTypeSelf', 'type_self_id', 'id');
+    }
 }

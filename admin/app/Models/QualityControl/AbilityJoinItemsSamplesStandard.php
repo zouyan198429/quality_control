@@ -74,4 +74,11 @@ class AbilityJoinItemsSamplesStandard extends BasePublicModel
      */
     protected $table = 'ability_join_items_samples_standard';
 
+    /**
+     * 获取所属能力验证取样登记--一维
+     */
+    public function abilityJoinItemsSample()
+    {
+        return $this->belongsTo('App\Models\QualityControl\AbilityJoinItemsSamples', 'sample_id', 'id');
+    }
 }

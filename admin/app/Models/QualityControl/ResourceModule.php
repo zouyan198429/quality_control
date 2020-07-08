@@ -72,4 +72,19 @@ class ResourceModule extends BasePublicModel
      * @var string
      */
     protected $table = 'resource_module';
+    /**
+     * 获取所属资源分类--一维
+     */
+    public function resource()
+    {
+        return $this->belongsTo('App\Models\QualityControl\Resource', 'resource_id', 'id');
+    }
+
+    /**
+     * 获取所属资源分类历史--一维
+     */
+    public function resourceHistory()
+    {
+        return $this->belongsTo('App\Models\QualityControl\ResourceHistory', 'resource_id_history', 'id');
+    }
 }

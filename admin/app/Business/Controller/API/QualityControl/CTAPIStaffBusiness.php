@@ -25,20 +25,27 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
 //        '1' => '已激活',
 //    ];
 
-    // 拥有者类型1平台2老师4学生
+    // 拥有者类型1平台2企业4个人
     public static $adminType = [
         '1' => '平台',
-        '2' => '老师',
-        '4' => '学生',
+        '2' => '企业',
+        '4' => '个人',
     ];
+
+    // 是否完善资料1待完善2已完善
+    public static $isPerfectArr = [
+        '1' => '待完善',
+        '2' => '已完善',
+    ];
+
     // 是否超级帐户2否1是
-    public $issuper = [
+    public static $issuper = [
         '2' => '普通帐户',
         '1' => '超级帐户',
     ];
 
     // 审核状态1待审核2审核通过4审核不通过
-    public $openStatus = [
+    public static $openStatus = [
         '1' => '待审核',
         '2' => '审核通过',
         '4' => '审核不通过',
@@ -55,6 +62,51 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
         '0' => '未知',
         '1' => '男',
         '2' => '女',
+    ];
+
+    // 企业--是否独立法人1独立法人 2非独立法人
+    public static $companyIsLegalPersionArr = [
+        '1' => '独立法人',
+        '2' => '非独立法人',
+    ];
+
+    // 企业--企业类型1检测机构、2生产企业
+    public static $companyTypeArr = [
+        '1' => '检测机构',
+        '2' => '生产企业',
+    ];
+
+    // 企业--企业性质1企业法人 、2企业非法人、3事业法人、4事业非法人、5社团法人、6社团非法人、7机关法人、8机关非法人、9其它机构、10民办非企业单位、11个体 、12工会法人
+    public static $companyPropArr = [
+        '1' => '企业法人',
+        '2' => '企业非法人',
+        '3' => '事业法人',
+        '4' => '事业非法人',
+        '5' => '社团法人',
+        '6' => '社团非法人',
+        '7' => '机关法人',
+        '8' => '机关非法人',
+        '9' => '其它机构',
+        '10' => '民办非企业单位',
+        '11' => '个体',
+        '12' => '工会法人',
+    ];
+
+    // 企业--单位人数1、1-20、2、20-100、3、100-500、4、500以上
+    public static $companyPeoplesNumArr = [
+        '1' => '1-20',
+        '2' => '20-100',
+        '3' => '100-500',
+        '4' => '500以上',
+    ];
+
+    // 企业--会员等级1非会员  2会员  4理事  8常务理事   16理事长
+    public static $companyGradeArr = [
+        '1' => '非会员',
+        '2' => '会员',
+        '4' => '理事',
+        '8' => '常务理事',
+        '16' => '理事长',
     ];
 
     /**
@@ -76,13 +128,15 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
      *
      * @param Request $request 请求信息
      * @param Controller $controller 控制对象
-     * @param int $admin_type 拥有者类型1平台2老师4学生 可以写操作
+     * @param int $admin_type 拥有者类型1平台2企业4个人 可以写操作
      * @param int $login_type 登录方式 1 用户名密码 ；2 手机验证码
-     * @param int $checkType 需要判断验证的类型 1图形验证码 2手机验证码
+     * @param int $checkType 需要判断验证的类型 1图形验证码 2手机验证码 -- 可以多种都需要 (1 | 2)
+     * @param int $operateType 操作类型 1 注册登录[帐号不存在时，自动注册并登录；存在时登录]--注册并进行登录操作 2 注册【不进行登录操作】  4登录
+     * @param array $regInitData 注册时的初始值 一维数组  如：['issuper' => 2,'open_status' => 2,'account_status' => 1] --最优先有效
      * @return  array 用户数组
      * @author zouyan(305463219@qq.com)
      */
-    public static function loginCaptchaCode(Request $request, Controller $controller, $admin_type = 0, $login_type = 1, $checkType = 1){
+    public static function loginCaptchaCode(Request $request, Controller $controller, $admin_type = 0, $login_type = 1, $checkType = 1, $operateType = 4, $regInitData = []){
         // 1图形验证码
         if( ($checkType & 1) == 1 ){
             $captcha_code = CommonRequest::get($request, 'captcha_code');
@@ -102,7 +156,7 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
         $user_id = 0;
         $result = ajaxDataArr(0, null, '登录失败！');// 默认为失败
         try {
-            $result = static::login( $request,  $controller, $admin_type , $login_type, $user_id);
+            $result = static::login( $request,  $controller, $admin_type , $login_type, $user_id, $operateType, $regInitData);
         } catch ( \Exception $e) {
             $errMsg = $e->getMessage();
             throws($errMsg);
@@ -137,15 +191,17 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
      *
      * @param Request $request 请求信息
      * @param Controller $controller 控制对象
-     * @param int $admin_type 拥有者类型1平台2老师4学生 可以写操作
+     * @param int $admin_type 拥有者类型1平台2企业4个人 可以写操作
      * @param int $login_type 登录方式 1 用户名密码 [已经判断过验证码] ；2 手机验证码[已经判断过短信验证码]
      * @param int $user_id 登录成功后的用户id 默认为：0
+     * @param int $operateType 操作类型 1 注册登录[帐号不存在时，自动注册并登录；存在时登录]--注册并进行登录操作 2 注册【不进行登录操作】  4登录 -- 通过 用户类型
+     * @param array $regInitData 注册时的初始值 一维数组  如：['issuper' => 2,'open_status' => 2,'account_status' => 1] --最优先有效
      * @return  mixed 用户数组
      * @author zouyan(305463219@qq.com)
      */
-    public static function login(Request $request, Controller $controller, $admin_type = 0, $login_type = 1, &$user_id = 0){
+    public static function login(Request $request, Controller $controller, $admin_type = 0, $login_type = 1, &$user_id = 0, $operateType = 4, $regInitData = []){
 
-        $preKey = CommonRequest::get($request, 'preKey');// 0 小程序 1后台
+        $preKey = CommonRequest::get($request, 'preKey');// 0 小程序 1后台[默认]
         if(!is_numeric($preKey)) $preKey = 1;
 
 //        $preKey = Common::get($request, 'preKey');// 0 小程序 1后台
@@ -187,14 +243,17 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
             case 2:// 2 手机验证码
                 $mobile = CommonRequest::get($request, 'mobile');
                 if(strlen($mobile) <= 0) throws('手机号不能为空！');
-                if(strlen($mobile) < 11) throws('用户名长度不得少于11位！');
+                if(strlen($mobile) < 11) throws('手机号长度不得少于11位！');
                 // 根据手机号获得用户信息
                 $mobileQueryParams = $queryParams;
                 array_push($mobileQueryParams['where'], ['mobile', $mobile]);
                 $userInfo = static::getInfoQuery($request, $controller, '', 0, 1, $mobileQueryParams, $relations, 1);
+                // 如果是注册-- 用户信息已经存在
+                if($operateType == 2 && !empty($userInfo)){
+                    throws('此手机号已被注册！');
+                }
                 // 没有用户信息，则注册用户信息
-                if(empty($userInfo)){
-
+                if(empty($userInfo) && in_array($operateType, [1, 2])){
                     $infoData = [
                         'admin_type' => $admin_type,
                         'issuper' => 2,
@@ -202,9 +261,13 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
                         'account_status' => 1,
                         'mobile' => $mobile,
                     ];
+                    // 加入指定字段及值
+                    if(!empty($regInitData)) $infoData = array_merge($infoData, $regInitData);
                     $staff_id = 0;
                     $userInfo = static::replaceById($request, $controller, $infoData, $staff_id, [ 'judgeDataKey' => 'replace',], true);
                 }
+                // 注册操作--直接返回用户
+                if($operateType == 2) return $userInfo;
                 break;
             default:// 1 用户名密码
                 $admin_username = CommonRequest::get($request, 'admin_username');
@@ -212,11 +275,44 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
                 if(strlen($admin_username) <= 0 || strlen($admin_password) <= 0) throws('用户名或密码不能为空！');
                 if(strlen($admin_username) < 6) throws('用户名长度不得少于6位！');
                 if(strlen($admin_password) < 6) throws('密码长度不得少于6位！');
-                array_push($queryParams['where'], ['admin_username', $admin_username]);
+                array_push($queryParams['where'], ['admin_username', $admin_username]);// 必须放在最上面，下面注册判断用户名是否存在要用此条件
+                // 如果是注册：要判断用户名是否已经存在
+                if($operateType == 2){
+                    // 判断确认密码
+                    $repass = CommonRequest::get($request, 'repass');
+                    if(strlen($repass) < 6) throws('确认密码长度不得少于6位！');
+                    if($admin_password != $repass) throws("密码与确认密码不一致！");
+                    $userQueryParams = $queryParams;
+                    $userCompareInfo = static::getInfoQuery($request, $controller, '', 0, 1, $userQueryParams, [], 1);
+                    if(!empty($userCompareInfo)) throws('用户名已存在！');
+                }
                 array_push($queryParams['where'], ['admin_password', md5($admin_password)]);
+
                 $userInfo = static::getInfoQuery($request, $controller, '', 0, 1, $queryParams, $relations, 1);
+                // 如果是注册-- 用户信息已经存在
+                if($operateType == 2 && !empty($userInfo)){
+                    throws('用户名已存在！');
+                }
+                // 没有用户信息，则注册用户信息
+                if(empty($userInfo) && in_array($operateType, [1, 2])){
+                    $infoData = [
+                        'admin_type' => $admin_type,
+                        'issuper' => 2,
+                        'open_status' => 2,
+                        'account_status' => 1,
+                        'admin_username' => $admin_username,
+                        'admin_password' => $admin_password,
+                    ];
+                    // 加入指定字段及值
+                    if(!empty($regInitData)) $infoData = array_merge($infoData, $regInitData);
+                    $staff_id = 0;
+                    $userInfo = static::replaceById($request, $controller, $infoData, $staff_id, [ 'judgeDataKey' => 'replace',], true);
+                }
+                // 注册操作--直接返回用户id
+                if($operateType == 2) return $userInfo;
 
         }
+        // 进行登录操作
 
         if(empty($userInfo) || count($userInfo) <= 0 || empty($userInfo)){
             throws('用户名信息不存在！');
@@ -228,7 +324,20 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
         if($login_type == 1 && $admin_username != $userInfo['admin_username']) throws('用户名或密码有误！');
         if($login_type == 2 && $mobile != $userInfo['mobile']) throws('手机号有误！');
         if($userInfo['account_status'] == 2 ) throws('用户已冻结！');
-        if($userInfo['open_status'] != 2 ) throws('用户非审核通过！');
+        // 让企业和个的待审核状态可以先登录，再在首页做
+        if($userInfo['open_status'] == 1 &&
+            (
+                ( in_array($userInfo['admin_type'], [2, 4]) && $userInfo['is_perfect'] == 2)  ||
+                $userInfo['admin_type'] == 1
+            )
+         ) throws('审核中，请耐心等待！');
+        if($userInfo['open_status'] == 4 ) throws('审核未通过！');
+        if($userInfo['open_status'] != 2   &&
+            (
+                ( in_array($userInfo['admin_type'], [2, 4]) && $userInfo['is_perfect'] == 2) ||
+                $userInfo['admin_type'] == 1
+            )
+        ) throws('非审核通过！');
 //        $staffCity = $userInfo['city'] ?? [];// 城市分站
 //        $staffCityPartner = $userInfo['city_partner'] ?? [];// 城市代理
 //        $staffSeller = $userInfo['seller'] ?? [];// 商家
@@ -368,28 +477,43 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
         $admin_type = CommonRequest::getInt($request, 'admin_type');
         if($admin_type > 0 )  array_push($queryParams['where'], ['admin_type', '=', $admin_type]);
 
-        $account_status = CommonRequest::get($request, 'account_status');
-        if(is_numeric($account_status) && $account_status >= 0 )  array_push($queryParams['where'], ['account_status', '=', $account_status]);
+        $is_perfect = CommonRequest::getInt($request, 'is_perfect');
+        if($is_perfect > 0 )  array_push($queryParams['where'], ['is_perfect', '=', $is_perfect]);
 
-        $open_status = CommonRequest::get($request, 'open_status');
-        if(is_numeric($open_status) && $open_status >= 0 )  array_push($queryParams['where'], ['open_status', '=', $open_status]);
+        $account_status = CommonRequest::getInt($request, 'account_status');
+        if(is_numeric($account_status) && $account_status > 0 )  array_push($queryParams['where'], ['account_status', '=', $account_status]);
 
-        $issuper = CommonRequest::get($request, 'issuper');
-        if(is_numeric($issuper) && $issuper >= 0 )  array_push($queryParams['where'], ['issuper', '=', $issuper]);
+        $open_status = CommonRequest::getInt($request, 'open_status');
+        if(is_numeric($open_status) && $open_status > 0 )  array_push($queryParams['where'], ['open_status', '=', $open_status]);
+
+        $issuper = CommonRequest::getInt($request, 'issuper');
+        if(is_numeric($issuper) && $issuper > 0 )  array_push($queryParams['where'], ['issuper', '=', $issuper]);
 
         $sex = CommonRequest::get($request, 'sex');
-        if(is_numeric($sex) && $sex > 0 )  array_push($queryParams['where'], ['sex', '=', $sex]);
+        if(is_numeric($sex) && $sex >= 0 )  array_push($queryParams['where'], ['sex', '=', $sex]);
 
-        $class_id = CommonRequest::get($request, 'class_id');
-        if(is_numeric($class_id) && $class_id >= 0 )  array_push($queryParams['where'], ['class_id', '=', $class_id]);
+        $company_id = CommonRequest::getInt($request, 'company_id');
+        if(is_numeric($company_id) && $company_id > 0 )  array_push($queryParams['where'], ['company_id', '=', $company_id]);
+
+        $company_is_legal_persion = CommonRequest::getInt($request, 'company_is_legal_persion');
+        if(is_numeric($company_is_legal_persion) && $company_is_legal_persion > 0 )  array_push($queryParams['where'], ['company_is_legal_persion', '=', $company_is_legal_persion]);
+
+        $company_type = CommonRequest::getInt($request, 'company_type');
+        if(is_numeric($company_type) && $company_type > 0 )  array_push($queryParams['where'], ['company_type', '=', $company_type]);
+
+        $company_prop = CommonRequest::getInt($request, 'company_prop');
+        if(is_numeric($company_prop) && $company_prop > 0 )  array_push($queryParams['where'], ['company_prop', '=', $company_prop]);
+
+        $company_peoples_num = CommonRequest::getInt($request, 'company_peoples_num');
+        if(is_numeric($company_peoples_num) && $company_peoples_num > 0 )  array_push($queryParams['where'], ['company_peoples_num', '=', $company_peoples_num]);
+
+        $company_grade = CommonRequest::getInt($request, 'company_grade');
+        if(is_numeric($company_grade) && $company_grade > 0 )  array_push($queryParams['where'], ['company_grade', '=', $company_grade]);
 
         // 方法最下面
         // 注意重写方法中，如果不是特殊的like，同样需要调起此默认like方法--特殊的写自己特殊的方法
         static::joinListParamsLike($request, $controller, $queryParams, $notLog);
     }
-
-
-
 
     /**
      * 删除单条数据--1平台管理员数据删除
@@ -397,47 +521,51 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
      * @param Request $request 请求信息
      * @param Controller $controller 控制对象
      * @param int $notLog 是否需要登陆 0需要1不需要
-     * @return  array 列表数据
+     * @return  mixed
      * @author zouyan(305463219@qq.com)
      */
-    public static function delAjax(Request $request, Controller $controller, $notLog = 0)
-    {
-        $company_id = $controller->company_id;
-//         $id = CommonRequest::getInt($request, 'id');
-        // 超级管理员不能删除
-//        $info = static::getInfoDataBase($request, $controller,'', $id, [], '', $notLog);
-//        if( empty($info)) throws('记录不存在!');
-//        if($info['issuper'] == 1) throws('超级帐户不可删除!');
-        return static::delAjaxBase($request, $controller, '', $notLog);
-
-    }
+//    public static function delAjax(Request $request, Controller $controller, $notLog = 0)
+//    {
+//        $company_id = $controller->company_id;
+//
+//        return static::delAjaxBase($request, $controller, '', $notLog);
+//
+//    }
 
     /**
-     * 删除单条数据--2老师4学生 数据删除
+     * 删除单条数据--2企业4个人 数据删除
      *
      * @param Request $request 请求信息
      * @param Controller $controller 控制对象
      * @param int $adminType 类型1平台2老师4学生
-     * @param int $class_id 操作的班级id 可以为0：不指定具体的班级
+     * @param int $organize_id 操作的所属企业id 可以为0：没有所属企业--企业后台，操作用户时用来限制，只能操作自己企业的用户
      * @param int $notLog 是否需要登陆 0需要1不需要
      * @return  mixed 列表数据
      * @author zouyan(305463219@qq.com)
      */
-    public static function delDatasAjax(Request $request, Controller $controller, $adminType = 0, $class_id = 0, $notLog = 0)
+    public static function delDatasAjax(Request $request, Controller $controller, $adminType = 0, $organize_id = 0, $notLog = 0)
     {
-        //  类型1平台2老师4学生
+        //  类型1平台2企业4个人
+        if(!in_array($controller->user_type, [1, 2]))  throws('用户中心不可进行删除操作!');
 
         $company_id = $controller->company_id;
         $user_id = $controller->user_id;
         $id = CommonRequest::get($request, 'id');
+        if(is_array($id)) $id = implode(',', $id);
+        // 如果是单条删除
+        if(is_numeric($id) || (is_string($id) && strpos($id, ',') === false )){
+            $info = $controller->judgePower($request, $id);
+            if($info['issuper'] == 1) throws('超级帐户不可删除!');
+
+        }
         // 调用删除接口
         $apiParams = [
             'company_id' => $company_id,
             'id' => $id,
             'operate_staff_id' => $user_id,
             'admin_type' => $adminType,
-            'class_id' => $class_id,
-            'modifAddOprate' => 0,
+            'organize_id' => $organize_id,
+            'modifAddOprate' => 1,
         ];
         static::exeDBBusinessMethodCT($request, $controller, '',  'delById', $apiParams, $company_id, $notLog);
         return ajaxDataArr(1, $id, '');
@@ -845,22 +973,6 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
         return true;
     }
 
-    /**
-     * 获得列表数据时，对查询结果进行导出操作--有特殊的需要自己重写此方法
-     *
-     * @param Request $request 请求信息
-     * @param Controller $controller 控制对象
-     * @param array $data_list 初始数据  -- 二维数组
-     * @param int $notLog 是否需要登陆 0需要1不需要
-     * @return  null 列表数据
-     * @author zouyan(305463219@qq.com)
-     */
-    public static function importTemplateExcel(Request $request, Controller $controller, $data_list = [], $notLog = 0){
-        $data_list = [];
-        $headArr = ['student_number'=>'学号', 'real_name'=>'姓名', 'sex'=>'性别'];
-        ImportExport::export('','学生导入模版',$data_list,1, $headArr, 0, ['sheet_title' => '学生导入模版']);
-    }
-
     // ***********导入***开始************************************************************
     /**
      * 批量导入
@@ -875,19 +987,19 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
     {
         $company_id = $controller->company_id;
         $user_id = $controller->user_id;
-        $class_id = CommonRequest::get($request, 'class_id');
+        $organize_id = CommonRequest::get($request, 'company_id');
         $admin_type = CommonRequest::get($request, 'admin_type');
         // 调用批量添加接口
         // 调用新加或修改接口
         $apiParams = [
-            'class_id' => $class_id,
+            'organize_id' => $organize_id,
             'admin_type' => $admin_type,
             'saveData' => $saveData,
             'company_id' => $company_id,
             'operate_staff_id' => $user_id,
             'modifAddOprate' => 1,
         ];
-        $methodName = 'importStudents';
+        $methodName = 'importStaffs';
 //        if(isset($saveData['mini_openid']))  $methodName = 'replaceByIdWX';
         $result = static::exeDBBusinessMethodCT($request, $controller, '',  $methodName, $apiParams, $company_id, $notLog);
         return $result;
@@ -939,6 +1051,27 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
 //            '3' => 'maths',
 //            '4' => 'english',
 //        ];
+        $admin_type = CommonRequest::get($request, 'admin_type');
+        $headArr = [
+            '姓名' => 'real_name',
+            '性别[未知|男|女]' => 'sex',
+            '手机[唯一]' => 'mobile',
+            '座机电话' => 'tel',
+            'QQ\email\微信' => 'qq_number',
+            '用户名[唯一]' => 'admin_username',
+            '登录密码' => 'admin_password',
+            '审核状态[待审核|审核通过|审核不通过]' => 'open_status',
+            '冻结状态[正常|冻结]' => 'account_status',
+        ];
+        switch($admin_type){
+            case 2:
+                break;
+            case 4:
+                break;
+            default:
+                break;
+        }
+
         try{
             $dataArr = ImportExport::import($fileName, $dataStartRow, $headRowNum, $headArr);
         } catch ( \Exception $e) {
@@ -949,4 +1082,175 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
 
     // ***********导入***结束************************************************************
 
+    /**
+     * 开启 批量 或 单条数据
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param int $admin_type 类型1平台2企业4个人
+     * @param int $organize_id 操作的所属企业id 可以为0：没有所属企业--企业后台，操作用户时用来限制，只能操作自己企业的用户
+     * @param string $id 记录id，多个用逗号分隔
+     * @param int $open_status 操作 状态 2审核通过     4审核不通过
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  int 修改的数量   array 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function openAjax(Request $request, Controller $controller, $admin_type = 1, $organize_id = 0, $id = 0, $open_status = 2, $notLog = 0)
+    {
+        $company_id = $controller->company_id;
+        $user_id = $controller->user_id;
+        // 调用新加或修改接口
+        $apiParams = [
+            'company_id' => $company_id,
+            'admin_type' => $admin_type,
+            'organize_id' => $organize_id,
+            'id' => $id,
+            'open_status' => $open_status,
+            'operate_staff_id' => $user_id,
+            'modifAddOprate' => 0,
+        ];
+        $modifyNum = static::exeDBBusinessMethodCT($request, $controller, '',  'openStatusById', $apiParams, $company_id, $notLog);
+        return $modifyNum;
+        // return static::delAjaxBase($request, $controller, '', $notLog);
+
+    }
+
+    /**
+     * 冻结/解冻批量 或 单条数据
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param int $admin_type 类型1平台2企业4个人
+     * @param int $organize_id 操作的所属企业id 可以为0：没有所属企业--企业后台，操作用户时用来限制，只能操作自己企业的用户
+     * @param string $id 记录id，多个用逗号分隔
+     * @param int $account_status 操作 状态 1正常--解冻操作； 2冻结--冻结操作
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  int 修改的数量   //   array 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function accountStatusAjax(Request $request, Controller $controller, $admin_type = 1, $organize_id = 0, $id = 0, $account_status = 2, $notLog = 0)
+    {
+        $company_id = $controller->company_id;
+        $user_id = $controller->user_id;
+        // 调用新加或修改接口
+        $apiParams = [
+            'company_id' => $company_id,
+            'admin_type' => $admin_type,
+            'organize_id' => $organize_id,
+            'id' => $id,
+            'account_status' => $account_status,
+            'operate_staff_id' => $user_id,
+            'modifAddOprate' => 0,
+        ];
+        $modifyNum = static::exeDBBusinessMethodCT($request, $controller, '',  'accountStatusById', $apiParams, $company_id, $notLog);
+
+        return $modifyNum;
+        // return static::delAjaxBase($request, $controller, '', $notLog);
+
+    }
+
+    /**
+     * 删除批量 或 单条数据---只能删除管理员
+     * 大后台: 管理员、企业 、 个人删除
+     * 企业后台： 个人删除
+     * 个人后台：无删除
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param int $admin_type 类型1平台2企业4个人
+     * @param string $id 记录id，多个用逗号分隔
+     * @param int $company_id 企业id--如果删除的是个人，且是 企业操作的时
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  int 修改的数量   //   array 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function delByIds(Request $request, Controller $controller, $admin_type = 1, $id = 0, $company_id = 0, $notLog = 0){
+
+        // 如果是单条删除
+        if(is_numeric($id) || (is_string($id) && strpos($id, ',') === false )){
+            $info = $controller->judgePower($request, $id);
+            if($info['issuper'] == 1) throws('超级帐户不可删除!');
+        }
+        if($admin_type != 1)  throws('只能对管理员进行操作!');
+        // 根据Id删除数据
+        // return CTAPIStaffBusiness::delAjax($request, $controller);
+        // 根据条件删除数据
+        $queryParams = [
+            'where' => [
+                // ['company_id', $company_id],
+                ['admin_type', $admin_type],
+                ['issuper', '<>', 1],
+            ],
+//            'select' => [
+//                'id','company_id','real_name'
+//            ],
+            // 'orderBy' => ['sort_num'=>'desc','id'=>'desc'],
+        ];
+        // 加入 id
+        Tool::appendParamQuery($queryParams, $id, 'id');
+        // 删除的是个人， 是企业后台--操作的-- 企业只能删除自己的员工
+        if($admin_type == 4 && $controller->user_type == 2){
+            if(!isset($queryParams['where'])) $queryParams['where'] = [];
+            array_push($queryParams['where'], ['company_id', $company_id]);// $controller->user_id
+        }
+        $delResult = CTAPIStaffBusiness::delRecordByQuery($request, $controller, '', $queryParams, 0);
+    }
+
+
+    /**
+     * 获得列表数据时，对查询结果进行导出操作--有特殊的需要自己重写此方法
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $queryParams 已有的查询条件数组
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  null 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function exportListData(Request $request, Controller $controller, &$data_list, $notLog = 0){
+            $admin_type = CommonRequest::get($request, 'admin_type');
+            $headArr = ['admin_username'=>'用户名', 'issuper_text'=>'角色', 'real_name'=>'姓名', 'sex_text'=>'性别', 'mobile'=>'手机号',
+                 'tel'=>'座机电话', 'qq_number'=>'QQ\email\微信', 'lastlogintime'=>'上次登录', 'created_at'=>'创建时间'];
+            $fileName = '系统管理员';
+            $sheetTitle = '系统管理员';
+            switch($admin_type){
+                case 2:
+                    break;
+                case 4:
+                    break;
+                default:
+                    break;
+            }
+            ImportExport::export('',$fileName,$data_list,1, $headArr, 0, ['sheet_title' => $sheetTitle]);
+    }
+
+    /**
+     * 获得列表数据时，对查询结果进行导出操作--有特殊的需要自己重写此方法
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $data_list 初始数据  -- 二维数组
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  null 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function importTemplateExcel(Request $request, Controller $controller, $data_list = [], $notLog = 0){
+        $data_list = [];
+        $headArr = ['real_name'=>'姓名', 'sex'=>'性别[未知|男|女]', 'mobile'=>'手机[唯一]', 'tel'=>'座机电话', 'qq_number'=>'QQ\email\微信'
+            , 'admin_username'=>'用户名[唯一]', 'admin_password'=>'登录密码', 'open_status'=>'审核状态[待审核|审核通过|审核不通过]'
+            , 'account_status'=>'冻结状态[正常|冻结]'];
+
+        $admin_type = CommonRequest::get($request, 'admin_type');
+        $fileName = '系统管理员导入模版';
+        $sheetTitle = '系统管理员';
+        switch($admin_type){
+            case 2:
+                break;
+            case 4:
+                break;
+            default:
+                break;
+        }
+        ImportExport::export('',$fileName, $data_list,1, $headArr, 0, ['sheet_title' => $sheetTitle]);
+    }
 }

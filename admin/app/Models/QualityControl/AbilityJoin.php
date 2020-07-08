@@ -74,4 +74,100 @@ class AbilityJoin extends BasePublicModel
      */
     protected $table = 'ability_join';
 
+    // 拥有者类型1平台2企业4个人
+    public $adminTypeArr = [
+        '1' => '平台',
+        '2' => '企业',
+        '4' => '个人',
+    ];
+
+    // 状态(1已报名;2已取样;4已完成【已验证结果】【如果有有问题、不满意 --还可以再取样--进入已取样状态--- 可以打印证书;
+    // 8已完成--不可再修改【打印证书后，不可再操作或大后台点《公布结果》后子项都已完成状态】)
+    public $statusArr = [
+        '1' => '已报名',
+        '2' => '已取样',
+        '4' => '已评定',
+        '8' => '已完成',
+    ];
+
+    // 证书是否打印 1未打印 2 已打印
+    public $isPrintArr = [
+        '1' => '未打印',
+        '2' => '已打印',
+    ];
+
+    // 证书是否领取1未领取 2 已领取
+    public $isGrantArr = [
+        '1' => '未领取',
+        '2' => '已领取',
+    ];
+
+    // 表里没有的字段
+    protected $appends = ['admin_type_text', 'status_text', 'is_print_text', 'is_grant_text'];
+
+
+    /**
+     * 获取用户的类型文字
+     *
+     * @return string
+     */
+    public function getAdminTypeTextAttribute()
+    {
+        return $this->adminTypeArr[$this->admin_type] ?? '';
+    }
+
+    /**
+     * 获取拥有者类型文字
+     *
+     * @return string
+     */
+    public function getStatusTextAttribute()
+    {
+        return $this->statusArr[$this->status] ?? '';
+    }
+
+    /**
+     * 获取证书是否打印文字
+     *
+     * @return string
+     */
+    public function getIsPrintTextAttribute()
+    {
+        return $this->isPrintArr[$this->is_print] ?? '';
+    }
+
+    /**
+     * 获取证书是否领取文字
+     *
+     * @return string
+     */
+    public function getIsGrantTextAttribute()
+    {
+        return $this->isGrantArr[$this->is_grant] ?? '';
+    }
+
+    /**
+     * 获取能力验证操作日志-二维
+     */
+    public function abilityJoinLogs()
+    {
+        return $this->hasMany('App\Models\QualityControl\AbilityJoinLogs', 'ability_join_id', 'id');
+    }
+
+    /**
+     * 获取能力验证报名项-二维
+     */
+    public function abilityJoinItems()
+    {
+        return $this->hasMany('App\Models\QualityControl\AbilityJoinItems', 'ability_join_id', 'id');
+    }
+
+    /**
+     * 获取所属帐号--一维
+     */
+    public function staff()
+    {
+        return $this->belongsTo('App\Models\QualityControl\Staff', 'staff_id', 'id');
+    }
+
 }

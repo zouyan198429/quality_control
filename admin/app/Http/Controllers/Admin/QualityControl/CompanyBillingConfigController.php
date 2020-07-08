@@ -8,7 +8,7 @@ use App\Services\Request\CommonRequest;
 use App\Services\Tool;
 use Illuminate\Http\Request;
 
-class CompanyBillingConfigController extends WorksController
+class CompanyBillingConfigController extends BasicController
 {
     /**
      * 首页
@@ -71,20 +71,20 @@ class CompanyBillingConfigController extends WorksController
 
     /**
      * @OA\Get(
-     *     path="/api/admin/QualityControl/rrr_dddd/ajax_info",
-     *     tags={"用户信息-开票配置"},
+     *     path="/api/admin/company_billing_config/ajax_info",
+     *     tags={"大后台-用户信息-开票配置"},
      *     summary="开票配置--详情",
      *     description="根据单个id,查询详情记录......",
      *     operationId="adminQualityControlCompanyBillingConfigAjax_info",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_rrr_dddd_id_required"),
-     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_info_rrr_dddd"),
+     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_company_billing_config_id_required"),
+     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_info_company_billing_config"),
      *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
      *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
-     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_rrr_dddd"}
+     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_company_billing_config"}
      */
     /**
      * ajax获得详情数据
@@ -104,20 +104,20 @@ class CompanyBillingConfigController extends WorksController
 
     /**
      * @OA\Post(
-     *     path="/api/admin/QualityControl/rrr_dddd/ajax_save",
-     *     tags={"用户信息-开票配置"},
+     *     path="/api/admin/company_billing_config/ajax_save",
+     *     tags={"大后台-用户信息-开票配置"},
      *     summary="开票配置--新加/修改",
      *     description="根据单个id,新加/修改记录(id>0:修改；id=0:新加)......",
      *     operationId="adminQualityControlCompanyBillingConfigAjax_save",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_rrr_dddd_id_required"),
+     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_company_billing_config_id_required"),
      *     @OA\Response(response=200,ref="#/components/responses/common_Response_modify"),
      *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
      *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
-     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_rrr_dddd"}
+     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_company_billing_config"}
      */
 
     /**
@@ -155,20 +155,20 @@ class CompanyBillingConfigController extends WorksController
 
     /**
      * @OA\Get(
-     *     path="/api/admin/QualityControl/rrr_dddd/ajax_alist",
-     *     tags={"用户信息-开票配置"},
+     *     path="/api/admin/company_billing_config/ajax_alist",
+     *     tags={"大后台-用户信息-开票配置"},
      *     summary="开票配置--列表",
      *     description="开票配置--列表......",
      *     operationId="adminQualityControlCompanyBillingConfigAjax_alist",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_rrr_dddd_id_optional"),
-     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_list_rrr_dddd"),
+     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_company_billing_config_id_optional"),
+     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_list_company_billing_config"),
      *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
      *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
-     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_rrr_dddd"}
+     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_company_billing_config"}
      */
     /**
      * ajax获得列表数据
@@ -226,20 +226,20 @@ class CompanyBillingConfigController extends WorksController
 
     /**
      * @OA\Post(
-     *     path="/api/admin/QualityControl/rrr_dddd/ajax_del",
-     *     tags={"用户信息-开票配置"},
+     *     path="/api/admin/company_billing_config/ajax_del",
+     *     tags={"大后台-用户信息-开票配置"},
      *     summary="开票配置--删除",
      *     description="根据单个id,删除记录......",
      *     operationId="adminQualityControlCompanyBillingConfigAjax_del",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_rrr_dddd_id_required"),
+     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_company_billing_config_id_required"),
      *     @OA\Response(response=200,ref="#/components/responses/common_Response_del"),
      *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
      *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
-     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_rrr_dddd"}
+     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_company_billing_config"}
      */
     /**
      * 子帐号管理-删除

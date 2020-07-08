@@ -70,21 +70,192 @@ $api->version('v1', function ($api) {
         $api->get('excel/import','ExcelController@import'); // 导入
         $api->get('excel/import_test','ExcelController@import_test'); // 导入 - 测试
 
-        // ---小狗工具
         // ------后台
 
-        // 验证码
-        $api->get('admin/ajax_captcha', 'Admin\QualityControl\IndexController@ajax_captcha');// api生成验证码
-        $api->post('admin/ajax_captcha_verify', 'Admin\QualityControl\IndexController@ajax_captcha_verify');// api生成验证码-验证
+        // 验证码 -- ok
+//        $api->get('admin/ajax_captcha', 'Admin\QualityControl\IndexController@ajax_captcha');// api生成验证码
+//        $api->post('admin/ajax_captcha_verify', 'Admin\QualityControl\IndexController@ajax_captcha_verify');// api生成验证码-验证
+        $api->get('admin/ajax_captcha', 'Admin\QualityControl\CaptchaController@ajax_captcha');// api生成验证码--ok
+        $api->post('admin/ajax_captcha_verify', 'Admin\QualityControl\CaptchaController@ajax_captcha_verify');// api生成验证码-验证--ok
+
+        // 手机验证码 -- ok
+        $api->any('admin/ajax_send_mobile_vercode', 'Admin\QualityControl\SMSController@ajax_send_mobile_vercode');// 发送手机验证码--ok
+        $api->any('admin/ajax_mobile_code_verify', 'Admin\QualityControl\SMSController@ajax_mobile_code_verify');// 发送手机验证码-验证--ok
 
         //// 登陆
-        $api->any('admin/ajax_login', 'Admin\QualityControl\IndexController@ajax_login');// 登陆-
-        $api->post('admin/ajax_password_save', 'Admin\QualityControl\IndexController@ajax_password_save');// 修改密码
-        $api->any('admin/ajax_info_save', 'Admin\QualityControl\IndexController@ajax_info_save');// 修改设置
+        $api->any('admin/ajax_login', 'Admin\QualityControl\IndexController@ajax_login');// 登陆--ok
+        $api->any('admin/ajax_login_sms', 'Admin\QualityControl\IndexController@ajax_login_sms');// 登陆-手机短信验证码--ok
+        $api->post('admin/ajax_password_save', 'Admin\QualityControl\IndexController@ajax_password_save');// 修改密码--ok
+        $api->any('admin/ajax_info_save', 'Admin\QualityControl\IndexController@ajax_info_save');// 修改设置--ok
 
         // 上传图片
         $api->post('admin/QualityControl/upload', 'Admin\QualityControl\UploadController@index');
         $api->post('admin/QualityControl/upload/ajax_del', 'Admin\QualityControl\UploadController@ajax_del');// 根据id删除文件
+
+        // 系统管理员
+        $api->any('admin/staff/ajax_alist', 'Admin\QualityControl\StaffController@ajax_alist');//ajax获得列表数据
+        $api->any('admin/staff/ajax_del', 'Admin\QualityControl\StaffController@ajax_del');// 删除
+        $api->post('admin/staff/ajax_save', 'Admin\QualityControl\StaffController@ajax_save');// 新加/修改
+        $api->post('admin/staff/ajax_get_child', 'Admin\QualityControl\StaffController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/staff/ajax_get_areachild', 'Admin\QualityControl\StaffController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/staff/ajax_import_staff','Admin\QualityControl\StaffController@ajax_import'); // 导入员工
+
+        $api->post('admin/staff/import', 'Admin\QualityControl\StaffController@import');// 导入excel
+        $api->post('admin/staff/ajax_get_ids', 'Admin\QualityControl\StaffController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        $api->any('admin/staff/ajax_open', 'Admin\QualityControl\StaffController@ajax_open');// 审核操作(通过/不通过)
+        $api->post('admin/staff/ajax_frozen', 'Admin\QualityControl\StaffController@ajax_frozen');// 操作(冻结/解冻)
+
+        // 企业帐号管理
+        $api->any('admin/company/ajax_alist', 'Admin\QualityControl\CompanyController@ajax_alist');//ajax获得列表数据
+        $api->any('admin/company/ajax_del', 'Admin\QualityControl\CompanyController@ajax_del');// 删除
+        $api->post('admin/company/ajax_save', 'Admin\QualityControl\CompanyController@ajax_save');// 新加/修改
+        $api->post('admin/company/ajax_get_child', 'Admin\QualityControl\CompanyController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/company/ajax_get_areachild', 'Admin\QualityControl\CompanyController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/company/ajax_import_staff','Admin\QualityControl\CompanyController@ajax_import'); // 导入员工
+
+        $api->post('admin/company/import', 'Admin\QualityControl\CompanyController@import');// 导入excel
+        $api->post('admin/company/ajax_get_ids', 'Admin\QualityControl\CompanyController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        $api->any('admin/company/ajax_open', 'Admin\QualityControl\CompanyController@ajax_open');// 审核操作(通过/不通过)
+        $api->post('admin/company/ajax_frozen', 'Admin\QualityControl\CompanyController@ajax_frozen');// 操作(冻结/解冻)
+
+        // 个人帐号管理
+        $api->any('admin/user/ajax_alist', 'Admin\QualityControl\UserController@ajax_alist');//ajax获得列表数据
+        $api->any('admin/user/ajax_del', 'Admin\QualityControl\UserController@ajax_del');// 删除
+        $api->post('admin/user/ajax_save', 'Admin\QualityControl\UserController@ajax_save');// 新加/修改
+        $api->post('admin/user/ajax_get_child', 'Admin\QualityControl\UserController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/user/ajax_get_areachild', 'Admin\QualityControl\UserController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/user/ajax_import_staff','Admin\QualityControl\UserController@ajax_import'); // 导入员工
+
+        $api->post('admin/user/import', 'Admin\QualityControl\UserController@import');// 导入excel
+        $api->post('admin/user/ajax_get_ids', 'Admin\QualityControl\UserController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        $api->any('admin/user/ajax_open', 'Admin\QualityControl\UserController@ajax_open');// 审核操作(通过/不通过)
+        $api->post('admin/user/ajax_frozen', 'Admin\QualityControl\UserController@ajax_frozen');// 操作(冻结/解冻)
+
+        // 行业[一级分类]
+        $api->any('admin/industry/ajax_alist', 'Admin\QualityControl\IndustryController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/industry/ajax_del', 'Admin\QualityControl\IndustryController@ajax_del');// 删除
+        $api->post('admin/industry/ajax_save', 'Admin\QualityControl\IndustryController@ajax_save');// 新加/修改
+        $api->post('admin/industry/ajax_get_child', 'Admin\QualityControl\IndustryController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/industry/ajax_get_areachild', 'Admin\QualityControl\IndustryController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/industry/ajax_import_staff','Admin\QualityControl\IndustryController@ajax_import'); // 导入员工
+
+        $api->post('admin/industry/import', 'Admin\QualityControl\IndustryController@import');// 导入excel
+        $api->post('admin/industry/ajax_get_ids', 'Admin\QualityControl\IndustryController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        // 城市[一级分类]
+        $api->any('admin/citys/ajax_alist', 'Admin\QualityControl\CitysController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/citys/ajax_del', 'Admin\QualityControl\CitysController@ajax_del');// 删除
+        $api->post('admin/citys/ajax_save', 'Admin\QualityControl\CitysController@ajax_save');// 新加/修改
+        $api->post('admin/citys/ajax_get_child', 'Admin\QualityControl\CitysController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/citys/ajax_get_areachild', 'Admin\QualityControl\CitysController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/citys/ajax_import_staff','Admin\QualityControl\CitysController@ajax_import'); // 导入员工
+
+        $api->post('admin/citys/import', 'Admin\QualityControl\CitysController@import');// 导入excel
+        $api->post('admin/citys/ajax_get_ids', 'Admin\QualityControl\CitysController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        // 老师登录验证码 验证码
+        $api->any('admin/sms_code/ajax_alist', 'Admin\QualityControl\SmsCodeController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/sms_code/ajax_del', 'Admin\QualityControl\SmsCodeController@ajax_del');// 删除
+        $api->post('admin/sms_code/ajax_save', 'Admin\QualityControl\SmsCodeController@ajax_save');// 新加/修改
+        $api->post('admin/sms_code/ajax_get_child', 'Admin\QualityControl\SmsCodeController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/sms_code/ajax_get_areachild', 'Admin\QualityControl\SmsCodeController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/sms_code/ajax_import_staff','Admin\QualityControl\SmsCodeController@ajax_import'); // 导入员工
+
+        $api->post('admin/sms_code/import', 'Admin\QualityControl\SmsCodeController@import');// 导入excel
+        $api->post('admin/sms_code/ajax_get_ids', 'Admin\QualityControl\SmsCodeController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        // 资质证书类型[一级分类]
+        $api->any('admin/company_certificate_type/ajax_alist', 'Admin\QualityControl\CompanyCertificateTypeController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/company_certificate_type/ajax_del', 'Admin\QualityControl\CompanyCertificateTypeController@ajax_del');// 删除
+        $api->post('admin/company_certificate_type/ajax_save', 'Admin\QualityControl\CompanyCertificateTypeController@ajax_save');// 新加/修改
+        $api->post('admin/company_certificate_type/ajax_get_child', 'Admin\QualityControl\CompanyCertificateTypeController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/company_certificate_type/ajax_get_areachild', 'Admin\QualityControl\CompanyCertificateTypeController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/company_certificate_type/ajax_import_staff','Admin\QualityControl\CompanyCertificateTypeController@ajax_import'); // 导入员工
+
+        $api->post('admin/company_certificate_type/import', 'Admin\QualityControl\CompanyCertificateTypeController@import');// 导入excel
+        $api->post('admin/company_certificate_type/ajax_get_ids', 'Admin\QualityControl\CompanyCertificateTypeController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        // 能力验证行业分类[一级分类]
+        $api->any('admin/ability_type/ajax_alist', 'Admin\QualityControl\AbilityTypeController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/ability_type/ajax_del', 'Admin\QualityControl\AbilityTypeController@ajax_del');// 删除
+        $api->post('admin/ability_type/ajax_save', 'Admin\QualityControl\AbilityTypeController@ajax_save');// 新加/修改
+        $api->post('admin/ability_type/ajax_get_child', 'Admin\QualityControl\AbilityTypeController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/ability_type/ajax_get_areachild', 'Admin\QualityControl\AbilityTypeController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/ability_type/ajax_import_staff','Admin\QualityControl\AbilityTypeController@ajax_import'); // 导入员工
+
+        $api->post('admin/ability_type/import', 'Admin\QualityControl\AbilityTypeController@import');// 导入excel
+        $api->post('admin/ability_type/ajax_get_ids', 'Admin\QualityControl\AbilityTypeController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        // 企业后台 company
+        // 验证码 -- ok
+//        $api->get('company/ajax_captcha', 'Company\QualityControl\IndexController@ajax_captcha');// api生成验证码
+//        $api->post('company/ajax_captcha_verify', 'Company\QualityControl\IndexController@ajax_captcha_verify');// api生成验证码-验证
+        $api->get('company/ajax_captcha', 'Company\QualityControl\CaptchaController@ajax_captcha');// api生成验证码--ok
+        $api->post('company/ajax_captcha_verify', 'Company\QualityControl\CaptchaController@ajax_captcha_verify');// api生成验证码-验证--ok
+
+        // 手机验证码 -- ok
+        $api->any('company/ajax_send_mobile_vercode', 'Company\QualityControl\SMSController@ajax_send_mobile_vercode');// 发送手机验证码--ok
+        $api->any('company/ajax_mobile_code_verify', 'Company\QualityControl\SMSController@ajax_mobile_code_verify');// 发送手机验证码-验证--ok
+
+        //// 登陆
+        $api->any('company/ajax_login', 'Company\QualityControl\IndexController@ajax_login');// 登陆--ok
+        $api->any('company/ajax_login_sms', 'Company\QualityControl\IndexController@ajax_login_sms');// 登陆-手机短信验证码--ok
+        $api->post('company/ajax_password_save', 'Company\QualityControl\IndexController@ajax_password_save');// 修改密码--ok
+        $api->any('company/ajax_info_save', 'Company\QualityControl\IndexController@ajax_info_save');// 修改设置--ok
+
+        // 上传图片
+        $api->post('company/QualityControl/upload', 'Company\QualityControl\UploadController@index');
+        $api->post('company/QualityControl/upload/ajax_del', 'Company\QualityControl\UploadController@ajax_del');// 根据id删除文件
+
+        // 用户中心 user
+        // 验证码 -- ok
+//        $api->get('user/ajax_captcha', 'User\QualityControl\IndexController@ajax_captcha');// api生成验证码
+//        $api->post('user/ajax_captcha_verify', 'User\QualityControl\IndexController@ajax_captcha_verify');// api生成验证码-验证
+        $api->get('user/ajax_captcha', 'User\QualityControl\CaptchaController@ajax_captcha');// api生成验证码--ok
+        $api->post('user/ajax_captcha_verify', 'User\QualityControl\CaptchaController@ajax_captcha_verify');// api生成验证码-验证--ok
+
+        // 手机验证码 -- ok
+        $api->any('user/ajax_send_mobile_vercode', 'User\QualityControl\SMSController@ajax_send_mobile_vercode');// 发送手机验证码--ok
+        $api->any('user/ajax_mobile_code_verify', 'User\QualityControl\SMSController@ajax_mobile_code_verify');// 发送手机验证码-验证--ok
+
+        //// 登陆
+        $api->any('user/ajax_login', 'User\QualityControl\IndexController@ajax_login');// 登陆--ok
+        $api->any('user/ajax_login_sms', 'User\QualityControl\IndexController@ajax_login_sms');// 登陆-手机短信验证码--ok
+        $api->post('user/ajax_password_save', 'User\QualityControl\IndexController@ajax_password_save');// 修改密码--ok
+        $api->any('user/ajax_info_save', 'User\QualityControl\IndexController@ajax_info_save');// 修改设置--ok
+
+        // 上传图片
+        $api->post('user/QualityControl/upload', 'User\QualityControl\UploadController@index');
+        $api->post('user/QualityControl/upload/ajax_del', 'User\QualityControl\UploadController@ajax_del');// 根据id删除文件
+
+        // 前台 web
+        // 验证码 -- ok
+//        $api->get('web/ajax_captcha', 'Web\QualityControl\IndexController@ajax_captcha');// api生成验证码
+//        $api->post('web/ajax_captcha_verify', 'Web\QualityControl\IndexController@ajax_captcha_verify');// api生成验证码-验证
+        $api->get('web/ajax_captcha', 'Web\QualityControl\CaptchaController@ajax_captcha');// api生成验证码--ok
+        $api->post('web/ajax_captcha_verify', 'Web\QualityControl\CaptchaController@ajax_captcha_verify');// api生成验证码-验证--ok
+
+        // 手机验证码 -- ok
+        $api->any('web/ajax_send_mobile_vercode', 'Web\QualityControl\SMSController@ajax_send_mobile_vercode');// 发送手机验证码--ok
+        $api->any('web/ajax_mobile_code_verify', 'Web\QualityControl\SMSController@ajax_mobile_code_verify');// 发送手机验证码-验证--ok
+
+        //// 登陆
+//        $api->any('web/ajax_login', 'Web\QualityControl\IndexController@ajax_login');// 登陆--ok
+//        $api->post('web/ajax_password_save', 'Web\QualityControl\IndexController@ajax_password_save');// 修改密码--ok
+//        $api->any('web/ajax_info_save', 'Web\QualityControl\IndexController@ajax_info_save');// 修改设置--ok
+
+        // 登录 注册
+        $api->any('web/ajax_reg', 'Web\QualityControl\HomeController@ajax_reg');// 注册
+        $api->any('web/ajax_perfect_company', 'Web\QualityControl\HomeController@ajax_perfect_company');// 注册-补充企业资料
+        $api->any('web/ajax_perfect_user', 'Web\QualityControl\HomeController@ajax_perfect_user');// 注册-补充用户资料
+
+        // 上传图片
+        $api->post('web/QualityControl/upload', 'Web\QualityControl\UploadController@index');
+        $api->post('web/QualityControl/upload/ajax_del', 'Web\QualityControl\UploadController@ajax_del');// 根据id删除文件
+
 //        Route::middleware('auth:api')->get('/user', function (Request $request) {
 //            return $request->user();
 //        });

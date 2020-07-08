@@ -113,7 +113,7 @@ class SendSMS
         }
 
         $modelObj = null;
-        $model_name = 'DogTools\SmsCode';
+        $model_name = config('public.dbModelsDir') . '\SmsCode';// 'DogTools\SmsCode';
 
         CommonAPIFromDBBusiness::exeUpdate($saveData, $smsQueryParams, $model_name, $modelObj);
         return true;

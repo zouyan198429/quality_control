@@ -74,4 +74,19 @@ class ProjectStandards extends BasePublicModel
      */
     protected $table = 'project_standards';
 
+    /**
+     * 获取能力验证报名项-二维
+     */
+    public function abilityJoinItems()
+    {
+        return $this->hasMany('App\Models\QualityControl\AbilityJoinItems', 'project_standard_id', 'id');
+    }
+
+    /**
+     * 获取所属能力验证-一维
+     */
+    public function ability()
+    {
+        return $this->belongsTo('App\Models\QualityControl\Abilitys', 'ability_id', 'id');
+    }
 }

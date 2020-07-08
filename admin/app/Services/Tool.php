@@ -1054,10 +1054,12 @@ class Tool
         $key = null;// 键名
         $pre = '';// 前缀
         $need_save_key = false; // 是否需要重新获得key
+        // 如果有用的浏览器，则获取保存在session中的redis键值
         if($save_session){// 使用seesion
 //            if (!session_id()) session_start();
 //            $key = $_SESSION[$session_key] ?? '';// session 中的key
             $key = SessionCustom::get($session_key, true);
+            // 没有redis 中的键值
             if(empty($key)){
                 $key = null;
                 $need_save_key = true;
@@ -1280,6 +1282,51 @@ class Tool
             if(is_null($v) || trim($v) === '') unset($array[$k]);
         }
         return $array;
+    }
+
+    /**
+     * 对一维数数值进行格式化处理，如果是字符，会自动转为数组
+     *
+     * @param string/array $paramVals 参数的值 数组-一维或字符 不是有效的字符或数组【源变量$paramVals设置为空数组】
+     * @param array $excludeVals 需要除外的参数值--不加入查询条件 [0, '0', ''] --默认；  ['']
+     * @param string $valsSeparator 如果是多值字符串，多个值的分隔符;默认逗号 ,
+     * @param int $operate_type 操作类型 1 每个元素去前后空；2值去重；4取差；8重置数组下标，0，1，2...
+     * @return  boolean true:有数据项  false:无数据或不是有效的字符或数组【源变量$paramVals设置为空数组】
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function formatOneArrVals(&$paramVals = '', $excludeVals = [0, '0', ''], $valsSeparator = ',', $operate_type = (1 | 2 | 4 | 8)){
+        if(!is_array($paramVals) && !is_string($paramVals)) {
+            $paramVals = [];
+            return false;
+        }
+        // 字符串，则转为数组 ；
+        if(!is_array($paramVals))  $paramVals = explode($valsSeparator, $paramVals);
+
+        // 1每个元素去前后空
+        if(($operate_type & 1) == 1){
+            $paramVals = array_map("trim",$paramVals);
+        }
+
+        // 2并去重
+        if(($operate_type & 2) == 2){
+            $paramVals = array_unique($paramVals);
+        }
+
+        // 4取差
+        if(($operate_type & 4) == 4 && !empty($excludeVals)){
+            $paramVals = array_diff($paramVals, $excludeVals);
+        }
+
+        // 8重置数组下标，0，1，2...
+        if(($operate_type & 8) == 8){
+            $paramVals = array_values($paramVals);
+        }
+
+        // 空数组不处理
+        $valNums = count($paramVals);
+        if ($valNums <= 0 ) return false;
+
+        return true;
     }
 
     /**
@@ -2561,6 +2608,13 @@ class Tool
      *   ];
      * @param string $errDo 错误处理方式 1 throws 2直接返回错误
      * @return mixed array 或不为空的字符[没有可能性]  错误信息 ，没有错，则为空
+     *   只可能返回这样的数组 ：下标 firstErr ：为 '' ;或 errMsg为空数组，就代表没有错误
+     *   可能是 false 或 null ：代表没有错
+     *   $errs = [
+     *       'firstErr' => '',// // 第一条错误信息
+     *       'errMsg' => [],// 所有错误数组 一维数组
+     *       'varErrMsg' => [],// 如果有 var_name 验证变量名[可为空]的，按此下标分组错误信息
+     *   ];
      * @author zouyan(305463219@qq.com)
      */
     public static function dataValid($valiDateParam = [], $errDo = 1) {
@@ -2577,8 +2631,14 @@ class Tool
             // output_error($error);
             // 如果是json格式
             if (!isNotJson($error)) {
-                return json_decode($error , true);
+                $errArr = json_decode($error , true);
+                $firstErr = $errArr['firstErr'] ?? '';
+                $errMsg = $errArr['errMsg'] ?? [];
+                $varErrMsg = $errArr['varErrMsg'] ?? [];
+                if($errDo == 1 && is_array($errMsg) && count($errMsg) <= 0) throws(implode('<br/>', $errMsg));
+                return $errArr;
             }
+            // 可能是 false 或 null ：代表没有错
             //  if($errDo == 1) throws($error);
             return $error;
         }
@@ -3872,6 +3932,77 @@ class Tool
             $hasInIsMerge = $paramConfig['hasInIsMerge'] ?? false;
             static::appendParamQuery($queryParams, $paramVals, $fieldName, $excludeVals, $valsSeparator, $hasInIsMerge);
             $paramConfigs[$k]['paramVals'] = $paramVals;
+        }
+        return true;
+    }
+
+    /**
+     * 判断当前要操作的数据，是当前登录用户可以操作的
+     * @param int $own_user_type 当前用户类型1平台2企业4个人
+     * @param int $own_company_id 当前操作者的  所属平台 id -- -1: 忽略【不判断】
+     * @param int $company_id 要判断的 记录 所属平台 id -- 0: 【不判断】
+     * @param int $own_organize_id  当前操作者的   组织id--所属企业 -- -1: 忽略【不判断】
+     * @param int $organize_id  要判断的 记录  组织id--所属企业 -- 0: 【不判断】
+     * @param int $own_personal_id 当前操作者的 个人id--最底层登录人员id -- -1: 忽略【不判断】
+     * @param int $personal_id 要判断的 个人id--最底层登录人员id -- 0: 【不判断】
+     * @return boolean 是否有权限  true:有权限  ； false:无权限
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function judgeOwnOperateAuth($own_user_type = 0, $own_company_id = 0, $company_id = 0, $own_organize_id = 0, $organize_id = 0, $own_personal_id = 0, $personal_id = 0){
+        // 传入值就判断
+        if($own_company_id != -1 && strlen($company_id) > 0 && $company_id != 0  && $own_company_id != $company_id) return false;
+        if($own_organize_id != -1 && strlen($organize_id) > 0 && $organize_id != 0  && $own_organize_id != $organize_id) return false;
+        if($own_personal_id != -1 && strlen($personal_id) > 0 && $personal_id != 0  && $own_personal_id != $personal_id) return false;
+        return true;
+    }
+
+    /**
+     * 批量判断当前要操作的数据，是当前登录用户可以操作的
+     * @param array $data 需要判断的数组  一维或二维数组
+     * @param array $powerFields 在数组值中，用来判断权限的字段名称指定
+     *   $powerFields = [
+     *       'company_id' => '',// 所属平台 id 在 数组中的下标，--为空，则不用数组中的字段来判断;--没有字段，则不用此下标或为空值
+     *      'organize_id' => '',// 组织id--所属企业 在 数组中的下标，--为空，则不用数组中的字段来判断;--没有字段，则不用此下标或为空值
+     *      'personal_id' => '',// 个人id--最底层登录人员id 在 数组中的下标，--为空，则不用数组中的字段来判断;--没有字段，则不用此下标或为空值
+     *  ];
+     * @param int $own_user_type 当前用户类型1平台2企业4个人
+     * @param int $own_company_id 当前操作者的  所属平台 id -- -1: 忽略【不判断】
+     * @param int $company_id 要判断的 记录 所属平台 id； -- 0: 【不判断】 --- 如果有 > 0 的值，则 使用这里的，不然使用 $powerFields
+     * @param int $own_organize_id  当前操作者的   组织id--所属企业 -- -1: 忽略【不判断】
+     * @param int $organize_id  要判断的 记录  组织id--所属企业； -- 0: 【不判断】 --- 如果有 > 0 的值，则 使用这里的，不然使用 $powerFields
+     * @param int $own_personal_id 当前操作者的 个人id--最底层登录人员id -- -1: 忽略【不判断】
+     * @param int $personal_id 要判断的 个人id--最底层登录人员id； -- 0: 【不判断】 --- 如果有 > 0 的值，则 使用这里的，不然使用 $powerFields
+     * @return boolean 是否有权限  true:有权限  ； false:无权限
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function batchJudgeOwnOperateAuth($data = [], $powerFields = [], $own_user_type = 0, $own_company_id = 0, $company_id = 0, $own_organize_id = 0, $organize_id = 0, $own_personal_id = 0, $personal_id = 0){
+        // 转为二维数组
+        $isMulti = static::isMultiArr($data, true);
+        // 循环判断
+        foreach($data as $k => $v){
+            $tem_company_id = $company_id;
+            if( !(strlen($tem_company_id) > 0 && $tem_company_id != 0 ) ){
+                $tem_field_name = (isset($powerFields['company_id']) && strlen($powerFields['company_id']) > 0 ) ? $powerFields['company_id'] : '';
+                if(strlen($tem_field_name) > 0 && isset($v[$tem_field_name]) && strlen($v[$tem_field_name]) > 0 && $v[$tem_field_name] != 0){
+                    $tem_company_id = $v[$tem_field_name];
+                }
+            }
+            $tem_organize_id = $organize_id;
+            if( !(strlen($tem_organize_id) > 0 && $tem_organize_id != 0 ) ){
+                $tem_field_name = (isset($powerFields['organize_id']) && strlen($powerFields['organize_id']) > 0 ) ? $powerFields['organize_id'] : '';
+                if(strlen($tem_field_name) > 0 && isset($v[$tem_field_name]) && strlen($v[$tem_field_name]) > 0 && $v[$tem_field_name] != 0){
+                    $tem_organize_id = $v[$tem_field_name];
+                }
+            }
+            $tem_personal_id = $personal_id;
+            if(! (strlen($tem_personal_id) > 0 && $tem_personal_id != 0 ) ){
+                $tem_field_name = (isset($powerFields['personal_id']) && strlen($powerFields['personal_id']) > 0 ) ? $powerFields['personal_id'] : '';
+                if(strlen($tem_field_name) > 0 && isset($v[$tem_field_name]) && strlen($v[$tem_field_name]) > 0 && $v[$tem_field_name] != 0){
+                    $tem_personal_id = $v[$tem_field_name];
+                }
+            }
+            $infoPower = static::judgeOwnOperateAuth($own_user_type, $own_company_id, $tem_company_id, $own_organize_id, $tem_organize_id, $own_personal_id, $tem_personal_id);
+            if(!$infoPower) return false;
         }
         return true;
     }

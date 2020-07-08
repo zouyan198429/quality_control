@@ -82,7 +82,7 @@ class CTAPIResourceBusiness extends BasicPublicCTAPIBusiness
      * @param Request $request 请求信息
      * @param Controller $controller 控制对象
      * @param int $notLog 是否需要登陆 0需要1不需要
-     * @return  array 列表数据
+     * @return  mixed 列表数据
      * @author zouyan(305463219@qq.com)
      */
     public static function delAjax(Request $request, Controller $controller, $notLog = 0)

@@ -74,4 +74,48 @@ class AbilityJoinLogs extends BasePublicModel
      */
     protected $table = 'ability_join_logs';
 
+    // 拥有者类型1平台2企业4个人
+    public $adminTypeArr = [
+        '1' => '平台',
+        '2' => '企业',
+        '4' => '个人',
+    ];
+
+    // 表里没有的字段
+    protected $appends = ['admin_type_text'];
+
+
+    /**
+     * 获取用户的类型文字
+     *
+     * @return string
+     */
+    public function getAdminTypeTextAttribute()
+    {
+        return $this->adminTypeArr[$this->admin_type] ?? '';
+    }
+
+    /**
+     * 获取所属帐号--一维
+     */
+    public function staff()
+    {
+        return $this->belongsTo('App\Models\QualityControl\Staff', 'staff_id', 'id');
+    }
+
+    /**
+     * 获取所属能力验证报名--一维
+     */
+    public function abilityJoin()
+    {
+        return $this->belongsTo('App\Models\QualityControl\AbilityJoin', 'ability_join_id', 'id');
+    }
+
+    /**
+     * 获取所属能力验证报名项表--一维
+     */
+    public function abilityJoinItem()
+    {
+        return $this->belongsTo('App\Models\QualityControl\AbilityJoinItems', 'project_standard_id', 'id');
+    }
 }

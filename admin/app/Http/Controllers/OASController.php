@@ -10,8 +10,8 @@ use OpenApi\Annotations as OA;
  * 文档基本信息（@  OA\Info全局唯一）
  * @OA\Info(
  *      version="1.0",
- *      title="小狗工具接口说明文档",
- *      description="小狗工具对外开放接口;<br/>返回数据<hr/>apistatus：1代表成功，其它非1（具体的错误编号）代表失败；<br/>result：成功时的各种数据；<br/>errorMsg：失败时的具体文字描述。",
+ *      title="接口说明文档",
+ *      description="对外开放接口;<br/>返回数据<hr/>apistatus：1代表成功，其它非1（具体的错误编号）代表失败；<br/>result：成功时的各种数据；<br/>errorMsg：失败时的具体文字描述。",
  *      @OA\Contact(
  *          name="邹燕开发支持",
  *          url="http://xueyuanjun.com",
@@ -27,7 +27,7 @@ use OpenApi\Annotations as OA;
 /**
  * Api路径前缀（可多个）
  * @OA\Server(
- *      url="http://runbuy.admin.cunwo.net",
+ *      url="http://qualitycontrol.admin.cunwo.net",
  *      description="开发环境"
  * )
  *
@@ -184,27 +184,27 @@ use OpenApi\Annotations as OA;
 class OASController extends Controller
 {
     /**
-     * @  OA\Get(
+     * @OA\Get(
      *     path="/api/show",
      *     tags={"XXAPI"},
      *     summary="获取时间接口",
      *     description="获取时间接口",
      *     operationId="TimeShow",
      *     deprecated=false,
-     *     @  OA\Parameter(
+     *     @OA\Parameter(
      *         name="access_token",
      *         in="query",
      *         description="用户授权",
      *         required=true,
-     *         @  OA\Schema(
+     *         @OA\Schema(
      *             type="string"
      *         )
      *     ),
-     *     @  OA\Response(
+     *     @OA\Response(
      *         response=200,
      *         description="操作成功返回"
      *     ),
-     *     @  OA\Response(
+     *     @OA\Response(
      *         response=400,
      *         description="发生错误"
      *     )

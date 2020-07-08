@@ -74,4 +74,19 @@ class AbilityType extends BasePublicModel
      */
     protected $table = 'ability_type';
 
+    /**
+     * 获取能力验证-二维
+     */
+    public function abilitys()
+    {
+        return $this->hasMany('App\Models\QualityControl\Abilitys', 'ability_type_id', 'id');
+    }
+
+    /**
+     * 获取所属资源--一维
+     */
+    public function resource()
+    {
+        return $this->belongsTo('App\Models\QualityControl\Resource', 'resource_id', 'id');
+    }
 }

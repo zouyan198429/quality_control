@@ -74,4 +74,12 @@ class CompanyBillingConfig extends BasePublicModel
      */
     protected $table = 'company_billing_config';
 
+    /**
+     * 获取对应的企业--一维
+     */
+    public function staff()
+    {
+        return $this->belongsTo('App\Models\RunBuy\Staff', 'staff_id', 'id')->withDefault();
+    }
+
 }

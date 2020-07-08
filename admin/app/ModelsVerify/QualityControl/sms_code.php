@@ -183,6 +183,42 @@ class sms_code extends BaseDBVerify
      *
      */
 
+    //***********************字段查询***开始*******************************
+    // 上面字段对应的查询参数
+    /**
+     *
+     * 上面字段对应的查询参数--可填
+     * @ OA\Parameter(
+     *      parameter="Schema_QualityControl_sms_code_brand_name_optional",
+     *      name="type_name",
+     *      in="query",
+     *      description="类型名称",
+     *      required=false,
+     *      deprecated=false,
+     *      @ OA\Schema(ref="#/components/schemas/Schema_QualityControl_sms_code_brand_name")
+     * ),
+     *
+     *
+     */
+
+    /**
+     *
+     * 上面字段对应的查询参数--必填
+     * @ OA\Parameter(
+     *      parameter="Schema_QualityControl_sms_code_brand_name_required",
+     *      name="type_name",
+     *      in="query",
+     *      description="类型名称",
+     *      required=true,
+     *      deprecated=false,
+     *      @ OA\Schema(ref="#/components/schemas/Schema_QualityControl_sms_code_brand_name")
+     * ),
+     *
+     *
+     */
+    //***********************字段查询***结束****************************
+
+
     /**
      * 短信验证码
      * @OA\Schema(

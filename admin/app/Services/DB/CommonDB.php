@@ -1322,7 +1322,7 @@ class CommonDB
             $requestData = $modelObj->update($dataParams);
             return $requestData;
         }, $queryParams, false, $dataParams, true, $isCacheDataByCache);
-
+         if(is_bool($requestData) && $requestData === true) $requestData = 0;// 没有修改数据，返回0
         return $requestData;
     }
 
@@ -1523,6 +1523,48 @@ class CommonDB
 
         // 查询加入版本号
         $historySearchConditon["version_num"] = $versionNum;
+
+        // ~~~~~~~~~~判断~当前主记录版本号是否有必要+1（主记录数据有改动，但没有更新版本号，这里进行纠正版本号）~~开始~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        // 判断主记录版本号，是否应该加1
+        $diffArr = []; // 记录不同的字段及值
+        $historyObjCopy = Tool::copyObject($historyObj);
+
+        $queryParamsHistory = static::getGueryParams($historySearchConditon, []);
+        $historyInfoObj = static::getInfoByQuery($historyObjCopy, 1, $queryParamsHistory, [], true);
+        // 有历史记录,需要对比，再确定是否更新版本
+        if(!empty($historyInfoObj)){
+            $ignoreHistoryFields = $ignoreFields;
+
+            // 忽略的比较字段
+            $ignoreHistoryFields = array_merge($ignoreHistoryFields,['id', 'version_history_id', 'version_num_history', 'created_at', 'updated_at', 'version_num', 'staff_id', 'operate_staff_id_history']);
+
+            // 比较字段
+            foreach($historyColumns as $field){
+                if( in_array($field,$ignoreHistoryFields) ) continue;
+                if($mainObj->$field != $historyInfoObj->$field){ // 字段值不同
+                    $diffArr[$field] = [$mainObj->$field,$historyInfoObj->$field];
+                }
+            }
+            if(!empty($diffArr)){// 有不同的值，则需要版本号+1
+                $modelHistoryObjCopy = Tool::copyObject($modelObjCopy);
+
+                $mainObj->version_num++;
+                $mainObj->save();
+
+                $versionNum++;// $versionNum += 1;
+                // 查询加入版本号
+                $historySearchConditon["version_num"] = $versionNum;
+                $historyData['version_num'] = $versionNum;
+
+                // 开通缓存，则更新缓存时间信息
+                if($cachePower > 0){
+                    $dataCacheArr = is_object($mainObj) ? $mainObj->toArray() : $mainObj;
+                    static::updateTimeByData($modelHistoryObjCopy, $dataCacheArr, 2, false, []);
+                }
+            }
+        }
+        // ~~~~~~~~~~判断~~~结束~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
         // 查找历史表当前版本
         static::firstOrCreate($historyObj, $historySearchConditon, $historyData );
 

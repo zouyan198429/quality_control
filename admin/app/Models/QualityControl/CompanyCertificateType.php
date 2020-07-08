@@ -74,4 +74,11 @@ class CompanyCertificateType extends BasePublicModel
      */
     protected $table = 'company_certificate_type';
 
+    /**
+     * 获取企业资质证书-二维
+     */
+    public function companyCertificates()
+    {
+        return $this->hasMany('App\Models\QualityControl\CompanyCertificate', 'type_id', 'id');
+    }
 }

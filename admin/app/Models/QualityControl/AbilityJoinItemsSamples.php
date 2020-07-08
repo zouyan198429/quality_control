@@ -74,4 +74,35 @@ class AbilityJoinItemsSamples extends BasePublicModel
      */
     protected $table = 'ability_join_items_samples';
 
+    /**
+     * 获取能力验证检测所用仪器-二维
+     */
+    public function abilityJoinItemsSamplesInstruments()
+    {
+        return $this->hasMany('App\Models\QualityControl\AbilityJoinItemsSamplesInstrument', 'sample_id', 'id');
+    }
+
+    /**
+     * 获取能力验证检测标准物质-二维
+     */
+    public function abilityJoinItemsSamplesStandards()
+    {
+        return $this->hasMany('App\Models\QualityControl\AbilityJoinItemsSamplesStandard', 'sample_id', 'id');
+    }
+
+    /**
+     * 获取所属能力验证报名项表--一维
+     */
+    public function abilityJoinItem()
+    {
+        return $this->belongsTo('App\Models\QualityControl\AbilityJoinItems', 'ability_join_item_id', 'id');
+    }
+
+    /**
+     * 获取关联到的能力验证检测方法依据---一维
+     */
+    public function abilityJoinItemsSamplesMethod()
+    {
+        return $this->hasOne('App\Models\RunBuy\AbilityJoinItemsSamplesMethod', 'sample_id', 'id');
+    }
 }
