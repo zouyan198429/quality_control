@@ -19,73 +19,175 @@
     <form class="am-form am-form-horizontal" method="post"  id="addForm">
         <input type="hidden" name="id" value="{{ $info['id'] ?? 0 }}"/>
         <table class="table1">
-{{--            <tr>--}}
-{{--                <th>帐号管理名称<span class="must">*</span></th>--}}
-{{--                <td>--}}
-{{--                    <input type="text" class="inp wnormal"  name="type_name" value="{{ $info['type_name'] ?? '' }}" placeholder="请输入帐号管理名称"/>--}}
-{{--                </td>--}}
-{{--            </tr>--}}
-{{--            <tr>--}}
-{{--                <th>排序[降序]<span class="must">*</span></th>--}}
-{{--                <td>--}}
-{{--                    <input type="text" class="inp wnormal"  name="sort_num" value="{{ $info['sort_num'] ?? '' }}" placeholder="请输入排序"  onkeyup="isnum(this) " onafterpaste="isnum(this)"  />--}}
-{{--                </td>--}}
-{{--            </tr>--}}
+            <tr>
+                <th>单位名称<span class="must">*</span></th>
+                <td>
+                    <input type="text" class="inp wnormal"  name="company_name" value="{{ $info['company_name'] ?? '' }}" placeholder="请输入单位名称"/>
+                </td>
+            </tr>
+            <tr>
+                <th>统一社会信用代码<span class="must">*</span></th>
+                <td>
+                    <input type="text" class="inp wnormal"  name="company_credit_code" value="{{ $info['company_credit_code'] ?? '' }}" placeholder="请输入统一社会信用代码"/>
+                </td>
+            </tr>
+            <tr>
+                <th>是否独立法人<span class="must"></span></th>
+                <td>
+                    <label class="company_is_legal_persion"><input type="checkbox"  name="company_is_legal_persion"  value="1"  @if(isset($info['company_is_legal_persion']) && $info['company_is_legal_persion'] == 1) checked="checked"  @endif />是否独立法人</label><span class="gray">企业类型为非独立法人时请填写主体单位信息</span>
+                </td>
+            </tr>
+            <tr class="company_is_legal_persion_item">
+                <th>主体机构统一社会信用代码<span class="must"></span></th>
+                <td>
+                    <input type="text" class="inp wnormal"  name="company_legal_credit_code" value="{{ $info['company_legal_credit_code'] ?? '' }}" placeholder="请输入主体机构统一社会信用代码"/>
+                </td>
+            </tr>
+            <tr class="company_is_legal_persion_item">
+                <th>主体机构<span class="must"></span></th>
+                <td>
+                    <input type="text" class="inp wnormal"  name="company_legal_name" value="{{ $info['company_legal_name'] ?? '' }}" placeholder="请输入主体机构"/>
+                </td>
+            </tr>
+            <tr>
+                <th>所在城市<span class="must">*</span></th>
+                <td>
+                    <select class="wnormal" name="city_id" style="width: 100px;">
+                        <option value="">请选择城市</option>
+                        @foreach ($citys_kv as $k=>$txt)
+                            <option value="{{ $k }}"  @if(isset($defaultCity) && $defaultCity == $k) selected @endif >{{ $txt }}</option>
+                        @endforeach
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>企业类型<span class="must">*</span></th>
+                <td>
+                    <label><input type="radio" name="company_type" value="1" @if (isset($info['company_type']) && $info['company_type'] == 1 ) checked @endif>检测机构</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <label><input type="radio" name="company_type" value="2" @if (isset($info['company_type']) && $info['company_type'] == 2 ) checked @endif>生产企业</label>
 
-            <tr>
-                <th>姓名<span class="must">*</span></th>
-                <td>
-                    <input type="text" class="inp wnormal"  name="real_name" value="{{ $info['real_name'] ?? '' }}" placeholder="请输入姓名"/>
                 </td>
             </tr>
             <tr>
-                <th>性别<span class="must">*</span></th>
-                <td  class="layui-input-block">
-                    <label><input type="radio" name="sex" value="1" @if (isset($info['sex']) && $info['sex'] == 1 ) checked @endif>男</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <label><input type="radio" name="sex" value="2" @if (isset($info['sex']) && $info['sex'] == 2 ) checked @endif>女</label>
-                </td>
-            </tr>
-{{--            <tr>--}}
-{{--                <th>状态<span class="must">*</span></th>--}}
-{{--                <td  class="layui-input-block">--}}
-{{--                    <label><input type="radio" name="account_status" value="1" @if (isset($info['account_status']) && $info['account_status'] == 1 ) checked @endif>正常</label>&nbsp;&nbsp;&nbsp;&nbsp;--}}
-{{--                    <label><input type="radio" name="account_status" value="2" @if (isset($info['account_status']) && $info['account_status'] == 2 ) checked @endif>冻结</label>--}}
-{{--                </td>--}}
-{{--            </tr>--}}
-            <tr>
-                <th>手机<span class="must">*</span></th>
+                <th>企业性质<span class="must">*</span></th>
                 <td>
-                    <input type="text" class="inp wnormal"  name="mobile" value="{{ $info['mobile'] ?? '' }}" placeholder="请输入手机"  onkeyup="isnum(this) " onafterpaste="isnum(this)"  />
+                    <select class="wnormal" name="company_prop" style="width: 100px;">
+                        <option value="">请选择企业性质</option>
+                        @foreach ($companyProp as $k=>$txt)
+                            <option value="{{ $k }}"  @if(isset($defaultCompanyProp) && $defaultCompanyProp == $k) selected @endif >{{ $txt }}</option>
+                        @endforeach
+                    </select>
                 </td>
             </tr>
             <tr>
-                <th>座机电话</th>
+                <th>通讯地址<span class="must">*</span></th>
                 <td>
-                    <input type="text" class="inp wnormal"  name="tel" value="{{ $info['tel'] ?? '' }}" placeholder="请输入座机电话"  />
+                    <input type="text" class="inp wnormal"  name="addr" value="{{ $info['addr'] ?? '' }}" placeholder="请输入通讯地址"/>
                 </td>
             </tr>
             <tr>
-                <th>QQ\email\微信</th>
+                <th>邮编<span class="must"></span></th>
                 <td>
-                    <input type="text" class="inp wnormal"  name="qq_number" value="{{ $info['qq_number'] ?? '' }}" placeholder="请输入QQ\email\微信" />
+                    <input type="text" class="inp wnormal"  name="zip_code" value="{{ $info['zip_code'] ?? '' }}" placeholder="请输入邮编"/>
+                </td>
+            </tr>
+            <tr>
+                <th>传真<span class="must"></span></th>
+                <td>
+                    <input type="text" class="inp wnormal"  name="fax" value="{{ $info['fax'] ?? '' }}" placeholder="请输入传真"/>
+                </td>
+            </tr>
+            <tr>
+                <th>企业邮箱<span class="must"></span></th>
+                <td>
+                    <input type="text" class="inp wnormal"  name="email" value="{{ $info['email'] ?? '' }}" placeholder="请输入企业邮箱"/>
+                    <p class="gray">用于接收通知等。</p>
+                </td>
+            </tr>
+            <tr>
+                <th>法人代表<span class="must">*</span></th>
+                <td>
+                    <input type="text" class="inp wnormal"  name="company_legal" value="{{ $info['company_legal'] ?? '' }}" placeholder="请输入法人代表"/>
+                </td>
+            </tr>
+            <tr>
+                <th>营业执照<span class="must">*</span></th>
+                <td>
+
+                </td>
+            </tr>
+            <tr>
+                <th>单位人数<span class="must">*</span></th>
+                <td>
+
+                    <select class="wnormal" name="company_peoples_num" style="width: 100px;">
+                        <option value="">请选择单位人数</option>
+                        @foreach ($companyProp as $k=>$txt)
+                            <option value="{{ $k }}"  @if(isset($defaultCompanyProp) && $defaultCompanyProp == $k) selected @endif >{{ $txt }}</option>
+                        @endforeach
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>所属行业<span class="must">*</span></th>
+                <td>
+                    <select class="wnormal" name="company_industry_id" style="width: 100px;">
+                        <option value="">请选择行业</option>
+                        @foreach ($industry_kv as $k=>$txt)
+                            <option value="{{ $k }}"  @if(isset($defaultIndustry) && $defaultIndustry == $k) selected @endif >{{ $txt }}</option>
+                        @endforeach
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>证书编号<span class="must">*</span></th>
+                <td>
+                    <input type="text" class="inp wnormal"  name="company_certificate_no" value="{{ $info['company_certificate_no'] ?? '' }}" placeholder="请输入证书编号"/>
+                </td>
+            </tr>
+            <tr>
+                <th>联系人<span class="must">*</span></th>
+                <td>
+                    <input type="text" class="inp wnormal"  name="company_contact_name" value="{{ $info['company_contact_name'] ?? '' }}" placeholder="请输入联系人"/>
+                </td>
+            </tr>
+            <tr>
+                <th>联系人手机<span class="must">*</span></th>
+                <td>
+                    <input type="text" class="inp wnormal"  name="company_contact_mobile" value="{{ $info['company_contact_mobile'] ?? '' }}" placeholder="请输入联系人手机"/>
+                </td>
+            </tr>
+            <tr>
+                <th>联系电话<span class="must">*</span></th>
+                <td>
+                    <input type="text" class="inp wnormal"  name="company_contact_tel" value="{{ $info['company_contact_tel'] ?? '' }}" placeholder="请输入联系电话"/>
                 </td>
             </tr>
             <tr>
                 <th>用户名<span class="must">*</span></th>
                 <td>
                     <input type="text" class="inp wnormal"  name="admin_username" value="{{ $info['admin_username'] ?? '' }}" placeholder="请输入用户名"/>
+
                 </td>
             </tr>
             <tr>
                 <th>登录密码<span class="must">*</span></th>
                 <td>
-                    <input type="password"  class="inp wnormal"   name="admin_password" placeholder="登录密码" />修改时，可为空，不修改密码。
+                    <input type="password"  class="inp wnormal"   name="admin_password" placeholder="登录密码" /><p>修改时，可为空：不修改密码。</p>
                 </td>
             </tr>
             <tr>
                 <th>确认密码<span class="must">*</span></th>
                 <td>
-                    <input type="password" class="inp wnormal"     name="sure_password"  placeholder="确认密码"/>修改时，可为空，不修改密码。
+                    <input type="password" class="inp wnormal"     name="sure_password"  placeholder="确认密码"/><p>修改时，可为空：不修改密码。</p>
+                </td>
+            </tr>
+            <tr>
+                <th>是否完善资料<span class="must">*</span></th>
+                <td>
+                    @foreach ($isPerfect as $k=>$txt)
+                        <label><input type="radio"  name="is_perfect"  value="{{ $k }}"  @if(isset($defaultIsPerfect) && $defaultIsPerfect == $k) checked="checked"  @endif />{{ $txt }} </label>
+                    @endforeach
                 </td>
             </tr>
             <tr>

@@ -27,7 +27,7 @@
 
 				<div class="form-item company_is_legal_persion">
 				    <label for="username" class="form-label"> 是否独立法人：  </label>
-				    <div class="form-input"><input type="checkbox" name="company_is_legal_persion" class="form-control" autocomplete="off" value="1">非独立法人 <span class="gray">企业类型为非独立法人时请填写主体单位信息</span></div>
+				    <div class="form-input"><input type="checkbox" name="company_is_legal_persion" class="form-control" autocomplete="off" value="1"  @if(isset($info['company_is_legal_persion']) && $info['company_is_legal_persion'] == 1) checked="checked"  @endif >非独立法人 <span class="gray">企业类型为非独立法人时请填写主体单位信息</span></div>
 
 				</div>
 				<div class="form-item company_is_legal_persion_item">

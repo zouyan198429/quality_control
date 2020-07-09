@@ -41,10 +41,25 @@ $(function(){
         // }, function(){
         //});
         return false;
-    })
+    });
+
+    $(document).on("click",".company_is_legal_persion",function(){
+        toggle_legal_persion();
+    });
+    toggle_legal_persion();
 
 });
-
+// 是否显示 独立法人 勾选内容
+function toggle_legal_persion() {
+    // 是否独立法人
+    var company_is_legal_persion = get_list_checked('company_is_legal_persion',2,1);
+    // 独立法人
+    if(company_is_legal_persion != '') {
+        $(".company_is_legal_persion_item").show();
+    }else{
+        $(".company_is_legal_persion_item").hide();
+    }
+}
 //ajax提交表单
 function ajax_form(){
     if (!SUBMIT_FORM) return false;//false，则返回
@@ -56,90 +71,132 @@ function ajax_form(){
     }
 
 
-
-
-    // var work_num = $('input[name=work_num]').val();
-    // if(!judge_validate(4,'工号',work_num,true,'length',1,30)){
-    //     return false;
-    // }
-    //
-    // var department_id = $('select[name=department_id]').val();
-    // var judge_seled = judge_validate(1,'部门',department_id,true,'digit','','');
-    // if(judge_seled != ''){
-    //     layer_alert("请选择部门",3,0);
-    //     //err_alert('<font color="#000000">' + judge_seled + '</font>');
-    //     return false;
-    // }
-
-    // var group_id = $('select[name=group_id]').val();
-    // var judge_seled = judge_validate(1,'部门',group_id,true,'digit','','');
-    // if(judge_seled != ''){
-    //     layer_alert("请选择班组",3,0);
-    //     //err_alert('<font color="#000000">' + judge_seled + '</font>');
-    //     return false;
-    // }
-
-    // var position_id = $('select[name=position_id]').val();
-    // var judge_seled = judge_validate(1,'职务',position_id,true,'digit','','');
-    // if(judge_seled != ''){
-    //     layer_alert("请选择职务",3,0);
-    //     //err_alert('<font color="#000000">' + judge_seled + '</font>');
-    //     return false;
-    // }
-
-    // var type_name = $('input[name=type_name]').val();
-    // if(!judge_validate(4,'标签名称',type_name,true,'length',1,20)){
-    //     return false;
-    // }
-    //
-    // var sort_num = $('input[name=sort_num]').val();
-    // if(!judge_validate(4,'排序',sort_num,false,'digit','','')){
-    //     return false;
-    // }
-
-    var real_name = $('input[name=real_name]').val();
-    if(!judge_validate(4,'姓名',real_name,true,'length',1,20)){
+    var company_name = $('input[name=company_name]').val();
+    if(!judge_validate(4,'单位名称',company_name,true,'length',1,100)){
         return false;
     }
 
-    var sex = $('input[name=sex]:checked').val() || '';
-    var judge_seled = judge_validate(1,'性别',sex,true,'custom',/^[12]$/,"");
+    var company_credit_code = $('input[name=company_credit_code]').val();
+    if(!judge_validate(4,'统一社会信用代码',company_credit_code,true,'length',1,50)){
+        return false;
+    }
+
+    // 是否独立法人
+    var company_is_legal_persion = get_list_checked('company_is_legal_persion',2,1);
+    // 独立法人
+    if(company_is_legal_persion != '') {
+        var company_legal_credit_code = $('input[name=company_legal_credit_code]').val();
+        if(!judge_validate(4,'主体机构统一社会信用代码',company_legal_credit_code,false,'length',1,50)){
+            return false;
+        }
+
+        var company_legal_name = $('input[name=company_legal_name]').val();
+        if(!judge_validate(4,'主体机构',company_legal_name,false,'length',1,50)){
+            return false;
+        }
+    }
+
+    var city_id = $('select[name=city_id]').val();
+    var judge_seled = judge_validate(1,'城市',city_id,true,'digit','','');
     if(judge_seled != ''){
-        layer_alert("请选择性别",3,0);
+        layer_alert("请选择城市",3,0);
         //err_alert('<font color="#000000">' + judge_seled + '</font>');
         return false;
     }
 
-    // var account_status = $('input[name=account_status]:checked').val() || '';
-    // var judge_seled = judge_validate(1,'冻结状态',account_status,true,'custom',/^[12]$/,"");
-    // if(judge_seled != ''){
-    //     layer_alert("请选择冻结状态",3,0);
+    var company_type = $('input[name=company_type]:checked').val() || '';
+    var judge_seled = judge_validate(1,'企业类型',company_type,true,'custom',/^[12]$/,"");
+    if(judge_seled != ''){
+        layer_alert("请选择企业类型",3,0);
+        //err_alert('<font color="#000000">' + judge_seled + '</font>');
+        return false;
+    }
+
+    var company_prop = $('select[name=company_prop]').val();
+    var judge_seled = judge_validate(1,'企业性质',company_prop,true,'digit','','');
+    if(judge_seled != ''){
+        layer_alert("请选择企业性质",3,0);
+        //err_alert('<font color="#000000">' + judge_seled + '</font>');
+        return false;
+    }
+
+    var addr = $('input[name=addr]').val();
+    if(!judge_validate(4,'通讯地址',addr,true,'length',1,100)){
+        return false;
+    }
+
+    var zip_code = $('input[name=zip_code]').val();
+    if(!judge_validate(4,'邮编',zip_code,false,'length',5,10)){
+        return false;
+    }
+
+    var fax = $('input[name=fax]').val();
+    if(!judge_validate(4,'传真',fax,false,'length',5,30)){
+        return false;
+    }
+
+    var email = $('input[name=email]').val();
+    if(!judge_validate(4,'企业邮箱',email,true,'email')){
+        return false;
+    }
+
+    var company_legal = $('input[name=company_legal]').val();
+    if(!judge_validate(4,'法人代表',company_legal,true,'length',1,30)){
+        return false;
+    }
+
+    var company_peoples_num = $('select[name=company_peoples_num]').val();
+    var judge_seled = judge_validate(1,'单位人数',company_peoples_num,true,'digit','','');
+    if(judge_seled != ''){
+        layer_alert("请选择单位人数",3,0);
+        //err_alert('<font color="#000000">' + judge_seled + '</font>');
+        return false;
+    }
+
+    var company_industry_id = $('select[name=company_industry_id]').val();
+    var judge_seled = judge_validate(1,'所属行业',company_industry_id,true,'digit','','');
+    if(judge_seled != ''){
+        layer_alert("请选择所属行业",3,0);
+        //err_alert('<font color="#000000">' + judge_seled + '</font>');
+        return false;
+    }
+
+    var company_certificate_no = $('input[name=company_certificate_no]').val();
+    if(!judge_validate(4,'证书编号',company_certificate_no,true,'length',4,30)){
+        return false;
+    }
+
+    var company_contact_name = $('input[name=company_contact_name]').val();
+    if(!judge_validate(4,'联系人',company_contact_name,true,'length',1,30)){
+        return false;
+    }
+
+    var company_contact_mobile = $('input[name=company_contact_mobile]').val();
+    if(!judge_validate(4,'联系人手机',company_contact_mobile,true,'mobile','','')){
+        return false;
+    }
+
+    var company_contact_tel = $('input[name=company_contact_tel]').val();
+    if(!judge_validate(4,'联系电话',company_contact_tel,true,'length',6,20)){
+        return false;
+    }
+
+    // 是否已阅读并同意  注册服务协议
+    // var read_and_agree = get_list_checked('read_and_agree',2,1);
+    // if(read_and_agree == '') {
+    //     layer_alert("请阅读并同意《注册服务协议》",3,0);
     //     //err_alert('<font color="#000000">' + judge_seled + '</font>');
     //     return false;
+    //
     // }
 
-    var mobile = $('input[name=mobile]').val();
-    if(!judge_validate(4,'手机',mobile,true,'mobile','','')){
+    var admin_username = $('input[name=admin_username]').val() || '';
+    console.log('admin_username',  admin_username);
+    if(!judge_validate(4,'用户名',admin_username,false,'length',6,20)){
         return false;
     }
-
-    var tel = $('input[name=tel]').val();
-    if(!judge_validate(4,'座机电话',tel,false,'length',1,20)){
-        return false;
-    }
-
-
-    var qq_number = $('input[name=qq_number]').val();
-    if(!judge_validate(4,'QQ\\email\\微信',qq_number,false,'length',1,30)){
-        return false;
-    }
-
-    var admin_username = $('input[name=admin_username]').val();
-    if(!judge_validate(4,'用户名',admin_username,true,'length',6,20)){
-        return false;
-    }
-    var admin_password = $('input[name=admin_password]').val();
-    var sure_password = $('input[name=sure_password]').val();
+    var admin_password = $('input[name=admin_password]').val() || '';
+    var sure_password = $('input[name=sure_password]').val() || '';
     if( id<=0 || admin_password != '' || sure_password != ''){
 
         // var admin_password = $('input[name=admin_password]').val();
@@ -155,6 +212,14 @@ function ajax_form(){
             layer_alert('确认密码和密码不一致！',5,0);
             return false;
         }
+    }
+
+    var is_perfect = $('input[name=is_perfect]:checked').val() || '';
+    var judge_seled = judge_validate(1,'是否完善资料',is_perfect,true,'custom',/^[12]$/,"");
+    if(judge_seled != ''){
+        layer_alert("请选择是否完善资料",3,0);
+        //err_alert('<font color="#000000">' + judge_seled + '</font>');
+        return false;
     }
 
 

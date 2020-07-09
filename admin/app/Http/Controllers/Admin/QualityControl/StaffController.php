@@ -163,6 +163,37 @@ class StaffController extends BasicController
         // $reDataArr = array_merge($reDataArr, $resultDatas);
         $reDataArr['info'] = $info;
         $reDataArr['operate'] = $operate;
+        // 获得城市KV值--企业和用户有城市
+        if(in_array(static::$ADMIN_TYPE , [2, 4])) {
+            // 获得城市KV值
+            $reDataArr['citys_kv'] = CTAPICitysBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'city_name']);
+            $reDataArr['defaultCity'] = $info['city_id'] ?? -1;// 默认
+
+            // 是否完善资料1待完善2已完善
+            $reDataArr['isPerfect'] =  CTAPIStaffBusiness::$isPerfectArr;
+            $reDataArr['defaultIsPerfect'] = $info['is_perfect'] ?? -1;// 列表页默认状态
+        }
+
+        // 只有企业有
+        if(static::$ADMIN_TYPE == 2) {
+
+            // 所属行业
+            $reDataArr['industry_kv'] = CTAPIIndustryBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'industry_name']);
+            $reDataArr['defaultIndustry'] = $info['company_industry_id'] ?? -1;// 默认
+
+            // 企业--企业性质1企业法人 、2企业非法人、3事业法人、4事业非法人、5社团法人、6社团非法人、7机关法人、8机关非法人、9其它机构、10民办非企业单位、11个体 、12工会法人
+            $reDataArr['companyProp'] = CTAPIStaffBusiness::$companyPropArr;
+            $reDataArr['defaultCompanyProp'] = $info['company_prop'] ?? -1;// 列表页默认状态
+
+            // 企业--单位人数1、1-20、2、20-100、3、100-500、4、500以上
+            $reDataArr['companyPeoples'] = CTAPIStaffBusiness::$companyPeoplesNumArr;
+            $reDataArr['defaultCompanyPeoples'] = $info['company_peoples_num'] ?? -1;// 列表页默认状态
+
+            // 企业--会员等级1非会员  2会员  4理事  8常务理事   16理事长
+            $reDataArr['companyGrade'] =  CTAPIStaffBusiness::$companyGradeArr;
+            $reDataArr['defaultCompanyGrade'] = $info['company_grade'] ?? -1;// 列表页默认状态
+        }
+
         return view('admin.QualityControl.' . static::$VIEW_NAME . '.add', $reDataArr);
     }
 
