@@ -31,6 +31,18 @@
             {{--<option value="{{ $k }}"  @if(isset($province_id) && $province_id == $k) selected @endif >{{ $txt }}</option>--}}
           {{--@endforeach--}}
         {{--</select>--}}
+          <select class="wmini" name="city_id" style="width: 80px;">
+              <option value="">城市</option>
+              @foreach ($citys_kv as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultCity) && $defaultCity == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
+          <select class="wmini" name="company_industry_id" style="width: 80px;">
+              <option value="">行业</option>
+              @foreach ($industry_kv as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultIndustry) && $defaultIndustry == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
           <select class="wmini" name="admin_type" style="width: 80px;display: none;">
               <option value="">帐户类型</option>
               @foreach ($adminType as $k=>$txt)
@@ -85,7 +97,7 @@
                   <option value="{{ $k }}"  @if(isset($defaultCompanyProp) && $defaultCompanyProp == $k) selected @endif >{{ $txt }}</option>
               @endforeach
           </select>
-          <select class="wmini" name="company_peoples_num" style="width: 80px;">
+          <select class="wmini" name="company_peoples_num" style="width: 80px;display: none;">
               <option value="">单位人数</option>
               @foreach ($companyPeoples as $k=>$txt)
                   <option value="{{ $k }}"  @if(isset($defaultCompanyPeoples) && $defaultCompanyPeoples == $k) selected @endif >{{ $txt }}</option>
@@ -98,12 +110,8 @@
               @endforeach
           </select>
         <select style="width:90px; height:28px;" name="field">
-            <option value="admin_username">用户名</option>
-            <option value="real_name">真实姓名</option>
-            <option value="tel">电话</option>
-            <option value="mobile">手机</option>
-            <option value="qq_number">QQ/微信</option>
             <option value="company_name">单位名称</option>
+            <option value="admin_username">用户名</option>
             <option value="company_credit_code">统一社会信用代码</option>
             <option value="company_legal_credit_code">主体机构统一社会信用代码</option>
             <option value="company_legal_name">主体机构</option>
@@ -112,8 +120,12 @@
             <option value="company_contact_name">联系人</option>
             <option value="company_contact_mobile">联系人手机</option>
             <option value="company_contact_tel">联系电话</option>
+            <option value="addr">通讯地址</option>
+            <option value="zip_code">邮编</option>
+            <option value="fax">传真</option>
+            <option value="email">企业邮箱</option>
         </select>
-        <input type="text" value=""    name="keyword"  placeholder="请输入关键字"/>
+        <input type="text" value=""    name="keyword"  placeholder="请输入关键字" style="width: 100px;"/>
         <button class="btn btn-normal search_frm">搜索</button>
       </div>
     </form>
@@ -122,9 +134,9 @@
     <button class="btn btn-danger  btn-xs batch_del"  onclick="action.batchDel(this)">批量删除</button>
     <button class="btn btn-success  btn-xs export_excel"  onclick="action.batchExportExcel(this)" >导出[按条件]</button>
     <button class="btn btn-success  btn-xs export_excel"  onclick="action.exportExcel(this)" >导出[勾选]</button>
-    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcelTemplate(this)">导入模版[EXCEL]</button>
-    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcel(this)">导入</button>
-    <div style="display:none;" ><input type="file" class="import_file img_input"></div>{{--导入file对象--}}
+{{--    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcelTemplate(this)">导入模版[EXCEL]</button>--}}
+{{--    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcel(this)">导入</button>--}}
+{{--    <div style="display:none;" ><input type="file" class="import_file img_input"></div>{ {--导入file对象--} }--}}
       <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.openSelected(this, 2)" >审核通过[勾选]</button>
       <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.openSelected(this, 4)" >审核不通过[勾选]</button>
     <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.frozenSelected(this, 2)" >冻结[勾选]</button>
@@ -134,14 +146,18 @@
     <colgroup>
         <col width="50">
         <col width="60">
-        <col width="">
-{{--        <col width="150">--}}
+        <col width="60">
         <col>
+        <col width="50">
+        <col width="50">
         <col>
-        <col>
-        <col>
-        <col>
-        <col width="150">
+        <col width="80">
+        <col width="105">
+        <col width="80">
+        <col width="60">
+        <col width="50">
+        <col width="90">
+        <col width="200">
 {{--        <col width="150">--}}
     </colgroup>
     <thead>
@@ -153,15 +169,19 @@
         </label>
       </th>
       <th>ID</th>
-{{--      <th>所属客户端</th>--}}
-        <th>用户名</th>
-        <th>姓名</th>
-        <th>手机号</th>
+      <th>城市</th>
+        <th>单位名称</th>
+        <th>行业</th>
+        <th>员工</th>
+        <th>证书编号</th>
+        <th>联系人</th>
+        <th>联系人手机</th>
         <th>完善资料</th>
         <th>审核</th>
         <th>状态</th>
-        <th>上次登录</th>
-      <th>创建时间</th>
+        <th>注册时间</th>
+{{--        <th>上次登录</th>--}}
+{{--      <th>创建时间</th>--}}
 {{--      <th>更新时间</th>--}}
       {{--<th>排序[降序]</th>--}}
       <th>操作</th>

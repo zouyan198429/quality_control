@@ -247,6 +247,7 @@ class HomeController extends BasicRegController
             'zip_code' => $zip_code,
             'fax' => $fax,
             'email' => $email,
+            'company_legal' => $company_legal,
             'company_peoples_num' => $company_peoples_num,
             'company_industry_id' => $company_industry_id,
             'company_certificate_no' => $company_certificate_no,

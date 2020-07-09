@@ -111,6 +111,7 @@ class CTAPISmsCodeBusiness extends BasicPublicCTAPIBusiness
         // 重写结束
         return true;
     }
+
     /**
      * 特殊的验证 关键字 -单个 的具体验证----具体的子类----重写此方法来实现具体的验证
      *

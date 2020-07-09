@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin\QualityControl;
 
+use App\Business\Controller\API\QualityControl\CTAPICitysBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIIndustryBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIResourceBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
 use App\Http\Controllers\WorksController;
@@ -47,7 +49,18 @@ class StaffController extends BasicController
     {
         $this->InitParams($request);
         $reDataArr = $this->reDataArr;
+        // 获得城市KV值--企业和用户有城市
+        if(in_array(static::$ADMIN_TYPE , [2, 4])) {
+            $reDataArr['citys_kv'] = CTAPICitysBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'city_name']);
+            $reDataArr['defaultCity'] = $info['city_id'] ?? -1;// 默认
+        }
 
+        // 所属行业--只有企业有
+        if(static::$ADMIN_TYPE == 2){
+            $reDataArr['industry_kv'] = CTAPIIndustryBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'industry_name']);
+            $reDataArr['defaultIndustry'] = $info['company_industry_id'] ?? -1;// 默认
+
+        }
         // 拥有者类型1平台2企业4个人
         $reDataArr['adminType'] =  CTAPIStaffBusiness::$adminType;
         $reDataArr['defaultAdminType'] = -1;// 列表页默认状态
@@ -315,7 +328,16 @@ class StaffController extends BasicController
         }
         CTAPIStaffBusiness::mergeRequest($request, $this, $mergeParams);
 
-        return  CTAPIStaffBusiness::getList($request, $this, 2 + 4);
+        $relations = [];//  ['siteResources']
+        $handleKeyArr = [];
+        if(static::$ADMIN_TYPE == 2) array_push($handleKeyArr, 'industry');
+        if(in_array(static::$ADMIN_TYPE, [2, 4])) $handleKeyArr = array_merge($handleKeyArr, ['extend', 'city']);
+
+        $extParams = [
+            'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+        ];
+
+        return  CTAPIStaffBusiness::getList($request, $this, 2 + 4, [], $relations, $extParams);
     }
 
     /**

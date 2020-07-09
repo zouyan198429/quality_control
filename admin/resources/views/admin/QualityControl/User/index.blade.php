@@ -31,6 +31,12 @@
             {{--<option value="{{ $k }}"  @if(isset($province_id) && $province_id == $k) selected @endif >{{ $txt }}</option>--}}
           {{--@endforeach--}}
         {{--</select>--}}
+          <select class="wmini" name="city_id" style="width: 80px;">
+              <option value="">城市</option>
+              @foreach ($citys_kv as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultCity) && $defaultCity == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
           <select class="wmini" name="admin_type" style="width: 80px;display: none;">
               <option value="">帐户类型</option>
               @foreach ($adminType as $k=>$txt)
