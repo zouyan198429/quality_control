@@ -1270,6 +1270,7 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
 
         // 重写开始
 
+
         $isNeedHandle = false;// 是否真的需要遍历处理数据 false:不需要：true:需要 ；只要有一个需要处理就标记
         // 城市数据
         $cityArr = [];
@@ -1277,6 +1278,9 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
         $industryArr = [];
         // 人员扩展信息数据
         $extendArr = [];
+        // 图片资源
+        $companyCertificateKV = [];// 企业id => 资源id 的kv值一维数组
+        $resourceDataArr = [];
 
         //        if(!empty($data_list) ){
         // 获得所属城市
@@ -1301,6 +1305,33 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
             if(!$isNeedHandle && !empty($extendArr)) $isNeedHandle = true;
         }
 
+        // 处理图片-- 营业执照
+        if(in_array('siteResources', $handleKeyArr)){
+            $companyIdArr = array_values(array_filter(array_column($data_list,'id')));// 资源id数组，并去掉值为0的
+            $companyCertificateList = [];
+            if(!empty($companyIdArr)){
+                // 获得企业资质证书
+                $companyCertificateQueryParams = [
+                    'where' => [
+                         ['type_id', 5],
+//                //['mobile', $keyword],
+                    ],
+//            'select' => [
+//                'id','company_id','position_name','sort_num'
+//                //,'operate_staff_id','operate_staff_id_history'
+//                ,'created_at'
+//            ],
+                    // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
+                ];
+                Tool::appendParamQuery($companyCertificateQueryParams, $companyIdArr, 'company_id', [0, '0', ''], ',', false);
+                // $companyCertificateList = CTAPICompanyCertificateBusiness::getList($request, $controller, 1,$companyCertificateQueryParams);
+                $companyCertificateList = CTAPICompanyCertificateBusiness::getBaseListData($request, $controller, '', $companyCertificateQueryParams,[], 1,  1)['data_list'] ?? [];
+            }
+            $resourceIdArr = array_values(array_filter(array_column($companyCertificateList,'resource_id')));// 资源id数组，并去掉值为0的
+            if(!empty($resourceIdArr)) $resourceDataArr = Tool::arrUnderReset(CTAPIResourceBusiness::getResourceByIds($request, $controller, $resourceIdArr), 'id', 2);// getListByIds($request, $controller, implode(',', $resourceIdArr));
+            if(!$isNeedHandle && !empty($resourceDataArr)) $isNeedHandle = true;
+            $companyCertificateKV = Tool::formatArrKeyVal($companyCertificateList, 'company_id', 'resource_id');// 企业id => 资源id 的kv值一维数组
+        }
         //        }
 
         // 改为不返回，好让数据下面没有数据时，有一个空对象，方便前端或其它应用处理数据
@@ -1330,8 +1361,19 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
                 $data_list[$k]['extend_info'] = $extendArr[$v['id']] ?? [];
 
             }
+            // 资源url
+            if(in_array('siteResources', $handleKeyArr)){
+                // $resource_list = [];
+                $resource_id = $companyCertificateKV[$v['id']] ?? 0;
+                $resource_list = $resourceDataArr[$resource_id] ?? [];
+                if(isset($v['site_resources'])){
+                    Tool::resourceUrl($v, 2);
+                    $resource_list = Tool::formatResource($v['site_resources'], 2);
+                    unset($data_list[$k]['site_resources']);
+                }
+                $data_list[$k]['resource_list'] = $resource_list;
+            }
         }
-
         // 重写结束
         return true;
     }

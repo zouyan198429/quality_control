@@ -19,9 +19,9 @@
   <div class="mmhead" id="mywork">
 
     @include('common.pageParams')
-    <div class="tabbox" >
-      <a href="javascript:void(0);" class="on" onclick="action.iframeModify(0)">添加资质证书类型</a>
-    </div>
+{{--    <div class="tabbox" >--}}
+{{--      <a href="javascript:void(0);" class="on" onclick="action.iframeModify(0)">添加资质证书类型</a>--}}
+{{--    </div>--}}
     <form onsubmit="return false;" class="form-horizontal" style="display: none;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
 

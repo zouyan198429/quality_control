@@ -14,7 +14,7 @@ class UploadController extends BasicController
     protected $source_path = '/resource/company/';
 
     /**
-     * 文件上传
+     * 文件上传--图片
      *
      * @param Request $request
      * @return mixed
@@ -23,7 +23,7 @@ class UploadController extends BasicController
     public function index(Request $request)
     {
         $this->InitParams($request);
-        return CTAPIResourceBusiness::filePlupload($request, $this, 2);
+        return CTAPIResourceBusiness::filePlupload($request, $this, 1);
     }
 
     /**

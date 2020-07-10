@@ -106,7 +106,7 @@ class StaffController extends BasicController
         $company_grade = CommonRequest::get($request, 'company_grade');
         if(strlen($company_grade) <= 0 ) $company_grade = -1;
         $reDataArr['defaultCompanyGrade'] = $company_grade;// 列表页默认状态
-
+        $reDataArr['company_grade'] = $company_grade;
         return view('admin.QualityControl.' . static::$VIEW_NAME . '.index', $reDataArr);
     }
 
@@ -149,7 +149,12 @@ class StaffController extends BasicController
 
         if ($id > 0) { // 获得详情数据
             $operate = "修改";
-            $info = CTAPIStaffBusiness::getInfoData($request, $this, $id, [], '', []);
+            $handleKeyArr = [];
+            if(static::$ADMIN_TYPE == 2) array_push($handleKeyArr, 'siteResources');// array_merge($handleKeyArr, ['industry', 'siteResources']); ;//
+            $extParams = [
+                'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+            ];
+            $info = CTAPIStaffBusiness::getInfoData($request, $this, $id, [], '', $extParams);
             $this->judgeUserPower($request, $info);
             // 判断是否有操作权限
             // 根据具体功能 ，加上或去掉要判断的下标
@@ -191,7 +196,9 @@ class StaffController extends BasicController
 
             // 企业--会员等级1非会员  2会员  4理事  8常务理事   16理事长
             $reDataArr['companyGrade'] =  CTAPIStaffBusiness::$companyGradeArr;
-            $reDataArr['defaultCompanyGrade'] = $info['company_grade'] ?? -1;// 列表页默认状态
+            $company_grade = ($id > 0) ? $info['company_grade'] : CommonRequest::get($request, 'company_grade');
+            if(strlen($company_grade) <= 0 ) $company_grade = -1;
+            $reDataArr['defaultCompanyGrade'] = $company_grade;// $info['company_grade'] ?? -1;// 列表页默认状态
         }
 
         return view('admin.QualityControl.' . static::$VIEW_NAME . '.add', $reDataArr);
@@ -361,7 +368,7 @@ class StaffController extends BasicController
 
         $relations = [];//  ['siteResources']
         $handleKeyArr = [];
-        if(static::$ADMIN_TYPE == 2) array_push($handleKeyArr, 'industry');
+        if(static::$ADMIN_TYPE == 2) array_push($handleKeyArr, 'industry');// array_merge($handleKeyArr, ['industry', 'siteResources']); ;//
         if(in_array(static::$ADMIN_TYPE, [2, 4])) $handleKeyArr = array_merge($handleKeyArr, ['extend', 'city']);
 
         $extParams = [

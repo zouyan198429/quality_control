@@ -44,6 +44,7 @@ class CompanyController extends StaffController
         $company_contact_name = CommonRequest::get($request, 'company_contact_name');
         $company_contact_mobile = CommonRequest::get($request, 'company_contact_mobile');
         $company_contact_tel = CommonRequest::get($request, 'company_contact_tel');
+        $is_perfect = CommonRequest::getInt($request, 'is_perfect');
         // 可能会用的参数
         $admin_username = CommonRequest::get($request, 'admin_username');
         $admin_password = CommonRequest::get($request, 'admin_password');
@@ -59,8 +60,23 @@ class CompanyController extends StaffController
             }
         }
 
+        // 图片资源
+        $resource_id = CommonRequest::get($request, 'resource_id');
+        // 如果是字符，则转为数组
+        if(is_string($resource_id) || is_numeric($resource_id)){
+            if(strlen(trim($resource_id)) > 0){
+                $resource_id = explode(',' ,$resource_id);
+            }
+        }
+        if(!is_array($resource_id)) $resource_id = [];
+
+        // 再转为字符串
+        $resource_ids = implode(',', $resource_id);
+        if(!empty($resource_ids)) $resource_ids = ',' . $resource_ids . ',';
+
         $saveData = [
             'admin_type' => static::$ADMIN_TYPE,
+            'is_perfect' => $is_perfect,
             'company_name' => $company_name,
             'company_credit_code' => $company_credit_code,
             'company_is_legal_persion' => $company_is_legal_persion,
@@ -81,6 +97,8 @@ class CompanyController extends StaffController
             'company_contact_mobile' => $company_contact_mobile,
             'company_contact_tel' => $company_contact_tel,
             'admin_username' => $admin_username,
+            'resource_ids' => $resource_ids,// 图片资源id串(逗号分隔-未尾逗号结束)
+            'resourceIds' => $resource_id,// 此下标为图片资源关系
         ];
         if($admin_password != '' || $sure_password != ''){
             if ($admin_password != $sure_password){
@@ -97,6 +115,7 @@ class CompanyController extends StaffController
             $addNewData = [
                 // 'account_password' => $account_password,
 //                'is_perfect' => 1,
+                'company_grade' => 1,// 新加的会员默认等级为非会员单位
                 'issuper' => 2,
 //                'company_type' => 0,// 企业类型1检测机构、2生产企业
 //                'company_prop' => 0,// 企业性质1企业法人 、2企业非法人、3事业法人、4事业非法人、5社团法人、6社团非法人、7机关法人、8机关非法人、9其它机构、10民办非企业单位、11个体 、12工会法人

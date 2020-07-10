@@ -19,9 +19,12 @@
   <div class="mmhead" id="mywork">
 
     @include('common.pageParams')
-    <div class="tabbox" >
-      <a href="javascript:void(0);" class="on" onclick="action.iframeModify(0)">添加单位</a>
-    </div>
+{{--      只有非会员单位可以手动添加，其它等级的需要再操作--}}
+      @if(isset($company_grade) && $company_grade == 1)
+        <div class="tabbox" >
+          <a href="javascript:void(0);" class="on" onclick="action.iframeModify(0)">添加单位</a>
+        </div>
+      @endif
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
 

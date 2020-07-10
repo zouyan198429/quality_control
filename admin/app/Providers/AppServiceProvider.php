@@ -53,6 +53,7 @@ class AppServiceProvider extends ServiceProvider
 //            'templates'                 => 'App\Models\DogTools\Templates',           // 小狗工具-模板库图片
 //            'teacher_templates'                 => 'App\Models\DogTools\TeacherTemplates',           // 小狗工具-老师卡片图片
 //            'classes'                 => 'App\Models\DogTools\Classes',           // 小狗工具-班级图片
+            'company_certificate'                 => 'App\Models\QualityControl\CompanyCertificate',           // 质检-企业资质证书图片
         ]);
 
         DB::listen(function ($query) {

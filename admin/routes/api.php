@@ -89,8 +89,8 @@ $api->version('v1', function ($api) {
         $api->any('admin/ajax_info_save', 'Admin\QualityControl\IndexController@ajax_info_save');// 修改设置--ok
 
         // 上传图片
-        $api->post('admin/QualityControl/upload', 'Admin\QualityControl\UploadController@index');
-        $api->post('admin/QualityControl/upload/ajax_del', 'Admin\QualityControl\UploadController@ajax_del');// 根据id删除文件
+        $api->post('admin/upload', 'Admin\QualityControl\UploadController@index');
+        $api->post('admin/upload/ajax_del', 'Admin\QualityControl\UploadController@ajax_del');// 根据id删除文件
 
         // 系统管理员
         $api->any('admin/staff/ajax_alist', 'Admin\QualityControl\StaffController@ajax_alist');//ajax获得列表数据
@@ -207,8 +207,8 @@ $api->version('v1', function ($api) {
         $api->any('company/ajax_info_save', 'Company\QualityControl\IndexController@ajax_info_save');// 修改设置--ok
 
         // 上传图片
-        $api->post('company/QualityControl/upload', 'Company\QualityControl\UploadController@index');
-        $api->post('company/QualityControl/upload/ajax_del', 'Company\QualityControl\UploadController@ajax_del');// 根据id删除文件
+        $api->post('company/upload', 'Company\QualityControl\UploadController@index');
+        $api->post('company/upload/ajax_del', 'Company\QualityControl\UploadController@ajax_del');// 根据id删除文件
 
         // 用户中心 user
         // 验证码 -- ok
@@ -228,8 +228,8 @@ $api->version('v1', function ($api) {
         $api->any('user/ajax_info_save', 'User\QualityControl\IndexController@ajax_info_save');// 修改设置--ok
 
         // 上传图片
-        $api->post('user/QualityControl/upload', 'User\QualityControl\UploadController@index');
-        $api->post('user/QualityControl/upload/ajax_del', 'User\QualityControl\UploadController@ajax_del');// 根据id删除文件
+        $api->post('user/upload', 'User\QualityControl\UploadController@index');
+        $api->post('user/upload/ajax_del', 'User\QualityControl\UploadController@ajax_del');// 根据id删除文件
 
         // 前台 web
         // 验证码 -- ok
@@ -253,8 +253,8 @@ $api->version('v1', function ($api) {
         $api->any('web/ajax_perfect_user', 'Web\QualityControl\HomeController@ajax_perfect_user');// 注册-补充用户资料
 
         // 上传图片
-        $api->post('web/QualityControl/upload', 'Web\QualityControl\UploadController@index');
-        $api->post('web/QualityControl/upload/ajax_del', 'Web\QualityControl\UploadController@ajax_del');// 根据id删除文件
+        $api->post('web/upload', 'Web\QualityControl\UploadController@index');
+        $api->post('web/upload/ajax_del', 'Web\QualityControl\UploadController@ajax_del');// 根据id删除文件
 
 //        Route::middleware('auth:api')->get('/user', function (Request $request) {
 //            return $request->user();

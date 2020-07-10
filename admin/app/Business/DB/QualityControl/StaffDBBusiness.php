@@ -127,6 +127,20 @@ class StaffDBBusiness extends BasePublicDBBusiness
             throws('手机号已存在！');
         }
 
+        // 是否有图片资源
+        $hasResource = false;
+
+        $resourceIds = [];
+        $resource_ids = $saveData['resource_ids'] ?? '';// 图片资源id串(逗号分隔-未尾逗号结束)
+        if(isset($saveData['resourceIds'])){
+            $hasResource = true;
+            $resourceIds = $saveData['resourceIds'];
+            unset($saveData['resourceIds']);
+        }
+        if(isset($saveData['resource_ids']))  unset($saveData['resource_ids']);
+        if(isset($saveData['resource_id']))  unset($saveData['resource_id']);
+
+
         DB::beginTransaction();
         try {
 
@@ -186,6 +200,46 @@ class StaffDBBusiness extends BasePublicDBBusiness
                 $saveBoolen = static::saveById($saveData, $id,$modelObj);
                 $resultDatas = static::getInfo($id);
                 $logCount = '修改';
+            }
+            // 同步修改图片资源关系
+//            if($hasResource){
+//                static::saveResourceSync($id, $resourceIds, $operate_staff_id, $operate_staff_id_history, []);
+//                // 更新图片资源表
+//                if(!empty($resourceIds)) {
+//                    $resourceArr = ['column_type' => 2, 'column_id' => $id];
+//                    ResourceDBBusiness::saveByIds($resourceArr, $resourceIds);
+//                }
+//            }
+            if($hasResource){
+                // 查询当前企业的营业执照记录id
+                $queryCompanyCertificateParams = [
+                    'where' => [
+                        'company_id' => $id,
+                        'type_id' => 5,
+                        //['admin_type',self::$admin_type],
+                    ],
+                    //            'select' => [
+                    //                'id','company_id','type_name','sort_num'
+                    //                //,'operate_staff_id','operate_staff_history_id'
+                    //                ,'created_at'
+                    //            ],
+                    // 'orderBy' => ['id'=>'desc'],
+                ];
+                $infoCompanyCertificateData = CompanyCertificateDBBusiness::getInfoByQuery(1, $queryCompanyCertificateParams, []);
+                // if(is_object($infoData))  $infoData = $infoData->toArray();
+                // 记录不存在，是新加，则必须要用帐号和密码
+                $companyCertificateId = $infoCompanyCertificateData['id'] ?? 0;
+                // 修改营业执照
+                $companyCertificateData = [
+                    'company_id' => $id,
+                    'type_id' => 5,
+                    'resource_id' => $resourceIds[0] ?? 0,// 第一个图片资源的id
+                    'resource_ids' => $resource_ids,// 图片资源id串(逗号分隔-未尾逗号结束)
+                    'resourceIds' => $resourceIds,// 此下标为图片资源关系
+                    'operate_staff_id' => $operate_staff_id,
+                    'operate_staff_id_history' => $operate_staff_id_history,
+                ];
+                CompanyCertificateDBBusiness::replaceById($companyCertificateData, $company_id, $companyCertificateId, $operate_staff_id, $modifAddOprate);
             }
 
 //            if($isModify && !in_array($operateType, [8]) && ($ownProperty & 1) == 1){// 1：有历史表 ***_history;
