@@ -254,6 +254,7 @@ $api->version('v1', function ($api) {
 
         $api->any('web/ajax_login_company', 'Web\QualityControl\HomeController@ajax_login_company');// 登陆----为登录测试  补充资料用
         $api->any('web/ajax_login_user', 'Web\QualityControl\HomeController@ajax_login_user');// 登陆----为登录测试  补充资料用
+        $api->any('web/company_ajax_alist', 'Web\QualityControl\HomeController@company_ajax_alist');// 登陆----为登录测试  补充资料用--获得企业列表信息
 
         // 上传图片
         $api->post('web/upload', 'Web\QualityControl\UploadController@index');

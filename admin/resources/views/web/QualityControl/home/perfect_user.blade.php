@@ -18,8 +18,11 @@
 				<div class="form-item">
 				    <label for="username" class="form-label"> 单位名称 <span class="red">*</span> </label>
 				    <div class="form-input">
-						<input type="text" name="username" class="form-control" autocomplete="off" value="">
-						<button class="btn btn-gray">检测/绑定</button>
+                        <input type="hidden" name="company_id"  value="{{ $info['company_id'] ?? '' }}" />
+                        <span class="company_name">{{ $info['user_company_name'] ?? '' }}</span>
+{{--                        <button  type="button"  class="btn btn-danger  btn-xs ace-icon fa fa-plus-circle bigger-60"  onclick="otheraction.selectShop(this)">选择所属店铺</button>--}}
+{{--						<input type="text" name="username" class="form-control" autocomplete="off" value="">--}}
+						<button   type="button" class="btn btn-gray"   onclick="otheraction.selectCompany(this)">选择所属企业</button>
 					</div>
 				</div>
 				<div class="form-item">
@@ -98,6 +101,8 @@
 <script type="text/javascript">
     var SAVE_URL = "{{ url('api/web/ajax_perfect_user') }}";// ajax保存记录地址
     var LOG_OUT_URL = "{{url('web/logout')}}";//保存成功后跳转到的地址
+
+    var SELECT_COMPANY_URL = "{{url('web/select_company')}}";// 选择所属企业
 </script>
 <script src="{{ asset('/js/web/QualityControl/perfect_user.js') }}"  type="text/javascript"></script>
 

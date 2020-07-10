@@ -378,6 +378,14 @@ class Staff extends BasePublicModel
     }
 
     /**
+     * 获取企业的所有用户-二维
+     */
+    public function users()
+    {
+        return $this->hasMany('App\Models\QualityControl\Staff', 'company_id', 'id');
+    }
+
+    /**
      * 获取城市-一维
      */
     public function city()
@@ -391,6 +399,14 @@ class Staff extends BasePublicModel
     public function industry()
     {
         return $this->belongsTo('App\Models\QualityControl\Industry', 'company_industry_id', 'id');
+    }
+
+    /**
+     * 获取所属企业[普通用户]-一维
+     */
+    public function company()
+    {
+        return $this->belongsTo('App\Models\QualityControl\Staff', 'company_id', 'id');
     }
 
     /**

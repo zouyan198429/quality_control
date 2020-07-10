@@ -293,6 +293,7 @@ Route::get('web/login', 'Web\QualityControl\HomeController@login');// login.html
 Route::get('web/reg_agree', 'Web\QualityControl\HomeController@reg_agree');// 注册服务协议
 Route::get('web/reg', 'Web\QualityControl\HomeController@reg');// 注册
 Route::get('web/perfect_company', 'Web\QualityControl\HomeController@perfect_company');// 注册-补充企业资料
+Route::get('web/select_company', 'Web\QualityControl\HomeController@select_company');// 注册-补充用户资料--选择所属企业
 Route::get('web/perfect_user', 'Web\QualityControl\HomeController@perfect_user');// 注册-补充用户资料
 Route::get('web/logout', 'Web\QualityControl\HomeController@logout');// 注销--ok
 

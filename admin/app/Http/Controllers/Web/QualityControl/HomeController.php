@@ -173,6 +173,99 @@ class HomeController extends BasicRegController
     }
 
     /**
+     * 选择-弹窗 选择所属企业
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function select_company(Request $request)
+    {
+        $this->InitParams($request);
+        $reDataArr = $this->reDataArr;
+        // 获得城市KV值--企业和用户有城市
+        $reDataArr['citys_kv'] = CTAPICitysBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'city_name']);
+        $reDataArr['defaultCity'] = $info['city_id'] ?? -1;// 默认
+
+        // 所属行业--只有企业有
+        $reDataArr['industry_kv'] = CTAPIIndustryBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'industry_name']);
+        $reDataArr['defaultIndustry'] = $info['company_industry_id'] ?? -1;// 默认
+
+        // 拥有者类型1平台2企业4个人
+        $reDataArr['adminType'] =  CTAPIStaffBusiness::$adminType;
+        $reDataArr['defaultAdminType'] = -1;// 列表页默认状态
+
+        // 是否完善资料1待完善2已完善
+        $reDataArr['isPerfect'] =  CTAPIStaffBusiness::$isPerfectArr;
+        $reDataArr['defaultIsPerfect'] = -1;// 列表页默认状态
+
+        // 是否超级帐户2否1是
+        $reDataArr['issuper'] =  CTAPIStaffBusiness::$issuper;
+        $reDataArr['defaultIssuper'] = -1;// 列表页默认状态
+
+        // 审核状态1待审核2审核通过4审核不通过
+        $reDataArr['openStatus'] =  CTAPIStaffBusiness::$openStatus;
+        $reDataArr['defaultOpenStatus'] = -1;// 列表页默认状态
+
+        // 状态 1正常 2冻结
+        $reDataArr['accountStatus'] =  CTAPIStaffBusiness::$accountStatus;
+        $reDataArr['defaultAccountStatus'] = -1;// 列表页默认状态
+
+        // 性别0未知1男2女
+        $reDataArr['sex'] =  CTAPIStaffBusiness::$sex;
+        $reDataArr['defaultSex'] = -1;// 列表页默认状态
+
+        // 企业--是否独立法人1独立法人 2非独立法人
+        $reDataArr['companyIsLegalPersion'] =  CTAPIStaffBusiness::$companyIsLegalPersionArr;
+        $reDataArr['defaultCompanyIsLegalPersion'] = -1;// 列表页默认状态
+
+        // 企业--企业类型1检测机构、2生产企业
+        $reDataArr['companyType'] =  CTAPIStaffBusiness::$companyTypeArr;
+        $reDataArr['defaultCompanyType'] = -1;// 列表页默认状态
+
+        // 企业--企业性质1企业法人 、2企业非法人、3事业法人、4事业非法人、5社团法人、6社团非法人、7机关法人、8机关非法人、9其它机构、10民办非企业单位、11个体 、12工会法人
+        $reDataArr['companyProp'] =  CTAPIStaffBusiness::$companyPropArr;
+        $reDataArr['defaultCompanyProp'] = -1;// 列表页默认状态
+
+        // 企业--单位人数1、1-20、2、20-100、3、100-500、4、500以上
+        $reDataArr['companyPeoples'] =  CTAPIStaffBusiness::$companyPeoplesNumArr;
+        $reDataArr['defaultCompanyPeoples'] = -1;// 列表页默认状态
+
+        // 企业--会员等级1非会员  2会员  4理事  8常务理事   16理事长
+        $reDataArr['companyGrade'] =  CTAPIStaffBusiness::$companyGradeArr;
+        $reDataArr['defaultCompanyGrade'] = -1;// 列表页默认状态
+
+        return view('web.QualityControl.home.select_company', $reDataArr);
+    }
+
+    /**
+     * ajax获得列表数据--获得企业列表信息
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function company_ajax_alist(Request $request){
+        $this->InitParams($request);
+        // $this->company_id = 1;
+        $mergeParams = [
+            'admin_type' => 2,// 类型1平台2企业4个人
+        ];
+        CTAPIStaffBusiness::mergeRequest($request, $this, $mergeParams);
+
+        $relations = [];//  ['siteResources']
+        $handleKeyArr = [];
+        array_push($handleKeyArr, 'industry');// array_merge($handleKeyArr, ['industry', 'siteResources']); ;//
+        $handleKeyArr = array_merge($handleKeyArr, ['extend', 'city']);
+
+        $extParams = [
+            'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+        ];
+
+        return  CTAPIStaffBusiness::getList($request, $this, 2 + 4, [], $relations, $extParams);
+    }
+
+    /**
      * 完善个人资料页
      *
      * @param Request $request
@@ -192,6 +285,10 @@ class HomeController extends BasicRegController
 //            return $this->errorView($reDataArr, 'error');
             return redirect('web/login');
         }
+        $handleKeyArr = [];
+        if($user_type == 4) array_push($handleKeyArr, 'company');// array_merge($handleKeyArr, ['industry', 'siteResources']); ;//
+
+        if(!empty($handleKeyArr)) CTAPIStaffBusiness::handleData($request, $this, $info, $handleKeyArr);
         $reDataArr['info'] = $info;
         // 获得城市KV值
         $reDataArr['citys_kv'] = CTAPICitysBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'city_name']);

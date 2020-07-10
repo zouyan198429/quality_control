@@ -1281,6 +1281,8 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
         // 图片资源
         $companyCertificateKV = [];// 企业id => 资源id 的kv值一维数组
         $resourceDataArr = [];
+        // 获得所属企业名称 ---如果是普通用户
+        $companyKv = [];
 
         //        if(!empty($data_list) ){
         // 获得所属城市
@@ -1332,6 +1334,15 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
             if(!$isNeedHandle && !empty($resourceDataArr)) $isNeedHandle = true;
             $companyCertificateKV = Tool::formatArrKeyVal($companyCertificateList, 'company_id', 'resource_id');// 企业id => 资源id 的kv值一维数组
         }
+
+        // 获得所属企业名称 ---如果是普通用户
+        if(in_array('company', $handleKeyArr)){
+            $companyIdArr = array_values(array_filter(array_column($data_list,'company_id')));// 资源id数组，并去掉值为0的
+            // 主键为下标的二维数组
+            if(!empty($companyIdArr)) $companyKv = Tool::formatArrKeyVal(CTAPIStaffBusiness::getListByIds($request, $controller, $companyIdArr, [], [], 'id'), 'id', 'company_name');
+            if(!$isNeedHandle && !empty($companyKv)) $isNeedHandle = true;
+        }
+
         //        }
 
         // 改为不返回，好让数据下面没有数据时，有一个空对象，方便前端或其它应用处理数据
@@ -1373,6 +1384,11 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
                 }
                 $data_list[$k]['resource_list'] = $resource_list;
             }
+            // 获得所属企业名称 ---如果是普通用户
+            if(in_array('company', $handleKeyArr)){
+                $data_list[$k]['user_company_name'] = $companyKv[$v['company_id']] ?? '';
+            }
+
         }
         // 重写结束
         return true;
