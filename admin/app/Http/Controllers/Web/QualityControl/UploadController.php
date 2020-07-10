@@ -6,7 +6,7 @@ use App\Business\Controller\API\QualityControl\CTAPIResourceBusiness;
 use Illuminate\Http\Request;
 use App\Http\Controllers\WorksController;
 
-class UploadController extends BasicController
+class UploadController extends BasicRegController
 {
     public $model_name = 'Resource';
     // 大后台 admin/年/月/日/文件
@@ -23,7 +23,7 @@ class UploadController extends BasicController
     public function index(Request $request)
     {
         $this->InitParams($request);
-        return CTAPIResourceBusiness::filePlupload($request, $this, 2);
+        return CTAPIResourceBusiness::filePlupload($request, $this, 1);
     }
 
     /**

@@ -290,10 +290,15 @@ Route::get('user/info', 'User\QualityControl\IndexController@info');//myinfo.htm
 // 前台 web
 Route::get('web/test', 'Web\QualityControl\HomeController@test');// 测试
 Route::get('web/login', 'Web\QualityControl\HomeController@login');// login.html 登录
+Route::get('web/reg_agree', 'Web\QualityControl\HomeController@reg_agree');// 注册服务协议
 Route::get('web/reg', 'Web\QualityControl\HomeController@reg');// 注册
 Route::get('web/perfect_company', 'Web\QualityControl\HomeController@perfect_company');// 注册-补充企业资料
 Route::get('web/perfect_user', 'Web\QualityControl\HomeController@perfect_user');// 注册-补充用户资料
 Route::get('web/logout', 'Web\QualityControl\HomeController@logout');// 注销--ok
+
+
+Route::get('web/login_company', 'Web\QualityControl\HomeController@login_company');// login.html 登录--为登录测试  补充资料用
+Route::get('web/login_user', 'Web\QualityControl\HomeController@login_user');// login.html 登录--为登录测试  补充资料用
 
 // 首页
 //Route::get('web/test', 'Web\QualityControl\IndexController@test');// 测试

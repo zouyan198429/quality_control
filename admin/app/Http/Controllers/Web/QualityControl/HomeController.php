@@ -42,6 +42,76 @@ class HomeController extends BasicRegController
     }
 
     /**
+     * 登录页 登录--为登录测试  补充资料用
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function login_company(Request $request)
+    {
+        // $this->InitParams($request);
+        $reDataArr = $this->reDataArr;
+        return view('web.QualityControl.login_company', $reDataArr);
+    }
+
+    /**
+     * 登录页 登录--为登录测试  补充资料用
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function login_user(Request $request)
+    {
+        // $this->InitParams($request);
+        $reDataArr = $this->reDataArr;
+        return view('web.QualityControl.login_user', $reDataArr);
+    }
+
+    /**
+     * ajax保存数据 登陆----为登录测试  补充资料用
+     *
+     * @param Request $request
+     * @return array
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_login_company(Request $request)
+    {
+        // $this->InitParams($request);
+        // $company_id = $this->company_id;
+        return CTAPIStaffBusiness::loginCaptchaCode($request, $this,2, 1, 1);
+    }
+
+    /**
+     * ajax保存数据 登陆----为登录测试  补充资料用
+     *
+     * @param Request $request
+     * @return array
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_login_user(Request $request)
+    {
+        // $this->InitParams($request);
+        // $company_id = $this->company_id;
+        return CTAPIStaffBusiness::loginCaptchaCode($request, $this,4, 1, 1);
+    }
+
+    /**
+     * 注册页 -- 注册服务协议
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function reg_agree(Request $request)
+    {
+        // $this->InitParams($request);
+        $reDataArr = $this->reDataArr;
+        return view('web.QualityControl.home.reg_agree', $reDataArr);
+    }
+
+    /**
      * 注册页
      *
      * @param Request $request
@@ -67,12 +137,18 @@ class HomeController extends BasicRegController
         $this->InitParams($request);
         $reDataArr = $this->reDataArr;
         $info = $this->user_info;
-        if(empty($info)){
+        $user_type = $info['admin_type'] ?? 0;
+        // 非企业用户不可进行此操作！
+        if(empty($info) || $user_type != 2){
 //            $reDataArr['errorMsg'] = '您还没有注册！';
 //            $reDataArr['isShowBtn'] = (1 | 2);// 1:显示“回到首页”；2：显示“返回上页”
 //            return $this->errorView($reDataArr, 'error');
             return redirect('web/login');
         }
+        $handleKeyArr = [];
+        if($user_type == 2) array_push($handleKeyArr, 'siteResources');// array_merge($handleKeyArr, ['industry', 'siteResources']); ;//
+
+        if(!empty($handleKeyArr)) CTAPIStaffBusiness::handleData($request, $this, $info, $handleKeyArr);
         $reDataArr['info'] = $info;
         // 获得城市KV值
         $reDataArr['citys_kv'] = CTAPICitysBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'city_name']);
@@ -108,7 +184,9 @@ class HomeController extends BasicRegController
         $this->InitParams($request);
         $reDataArr = $this->reDataArr;
         $info = $this->user_info;
-        if(empty($info)){
+        $user_type = $info['admin_type'] ?? 0;
+        // 非用户不可进行此操作！
+        if(empty($info) || $user_type != 4){
 //            $reDataArr['errorMsg'] = '您还没有注册！';
 //            $reDataArr['isShowBtn'] = (1 | 2);// 1:显示“回到首页”；2：显示“返回上页”
 //            return $this->errorView($reDataArr, 'error');
@@ -232,6 +310,21 @@ class HomeController extends BasicRegController
         $admin_username = CommonRequest::get($request, 'admin_username');
         $admin_password = CommonRequest::get($request, 'admin_password');
         $sure_password = CommonRequest::get($request, 'sure_password');
+
+        // 图片资源
+        $resource_id = CommonRequest::get($request, 'resource_id');
+        // 如果是字符，则转为数组
+        if(is_string($resource_id) || is_numeric($resource_id)){
+            if(strlen(trim($resource_id)) > 0){
+                $resource_id = explode(',' ,$resource_id);
+            }
+        }
+        if(!is_array($resource_id)) $resource_id = [];
+
+        // 再转为字符串
+        $resource_ids = implode(',', $resource_id);
+        if(!empty($resource_ids)) $resource_ids = ',' . $resource_ids . ',';
+
         $saveData = [
             'admin_type' => $this->user_info['admin_type'],
             'is_perfect' => 2,
@@ -254,6 +347,9 @@ class HomeController extends BasicRegController
             'company_contact_name' => $company_contact_name,
             'company_contact_mobile' => $company_contact_mobile,
             'company_contact_tel' => $company_contact_tel,
+            // 'resource_id' => $resource_id[0] ?? 0,// 第一个图片资源的id
+            'resource_ids' => $resource_ids,// 图片资源id串(逗号分隔-未尾逗号结束)
+            'resourceIds' => $resource_id,// 此下标为图片资源关系
         ];
         if($admin_username != '') $saveData['admin_username'] = $admin_username;
         if($admin_password != '' || $sure_password != ''){

@@ -23,7 +23,7 @@ class UploadController extends BasicController
     public function index(Request $request)
     {
         $this->InitParams($request);
-        return CTAPIResourceBusiness::filePlupload($request, $this, 2);
+        return CTAPIResourceBusiness::filePlupload($request, $this, 1);
     }
 
     /**

@@ -252,6 +252,9 @@ $api->version('v1', function ($api) {
         $api->any('web/ajax_perfect_company', 'Web\QualityControl\HomeController@ajax_perfect_company');// 注册-补充企业资料
         $api->any('web/ajax_perfect_user', 'Web\QualityControl\HomeController@ajax_perfect_user');// 注册-补充用户资料
 
+        $api->any('web/ajax_login_company', 'Web\QualityControl\HomeController@ajax_login_company');// 登陆----为登录测试  补充资料用
+        $api->any('web/ajax_login_user', 'Web\QualityControl\HomeController@ajax_login_user');// 登陆----为登录测试  补充资料用
+
         // 上传图片
         $api->post('web/upload', 'Web\QualityControl\UploadController@index');
         $api->post('web/upload/ajax_del', 'Web\QualityControl\UploadController@ajax_del');// 根据id删除文件

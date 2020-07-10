@@ -97,6 +97,7 @@ class CompanyController extends StaffController
             'company_contact_mobile' => $company_contact_mobile,
             'company_contact_tel' => $company_contact_tel,
             'admin_username' => $admin_username,
+           // 'resource_id' => $resource_id[0] ?? 0,// 第一个图片资源的id
             'resource_ids' => $resource_ids,// 图片资源id串(逗号分隔-未尾逗号结束)
             'resourceIds' => $resource_id,// 此下标为图片资源关系
         ];
