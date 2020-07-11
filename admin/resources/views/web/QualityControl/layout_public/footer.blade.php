@@ -4,12 +4,14 @@
 <div id="footer">
     <div class="footl1 c">
         <div class="wrap">
-            <div class="contact fl">
-
-                电话：029-87290790 029-87291424
-                传真：029-87290790   邮件：sxsrzrk@163.com   <br />
-                网址：http://www.sxsrzrk.com/<br />
-                地址：西安市新城省政府大院45号楼212室
+            <div class="footlogo">
+                <img src="{{asset('staticweb/image/footlogo.png')}}" alt="">
+            </div>
+            <div class="bottom_info fl"> 
+                    <div class="biitem telephone"><i></i><b>电话：</b>029-87290790 87290659 87294737  87291424&nbsp;&nbsp;</div>
+                    <div class="biitem fax"><i></i><b>传真：</b>029-87290790&nbsp;&nbsp;</div>
+                    <div class="biitem email"><i></i><b>邮件：</b>sxsrzrk@163.com &nbsp;&nbsp;</div> 
+                    <div class="biitem address"><i></i><b>地址：</b>西安市新城省西五路68号（省政府北门外陕西省物流集团投资有限公司四楼411、413、515室）</div>
             </div>
             <div class="ewm fr">
                 <img src="{{asset('staticweb/image/ewm.jpg')}}" alt="">

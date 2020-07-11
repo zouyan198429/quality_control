@@ -1,21 +1,60 @@
 <!doctype html>
 <html lang="en">
 <head>
-    @include('web.QualityControl.layout_public.pagehead')
     <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/css/layui.css')}}" media="all">
+
+    @include('web.QualityControl.layout_public.pagehead')
 {{--  	<script type="text/javascript" src="{{asset('staticweb/js/jquery1.42.min.js')}}"></script>--}}
 {{--  	<script type="text/javascript" src="{{asset('staticweb/js/jquery.SuperSlide.2.1.1.js')}}"></script>--}}
 </head>
-<body style=" background:#eee; ">
+<body id="body-login" >
     @include('web.QualityControl.layout_public.header')
 	<div id="main">
-		<div class="login" style="width:980px; margin:40px auto 20px auto; border:1px solid #eee;  padding:20px 20px;  ">
+		<div class="login">
+        <style>
+            .login {
+                width:1180px; margin:40px auto 20px auto;  padding:20px 20px; min-height: 500px;
+            }
+            .bd-right {
+                .min-height: 480px; 
+            }
+            .layui-tab {
+                margin:0;
+            }
+            .layui-tab-title li {
+                height: 60px;
+            }
+            .layui-tab-title .layui-this {
+                border:0;
+                border-left:1px solid #eee;
+                border-right: 1px solid #eee;
+                border-bottom: 2px solid #06a;
+                height: 58px;
+                border-right:1px solid #eee;
+                margin-left: -1px;
+            }
+            .layui-tab-title .layui-this:after {
+                display: none;
+            }
+            .layui-tab-content {
+                min-height: 400px;
+            }
+            .layui-tab-item {
+                padding-top:30px;
+            }
+            input[type='text'].form-control {
+                height: 36px;
+            }
+            input[type='password'].form-control {
+                height: 36px;
+            }
+        </style>
 
 			<div class="bd-left">
 			</div>
-			<div class="bd-right " style="background:#fff;">
+			<div class="bd-right" style="background:#fff;">
 
-                <div class="layui-tab">
+                <div class="layui-tab login-tag hd">
                     <input type="hidden" name="form_type" value="user_login" />
                     <ul class="layui-tab-title">
                         <li class="layui-this"  data-type="user_login">个人登录</li>
@@ -33,20 +72,20 @@
                                         <input type="text" name="mobile" class="form-control" placeholder="输入手机号"   value="">
                                     </div>
                                     <div class="form-group layui-form-item">
-                                        <input type="text" name="mobile_vercode" class="form-control fl" style="width:60%;" placeholder="验证码"   value="">
-{{--                                        <input type="text" name="text" class="form-control fr tc" style="width:34%;" placeholder="发送验证码"   value="">--}}
-                                        <button type="button" class="layui-btn layui-btn-primary layui-btn-fluid LAY-user-getsmscode" id="LAY-user-getsmscode">获取验证码</button>
+                                        <input type="text" name="mobile_vercode" class="form-control fl" style="width:69.1%;" placeholder="验证码"   value="">
+<!--                          <input type="text" name="text" class="form-control fr tc" style="width:34%;" placeholder="发送验证码"   value=""> 
+ -->                                      <button type="button" class="layui-btn" id="LAY-user-getsmscode">获取验证码</button>
                                         <div class="c"></div>
                                     </div>
-{{--                                    <div class="form-group layui-form-item">--}}
-{{--                                        <label for="password" class="form-label">图形验证码</label>--}}
-{{--                                        <div class="form-input">--}}
-{{--                                            <input type="text" name="captcha_code"  lay-verify="required" placeholder="图形验证码" class="layui-input" style="width:100px;">--}}
-{{--                                            <input type="hidden" name="captcha_key" />--}}
-{{--                                            <img src="" class="layadmin-user-login-codeimg" id="LAY-user-get-vercode" >--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-
+<!--                                      <div class="form-group layui-form-item">- -}}
+                                         <label for="password" class="form-label">图形验证码</label>- -}}
+                                         <div class="form-input">- -}}
+                                             <input type="text" name="captcha_code"  lay-verify="required" placeholder="图形验证码" class="layui-input" style="width:100px;">- -}}
+                                             <input type="hidden" name="captcha_key" />- -}}
+                                             <img src="" class="layadmin-user-login-codeimg" id="LAY-user-get-vercode" >- -}}
+                                         </div>- -}}
+                                     </div>- -}}
+ -->
                                     <a href="javascript:void(0);" class="btn btn-block submitBtn">登录</a>
                                 </form>
 
@@ -67,9 +106,9 @@
                                             <div class="c"></div>
                                         </div>
                                         <div class="form-group layui-form-item">
-                                            <label for="password" class="form-label">图形验证码</label>
-                                            <div class="form-input">
-                                                <input type="text" name="captcha_code" lay-verify="required" placeholder="图形验证码" class="layui-input" style="width:100px;">
+<!--                                             <label for="password" class="form-label">图形验证码</label>
+ -->                                            <div class="form-input">
+                                                <input type="text" name="captcha_code" lay-verify="required" placeholder="图形验证码" class="layui-input" style="width:100px; display: inline-block;">
                                                 <input type="hidden" name="captcha_key" />
                                                 <img src="" class="layadmin-user-login-codeimg" id="LAY-user-get-vercode" >
                                             </div>
@@ -87,6 +126,7 @@
 					<a href="{{ url('web/reg') }}" >新用户注册</a>
 					<div class="k20"></div>
 				</div>
+                <div class="c"></div>
 
 			</div>
 			<div class="c"></div>
