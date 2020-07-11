@@ -147,8 +147,8 @@
 {{--  </div>--}}
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
-        <col width="50">
-        <col width="60">
+{{--        <col width="50">--}}
+{{--        <col width="60">--}}
         <col width="60">
         <col>
         <col width="90">
@@ -157,13 +157,13 @@
     </colgroup>
     <thead>
     <tr>
-      <th>
+      <th style="display: none;">
         <label class="pos-rel">
           <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>
           <!-- <span class="lbl">全选</span> -->
         </label>
       </th>
-      <th>ID</th>
+      <th style="display: none;">ID</th>
       <th>城市</th>
       <th>单位名称</th>
       <th>行业</th>

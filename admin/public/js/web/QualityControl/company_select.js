@@ -44,13 +44,13 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
     console.log('is_read_page', typeof(is_read_page));
     console.log('ajax_async', typeof(ajax_async));
     reset_list(is_read_page, false, reset_total, do_num);
-    // initList();
+    initList();
 }
 
 // 初始化
 function initList(){
     // 获得选中的城市id 数组
-    var SELECTED_IDS = parent.getSelectedShopIds();
+    var SELECTED_IDS = parent.getSelectedCompanyIds();
     console.log('SELECTED_IDS',SELECTED_IDS);
     $('#data_list').find('tr').each(function () {
         var trObj = $(this);
@@ -62,23 +62,23 @@ function initList(){
         if(SELECTED_IDS.indexOf(item_id) !== -1){// 已选
             trObj.find('.add').hide();
             trObj.find('.del').show();
-            checkedObj.prop('disabled',true);
-            checkedObj.prop('checked',false);
+            checkedObj.prop('disabled',true);// 不可用
+            checkedObj.prop('checked',false);// 没有选中
         }else{// 未选
             trObj.find('.add').show();
             trObj.find('.del').hide();
-            checkedObj.prop('disabled',false);
+            checkedObj.prop('disabled',false);// 可用
         }
 
     });
 }
 //业务逻辑部分
 var otheraction = {
-    add : function(id){// 增加单个
+    add : function(id, company_name){// 增加单个
         var index_query = layer.confirm('确定选择当前记录？', {
             btn: ['确定','取消'] //按钮
         }, function(){
-            parent.addShop(id);
+            parent.addCompany(id, company_name);
             // initList();
             layer.close(index_query);
             parent_reset_list();// 关闭弹窗
@@ -90,7 +90,7 @@ var otheraction = {
         var index_query = layer.confirm('确定取消当前记录？', {
             btn: ['确定','取消'] //按钮
         }, function(){
-            parent.removeShop(id);
+            parent.removeCompany(id);
             initList();
             layer.close(index_query);
         }, function(){
@@ -115,18 +115,18 @@ var otheraction = {
     document.write("        %>");
     document.write("");
     document.write("        <tr>");
-    document.write("            <td>");
+    document.write("            <td style=\"display: none;\">");
     document.write("                <label class=\"pos-rel\">");
     document.write("                    <input  onclick=\"action.seledSingle(this)\" type=\"checkbox\" class=\"ace check_item\" <%if( false &&  !can_modify){%> disabled <%}%>  value=\"<%=item.id%>\"\/>");
     document.write("                  <span class=\"lbl\"><\/span>");
     document.write("                <\/label>");
     document.write("            <\/td>");
-    document.write("            <td><%=item.id%><\/td>");
+    document.write("            <td style=\"display: none;\"><%=item.id%><\/td>");
     document.write("            <td><%=item.city_name%><\/td>");
     document.write("            <td><%=item.company_name%><\/td>");
     document.write("            <td><%=item.industry_name%><\/td>");
     document.write("            <td>");
-    document.write("            <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info add \" onclick=\"otheraction.add(<%=item.id%>)\">");
+    document.write("            <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info add \" onclick=\"otheraction.add(<%=item.id%>,'<%=item.company_name%>')\">");
     document.write("                <i class=\"ace-icon fa fa-plus bigger-60\"> 选择<\/i>");
     document.write("            <\/a>");
     document.write("            <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info del pink \" onclick=\"otheraction.del(<%=item.id%>)\">");

@@ -488,6 +488,7 @@ class HomeController extends BasicRegController
         if($id != $this->user_info['id']) throws('参数[id]有误！');
         if($this->user_info['admin_type'] != 4)  throws('非用户不可进行此操作！');
         // CommonRequest::judgeEmptyParams($request, 'id', $id);
+        $company_id = CommonRequest::getInt($request, 'company_id');
         $real_name = CommonRequest::get($request, 'real_name');
         $email = CommonRequest::get($request, 'email');
         $mobile = CommonRequest::get($request, 'mobile');
@@ -499,11 +500,16 @@ class HomeController extends BasicRegController
         $admin_username = CommonRequest::get($request, 'admin_username');
         $admin_password = CommonRequest::get($request, 'admin_password');
         $sure_password = CommonRequest::get($request, 'sure_password');
+        // 判断企业是否存在
+        $companyInfo = static::getStaffInfo($company_id);
+        if(empty($companyInfo) || $companyInfo['admin_type'] != 2) throws('所属企业不存在！');
         $saveData = [
             'admin_type' => $this->user_info['admin_type'],
             'is_perfect' => 2,
+            'company_id' => $company_id,
             'real_name' => $real_name,
             'mobile' => $mobile,
+            'email' => $email,
             'qq_number' => $qq_number,
             'id_number' => $id_number,
             'city_id' => $city_id,

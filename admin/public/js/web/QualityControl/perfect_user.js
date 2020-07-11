@@ -58,7 +58,7 @@ var otheraction = {
         // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
         var tishi = '选择所属企业';//"查看供应商";
         console.log('weburl', weburl);
-        layeriframe(weburl,tishi,900,450,0);
+        layeriframe(weburl,tishi,700,450,0);
         return false;
     }
 };
@@ -113,7 +113,13 @@ function ajax_form(){
     // if(!judge_validate(4,'排序',sort_num,false,'digit','','')){
     //     return false;
     // }
-
+    // 所属企业
+    var company_id = $('input[name=company_id]').val();
+    var judge_seled = judge_validate(1,'所属企业',company_id,true,'positive_int','','');
+    if(judge_seled != ''){
+        layer_alert("请选择所属企业",3,0);
+        return false;
+    }
     var real_name = $('input[name=real_name]').val();
     if(!judge_validate(4,'姓名',real_name,true,'length',1,20)){
         return false;
@@ -252,43 +258,9 @@ function removeCompany(company_id){
 }
 
 // 增加
-// shop_id 店铺id, 多个用,号分隔
-function addShop(shop_id){
-    if(shop_id == '') return ;
-    var data = {};
-    data['id'] = shop_id;
-    console.log('data', data);
-    console.log('AJAX_SHOP_SELECTED_URL', AJAX_SHOP_SELECTED_URL);
-    var layer_index = layer.load();
-    $.ajax({
-        'async': false,// true,//false:同步;true:异步
-        'type' : 'POST',
-        'url' : AJAX_SHOP_SELECTED_URL,
-        'headers':get_ajax_headers({}, ADMIN_AJAX_TYPE_NUM),
-        'data' : data,
-        'dataType' : 'json',
-        'success' : function(ret){
-            console.log('ret',ret);
-            if(!ret.apistatus){//失败
-                //alert('失败');
-                err_alert(ret.errorMsg);
-            }else{//成功
-                var info = ret.result;
-                console.log('info', info);
-                $('input[name=seller_id]').val(info.seller_id);
-
-                $('input[name=shop_id]').val(info.id).change();
-                $('input[name=shop_id_history]').val(info.history_id);
-                $('.shop_name').html(info.shop_name);
-                var now_state = info.now_state;// 最新的 0没有变化 ;1 已经删除  2 试卷不同
-                if(now_state == 2 ){
-                    $('.update_shop').show();
-                }else{
-                    $('.update_shop').hide();
-                }
-            }
-            layer.close(layer_index)//手动关闭
-        }
-    });
+// company_id 企业id, 多个用,号分隔
+function addCompany(company_id, company_name){
+    $('input[name=company_id]').val(company_id);
+    $('.company_name').html(company_name);
 }
 
