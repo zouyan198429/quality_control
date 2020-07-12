@@ -1,28 +1,28 @@
 <?php
-namespace App\Http\Controllers\Admin\QualityControl;
+namespace App\Http\Controllers\WebFront\User\QualityControl;
 
 
 use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
 use App\Http\Controllers\WorksController;
 use App\Services\Tool;
 
-class BasicController extends WorksController
+class BasicController extends \App\Http\Controllers\WebFront\BasicController
 {
     // 每一种登录项的唯一标识【大后台：adimn; 企业：company;用户：user】,每一种后台控制器父类，修改成自己的唯一值
     //        用途，如加入到登录状态session中，就可以一个浏览器同时登录多个后台。--让每一个后台session的键都唯一，不串（重）
-    public $siteLoginUniqueKey = 'admin';
-    public $user_type = 1;// 登录用户所属的后台类型  1平台2企业4个人
+//    public $siteLoginUniqueKey = 'user';
+    public $user_type = 4;// 登录用户所属的后台类型  1平台2企业4个人
 
     // 获得当前登录状态者的 是组织id
     public function initOwnOrganizeId(){
         // $userInfo = $this->user_info;
-        return 0;// $this->user_id; 真正的企业后台用这个值 ； $userInfo['company_id'] ?? 0; 真正的个人后台用这个值 ；个人用0比较对
+        return 0; // $this->user_id; // 真正的企业后台用这个值 ； $userInfo['company_id'] ?? 0; 真正的个人后台用这个值 ；个人用0比较对
     }
 
     // 获得个人id--最底层登录人员id，如果是个人登录的话，否则为0
     // 各后台可重写此方法，特别是个人后台中心
     public function initPersonalId(){
-        return 0;// $this->user_id; 真正的个人后台用这个值
+        return $this->user_id; // 真正的个人后台用这个值
     }
 
     // 重购方法
@@ -48,22 +48,32 @@ class BasicController extends WorksController
             $this->delUserInfo();
             throws('非法访问！');
         }
+
+        if($userInfo['is_perfect'] == 1 ) {
+            // 待补充资料
+            if(!isAjax()){
+                throws('待补充用户资料', '1002');
+                // return redirect('web/perfect_user');
+            }
+            throws('待补充用户资料');
+        }
+
         if($userInfo['account_status'] == 2 ){
             $this->delUserInfo();
             throws('用户已冻结！');
         }
 
-        if($userInfo['open_status'] == 1 ){
+        if($userInfo['open_status'] == 1  && $userInfo['is_perfect'] == 2){
             $this->delUserInfo();
-            throws('审核中，请耐心等待！');
+            throws('审核中，请耐心等待！！');
         }
         if($userInfo['open_status'] == 4 ){
             $this->delUserInfo();
-            throws('审核未通过！');
+            throws('审核未通过！！');
         }
-        if($userInfo['open_status'] != 2 ){
+        if($userInfo['open_status'] != 2 && $userInfo['is_perfect'] == 2 ){
             $this->delUserInfo();
-            throws('非审核通过！');
+            throws('非审核通过！！');
         }
         return $userInfo;
     }

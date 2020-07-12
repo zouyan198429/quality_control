@@ -28,7 +28,7 @@ class StaffController extends BasicController
 
     // 判断操作权限--根据用户信息【一维数组】
     public function judgeUserPower(Request $request, $userInfo = []){
-        if(empty($userInfo) || count($userInfo) <= 0 || empty($userInfo)){
+        if(empty($userInfo) || count($userInfo) <= 0){
             throws('用户名信息不存在！');
         }
         // 判断类型是否正确 1平台2老师4学生

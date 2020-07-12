@@ -241,6 +241,7 @@ function ajax_save(formObj, id, login_url, index_url){
                 layer_alert(ret.errorMsg,3,0);
                 // err_alert('<font color="#000000">' + ret.errorMsg + '</font>');
             }else{//成功
+
                 goTop(index_url);
                 // var supplier_id = ret.result['supplier_id'];
                 //if(SUPPLIER_ID_VAL <= 0 && judge_integerpositive(supplier_id)){

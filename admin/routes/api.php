@@ -191,74 +191,74 @@ $api->version('v1', function ($api) {
 
         // 企业后台 company
         // 验证码 -- ok
-//        $api->get('company/ajax_captcha', 'Company\QualityControl\IndexController@ajax_captcha');// api生成验证码
-//        $api->post('company/ajax_captcha_verify', 'Company\QualityControl\IndexController@ajax_captcha_verify');// api生成验证码-验证
-        $api->get('company/ajax_captcha', 'Company\QualityControl\CaptchaController@ajax_captcha');// api生成验证码--ok
-        $api->post('company/ajax_captcha_verify', 'Company\QualityControl\CaptchaController@ajax_captcha_verify');// api生成验证码-验证--ok
+//        $api->get('company/ajax_captcha', 'WebFront\Company\QualityControl\IndexController@ajax_captcha');// api生成验证码
+//        $api->post('company/ajax_captcha_verify', 'WebFront\Company\QualityControl\IndexController@ajax_captcha_verify');// api生成验证码-验证
+        $api->get('company/ajax_captcha', 'WebFront\Company\QualityControl\CaptchaController@ajax_captcha');// api生成验证码--ok
+        $api->post('company/ajax_captcha_verify', 'WebFront\Company\QualityControl\CaptchaController@ajax_captcha_verify');// api生成验证码-验证--ok
 
         // 手机验证码 -- ok
-        $api->any('company/ajax_send_mobile_vercode', 'Company\QualityControl\SMSController@ajax_send_mobile_vercode');// 发送手机验证码--ok
-        $api->any('company/ajax_mobile_code_verify', 'Company\QualityControl\SMSController@ajax_mobile_code_verify');// 发送手机验证码-验证--ok
+        $api->any('company/ajax_send_mobile_vercode', 'WebFront\Company\QualityControl\SMSController@ajax_send_mobile_vercode');// 发送手机验证码--ok
+        $api->any('company/ajax_mobile_code_verify', 'WebFront\Company\QualityControl\SMSController@ajax_mobile_code_verify');// 发送手机验证码-验证--ok
 
         //// 登陆
-        $api->any('company/ajax_login', 'Company\QualityControl\IndexController@ajax_login');// 登陆--ok
-        $api->any('company/ajax_login_sms', 'Company\QualityControl\IndexController@ajax_login_sms');// 登陆-手机短信验证码--ok
-        $api->post('company/ajax_password_save', 'Company\QualityControl\IndexController@ajax_password_save');// 修改密码--ok
-        $api->any('company/ajax_info_save', 'Company\QualityControl\IndexController@ajax_info_save');// 修改设置--ok
+        $api->any('company/ajax_login', 'WebFront\Company\QualityControl\IndexController@ajax_login');// 登陆--ok
+        $api->any('company/ajax_login_sms', 'WebFront\Company\QualityControl\IndexController@ajax_login_sms');// 登陆-手机短信验证码--ok
+        $api->post('company/ajax_password_save', 'WebFront\Company\QualityControl\IndexController@ajax_password_save');// 修改密码--ok
+        $api->any('company/ajax_info_save', 'WebFront\Company\QualityControl\IndexController@ajax_info_save');// 修改设置--ok
 
         // 上传图片
-        $api->post('company/upload', 'Company\QualityControl\UploadController@index');
-        $api->post('company/upload/ajax_del', 'Company\QualityControl\UploadController@ajax_del');// 根据id删除文件
+        $api->post('company/upload', 'WebFront\Company\QualityControl\UploadController@index');
+        $api->post('company/upload/ajax_del', 'WebFront\Company\QualityControl\UploadController@ajax_del');// 根据id删除文件
 
         // 用户中心 user
         // 验证码 -- ok
-//        $api->get('user/ajax_captcha', 'User\QualityControl\IndexController@ajax_captcha');// api生成验证码
-//        $api->post('user/ajax_captcha_verify', 'User\QualityControl\IndexController@ajax_captcha_verify');// api生成验证码-验证
-        $api->get('user/ajax_captcha', 'User\QualityControl\CaptchaController@ajax_captcha');// api生成验证码--ok
-        $api->post('user/ajax_captcha_verify', 'User\QualityControl\CaptchaController@ajax_captcha_verify');// api生成验证码-验证--ok
+//        $api->get('user/ajax_captcha', 'WebFront\User\QualityControl\IndexController@ajax_captcha');// api生成验证码
+//        $api->post('user/ajax_captcha_verify', 'WebFront\User\QualityControl\IndexController@ajax_captcha_verify');// api生成验证码-验证
+        $api->get('user/ajax_captcha', 'WebFront\User\QualityControl\CaptchaController@ajax_captcha');// api生成验证码--ok
+        $api->post('user/ajax_captcha_verify', 'WebFront\User\QualityControl\CaptchaController@ajax_captcha_verify');// api生成验证码-验证--ok
 
         // 手机验证码 -- ok
-        $api->any('user/ajax_send_mobile_vercode', 'User\QualityControl\SMSController@ajax_send_mobile_vercode');// 发送手机验证码--ok
-        $api->any('user/ajax_mobile_code_verify', 'User\QualityControl\SMSController@ajax_mobile_code_verify');// 发送手机验证码-验证--ok
+        $api->any('user/ajax_send_mobile_vercode', 'WebFront\User\QualityControl\SMSController@ajax_send_mobile_vercode');// 发送手机验证码--ok
+        $api->any('user/ajax_mobile_code_verify', 'WebFront\User\QualityControl\SMSController@ajax_mobile_code_verify');// 发送手机验证码-验证--ok
 
         //// 登陆
-        $api->any('user/ajax_login', 'User\QualityControl\IndexController@ajax_login');// 登陆--ok
-        $api->any('user/ajax_login_sms', 'User\QualityControl\IndexController@ajax_login_sms');// 登陆-手机短信验证码--ok
-        $api->post('user/ajax_password_save', 'User\QualityControl\IndexController@ajax_password_save');// 修改密码--ok
-        $api->any('user/ajax_info_save', 'User\QualityControl\IndexController@ajax_info_save');// 修改设置--ok
+        $api->any('user/ajax_login', 'WebFront\User\QualityControl\IndexController@ajax_login');// 登陆--ok
+        $api->any('user/ajax_login_sms', 'WebFront\User\QualityControl\IndexController@ajax_login_sms');// 登陆-手机短信验证码--ok
+        $api->post('user/ajax_password_save', 'WebFront\User\QualityControl\IndexController@ajax_password_save');// 修改密码--ok
+        $api->any('user/ajax_info_save', 'WebFront\User\QualityControl\IndexController@ajax_info_save');// 修改设置--ok
 
         // 上传图片
-        $api->post('user/upload', 'User\QualityControl\UploadController@index');
-        $api->post('user/upload/ajax_del', 'User\QualityControl\UploadController@ajax_del');// 根据id删除文件
+        $api->post('user/upload', 'WebFront\User\QualityControl\UploadController@index');
+        $api->post('user/upload/ajax_del', 'WebFront\User\QualityControl\UploadController@ajax_del');// 根据id删除文件
 
         // 前台 web
         // 验证码 -- ok
-//        $api->get('web/ajax_captcha', 'Web\QualityControl\IndexController@ajax_captcha');// api生成验证码
-//        $api->post('web/ajax_captcha_verify', 'Web\QualityControl\IndexController@ajax_captcha_verify');// api生成验证码-验证
-        $api->get('web/ajax_captcha', 'Web\QualityControl\CaptchaController@ajax_captcha');// api生成验证码--ok
-        $api->post('web/ajax_captcha_verify', 'Web\QualityControl\CaptchaController@ajax_captcha_verify');// api生成验证码-验证--ok
+//        $api->get('web/ajax_captcha', 'WebFront\Web\QualityControl\IndexController@ajax_captcha');// api生成验证码
+//        $api->post('web/ajax_captcha_verify', 'WebFront\Web\QualityControl\IndexController@ajax_captcha_verify');// api生成验证码-验证
+        $api->get('web/ajax_captcha', 'WebFront\Web\QualityControl\CaptchaController@ajax_captcha');// api生成验证码--ok
+        $api->post('web/ajax_captcha_verify', 'WebFront\Web\QualityControl\CaptchaController@ajax_captcha_verify');// api生成验证码-验证--ok
 
         // 手机验证码 -- ok
-        $api->any('web/ajax_send_mobile_vercode', 'Web\QualityControl\SMSController@ajax_send_mobile_vercode');// 发送手机验证码--ok
-        $api->any('web/ajax_mobile_code_verify', 'Web\QualityControl\SMSController@ajax_mobile_code_verify');// 发送手机验证码-验证--ok
+        $api->any('web/ajax_send_mobile_vercode', 'WebFront\Web\QualityControl\SMSController@ajax_send_mobile_vercode');// 发送手机验证码--ok
+        $api->any('web/ajax_mobile_code_verify', 'WebFront\Web\QualityControl\SMSController@ajax_mobile_code_verify');// 发送手机验证码-验证--ok
 
         //// 登陆
-//        $api->any('web/ajax_login', 'Web\QualityControl\IndexController@ajax_login');// 登陆--ok
-//        $api->post('web/ajax_password_save', 'Web\QualityControl\IndexController@ajax_password_save');// 修改密码--ok
-//        $api->any('web/ajax_info_save', 'Web\QualityControl\IndexController@ajax_info_save');// 修改设置--ok
+//        $api->any('web/ajax_login', 'WebFront\Web\QualityControl\IndexController@ajax_login');// 登陆--ok
+//        $api->post('web/ajax_password_save', 'WebFront\Web\QualityControl\IndexController@ajax_password_save');// 修改密码--ok
+//        $api->any('web/ajax_info_save', 'WebFront\Web\QualityControl\IndexController@ajax_info_save');// 修改设置--ok
 
         // 登录 注册
-        $api->any('web/ajax_reg', 'Web\QualityControl\HomeController@ajax_reg');// 注册
-        $api->any('web/ajax_perfect_company', 'Web\QualityControl\HomeController@ajax_perfect_company');// 注册-补充企业资料
-        $api->any('web/ajax_perfect_user', 'Web\QualityControl\HomeController@ajax_perfect_user');// 注册-补充用户资料
+        $api->any('web/ajax_reg', 'WebFront\Web\QualityControl\HomeController@ajax_reg');// 注册
+        $api->any('web/ajax_perfect_company', 'WebFront\Web\QualityControl\HomeController@ajax_perfect_company');// 注册-补充企业资料
+        $api->any('web/ajax_perfect_user', 'WebFront\Web\QualityControl\HomeController@ajax_perfect_user');// 注册-补充用户资料
 
-        $api->any('web/ajax_login_company', 'Web\QualityControl\HomeController@ajax_login_company');// 登陆----为登录测试  补充资料用
-        $api->any('web/ajax_login_user', 'Web\QualityControl\HomeController@ajax_login_user');// 登陆----为登录测试  补充资料用
-        $api->any('web/company_ajax_alist', 'Web\QualityControl\HomeController@company_ajax_alist');// 登陆----为登录测试  补充资料用--获得企业列表信息
+        $api->any('web/ajax_login_company', 'WebFront\Web\QualityControl\HomeController@ajax_login_company');// 登陆----为登录测试  补充资料用
+        $api->any('web/ajax_login_user', 'WebFront\Web\QualityControl\HomeController@ajax_login_user');// 登陆----为登录测试  补充资料用
+        $api->any('web/company_ajax_alist', 'WebFront\Web\QualityControl\HomeController@company_ajax_alist');// 登陆----为登录测试  补充资料用--获得企业列表信息
 
         // 上传图片
-        $api->post('web/upload', 'Web\QualityControl\UploadController@index');
-        $api->post('web/upload/ajax_del', 'Web\QualityControl\UploadController@ajax_del');// 根据id删除文件
+        $api->post('web/upload', 'WebFront\Web\QualityControl\UploadController@index');
+        $api->post('web/upload/ajax_del', 'WebFront\Web\QualityControl\UploadController@ajax_del');// 根据id删除文件
 
 //        Route::middleware('auth:api')->get('/user', function (Request $request) {
 //            return $request->user();

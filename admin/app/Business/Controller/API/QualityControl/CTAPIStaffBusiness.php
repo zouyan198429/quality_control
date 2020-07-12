@@ -194,7 +194,7 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
      * @param int $admin_type 拥有者类型1平台2企业4个人 可以写操作
      * @param int $login_type 登录方式 1 用户名密码 [已经判断过验证码] ；2 手机验证码[已经判断过短信验证码]
      * @param int $user_id 登录成功后的用户id 默认为：0
-     * @param int $operateType 操作类型 1 注册登录[帐号不存在时，自动注册并登录；存在时登录]--注册并进行登录操作 2 注册【不进行登录操作】  4登录 -- 通过 用户类型
+     * @param int $operateType 操作类型 1 注册登录[帐号不存在时，自动注册并登录；存在时登录]--注册并进行登录操作 2 注册【不进行登录操作】  4登录 -- 通过 用户类型，
      * @param array $regInitData 注册时的初始值 一维数组  如：['issuper' => 2,'open_status' => 2,'account_status' => 1] --最优先有效
      * @return  mixed 用户数组
      * @author zouyan(305463219@qq.com)
@@ -314,7 +314,7 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
         }
         // 进行登录操作
 
-        if(empty($userInfo) || count($userInfo) <= 0 || empty($userInfo)){
+        if(empty($userInfo) || count($userInfo) <= 0){
             throws('用户名信息不存在！');
         }
 
