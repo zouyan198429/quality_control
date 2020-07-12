@@ -2,52 +2,17 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/css/layui.css')}}" media="all">
-
     @include('web.QualityControl.layout_public.pagehead')
 {{--  	<script type="text/javascript" src="{{asset('staticweb/js/jquery1.42.min.js')}}"></script>--}}
 {{--  	<script type="text/javascript" src="{{asset('staticweb/js/jquery.SuperSlide.2.1.1.js')}}"></script>--}}
 </head>
 <body id="body-login" >
     @include('web.QualityControl.layout_public.header')
+    <div class="line-blue"></div>
 	<div id="main">
 		<div class="login">
         <style>
-            .login {
-                width:1180px; margin:40px auto 20px auto;  padding:20px 20px; min-height: 500px;
-            }
-            .bd-right {
-                .min-height: 480px; 
-            }
-            .layui-tab {
-                margin:0;
-            }
-            .layui-tab-title li {
-                height: 60px;
-            }
-            .layui-tab-title .layui-this {
-                border:0;
-                border-left:1px solid #eee;
-                border-right: 1px solid #eee;
-                border-bottom: 2px solid #06a;
-                height: 58px;
-                border-right:1px solid #eee;
-                margin-left: -1px;
-            }
-            .layui-tab-title .layui-this:after {
-                display: none;
-            }
-            .layui-tab-content {
-                min-height: 400px;
-            }
-            .layui-tab-item {
-                padding-top:30px;
-            }
-            input[type='text'].form-control {
-                height: 36px;
-            }
-            input[type='password'].form-control {
-                height: 36px;
-            }
+
         </style>
 
 			<div class="bd-left">
@@ -57,8 +22,8 @@
                 <div class="layui-tab login-tag hd">
                     <input type="hidden" name="form_type" value="user_login" />
                     <ul class="layui-tab-title">
-                        <li class="layui-this"  data-type="user_login">个人登录</li>
-                        <li data-type="compnay_login">企业登录</li>
+                        <li class="layui-this"  data-type="user_login"><i id="i-user" ></i>个人登录</li>
+                        <li data-type="compnay_login" ><i id="i-com"></i>企业登录</li>
                     </ul>
                     <div class="layui-tab-content">
                         <div class="layui-tab-item layui-show">
@@ -86,6 +51,7 @@
                                          </div>- -}}
                                      </div>- -}}
  -->
+                                    <div class="k10">   </div>
                                     <a href="javascript:void(0);" class="btn btn-block submitBtn">登录</a>
                                 </form>
 
@@ -123,7 +89,7 @@
                     </div>
                 </div>
 				<div class="fd tc">
-					<a href="{{ url('web/reg') }}" >新用户注册</a>
+					还没有帐户？ <a href="{{ url('web/reg') }}" >立即注册</a>
 					<div class="k20"></div>
 				</div>
                 <div class="c"></div>

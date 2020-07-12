@@ -1,17 +1,18 @@
 <!doctype html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/css/layui.css')}}" media="all">
     @include('web.QualityControl.layout_public.pagehead')
     <!-- zui css -->
     <link rel="stylesheet" href="{{asset('dist/css/zui.min.css') }}">
-    <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/css/layui.css')}}" media="all">
 </head>
-<body style=" background:#eee; ">
+<body style=" background:#f8f8f8; ">
     @include('web.QualityControl.layout_public.header')
+    <div class="line-blue"></div>
 	<div id="main">
-		<div class="reg" style="width:980px; margin:40px auto 20px auto; border:1px solid #eee; min-height:500px;  padding:20px 20px; background:#fff;  ">
+		<div class="reg">
 
-			<div class="hd tc" style="padding:30px 0;">
+			<div class="hd-reg" >
 				<h2>完善企业资料</h2>
 			</div>
 
@@ -30,7 +31,7 @@
 
 				<div class="form-item company_is_legal_persion">
 				    <label for="username" class="form-label"> 是否独立法人：  </label>
-				    <div class="form-input"><input type="checkbox" name="company_is_legal_persion" class="form-control" autocomplete="off" value="1"  @if(isset($info['company_is_legal_persion']) && $info['company_is_legal_persion'] == 1) checked="checked"  @endif >非独立法人 <span class="gray">企业类型为非独立法人时请填写主体单位信息</span></div>
+				    <div class="form-input"><input type="checkbox" name="company_is_legal_persion" class="form-control" style="width:22px; margin:0;display: inline-block;  vertical-align: middle;" autocomplete="off" value="1"  @if(isset($info['company_is_legal_persion']) && $info['company_is_legal_persion'] == 1) checked="checked"  @endif >非独立法人 <span class="gray">企业类型为非独立法人时请填写主体单位信息</span></div>
 
 				</div>
 				<div class="form-item company_is_legal_persion_item">
@@ -61,8 +62,8 @@
 				<div class="form-item">
 				    <label for="text" class="form-label">企业类型 <span class="red">*</span> </label>
 				    <div class="form-input">
-						 <input type="radio" name="company_type" value="1" title="检测机构" @if (isset($info['company_type']) && $info['company_type'] == 1 ) checked @endif>检测机构
-						 <input type="radio" name="company_type" value="2" title="生产企业" @if (isset($info['company_type']) && $info['company_type'] == 2 ) checked @endif>生产企业
+						 <input type="radio" name="company_type" value="1" title="检测机构" style="margin:0; " @if (isset($info['company_type']) && $info['company_type'] == 1 ) checked @endif> 检测机构
+						 <input type="radio" name="company_type" value="2" title="生产企业" style="margin:0; " @if (isset($info['company_type']) && $info['company_type'] == 2 ) checked @endif> 生产企业
 					</div>
 				</div>
 				<div class="form-item">
@@ -105,7 +106,7 @@
 				<div class="form-item">
 				    <label for="text" class="form-label">营业执照 <span class="red">*</span></label>
 				    <div class="form-input">
-{{--                        <input type="file" name="text" class="form-control" autocomplete="off" value="{{ $info['aaaa'] ?? '' }}">--}}
+{{--                        <!-- <input type="file" name="text" class="form-control" autocomplete="off" value="{{ $info['aaaa'] ?? '' }}"> -->--}}
 
                         <div class="alert alert-warning alert-dismissable">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -135,21 +136,25 @@
 				</div>
                 <div class="form-item">
                     <label for="text" class="form-label">单位人数 <span class="red">*</span> </label>
-                    <select class="form-control" style="width: 360px;"  name="company_peoples_num">
-					  <option value="">请选择</option>
-                        @foreach ($companyPeoples as $k=>$txt)
-                            <option value="{{ $k }}"  @if(isset($defaultCompanyPeoples) && $defaultCompanyPeoples == $k) selected @endif >{{ $txt }}</option>
-                        @endforeach
-					</select>
+                    <div class="form-input">
+                        <select class="form-control" style="width: 360px;"  name="company_peoples_num">
+    					  <option value="">请选择</option>
+                            @foreach ($companyPeoples as $k=>$txt)
+                                <option value="{{ $k }}"  @if(isset($defaultCompanyPeoples) && $defaultCompanyPeoples == $k) selected @endif >{{ $txt }}</option>
+                            @endforeach
+    					</select>
+                    </div>
                 </div>
                 <div class="form-item">
                     <label for="text" class="form-label">所属行业 <span class="red">*</span> </label>
-                    <select class="form-control" style="width: 360px;"   name="company_industry_id">
-					  <option value="">请选择</option>
-                        @foreach ($industry_kv as $k=>$txt)
-                            <option value="{{ $k }}"  @if(isset($defaultIndustry) && $defaultIndustry == $k) selected @endif >{{ $txt }}</option>
-                        @endforeach
-					</select>
+                    <div class="form-input">
+                        <select class="form-control" style="width: 360px;"   name="company_industry_id">
+    					  <option value="">请选择</option>
+                            @foreach ($industry_kv as $k=>$txt)
+                                <option value="{{ $k }}"  @if(isset($defaultIndustry) && $defaultIndustry == $k) selected @endif >{{ $txt }}</option>
+                            @endforeach
+    					</select>
+                    </div>
                 </div>
                 <div class="form-item">
                     <label for="text" class="form-label">证书编号 <span class="red">*</span></label>
@@ -169,7 +174,7 @@
                 </div>
 				<div class="form-item read_and_agree">
 				    <label for="text" class="form-label"> </label>
-				    <div class="form-input"><input type="checkbox" name="read_and_agree" autocomplete="off" value="1">我已阅读并同意<a href="javascript:void(0);" class="blue reg_agree_info">注册服务协议</a></div>
+				    <div class="form-input"><input type="checkbox" name="read_and_agree" autocomplete="off" value="1" style="width:26px;line-height: 28px; margin:0;  display: inline-block;  vertical-align: middle;" > <span style="line-height: 28px;">我已阅读并同意<a href="javascript:void(0);" class="blue reg_agree_info">注册服务协议</a></span></div>
 				</div>
                 <div class="k20"></div>
                 <a href="javascript:void(0);" class="btn btn-default btn-block"   id="submitBtn">提交</a>

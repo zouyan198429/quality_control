@@ -62,9 +62,9 @@ select { height:24px; line-height:24px; }
 
 .form-item {    margin-bottom: 15px;    text-align: left; }
 .form-label {     display: inline-block;    margin-bottom: 5px;    width:140px;    text-align: left;}
-.form-input {    min-width:300px;     display: inline-block;    padding: 6px 0;       color: #555;    vertical-align: middle;
+.form-input {    min-width:300px;     display: inline-block;    padding: 6px 0;    color: #555;    vertical-align: middle;
        background-image: none;     border-radius: 2px;}
-.form-input input[type='text'] ,.form-input input[type='password'] ,.form-input select { font-size: 14px;    line-height: 1.42;     width: 60%;  text-indent: 12px;     height:36px;}
+.form-input input[type='text'] ,.form-input input[type='password'] ,.form-input select { font-size: 14px;    line-height: 1.42;    text-indent: 12px;     height:36px;}
 .form-group {    margin-bottom: 15px;}
 
 .control-label {     display: block;    margin-bottom: 5px;}
@@ -76,8 +76,9 @@ select.form-control { height: 36px; line-height: 36px;}
 
 /* 按钮 */
 
-.btn ,a.btn {    display: inline-block;    vertical-align:middle;    padding:0px 18px;    height:38x;   line-height: 38px;    font-size: 14px;    color: #FFFFFF;    cursor: pointer;    text-align: center;    border: 1px solid #009688;
-    border-radius: 2px;    background-color: #009688;    transition: opacity 0.2s ease-in-out 0s;    margin:0 7px 10px 0;}
+.btn ,a.btn {    display: inline-block;    vertical-align:middle;    padding:0px 18px;    height:38x;   line-height: 38px;    font-size: 14px;
+    color: #FFFFFF;    cursor: pointer;    text-align: center;    border: 1px solid #3754a0;
+    border-radius: 2px;    background-color: #3754a0;    transition: opacity 0.2s ease-in-out 0s;    margin:0 7px 10px 0;}
 .btn:hover {	text-decoration: none;	opacity:.8;filter:alpha(opacity=80);}
 
 .btn-lg,a.btn-lg { 	height:44px; line-height: 44px; padding:0 25px;	font-size: 16px; border:none;}

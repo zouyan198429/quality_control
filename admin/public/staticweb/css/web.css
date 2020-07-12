@@ -9,14 +9,14 @@
 /* header*/
 
 #header {
-	height:100px; line-height: 90px;
+	height:100px; 
 	background: #fff;
 	box-shadow: 0 0 5px #eee;
 }
 
 
 #logo {
-	width: 320px;  
+	width: 320px;  line-height: 90px;
 }
 #logo img {
 	width: 320px;
@@ -28,16 +28,39 @@
 }
 
 
-.account {  display: inline-block; }
-.account-wrap {
+#toptell {
 	position: absolute;
-	right: 0; 
-	top:0; 
-	text-align: center;
+	right: 0;
+	top:12px;
+	height: 24px;
+	line-height: 24px;
+	padding-left:35px;
+	background: url(../image/icon.png) no-repeat 10px -53px;
 }
-.account-wrap a { 
+#toptell i {
+	color: #24408a;
 }
- 
+#toplogin {
+	position: absolute;
+	right: 0;
+	top: 45px; 
+	border-radius: 50px;
+	overflow: hidden;
+	padding: 5px 15px 5px 35px;
+	background:#eceeef url(../image/icon.png) no-repeat 10px -4px;
+	
+}
+#toplogin a {
+	padding: 0 5px;
+	color: #333;
+}
+
+
+
+
+
+
+
 
 /*nav*/
 
@@ -66,6 +89,11 @@
 .nav ul li:hover ul li a {display:block; background:#555; color:#fff;  height: 34px; line-height: 34px; font-size:14px; border-bottom:1px solid #777; border-right:0;}
 .nav ul li:hover ul li a:hover {background:#CE1522; color:#fff;}
 
+.line-blue {
+	border-top: 4px solid #2a4ead;
+	width: 100%;
+	clear: both;
+}
 
 /*footer*/
 
@@ -816,7 +844,11 @@ body {
 /* 登录  */
 
 #body-login {
-	background:#e1e2e5 url(../image/bg-login.jpg) no-repeat center 0;
+	background:#e1e2e5 url(../image/bg-login-1.jpg) no-repeat center 0;
+}
+
+.login {
+    width:1200px; margin:80px auto 20px auto;  padding:20px 0; min-height: 500px;
 }
 
 .login .bd-left {
@@ -835,19 +867,11 @@ body {
 	bottom: 0;
 	width: 100%;
 }
-
+.login .fd a {
+	color: #2a4ead;
+}
 .login-tag {
 	height: 60px; 
-}
-.login-tag li {
-	height: 60px;
-	line-height: 60px;
-	width: 49.8%;
-	float: left;
-	display: block;
-	text-align: center;
-	cursor: pointer;
-	padding:0;
 }
  
 .login-mm p {
@@ -855,9 +879,83 @@ body {
 }
 .login-mm .btn {
 	width: 90%;  
-	margin-top: 20px;
+	margin-top: 10px;
 }
  
+.layui-btn {
+	background-color: #cdbda5;
+}
+.layui-input {
+	padding: 0;
+}
+.bd-right {
+    .min-height: 480px; 
+}
+.layui-tab {
+    margin:0;
+}
+.layui-tab-title li {
+    height: 60px;
+    text-indent: 2.5em;
+    font-size:15px;
+    position: relative;
+    line-height: 60px;
+	width: 49.85%;
+	float: left; 
+	text-align: center;
+	cursor: pointer;
+	padding:0;
+}
+.layui-tab-title li i {
+	width:32px;
+	height:32px;
+	position: absolute;
+	left:78px;
+	top:14px;
+	z-index: 1000;
+	display: block;
+}
+.layui-tab-title li i#i-user  {
+    background: url(../image/icon-05.png) no-repeat 0 0;
+}
+.layui-tab-title li i#i-com {
+    background: url(../image/icon-05.png) no-repeat -300px 0;
+}
+
+.layui-tab-title li.layui-this {
+    border:0;
+    border-left:1px solid #eee; 
+    border-bottom: 3px solid #06a;
+    height: 57px;
+    border-right:1px solid #eee;
+    margin-left: -1px;
+    line-height: 56px;
+    color: #2a4ead;
+    background-position:left top;
+}
+
+.layui-tab-title li.layui-this i#i-user {
+	background: url(../image/icon-05.png) no-repeat 0 -56px;
+}
+.layui-tab-title li.layui-this i#i-com {
+    background: url(../image/icon-05.png) no-repeat -300px -56px;
+}
+
+.layui-tab-title .layui-this:after {
+    display: none;
+}
+.layui-tab-content {
+    min-height: 400px;
+}
+.layui-tab-item {
+    padding-top:30px;
+}
+input[type='text'].form-control {
+    height: 36px;
+}
+input[type='password'].form-control {
+    height: 36px;
+}
 
 element.style {
 }
@@ -865,6 +963,50 @@ element.style {
 	height: 60px;
 	overflow: hidden;
 }
+
+
+
+#body-reg1 {
+		background:#e1e2e5 url(../image/bg-login-1.jpg) no-repeat center 0;
+	}
+.reg {
+	    width:1200px; margin:80px auto 20px auto;  padding:0 0 45px 0; min-height: 500px;
+	    background: #fff;
+}
+
+.hd-reg {
+	border-bottom: 1px solid #eceeef;
+	padding:15px 0;
+	text-indent: 2.35em;
+	margin-bottom: 40px;
+	background:#fff url(../image/icon-06.png) no-repeat 24px 11px;
+}
+.hd-reg h2 {
+	font-size: 16px;
+	color: #2a4ead;
+	display: inline-block;
+	margin:0;
+}
+.hd-reg span {
+	color: #d1d3d4;
+}
+
+
+.reg .fd a {
+	color: #2a4ead;
+}
+
+
+.w480 {
+	 width: 480px;
+}
+
+.w150  {
+	width: 150px;
+}
+
+
+
 
 /* index */
 
