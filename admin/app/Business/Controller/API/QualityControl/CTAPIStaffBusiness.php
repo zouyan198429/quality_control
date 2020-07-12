@@ -477,6 +477,9 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
         $admin_type = CommonRequest::getInt($request, 'admin_type');
         if($admin_type > 0 )  array_push($queryParams['where'], ['admin_type', '=', $admin_type]);
 
+        $city_id = CommonRequest::getInt($request, 'city_id');
+        if($city_id > 0 )  array_push($queryParams['where'], ['city_id', '=', $city_id]);
+
         $is_perfect = CommonRequest::getInt($request, 'is_perfect');
         if($is_perfect > 0 )  array_push($queryParams['where'], ['is_perfect', '=', $is_perfect]);
 
@@ -893,6 +896,67 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
     }
 
     /**
+     * 判断手机号是否是用效的用户
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param string $user_type 用户类型  1平台2企业4个人 可以多个  如： 1 ｜ 2-- 0代表不判断是否存在
+     * @param string $mobile 发送的手机号
+     * @param string $countryCode 国家码 '86' 阿里的暂时无用
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  null 无返回值
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function mobileIsValid(Request $request, Controller $controller, $user_type = 0, $mobile = "", $countryCode = '86', $notLog = 0)
+    {
+        if($user_type == 0) return true;
+        // 多语言配置自动验证数据
+        $judgeDataItem = [
+            'mobile' => $mobile,
+        ];
+        $judgeData = $judgeDataItem;
+        $mustFields = ['mobile'];
+        static::judgeDataThrowsErr(1, $judgeData, $mustFields, [], 1, "<br/>", ['request' => $request, 'controller' => $controller]);
+        // 判断手机号是否是用户
+        $admin_type = [];
+        if( ($user_type & 1) == 1) array_push($admin_type, 1);
+        if( ($user_type & 2) == 2) array_push($admin_type, 2);
+        if( ($user_type & 4) == 4) array_push($admin_type, 4);
+        if(empty($admin_type)) return true;
+
+        $queryParams = [
+            'where' => [
+                ['mobile',$mobile],
+//                ['admin_username',$admin_username],
+//                ['admin_password',md5($admin_password)],
+            ],
+//            'whereIn' => [
+//                'admin_type' => array_keys(self::$adminType),
+//            ],
+            // 'select' => ['id','company_id','admin_username','real_name','admin_type'],
+            // 'limit' => 1
+        ];
+        Tool::appendParamQuery($queryParams, $admin_type, 'admin_type', [0, '0', ''], ',', false);
+        $userInfo = static::getInfoQuery($request, $controller, '', 0, 1, $queryParams, [], 1);
+        if(empty($userInfo)) throws('手机号不是有效的用户，请先注册再使用！');
+
+        if($userInfo['account_status'] == 2 ){
+            throws('用户已冻结！');
+        }
+
+        if($userInfo['open_status'] == 1  && $userInfo['is_perfect'] == 2){
+            throws('审核中，请耐心等待！！');
+        }
+
+        if($userInfo['open_status'] == 4 ){
+            throws('审核未通过！！');
+        }
+
+        return true;
+    }
+
+
+    /**
      * 注册发送手机验证码
      *
      * @param Request $request 请求信息
@@ -914,6 +978,7 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
         $judgeData = $judgeDataItem;
         $mustFields = ['mobile'];
         static::judgeDataThrowsErr(1, $judgeData, $mustFields, [], 1, "<br/>", ['request' => $request, 'controller' => $controller]);
+
         $mobile_vercode = '';
         $smsConfig = [];
         // 发送手机验证码[判断手机号是否可以发送验证码]
@@ -1215,8 +1280,24 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
             $sheetTitle = '系统管理员';
             switch($admin_type){
                 case 2:
+                    $headArr = ['company_name'=>'单位名称', 'company_grade_text'=>'会员类型', 'company_credit_code'=>'统一社会信用代码',  'company_is_legal_persion_text'=>'是否独立法人',
+                        'company_legal_credit_code'=>'主体机构统一社会信用代码', 'company_legal_name'=>'主体机构',  'city_name'=>'所在城市',
+                        'company_type_text'=>'企业类型',  'company_prop_text'=>'企业性质',  'addr'=>'通讯地址',
+                        'zip_code'=>'邮编',  'fax'=>'传真',  'email'=>'企业邮箱',  'company_legal'=>'法人代表',  'company_peoples_num_text'=>'单位人数',
+                        'industry_name'=>'所属行业',  'company_certificate_no'=>'证书编号',  'company_contact_name'=>'联系人',
+                        'company_contact_mobile'=>'联系人手机',  'company_contact_tel'=>'联系电话', 'admin_username'=>'用户名',
+                        'is_perfect_text'=>'完善资料', 'open_status_text'=>'审核', 'account_status_text'=>'状态',
+                        'lastlogintime'=>'上次登录', 'created_at'=>'创建时间'];
+                    $fileName = '企业';
+                    $sheetTitle = '企业';
                     break;
                 case 4:
+                    $headArr = ['user_company_name'=>'所属企业', 'real_name'=>'姓名', 'sex_text'=>'性别', 'mobile'=>'手机号',
+                        'email'=>'邮箱', 'qq_number'=>'微信号', 'id_number'=>'身份证号', 'city_name'=>'城市', 'addr'=>'通讯地址',
+                        'is_perfect_text'=>'完善资料', 'open_status_text'=>'审核', 'account_status_text'=>'状态',
+                        'lastlogintime'=>'上次登录', 'created_at'=>'创建时间'];
+                    $fileName = '用户';
+                    $sheetTitle = '用户';
                     break;
                 default:
                     break;

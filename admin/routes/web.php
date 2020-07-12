@@ -208,7 +208,7 @@ Route::get('admin/staff/import_template', 'Admin\QualityControl\StaffController@
 // 企业帐号管理
 Route::get('admin/company', 'Admin\QualityControl\CompanyController@index');// 列表
 Route::get('admin/company/add/{id}', 'Admin\QualityControl\CompanyController@add');// 添加
-// Route::get('admin/company/select', 'Admin\QualityControl\CompanyController@select');// 选择-弹窗
+ Route::get('admin/company/select', 'Admin\QualityControl\CompanyController@select');// 选择-弹窗
 Route::get('admin/company/export', 'Admin\QualityControl\CompanyController@export');// 导出
 Route::get('admin/company/import_template', 'Admin\QualityControl\CompanyController@import_template');// 导入模版
 

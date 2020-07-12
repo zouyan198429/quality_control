@@ -38,8 +38,8 @@
                                     </div>
                                     <div class="form-group layui-form-item">
                                         <input type="text" name="mobile_vercode" class="form-control fl" style="width:69.1%;" placeholder="验证码"   value="">
-<!--                          <input type="text" name="text" class="form-control fr tc" style="width:34%;" placeholder="发送验证码"   value=""> 
- -->                                      <button type="button" class="layui-btn" id="LAY-user-getsmscode">获取验证码</button>
+<!--                          <input type="text" name="text" class="form-control fr tc" style="width:34%;" placeholder="发送验证码"   value="">
+ -->                                      <button type="button" class="layui-btn LAY-user-getsmscode" id="LAY-user-getsmscode">获取验证码</button>
                                         <div class="c"></div>
                                     </div>
 <!--                                      <div class="form-group layui-form-item">- -}}
@@ -74,7 +74,9 @@
                                         <div class="form-group layui-form-item">
 <!--                                             <label for="password" class="form-label">图形验证码</label>
  -->                                            <div class="form-input">
-                                                <input type="text" name="captcha_code" lay-verify="required" placeholder="图形验证码" class="layui-input" style="width:100px; display: inline-block;">
+                                                <label>
+                                                    <input type="text" name="captcha_code" lay-verify="required" placeholder="图形验证码" class="layui-input" style="width:100px; display: inline-block;">
+                                                </label>
                                                 <input type="hidden" name="captcha_key" />
                                                 <img src="" class="layadmin-user-login-codeimg" id="LAY-user-get-vercode" >
                                             </div>

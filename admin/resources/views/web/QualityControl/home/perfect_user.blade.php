@@ -31,6 +31,13 @@
                     	<input type="text" name="real_name" autocomplete="off" value="{{ $info['real_name'] ?? '' }}">
                     </div>
                 </div>
+                <div class="form-item">
+                    <label for="username" class="form-label"> 性别 <span class="red">*</span> </label>
+                    <div class="form-input">
+                        <label><input type="radio" name="sex" value="1" @if (isset($info['sex']) && $info['sex'] == 1 ) checked @endif>男</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <label><input type="radio" name="sex" value="2" @if (isset($info['sex']) && $info['sex'] == 2 ) checked @endif>女</label>
+                    </div>
+                </div>
 
                  <div class="form-item">
                     <label for="text" class="form-label">邮箱<span class="red">*</span> </label>

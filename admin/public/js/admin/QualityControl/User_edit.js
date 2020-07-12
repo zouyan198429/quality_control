@@ -45,6 +45,24 @@ $(function(){
 
 });
 
+
+//业务逻辑部分
+var otheraction = {
+    selectCompany: function(obj){// 选择商家
+        var recordObj = $(obj);
+        //获得表单各name的值
+        var weburl = SELECT_COMPANY_URL;
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = '选择所属企业';//"查看供应商";
+        console.log('weburl', weburl);
+        layeriframe(weburl,tishi,700,450,0);
+        return false;
+    }
+};
 //ajax提交表单
 function ajax_form(){
     if (!SUBMIT_FORM) return false;//false，则返回
@@ -55,47 +73,13 @@ function ajax_form(){
         return false;
     }
 
-
-
-
-    // var work_num = $('input[name=work_num]').val();
-    // if(!judge_validate(4,'工号',work_num,true,'length',1,30)){
-    //     return false;
-    // }
-    //
-    // var department_id = $('select[name=department_id]').val();
-    // var judge_seled = judge_validate(1,'部门',department_id,true,'digit','','');
-    // if(judge_seled != ''){
-    //     layer_alert("请选择部门",3,0);
-    //     //err_alert('<font color="#000000">' + judge_seled + '</font>');
-    //     return false;
-    // }
-
-    // var group_id = $('select[name=group_id]').val();
-    // var judge_seled = judge_validate(1,'部门',group_id,true,'digit','','');
-    // if(judge_seled != ''){
-    //     layer_alert("请选择班组",3,0);
-    //     //err_alert('<font color="#000000">' + judge_seled + '</font>');
-    //     return false;
-    // }
-
-    // var position_id = $('select[name=position_id]').val();
-    // var judge_seled = judge_validate(1,'职务',position_id,true,'digit','','');
-    // if(judge_seled != ''){
-    //     layer_alert("请选择职务",3,0);
-    //     //err_alert('<font color="#000000">' + judge_seled + '</font>');
-    //     return false;
-    // }
-
-    // var type_name = $('input[name=type_name]').val();
-    // if(!judge_validate(4,'标签名称',type_name,true,'length',1,20)){
-    //     return false;
-    // }
-    //
-    // var sort_num = $('input[name=sort_num]').val();
-    // if(!judge_validate(4,'排序',sort_num,false,'digit','','')){
-    //     return false;
-    // }
+    // 所属企业
+    var company_id = $('input[name=company_id]').val();
+    var judge_seled = judge_validate(1,'所属企业',company_id,true,'positive_int','','');
+    if(judge_seled != ''){
+        layer_alert("请选择所属企业",3,0);
+        return false;
+    }
 
     var real_name = $('input[name=real_name]').val();
     if(!judge_validate(4,'姓名',real_name,true,'length',1,20)){
@@ -110,53 +94,70 @@ function ajax_form(){
         return false;
     }
 
-    // var account_status = $('input[name=account_status]:checked').val() || '';
-    // var judge_seled = judge_validate(1,'冻结状态',account_status,true,'custom',/^[12]$/,"");
-    // if(judge_seled != ''){
-    //     layer_alert("请选择冻结状态",3,0);
-    //     //err_alert('<font color="#000000">' + judge_seled + '</font>');
-    //     return false;
-    // }
+    var email = $('input[name=email]').val();
+    if(!judge_validate(4,'邮箱',email,false,'email')){
+        return false;
+    }
 
     var mobile = $('input[name=mobile]').val();
-    if(!judge_validate(4,'手机',mobile,true,'mobile','','')){
+    if(!judge_validate(4,'手机号',mobile,true,'mobile','','')){
         return false;
     }
-
-    var tel = $('input[name=tel]').val();
-    if(!judge_validate(4,'座机电话',tel,false,'length',1,20)){
-        return false;
-    }
-
 
     var qq_number = $('input[name=qq_number]').val();
-    if(!judge_validate(4,'QQ\\email\\微信',qq_number,false,'length',1,30)){
+    if(!judge_validate(4,'微信号',qq_number,false,'length',1,20)){
         return false;
     }
 
-    var admin_username = $('input[name=admin_username]').val();
-    if(!judge_validate(4,'用户名',admin_username,true,'length',6,20)){
+    var id_number = $('input[name=id_number]').val();
+    if(!judge_validate(4,'身份证号',id_number,false,'length',15,20)){
         return false;
     }
-    var admin_password = $('input[name=admin_password]').val();
-    var sure_password = $('input[name=sure_password]').val();
-    if( id<=0 || admin_password != '' || sure_password != ''){
 
-        // var admin_password = $('input[name=admin_password]').val();
-        if(!judge_validate(4,'密码',admin_password,true,'length',6,20)){
-            return false;
-        }
-        // var sure_password = $('input[name=sure_password]').val();
-        if(!judge_validate(4,'确认密码',sure_password,true,'length',6,20)){
-            return false;
-        }
-
-        if(admin_password !== sure_password){
-            layer_alert('确认密码和密码不一致！',5,0);
-            return false;
-        }
+    var city_id = $('select[name=city_id]').val();
+    var judge_seled = judge_validate(1,'城市',city_id,true,'digit','','');
+    if(judge_seled != ''){
+        layer_alert("请选择城市",3,0);
+        //err_alert('<font color="#000000">' + judge_seled + '</font>');
+        return false;
     }
 
+    var addr = $('input[name=addr]').val();
+    if(!judge_validate(4,'通讯地址',addr,false,'length',1,100)){
+        return false;
+    }
+
+    // var admin_username = $('input[name=admin_username]').val() || '';
+    // console.log('admin_username',  admin_username);
+    // if(!judge_validate(4,'用户名',admin_username,false,'length',6,20)){
+    //     return false;
+    // }
+    // var admin_password = $('input[name=admin_password]').val() || '';
+    // var sure_password = $('input[name=sure_password]').val() || '';
+    // if( id<=0 || admin_password != '' || sure_password != ''){
+    //
+    //     // var admin_password = $('input[name=admin_password]').val();
+    //     if(!judge_validate(4,'密码',admin_password,true,'length',6,20)){
+    //         return false;
+    //     }
+    //     // var sure_password = $('input[name=sure_password]').val();
+    //     if(!judge_validate(4,'确认密码',sure_password,true,'length',6,20)){
+    //         return false;
+    //     }
+    //
+    //     if(admin_password !== sure_password){
+    //         layer_alert('确认密码和密码不一致！',5,0);
+    //         return false;
+    //     }
+    // }
+
+    var is_perfect = $('input[name=is_perfect]:checked').val() || '';
+    var judge_seled = judge_validate(1,'是否完善资料',is_perfect,true,'custom',/^[12]$/,"");
+    if(judge_seled != ''){
+        layer_alert("请选择是否完善资料",3,0);
+        //err_alert('<font color="#000000">' + judge_seled + '</font>');
+        return false;
+    }
 
     // 验证通过
     SUBMIT_FORM = false;//标记为已经提交过
@@ -203,4 +204,30 @@ function ajax_form(){
         }
     });
     return false;
+}
+
+// 获得选中的企业id 数组
+function getSelectedCompanyIds(){
+    var company_ids = [];
+    var company_id = $('input[name=company_id]').val();
+    company_ids.push(company_id);
+    console.log('company_ids' , company_ids);
+    return company_ids;
+}
+
+// 取消
+// company_id 企业id
+function removeCompany(company_id){
+    var seled_company_id = $('input[name=company_id]').val();
+    if(company_id == seled_company_id){
+        $('input[name=company_id]').val('');
+        $('.company_name').html('');
+    }
+}
+
+// 增加
+// company_id 企业id, 多个用,号分隔
+function addCompany(company_id, company_name){
+    $('input[name=company_id]').val(company_id);
+    $('.company_name').html(company_name);
 }

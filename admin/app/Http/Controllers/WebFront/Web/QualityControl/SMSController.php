@@ -43,6 +43,9 @@ class SMSController extends BasicController
         $mobile = CommonRequest::get($request, 'mobile');
         $countryCode = '86';
         $templateParams = [];
+        // 判断用户是否有效
+        $user_type = $this->user_type;
+        CTAPIStaffBusiness::mobileIsValid($request, $this, $user_type, $mobile, $countryCode, 1);
         // 发送手机验证码
         CTAPIStaffBusiness::sendSMSCodeLimit($request, $this, 'reg', $mobile, $countryCode, $templateParams, 1);
         return ajaxDataArr(1, ['data' => 1], '');

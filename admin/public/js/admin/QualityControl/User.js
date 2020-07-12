@@ -80,6 +80,20 @@ var otheraction = {
         });
         return false;
     },
+    selectCompany: function(obj){// 选择商家
+        var recordObj = $(obj);
+        //获得表单各name的值
+        var weburl = SELECT_COMPANY_URL;
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = '选择所属企业';//"查看供应商";
+        console.log('weburl', weburl);
+        layeriframe(weburl,tishi,700,450,0);
+        return false;
+    }
 };
 
 
@@ -162,6 +176,32 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
     });
 }
 
+// 获得选中的企业id 数组
+function getSelectedCompanyIds(){
+    var company_ids = [];
+    var company_id = $('input[name=company_id]').val();
+    company_ids.push(company_id);
+    console.log('company_ids' , company_ids);
+    return company_ids;
+}
+
+// 取消
+// company_id 企业id
+function removeCompany(company_id){
+    var seled_company_id = $('input[name=company_id]').val();
+    if(company_id == seled_company_id){
+        $('input[name=company_id]').val('');
+        $('.company_name').html('');
+    }
+}
+
+// 增加
+// company_id 企业id, 多个用,号分隔
+function addCompany(company_id, company_name){
+    $('input[name=company_id]').val(company_id);
+    $('.company_name').html(company_name);
+}
+
 (function() {
     document.write("");
     document.write("    <!-- 前端模板部分 -->");
@@ -185,9 +225,13 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
     document.write("            <\/td>");
     document.write("            <td><%=item.id%><\/td>");
     // document.write("            <td><%=item.client_id%><\/td>");
-    document.write("            <td><%=item.admin_username%><\/td>");
+    document.write("            <td><%=item.user_company_name%><\/td>");
     document.write("            <td><%=item.real_name%><\/td>");
+    document.write("            <td><%=item.sex_text%><\/td>");
     document.write("            <td><%=item.mobile%><\/td>");
+    document.write("            <td><%=item.city_name%><\/td>");
+    document.write("            <td><%=item.email%><\/td>");
+    document.write("            <td><%=item.qq_number%><\/td>");
     document.write("            <td><%=item.is_perfect_text%><\/td>");
     document.write("            <td><%=item.open_status_text%><\/td>");
     document.write("            <td><%=item.account_status_text%><\/td>");

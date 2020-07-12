@@ -490,6 +490,7 @@ class HomeController extends BasicRegController
         // CommonRequest::judgeEmptyParams($request, 'id', $id);
         $company_id = CommonRequest::getInt($request, 'company_id');
         $real_name = CommonRequest::get($request, 'real_name');
+        $sex = CommonRequest::getInt($request, 'sex');
         $email = CommonRequest::get($request, 'email');
         $mobile = CommonRequest::get($request, 'mobile');
         $qq_number = CommonRequest::get($request, 'qq_number');
@@ -508,6 +509,7 @@ class HomeController extends BasicRegController
             'is_perfect' => 2,
             'company_id' => $company_id,
             'real_name' => $real_name,
+            'sex' => $sex,
             'mobile' => $mobile,
             'email' => $email,
             'qq_number' => $qq_number,

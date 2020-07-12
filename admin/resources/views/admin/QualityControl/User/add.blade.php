@@ -31,7 +31,14 @@
 {{--                    <input type="text" class="inp wnormal"  name="sort_num" value="{{ $info['sort_num'] ?? '' }}" placeholder="请输入排序"  onkeyup="isnum(this) " onafterpaste="isnum(this)"  />--}}
 {{--                </td>--}}
 {{--            </tr>--}}
-
+            <tr>
+                <th>所属企业<span class="must">*</span></th>
+                <td>
+                    <input type="hidden" name="company_id"  value="{{ $info['company_id'] ?? '' }}" />
+                    <span class="company_name">{{ $info['user_company_name'] ?? '' }}</span>
+                    <button  type="button"  class="btn btn-danger  btn-xs ace-icon fa fa-plus-circle bigger-60"  onclick="otheraction.selectCompany(this)">选择所属企业</button>
+                </td>
+            </tr>
             <tr>
                 <th>姓名<span class="must">*</span></th>
                 <td>
@@ -43,6 +50,12 @@
                 <td  class="layui-input-block">
                     <label><input type="radio" name="sex" value="1" @if (isset($info['sex']) && $info['sex'] == 1 ) checked @endif>男</label>&nbsp;&nbsp;&nbsp;&nbsp;
                     <label><input type="radio" name="sex" value="2" @if (isset($info['sex']) && $info['sex'] == 2 ) checked @endif>女</label>
+                </td>
+            </tr>
+            <tr>
+                <th>邮箱<span class="must"></span></th>
+                <td>
+                    <input type="text" class="inp wnormal"  name="email" value="{{ $info['email'] ?? '' }}" placeholder="请输入邮箱"  />
                 </td>
             </tr>
 {{--            <tr>--}}
@@ -59,33 +72,58 @@
                 </td>
             </tr>
             <tr>
-                <th>座机电话</th>
-                <td>
-                    <input type="text" class="inp wnormal"  name="tel" value="{{ $info['tel'] ?? '' }}" placeholder="请输入座机电话"  />
-                </td>
-            </tr>
-            <tr>
-                <th>QQ\email\微信</th>
+                <th>QQ\email\微信<span class="must"></span></th>
                 <td>
                     <input type="text" class="inp wnormal"  name="qq_number" value="{{ $info['qq_number'] ?? '' }}" placeholder="请输入QQ\email\微信" />
                 </td>
             </tr>
             <tr>
-                <th>用户名<span class="must">*</span></th>
+                <th>身份证号<span class="must"></span></th>
                 <td>
-                    <input type="text" class="inp wnormal"  name="admin_username" value="{{ $info['admin_username'] ?? '' }}" placeholder="请输入用户名"/>
+                    <input type="text" class="inp wnormal"  name="id_number" value="{{ $info['id_number'] ?? '' }}" placeholder="请输入身份证号"  />
                 </td>
             </tr>
             <tr>
-                <th>登录密码<span class="must">*</span></th>
+                <th>所在城市<span class="must">*</span></th>
                 <td>
-                    <input type="password"  class="inp wnormal"   name="admin_password" placeholder="登录密码" />修改时，可为空，不修改密码。
+                    <select class="wnormal" name="city_id">
+                        <option value="">请选择城市</option>
+                        @foreach ($citys_kv as $k=>$txt)
+                            <option value="{{ $k }}"  @if(isset($defaultCity) && $defaultCity == $k) selected @endif >{{ $txt }}</option>
+                        @endforeach
+                    </select>
                 </td>
             </tr>
             <tr>
-                <th>确认密码<span class="must">*</span></th>
+                <th>通讯地址<span class="must"></span></th>
                 <td>
-                    <input type="password" class="inp wnormal"     name="sure_password"  placeholder="确认密码"/>修改时，可为空，不修改密码。
+                    <input type="text" class="inp wnormal"  name="addr" value="{{ $info['addr'] ?? '' }}" placeholder="请输入地址"  />
+                </td>
+            </tr>
+{{--            <tr>--}}
+{{--                <th>用户名<span class="must">*</span></th>--}}
+{{--                <td>--}}
+{{--                    <input type="text" class="inp wnormal"  name="admin_username" value="{{ $info['admin_username'] ?? '' }}" placeholder="请输入用户名"/>--}}
+{{--                </td>--}}
+{{--            </tr>--}}
+{{--            <tr>--}}
+{{--                <th>登录密码<span class="must">*</span></th>--}}
+{{--                <td>--}}
+{{--                    <input type="password"  class="inp wnormal"   name="admin_password" placeholder="登录密码" />修改时，可为空，不修改密码。--}}
+{{--                </td>--}}
+{{--            </tr>--}}
+{{--            <tr>--}}
+{{--                <th>确认密码<span class="must">*</span></th>--}}
+{{--                <td>--}}
+{{--                    <input type="password" class="inp wnormal"     name="sure_password"  placeholder="确认密码"/>修改时，可为空，不修改密码。--}}
+{{--                </td>--}}
+{{--            </tr>--}}
+            <tr>
+                <th>是否完善资料<span class="must">*</span></th>
+                <td>
+                    @foreach ($isPerfect as $k=>$txt)
+                        <label><input type="radio"  name="is_perfect"  value="{{ $k }}"  @if(isset($defaultIsPerfect) && $defaultIsPerfect == $k) checked="checked"  @endif />{{ $txt }} </label>
+                    @endforeach
                 </td>
             </tr>
             <tr>
@@ -104,6 +142,8 @@
 <script type="text/javascript">
     var SAVE_URL = "{{ url('api/admin/user/ajax_save') }}";// ajax保存记录地址
     var LIST_URL = "{{url('admin/user')}}";//保存成功后跳转到的地址
+
+    var SELECT_COMPANY_URL = "{{url('admin/company/select')}}";// 选择所属企业
 </script>
 <script src="{{ asset('/js/admin/QualityControl/User_edit.js') }}"  type="text/javascript"></script>
 </body>

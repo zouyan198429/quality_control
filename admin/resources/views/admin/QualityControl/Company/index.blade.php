@@ -151,7 +151,7 @@
         <col width="60">
         <col width="60">
         <col>
-        <col width="50">
+        <col width="100">
         <col width="50">
         <col>
         <col width="80">

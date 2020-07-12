@@ -72,47 +72,6 @@ function ajax_form(){
         return false;
     }
 
-
-
-
-    // var work_num = $('input[name=work_num]').val();
-    // if(!judge_validate(4,'工号',work_num,true,'length',1,30)){
-    //     return false;
-    // }
-    //
-    // var department_id = $('select[name=department_id]').val();
-    // var judge_seled = judge_validate(1,'部门',department_id,true,'digit','','');
-    // if(judge_seled != ''){
-    //     layer_alert("请选择部门",3,0);
-    //     //err_alert('<font color="#000000">' + judge_seled + '</font>');
-    //     return false;
-    // }
-
-    // var group_id = $('select[name=group_id]').val();
-    // var judge_seled = judge_validate(1,'部门',group_id,true,'digit','','');
-    // if(judge_seled != ''){
-    //     layer_alert("请选择班组",3,0);
-    //     //err_alert('<font color="#000000">' + judge_seled + '</font>');
-    //     return false;
-    // }
-
-    // var position_id = $('select[name=position_id]').val();
-    // var judge_seled = judge_validate(1,'职务',position_id,true,'digit','','');
-    // if(judge_seled != ''){
-    //     layer_alert("请选择职务",3,0);
-    //     //err_alert('<font color="#000000">' + judge_seled + '</font>');
-    //     return false;
-    // }
-
-    // var type_name = $('input[name=type_name]').val();
-    // if(!judge_validate(4,'标签名称',type_name,true,'length',1,20)){
-    //     return false;
-    // }
-    //
-    // var sort_num = $('input[name=sort_num]').val();
-    // if(!judge_validate(4,'排序',sort_num,false,'digit','','')){
-    //     return false;
-    // }
     // 所属企业
     var company_id = $('input[name=company_id]').val();
     var judge_seled = judge_validate(1,'所属企业',company_id,true,'positive_int','','');
@@ -120,8 +79,17 @@ function ajax_form(){
         layer_alert("请选择所属企业",3,0);
         return false;
     }
+
     var real_name = $('input[name=real_name]').val();
     if(!judge_validate(4,'姓名',real_name,true,'length',1,20)){
+        return false;
+    }
+
+    var sex = $('input[name=sex]:checked').val() || '';
+    var judge_seled = judge_validate(1,'性别',sex,true,'custom',/^[12]$/,"");
+    if(judge_seled != ''){
+        layer_alert("请选择性别",3,0);
+        //err_alert('<font color="#000000">' + judge_seled + '</font>');
         return false;
     }
 
