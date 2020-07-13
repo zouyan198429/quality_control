@@ -254,6 +254,13 @@ Route::get('admin/ability_type/add/{id}', 'Admin\QualityControl\AbilityTypeContr
 Route::get('admin/ability_type/export', 'Admin\QualityControl\AbilityTypeController@export');// 导出
 Route::get('admin/ability_type/import_template', 'Admin\QualityControl\AbilityTypeController@import_template');// 导入模版
 
+// 能力验证
+Route::get('admin/abilitys', 'Admin\QualityControl\AbilitysController@index');// 列表
+Route::get('admin/abilitys/add/{id}', 'Admin\QualityControl\AbilitysController@add');// 添加
+// Route::get('admin/abilitys/select', 'Admin\QualityControl\AbilitysController@select');// 选择-弹窗
+Route::get('admin/abilitys/export', 'Admin\QualityControl\AbilitysController@export');// 导出
+Route::get('admin/abilitys/import_template', 'Admin\QualityControl\AbilitysController@import_template');// 导入模版
+
 // 企业后台 company
 Route::get('company/login', 'WebFront\Company\QualityControl\IndexController@login');// login.html 登录
 Route::get('company/reg', 'WebFront\Company\QualityControl\IndexController@reg');// 注册
