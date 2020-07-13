@@ -189,6 +189,17 @@ $api->version('v1', function ($api) {
         $api->post('admin/ability_type/import', 'Admin\QualityControl\AbilityTypeController@import');// 导入excel
         $api->post('admin/ability_type/ajax_get_ids', 'Admin\QualityControl\AbilityTypeController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
+        // 能力验证
+        $api->any('admin/abilitys/ajax_alist', 'Admin\QualityControl\AbilitysController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/abilitys/ajax_del', 'Admin\QualityControl\AbilitysController@ajax_del');// 删除
+        $api->post('admin/abilitys/ajax_save', 'Admin\QualityControl\AbilitysController@ajax_save');// 新加/修改
+        $api->post('admin/abilitys/ajax_get_child', 'Admin\QualityControl\AbilitysController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/abilitys/ajax_get_areachild', 'Admin\QualityControl\AbilitysController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/abilitys/ajax_import_staff','Admin\QualityControl\AbilitysController@ajax_import'); // 导入员工
+
+        $api->post('admin/abilitys/import', 'Admin\QualityControl\AbilitysController@import');// 导入excel
+        $api->post('admin/abilitys/ajax_get_ids', 'Admin\QualityControl\AbilitysController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
         // 企业后台 company
         // 验证码 -- ok
 //        $api->get('company/ajax_captcha', 'WebFront\Company\QualityControl\IndexController@ajax_captcha');// api生成验证码

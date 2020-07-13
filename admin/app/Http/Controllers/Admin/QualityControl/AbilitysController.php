@@ -132,13 +132,25 @@ class AbilitysController extends BasicController
         $this->InitParams($request);
         $id = CommonRequest::getInt($request, 'id');
         // CommonRequest::judgeEmptyParams($request, 'id', $id);
-        $type_name = CommonRequest::get($request, 'type_name');
-        $sort_num = CommonRequest::getInt($request, 'sort_num');
+        $ability_name = CommonRequest::get($request, 'ability_name');
+        $estimate_add_num = CommonRequest::getInt($request, 'estimate_add_num');
+        $join_begin_date = CommonRequest::get($request, 'join_begin_date');
+        $join_end_date = CommonRequest::get($request, 'join_end_date');
+        // 判断开始结束日期
+        Tool::judgeBeginEndDate($join_begin_date, $join_end_date, 1 + 2 + 16 + 128 + 256 + 512, 1, date('Y-m-d H:i:s'), '报名时间');
 
         $saveData = [
-            'type_name' => $type_name,
-            'sort_num' => $sort_num,
+            'ability_name' => $ability_name,
+            'estimate_add_num' => $estimate_add_num,
+            'join_begin_date' => $join_begin_date,
+            'join_end_date' => $join_end_date,
         ];
+        // 开始报名前，可以增删改，后面就不可以修改、删除
+        if($id > 0){
+            $info = CTAPIAbilitysBusiness::getInfoData($request, $this, $id, [], '', []);
+            if(empty($info)) throws('记录不存在！');
+            if($info['status'] != 1) throws('当前记录非【待开始】状态，不可修改！');
+        }
 
 //        if($id <= 0) {// 新加;要加入的特别字段
 //            $addNewData = [
@@ -251,6 +263,10 @@ class AbilitysController extends BasicController
     public function ajax_del(Request $request)
     {
         $this->InitParams($request);
+         $id = CommonRequest::getInt($request, 'id');
+        $info = CTAPIAbilitysBusiness::getInfoData($request, $this, $id, [], '', []);
+        if(empty($info)) throws('记录不存在！');
+        if($info['status'] != 1) throws('当前记录非【待开始】状态，不可删除！');
         return CTAPIAbilitysBusiness::delAjax($request, $this);
     }
 
