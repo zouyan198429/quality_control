@@ -126,39 +126,101 @@
                     <dd>
                         <a lay-href="{{ url('admin/company') }}?company_grade=1">非会员单位</a>
                     </dd>
-                </dl>
-                <dl class="layui-nav-child">
                     <dd>
                         <a lay-href="{{ url('admin/company') }}?company_grade=2">会员单位</a>
                     </dd>
-                </dl>
-                <dl class="layui-nav-child">
                     <dd>
                         <a lay-href="{{ url('admin/company') }}?company_grade=4">理事单位</a>
                     </dd>
-                </dl>
-                <dl class="layui-nav-child">
                     <dd>
                         <a lay-href="{{ url('admin/company') }}?company_grade=8">常务理事单位</a>
                     </dd>
-                </dl>
-                <dl class="layui-nav-child">
                     <dd>
                         <a lay-href="{{ url('admin/company') }}?company_grade=16">理事长单位</a>
                     </dd>
-                </dl>
-              <dl class="layui-nav-child">
-                <dd>
-                  <a lay-href="{{ url('admin/user') }}">人员列表</a>
-                </dd>
-              </dl>
-                <dl class="layui-nav-child">
                     <dd>
-                        <a lay-href="{{ url('admin/user') }}">个人会员</a>
+                      <a lay-href="{{ url('admin/user') }}">人员列表</a>
+                    </dd>
+                    <dd>
+                        <a lay-href="javascript:void(0);">个人会员</a>
 {{--                        没有所属企业的会员--}}
+                    </dd>
+                    <dd>
+                        <a lay-href="javascript:void(01);">会员分析</a>
                     </dd>
                 </dl>
             </li>
+              <li data-name="user" class="layui-nav-item">
+                  <a href="javascript:;" lay-tips="会员管理" lay-direction="2">
+                      <i class="layui-icon layui-icon-component"></i>
+                      <cite>面授培训</cite>
+                  </a>
+                  <dl class="layui-nav-child">
+                      <dd>
+                          <a lay-href="javascript:void(10);">培训班管理</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="javascript:void(11);">课程管理</a>
+                      </dd>
+                  </dl>
+              </li>
+              <li data-name="user" class="layui-nav-item">
+                  <a href="javascript:;" lay-tips="在线直播" lay-direction="2">
+                      <i class="layui-icon layui-icon-component"></i>
+                      <cite>在线直播</cite>
+                  </a>
+                  <dl class="layui-nav-child">
+                      <dd>
+                          <a lay-href="javascript:void(20);">直播课</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="javascript:void(21);">评论管理</a>
+                      </dd>
+                  </dl>
+              </li>
+              <li data-name="user" class="layui-nav-item">
+                  <a href="javascript:;" lay-tips="视频课程" lay-direction="2">
+                      <i class="layui-icon layui-icon-component"></i>
+                      <cite>视频课程</cite>
+                  </a>
+                  <dl class="layui-nav-child">
+                      <dd>
+                          <a lay-href="javascript:void(30);">录播课程</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="javascript:void(31);">订单管理</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="javascript:void(32);">评论管理</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="javascript:void(33);">分析报告</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="javascript:void(34);">课程分类</a>
+                      </dd>
+                  </dl>
+              </li>
+              <li data-name="user" class="layui-nav-item">
+                  <a href="javascript:;" lay-tips="考试管理" lay-direction="2">
+                      <i class="layui-icon layui-icon-component"></i>
+                      <cite>考试管理</cite>
+                  </a>
+                  <dl class="layui-nav-child">
+                      <dd>
+                          <a lay-href="javascript:void(40);">试题</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="javascript:void(41);">试卷</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="javascript:void(42);">考试</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="javascript:void(43);">试题分类</a>
+                      </dd>
+                  </dl>
+              </li>
               <li data-name="user" class="layui-nav-item">
                   <a href="javascript:;" lay-tips="能力验证" lay-direction="2">
                       <i class="layui-icon layui-icon-component"></i>
@@ -166,17 +228,72 @@
                   </a>
                   <dl class="layui-nav-child">
                       <dd>
-                          <a lay-href="javascript:void(0);">项目管理</a>
+                          <a lay-href="javascript:void(50);">项目管理</a>
                       </dd>
-                  </dl>
-                  <dl class="layui-nav-child">
                       <dd>
-                          <a lay-href="javascript:void(0);">用户报名</a>
+                          <a lay-href="javascript:void(51);">用户报名</a>
                       </dd>
-                  </dl>
-                  <dl class="layui-nav-child">
                       <dd>
                           <a lay-href="{{ url('admin/ability_type') }}?company_grade=4">领域管理</a>
+                      </dd>
+                  </dl>
+              </li>
+              <li data-name="user" class="layui-nav-item">
+                  <a href="javascript:;" lay-tips="开票管理" lay-direction="2">
+                      <i class="layui-icon layui-icon-component"></i>
+                      <cite>开票管理</cite>
+                  </a>
+                  <dl class="layui-nav-child">
+                      <dd>
+                          <a lay-href="javascript:void(60);">开票申请</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="javascript:void(61);">订单流水</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="javascript:void(62);">支付设置</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="javascript:void(63);">财务分析</a>
+                      </dd>
+                  </dl>
+              </li>
+              <li data-name="user" class="layui-nav-item">
+                  <a href="javascript:;" lay-tips="内容管理" lay-direction="2">
+                      <i class="layui-icon layui-icon-component"></i>
+                      <cite>内容管理</cite>
+                  </a>
+                  <dl class="layui-nav-child">
+                      <dd>
+                          <a lay-href="javascript:void(60);">单页管理</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="javascript:void(61);">文章管理</a>
+                      </dd>
+                  </dl>
+              </li>
+              <li data-name="user" class="layui-nav-item">
+                  <a href="javascript:;" lay-tips="消息公告" lay-direction="2">
+                      <i class="layui-icon layui-icon-component"></i>
+                      <cite>消息公告</cite>
+                  </a>
+                  <dl class="layui-nav-child">
+                      <dd>
+                          <a lay-href="javascript:void(70);">消息公告</a>
+                      </dd>
+                  </dl>
+              </li>
+              <li data-name="user" class="layui-nav-item">
+                  <a href="javascript:;" lay-tips="广告及链接" lay-direction="2">
+                      <i class="layui-icon layui-icon-component"></i>
+                      <cite>广告及链接</cite>
+                  </a>
+                  <dl class="layui-nav-child">
+                      <dd>
+                          <a lay-href="javascript:void(80);">广告</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="javascript:void(81);">链接</a>
                       </dd>
                   </dl>
               </li>
@@ -186,9 +303,21 @@
                 <cite>基础设置</cite>
               </a>
               <dl class="layui-nav-child">
+                  <dd>
+                      <a lay-href="javascript:void(90);">基本设置</a>
+                  </dd>
                 <dd>
-                  <a lay-href="{{ url('admin/staff') }}">管理员管理</a>
+                  <a lay-href="{{ url('admin/staff') }}">人员管理</a>
                 </dd>
+                  <dd>
+                      <a lay-href="javascript:void(91);">角色权限</a>
+                  </dd>
+                  <dd>
+                      <a lay-href="javascript:void(92);">会员级别</a>
+                  </dd>
+                  <dd>
+                      <a lay-href="javascript:void(93);">短信模板</a>
+                  </dd>
                   <dd>
 {{--                      <a lay-href="{{ url('admin/company') }}">企业管理</a>--}}
 {{--                  </dd>--}}

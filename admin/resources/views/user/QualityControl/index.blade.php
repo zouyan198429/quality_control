@@ -118,97 +118,57 @@
             {{--</li>--}}
 
             <li data-name="user" class="layui-nav-item">
-              <a href="javascript:;" lay-tips="会员管理" lay-direction="2">
+              <a href="javascript:;" lay-tips="面授报名" lay-direction="2">
                 <i class="layui-icon layui-icon-component"></i>
-                <cite>会员管理</cite>
+                <cite>面授报名</cite>
               </a>
                 <dl class="layui-nav-child">
                     <dd>
-                        <a lay-href="{{ url('admin/company') }}?company_grade=1">非会员单位</a>
-                    </dd>
-                </dl>
-                <dl class="layui-nav-child">
-                    <dd>
-                        <a lay-href="{{ url('admin/company') }}?company_grade=2">会员单位</a>
-                    </dd>
-                </dl>
-                <dl class="layui-nav-child">
-                    <dd>
-                        <a lay-href="{{ url('admin/company') }}?company_grade=4">理事单位</a>
-                    </dd>
-                </dl>
-                <dl class="layui-nav-child">
-                    <dd>
-                        <a lay-href="{{ url('admin/company') }}?company_grade=8">常务理事单位</a>
-                    </dd>
-                </dl>
-                <dl class="layui-nav-child">
-                    <dd>
-                        <a lay-href="{{ url('admin/company') }}?company_grade=16">理事长单位</a>
-                    </dd>
-                </dl>
-              <dl class="layui-nav-child">
-                <dd>
-                  <a lay-href="{{ url('admin/user') }}">人员列表</a>
-                </dd>
-              </dl>
-                <dl class="layui-nav-child">
-                    <dd>
-                        <a lay-href="{{ url('admin/staff') }}">个人会员</a>
-{{--                        没有所属企业的会员--}}
+                        <a lay-href="javascript:void(10);">面授报名</a>
                     </dd>
                 </dl>
             </li>
               <li data-name="user" class="layui-nav-item">
-                  <a href="javascript:;" lay-tips="能力验证" lay-direction="2">
+                  <a href="javascript:;" lay-tips="我的课程" lay-direction="2">
                       <i class="layui-icon layui-icon-component"></i>
-                      <cite>能力验证</cite>
+                      <cite>我的课程</cite>
                   </a>
                   <dl class="layui-nav-child">
                       <dd>
-                          <a lay-href="javascript:void(0);">项目管理</a>
+                          <a lay-href="javascript:void(20);">我的课程</a>
                       </dd>
                   </dl>
+              </li>
+              <li data-name="user" class="layui-nav-item">
+                  <a href="javascript:;" lay-tips="我的考试" lay-direction="2">
+                      <i class="layui-icon layui-icon-component"></i>
+                      <cite>我的考试</cite>
+                  </a>
                   <dl class="layui-nav-child">
                       <dd>
-                          <a lay-href="javascript:void(0);">用户报名</a>
+                          <a lay-href="javascript:void(30);">我的考试</a>
                       </dd>
                   </dl>
+              </li>
+              <li data-name="user" class="layui-nav-item">
+                  <a href="javascript:;" lay-tips="消息中心" lay-direction="2">
+                      <i class="layui-icon layui-icon-component"></i>
+                      <cite>消息中心</cite>
+                  </a>
                   <dl class="layui-nav-child">
                       <dd>
-                          <a lay-href="{{ url('admin/ability_type') }}?company_grade=4">领域管理</a>
+                          <a lay-href="javascript:void(40);">消息中心</a>
                       </dd>
                   </dl>
               </li>
             <li data-name="user" class="layui-nav-item">
-              <a href="javascript:;" lay-tips="基础设置" lay-direction="2">
+              <a href="javascript:;" lay-tips="个人资料" lay-direction="2">
                 <i class="layui-icon layui-icon-user"></i>
-                <cite>基础设置</cite>
+                <cite>个人资料</cite>
               </a>
               <dl class="layui-nav-child">
-                <dd>
-                  <a lay-href="{{ url('admin/staff') }}">管理员管理</a>
-                </dd>
                   <dd>
-{{--                      <a lay-href="{{ url('admin/company') }}">企业管理</a>--}}
-{{--                  </dd>--}}
-{{--                  <dd>--}}
-{{--                      <a lay-href="{{ url('admin/user') }}">个人会员</a>--}}
-{{--                  </dd>--}}
-                  <dd>
-                      <a lay-href="{{ url('admin/industry') }}">企业行业管理</a>
-                  </dd>
-                  <dd>
-                      <a lay-href="{{ url('admin/citys') }}">城市管理</a>
-                  </dd>
-                  <dd>
-                      <a lay-href="{{ url('admin/company_certificate_type') }}">资质证书类型</a>
-                  </dd>
-{{--                  <dd>--}}
-{{--                      <a lay-href="{{ url('admin/ability_type') }}">能力验证行业分类</a>--}}
-{{--                  </dd>--}}
-                  <dd>
-                      <a lay-href="{{ url('admin/sms_code') }}">短信日志管理</a>
+                      <a lay-href="javascript:void(50);">个人资料</a>
                   </dd>
               </dl>
             </li>
