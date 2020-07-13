@@ -3,14 +3,15 @@
 <head>
     @include('web.QualityControl.layout_public.pagehead')
 </head>
-<body style=" background:#eee; ">
+<body style=" background:#f8f8f8; ">
     @include('web.QualityControl.layout_public.header')
+    <div class="line-blue"></div>
 	<div id="main">
-		<div class="reg" style="width:980px; margin:40px auto 20px auto; border:1px solid #eee; min-height:500px;  padding:20px 20px; background:#fff;  ">
-
-			<div class="hd tc" style="padding:30px 0;">
-				<h2>完善个人资料</h2>
-			</div>
+		<div class="reg" style="box-shadow:  0 0 8px #ddd" >
+ 
+            <div class="hd-reg" >
+                <h2>完善个人资料</h2>
+            </div>
             <form class="am-form am-form-horizontal" method="post"  id="addForm">
                 <input type="hidden" name="id" value="{{ $info['id'] ?? 0 }}"/>
 			<div class="bd" style="width:800px; margin:0 auto;">
@@ -25,44 +26,27 @@
 						<button   type="button" class="btn btn-gray"   onclick="otheraction.selectCompany(this)">选择所属企业</button>
 					</div>
 				</div>
-				<div class="form-item">
-                    <label for="username" class="form-label"> 姓名 <span class="red">*</span> </label>
-                    <div class="form-input">
-                    	<input type="text" name="real_name" autocomplete="off" value="{{ $info['real_name'] ?? '' }}">
-                    </div>
-                </div>
+				
+                
                 <div class="form-item">
-                    <label for="username" class="form-label"> 性别 <span class="red">*</span> </label>
-                    <div class="form-input">
-                        <label><input type="radio" name="sex" value="1" @if (isset($info['sex']) && $info['sex'] == 1 ) checked @endif>男</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                        <label><input type="radio" name="sex" value="2" @if (isset($info['sex']) && $info['sex'] == 2 ) checked @endif>女</label>
-                    </div>
-                </div>
-
-                 <div class="form-item">
                     <label for="text" class="form-label">邮箱<span class="red">*</span> </label>
                     <div class="form-input">
-                    <input type="text" name="email" autocomplete="off" value="{{ $info['email'] ?? '' }}">
+                    <input type="text" name="email" autocomplete="off" value="{{ $info['email'] ?? '' }}" class="w480">
                     <p class="gray">用于接收通知等。</p>
                     </div>
                 </div>
-                <div class="form-item">
-                    <label for="text" class="form-label">手机号 <span class="red">*</span></label>
-                    <div class="form-input">
-                    <input type="text" name="mobile" autocomplete="off" value="{{ $info['mobile'] ?? '' }}">
-                    </div>
-                </div>
+                
 
                 <div class="form-item">
                     <label for="text" class="form-label">微信号<span class="red">*</span></label>
                     <div class="form-input">
-                    <input type="text" name="qq_number" autocomplete="off" value="{{ $info['qq_number'] ?? '' }}">
+                    <input type="text" name="qq_number" autocomplete="off" value="{{ $info['qq_number'] ?? '' }}" class="w480">
                     </div>
                 </div>
                 <div class="form-item">
                     <label for="text" class="form-label">身份证号<span class="red">*</span></label>
                     <div class="form-input">
-                    <input type="text" name="id_number" autocomplete="off" value="{{ $info['id_number'] ?? '' }}">
+                    <input type="text" name="id_number" autocomplete="off" value="{{ $info['id_number'] ?? '' }}" class="w480">
                     </div>
                 </div>
                 <div class="form-item">
@@ -80,7 +64,7 @@
                 <div class="form-item">
                     <label for="text" class="form-label">通讯地址</label>
                     <div class="form-input">
-	                    <input type="text" name="addr" autocomplete="off" value="{{ $info['addr'] ?? '' }}">
+	                    <input type="text" name="addr" autocomplete="off" value="{{ $info['addr'] ?? '' }}" class="w480">
 	                </div>
                 </div>
                 <div class="k20"></div>

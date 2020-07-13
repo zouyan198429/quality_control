@@ -17,6 +17,13 @@
                 <span>  Register</span>
 			</div>
 			<div class="bd" style="width:800px; margin:0 auto;">
+                <div class="form-item">
+                    <label for="password" class="form-label">帐户类型</label>
+                    <div class="form-input ">
+                        <input type="radio" name="admin_type" value="2" title="企业帐号">企业帐号
+                        <input type="radio" name="admin_type" value="4" title="个人帐号">个人帐号
+                    </div>
+                </div>
 
 				<div class="form-item">
                     <label for="username" class="form-label">用户名</label>
@@ -36,13 +43,31 @@
                     	<input type="password" name="repass"  autocomplete="off" value="" class="w480">
                     </div>
                 </div>
+
+                <div class="line"></div>
+
                 <div class="form-item">
-                    <label for="password" class="form-label">帐户类型</label>
-                    <div class="form-input ">
-	                    <input type="radio" name="admin_type" value="2" title="企业帐号">企业帐号
-	                    <input type="radio" name="admin_type" value="4" title="个人帐号">个人帐号
+                    <label for="username" class="form-label"> 姓名 <span class="red">*</span> </label>
+                    <div class="form-input">
+                        <input type="text" name="real_name" autocomplete="off" value="{{ $info['real_name'] ?? '' }}" class="w480">
+                    </div>
+                </div> 
+                <div class="form-item">
+                    <label for="username" class="form-label"> 性别 <span class="red">*</span> </label>
+                    <div class="form-input">
+                        <label  for="nan"><input type="radio" id="nan" name="sex" value="1"  checked >男</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <label  for="nv"><input type="radio" id="nv" name="sex" value="2"  >女</label>
                     </div>
                 </div>
+                <div class="form-item">
+                    <label for="text" class="form-label">手机号 <span class="red">*</span></label>
+                    <div class="form-input">
+                    <input type="text" name="mobile" autocomplete="off" value="{{ $info['mobile'] ?? '' }}" class="w480">
+                    </div>
+                </div>
+
+                <div class="line"></div>
+
                 <div class="form-item">
                     <label for="password" class="form-label">图形验证码</label>
                     <div class="form-input">
@@ -51,6 +76,7 @@
                         <img src="" class="layadmin-user-login-codeimg" id="LAY-user-get-vercode" >
                     </div>
                 </div>
+
                 <div class="form-item">
                     <label for="password" class="form-label"></label>
                 	<div class="form-input">

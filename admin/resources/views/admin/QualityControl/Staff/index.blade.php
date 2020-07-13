@@ -134,17 +134,16 @@
     <colgroup>
         <col width="40">
         <col width="60">
-        <col width="">
-{{--        <col width="150">--}}
+        <col width="150"> 
+        <col width="150"> 
+        <col width="150"> 
+        <col>
+        <col width="150"> 
+        <col width="100"> 
         <col>
         <col>
-        <col>
-        <col>
-        <col>
-        <col>
-        <col>
-        <col width="150">
-        <col width="150">
+        <col width="160">
+        <col width="250">
     </colgroup>
     <thead>
     <tr>

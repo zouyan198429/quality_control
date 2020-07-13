@@ -10,7 +10,7 @@
     @include('web.QualityControl.layout_public.header')
     <div class="line-blue"></div>
 	<div id="main">
-		<div class="reg">
+		<div class="reg" style="box-shadow:  0 0 8px #ddd">
 
 			<div class="hd-reg" >
 				<h2>完善企业资料</h2>

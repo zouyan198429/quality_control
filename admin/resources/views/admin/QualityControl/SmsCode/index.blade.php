@@ -73,14 +73,13 @@
     <colgroup>
         <col width="50">
         <col width="60">
-        <col width="">
-        <col width="">
-        <col width="">
-        <col width="">
-        <col width="">
-{{--        <col width="150">--}}
-        <col width="150">
-{{--        <col width="150">--}}
+        <col>
+        <col width="140">
+        <col width="90">
+        <col width="140">
+        <col width="120">
+        <col>
+        <col width="160"> 
     </colgroup>
     <thead>
     <tr>

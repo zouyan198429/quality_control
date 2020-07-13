@@ -54,10 +54,11 @@
         <col width="50">
         <col width="60">
         <col>
+        <col width="90">
         <col>
         <col>
-        <col width="150">
-        <col width="150">
+        <col width="100">
+        <col width="140">
     </colgroup>
     <thead>
     <tr>
