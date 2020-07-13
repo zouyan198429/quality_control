@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>前端 -{{ config('public.webName') }}</title>
+  <title>{{ config('public.webName') }}</title>
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -94,7 +94,7 @@
         <div class="layui-side-scroll">
           {{--<div class="layui-logo" lay-href="{{ url('layui/home/console') }}">--}}
           <div class="layui-logo" lay-href="{{ url('/help/index.html') }}">
-            <span>质量认证认可协会-企业后台</span>
+            <span>企业管理后台</span>
           </div>
 
           <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
@@ -117,7 +117,7 @@
               {{--</dl>--}}
             {{--</li>--}}
 
-            <li data-name="user" class="layui-nav-item">
+          <!--   <li data-name="user" class="layui-nav-item">
               <a href="javascript:;" lay-tips="面授培训" lay-direction="2">
                 <i class="layui-icon layui-icon-component"></i>
                 <cite>面授培训</cite>
@@ -159,7 +159,7 @@
                           <a lay-href="javascript:void(30);">在线考试</a>
                       </dd>
                   </dl>
-              </li>
+              </li> -->
               <li data-name="user" class="layui-nav-item">
                   <a href="javascript:;" lay-tips="能力验证" lay-direction="2">
                       <i class="layui-icon layui-icon-component"></i>
@@ -182,7 +182,7 @@
                       </dd>
                   </dl>
               </li>
-              <li data-name="user" class="layui-nav-item">
+             <!--  <li data-name="user" class="layui-nav-item">
                   <a href="javascript:;" lay-tips="发票管理" lay-direction="2">
                       <i class="layui-icon layui-icon-component"></i>
                       <cite>发票管理</cite>
@@ -203,7 +203,7 @@
                           <a lay-href="javascript:void(70);">消息中心</a>
                       </dd>
                   </dl>
-              </li>
+              </li> -->
             <li data-name="user" class="layui-nav-item">
               <a href="javascript:;" lay-tips="企业帐号" lay-direction="2">
                 <i class="layui-icon layui-icon-user"></i>
