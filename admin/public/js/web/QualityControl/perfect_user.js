@@ -80,28 +80,28 @@ function ajax_form(){
         return false;
     }
 
-    var real_name = $('input[name=real_name]').val();
-    if(!judge_validate(4,'姓名',real_name,true,'length',1,20)){
-        return false;
-    }
+    // var real_name = $('input[name=real_name]').val();
+    // if(!judge_validate(4,'姓名',real_name,true,'length',1,20)){
+    //     return false;
+    // }
 
-    var sex = $('input[name=sex]:checked').val() || '';
-    var judge_seled = judge_validate(1,'性别',sex,true,'custom',/^[12]$/,"");
-    if(judge_seled != ''){
-        layer_alert("请选择性别",3,0);
-        //err_alert('<font color="#000000">' + judge_seled + '</font>');
-        return false;
-    }
+    // var sex = $('input[name=sex]:checked').val() || '';
+    // var judge_seled = judge_validate(1,'性别',sex,true,'custom',/^[12]$/,"");
+    // if(judge_seled != ''){
+    //     layer_alert("请选择性别",3,0);
+    //     //err_alert('<font color="#000000">' + judge_seled + '</font>');
+    //     return false;
+    // }
 
     var email = $('input[name=email]').val();
     if(!judge_validate(4,'邮箱',email,true,'email')){
         return false;
     }
 
-    var mobile = $('input[name=mobile]').val();
-    if(!judge_validate(4,'手机号',mobile,true,'mobile','','')){
-        return false;
-    }
+    // var mobile = $('input[name=mobile]').val();
+    // if(!judge_validate(4,'手机号',mobile,true,'mobile','','')){
+    //     return false;
+    // }
 
     var qq_number = $('input[name=qq_number]').val();
     if(!judge_validate(4,'微信号',qq_number,true,'length',1,20)){

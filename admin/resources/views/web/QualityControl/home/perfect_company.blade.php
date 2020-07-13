@@ -62,8 +62,8 @@
 				<div class="form-item">
 				    <label for="text" class="form-label">企业类型 <span class="red">*</span> </label>
 				    <div class="form-input">
-						 <input type="radio" name="company_type" value="1" title="检测机构" style="margin:0; " @if (isset($info['company_type']) && $info['company_type'] == 1 ) checked @endif> 检测机构
-						 <input type="radio" name="company_type" value="2" title="生产企业" style="margin:0; " @if (isset($info['company_type']) && $info['company_type'] == 2 ) checked @endif> 生产企业
+                        <label  for="company_type_one"> <input type="radio" id="company_type_one" name="company_type" value="1" title="检测机构" style="margin:0; " @if (isset($info['company_type']) && $info['company_type'] == 1 ) checked @endif> 检测机构</label>&nbsp;
+                        <label  for="company_type_two"><input type="radio" id="company_type_two"  name="company_type" value="2" title="生产企业" style="margin:0; " @if (isset($info['company_type']) && $info['company_type'] == 2 ) checked @endif> 生产企业</label>&nbsp;
 					</div>
 				</div>
 				<div class="form-item">
