@@ -228,7 +228,11 @@ $api->version('v1', function ($api) {
         $api->get('user/ajax_captcha', 'WebFront\User\QualityControl\CaptchaController@ajax_captcha');// api生成验证码--ok
         $api->post('user/ajax_captcha_verify', 'WebFront\User\QualityControl\CaptchaController@ajax_captcha_verify');// api生成验证码-验证--ok
 
-        // 手机验证码 -- ok
+        // 手机验证码--注册 -- ok
+        $api->any('user/reg/ajax_send_mobile_vercode', 'WebFront\User\QualityControl\SMSRegController@ajax_send_mobile_vercode');// 发送手机验证码--ok
+        $api->any('user/reg/ajax_mobile_code_verify', 'WebFront\User\QualityControl\SMSRegController@ajax_mobile_code_verify');// 发送手机验证码-验证--ok
+
+        // 手机验证码--登录 -- ok
         $api->any('user/ajax_send_mobile_vercode', 'WebFront\User\QualityControl\SMSController@ajax_send_mobile_vercode');// 发送手机验证码--ok
         $api->any('user/ajax_mobile_code_verify', 'WebFront\User\QualityControl\SMSController@ajax_mobile_code_verify');// 发送手机验证码-验证--ok
 

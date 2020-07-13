@@ -74,7 +74,7 @@
             </a>
             <dl class="layui-nav-child">
               <dd><a lay-href="{{ url('user/info') }}">基本资料</a></dd>
-              <dd><a lay-href="{{ url('user/password') }}">修改密码</a></dd>
+{{--              <dd><a lay-href="{{ url('user/password') }}">修改密码</a></dd>--}}
               <hr>
               <dd  style="text-align: center;"><a href="{{ url('user/logout') }}">退出</a></dd>
             </dl>

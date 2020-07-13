@@ -33,17 +33,17 @@
                 </div>
                 <div class="layui-form-mid layui-word-aux">当前角色不可更改为其它角色</div>
               </div>
-              <div class="layui-form-item">
+              <div class="layui-form-item" style="display: none;">
                 <label class="layui-form-label">用户名</label>
                 <div class="layui-input-inline">
                   <input type="text" name="admin_username" value="{{ $admin_username ?? '' }}"  class="layui-input">
                 </div>
                 <div class="layui-form-mid layui-word-aux">用于后台登入名</div>
               </div>
-              <div class="layui-form-item">
+              <div class="layui-form-item" style="display: none;">
                 <label class="layui-form-label">手机</label>
                 <div class="layui-input-inline">
-                  <input type="text" name="mobile" value="{{ $mobile ?? '' }}" lay-verify="phone" autocomplete="off" class="layui-input">
+                  <input type="text" name="mobile" value="{{ $mobile ?? '' }}" lay-verify="phone" autocomplete="off" class="layui-input" readonly>
                 </div>
 {{--                <div class="layui-form-mid layui-word-aux">可用于后台登入</div>--}}
               </div>

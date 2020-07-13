@@ -82,7 +82,7 @@ class SMSController extends BasicController
         $countryCode = '86';
         $mobile_vercode = CommonRequest::get($request, 'mobile_vercode');
         // 发送手机验证码验证有效性
-        CTAPIStaffBusiness::sMSCodeVerify($request, $this, 'reg', $mobile, $countryCode,  $mobile_vercode, false);
+        CTAPIStaffBusiness::SMSCodeVerify($request, $this, 'reg', $mobile, $countryCode,  $mobile_vercode, false);
         return ajaxDataArr(1, ['data' => 1], '');
     }
 }

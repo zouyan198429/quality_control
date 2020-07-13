@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use OpenApi\Annotations as OA;
 
-class SMSController extends BasicController
+class SMSRegController extends BasicController
 {
 
     /**
@@ -43,9 +43,9 @@ class SMSController extends BasicController
         $mobile = CommonRequest::get($request, 'mobile');
         $countryCode = '86';
         $templateParams = [];
-        // 判断用户是否有效
+        // 判断用户是否手机号已经注册
         $user_type = $this->user_type;
-        CTAPIStaffBusiness::mobileIsValid($request, $this, $user_type, $mobile, $countryCode, 1);
+        CTAPIStaffBusiness::mobileIsReged($request, $this, $user_type, $mobile, $countryCode, 1);
         // 发送手机验证码
         CTAPIStaffBusiness::sendSMSCodeLimit($request, $this, 'reg', $mobile, $countryCode, $templateParams, 1);
         return ajaxDataArr(1, ['data' => 1], '');

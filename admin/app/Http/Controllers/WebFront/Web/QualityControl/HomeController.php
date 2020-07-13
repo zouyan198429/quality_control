@@ -341,8 +341,19 @@ class HomeController extends BasicRegController
         ];
         // 企业和用户需要审核
         if(in_array($admin_type, [2, 4])) $regInitData['open_status'] = 1;
-
-        $userInfo = CTAPIStaffBusiness::loginCaptchaCode($request, $this,$admin_type, 1, 1, 2, $regInitData);
+        $login_type = 1;
+        $checkType = 1;
+        if($admin_type == 4){// 用户
+            $login_type = 2;
+            $checkType = 2;
+            $real_name = CommonRequest::get($request, 'real_name');
+            $sex = CommonRequest::getInt($request, 'sex');
+            $regInitData = array_merge($regInitData, [
+                'real_name' => $real_name,
+                'sex' => $sex,
+            ]);
+        }
+        $userInfo = CTAPIStaffBusiness::loginCaptchaCode($request, $this,$admin_type, $login_type, $checkType, 2, $regInitData);
         // 保存注册信息
         $preKey = CommonRequest::get($request, 'preKey');// 0 小程序 1后台[默认]
         if(!is_numeric($preKey)) $preKey = 1;
@@ -489,10 +500,10 @@ class HomeController extends BasicRegController
         if($this->user_info['admin_type'] != 4)  throws('非用户不可进行此操作！');
         // CommonRequest::judgeEmptyParams($request, 'id', $id);
         $company_id = CommonRequest::getInt($request, 'company_id');
-        $real_name = CommonRequest::get($request, 'real_name');
-        $sex = CommonRequest::getInt($request, 'sex');
+//        $real_name = CommonRequest::get($request, 'real_name');
+//        $sex = CommonRequest::getInt($request, 'sex');
         $email = CommonRequest::get($request, 'email');
-        $mobile = CommonRequest::get($request, 'mobile');
+//        $mobile = CommonRequest::get($request, 'mobile');
         $qq_number = CommonRequest::get($request, 'qq_number');
         $id_number = CommonRequest::get($request, 'id_number');
         $city_id = CommonRequest::getInt($request, 'city_id');
@@ -508,9 +519,9 @@ class HomeController extends BasicRegController
             'admin_type' => $this->user_info['admin_type'],
             'is_perfect' => 2,
             'company_id' => $company_id,
-            'real_name' => $real_name,
-            'sex' => $sex,
-            'mobile' => $mobile,
+//            'real_name' => $real_name,
+//            'sex' => $sex,
+//            'mobile' => $mobile,
             'email' => $email,
             'qq_number' => $qq_number,
             'id_number' => $id_number,

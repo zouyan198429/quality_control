@@ -4,67 +4,49 @@ if(self != top){top.location.href=self.location.href;}
 
 var SUBMIT_FORM = true;//防止多次点击提交
 $(function(){
-    // 获得验证码
+    // 获得验证码--手机
     $(document).on("click",".LAY-user-getsmscode",function(){
         var obj = $(this);
         getsmscode(obj);
 
     });
 
-
     //提交
-    $(document).on("click",".submitBtn",function(){
+    $(document).on("click","#submitBtn",function(){
         //var index_query = layer.confirm('您确定提交保存吗？', {
         //    btn: ['确定','取消'] //按钮
         //}, function(){
-        var obj = $(this);
-        var formObj = obj.closest('form');
-        let type = $('input[name=form_type]').val();
-        console.log('type=' , type);
-        switch(type){
-            case 'user_login':
-                ajax_form_sms(formObj, USER_LOGIN_URL, USER_INDEX_URL);
-                break;
-            case 'compnay_login':
-                ajax_form(formObj, COMPANY_LOGIN_URL, COMPANY_INDEX_URL);
-                break;
-            default:
-        }
+        ajax_form();
         //    layer.close(index_query);
         // }, function(){
         //});
         return false;
     });
-
-    $(document).on("click",".layui-tab-title li",function(){
-        var obj = $(this);
-        let type = obj.data('type');
-        var old_type = $('input[name=form_type]').val();
-        // alert(type);
-        let formObj = $('.' + type);
-        if(old_type != type){
-            // 更新验证码
-            let imgcodeObj = formObj.find('.' +  CAPTCHA_IMG_CLASS + '');
-            let imgSrc = imgcodeObj.attr('src');
-            if(imgSrc == '') get_captcha_code(imgcodeObj);
-        }
-        $('input[name=form_type]').val(type);
+    //提交
+    $(document).on("change","input[name=admin_type]",function(){
+        $obj = $(this);
+        let admin_type = $obj.val();
+        form_toggle(admin_type);
     });
 
-    $(document).on("click","." + CAPTCHA_IMG_CLASS,function(){
-        var obj = $(this);
-        get_captcha_code(obj);
-    });
 
-    // 短信登录不用图形验证码
-    if(false){
-        $('.' +  CAPTCHA_IMG_CLASS + '').first().click();
-    }
-    // $('.' +  CAPTCHA_IMG_CLASS + '').each(function(){
-    //     var obj = $(this);
-    //     get_captcha_code(obj);
-    // })
+    $(document).on("click","#" + CAPTCHA_IMG_ID,function(){
+        get_captcha_code();
+    });
+    form_toggle(2);
+    get_captcha_code();
 });
+// 显示、隐藏表单
+// admin_type 2企业  4用户
+function form_toggle(admin_type){
+    if(admin_type == 2){
+        $(".company_input").show();
+        $(".user_input").hide();
+    }else{
+        $(".company_input").hide();
+        $(".user_input").show();
+    }
+}
 
 // 获得手机验证码
 function getsmscode(obj){
@@ -82,7 +64,7 @@ function getsmscode(obj){
     }
     // 发送手机验证码
     let expire_seconds = CODE_TIME;// 60 * 2;
-    send_mobile_code(obj, mobile, SEND_MOBILE_CODE_URL, expire_seconds)
+    send_mobile_code(obj, mobile, SEND_MOBILE_CODE_URL, expire_seconds);
 }
 
 // 倒计时
@@ -104,22 +86,17 @@ function countdown(obj, expire_seconds) {
     }
 }
 
-
 // 获得验证码图片
-function get_captcha_code(obj){
-    var img_url = COMPANY_GET_CAPTCHA_IMG_URL;
-    let type = $('input[name=form_type]').val();
-    if(type == 'user_login') img_url = USER_GET_CAPTCHA_IMG_URL;
+function get_captcha_code(){
     var layer_index = layer.load();
     data = {'random':Math.random()};
     $.ajax({
         'type' : 'GET',
-        'url' : img_url,
+        'url' : GET_CAPTCHA_IMG_URL,
         'headers':get_ajax_headers({}, ADMIN_AJAX_TYPE_NUM),
         'data' : data,
         'dataType' : 'json',
         'success' : function(ret){
-            console.log(ret);
             if(!ret.apistatus){//失败
                 SUBMIT_FORM = true;//标记为未提交过
                 //alert('失败');
@@ -136,8 +113,8 @@ function get_captcha_code(obj){
 
                 var captcha = ret.result;
                 console.log(captcha);
-                obj.attr('src', captcha.img);
-                obj.closest('.' + CAPTCHA_FORM_ITEM).find('input[name=' +  CAPTCHA_KEY_INPUT_NAME + ']').val(captcha.key);
+                $("#" + CAPTCHA_IMG_ID ).attr('src', captcha.img);
+                $('input[name=' +  CAPTCHA_KEY_INPUT_NAME + ']').val(captcha.key);
 
             }
             layer.close(layer_index);//手动关闭
@@ -147,88 +124,115 @@ function get_captcha_code(obj){
 
 
 //ajax提交表单
-function ajax_form(formObj, login_url, index_url){
+function ajax_form(){
     if (!SUBMIT_FORM) return false;//false，则返回
     // 验证信息
     var id = 0;// $('input[name=id]').val();
     if(!judge_validate(4,'记录id',id,true,'digit','','')){
         return false;
     }
-    // 验证信息
-    var admin_username = formObj.find('input[name=admin_username]').val();
-    var judgeuser =judge_validate(1,'帐号',admin_username,true,'length',6,20);
-    if(judgeuser != ''){
-        layer_alert(judgeuser,3,0);
-        // err_alert('<font color="#000000">' + judgeuser + '</font>');
+
+    var admin_type = $('input[name=admin_type]:checked').val() || '';
+    var judge_seled = judge_validate(1,'帐户类型',admin_type,true,'custom',/^[24]$/,"");
+    if(judge_seled != ''){
+        layer_alert("请选择帐户类型",3,0);
+        //err_alert('<font color="#000000">' + judge_seled + '</font>');
         return false;
     }
-    var admin_password = formObj.find('input[name=admin_password]').val();
-    var judgePassword = judge_validate(1,'密码',admin_password,true,'length',6,20);
-    if(judgePassword != ''){
-        layer_alert(judgePassword,3,0);
-        //err_alert('<font color="#000000">' + judgePassword + '</font>');
-        return false;
-    }
+    var formObj = $("#addForm");
+    // 企业
+    if(admin_type == 2){
 
-    // 验证码信息
-    var captcha_code = formObj.find('input[name=captcha_code]').val();
-    var judgecode =judge_validate(1,'验证码',captcha_code,true,'length',4,6);
-    if(judgecode != ''){
-        judgecode = "请输入完整的验证码";
-        layer_alert(judgecode,3,0);
-        // err_alert('<font color="#000000">' + judgeuser + '</font>');
-        return false;
-    }
-    ajax_save(formObj, id, login_url, index_url);
-}
-
-//ajax提交表单
-function ajax_form_sms(formObj, login_url, index_url){
-    if (!SUBMIT_FORM) return false;//false，则返回
-
-    // 验证信息
-    var id = 0;// $('input[name=id]').val();
-    if(!judge_validate(4,'记录id',id,true,'digit','','')){
-        return false;
-    }
-
-    var mobile = $('input[name=mobile]').val();
-    var judgemobile =judge_validate(1,'手机号',mobile,true,'mobile');
-    if(judgemobile != ''){
-        layer_alert(judgemobile,3,0);
-        // err_alert('<font color="#000000">' + judgeuser + '</font>');
-        return false;
-    }
-
-    var mobile_vercode = '';
-    if(mobile != ''){
-        var mobile_vercode = $('input[name=mobile_vercode]').val();
-        var judgemobile_vercode =judge_validate(1,'验证码',mobile_vercode,true,'length',4,6);
-        if(judgemobile_vercode != ''){
-            judgemobile_vercode = "请输入验证码。<br/>如未获取，请点击获取验证码！";
-            layer_alert(judgemobile_vercode,3,0);
+        // 验证信息
+        var admin_username = $('input[name=admin_username]').val();
+        var judgeuser =judge_validate(1,'用户名',admin_username,true,'length',6,20);
+        if(judgeuser != ''){
+            layer_alert(judgeuser,3,0);
             // err_alert('<font color="#000000">' + judgeuser + '</font>');
             return false;
         }
+        var admin_password = $('input[name=admin_password]').val();
+        var judgePassword = judge_validate(1,'密码',admin_password,true,'length',6,20);
+        if(judgePassword != ''){
+            layer_alert(judgePassword,3,0);
+            //err_alert('<font color="#000000">' + judgePassword + '</font>');
+            return false;
+        }
+
+        var repass =$('input[name=repass]').val();
+        var judgerepass = judge_validate(1,'确认密码',repass,true,'length',6,20);
+        if(judgerepass != ''){
+            layer_alert(judgerepass,3,0);
+            //err_alert('<font color="#000000">' + judgePassword + '</font>');
+            return false;
+        }
+
+        if(admin_password != repass){
+            layer_alert("密码与确认密码不一致！",3,0);
+            //err_alert('<font color="#000000">' + judgePassword + '</font>');
+            return false;
+        }
+
+        // 验证码信息
+        var captcha_code = $('input[name=captcha_code]').val();
+        var judgecode =judge_validate(1,'验证码',captcha_code,true,'length',4,6);
+        if(judgecode != ''){
+            judgecode = "请输入完整的验证码";
+            layer_alert(judgecode,3,0);
+            // err_alert('<font color="#000000">' + judgeuser + '</font>');
+            return false;
+        }
+        ajax_save(formObj, id, REG_URL, PERFECT_COMPANY_URL);
+
+    }else{
+
+        var real_name = $('input[name=real_name]').val();
+        if(!judge_validate(4,'姓名',real_name,true,'length',1,20)){
+            return false;
+        }
+
+        var sex = $('input[name=sex]:checked').val() || '';
+        var judge_seled = judge_validate(1,'性别',sex,true,'custom',/^[12]$/,"");
+        if(judge_seled != ''){
+            layer_alert("请选择性别",3,0);
+            //err_alert('<font color="#000000">' + judge_seled + '</font>');
+            return false;
+        }
+
+        var mobile = $('input[name=mobile]').val();
+        if(!judge_validate(4,'手机号',mobile,true,'mobile','','')){
+            return false;
+        }
+
+        var mobile_vercode = '';
+        if(mobile != ''){
+            var mobile_vercode = $('input[name=mobile_vercode]').val();
+            var judgemobile_vercode =judge_validate(1,'验证码',mobile_vercode,true,'length',4,6);
+            if(judgemobile_vercode != ''){
+                judgemobile_vercode = "请输入验证码。<br/>如未获取，请点击获取验证码！";
+                layer_alert(judgemobile_vercode,3,0);
+                // err_alert('<font color="#000000">' + judgeuser + '</font>');
+                return false;
+            }
+        }
+
+        // 验证验证码是否正确--并提交
+        mobile_code_verify(formObj, id, mobile, mobile_vercode, SEND_MOBILE_CODE_VERIFY_URL, 2, REG_URL, PERFECT_USER_URL);
     }
 
-    // 验证验证码是否正确--并提交
-    mobile_code_verify(formObj, id, mobile, mobile_vercode, SEND_MOBILE_CODE_VERIFY_URL, 2, login_url, index_url);
-    // ajax_save(id);
-    return false;
 }
 
 // 验证通过后，ajax保存
-function ajax_save(formObj, id, login_url, index_url){
+function ajax_save(formObj, id, reg_url, index_url){
     // 验证通过
     SUBMIT_FORM = false;//标记为已经提交过
-    var data = formObj.serialize();
-    console.log(login_url);
+    var data = formObj.serialize();// $("#addForm").serialize();
+    console.log(REG_URL);
     console.log(data);
     var layer_index = layer.load();
     $.ajax({
         'type' : 'POST',
-        'url' : login_url,
+        'url' : reg_url,// REG_URL,
         'headers':get_ajax_headers({}, ADMIN_AJAX_TYPE_NUM),
         'data' : data,
         'dataType' : 'json',
@@ -241,8 +245,10 @@ function ajax_save(formObj, id, login_url, index_url){
                 layer_alert(ret.errorMsg,3,0);
                 // err_alert('<font color="#000000">' + ret.errorMsg + '</font>');
             }else{//成功
-
-                goTop(index_url);
+                // goTop(INDEX_URL);
+                var goto_url = index_url;//  PERFECT_COMPANY_URL;
+                // if(admin_type == 4) goto_url = PERFECT_USER_URL;
+                goTop(goto_url);
                 // var supplier_id = ret.result['supplier_id'];
                 //if(SUPPLIER_ID_VAL <= 0 && judge_integerpositive(supplier_id)){
                 //    SUPPLIER_ID_VAL = supplier_id;
@@ -299,9 +305,8 @@ function send_mobile_code(obj, mobile, send_mobile_url, expire_seconds){
 }
 
 // 验证手机验证码是否正确
-// id 没有写 0
 // 操作类型 operate_type 1 仅验证 2 提交表单
-function mobile_code_verify(formObj, id, mobile, mobile_vercode, mobile_cod_verify_url, operate_type, login_url, index_url){
+function mobile_code_verify(formObj, id, mobile, mobile_vercode, mobile_cod_verify_url, operate_type, reg_url, index_url){
     if (!SUBMIT_FORM) return false;//false，则返回
     // 验证通过
     SUBMIT_FORM = false;//标记为已经提交过
@@ -331,7 +336,7 @@ function mobile_code_verify(formObj, id, mobile, mobile_vercode, mobile_cod_veri
                         break;
                     case 2:// 2 提交表单
 
-                        ajax_save(formObj, id, login_url, index_url);
+                        ajax_save(formObj, id, reg_url, index_url);
                         break;
                     default:
                 }

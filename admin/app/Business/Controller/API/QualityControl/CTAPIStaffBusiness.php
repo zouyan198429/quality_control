@@ -151,7 +151,7 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
             $mobile = CommonRequest::get($request, 'mobile');
             $mobile_vercode = CommonRequest::get($request, 'mobile_vercode');
             // 发送手机验证码验证有效性
-            CTAPIStaffBusiness::sMSCodeVerify($request, $controller, 'reg', $mobile, $countryCode,  $mobile_vercode, true);
+            CTAPIStaffBusiness::SMSCodeVerify($request, $controller, 'reg', $mobile, $countryCode,  $mobile_vercode, true);
         }
         $user_id = 0;
         $result = ajaxDataArr(0, null, '登录失败！');// 默认为失败
@@ -957,6 +957,55 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
 
 
     /**
+     * 判断手机号是否是已经注册用户
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param string $user_type 用户类型  1平台2企业4个人 可以多个  如： 1 ｜ 2-- 0代表不判断是否存在
+     * @param string $mobile 发送的手机号
+     * @param string $countryCode 国家码 '86' 阿里的暂时无用
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  null 无返回值
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function mobileIsReged(Request $request, Controller $controller, $user_type = 0, $mobile = "", $countryCode = '86', $notLog = 0)
+    {
+        if($user_type == 0) return true;
+        // 多语言配置自动验证数据
+        $judgeDataItem = [
+            'mobile' => $mobile,
+        ];
+        $judgeData = $judgeDataItem;
+        $mustFields = ['mobile'];
+        static::judgeDataThrowsErr(1, $judgeData, $mustFields, [], 1, "<br/>", ['request' => $request, 'controller' => $controller]);
+        // 判断手机号是否是用户
+        $admin_type = [];
+        if( ($user_type & 1) == 1) array_push($admin_type, 1);
+        if( ($user_type & 2) == 2) array_push($admin_type, 2);
+        if( ($user_type & 4) == 4) array_push($admin_type, 4);
+        if(empty($admin_type)) return true;
+
+        $queryParams = [
+            'where' => [
+                ['mobile',$mobile],
+//                ['admin_username',$admin_username],
+//                ['admin_password',md5($admin_password)],
+            ],
+//            'whereIn' => [
+//                'admin_type' => array_keys(self::$adminType),
+//            ],
+            // 'select' => ['id','company_id','admin_username','real_name','admin_type'],
+            // 'limit' => 1
+        ];
+        Tool::appendParamQuery($queryParams, $admin_type, 'admin_type', [0, '0', ''], ',', false);
+        $userInfo = static::getInfoQuery($request, $controller, '', 0, 1, $queryParams, [], 1);
+        // 已经注册
+        if(!empty($userInfo)) throws('手机号已注册，请直接使用手机号登录！');
+        return true;
+    }
+
+
+    /**
      * 注册发送手机验证码
      *
      * @param Request $request 请求信息
@@ -1019,7 +1068,7 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
      * @return  null 无返回值
      * @author zouyan(305463219@qq.com)
      */
-    public static function sMSCodeVerify(Request $request, Controller $controller, $sms_key = '', $mobile = "", $countryCode = '86', $vercode = '', $del_cache = false){
+    public static function SMSCodeVerify(Request $request, Controller $controller, $sms_key = '', $mobile = "", $countryCode = '86', $vercode = '', $del_cache = false){
 
         // 多语言配置自动验证数据
         $judgeDataItem = [
