@@ -255,6 +255,7 @@ Route::get('admin/ability_type/export', 'Admin\QualityControl\AbilityTypeControl
 Route::get('admin/ability_type/import_template', 'Admin\QualityControl\AbilityTypeController@import_template');// 导入模版
 
 // 能力验证
+Route::get('admin/abilitys/test', 'Admin\QualityControl\AbilitysController@test');// 列表
 Route::get('admin/abilitys', 'Admin\QualityControl\AbilitysController@index');// 列表
 Route::get('admin/abilitys/add/{id}', 'Admin\QualityControl\AbilitysController@add');// 添加
 // Route::get('admin/abilitys/select', 'Admin\QualityControl\AbilitysController@select');// 选择-弹窗

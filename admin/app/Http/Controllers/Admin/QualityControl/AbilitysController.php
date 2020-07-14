@@ -10,6 +10,14 @@ use Illuminate\Http\Request;
 
 class AbilitysController extends BasicController
 {
+
+    public function test(Request $request)
+    {
+        $this->InitParams($request);
+        $reDataArr = $this->reDataArr;
+        return view('admin.QualityControl.Abilitys.test', $reDataArr);
+    }
+
     /**
      * 首页
      *
@@ -61,7 +69,11 @@ class AbilitysController extends BasicController
 
         if ($id > 0) { // 获得详情数据
             $operate = "修改";
-            $info = CTAPIAbilitysBusiness::getInfoData($request, $this, $id, [], '', []);
+            $handleKeyArr = ['projectStandards', 'projectSubmitItems'];
+            $extParams = [
+                'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+            ];
+            $info = CTAPIAbilitysBusiness::getInfoData($request, $this, $id, [], '', $extParams);
         }
         // $reDataArr = array_merge($reDataArr, $resultDatas);
         $reDataArr['info'] = $info;
@@ -136,14 +148,50 @@ class AbilitysController extends BasicController
         $estimate_add_num = CommonRequest::getInt($request, 'estimate_add_num');
         $join_begin_date = CommonRequest::get($request, 'join_begin_date');
         $join_end_date = CommonRequest::get($request, 'join_end_date');
+        $duration_minute = CommonRequest::getInt($request, 'duration_minute');
         // 判断开始结束日期
         Tool::judgeBeginEndDate($join_begin_date, $join_end_date, 1 + 2 + 16 + 128 + 256 + 512, 1, date('Y-m-d H:i:s'), '报名时间');
+        if(!is_numeric($duration_minute) || $duration_minute <= 0 ) throws('数据提交时限必须是数值且大于0！');
+
+
+        // 方法标准
+        $project_standard_ids = CommonRequest::get($request, 'project_standard_ids');// 值id数组
+        if(is_string($project_standard_ids) || !is_array($project_standard_ids)) $project_standard_ids = explode(',', $project_standard_ids);
+
+        $project_standard_names = CommonRequest::get($request, 'project_standard_names');// 值数组
+        if(is_string($project_standard_names) || !is_array($project_standard_names)) $project_standard_names = explode(',', $project_standard_names);
+
+        $project_standards = [];// 数组
+        foreach ($project_standard_ids as $k => $temId){
+            array_push($project_standards,[
+                'id' => $temId,
+                'name' => $project_standard_names[$k],
+            ]);
+        }
+
+        // 验证数据项
+        $submit_item_ids = CommonRequest::get($request, 'submit_item_ids');// 值id数组
+        if(is_string($submit_item_ids) || !is_array($submit_item_ids)) $submit_item_ids = explode(',', $submit_item_ids);
+
+        $submit_item_names = CommonRequest::get($request, 'submit_item_names');// 值数组
+        if(is_string($submit_item_names) || !is_array($submit_item_names)) $submit_item_names = explode(',', $submit_item_names);
+
+        $submit_items = [];// 数组
+        foreach ($submit_item_ids as $k => $temId){
+            array_push($submit_items,[
+                'id' => $temId,
+                'name' => $submit_item_names[$k],
+            ]);
+        }
 
         $saveData = [
             'ability_name' => $ability_name,
             'estimate_add_num' => $estimate_add_num,
+            'duration_minute' => $duration_minute,
             'join_begin_date' => $join_begin_date,
             'join_end_date' => $join_end_date,
+            'project_standards' => $project_standards,// 方法标准 - 数组
+            'submit_items' => $submit_items,// 验证数据项  - 数组
         ];
         // 开始报名前，可以增删改，后面就不可以修改、删除
         if($id > 0){
@@ -191,7 +239,14 @@ class AbilitysController extends BasicController
      */
     public function ajax_alist(Request $request){
         $this->InitParams($request);
-        return  CTAPIAbilitysBusiness::getList($request, $this, 2 + 4);
+
+        $relations = [];//  ['siteResources']
+        $handleKeyArr = ['projectStandards', 'projectSubmitItems'];
+        $extParams = [
+            'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+        ];
+
+        return  CTAPIAbilitysBusiness::getList($request, $this, 2 + 4, [], $relations, $extParams);
     }
 
     /**

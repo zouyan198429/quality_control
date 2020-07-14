@@ -428,7 +428,7 @@ class StaffController extends BasicController
         if(in_array(static::$ADMIN_TYPE, [2, 4])) $handleKeyArr = array_merge($handleKeyArr, ['extend', 'city']);
         if(static::$ADMIN_TYPE == 4) array_push($handleKeyArr, 'company');
 
-            $extParams = [
+        $extParams = [
             'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
         ];
 

@@ -140,7 +140,7 @@
                     </dd>
                     <dd>
                       <a lay-href="{{ url('admin/user') }}">个人会员</a>
-                    </dd>                    
+                    </dd>
                     <dd>
                         <a lay-href="javascript:void(01);">会员分析</a>
                     </dd>
@@ -224,14 +224,14 @@
                   </a>
                   <dl class="layui-nav-child">
                       <dd>
-                          <a lay-href="javascript:void(50);">项目管理</a>
+                          <a lay-href="{{ url('admin/abilitys') }}">项目管理</a>
                       </dd>
                       <dd>
                           <a lay-href="javascript:void(51);">用户报名</a>
                       </dd>
-                      <dd>
-                          <a lay-href="{{ url('admin/ability_type') }}?company_grade=4">领域管理</a>
-                      </dd>
+{{--                      <dd>--}}
+{{--                          <a lay-href="{{ url('admin/ability_type') }}?company_grade=4">领域管理</a>--}}
+{{--                      </dd>--}}
                   </dl>
               </li>
               <!-- <li data-name="user" class="layui-nav-item">
@@ -322,7 +322,7 @@
                   </dd>
                   <dd>
                       <a lay-href="{{ url('admin/company_certificate_type') }}">资质证书类型</a>
-                  </dd> 
+                  </dd>
                   <dd>
                       <a lay-href="{{ url('admin/sms_code') }}">短信日志管理</a>
                   </dd>
