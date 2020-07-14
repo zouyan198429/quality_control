@@ -332,6 +332,7 @@ class HomeController extends BasicRegController
         $admin_type = CommonRequest::getInt($request, 'admin_type');
         if(!in_array($admin_type, [2, 4])) throws('帐户类型无效！');
         $regInitData = [
+            'company_is_legal_persion' => 2,// 企业--是否独立法人1独立法人 2非独立法人
             'issuper' => 2,
             'company_type' => 0,// 企业类型1检测机构、2生产企业
             'company_prop' => 0,// 企业性质1企业法人 、2企业非法人、3事业法人、4事业非法人、5社团法人、6社团非法人、7机关法人、8机关非法人、9其它机构、10民办非企业单位、11个体 、12工会法人

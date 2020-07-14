@@ -113,7 +113,7 @@
                             <p>一次最多上传1张图片。</p>
                         </div>
                         <div class="row  baguetteBoxOne gallery ">
-                            <div class="col-xs-6">
+                            <div class="col-xs-12">
                                 @component('component.upfileone.piconecode')
                                     @slot('fileList')
                                         grid
