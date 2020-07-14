@@ -702,7 +702,8 @@ function judge_validate(err_type,tishi_name,value,is_must,reg_msg,min_length,max
                 break;
             case "positive_int":// >0正整数[全是数字且>0] judge_positive_int(value)
                 if(!judge_positive_int(tem_value)){
-                   back_err = "格式不是有效的>0正整数[全是数字且>0]格式!";
+                   // back_err = "格式不是有效的>0正整数[全是数字且>0]格式!";
+                   back_err = "必须是正整数[>0]!";
                 }
                 break;
             case "digit"://:0+正整数 judge_judge_digit(value)
@@ -1676,6 +1677,16 @@ function empty_area_option(record_obj){
 	record_obj.empty();//清空下拉
 	record_obj.append(empty_option_html);
 }
+
+//初始化标签json串;[{'id': 0,'tag_name': '标签名称','id_input_name':'id[]','tag_input_name':'tag_name[]'},...]
+//返回select 的option html代码
+function reset_tags_option(tags_json){
+    var tags_data_list_json = {"data_list":tags_json};
+    var html_tags = resolve_baidu_template('baidu_template_tag_item_list',tags_data_list_json,'');//解析
+    //alert(html_sel_option);
+    return html_tags;
+}
+
 //初始化下拉框json串[注意:option_json下标名不能变];{"option_json":{"1": "北京","2": "天津","3": "上海"}}
 //返回select 的option html代码
 function reset_sel_option(option_json){
@@ -2275,6 +2286,150 @@ function GetDistance( lat1,  lng1,  lat2,  lng2){
     s = Math.round(s * 10000) / 10000;
     return s;
 }
+// ~~~~~~~~~~~~~~~~~~~~标签~~相关~~~开始~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// 初始化时，只要id 、tag_name 其它的，会根据配置自动完成
+// var aaa = [
+//     {'id': 0, 'tag_name': '标签名称','id_input_name':'id[]','tag_input_name':'tag_name[]'},
+//     {'id': 0, 'tag_name': '标签名称sss','id_input_name':'id[]','tag_input_name':'tag_name[]'}
+// ];
+// 初始化标签
+function  init_tags(){
+    for(var p in TAGS_CONFIG){
+        var tag_obj = $('#' + p);
+        if(tag_obj.length <= 0) continue;
+        var record_config = TAGS_CONFIG[p];
+        var init_tags = getAttrVal(record_config, 'init_tags', true, []);
+
+        // id  name 进行覆盖
+        var id_input_name = getAttrVal(record_config, 'id_input_name', true, 'id_input_name[]');
+        var tag_input_name = getAttrVal(record_config, 'tag_input_name', true, 'tag_input_name[]');
+        for(var p in init_tags){
+            init_tags[p].id_input_name = id_input_name;
+            init_tags[p].tag_input_name = tag_input_name;
+        }
+
+        var tags_html = reset_tags_option(init_tags);
+        console.log(tags_html);
+        tag_obj.find('.tags_list').html(tags_html);
+    }
+}
+// 判断标签数量--所有标签
+// true：正确；false:有错
+function judge_tags_num() {
+    for(var p in TAGS_CONFIG){
+        var tag_obj = $('#' + p);
+        if(tag_obj.length <= 0) continue;
+        if(!judge_tags_item_num(p)) return false;// 有错
+    }
+    return true;
+}
+// 判断标签数量--指定标签
+// true：正确；false:有错
+function judge_tags_item_num(tag_config_key) {
+    var record_config = TAGS_CONFIG[tag_config_key];
+    var tag_txt_name = getAttrVal(record_config, 'tag_name', true, 0);
+    var min_num = getAttrVal(record_config, 'min_num', true, 0);
+    var max_num = getAttrVal(record_config, 'max_num', true, 0);
+    var tag_obj = $('#' + tag_config_key);
+    var record_num = tag_obj.find('.tag').length;
+    if(min_num > 0 && min_num > record_num){
+        err_alert( tag_txt_name + '至少添加' +  min_num + '条记录！');
+        return false;
+    }
+    if(max_num > 0 && max_num <= record_num){
+        err_alert(tag_txt_name + '最多只能添加' +  max_num + '条记录！');
+        return false;
+    }
+    return true;
+}
+// 添加标签
+// obj 添加按钮对象
+function add_tag(obj) {
+    var tags_block = obj.closest('.tags_block');
+    // 判断值是否为空
+    var tag_name = tags_block.find('input[name="tag_name"]').val();
+    console.log('tag_name=', tag_name);
+    if(tag_name == ''){
+        err_alert('名称不能为空！');
+        return false;
+    }
+    var tag_config_key = tags_block.attr('id');// obj.data("tag_config_key");
+    console.log('id=' , tag_config_key);
+    if(isEmptyAttr(TAGS_CONFIG, tag_config_key)){
+        err_alert('标签配置信息不存在！');
+        return false;
+    }
+    var record_config = getAttrVal(TAGS_CONFIG, tag_config_key, true, {});
+    var tag_txt_name = getAttrVal(record_config, 'tag_name', true, 0);
+    var default_id = getAttrVal(record_config, 'default_id', true, 0);
+    var id_input_name = getAttrVal(record_config, 'id_input_name', true, 0);
+    var tag_input_name = getAttrVal(record_config, 'tag_input_name', true, 0);
+    var min_len = getAttrVal(record_config, 'min_len', true, '');
+    var max_len = getAttrVal(record_config, 'max_len', true, '');
+    var min_num = getAttrVal(record_config, 'min_num', true, 0);
+    var max_num = getAttrVal(record_config, 'max_num', true, 0);
+
+    // 判断值的长度
+    if(!judge_validate(4,tag_txt_name,tag_name,true,'length',min_len,max_len)){
+        return false;
+    }
+
+    var record_num = tags_block.find('.tag').length;
+    if(max_num > 0 && max_num <= record_num){
+        err_alert(tag_txt_name + '最多只能添加' +  max_num + '条记录！');
+        return false;
+    }
+
+    var tag_exist = false;// 记录是否已经存在 true:存在；false:不存在
+    // 判断是否已经存在
+    tags_block.find('.tag').each(function () {
+        var tagObj = $(this);
+        var tag_txt = tagObj.find('.tag_txt').html();
+        console.log(tag_txt);
+        if(tag_name == tag_txt){
+            console.log('记录已经存在！');
+            tag_exist = true;
+            return false;
+        }
+        console.log('===',tag_txt);
+    });
+    if(tag_exist){
+        console.log('=记录已经存在！');
+        err_alert('记录已经存在！');
+        return false;
+    }else{
+        console.log('=记录不存在！');
+        var tag_obj = {'id': default_id, 'tag_name': tag_name,'id_input_name':id_input_name,'tag_input_name':tag_input_name};
+        tags_json = [
+            // {'id': 0, 'tag_name': '标签名称','id_input_name':'id[]','tag_input_name':'tag_name[]'},
+            // {'id': 0, 'tag_name': '标签名称sss','id_input_name':'id[]','tag_input_name':'tag_name[]'}
+        ];
+        tags_json.push(tag_obj);
+        var tags_html = reset_tags_option(tags_json);
+        tags_block.find('.tags_list').append(tags_html);
+        tags_block.find('input[name="tag_name"]').val('');
+
+    }
+}
+// 标签删除
+// obj 点击的删除对象--叉 *
+function del_tag(obj) {
+    var index_query = layer.confirm('您确定移除吗？', {
+        btn: ['确定','取消'] //按钮
+    }, function(){
+        obj.closest('.tag').remove();
+        layer.close(index_query);
+    }, function(){
+    });
+}
+// 清空标签
+function empty_tag(tag_config_key){
+    var tag_obj = $('#' + tag_config_key);
+    if(tag_obj.length <= 0) return true;
+    tags_block.find('.tags_list').html('');
+}
+
+//~~~~~~~~~~~~~~~~~~~~标签~~相关~~~开始~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // 自己实现一个copy，可以传入deep参数表示是否执行深复制：https://www.cnblogs.com/tracylin/p/5346314.html 也来谈一谈js的浅复制和深复制
 //util作为判断变量具体类型的辅助模块
 var util = (function(){
@@ -2454,4 +2609,21 @@ function copy(obj,deep){
     document.write("    <\/script>");
     document.write("    <!-- [省市区\/县]下拉框模板部分 结束-->");
     document.write("    <!-- 前端模板结束 -->");
+    document.write("");
+    document.write("<!-- 前端模板部分 -->");
+    document.write("<!-- 列表模板部分 开始  <! -- 模板中可以用HTML注释 -- >  或  <%* 这是模板自带注释格式 *%> -->");
+    document.write("<script type=\"text\/template\"  id=\"baidu_template_tag_item_list\">");
+    document.write("    <%for(var i = 0; i<data_list.length;i++){");
+    document.write("    var item = data_list[i];");
+    document.write("    %>");
+    document.write("    <span class=\"tag\">");
+    document.write("        <span class=\"tag_txt\" data-id=\"<%=item.id%>\"><%=item.tag_name%><\/span>");
+    document.write("        <input type=\"hidden\" name=\"<%=item.id_input_name%>\" value=\"<%=item.id%>\">");
+    document.write("        <input type=\"hidden\" name=\"<%=item.tag_input_name%>\" value=\"<%=item.tag_name%>\">");
+    document.write("        <i class=\"close\">×<\/i>");
+    document.write("    <\/span>");
+    document.write("    <%}%>");
+    document.write("<\/script>");
+    document.write("<!-- 列表模板部分 结束-->");
+    document.write("<!-- 前端模板结束 -->");
 }).call();

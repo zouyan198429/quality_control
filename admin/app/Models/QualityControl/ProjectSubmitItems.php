@@ -1,9 +1,9 @@
 <?php
-// 能力验证
+// 验证数据项
 
 namespace App\Models\QualityControl;
 
-class Abilitys extends BasePublicModel
+class ProjectSubmitItems extends BasePublicModel
 {
     //****************数据据缓存**相关的***开始********************************************
 //    public static $cachePre = 'cacheDB';// 缓存键最前面的关键字  cacheDb:U:{id值}_{email值}  中的 cacheDb
@@ -72,78 +72,21 @@ class Abilitys extends BasePublicModel
      *
      * @var string
      */
-    protected $table = 'abilitys';
-
-
-    // 状态(1待开始 、2报名中、4进行中、8已结束 16 已取消【作废】)
-    public $statusArr = [
-        '1' => '待开始',
-        '2' => '报名中',
-        '4' => '进行中',
-        '8' => '已结束',
-        '16' => '已取消',
-    ];
-
-    // 是否公布结果1未公布  2待公布 4  已公布
-    public $isPublishArr = [
-        '1' => '未公布',
-        '2' => '待公布',
-        '4' => '已公布',
-    ];
-
-    // 表里没有的字段
-    protected $appends = ['status_text', 'is_publish_text'];
-
-    /**
-     * 获取拥有者类型文字
-     *
-     * @return string
-     */
-    public function getStatusTextAttribute()
-    {
-        return $this->statusArr[$this->status] ?? '';
-    }
-
-    /**
-     * 获取是否公布结果文字
-     *
-     * @return string
-     */
-    public function getIsPublishTextAttribute()
-    {
-        return $this->isPublishArr[$this->is_publish] ?? '';
-    }
-
-    /**
-     * 获取项目标准-二维
-     */
-    public function projectStandards()
-    {
-        return $this->hasMany('App\Models\QualityControl\ProjectStandards', 'ability_id', 'id');
-    }
-
-
-    /**
-     * 获取验证数据项-二维
-     */
-    public function projectSubmitItems()
-    {
-        return $this->hasMany('App\Models\QualityControl\ProjectSubmitItems', 'ability_id', 'id');
-    }
+    protected $table = 'project_submit_items';
 
     /**
      * 获取能力验证报名项-二维
      */
-    public function abilityJoinItems()
-    {
-        return $this->hasMany('App\Models\QualityControl\AbilityJoinItems', 'ability_id', 'id');
-    }
+//    public function abilityJoinItems()
+//    {
+//        return $this->hasMany('App\Models\QualityControl\AbilityJoinItems', 'project_standard_id', 'id');
+//    }
 
     /**
-     * 获取所属能力验证类型--一维
+     * 获取所属能力验证-一维
      */
-    public function abilityType()
+    public function ability()
     {
-        return $this->belongsTo('App\Models\QualityControl\AbilityType', 'ability_type_id', 'id');
+        return $this->belongsTo('App\Models\QualityControl\Abilitys', 'ability_id', 'id');
     }
 }

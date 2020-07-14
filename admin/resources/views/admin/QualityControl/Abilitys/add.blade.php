@@ -32,7 +32,7 @@
                 </td>
             </tr>
             <tr>
-                <th>报名起止时间</th>
+                <th>报名起止时间<span class="must">*</span></th>
                 <td>
                     <input type="text" class="inp wlong join_begin_date" name="join_begin_date" value="{{ $info['join_begin_date'] ?? '' }}" placeholder="请选择开始时间" style="width: 150px;"  readonly="true"/>
                     -
@@ -40,15 +40,45 @@
                 </td>
             </tr>
             <tr>
+                <th>数据提交时限<span class="must">*</span></th>
+                <td>
+                    <input type="text" class="inp wnormal"  name="duration_minute" value="{{ $info['duration_minute'] ?? '' }}" placeholder="请输入数据提交时限"  onkeyup="isnum(this) " onafterpaste="isnum(this)"  />
+                    <p class="gray">领样后，提交数据时限(<sapn style="color:red;font-weight: bold;">单位：天</sapn>；)</p>
+                </td>
+            </tr>
+            <tr>
+                <th>方法标准<span class="must">*</span></th>
+                <td>
+                    <span class="tags_block" id="project_standards">
+                        <span class="tags_list">
+{{--                            <span class="tag">--}}
+{{--                                <span class="tag_txt">品学兼优</span>--}}
+{{--                                <i class="close">×</i>--}}
+{{--                            </span>--}}
+                        </span>
+                        <input type="text" name="tag_name" value="" class="tag_name">
+                        <button class="btn btn-small tag_add" type="button">添加</button>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <th>验证数据项<span class="must">*</span></th>
+                <td>
+                    <span class="tags_block" id="submit_items">
+                        <span class="tags_list">
+{{--                            <span class="tag">--}}
+                            {{--                                <span class="tag_txt">品学兼优</span>--}}
+                            {{--                                <i class="close">×</i>--}}
+                            {{--                            </span>--}}
+                        </span>
+                        <input type="text" name="tag_name" value="" class="tag_name">
+                        <button class="btn btn-small tag_add" type="button">添加</button>
+                    </span>
+                </td>
+            </tr>
+            <tr>
                 <th> </th>
                 <td>
-
-                    <div class="tags" id="tags">
-                        <input type="text" name="" id="inputTags" placeholder="回车生成标签" autocomplete="off">
-                    </div>
-                    <div class="tags" id="tagsaaa">
-                        <input type="text" name="" id="inputTagsaaa" placeholder="回车生成标签" autocomplete="off">
-                    </div>
                     <button class="btn btn-l wnormal"  id="submitBtn" >提交</button>
                 </td>
             </tr>
@@ -60,8 +90,6 @@
 <script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>
 <script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.all.js')}}"></script>
 {{--<script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.js')}}"></script>--}}
-<link rel="stylesheet" href="{{asset('layui/extend/inputTags/inputTags.css')}}" media="all">
-<script type="text/javascript" src="{{asset('layui/extend/inputTags/inputTags.js')}}"></script>
 @include('public.dynamic_list_foot')
 <script type="text/javascript">
     var SAVE_URL = "{{ url('api/admin/abilitys/ajax_save') }}";// ajax保存记录地址
@@ -70,6 +98,8 @@
     var BEGIN_TIME = "{{ $info['join_begin_date'] ?? '' }}" ;//报名开始时间
     var END_TIME = "{{ $info['join_end_date'] ?? '' }}" ;//报名截止时间
 
+    var PROJECT_STANDARDS_TAGS = @json($info['project_standards'] ?? []) ;
+    var SUBMIT_ITEMS_TAGS = @json($info['submit_items'] ?? []) ;
 </script>
 <script src="{{ asset('/js/admin/QualityControl/Abilitys_edit.js') }}"  type="text/javascript"></script>
 </body>

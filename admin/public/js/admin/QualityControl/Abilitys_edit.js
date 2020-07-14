@@ -29,31 +29,33 @@ function parent_reset_list_iframe_close(reset_total){
 function parent_reset_list(){
     parent.layer.close(PARENT_LAYER_INDEX);
 }
+// 标签配置
+const TAGS_CONFIG = {
+    'project_standards' :{// 能力验证项目标准
+        'tag_name':'方法标准',// 标签文字名称
+        'init_tags' : PROJECT_STANDARDS_TAGS,// [],// 标签初始化对象  初始化时，只要id 、tag_name 其它的，会根据配置自动完成     [{'id': 0, 'tag_name': '标签名称','id_input_name':'id[]','tag_input_name':'tag_name[]'},..]
+        'default_id' : 0,// id默认值
+        'id_input_name' : 'project_standard_ids[]',// id 输入框的名称
+        'tag_input_name' : 'project_standard_names[]',// tag_name 输入框的名称
+        'min_len': 1,// 标签的最小字符长度；> 0 ，才判断;其它值 空 ''：代表不判断
+        'max_len': 30,// 标签的最大字符长度；> 0 ，才判断;其它值 空 ''：代表不判断
+        'min_num': 1,// 标签的最小数量；> 0 ，才判断;其它值：代表不限
+        'max_num': 30// 标签的最大数量；> 0 ，才判断;其它值：代表不限
+    },
+    'submit_items' :{// 能力验证--提交数据
+        'tag_name':'验证数据项',// 标签文字名称
+        'init_tags' : SUBMIT_ITEMS_TAGS,// [],// 标签初始化对象 初始化时，只要id 、tag_name 其它的，会根据配置自动完成 [{'id': 0, 'tag_name': '标签名称','id_input_name':'id[]','tag_input_name':'tag_name[]'},..]
+        'default_id' : 0,// id默认值
+        'id_input_name' : 'submit_item_ids[]',// id 输入框的名称
+        'tag_input_name' : 'submit_item_names[]',// tag_name 输入框的名称
+        'min_len': 1,// 标签的最小字符长度；> 0 ，才判断;其它值 空 ''：代表不判断
+        'max_len': 30,// 标签的最大字符长度；> 0 ，才判断;其它值 空 ''：代表不判断
+        'min_num': 1,// 标签的最小数量；> 0 ，才判断;其它值：代表不限
+        'max_num': 20// 标签的最大数量；> 0 ，才判断;其它值：代表不限
+    }
+};
 
 $(function(){
-    // layui.use(['inputTags'],function(){
-        var inputTags = layui.inputTags;
-        inputTags.render({
-            elem:'#inputTags',
-            content: ['标题一','标题二'],
-            aldaBtn: true,
-            done: function(value){
-
-                console.log(value);
-            }
-        });
-    var inputTagsaaa = layui.inputTags;
-    inputTagsaaa.render({
-        elem:'#inputTagsaaa',
-        content: ['标题一','标题二'],
-        aldaBtn: true,
-        done: function(value){
-
-            console.log(value);
-        }
-    });
-
-    // });
     //执行一个laydate实例
     // 开始日期
     var startConfig = {
@@ -138,6 +140,22 @@ $(function(){
         return false;
     });
 
+    // ~~~~~~~~~~~~~~~~~~~标签~~~~~~~~开始~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // 添加标签
+    $(document).on("click",".tags_block .tag_add",function(){
+        var obj = $(this);
+        add_tag(obj);
+        return false;
+    });
+    // 标签删除
+    $(document).on("click",".tags_block .close",function(){
+        var obj = $(this);
+        del_tag(obj);
+        return false;
+    });
+    init_tags();// 初始化标签
+    // ~~~~~~~~~~~~~~~~~标签~~~~~~~~结束~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 });
 
 //ajax提交表单
@@ -214,7 +232,15 @@ function ajax_form(){
         }
     }
 
+    var duration_minute = $('input[name=duration_minute]').val();
+    if(!judge_validate(4,'数据提交时限',duration_minute,true,'positive_int','','')){
+        return false;
+    }
 
+    // 标签判断数量--所有标签
+    if(!judge_tags_num()){
+        return false;
+    }
 
     // 验证通过
     SUBMIT_FORM = false;//标记为已经提交过

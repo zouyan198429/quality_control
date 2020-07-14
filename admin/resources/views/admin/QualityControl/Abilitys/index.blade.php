@@ -20,7 +20,7 @@
 
     @include('common.pageParams')
     <div class="tabbox" >
-      <a href="javascript:void(0);" class="on" onclick="action.iframeModify(0)">添加能力验证</a>
+      <a href="javascript:void(0);" class="on" onclick="action.iframeModify(0)">添加项目</a>
     </div>
     <form onsubmit="return false;" class="form-horizontal" style="display: none;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
@@ -57,8 +57,11 @@
         <col>
 {{--        <col>--}}
         <col width="60">
-        <col width="60">
+        <col width="50">
         <col>
+        <col>
+        <col>
+        <col width="50">
         <col width="60">
         <col width="60">
         <col width="90">
@@ -81,6 +84,9 @@
         <th>预估参加数</th>
         <th>报名企业</th>
         <th>报名起止时间</th>
+        <th>方法标准</th>
+        <th>验证数据项</th>
+        <th>提交时限</th>
         <th>状态</th>
         <th>是否公布结果</th>
         <th>公布时间</th>
@@ -114,7 +120,7 @@
       var ADD_URL = "{{ url('admin/abilitys/add/0') }}"; //添加url
 
       var IFRAME_MODIFY_URL = "{{url('admin/abilitys/add/')}}/";//添加/修改页面地址前缀 + id
-      var IFRAME_MODIFY_URL_TITLE = "能力验证" ;// 详情弹窗显示提示  [添加/修改] +  栏目/主题
+      var IFRAME_MODIFY_URL_TITLE = "项目" ;// 详情弹窗显示提示  [添加/修改] +  栏目/主题
       var IFRAME_MODIFY_CLOSE_OPERATE = 0 ;// 详情弹窗operate_num关闭时的操作0不做任何操作1刷新当前页面2刷新当前列表页面
 
       var SHOW_URL = "{{url('admin/abilitys/info/')}}/";//显示页面地址前缀 + id

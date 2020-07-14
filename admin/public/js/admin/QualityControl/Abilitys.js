@@ -44,6 +44,9 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
     document.write("            <td><%=item.estimate_add_num%><\/td>");
     document.write("            <td><%=item.join_num%><\/td>");
     document.write("            <td><%=item.join_begin_date%> - <%=item.join_end_date%><\/td>");
+    document.write("            <td><%=item.project_standards_text%><\/td>");
+    document.write("            <td><%=item.submit_items_text%><\/td>");
+    document.write("            <td><%=item.duration_minute%>天<\/td>");
     document.write("            <td><%=item.status_text%><\/td>");
     document.write("            <td><%=item.is_publish_text%><\/td>");
     document.write("            <td><%=item.publish_time%><\/td>");

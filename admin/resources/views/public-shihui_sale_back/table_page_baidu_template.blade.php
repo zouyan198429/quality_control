@@ -16,7 +16,7 @@
             <div class="col-xs-4">
                 <div aria-live="polite" role="status" id="dynamic-table_info" class="dataTables_info">
                     Showing 1 to 10 of 23 entries
-            
+
                 </div>
             </div>
             <?php }?>
@@ -43,7 +43,7 @@
                         </ul>
                     </div>
                 </div>
-        </div> 
+        </div>
     </script>
     <!-- 列表分页模板部分 结束-->
 
@@ -136,3 +136,20 @@
     </script>
     <!-- [省市区/县]下拉框模板部分 结束-->
     <!-- 前端模板结束 -->
+
+<!-- 前端模板部分 -->
+<!-- 列表模板部分 开始  <! -- 模板中可以用HTML注释 -- >  或  <%* 这是模板自带注释格式 *%> -->
+<script type="text/template"  id="baidu_template_tag_item_list">
+    <%for(var i = 0; i<data_list.length;i++){
+    var item = data_list[i];
+    %>
+    <span class="tag">
+        <span class="tag_txt" data-id="<%=item.id%>"><%=item.tag_name%></span>
+        <input type="hidden" name="<%=item.id_input_name%>" value="<%=item.id%>">
+        <input type="hidden" name="<%=item.tag_input_name%>" value="<%=item.tag_name%>">
+        <i class="close">×</i>
+    </span>
+    <%}%>
+</script>
+<!-- 列表模板部分 结束-->
+<!-- 前端模板结束 -->
