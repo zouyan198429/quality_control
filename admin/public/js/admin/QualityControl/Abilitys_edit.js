@@ -38,7 +38,7 @@ const TAGS_CONFIG = {
         'id_input_name' : 'project_standard_ids[]',// id 输入框的名称
         'tag_input_name' : 'project_standard_names[]',// tag_name 输入框的名称
         'min_len': 1,// 标签的最小字符长度；> 0 ，才判断;其它值 空 ''：代表不判断
-        'max_len': 30,// 标签的最大字符长度；> 0 ，才判断;其它值 空 ''：代表不判断
+        'max_len': 80,// 标签的最大字符长度；> 0 ，才判断;其它值 空 ''：代表不判断
         'min_num': 1,// 标签的最小数量；> 0 ，才判断;其它值：代表不限
         'max_num': 30// 标签的最大数量；> 0 ，才判断;其它值：代表不限
     },
