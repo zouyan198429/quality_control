@@ -1,9 +1,9 @@
 <?php
-// 能力验证取样登记表
+// 能力验证取样登记样品结果
 
 namespace App\Models\QualityControl;
 
-class AbilityJoinItemsSamples extends BasePublicModel
+class AbilityJoinItemsSampleResult extends BasePublicModel
 {
     //****************数据据缓存**相关的***开始********************************************
 //    public static $cachePre = 'cacheDB';// 缓存键最前面的关键字  cacheDb:U:{id值}_{email值}  中的 cacheDb
@@ -72,6 +72,37 @@ class AbilityJoinItemsSamples extends BasePublicModel
      *
      * @var string
      */
-    protected $table = 'ability_join_items_samples';
+    protected $table = 'ability_join_items_sample_result';
 
+    /**
+     * 获取能力验证检测所用仪器-二维
+     */
+    public function abilityJoinItemsResultsInstruments()
+    {
+        return $this->hasMany('App\Models\QualityControl\AbilityJoinItemsResultsInstrument', 'result_id', 'id');
+    }
+
+    /**
+     * 获取能力验证检测标准物质-二维
+     */
+    public function abilityJoinItemsResultsStandards()
+    {
+        return $this->hasMany('App\Models\QualityControl\AbilityJoinItemsResultsStandard', 'result_id', 'id');
+    }
+
+    /**
+     * 获取所属能力验证报名项表--一维
+     */
+    public function abilityJoinItem()
+    {
+        return $this->belongsTo('App\Models\QualityControl\AbilityJoinItems', 'ability_join_item_id', 'id');
+    }
+
+    /**
+     * 获取关联到的能力验证检测方法依据---一维
+     */
+    public function abilityJoinItemsResultsMethod()
+    {
+        return $this->hasOne('App\Models\RunBuy\AbilityJoinItemsResultsMethod', 'result_id', 'id');
+    }
 }

@@ -1,9 +1,9 @@
 <?php
-// 能力验证取样登记表
+// 能力验证检测标准物质
 
 namespace App\Models\QualityControl;
 
-class AbilityJoinItemsSamples extends BasePublicModel
+class AbilityJoinItemsResultsStandard extends BasePublicModel
 {
     //****************数据据缓存**相关的***开始********************************************
 //    public static $cachePre = 'cacheDB';// 缓存键最前面的关键字  cacheDb:U:{id值}_{email值}  中的 cacheDb
@@ -72,6 +72,13 @@ class AbilityJoinItemsSamples extends BasePublicModel
      *
      * @var string
      */
-    protected $table = 'ability_join_items_samples';
+    protected $table = 'ability_join_items_results_standard';
 
+    /**
+     * 获取所属能力验证单次结果   --一维
+     */
+    public function abilityJoinItemsResult()
+    {
+        return $this->belongsTo('App\Models\QualityControl\AbilityJoinItemsResults', 'result_id', 'id');
+    }
 }
