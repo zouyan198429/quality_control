@@ -25,12 +25,7 @@
     <form onsubmit="return false;" class="form-horizontal" style="display: none;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
 
-        {{--<select class="wmini" name="province_id">--}}
-          {{--<option value="">全部</option>--}}
-          {{--@foreach ($province_kv as $k=>$txt)--}}
-            {{--<option value="{{ $k }}"  @if(isset($province_id) && $province_id == $k) selected @endif >{{ $txt }}</option>--}}
-          {{--@endforeach--}}
-        {{--</select>--}}
+         
         <select style="width:80px; height:28px;" name="field">
           <option value="ability_name">检测项目</option>
         </select>
@@ -39,60 +34,41 @@
       </div>
     </form>
   </div>
-  {{--
-  <div class="table-header">
-    { {--<button class="btn btn-danger  btn-xs batch_del"  onclick="action.batchDel(this)">批量删除</button>--} }
-    <button class="btn btn-success  btn-xs export_excel"  onclick="action.batchExportExcel(this)" >导出[按条件]</button>
-    <button class="btn btn-success  btn-xs export_excel"  onclick="action.exportExcel(this)" >导出[勾选]</button>
-    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcelTemplate(this)">导入模版[EXCEL]</button>
-    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcel(this)">导入城市</button>
-    <div style="display:none;" ><input type="file" class="import_file img_input"></div>{ {--导入file对象--} }
-  </div>
---}}
+  
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
-        <col width="50">
-        <col width="60">
-{{--        <col width="60">--}}
+        <col width="50"> 
+        <col> 
+       <!--  <col width="60"> -->
+        <col width="80">
+        <col> 
         <col>
-{{--        <col>--}}
-        <col width="60">
-        <col width="50">
-        <col>
-        <col>
-        <col>
-        <col width="50">
-        <col width="60">
-        <col width="60">
+        <col width="">
         <col width="90">
+        <col width="">
         <col width="90">
-{{--        <col width="150">--}}
+        <col width=""> 
         <col width="150">
     </colgroup>
     <thead>
     <tr>
-      <th>
+     <!--  <th>
         <label class="pos-rel">
           <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>
-          <!-- <span class="lbl">全选</span> -->
         </label>
-      </th>
-      <th>ID</th>
-{{--        <th>技术领域</th>--}}
-      <th>检测项目</th>
-{{--      <th>方法标准</th>--}}
-        <th>预估参加数</th>
+      </th> -->
+      <th>ID</th> 
+      <th>检测项目</th> 
+        <!-- <th>预估参加数</th> -->
         <th>报名企业</th>
         <th>报名起止时间</th>
-        <th>方法标准</th>
+        <!-- <th>方法标准</th> -->
         <th>验证数据项</th>
         <th>提交时限</th>
         <th>状态</th>
         <th>是否公布结果</th>
         <th>公布时间</th>
-      <th>创建时间</th>
-{{--      <th>更新时间</th>--}}
-{{--      <th>排序[降序]</th>--}}
+      <th>创建时间</th> 
       <th>操作</th>
     </tr>
     </thead>
@@ -135,6 +111,6 @@
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/Abilitys.js') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/Abilitys.js?813') }}"  type="text/javascript"></script>
 </body>
 </html>

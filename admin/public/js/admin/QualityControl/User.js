@@ -225,13 +225,14 @@ function addCompany(company_id, company_name){
     document.write("            <\/td>");
     document.write("            <td><%=item.id%><\/td>");
     // document.write("            <td><%=item.client_id%><\/td>");
-    document.write("            <td><%=item.user_company_name%><\/td>");
+    
     document.write("            <td><%=item.real_name%><\/td>");
     document.write("            <td><%=item.sex_text%><\/td>");
     document.write("            <td><%=item.mobile%><\/td>");
-    document.write("            <td><%=item.city_name%><\/td>");
-    document.write("            <td><%=item.email%><\/td>");
-    document.write("            <td><%=item.qq_number%><\/td>");
+    //document.write("            <td><%=item.city_name%><\/td>");
+    //document.write("            <td><%=item.email%><\/td>");
+    //document.write("            <td><%=item.qq_number%><\/td>");
+    document.write("            <td><%=item.user_company_name%><\/td>");
     document.write("            <td><%=item.is_perfect_text%><\/td>");
     document.write("            <td><%=item.open_status_text%><\/td>");
     document.write("            <td><%=item.account_status_text%><\/td>");

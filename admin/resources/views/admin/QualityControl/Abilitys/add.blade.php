@@ -49,31 +49,23 @@
             <tr>
                 <th>方法标准<span class="must">*</span></th>
                 <td>
-                    <span class="tags_block" id="project_standards">
-                        <span class="tags_list">
-{{--                            <span class="tag">--}}
-{{--                                <span class="tag_txt">品学兼优</span>--}}
-{{--                                <i class="close">×</i>--}}
-{{--                            </span>--}}
-                        </span>
+                    <div class="tags_block" id="project_standards">
+                        <p class="tags_list"> 
+                        </p>
                         <input type="text" name="tag_name" value="" class="tag_name">
                         <button class="btn btn-small tag_add" type="button">添加</button>
-                    </span>
+                    </div>
                 </td>
             </tr>
             <tr>
                 <th>验证数据项<span class="must">*</span></th>
                 <td>
-                    <span class="tags_block" id="submit_items">
-                        <span class="tags_list">
-{{--                            <span class="tag">--}}
-                            {{--                                <span class="tag_txt">品学兼优</span>--}}
-                            {{--                                <i class="close">×</i>--}}
-                            {{--                            </span>--}}
-                        </span>
+                    <div class="tags_block" id="submit_items">
+                        <p class="tags_list"> 
+                        </p>
                         <input type="text" name="tag_name" value="" class="tag_name">
                         <button class="btn btn-small tag_add" type="button">添加</button>
-                    </span>
+                    </div>
                 </td>
             </tr>
             <tr>
@@ -101,6 +93,6 @@
     var PROJECT_STANDARDS_TAGS = @json($info['project_standards'] ?? []) ;
     var SUBMIT_ITEMS_TAGS = @json($info['submit_items'] ?? []) ;
 </script>
-<script src="{{ asset('/js/admin/QualityControl/Abilitys_edit.js') }}"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/Abilitys_edit.js?448') }}"  type="text/javascript"></script>
 </body>
 </html>

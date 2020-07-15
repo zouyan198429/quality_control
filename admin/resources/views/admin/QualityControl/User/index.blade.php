@@ -25,12 +25,7 @@
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
 
-        {{--<select class="wmini" name="province_id">--}}
-          {{--<option value="">全部</option>--}}
-          {{--@foreach ($province_kv as $k=>$txt)--}}
-            {{--<option value="{{ $k }}"  @if(isset($province_id) && $province_id == $k) selected @endif >{{ $txt }}</option>--}}
-          {{--@endforeach--}}
-        {{--</select>--}}
+        
           <span>
                 <input type="hidden" name="company_id"  value="{{ $info['company_id'] ?? '' }}" />
                 <span class="company_name">{{ $info['user_company_name'] ?? '' }}</span>
@@ -110,22 +105,12 @@
           </select>
         <select style="width:90px; height:28px;" name="field">
             <option value="admin_username">用户名</option>
-            <option value="real_name">真实姓名</option>
-{{--            <option value="tel">电话</option>--}}
+            <option value="real_name">真实姓名</option> 
             <option value="mobile">手机</option>
             <option value="qq_number">QQ/微信</option>
             <option value="email">邮箱</option>
             <option value="id_number">身份证号</option>
-            <option value="addr">通讯地址</option>
-{{--            <option value="company_name">单位名称</option>--}}
-{{--            <option value="company_credit_code">统一社会信用代码</option>--}}
-{{--            <option value="company_legal_credit_code">主体机构统一社会信用代码</option>--}}
-{{--            <option value="company_legal_name">主体机构</option>--}}
-{{--            <option value="company_legal">法人代表</option>--}}
-{{--            <option value="company_certificate_no">证书编号</option>--}}
-{{--            <option value="company_contact_name">联系人</option>--}}
-{{--            <option value="company_contact_mobile">联系人手机</option>--}}
-{{--            <option value="company_contact_tel">联系电话</option>--}}
+            <option value="addr">通讯地址</option> 
         </select>
         <input type="text" value=""    name="keyword"  placeholder="请输入关键字" style="width: 100px;"/>
         <button class="btn btn-normal search_frm">搜索</button>
@@ -135,9 +120,7 @@
   <div class="table-header">
     <button class="btn btn-danger  btn-xs batch_del"  onclick="action.batchDel(this)">批量删除</button>
     <button class="btn btn-success  btn-xs export_excel"  onclick="action.batchExportExcel(this)" >导出[按条件]</button>
-    <button class="btn btn-success  btn-xs export_excel"  onclick="action.exportExcel(this)" >导出[勾选]</button>
-{{--    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcelTemplate(this)">导入模版[EXCEL]</button>--}}
-{{--    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcel(this)">导入</button>--}}
+    <button class="btn btn-success  btn-xs export_excel"  onclick="action.exportExcel(this)" >导出[勾选]</button> 
     <div style="display:none;" ><input type="file" class="import_file img_input"></div>{{--导入file对象--}}
       <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.openSelected(this, 2)" >审核通过[勾选]</button>
       <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.openSelected(this, 4)" >审核不通过[勾选]</button>
@@ -148,15 +131,18 @@
     <colgroup>
         <col width="50">
         <col width="50">
-        <col>
+
         <col>
         <col width="50">
         <col width="105">
-        <col width="80">
+
         <col >
         <col >
+        <!-- <col >
         <col width="75">
-        <col width="75">
+        <col width="75"> -->
+        <col>
+
         <col width="75">
         <col width="160">
         <col width="160">
@@ -164,27 +150,26 @@
     </colgroup>
     <thead>
     <tr>
-      <th>
-        <label class="pos-rel">
-          <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>
-          <!-- <span class="lbl">全选</span> -->
-        </label>
-      </th>
-      <th>ID</th>
-        <th>所属企业</th>
+        <th>
+          <label class="pos-rel">
+            <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>
+          </label>
+        </th>
+        <th>ID</th>
+        
         <th>姓名</th>
         <th>性别</th>
         <th>手机号</th>
-        <th>城市</th>
+       <!--  <th>城市</th>
         <th>邮箱</th>
-        <th>微信号</th>
+        <th>微信号</th> -->
+
+        <th>所属企业</th>
         <th>完善资料</th>
         <th>审核</th>
         <th>状态</th>
         <th>上次登录</th>
-      <th>创建时间</th>
-{{--      <th>更新时间</th>--}}
-      {{--<th>排序[降序]</th>--}}
+      <th>创建时间</th> 
       <th>操作</th>
     </tr>
     </thead>
@@ -233,6 +218,6 @@
       var SELECT_COMPANY_URL = "{{url('admin/company/select')}}";// 选择所属企业
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/User.js') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/User.js?58') }}"  type="text/javascript"></script>
 </body>
 </html>
