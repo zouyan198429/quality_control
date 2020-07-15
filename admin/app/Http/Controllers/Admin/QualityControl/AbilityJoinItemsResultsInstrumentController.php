@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Admin\QualityControl;
 
-use App\Business\Controller\API\QualityControl\CTAPIAbilityJoinItemsSamplesMethodBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIAbilityJoinItemsResultsInstrumentBusiness;
 use App\Http\Controllers\WorksController;
 use App\Services\Request\CommonRequest;
 use App\Services\Tool;
 use Illuminate\Http\Request;
 
-class AbilityJoinItemsSamplesMethodController extends BasicController
+class AbilityJoinItemsResultsInstrumentController extends BasicController
 {
     /**
      * 首页
@@ -21,7 +21,7 @@ class AbilityJoinItemsSamplesMethodController extends BasicController
     {
         $this->InitParams($request);
         $reDataArr = $this->reDataArr;
-        return view('admin.QualityControl.AbilityJoinItemsSamplesMethod.index', $reDataArr);
+        return view('admin.QualityControl.AbilityJoinItemsResultsInstrument.index', $reDataArr);
     }
 
     /**
@@ -35,10 +35,10 @@ class AbilityJoinItemsSamplesMethodController extends BasicController
 //    {
 //        $this->InitParams($request);
 //        $reDataArr = $this->reDataArr;
-//        $reDataArr['province_kv'] = CTAPIAbilityJoinItemsSamplesMethodBusiness::getCityByPid($request, $this,  0);
-//        $reDataArr['province_kv'] = CTAPIAbilityJoinItemsSamplesMethodBusiness::getChildListKeyVal($request, $this, 0, 1 + 0, 0);
+//        $reDataArr['province_kv'] = CTAPIAbilityJoinItemsResultsInstrumentBusiness::getCityByPid($request, $this,  0);
+//        $reDataArr['province_kv'] = CTAPIAbilityJoinItemsResultsInstrumentBusiness::getChildListKeyVal($request, $this, 0, 1 + 0, 0);
 //        $reDataArr['province_id'] = 0;
-//        return view('admin.QualityControl.AbilityJoinItemsSamplesMethod.select', $reDataArr);
+//        return view('admin.QualityControl.AbilityJoinItemsResultsInstrument.select', $reDataArr);
 //    }
 
     /**
@@ -61,30 +61,30 @@ class AbilityJoinItemsSamplesMethodController extends BasicController
 
         if ($id > 0) { // 获得详情数据
             $operate = "修改";
-            $info = CTAPIAbilityJoinItemsSamplesMethodBusiness::getInfoData($request, $this, $id, [], '', []);
+            $info = CTAPIAbilityJoinItemsResultsInstrumentBusiness::getInfoData($request, $this, $id, [], '', []);
         }
         // $reDataArr = array_merge($reDataArr, $resultDatas);
         $reDataArr['info'] = $info;
         $reDataArr['operate'] = $operate;
-        return view('admin.QualityControl.AbilityJoinItemsSamplesMethod.add', $reDataArr);
+        return view('admin.QualityControl.AbilityJoinItemsResultsInstrument.add', $reDataArr);
     }
 
     /**
      * @OA\Get(
-     *     path="/api/admin/ability_join_items_samples_method/ajax_info",
-     *     tags={"大后台-能力验证-检测方法依据"},
-     *     summary="检测方法依据--详情",
+     *     path="/api/admin/ability_join_items_results_instrument/ajax_info",
+     *     tags={"大后台-能力验证-检测所用仪器"},
+     *     summary="检测所用仪器--详情",
      *     description="根据单个id,查询详情记录......",
-     *     operationId="adminQualityControlAbilityJoinItemsSamplesMethodAjax_info",
+     *     operationId="adminQualityControlAbilityJoinItemsResultsInstrumentAjax_info",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_ability_join_items_samples_method_id_required"),
-     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_info_ability_join_items_samples_method"),
+     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_ability_join_items_results_instrument_id_required"),
+     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_info_ability_join_items_results_instrument"),
      *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
      *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
-     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_ability_join_items_samples_method"}
+     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_ability_join_items_results_instrument"}
      */
     /**
      * ajax获得详情数据
@@ -97,27 +97,27 @@ class AbilityJoinItemsSamplesMethodController extends BasicController
         $this->InitParams($request);
         $id = CommonRequest::getInt($request, 'id');
         if(!is_numeric($id) || $id <=0) return ajaxDataArr(0, null, '参数[id]有误！');
-        $info = CTAPIAbilityJoinItemsSamplesMethodBusiness::getInfoData($request, $this, $id, [], '', []);
+        $info = CTAPIAbilityJoinItemsResultsInstrumentBusiness::getInfoData($request, $this, $id, [], '', []);
         $resultDatas = ['info' => $info];
         return ajaxDataArr(1, $resultDatas, '');
     }
 
     /**
      * @OA\Post(
-     *     path="/api/admin/ability_join_items_samples_method/ajax_save",
-     *     tags={"大后台-能力验证-检测方法依据"},
-     *     summary="检测方法依据--新加/修改",
+     *     path="/api/admin/ability_join_items_results_instrument/ajax_save",
+     *     tags={"大后台-能力验证-检测所用仪器"},
+     *     summary="检测所用仪器--新加/修改",
      *     description="根据单个id,新加/修改记录(id>0:修改；id=0:新加)......",
-     *     operationId="adminQualityControlAbilityJoinItemsSamplesMethodAjax_save",
+     *     operationId="adminQualityControlAbilityJoinItemsResultsInstrumentAjax_save",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_ability_join_items_samples_method_id_required"),
+     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_ability_join_items_results_instrument_id_required"),
      *     @OA\Response(response=200,ref="#/components/responses/common_Response_modify"),
      *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
      *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
-     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_ability_join_items_samples_method"}
+     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_ability_join_items_results_instrument"}
      */
 
     /**
@@ -149,26 +149,26 @@ class AbilityJoinItemsSamplesMethodController extends BasicController
         $extParams = [
             'judgeDataKey' => 'replace',// 数据验证的下标
         ];
-        $resultDatas = CTAPIAbilityJoinItemsSamplesMethodBusiness::replaceById($request, $this, $saveData, $id, $extParams, true);
+        $resultDatas = CTAPIAbilityJoinItemsResultsInstrumentBusiness::replaceById($request, $this, $saveData, $id, $extParams, true);
         return ajaxDataArr(1, $resultDatas, '');
     }
 
     /**
      * @OA\Get(
-     *     path="/api/admin/ability_join_items_samples_method/ajax_alist",
-     *     tags={"大后台-能力验证-检测方法依据"},
-     *     summary="检测方法依据--列表",
-     *     description="检测方法依据--列表......",
-     *     operationId="adminQualityControlAbilityJoinItemsSamplesMethodAjax_alist",
+     *     path="/api/admin/ability_join_items_results_instrument/ajax_alist",
+     *     tags={"大后台-能力验证-检测所用仪器"},
+     *     summary="检测所用仪器--列表",
+     *     description="检测所用仪器--列表......",
+     *     operationId="adminQualityControlAbilityJoinItemsResultsInstrumentAjax_alist",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_ability_join_items_samples_method_id_optional"),
-     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_list_ability_join_items_samples_method"),
+     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_ability_join_items_results_instrument_id_optional"),
+     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_list_ability_join_items_results_instrument"),
      *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
      *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
-     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_ability_join_items_samples_method"}
+     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_ability_join_items_results_instrument"}
      */
     /**
      * ajax获得列表数据
@@ -179,7 +179,7 @@ class AbilityJoinItemsSamplesMethodController extends BasicController
      */
     public function ajax_alist(Request $request){
         $this->InitParams($request);
-        return  CTAPIAbilityJoinItemsSamplesMethodBusiness::getList($request, $this, 2 + 4);
+        return  CTAPIAbilityJoinItemsResultsInstrumentBusiness::getList($request, $this, 2 + 4);
     }
 
     /**
@@ -191,7 +191,7 @@ class AbilityJoinItemsSamplesMethodController extends BasicController
      */
 //    public function ajax_get_ids(Request $request){
 //        $this->InitParams($request);
-//        $result = CTAPIAbilityJoinItemsSamplesMethodBusiness::getList($request, $this, 1 + 0);
+//        $result = CTAPIAbilityJoinItemsResultsInstrumentBusiness::getList($request, $this, 1 + 0);
 //        $data_list = $result['result']['data_list'] ?? [];
 //        $ids = implode(',', array_column($data_list, 'id'));
 //        return ajaxDataArr(1, $ids, '');
@@ -207,7 +207,7 @@ class AbilityJoinItemsSamplesMethodController extends BasicController
      */
 //    public function export(Request $request){
 //        $this->InitParams($request);
-//        CTAPIAbilityJoinItemsSamplesMethodBusiness::getList($request, $this, 1 + 0);
+//        CTAPIAbilityJoinItemsResultsInstrumentBusiness::getList($request, $this, 1 + 0);
 //    }
 
 
@@ -220,26 +220,26 @@ class AbilityJoinItemsSamplesMethodController extends BasicController
      */
 //    public function import_template(Request $request){
 //        $this->InitParams($request);
-//        CTAPIAbilityJoinItemsSamplesMethodBusiness::importTemplate($request, $this);
+//        CTAPIAbilityJoinItemsResultsInstrumentBusiness::importTemplate($request, $this);
 //    }
 
 
     /**
      * @OA\Post(
-     *     path="/api/admin/ability_join_items_samples_method/ajax_del",
-     *     tags={"大后台-能力验证-检测方法依据"},
-     *     summary="检测方法依据--删除",
+     *     path="/api/admin/ability_join_items_results_instrument/ajax_del",
+     *     tags={"大后台-能力验证-检测所用仪器"},
+     *     summary="检测所用仪器--删除",
      *     description="根据单个id,删除记录......",
-     *     operationId="adminQualityControlAbilityJoinItemsSamplesMethodAjax_del",
+     *     operationId="adminQualityControlAbilityJoinItemsResultsInstrumentAjax_del",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_ability_join_items_samples_method_id_required"),
+     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_ability_join_items_results_instrument_id_required"),
      *     @OA\Response(response=200,ref="#/components/responses/common_Response_del"),
      *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
      *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
-     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_ability_join_items_samples_method"}
+     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_ability_join_items_results_instrument"}
      */
     /**
      * 子帐号管理-删除
@@ -251,7 +251,7 @@ class AbilityJoinItemsSamplesMethodController extends BasicController
     public function ajax_del(Request $request)
     {
         $this->InitParams($request);
-        return CTAPIAbilityJoinItemsSamplesMethodBusiness::delAjax($request, $this);
+        return CTAPIAbilityJoinItemsResultsInstrumentBusiness::delAjax($request, $this);
     }
 
     /**
@@ -265,8 +265,8 @@ class AbilityJoinItemsSamplesMethodController extends BasicController
 //        $this->InitParams($request);
 //        $parent_id = CommonRequest::getInt($request, 'parent_id');
 //        // 获得一级城市信息一维数组[$k=>$v]
-//        $childKV = CTAPIAbilityJoinItemsSamplesMethodBusiness::getCityByPid($request, $this, $parent_id);
-//        // $childKV = CTAPIAbilityJoinItemsSamplesMethodBusiness::getChildListKeyVal($request, $this, $parent_id, 1 + 0);
+//        $childKV = CTAPIAbilityJoinItemsResultsInstrumentBusiness::getCityByPid($request, $this, $parent_id);
+//        // $childKV = CTAPIAbilityJoinItemsResultsInstrumentBusiness::getChildListKeyVal($request, $this, $parent_id, 1 + 0);
 //
 //        return  ajaxDataArr(1, $childKV, '');;
 //    }
@@ -276,7 +276,7 @@ class AbilityJoinItemsSamplesMethodController extends BasicController
 //    public function ajax_import(Request $request){
 //        $this->InitParams($request);
 //        $fileName = 'staffs.xlsx';
-//        $resultDatas = CTAPIAbilityJoinItemsSamplesMethodBusiness::importByFile($request, $this, $fileName);
+//        $resultDatas = CTAPIAbilityJoinItemsResultsInstrumentBusiness::importByFile($request, $this, $fileName);
 //        return ajaxDataArr(1, $resultDatas, '');
 //    }
 
@@ -295,7 +295,7 @@ class AbilityJoinItemsSamplesMethodController extends BasicController
 //        if($result['apistatus'] == 0) return $result;
 //        // 文件上传成功
 //        $fileName = Tool::getPath('public') . '/' . $result['result']['filePath'];
-//        $resultDatas = CTAPIAbilityJoinItemsSamplesMethodBusiness::importByFile($request, $this, $fileName);
+//        $resultDatas = CTAPIAbilityJoinItemsResultsInstrumentBusiness::importByFile($request, $this, $fileName);
 //        return ajaxDataArr(1, $resultDatas, '');
 //    }
 }

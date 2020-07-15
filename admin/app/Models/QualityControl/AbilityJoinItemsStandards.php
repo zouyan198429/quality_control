@@ -1,9 +1,9 @@
 <?php
-// 能力验证检测方法依据
+// 能力验证报名项-项目标准
 
 namespace App\Models\QualityControl;
 
-class AbilityJoinItemsSamplesMethod extends BasePublicModel
+class AbilityJoinItemsStandards extends BasePublicModel
 {
     //****************数据据缓存**相关的***开始********************************************
 //    public static $cachePre = 'cacheDB';// 缓存键最前面的关键字  cacheDb:U:{id值}_{email值}  中的 cacheDb
@@ -72,13 +72,6 @@ class AbilityJoinItemsSamplesMethod extends BasePublicModel
      *
      * @var string
      */
-    protected $table = 'ability_join_items_samples_method';
+    protected $table = 'ability_join_items_standards';
 
-    /**
-     * 获取对应的能力验证取样登记表--一维
-     */
-    public function abilityJoinItemsSample()
-    {
-        return $this->belongsTo('App\Models\RunBuy\AbilityJoinItemsSamples', 'sample_id', 'id')->withDefault();
-    }
 }

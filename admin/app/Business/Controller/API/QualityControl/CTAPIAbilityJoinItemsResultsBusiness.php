@@ -1,5 +1,5 @@
 <?php
-//能力验证检测标准物质
+//能力验证单次结果
 namespace App\Business\Controller\API\QualityControl;
 
 use App\Services\DBRelation\RelationDB;
@@ -12,10 +12,10 @@ use App\Services\Request\CommonRequest;
 use App\Http\Controllers\BaseController as Controller;
 use Illuminate\Support\Facades\Hash;
 
-class CTAPIAbilityJoinItemsSamplesStandardBusiness extends BasicPublicCTAPIBusiness
+class CTAPIAbilityJoinItemsResultsBusiness extends BasicPublicCTAPIBusiness
 {
-    public static $model_name = 'API\QualityControl\AbilityJoinItemsSamplesStandardAPI';
-    public static $table_name = 'ability_join_items_samples_standard';// 表名称
+    public static $model_name = 'API\QualityControl\AbilityJoinItemsResultsAPI';
+    public static $table_name = 'ability_join_items_results';// 表名称
 
     // 是否激活(0:未激活；1：已激活)
 //    public static $isActiveArr = [

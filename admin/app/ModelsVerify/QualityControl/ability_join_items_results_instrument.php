@@ -3,10 +3,10 @@ namespace App\ModelsVerify\QualityControl;
 
 use OpenApi\Annotations as OA;
 
-class ability_join_items_samples_standard extends BaseDBVerify
+class ability_join_items_results_instrument extends BaseDBVerify
 {
-    public static $model_name = 'QualityControl\AbilityJoinItemsSamplesStandard';// 相对于Models的数据模型名称;在子类中定义，使用时用static::,不用self::
-    public static $table_name = 'ability_join_items_samples_standard';// 数据表名称
+    public static $model_name = 'QualityControl\AbilityJoinItemsResultsInstrument';// 相对于Models的数据模型名称;在子类中定义，使用时用static::,不用self::
+    public static $table_name = 'ability_join_items_results_instrument';// 数据表名称
     // 需要从父的去掉的字段  -- 一维数组
     // 如 ['version_history_id', 'version_num_history']
     public static $delFields = [];
@@ -101,7 +101,7 @@ class ability_join_items_samples_standard extends BaseDBVerify
     /**
      * 个人访问客户端属性-品牌名称
      * @ OA\Schema(
-     *   schema="Schema_QualityControl_ability_join_items_samples_standard_brand_name",
+     *   schema="Schema_QualityControl_ability_join_items_results_instrument_brand_name",
      *   type="string",
      *   title="个人访问客户端属性-品牌名称",
      *   description="个人访问客户端属性-品牌名称",
@@ -119,13 +119,13 @@ class ability_join_items_samples_standard extends BaseDBVerify
      *
      * 上面字段对应的查询参数--可填
      * @ OA\Parameter(
-     *      parameter="Schema_QualityControl_ability_join_items_samples_standard_brand_name_optional",
+     *      parameter="Schema_QualityControl_ability_join_items_results_instrument_brand_name_optional",
      *      name="type_name",
      *      in="query",
      *      description="类型名称",
      *      required=false,
      *      deprecated=false,
-     *      @ OA\Schema(ref="#/components/schemas/Schema_QualityControl_ability_join_items_samples_standard_brand_name")
+     *      @ OA\Schema(ref="#/components/schemas/Schema_QualityControl_ability_join_items_results_instrument_brand_name")
      * ),
      *
      *
@@ -135,13 +135,13 @@ class ability_join_items_samples_standard extends BaseDBVerify
      *
      * 上面字段对应的查询参数--必填
      * @ OA\Parameter(
-     *      parameter="Schema_QualityControl_ability_join_items_samples_standard_brand_name_required",
+     *      parameter="Schema_QualityControl_ability_join_items_results_instrument_brand_name_required",
      *      name="type_name",
      *      in="query",
      *      description="类型名称",
      *      required=true,
      *      deprecated=false,
-     *      @ OA\Schema(ref="#/components/schemas/Schema_QualityControl_ability_join_items_samples_standard_brand_name")
+     *      @ OA\Schema(ref="#/components/schemas/Schema_QualityControl_ability_join_items_results_instrument_brand_name")
      * ),
      *
      *
@@ -154,7 +154,7 @@ class ability_join_items_samples_standard extends BaseDBVerify
     /**
      * 个人访问客户端属性-id
      * @OA\Schema(
-     *   schema="Schema_QualityControl_ability_join_items_samples_standard_id",
+     *   schema="Schema_QualityControl_ability_join_items_results_instrument_id",
      *   type="integer",
      *   format="int32",
      *   title="个人访问客户端属性-id",
@@ -172,13 +172,13 @@ class ability_join_items_samples_standard extends BaseDBVerify
      *
      * 上面字段对应的查询参数--可填
      * @OA\Parameter(
-     *      parameter="Schema_QualityControl_ability_join_items_samples_standard_id_optional",
+     *      parameter="Schema_QualityControl_ability_join_items_results_instrument_id_optional",
      *      name="id",
      *      in="query",
      *      description="模板库分类-id",
      *      required=false,
      *      deprecated=false,
-     *      @OA\Schema(ref="#/components/schemas/Schema_QualityControl_ability_join_items_samples_standard_id")
+     *      @OA\Schema(ref="#/components/schemas/Schema_QualityControl_ability_join_items_results_instrument_id")
      * ),
      *
      *
@@ -188,13 +188,13 @@ class ability_join_items_samples_standard extends BaseDBVerify
      *
      * 上面字段对应的查询参数--必填
      * @OA\Parameter(
-     *      parameter="Schema_QualityControl_ability_join_items_samples_standard_id_required",
+     *      parameter="Schema_QualityControl_ability_join_items_results_instrument_id_required",
      *      name="id",
      *      in="query",
      *      description="模板库分类-id",
      *      required=true,
      *      deprecated=false,
-     *      @OA\Schema(ref="#/components/schemas/Schema_QualityControl_ability_join_items_samples_standard_id")
+     *      @OA\Schema(ref="#/components/schemas/Schema_QualityControl_ability_join_items_results_instrument_id")
      * ),
      *
      *
@@ -205,13 +205,13 @@ class ability_join_items_samples_standard extends BaseDBVerify
      *
      * 上面字段对应的查询参数--可填
      * @OA\Parameter(
-     *      parameter="Schema_QualityControl_ability_join_items_samples_standard_id_optional_quote",
+     *      parameter="Schema_QualityControl_ability_join_items_results_instrument_id_optional_quote",
      *      name="template_type_id",
      *      in="query",
      *      description="模板库分类-id",
      *      required=false,
      *      deprecated=false,
-     *      @OA\Schema(ref="#/components/schemas/Schema_QualityControl_ability_join_items_samples_standard_id")
+     *      @OA\Schema(ref="#/components/schemas/Schema_QualityControl_ability_join_items_results_instrument_id")
      * ),
      *
      *
@@ -221,13 +221,13 @@ class ability_join_items_samples_standard extends BaseDBVerify
      *
      * 上面字段对应的查询参数--必填
      * @OA\Parameter(
-     *      parameter="Schema_QualityControl_ability_join_items_samples_standard_id_required_quote",
+     *      parameter="Schema_QualityControl_ability_join_items_results_instrument_id_required_quote",
      *      name="template_type_id",
      *      in="query",
      *      description="模板库分类-id",
      *      required=true,
      *      deprecated=false,
-     *      @OA\Schema(ref="#/components/schemas/Schema_QualityControl_ability_join_items_samples_standard_id")
+     *      @OA\Schema(ref="#/components/schemas/Schema_QualityControl_ability_join_items_results_instrument_id")
      * ),
      *
      *
@@ -238,7 +238,7 @@ class ability_join_items_samples_standard extends BaseDBVerify
     /**
      * 模糊查询字段名--具体的表模型用
      * @OA\Parameter(
-     *      parameter="Parameter_QualityControl_ability_join_items_samples_standard_field",
+     *      parameter="Parameter_QualityControl_ability_join_items_results_instrument_field",
      *      name="field",
      *      in="query",
      *      description="模糊查询字段名",
@@ -258,7 +258,7 @@ class ability_join_items_samples_standard extends BaseDBVerify
     // 有所有字段的对象
     /**
      * @OA\Schema(
-     *     schema="Schema_QualityControl_ability_join_items_samples_standard_obj",
+     *     schema="Schema_QualityControl_ability_join_items_results_instrument_obj",
      *     title="个人访问客户端",
      *     description="个人访问客户端列表",
      *     required={},
@@ -275,14 +275,14 @@ class ability_join_items_samples_standard extends BaseDBVerify
      * 单条记录请求体
      *
      * @OA\RequestBody(
-     *     request="RequestBody_QualityControl_info_ability_join_items_samples_standard",
+     *     request="RequestBody_QualityControl_info_ability_join_items_results_instrument",
      *     description="单个增加",
      *     required=true,
-     *     @OA\JsonContent(ref="#/components/schemas/Schema_QualityControl_ability_join_items_samples_standard_obj"),
+     *     @OA\JsonContent(ref="#/components/schemas/Schema_QualityControl_ability_join_items_results_instrument_obj"),
      *     @OA\MediaType(
      *         mediaType="application/xml",
      *         @OA\Schema(
-     *              @OA\Property(property="info", ref="#/components/schemas/Schema_QualityControl_ability_join_items_samples_standard_obj"),
+     *              @OA\Property(property="info", ref="#/components/schemas/Schema_QualityControl_ability_join_items_results_instrument_obj"),
      *              @OA\Xml(
      *                  name="root",
      *                  wrapped=true
@@ -297,7 +297,7 @@ class ability_join_items_samples_standard extends BaseDBVerify
      * 多条记录请求体
      *
      * @OA\RequestBody(
-     *     request="RequestBody_QualityControl_multi_ability_join_items_samples_standard",
+     *     request="RequestBody_QualityControl_multi_ability_join_items_results_instrument",
      *     description="批量增加",
      *     required=true,
      *     @OA\JsonContent(
@@ -305,7 +305,7 @@ class ability_join_items_samples_standard extends BaseDBVerify
      *          @OA\Property(
      *              property="data_list",
      *              type="array",
-     *              @OA\Items(ref="#/components/schemas/Schema_QualityControl_ability_join_items_samples_standard_obj"),
+     *              @OA\Items(ref="#/components/schemas/Schema_QualityControl_ability_join_items_results_instrument_obj"),
      *          ),
      *     ),
      *     @OA\MediaType(
@@ -313,7 +313,7 @@ class ability_join_items_samples_standard extends BaseDBVerify
      *         @OA\Schema(
      *              @OA\Property(
      *                  property="data_list",
-     *                  @OA\Property(property="info", ref="#/components/schemas/Schema_QualityControl_ability_join_items_samples_standard_obj"),
+     *                  @OA\Property(property="info", ref="#/components/schemas/Schema_QualityControl_ability_join_items_results_instrument_obj"),
      *              ),
      *              @OA\Xml(
      *                  name="root",
@@ -363,7 +363,7 @@ class ability_join_items_samples_standard extends BaseDBVerify
      *
      * 列表页
      *     @OA\Response(
-     *         response="Response_QualityControl_list_ability_join_items_samples_standard",
+     *         response="Response_QualityControl_list_ability_join_items_results_instrument",
      *         description="操作成功返回",
      *         @OA\JsonContent(
      *              type="object",
@@ -376,7 +376,7 @@ class ability_join_items_samples_standard extends BaseDBVerify
      *                      property="data_list",
      *                      type="array",
      *                      description="当前页列表数据",
-     *                      @OA\Items(ref="#/components/schemas/Schema_QualityControl_ability_join_items_samples_standard_obj"),
+     *                      @OA\Items(ref="#/components/schemas/Schema_QualityControl_ability_join_items_results_instrument_obj"),
      *                  ),
      *                  @OA\Property(property="total", ref="#/components/schemas/common_Schema_total"),
      *                  @OA\Property(property="page", ref="#/components/schemas/common_Schema_page"),
@@ -400,7 +400,7 @@ class ability_join_items_samples_standard extends BaseDBVerify
      *                      @OA\Property(
      *                          property="info",
      *                          type="array",
-     *                          @OA\Items(ref="#/components/schemas/Schema_QualityControl_ability_join_items_samples_standard_obj"),
+     *                          @OA\Items(ref="#/components/schemas/Schema_QualityControl_ability_join_items_results_instrument_obj"),
      *                      ),
      *                  ),
      *                  @OA\Property(property="total", ref="#/components/schemas/common_Schema_total"),
@@ -438,7 +438,7 @@ class ability_join_items_samples_standard extends BaseDBVerify
      *  "errorMsg": "有错时的错误信息"
      * }
      *     @OA\Response(
-     *         response="Response_QualityControl_info_ability_join_items_samples_standard",
+     *         response="Response_QualityControl_info_ability_join_items_results_instrument",
      *         description="操作成功返回",
      *         @OA\JsonContent(
      *              type="object",
@@ -446,7 +446,7 @@ class ability_join_items_samples_standard extends BaseDBVerify
      *              @OA\Property(
      *                  property="result",
      *                  type="object",
-     *                  @OA\Property(property="info",ref="#/components/schemas/Schema_QualityControl_ability_join_items_samples_standard_obj"),
+     *                  @OA\Property(property="info",ref="#/components/schemas/Schema_QualityControl_ability_join_items_results_instrument_obj"),
      *               ),
      *              @OA\Property(property="errorMsg", ref="#/components/schemas/common_Schema_errorMsg"),
      *        ),
@@ -456,7 +456,7 @@ class ability_join_items_samples_standard extends BaseDBVerify
      *              @OA\Property(
      *                  property="result",
      *                  type="object",
-     *                  @OA\Property(property="info",ref="#/components/schemas/Schema_QualityControl_ability_join_items_samples_standard_obj",),
+     *                  @OA\Property(property="info",ref="#/components/schemas/Schema_QualityControl_ability_join_items_results_instrument_obj",),
      *               ),
      *              @OA\Property(property="errorMsg", ref="#/components/schemas/common_Schema_errorMsg"),
      *              @OA\Xml(
@@ -487,18 +487,18 @@ class ability_join_items_samples_standard extends BaseDBVerify
      *  "errorMsg": "有错时的错误信息"
      * }
      *     @OA\Response(
-     *         response="Response_QualityControl_result_ability_join_items_samples_standard",
+     *         response="Response_QualityControl_result_ability_join_items_results_instrument",
      *         description="操作成功返回",
      *         @OA\JsonContent(
      *              type="object",
      *              @OA\Property(property="apistatus", ref="#/components/schemas/common_Schema_apistatus"),
-     *              @OA\Property(property="result",ref="#/components/schemas/Schema_QualityControl_ability_join_items_samples_standard_obj"),
+     *              @OA\Property(property="result",ref="#/components/schemas/Schema_QualityControl_ability_join_items_results_instrument_obj"),
      *              @OA\Property(property="errorMsg", ref="#/components/schemas/common_Schema_errorMsg"),
      *        ),
      *        @OA\XmlContent(
      *              type="object",
      *              @OA\Property(property="apistatus", ref="#/components/schemas/common_Schema_apistatus"),
-     *              @OA\Property(property="result",ref="#/components/schemas/Schema_QualityControl_ability_join_items_samples_standard_obj"),
+     *              @OA\Property(property="result",ref="#/components/schemas/Schema_QualityControl_ability_join_items_results_instrument_obj"),
      *              @OA\Property(property="errorMsg", ref="#/components/schemas/common_Schema_errorMsg"),
      *              @OA\Xml(
      *                  name="root",

@@ -16,11 +16,11 @@ class SMSRegController extends BasicController
 
     /**
      * @OA\Get(
-     *     path="/api/user/ajax_send_mobile_vercode",
+     *     path="/api/user/reg/ajax_send_mobile_vercode",
      *     tags={"用户中心-帐号注册登录"},
      *     summary="发送手机注册验证码",
      *     description="验证码2分钟内有效，过期请重新发送。未注册有效手机号。限:10次/天；30次/月；50次/半年；",
-     *     operationId="userSMSAjax_send_mobile_vercode",
+     *     operationId="userSMSARegjax_send_mobile_vercode",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
      *     @OA\Parameter(ref="#/components/parameters/common_Parameter_mobile"),
@@ -53,11 +53,11 @@ class SMSRegController extends BasicController
 
     /**
      * @OA\Post(
-     *     path="/api/user/ajax_mobile_code_verify",
+     *     path="/api/user/reg/ajax_mobile_code_verify",
      *     tags={"用户中心-帐号注册登录"},
      *     summary="发送手机注册验证码校验是否正确",
      *     description="验证码2分钟内有效，过期请重新发送。未注册有效手机号。限:10次/天；30次/月；50次/半年；",
-     *     operationId="userSMSAjax_mobile_code_verify",
+     *     operationId="userSMSRegAjax_mobile_code_verify",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
      *     @OA\Parameter(ref="#/components/parameters/common_Parameter_mobile"),
