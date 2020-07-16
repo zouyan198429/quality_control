@@ -257,9 +257,19 @@ Route::get('admin/ability_type/import_template', 'Admin\QualityControl\AbilityTy
 // 能力验证
 Route::get('admin/abilitys', 'Admin\QualityControl\AbilitysController@index');// 列表
 Route::get('admin/abilitys/add/{id}', 'Admin\QualityControl\AbilitysController@add');// 添加
+Route::get('admin/abilitys/info/{id}', 'Admin\QualityControl\AbilitysController@info');// 查看-详情
 // Route::get('admin/abilitys/select', 'Admin\QualityControl\AbilitysController@select');// 选择-弹窗
 Route::get('admin/abilitys/export', 'Admin\QualityControl\AbilitysController@export');// 导出
 Route::get('admin/abilitys/import_template', 'Admin\QualityControl\AbilitysController@import_template');// 导入模版
+
+// 能力验证--报名管理
+Route::get('admin/ability_join', 'Admin\QualityControl\AbilityJoinController@index');// 列表
+Route::get('admin/ability_join/add/{id}', 'Admin\QualityControl\AbilityJoinController@add');// 添加
+Route::get('admin/ability_join/info/{id}', 'Admin\QualityControl\AbilityJoinController@info');// 查看-详情
+// Route::get('admin/ability_join/select', 'Admin\QualityControl\AbilityJoinController@select');// 选择-弹窗
+Route::get('admin/ability_join/export', 'Admin\QualityControl\AbilityJoinController@export');// 导出
+Route::get('admin/ability_join/import_template', 'Admin\QualityControl\AbilityJoinController@import_template');// 导入模版
+
 
 // 企业后台 company
 Route::get('company/login', 'WebFront\Company\QualityControl\IndexController@login');// login.html 登录
@@ -279,8 +289,8 @@ Route::get('company/info', 'WebFront\Company\QualityControl\IndexController@info
 
 // 能力验证
 Route::get('company/abilitys', 'WebFront\Company\QualityControl\AbilitysController@index');// 列表
-Route::get('company/abilitys/info/{id}', 'WebFront\Company\QualityControl\AbilitysController@info');// 查看
-Route::get('company/abilitys/join/{ids}', 'WebFront\Company\QualityControl\AbilitysController@join');// 查看
+Route::get('company/abilitys/info/{id}', 'WebFront\Company\QualityControl\AbilitysController@info');// 查看-详情
+Route::get('company/abilitys/join/{ids}', 'WebFront\Company\QualityControl\AbilitysController@join');// 报名
 //Route::get('company/abilitys/add/{id}', 'WebFront\Company\QualityControl\AbilitysController@add');// 添加
 // Route::get('company/abilitys/select', 'WebFront\Company\QualityControl\AbilitysController@select');// 选择-弹窗
 //Route::get('company/abilitys/export', 'WebFront\Company\QualityControl\AbilitysController@export');// 导出

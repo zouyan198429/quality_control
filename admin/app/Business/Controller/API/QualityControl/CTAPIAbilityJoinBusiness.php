@@ -57,4 +57,114 @@ class CTAPIAbilityJoinBusiness extends BasicPublicCTAPIBusiness
         }
         return $errMsgs;
     }
+
+    /**
+     * 格式化数据 --如果有格式化，肯定会重写---本地数据库主要用这个来格式化数据
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $data_list 需要格式化的数据---二维数组(如果是一维数组，是转成二维数组后的数据)
+     * @param array $handleKeyArr 其它扩展参数，// 一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。--名称关键字，尽可能与关系名一样
+     * @param boolean 原数据类型 true:二维[默认];false:一维
+     * @return  boolean true
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function handleDataFormat(Request $request, Controller $controller, &$data_list, $handleKeyArr, $isMulti = true){
+
+        // 重写开始
+
+        $isNeedHandle = false;// 是否真的需要遍历处理数据 false:不需要：true:需要 ；只要有一个需要处理就标记
+
+        //        if(!empty($data_list) ){
+        // 企业信息
+        $companyDataList = [];// 企业id 为下标 二维数组
+        $companyKVList = [];// 企业id => 企业名称 的键值对
+        if(in_array('company', $handleKeyArr)){
+            $staffIdsArr = array_values(array_filter(array_column($data_list,'staff_id')));// 资源id数组，并去掉值为0的
+            // 查询条件
+            $companyList = [];
+            if(!empty($staffIdsArr)){
+                // 获得企业信息
+                $companyQueryParams = [
+                    'where' => [
+                        // ['type_id', 5],
+                        //                //['mobile', $keyword],
+                    ],
+                    //            'select' => [
+                    //                'id','company_id','position_name','sort_num'
+                    //                //,'operate_staff_id','operate_staff_id_history'
+                    //                ,'created_at'
+                    //            ],
+                    // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
+                ];
+                Tool::appendParamQuery($companyQueryParams, $staffIdsArr, 'id', [0, '0', ''], ',', false);
+                $companyList = CTAPIStaffBusiness::getBaseListData($request, $controller, '', $companyQueryParams,[], 1,  1)['data_list'] ?? [];
+            }
+            if(!empty($companyList)){
+                $companyDataList = Tool::arrUnderReset($companyList, 'id', 1);
+                $companyKVList = Tool::formatArrKeyVal($companyList, 'id', 'company_name');
+            }
+            if(!$isNeedHandle && !empty($companyDataList)) $isNeedHandle = true;
+        }
+
+        //        }
+        // 改为不返回，好让数据下面没有数据时，有一个空对象，方便前端或其它应用处理数据
+        // if(!$isNeedHandle){// 不处理，直接返回 // if(!$isMulti) $data_list = $data_list[0] ?? [];
+        //    return true;
+        // }
+
+        foreach($data_list as $k => $v){
+            //            // 公司名称
+            //            $data_list[$k]['company_name'] = $v['company_info']['company_name'] ?? '';
+            //            if(isset($data_list[$k]['company_info'])) unset($data_list[$k]['company_info']);
+
+
+            // 企业信息
+            if(in_array('company', $handleKeyArr)){
+                $data_list[$k]['company_name'] = $companyKVList[$v['staff_id']] ?? '';
+            }
+        }
+
+        // 重写结束
+        return true;
+    }
+
+    /**
+     * 获得列表数据时，查询条件的参数拼接--有特殊的需要自己重写此方法--每个字类都有此方法
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $queryParams 已有的查询条件数组
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  null 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function joinListParams(Request $request, Controller $controller, &$queryParams, $notLog = 0){
+
+        $admin_type = CommonRequest::getInt($request, 'admin_type');
+        if($admin_type > 0 )  array_push($queryParams['where'], ['admin_type', '=', $admin_type]);
+
+        $staff_id = CommonRequest::getInt($request, 'staff_id');
+        if($staff_id > 0 )  array_push($queryParams['where'], ['staff_id', '=', $staff_id]);
+
+        $status = CommonRequest::getInt($request, 'status');
+        if($status > 0 )  array_push($queryParams['where'], ['status', '=', $status]);
+
+//        $status = CommonRequest::get($request, 'status');
+//        if(strlen($status) > 0 && $status != 0)  Tool::appendParamQuery($queryParams, $status, 'status', [0, '0', ''], ',', false);
+
+        $is_print = CommonRequest::getInt($request, 'is_print');
+        if($is_print > 0 )  array_push($queryParams['where'], ['is_print', '=', $is_print]);
+
+        $is_grant = CommonRequest::getInt($request, 'is_grant');
+        if($is_grant > 0 )  array_push($queryParams['where'], ['is_grant', '=', $is_grant]);
+
+//        $ids = CommonRequest::get($request, 'ids');
+//        if(strlen($ids) > 0 && $ids != 0)  Tool::appendParamQuery($queryParams, $ids, 'id', [0, '0', ''], ',', false);
+
+        // 方法最下面
+        // 注意重写方法中，如果不是特殊的like，同样需要调起此默认like方法--特殊的写自己特殊的方法
+        static::joinListParamsLike($request, $controller, $queryParams, $notLog);
+    }
+
 }
