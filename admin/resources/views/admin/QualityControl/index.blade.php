@@ -227,7 +227,7 @@
                           <a lay-href="{{ url('admin/abilitys') }}">项目管理</a>
                       </dd>
                       <dd>
-                          <a lay-href="javascript:void(51);">用户报名</a>
+                          <a lay-href="{{ url('admin/ability_join') }}">用户报名</a>
                       </dd>
 {{--                      <dd>--}}
 {{--                          <a lay-href="{{ url('admin/ability_type') }}?company_grade=4">领域管理</a>--}}
