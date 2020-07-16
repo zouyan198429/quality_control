@@ -74,6 +74,40 @@ class AbilitysController extends BasicController
     }
 
     /**
+     * 查看
+     *
+     * @param Request $request
+     * @param int $id
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function info(Request $request,$id = 0)
+    {
+        $this->InitParams($request);
+        $reDataArr = $this->reDataArr;
+        if(!is_numeric($id) || $id <= 0){
+            $reDataArr['errorMsg'] = '参数[id]有误！';
+            $reDataArr['isShowBtn'] = 0;// 1:显示“回到首页”；2：显示“返回上页”
+            return $this->errorView($reDataArr, 'error');
+        }
+        $operate = "详情";
+        $handleKeyArr = ['projectStandards', 'projectSubmitItems'];
+        $extParams = [
+            'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+        ];
+        $info = CTAPIAbilitysBusiness::getInfoData($request, $this, $id, [], '', $extParams);
+        // $reDataArr = array_merge($reDataArr, $resultDatas);
+        if(empty($info)) {
+            $reDataArr['errorMsg'] = '记录不存在！';
+            $reDataArr['isShowBtn'] = 0;// 1:显示“回到首页”；2：显示“返回上页”
+            return $this->errorView($reDataArr, 'error');
+        }
+        $reDataArr['info'] = $info;
+        $reDataArr['operate'] = $operate;
+        return view('admin.QualityControl.Abilitys.info', $reDataArr);
+    }
+
+    /**
      * @OA\Get(
      *     path="/api/admin/abilitys/ajax_info",
      *     tags={"大后台-能力验证-能力验证"},
