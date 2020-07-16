@@ -263,4 +263,73 @@ class AbilitysDBBusiness extends BasePublicDBBusiness
         return $id;
     }
 
+    /**
+     * 未开始的，时间一到进入到开始报名--每一分钟跑一次
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function autoBeginJoin()
+    {
+        $dateTime =  date('Y-m-d H:i:s');
+        // 读取所有未开始的
+        $queryParams = [
+            'where' => [
+                ['status', 1],
+                ['join_begin_date', '<=', $dateTime],
+            ],
+             'select' => ['id' ]
+        ];
+        $dataList = static::getAllList($queryParams, [])->toArray();
+
+        if(!empty($dataList)){
+            $ids = array_values(array_unique(array_column($dataList,'id')));
+            $saveDate = [
+                'status' => 2,
+            ];
+            $saveQueryParams = [
+                'where' => [
+                    ['status', 1],
+                    // ['status_business', '!=', 1],
+                ],
+            ];
+            Tool::appendParamQuery($saveQueryParams, $ids, 'id', [0, '0', ''], ',', false);
+            static::save($saveDate, $saveQueryParams);
+        }
+    }
+
+    /**
+     * 开始报名的，时间一到结束，进入到进行中--每一分钟跑一次
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function autoBeginDoing()
+    {
+        $dateTime =  date('Y-m-d H:i:s');
+        // 读取所有未开始的
+        $queryParams = [
+            'where' => [
+                // ['status', 2],
+                ['join_end_date', '<=', $dateTime],
+            ],
+            'whereIn' => [ 'status' => [1,2]],
+            'select' => ['id' ]
+        ];
+        $dataList = static::getAllList($queryParams, [])->toArray();
+
+        if(!empty($dataList)){
+            $ids = array_values(array_unique(array_column($dataList,'id')));
+            $saveDate = [
+                'status' => 4,
+            ];
+            $saveQueryParams = [
+                'where' => [
+                    // ['status', 2],
+                    // ['status_business', '!=', 1],
+                ],
+                'whereIn' => [ 'status' => [1,2]],
+            ];
+            Tool::appendParamQuery($saveQueryParams, $ids, 'id', [0, '0', ''], ',', false);
+            static::save($saveDate, $saveQueryParams);
+        }
+    }
 }

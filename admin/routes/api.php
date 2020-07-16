@@ -221,6 +221,18 @@ $api->version('v1', function ($api) {
         $api->post('company/upload', 'WebFront\Company\QualityControl\UploadController@index');
         $api->post('company/upload/ajax_del', 'WebFront\Company\QualityControl\UploadController@ajax_del');// 根据id删除文件
 
+        // 能力验证
+        $api->any('company/abilitys/ajax_alist', 'WebFront\Company\QualityControl\AbilitysController@ajax_alist');//ajax获得列表数据
+        $api->post('company/abilitys/ajax_join_save', 'WebFront\Company\QualityControl\AbilitysController@ajax_join_save');// 报名
+//        $api->post('company/abilitys/ajax_del', 'WebFront\Company\QualityControl\AbilitysController@ajax_del');// 删除
+//        $api->post('company/abilitys/ajax_save', 'WebFront\Company\QualityControl\AbilitysController@ajax_save');// 新加/修改
+//        $api->post('company/abilitys/ajax_get_child', 'WebFront\Company\QualityControl\AbilitysController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+//        $api->post('company/abilitys/ajax_get_areachild', 'WebFront\Company\QualityControl\AbilitysController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+//        $api->post('company/abilitys/ajax_import_staff','WebFront\Company\QualityControl\AbilitysController@ajax_import'); // 导入员工
+//
+//        $api->post('company/abilitys/import', 'WebFront\Company\QualityControl\AbilitysController@import');// 导入excel
+//        $api->post('company/abilitys/ajax_get_ids', 'WebFront\Company\QualityControl\AbilitysController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
         // 用户中心 user
         // 验证码 -- ok
 //        $api->get('user/ajax_captcha', 'WebFront\User\QualityControl\IndexController@ajax_captcha');// api生成验证码

@@ -255,7 +255,6 @@ Route::get('admin/ability_type/export', 'Admin\QualityControl\AbilityTypeControl
 Route::get('admin/ability_type/import_template', 'Admin\QualityControl\AbilityTypeController@import_template');// 导入模版
 
 // 能力验证
-Route::get('admin/abilitys/test', 'Admin\QualityControl\AbilitysController@test');// 列表
 Route::get('admin/abilitys', 'Admin\QualityControl\AbilitysController@index');// 列表
 Route::get('admin/abilitys/add/{id}', 'Admin\QualityControl\AbilitysController@add');// 添加
 // Route::get('admin/abilitys/select', 'Admin\QualityControl\AbilitysController@select');// 选择-弹窗
@@ -277,6 +276,16 @@ Route::get('company/logout', 'WebFront\Company\QualityControl\IndexController@lo
 Route::get('company/password', 'WebFront\Company\QualityControl\IndexController@password');//psdmodify.html 个人信息-修改密码--ok
 Route::get('company/info', 'WebFront\Company\QualityControl\IndexController@info');//myinfo.html 个人信息--显示--ok
 //Route::get('company/down_drive', 'WebFront\Company\QualityControl\IndexController@down_drive');// 下载网页打印机驱动
+
+// 能力验证
+Route::get('company/abilitys', 'WebFront\Company\QualityControl\AbilitysController@index');// 列表
+Route::get('company/abilitys/info/{id}', 'WebFront\Company\QualityControl\AbilitysController@info');// 查看
+Route::get('company/abilitys/join/{ids}', 'WebFront\Company\QualityControl\AbilitysController@join');// 查看
+//Route::get('company/abilitys/add/{id}', 'WebFront\Company\QualityControl\AbilitysController@add');// 添加
+// Route::get('company/abilitys/select', 'WebFront\Company\QualityControl\AbilitysController@select');// 选择-弹窗
+//Route::get('company/abilitys/export', 'WebFront\Company\QualityControl\AbilitysController@export');// 导出
+//Route::get('company/abilitys/import_template', 'WebFront\Company\QualityControl\AbilitysController@import_template');// 导入模版
+
 
 // 用户中心 user
 Route::get('user/login', 'WebFront\User\QualityControl\IndexController@login');// login.html 登录

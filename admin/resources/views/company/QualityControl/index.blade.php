@@ -167,7 +167,7 @@
                   </a>
                   <dl class="layui-nav-child">
                       <dd>
-                          <a lay-href="javascript:void(40);">能力验证</a>
+                          <a lay-href="{{ url('company/abilitys') }}">能力验证</a>
                       </dd>
                   </dl>
               </li>

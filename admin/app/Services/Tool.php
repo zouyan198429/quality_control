@@ -3242,7 +3242,7 @@ class Tool
      * @details
      * @param $beginTime 开始时间 05:00:00
      * @param $endTime 结束时间 15:00:00
-     * @return boolean  true:结束时间 >= 开始时间 或 false:结束时间 >= 开始时间
+     * @return boolean  true:结束时间 >= 开始时间 或 false:结束时间 < 开始时间
      *
      */
     public static function timeDomparison($beginTime, $endTime){
@@ -3872,7 +3872,7 @@ class Tool
         // 空字符不处理
         if(is_string($paramVals) && strlen($paramVals) <= 0) return false;
         // 不是字符也不是数组不处理
-        if(is_string($paramVals) && is_array($paramVals)) return false;
+        if(!is_string($paramVals) && !is_array($paramVals)) return false;
         // 字符串，则转为数组 ；并去重
         if(!is_array($paramVals))  $paramVals = array_unique(explode($valsSeparator, $paramVals));
         // 每个元素去前后空
