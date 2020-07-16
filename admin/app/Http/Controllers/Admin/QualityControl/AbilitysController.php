@@ -10,14 +10,6 @@ use Illuminate\Http\Request;
 
 class AbilitysController extends BasicController
 {
-
-    public function test(Request $request)
-    {
-        $this->InitParams($request);
-        $reDataArr = $this->reDataArr;
-        return view('admin.QualityControl.Abilitys.test', $reDataArr);
-    }
-
     /**
      * 首页
      *

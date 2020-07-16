@@ -315,7 +315,8 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
         // 进行登录操作
 
         if(empty($userInfo) || count($userInfo) <= 0){
-            throws('用户名信息不存在！');
+            if($login_type == 2)throws('用户名信息不存在！');
+            throws('用户名信息不存在或帐号密码有误！');
         }
 
         // 以下是对用户信息的验证

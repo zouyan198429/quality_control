@@ -16,23 +16,47 @@
 
 {{--<div id="crumb"><i class="fa fa-reorder fa-fw" aria-hidden="true"></i> {{ $operate ?? '' }}员工</div>--}}
 <div class="mm">
-    <form class="am-form am-form-horizontal" method="post"  id="addForm">
         <table class="table1">
             <tr>
-                <th>检测项目<span class="must">*</span></th>
+                <th>检测项目<span class="must"></span></th>
                 <td>
-{{--                    <input type="text" class="inp wnormal"  name="ability_name" value="{{ $info['ability_name'] ?? '' }}" placeholder="请输入检测项目"/>--}}
+                    {{ $info['ability_name'] ?? '' }}
+                </td>
+            </tr>
+{{--            <tr>--}}
+{{--                <th>预估参加实验数<span class="must"></span></th>--}}
+{{--                <td>--}}
+{{--                    {{ $info['estimate_add_num'] ?? '' }}--}}
+{{--                </td>--}}
+{{--            </tr>--}}
+            <tr>
+                <th>报名起止时间<span class="must"></span></th>
+                <td>
+                    {{ $info['join_begin_date'] ?? '' }}
+                    -
+                    {{ $info['join_end_date'] ?? '' }}
                 </td>
             </tr>
             <tr>
-                <th> </th>
+                <th>数据提交时限<span class="must"></span></th>
                 <td>
-{{--                    <button class="btn btn-l wnormal"  id="submitBtn" >提交</button>--}}
+                    {{ $info['duration_minute'] ?? '' }}天
+                </td>
+            </tr>
+            <tr>
+                <th>方法标准<span class="must"></span></th>
+                <td>
+                    {!!  $info['project_standards_text'] ?? '' !!}
+                </td>
+            </tr>
+            <tr>
+                <th>验证数据项<span class="must"></span></th>
+                <td>
+                    {!!  $info['submit_items_text'] ?? '' !!}
                 </td>
             </tr>
 
         </table>
-    </form>
 </div>
 <script type="text/javascript" src="{{asset('laydate/laydate.js')}}"></script>
 <script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>
@@ -40,12 +64,8 @@
 {{--<script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.js')}}"></script>--}}
 @include('public.dynamic_list_foot')
 <script type="text/javascript">
-    var SAVE_URL = "{{ url('api/admin/abilitys/ajax_save') }}";// ajax保存记录地址
-    var LIST_URL = "{{url('admin/abilitys')}}";//保存成功后跳转到的地址
-
-    var BEGIN_TIME = "{{ $info['join_begin_date'] ?? '' }}" ;//报名开始时间
-    var END_TIME = "{{ $info['join_end_date'] ?? '' }}" ;//报名截止时间
 
 </script>
+<script src="{{ asset('/js/company/QualityControl/Abilitys_info.js?0') }}"  type="text/javascript"></script>
 </body>
 </html>

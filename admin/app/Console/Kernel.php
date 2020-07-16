@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Business\API\RunBuy\CityAPIBusiness;
+use App\Business\DB\QualityControl\AbilitysDBBusiness;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -28,7 +29,9 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')
         //          ->hourly();
         $schedule->call(function () {
-            CityAPIBusiness::autoCancelOrdes();// 跑城市订单过期未接单自动关闭脚本--每一分钟跑一次
+            // CityAPIBusiness::autoCancelOrdes();// 跑城市订单过期未接单自动关闭脚本--每一分钟跑一次
+            AbilitysDBBusiness::autoBeginJoin();// 未开始的，时间一到进入到开始报名
+            AbilitysDBBusiness::autoBeginDoing();// 开始报名的，时间一到结束，进入到进行中
         })->everyMinute();// 每分钟执行一次 锁会在 5 分钟后失效->withoutOverlapping(5)[会失败] ;  ->appendOutputTo($filePath)
 
         // Horizon 包含一个 Metrics 仪表盘，它可以提供任务和队列等待时间和吞吐量信息，

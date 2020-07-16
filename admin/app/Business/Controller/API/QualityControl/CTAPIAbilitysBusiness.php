@@ -7,6 +7,7 @@ use App\Services\Excel\ImportExport;
 use App\Services\Request\API\HttpRequest;
 use App\Services\SMS\LimitSMS;
 use App\Services\Tool;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Services\Request\CommonRequest;
 use App\Http\Controllers\BaseController as Controller;
@@ -131,6 +132,29 @@ class CTAPIAbilitysBusiness extends BasicPublicCTAPIBusiness
         }
 
 
+        // 判断自己是否已经报名
+        $joinedAbilityIds = [];// 已报名的项目ID数组
+        if(in_array('joined', $handleKeyArr)){
+
+            $user_info = $controller->user_info;
+            $abilityIds = array_values(array_unique(array_column($data_list,'id')));
+            if(!empty($abilityIds)){
+                // 还得查一下不是状态2的记录，再获得kv把
+                $queryParams = [
+                    'where' => [
+                        ['admin_type', $user_info['admin_type']],
+                        ['staff_id', $user_info['id']],
+                        // ['ability_id', $id],
+                    ],
+                    // 'select' => ['id', 'amount', 'status', 'my_order_no' ]
+                ];
+                Tool::appendParamQuery($queryParams, $abilityIds, 'ability_id', [0, '0', ''], ',', false);
+                $joinItemDataList = CTAPIAbilityJoinItemsBusiness::ajaxGetQueryListCTL($request, $controller, '', $queryParams, [], 1);
+                if(!empty($joinItemDataList)) $joinedAbilityIds = array_values(array_unique(array_column($joinItemDataList,'ability_id')));
+
+            }
+        }
+
 
         //        }
         // 改为不返回，好让数据下面没有数据时，有一个空对象，方便前端或其它应用处理数据
@@ -143,6 +167,10 @@ class CTAPIAbilitysBusiness extends BasicPublicCTAPIBusiness
         //            $data_list[$k]['company_name'] = $v['company_info']['company_name'] ?? '';
         //            if(isset($data_list[$k]['company_info'])) unset($data_list[$k]['company_info']);
 
+            // 格式化发布时间
+            if(isset($v['created_at']) && !empty($v['created_at'])){
+                $data_list[$k]['created_at_format'] = judgeDate($v['created_at'],'Y-m-d');
+            }
 
             // 获得项目标准
             if(in_array('projectStandards', $handleKeyArr)){
@@ -156,7 +184,7 @@ class CTAPIAbilitysBusiness extends BasicPublicCTAPIBusiness
                     ]);
                 }
                 $data_list[$k]['project_standards'] = $configArr;
-                $data_list[$k]['project_standards_text'] = implode(',', Tool::getArrFields($temArr, 'name'));
+                $data_list[$k]['project_standards_text'] = implode('<br/>', Tool::getArrFields($temArr, 'name'));
             }
             // 获得验证数据项
             if(in_array('projectSubmitItems', $handleKeyArr)){
@@ -170,11 +198,116 @@ class CTAPIAbilitysBusiness extends BasicPublicCTAPIBusiness
                     ]);
                 }
                 $data_list[$k]['submit_items'] = $configArr;
-                $data_list[$k]['submit_items_text'] = implode(',', Tool::getArrFields($temArr, 'name'));
+                $data_list[$k]['submit_items_text'] = implode('<br/>', Tool::getArrFields($temArr, 'name'));
+            }
+            // 判断自己是否已经报名
+            if(in_array('joined', $handleKeyArr)){
+                $is_joined = 0;
+                $is_joined_text = '未报名';
+                if(in_array($v['id'], $joinedAbilityIds)){
+                    $is_joined = 1;
+                    $is_joined_text = '已报名';
+                }
+                $data_list[$k]['is_joined'] = $is_joined;
+                $data_list[$k]['is_joined_text'] = $is_joined_text;
             }
         }
 
         // 重写结束
         return true;
+    }
+
+    /**
+     * 获得列表数据时，查询条件的参数拼接--有特殊的需要自己重写此方法--每个字类都有此方法
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $queryParams 已有的查询条件数组
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  null 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function joinListParams(Request $request, Controller $controller, &$queryParams, $notLog = 0){
+
+        $ability_type_id = CommonRequest::getInt($request, 'ability_type_id');
+        if($ability_type_id > 0 )  array_push($queryParams['where'], ['ability_type_id', '=', $ability_type_id]);
+
+        $is_publish = CommonRequest::getInt($request, 'is_publish');
+        if($is_publish > 0 )  array_push($queryParams['where'], ['is_publish', '=', $is_publish]);
+
+        $status = CommonRequest::get($request, 'status');
+        if(strlen($status) > 0 && $status != 0)  Tool::appendParamQuery($queryParams, $status, 'status', [0, '0', ''], ',', false);
+
+        $ids = CommonRequest::get($request, 'ids');
+        if(strlen($ids) > 0 && $ids != 0)  Tool::appendParamQuery($queryParams, $ids, 'id', [0, '0', ''], ',', false);
+
+        // 方法最下面
+        // 注意重写方法中，如果不是特殊的like，同样需要调起此默认like方法--特殊的写自己特殊的方法
+        static::joinListParamsLike($request, $controller, $queryParams, $notLog);
+    }
+
+    /**
+     * 判断记录是否到开始报名时间--方法回全时throws错误，根据调用场景 可以用try  catch
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $dataList 能力验证记录  二维或一维数组  ；必须有 id ability_name join_begin_date join_end_date status 下标
+     * @param int $judge_type 判断类型  1 判断是否 开始  2 判断是否结束 [说明 3 是 1+2 ：非有效的报名就会报错]   4 判断是否已经报过名
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  null 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function judgeCanJoin(Request $request, Controller $controller, $dataList = [], $judge_type = 1, $notLog = 0){
+        $currentNow = Carbon::now()->toDateTimeString();
+        // 如果是一维数组，转为二维
+        $isMulti = Tool::isMultiArr($dataList, true);
+
+        $user_info = $controller->user_info;
+
+        foreach($dataList as $k => $v){
+            $id = $v['id'];
+            $ability_name = $v['ability_name'];
+            $join_begin_date = $v['join_begin_date'];
+            $join_end_date = $v['join_end_date'];
+            $status = $v['status'];// 状态(1待开始 、2报名中、4进行中、8已结束 16 已取消【作废】)
+            $errStr = '';
+            // 判断是否已开始报名
+            if(in_array($status, [1,2])){
+                if( ($judge_type & 1) == 1 && Tool::diffDate($currentNow, $join_begin_date, 1, '时间', 2) > 0) $errStr = $ability_name . '还未到开始报名时间！';
+                if( ($judge_type & 2) == 2 && Tool::diffDate($join_end_date, $currentNow, 1, '时间', 2) > 0) $errStr = $ability_name . '报名已结束！' . $join_end_date. ' -- ' . $currentNow;
+                if( ($judge_type & 3) == 3 && $status == 1){// 说明可以开始报名了--修改状态
+                    $saveData = [
+                        'status' => 2,
+                    ];
+                    static::replaceById($request, $controller, $saveData,$id, [], true, 1);
+                }
+            }else{
+                if( ($judge_type & 3) == 3 ) $errStr = $ability_name . ($v['status_text'] ?? '');
+            }
+
+            // 判断是否已经报过名
+            // $ability_ids = array_values(array_unique(array_column($dataList,'id')));
+            // if(!empty($ability_ids)){
+            if( ($judge_type & 4) == 4 ){
+                $queryParams = [
+                    'where' => [
+                        ['admin_type', $user_info['admin_type']],
+                        ['staff_id', $user_info['id']],
+                        ['ability_id', $id],
+//                ['teacher_status',1],
+                    ],
+                    // 'select' => ['id', 'amount', 'status', 'my_order_no' ]
+                ];
+                // Tool::appendParamQuery($queryParams, $ability_ids, 'ability_id', [0, '0', ''], ',', false);
+                $joinItemInfo = CTAPIAbilityJoinItemsBusiness::getInfoQuery($request, $controller, '', 0, 1, $queryParams, [], 1);
+                if(!empty($joinItemInfo))  $errStr = $ability_name . '已报名，不可重复报名！';
+
+            }
+            // }
+            if($errStr != ''){
+                throws($errStr);
+                break;
+            }
+        }
     }
 }

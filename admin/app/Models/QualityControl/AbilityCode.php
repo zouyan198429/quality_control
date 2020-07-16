@@ -1,8 +1,9 @@
 <?php
+// 能力验证代码
 
 namespace App\Models\QualityControl;
 
-class StaffHistory extends Staff
+class AbilityCode extends BasePublicModel
 {
     //****************数据据缓存**相关的***开始********************************************
 //    public static $cachePre = 'cacheDB';// 缓存键最前面的关键字  cacheDb:U:{id值}_{email值}  中的 cacheDb
@@ -64,31 +65,13 @@ class StaffHistory extends Staff
     // 4：有操作员工历史id 字段 operate_staff_id_history
     // 8：有操作日期字段 created_at timestamp
     // 16：有更新日期字段 updated_at  timestamp
-    public static $ownProperty = (2 | 4 | 8 | 16);
+    public static $ownProperty = (2 | 4 | 8 | 16);// (1 | 2 | 4 | 8 | 16);
 
     /**
      * 关联到模型的数据表
      *
      * @var string
      */
-    protected $table = 'staff_history';
+    protected $table = 'ability_code';
 
-    /**
-     * 设置帐号的密码md5加密
-     *
-     * @param  string  $value
-     * @return string
-     */
-    public function setAdminPasswordAttribute($value)
-    {
-        $this->attributes['admin_password'] = $value;// md5($value);
-    }
-
-    /**
-     * 获取所属帐号--一维
-     */
-    public function staff()
-    {
-        return $this->belongsTo('App\Models\QualityControl\Staff', 'staff_id', 'id');
-    }
 }
