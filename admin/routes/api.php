@@ -202,14 +202,14 @@ $api->version('v1', function ($api) {
 
         // 能力验证--报名管理
         $api->any('admin/ability_join/ajax_alist', 'Admin\QualityControl\AbilityJoinController@ajax_alist');//ajax获得列表数据
-        $api->post('admin/ability_join/ajax_del', 'Admin\QualityControl\AbilityJoinController@ajax_del');// 删除
-        $api->post('admin/ability_join/ajax_save', 'Admin\QualityControl\AbilityJoinController@ajax_save');// 新加/修改
-        $api->post('admin/ability_join/ajax_get_child', 'Admin\QualityControl\AbilityJoinController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
-        $api->post('admin/ability_join/ajax_get_areachild', 'Admin\QualityControl\AbilityJoinController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
-        $api->post('admin/ability_join/ajax_import_staff','Admin\QualityControl\AbilityJoinController@ajax_import'); // 导入员工
+//        $api->post('admin/ability_join/ajax_del', 'Admin\QualityControl\AbilityJoinController@ajax_del');// 删除
+//        $api->post('admin/ability_join/ajax_save', 'Admin\QualityControl\AbilityJoinController@ajax_save');// 新加/修改
+//        $api->post('admin/ability_join/ajax_get_child', 'Admin\QualityControl\AbilityJoinController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+//        $api->post('admin/ability_join/ajax_get_areachild', 'Admin\QualityControl\AbilityJoinController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+//        $api->post('admin/ability_join/ajax_import_staff','Admin\QualityControl\AbilityJoinController@ajax_import'); // 导入员工
 
-        $api->post('admin/ability_join/import', 'Admin\QualityControl\AbilityJoinController@import');// 导入excel
-        $api->post('admin/ability_join/ajax_get_ids', 'Admin\QualityControl\AbilityJoinController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+//        $api->post('admin/ability_join/import', 'Admin\QualityControl\AbilityJoinController@import');// 导入excel
+//        $api->post('admin/ability_join/ajax_get_ids', 'Admin\QualityControl\AbilityJoinController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
         // 企业后台 company
         // 验证码 -- ok
@@ -243,6 +243,17 @@ $api->version('v1', function ($api) {
 //
 //        $api->post('company/abilitys/import', 'WebFront\Company\QualityControl\AbilitysController@import');// 导入excel
 //        $api->post('company/abilitys/ajax_get_ids', 'WebFront\Company\QualityControl\AbilitysController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        // 能力验证--报名管理
+        $api->any('company/ability_join/ajax_alist', 'WebFront\Company\QualityControl\AbilityJoinController@ajax_alist');//ajax获得列表数据
+//        $api->post('company/ability_join/ajax_del', 'WebFront\Company\QualityControl\AbilityJoinController@ajax_del');// 删除
+//        $api->post('company/ability_join/ajax_save', 'WebFront\Company\QualityControl\AbilityJoinController@ajax_save');// 新加/修改
+//        $api->post('company/ability_join/ajax_get_child', 'WebFront\Company\QualityControl\AbilityJoinController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+//        $api->post('company/ability_join/ajax_get_areachild', 'WebFront\Company\QualityControl\AbilityJoinController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+//        $api->post('company/ability_join/ajax_import_staff','WebFront\Company\QualityControl\AbilityJoinController@ajax_import'); // 导入员工
+
+//        $api->post('company/ability_join/import', 'WebFront\Company\QualityControl\AbilityJoinController@import');// 导入excel
+//        $api->post('company/ability_join/ajax_get_ids', 'WebFront\Company\QualityControl\AbilityJoinController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
         // 用户中心 user
         // 验证码 -- ok

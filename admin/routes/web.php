@@ -264,11 +264,11 @@ Route::get('admin/abilitys/import_template', 'Admin\QualityControl\AbilitysContr
 
 // 能力验证--报名管理
 Route::get('admin/ability_join', 'Admin\QualityControl\AbilityJoinController@index');// 列表
-Route::get('admin/ability_join/add/{id}', 'Admin\QualityControl\AbilityJoinController@add');// 添加
+//Route::get('admin/ability_join/add/{id}', 'Admin\QualityControl\AbilityJoinController@add');// 添加
 Route::get('admin/ability_join/info/{id}', 'Admin\QualityControl\AbilityJoinController@info');// 查看-详情
 // Route::get('admin/ability_join/select', 'Admin\QualityControl\AbilityJoinController@select');// 选择-弹窗
-Route::get('admin/ability_join/export', 'Admin\QualityControl\AbilityJoinController@export');// 导出
-Route::get('admin/ability_join/import_template', 'Admin\QualityControl\AbilityJoinController@import_template');// 导入模版
+//Route::get('admin/ability_join/export', 'Admin\QualityControl\AbilityJoinController@export');// 导出
+//Route::get('admin/ability_join/import_template', 'Admin\QualityControl\AbilityJoinController@import_template');// 导入模版
 
 
 // 企业后台 company
@@ -295,6 +295,14 @@ Route::get('company/abilitys/join/{ids}', 'WebFront\Company\QualityControl\Abili
 // Route::get('company/abilitys/select', 'WebFront\Company\QualityControl\AbilitysController@select');// 选择-弹窗
 //Route::get('company/abilitys/export', 'WebFront\Company\QualityControl\AbilitysController@export');// 导出
 //Route::get('company/abilitys/import_template', 'WebFront\Company\QualityControl\AbilitysController@import_template');// 导入模版
+
+// 能力验证--报名管理
+Route::get('company/ability_join', 'WebFront\Company\QualityControl\AbilityJoinController@index');// 列表
+//Route::get('company/ability_join/add/{id}', 'WebFront\Company\QualityControl\AbilityJoinController@add');// 添加
+Route::get('company/ability_join/info/{id}', 'WebFront\Company\QualityControl\AbilityJoinController@info');// 查看-详情
+// Route::get('company/ability_join/select', 'WebFront\Company\QualityControl\AbilityJoinController@select');// 选择-弹窗
+//Route::get('company/ability_join/export', 'WebFront\Company\QualityControl\AbilityJoinController@export');// 导出
+//Route::get('company/ability_join/import_template', 'WebFront\Company\QualityControl\AbilityJoinController@import_template');// 导入模版
 
 
 // 用户中心 user

@@ -14,7 +14,7 @@ class AdminController extends BaseController
         if (!session_id()) session_start();// 初始化session
         $userInfo = $_SESSION['userInfo']?? [];
         if(empty($userInfo)) {
-            throws('非法请求！');
+            throws('非法请求！', $this->getNotLoginErrCode());
 //            if(isAjax()){
 //                ajaxDataArr(0, null, '非法请求！');
 //            }else{
@@ -23,7 +23,7 @@ class AdminController extends BaseController
         }
         $company_id = $userInfo['company_id'] ?? null;//CommonRequest::getInt($request, 'company_id');
         if(empty($company_id) || (!is_numeric($company_id))){
-            throws('非法请求！');
+            throws('非法请求！', $this->getNotLoginErrCode());
 //            if(isAjax()){
 //                ajaxDataArr(0, null, '非法请求！');
 //            }else{

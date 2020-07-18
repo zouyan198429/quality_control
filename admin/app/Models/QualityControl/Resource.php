@@ -74,20 +74,20 @@ class Resource extends BasePublicModel
     protected $table = 'resource';
 
     // 拥有者类型1平台2企业4个人
-    public $owerTypeArr = [
+    public static $owerTypeArr = [
         '1' => '平台',
         '2' => '企业',
         '4' => '个人',
     ];
 
     // 资源类型1图片2excel
-    public $resourceTypeArr = [
+    public static $resourceTypeArr = [
         '1' => '图片',
         '2' => 'excel',
     ];
 
     // 所属栏目1普通上传 2 能力验证
-    public $columnTypeArr = [
+    public static $columnTypeArr = [
         '1' => '普通上传',
         '2' => '能力验证',
     ];
@@ -102,7 +102,7 @@ class Resource extends BasePublicModel
      */
     public function getOwerTypeTextAttribute()
     {
-        return $this->owerTypeArr[$this->ower_type] ?? '';
+        return static::$owerTypeArr[$this->ower_type] ?? '';
     }
 
     /**
@@ -112,7 +112,7 @@ class Resource extends BasePublicModel
      */
     public function getResourceTypeTextAttribute()
     {
-        return $this->resourceTypeArr[$this->resource_type] ?? '';
+        return static::$resourceTypeArr[$this->resource_type] ?? '';
     }
 
     /**
@@ -122,7 +122,7 @@ class Resource extends BasePublicModel
      */
     public function getColumnTypeTextAttribute()
     {
-        return $this->columnTypeArr[$this->column_type] ?? '';
+        return static::$columnTypeArr[$this->column_type] ?? '';
     }
 
     /**

@@ -75,12 +75,12 @@ class SmsCode extends BasePublicModel
     protected $table = 'sms_code';
 
     // 类型1登录/注册
-    public $smsTypeArr = [
+    public static $smsTypeArr = [
         '1' => '登录/注册',
     ];
 
     // 状态 1待发送2已发送4已使用(登录)8发送失败
-    public $smsStatusArr = [
+    public static $smsStatusArr = [
         '1' => '待发送',
         '2' => '已发送',
         '4' => '已使用',
@@ -97,7 +97,7 @@ class SmsCode extends BasePublicModel
      */
     public function getSmsTypeTextAttribute()
     {
-        return $this->smsTypeArr[$this->sms_type] ?? '';
+        return static::$smsTypeArr[$this->sms_type] ?? '';
     }
 
     /**
@@ -107,7 +107,7 @@ class SmsCode extends BasePublicModel
      */
     public function getSmsStatusTextAttribute()
     {
-        return $this->smsStatusArr[$this->sms_status] ?? '';
+        return static::$smsStatusArr[$this->sms_status] ?? '';
     }
 
     /**

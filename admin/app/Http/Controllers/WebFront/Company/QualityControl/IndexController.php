@@ -5,6 +5,7 @@ namespace App\Http\Controllers\WebFront\Company\QualityControl;
 use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
 // use App\Business\Controller\API\RunBuy\CTAPITablesBusiness;
 use App\Http\Controllers\WorksController;
+use App\Models\QualityControl\Staff;
 use App\Services\Captcha\CaptchaCode;
 use App\Services\File\DownFile;
 use App\Services\Request\CommonRequest;
@@ -34,10 +35,15 @@ class IndexController extends BasicController
      */
     public function index(Request $request)
     {
-        $this->InitParams($request);
-        $reDataArr = $this->reDataArr;
+        $reDataArr = [];// 可以传给视图的全局变量数组
+        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request){
+            // 正常流程的代码
 
-        // 如果用户没有完善信息，则跳转到完善信息页
+            $this->InitParams($request);
+            // $reDataArr = $this->reDataArr;
+            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+
+            // 如果用户没有完善信息，则跳转到完善信息页
 //        $userInfo = $this->user_info;
 //        if($userInfo['is_perfect'] == 1 ){
             // 保存注册信息
@@ -48,7 +54,9 @@ class IndexController extends BasicController
 //            $this->delUserInfo();
 //            return redirect(config('public.webSite.reg.domain') .'web/perfect_company');
 //        }
-        return view('company.QualityControl.index', $reDataArr);
+            return view('company.QualityControl.index', $reDataArr);
+
+        }, $this->errMethod, $reDataArr, $this->errorView);
     }
 
     /**
@@ -94,8 +102,15 @@ class IndexController extends BasicController
      */
     public function login(Request $request)
     {
-        $reDataArr = $this->reDataArr;
-        return view('company.QualityControl.login', $reDataArr);
+        $reDataArr = [];// 可以传给视图的全局变量数组
+        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request){
+            // 正常流程的代码
+
+            // $reDataArr = $this->reDataArr;
+            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+            return view('company.QualityControl.login', $reDataArr);
+
+        }, $this->errMethod, $reDataArr, $this->errorView);
     }
 
     /**
@@ -107,11 +122,18 @@ class IndexController extends BasicController
      */
     public function password(Request $request)
     {
-        $this->InitParams($request);
-        $reDataArr = $this->reDataArr;
-        $user_info = $this->user_info;
-        $reDataArr = array_merge($reDataArr, $user_info);
-        return view('company.QualityControl.admin.password', $reDataArr);
+        $reDataArr = [];// 可以传给视图的全局变量数组
+        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request){
+            // 正常流程的代码
+
+            $this->InitParams($request);
+            // $reDataArr = $this->reDataArr;
+            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+            $user_info = $this->user_info;
+            $reDataArr = array_merge($reDataArr, $user_info);
+            return view('company.QualityControl.admin.password', $reDataArr);
+
+        }, $this->errMethod, $reDataArr, $this->errorView);
     }
 
     /**
@@ -123,14 +145,21 @@ class IndexController extends BasicController
      */
     public function info(Request $request)
     {
-        $this->InitParams($request);
-        $reDataArr = $this->reDataArr;
-        $user_info = $this->user_info;
+        $reDataArr = [];// 可以传给视图的全局变量数组
+        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request){
+            // 正常流程的代码
 
-        $reDataArr['adminType'] =  CTAPIStaffBusiness::$adminType;
-        $reDataArr['defaultAdminType'] = $user_info['admin_type'] ?? 0;// 列表页默认状态
-        $reDataArr = array_merge($reDataArr, $user_info);
-        return view('company.QualityControl.admin.info', $reDataArr);
+            $this->InitParams($request);
+            // $reDataArr = $this->reDataArr;
+            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+            $user_info = $this->user_info;
+
+            $reDataArr['adminType'] =  Staff::$adminTypeArr;
+            $reDataArr['defaultAdminType'] = $user_info['admin_type'] ?? 0;// 列表页默认状态
+            $reDataArr = array_merge($reDataArr, $user_info);
+            return view('company.QualityControl.admin.info', $reDataArr);
+
+        }, $this->errMethod, $reDataArr, $this->errorView);
     }
 
     /**
@@ -142,8 +171,15 @@ class IndexController extends BasicController
      */
     public function err404(Request $request)
     {
-        $reDataArr = $this->reDataArr;
-        return view('404', $reDataArr);
+        $reDataArr = [];// 可以传给视图的全局变量数组
+        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request){
+            // 正常流程的代码
+
+            // $reDataArr = $this->reDataArr;
+            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+            return view('404', $reDataArr);
+
+        }, $this->errMethod, $reDataArr, $this->errorView);
     }
 
     /**

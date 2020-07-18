@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\QualityControl;
 
 use App\Business\Controller\API\QualityControl\CTAPISmsCodeBusiness;
 use App\Http\Controllers\WorksController;
+use App\Models\QualityControl\SmsCode;
 use App\Services\Request\CommonRequest;
 use App\Services\Tool;
 use Illuminate\Http\Request;
@@ -19,19 +20,26 @@ class SmsCodeController extends BasicController
      */
     public function index(Request $request)
     {
-        $this->InitParams($request);
-        $reDataArr = $this->reDataArr;
+        $reDataArr = [];// 可以传给视图的全局变量数组
+        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request){
+            // 正常流程的代码
 
-        // 类型1登录/注册
-        $reDataArr['smsType'] =  CTAPISmsCodeBusiness::$smsTypeArr;
-        $reDataArr['defaultSmsType'] = -1;// 列表页默认状态
+            $this->InitParams($request);
+            // $reDataArr = $this->reDataArr;
+            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+
+            // 类型1登录/注册
+            $reDataArr['smsType'] =  SmsCode::$smsTypeArr;
+            $reDataArr['defaultSmsType'] = -1;// 列表页默认状态
 
 
-        // 状态 1待发送2已发送4已使用(登录)8发送失败
-        $reDataArr['smsStatus'] =  CTAPISmsCodeBusiness::$smsStatusArr;
-        $reDataArr['defaultSmsStatus'] = -1;// 列表页默认状态
+            // 状态 1待发送2已发送4已使用(登录)8发送失败
+            $reDataArr['smsStatus'] =  SmsCode::$smsStatusArr;
+            $reDataArr['defaultSmsStatus'] = -1;// 列表页默认状态
 
-        return view('admin.QualityControl.SmsCode.index', $reDataArr);
+            return view('admin.QualityControl.SmsCode.index', $reDataArr);
+
+        }, $this->errMethod, $reDataArr, $this->errorView);
     }
 
     /**
@@ -43,12 +51,19 @@ class SmsCodeController extends BasicController
      */
 //    public function select(Request $request)
 //    {
-//        $this->InitParams($request);
-//        $reDataArr = $this->reDataArr;
-//        $reDataArr['province_kv'] = CTAPISmsCodeBusiness::getCityByPid($request, $this,  0);
-//        $reDataArr['province_kv'] = CTAPISmsCodeBusiness::getChildListKeyVal($request, $this, 0, 1 + 0, 0);
-//        $reDataArr['province_id'] = 0;
-//        return view('admin.QualityControl.SmsCode.select', $reDataArr);
+//        $reDataArr = [];// 可以传给视图的全局变量数组
+//        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request){
+//            // 正常流程的代码
+//
+//            $this->InitParams($request);
+//            // $reDataArr = $this->reDataArr;
+//            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+//            $reDataArr['province_kv'] = CTAPISmsCodeBusiness::getCityByPid($request, $this,  0);
+//            $reDataArr['province_kv'] = CTAPISmsCodeBusiness::getChildListKeyVal($request, $this, 0, 1 + 0, 0);
+//            $reDataArr['province_id'] = 0;
+//            return view('admin.QualityControl.SmsCode.select', $reDataArr);
+//
+//        }, $this->errMethod, $reDataArr, $this->errorView);
 //    }
 
     /**
@@ -61,22 +76,29 @@ class SmsCodeController extends BasicController
      */
     public function add(Request $request,$id = 0)
     {
-        $this->InitParams($request);
-        $reDataArr = $this->reDataArr;
-        $info = [
-            'id'=>$id,
-          //   'department_id' => 0,
-        ];
-        $operate = "添加";
+        $reDataArr = [];// 可以传给视图的全局变量数组
+        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request, &$id){
+            // 正常流程的代码
 
-        if ($id > 0) { // 获得详情数据
-            $operate = "修改";
-            $info = CTAPISmsCodeBusiness::getInfoData($request, $this, $id, [], '', []);
-        }
-        // $reDataArr = array_merge($reDataArr, $resultDatas);
-        $reDataArr['info'] = $info;
-        $reDataArr['operate'] = $operate;
-        return view('admin.QualityControl.SmsCode.add', $reDataArr);
+            $this->InitParams($request);
+            // $reDataArr = $this->reDataArr;
+            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+            $info = [
+                'id'=>$id,
+                //   'department_id' => 0,
+            ];
+            $operate = "添加";
+
+            if ($id > 0) { // 获得详情数据
+                $operate = "修改";
+                $info = CTAPISmsCodeBusiness::getInfoData($request, $this, $id, [], '', []);
+            }
+            // $reDataArr = array_merge($reDataArr, $resultDatas);
+            $reDataArr['info'] = $info;
+            $reDataArr['operate'] = $operate;
+            return view('admin.QualityControl.SmsCode.add', $reDataArr);
+
+        }, $this->errMethod, $reDataArr, $this->errorView);
     }
 
     /**

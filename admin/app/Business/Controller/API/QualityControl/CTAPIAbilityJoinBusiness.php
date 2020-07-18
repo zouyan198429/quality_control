@@ -107,6 +107,43 @@ class CTAPIAbilityJoinBusiness extends BasicPublicCTAPIBusiness
             if(!$isNeedHandle && !empty($companyDataList)) $isNeedHandle = true;
         }
 
+        // 获得报名项
+        $joinItemKeyDataList = [];// 报名主表 id 为下标 二维数组
+        if(in_array('joinItems', $handleKeyArr)){
+            $joinIdsArr = array_values(array_filter(array_column($data_list,'id')));// 资源id数组，并去掉值为0的
+            // 查询条件
+            $joinItemList = [];
+            if(!empty($joinIdsArr)){
+                // 获得企业信息
+                $joinItemQueryParams = [
+                    'where' => [
+                        // ['type_id', 5],
+                        //                //['mobile', $keyword],
+                    ],
+                    //            'select' => [
+                    //                'id','company_id','position_name','sort_num'
+                    //                //,'operate_staff_id','operate_staff_id_history'
+                    //                ,'created_at'
+                    //            ],
+                    // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
+                ];
+                Tool::appendParamQuery($joinItemQueryParams, $joinIdsArr, 'ability_join_id', [0, '0', ''], ',', false);
+                // $joinItemList = CTAPIAbilityJoinItemsBusiness::getBaseListData($request, $controller, '', $joinItemQueryParams, [], 1,  1)['data_list'] ?? [];
+
+                $extParams = [
+                    'handleKeyArr' => ['ability', 'joinItemsStandards', 'projectStandards'],//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                ];
+                $joinItemList = CTAPIAbilityJoinItemsBusiness::getList($request, $controller, 1, $joinItemQueryParams, [], $extParams)['result']['data_list'] ?? [];
+            }
+            if(!empty($joinItemList)){
+                $joinItemKeyDataList = Tool::arrUnderReset($joinItemList, 'ability_join_id', 2);
+
+            }
+            if(!$isNeedHandle && !empty($joinItemKeyDataList)) $isNeedHandle = true;
+
+        }
+
+
         //        }
         // 改为不返回，好让数据下面没有数据时，有一个空对象，方便前端或其它应用处理数据
         // if(!$isNeedHandle){// 不处理，直接返回 // if(!$isMulti) $data_list = $data_list[0] ?? [];
@@ -121,7 +158,12 @@ class CTAPIAbilityJoinBusiness extends BasicPublicCTAPIBusiness
 
             // 企业信息
             if(in_array('company', $handleKeyArr)){
+                $data_list[$k]['company_info'] = $companyDataList[$v['staff_id']] ?? '';
                 $data_list[$k]['company_name'] = $companyKVList[$v['staff_id']] ?? '';
+            }
+            // 获得报名项
+            if(in_array('joinItems', $handleKeyArr)){
+                $data_list[$k]['join_items'] = $joinItemKeyDataList[$v['id']] ?? '';
             }
         }
 
@@ -140,6 +182,7 @@ class CTAPIAbilityJoinBusiness extends BasicPublicCTAPIBusiness
      * @author zouyan(305463219@qq.com)
      */
     public static function joinListParams(Request $request, Controller $controller, &$queryParams, $notLog = 0){
+        // 自己的参数查询拼接在这里-- 注意：多个id 的查询默认就已经有了，参数是 ids  多个用逗号分隔
 
         $admin_type = CommonRequest::getInt($request, 'admin_type');
         if($admin_type > 0 )  array_push($queryParams['where'], ['admin_type', '=', $admin_type]);

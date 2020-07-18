@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\ModelsVerify\QualityControl\industry;
 use App\Services\Request\API\Sites\APIRunBuyRequest;
 use App\Services\Tool;
 use Dingo\Api\Routing\Helpers;
@@ -52,6 +53,8 @@ class BaseController extends Controller
     public $city_partner_id = 0;
     public $seller_id = 0;
     public $shop_id = 0;
+    public $errMethod = 'errorViewDo';// 根据错误码执行自己独特的操作方法 参数 $request, $reDataArr, $errCode, $errStr
+    public $errorView = 'error';//  错误显示的视图
 
     public function InitParams(Request $request)
     {
@@ -221,5 +224,43 @@ class BaseController extends Controller
         if(!isset($reDataArr['errorMsg'])) $reDataArr['errorMsg'] = '您没有操作权限！';
         if(!isset($reDataArr['isShowBtn'])) $reDataArr['isShowBtn'] = 0;
         return view($errorView, $reDataArr);
+    }
+
+    /**
+     * 页面视图捕获到错误时，根据错误码执行自己独特的操作
+     * @param Request $request
+     * @param array $reDataArr 在数组值中，用来判断权限的字段名称指定,以及其它想传到错误视图的变量
+     *   $reDataArr = [
+     *       'errorMsg' => '',// 错误文字 ，  您没有操作权限---此值是throws抛出的错误内容
+     *      'isShowBtn' => '',// // 1:显示“回到首页”；2：显示“返回上页”
+     *       ...
+     *  ];
+     * @param int $errCode 错误码
+     * @param int $errStr 错误的内容
+     * @param string $errorView 错误显示的视图
+     * @return mixed 返回视图 或 true:没有返回视图
+     * @author zouyan(305463219@qq.com)
+     */
+    public function errorViewDo(Request $request, $reDataArr, $errCode, $errStr = ''){
+        switch($errCode){
+            case 700:// 登录状态过期
+                break;
+            case 1001:// 待补充企业资料
+                return redirect('web/perfect_company');
+                break;
+            case 1002:// 待补充用户资料
+                return redirect('web/perfect_user');
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+
+    // 获得没有登录或登录状态失效时的错误码
+    // $source = -1;// 来源-1网站页面，2ajax；3小程序
+    // 如果是 2ajax；3小程序，则 返回source的原值，否则，返回999【页面调用来请求数据的】
+    public function getNotLoginErrCode(){
+        return in_array($this->source, [2,3]) ?  $this->source : 999;//
     }
 }

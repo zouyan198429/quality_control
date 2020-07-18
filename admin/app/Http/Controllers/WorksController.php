@@ -27,7 +27,7 @@ class WorksController extends BaseController
         $userInfo = $this->getUserInfo();
         // pr($userInfo);
         if(empty($userInfo)) {
-            throws('非法请求！', $this->source);
+            throws('非法请求！', $this->getNotLoginErrCode());// $this->source);
 //            if(isAjax()){
 //                ajaxDataArr(0, null, '非法请求！');
 //            }else{
@@ -36,7 +36,7 @@ class WorksController extends BaseController
         }
         $company_id = $userInfo['id'] ?? null;//$userInfo['company_id'] ?? null;//CommonRequest::getInt($request, 'company_id');
         if(empty($company_id) || (!is_numeric($company_id))){
-            throws('非法请求！', $this->source);
+            throws('非法请求！', $this->getNotLoginErrCode());// $this->source);
 //            if(isAjax()){
 //                ajaxDataArr(0, null, '非法请求！');
 //            }else{

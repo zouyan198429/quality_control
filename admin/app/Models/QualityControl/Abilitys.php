@@ -76,7 +76,7 @@ class Abilitys extends BasePublicModel
 
 
     // 状态(1待开始 、2报名中、4进行中、8已结束 16 已取消【作废】)
-    public $statusArr = [
+    public static $statusArr = [
         '1' => '待开始',
         '2' => '报名中',
         '4' => '进行中',
@@ -85,7 +85,7 @@ class Abilitys extends BasePublicModel
     ];
 
     // 是否公布结果1未公布  2待公布 4  已公布
-    public $isPublishArr = [
+    public static $isPublishArr = [
         '1' => '未公布',
         '2' => '待公布',
         '4' => '已公布',
@@ -101,7 +101,7 @@ class Abilitys extends BasePublicModel
      */
     public function getStatusTextAttribute()
     {
-        return $this->statusArr[$this->status] ?? '';
+        return static::$statusArr[$this->status] ?? '';
     }
 
     /**
@@ -111,7 +111,7 @@ class Abilitys extends BasePublicModel
      */
     public function getIsPublishTextAttribute()
     {
-        return $this->isPublishArr[$this->is_publish] ?? '';
+        return static::$isPublishArr[$this->is_publish] ?? '';
     }
 
     /**

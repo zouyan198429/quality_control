@@ -75,7 +75,7 @@ class AbilityJoin extends BasePublicModel
     protected $table = 'ability_join';
 
     // 拥有者类型1平台2企业4个人
-    public $adminTypeArr = [
+    public static $adminTypeArr = [
         '1' => '平台',
         '2' => '企业',
         '4' => '个人',
@@ -83,7 +83,7 @@ class AbilityJoin extends BasePublicModel
 
     // 状态(1已报名;2已取样;4已完成【已验证结果】【如果有有问题、不满意 --还可以再取样--进入已取样状态--- 可以打印证书;
     // 8已完成--不可再修改【打印证书后，不可再操作或大后台点《公布结果》后子项都已完成状态】)
-    public $statusArr = [
+    public static $statusArr = [
         '1' => '已报名',
         '2' => '部分取样',
         '4' => '已取样',
@@ -93,13 +93,13 @@ class AbilityJoin extends BasePublicModel
     ];
 
     // 证书是否打印 1未打印 2 已打印
-    public $isPrintArr = [
+    public static $isPrintArr = [
         '1' => '未打印',
         '2' => '已打印',
     ];
 
-    // 证书是否领取1未领取 2 已领取
-    public $isGrantArr = [
+    // 证书是否领取 1未领取 2 已领取
+    public static $isGrantArr = [
         '1' => '未领取',
         '2' => '已领取',
     ];
@@ -115,7 +115,7 @@ class AbilityJoin extends BasePublicModel
      */
     public function getAdminTypeTextAttribute()
     {
-        return $this->adminTypeArr[$this->admin_type] ?? '';
+        return static::$adminTypeArr[$this->admin_type] ?? '';
     }
 
     /**
@@ -125,7 +125,7 @@ class AbilityJoin extends BasePublicModel
      */
     public function getStatusTextAttribute()
     {
-        return $this->statusArr[$this->status] ?? '';
+        return static::$statusArr[$this->status] ?? '';
     }
 
     /**
@@ -135,7 +135,7 @@ class AbilityJoin extends BasePublicModel
      */
     public function getIsPrintTextAttribute()
     {
-        return $this->isPrintArr[$this->is_print] ?? '';
+        return static::$isPrintArr[$this->is_print] ?? '';
     }
 
     /**
@@ -145,7 +145,7 @@ class AbilityJoin extends BasePublicModel
      */
     public function getIsGrantTextAttribute()
     {
-        return $this->isGrantArr[$this->is_grant] ?? '';
+        return static::$isGrantArr[$this->is_grant] ?? '';
     }
 
     /**

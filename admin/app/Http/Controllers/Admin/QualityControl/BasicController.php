@@ -35,7 +35,7 @@ class BasicController extends WorksController
         if(empty($siteLoginUniqueKey)) $siteLoginUniqueKey = $this->siteLoginUniqueKey;
         $staff_id = Tool::getSession($this->redisKey, $this->save_session,
             config('public.sessionKey') . $siteLoginUniqueKey, config('public.sessionRedisTye'));
-        if(!is_numeric($staff_id)) throws('登录失效，请重新登录！');
+        if(!is_numeric($staff_id)) throws('登录失效，请重新登录！', $this->getNotLoginErrCode());
         $userInfo = $this->getStaffInfo($staff_id);
 //        $userInfo = CTAPIStaffBusiness::getInfoDataBase(\request(), $this,'', $staff_id, [], '', 1);
         // 对数据进行有效性验证
