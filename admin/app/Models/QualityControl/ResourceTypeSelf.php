@@ -74,7 +74,7 @@ class ResourceTypeSelf extends BasePublicModel
     protected $table = 'resource_type_self';
 
     // 拥有者类型1平台2企业4个人
-    public $owerTypeArr = [
+    public static $owerTypeArr = [
         '1' => '平台',
         '2' => '企业',
         '4' => '个人',
@@ -90,7 +90,7 @@ class ResourceTypeSelf extends BasePublicModel
      */
     public function getOwerTypeTextAttribute()
     {
-        return $this->owerTypeArr[$this->ower_type] ?? '';
+        return static::$owerTypeArr[$this->ower_type] ?? '';
     }
 
     /**

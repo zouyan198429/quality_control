@@ -7,6 +7,7 @@ use App\Business\Controller\API\QualityControl\CTAPIIndustryBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
 // use App\Business\Controller\API\RunBuy\CTAPITablesBusiness;
 use App\Http\Controllers\WorksController;
+use App\Models\QualityControl\Staff;
 use App\Services\Captcha\CaptchaCode;
 use App\Services\File\DownFile;
 use App\Services\Request\CommonRequest;
@@ -36,9 +37,15 @@ class HomeController extends BasicRegController
      */
     public function login(Request $request)
     {
-        // $this->InitParams($request);
-        $reDataArr = $this->reDataArr;
-        return view('web.QualityControl.home.login', $reDataArr);
+        $reDataArr = [];// 可以传给视图的全局变量数组
+        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request){
+            // 正常流程的代码
+
+            // $this->InitParams($request);
+            // $reDataArr = $this->reDataArr;
+            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+            return view('web.QualityControl.home.login', $reDataArr);
+        }, $this->errMethod, $reDataArr, $this->errorView);
     }
 
     /**
@@ -50,9 +57,15 @@ class HomeController extends BasicRegController
      */
     public function login_company(Request $request)
     {
-        // $this->InitParams($request);
-        $reDataArr = $this->reDataArr;
-        return view('web.QualityControl.login_company', $reDataArr);
+        $reDataArr = [];// 可以传给视图的全局变量数组
+        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request){
+            // 正常流程的代码
+
+            // $this->InitParams($request);
+            // $reDataArr = $this->reDataArr;
+            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+            return view('web.QualityControl.login_company', $reDataArr);
+        }, $this->errMethod, $reDataArr, $this->errorView);
     }
 
     /**
@@ -64,9 +77,16 @@ class HomeController extends BasicRegController
      */
     public function login_user(Request $request)
     {
-        // $this->InitParams($request);
-        $reDataArr = $this->reDataArr;
-        return view('web.QualityControl.login_user', $reDataArr);
+        $reDataArr = [];// 可以传给视图的全局变量数组
+        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request){
+            // 正常流程的代码
+
+            // $this->InitParams($request);
+            // $reDataArr = $this->reDataArr;
+            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+            return view('web.QualityControl.login_user', $reDataArr);
+
+        }, $this->errMethod, $reDataArr, $this->errorView);
     }
 
     /**
@@ -106,9 +126,16 @@ class HomeController extends BasicRegController
      */
     public function reg_agree(Request $request)
     {
-        // $this->InitParams($request);
-        $reDataArr = $this->reDataArr;
-        return view('web.QualityControl.home.reg_agree', $reDataArr);
+        $reDataArr = [];// 可以传给视图的全局变量数组
+        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request){
+            // 正常流程的代码
+
+            // $this->InitParams($request);
+            // $reDataArr = $this->reDataArr;
+            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+            return view('web.QualityControl.home.reg_agree', $reDataArr);
+
+        }, $this->errMethod, $reDataArr, $this->errorView);
     }
 
     /**
@@ -120,9 +147,15 @@ class HomeController extends BasicRegController
      */
     public function reg(Request $request)
     {
-        // $this->InitParams($request);
-        $reDataArr = $this->reDataArr;
-        return view('web.QualityControl.home.reg', $reDataArr);
+        $reDataArr = [];// 可以传给视图的全局变量数组
+        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request){
+            // 正常流程的代码
+
+            // $this->InitParams($request);
+            // $reDataArr = $this->reDataArr;
+            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+            return view('web.QualityControl.home.reg', $reDataArr);
+        }, $this->errMethod, $reDataArr, $this->errorView);
     }
 
     /**
@@ -134,42 +167,46 @@ class HomeController extends BasicRegController
      */
     public function perfect_company(Request $request)
     {
-        $this->InitParams($request);
-        $reDataArr = $this->reDataArr;
-        $info = $this->user_info;
-        $user_type = $info['admin_type'] ?? 0;
-        // 非企业用户不可进行此操作！
-        if(empty($info) || $user_type != 2){
-//            $reDataArr['errorMsg'] = '您还没有注册！';
-//            $reDataArr['isShowBtn'] = (1 | 2);// 1:显示“回到首页”；2：显示“返回上页”
-//            return $this->errorView($reDataArr, 'error');
-            return redirect('web/login');
-        }
-        $handleKeyArr = [];
-        if($user_type == 2) array_push($handleKeyArr, 'siteResources');// array_merge($handleKeyArr, ['industry', 'siteResources']); ;//
+        $reDataArr = [];// 可以传给视图的全局变量数组
+        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request){
+            // 正常流程的代码
 
-        if(!empty($handleKeyArr)) CTAPIStaffBusiness::handleData($request, $this, $info, $handleKeyArr);
-        $reDataArr['info'] = $info;
-        // 获得城市KV值
-        $reDataArr['citys_kv'] = CTAPICitysBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'city_name']);
-        $reDataArr['defaultCity'] = $info['city_id'] ?? -1;// 默认
+            $this->InitParams($request);
+            // $reDataArr = $this->reDataArr;
+            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+            $info = $this->user_info;
+            $user_type = $info['admin_type'] ?? 0;
+            // 非企业用户不可进行此操作！
+            if(empty($info) || $user_type != 2){
+//            throws('您还没有注册！', $this->getNotLoginErrCode());
+                return redirect('web/login');
+            }
+            $handleKeyArr = [];
+            if($user_type == 2) array_push($handleKeyArr, 'siteResources');// array_merge($handleKeyArr, ['industry', 'siteResources']); ;//
 
-        // 所属行业
-        $reDataArr['industry_kv'] = CTAPIIndustryBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'industry_name']);
-        $reDataArr['defaultIndustry'] = $info['company_industry_id'] ?? -1;// 默认
+            if(!empty($handleKeyArr)) CTAPIStaffBusiness::handleData($request, $this, $info, $handleKeyArr);
+            $reDataArr['info'] = $info;
+            // 获得城市KV值
+            $reDataArr['citys_kv'] = CTAPICitysBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'city_name']);
+            $reDataArr['defaultCity'] = $info['city_id'] ?? -1;// 默认
 
-        // 企业--企业类型1检测机构、2生产企业
-        $reDataArr['companyType'] =  CTAPIStaffBusiness::$companyTypeArr;
-        $reDataArr['defaultCompanyType'] = $info['company_type'] ?? -1;// 列表页默认状态
+            // 所属行业
+            $reDataArr['industry_kv'] = CTAPIIndustryBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'industry_name']);
+            $reDataArr['defaultIndustry'] = $info['company_industry_id'] ?? -1;// 默认
 
-        // 企业--企业性质1企业法人 、2企业非法人、3事业法人、4事业非法人、5社团法人、6社团非法人、7机关法人、8机关非法人、9其它机构、10民办非企业单位、11个体 、12工会法人
-        $reDataArr['companyProp'] =  CTAPIStaffBusiness::$companyPropArr;
-        $reDataArr['defaultCompanyProp'] = $info['company_prop'] ?? -1;// 列表页默认状态
+            // 企业--企业类型1检测机构、2生产企业
+            $reDataArr['companyType'] =  Staff::$companyTypeArr;
+            $reDataArr['defaultCompanyType'] = $info['company_type'] ?? -1;// 列表页默认状态
 
-        // 企业--单位人数1、1-20、2、20-100、3、100-500、4、500以上
-        $reDataArr['companyPeoples'] =  CTAPIStaffBusiness::$companyPeoplesNumArr;
-        $reDataArr['defaultCompanyPeoples'] = $info['company_peoples_num'] ?? -1;// 列表页默认状态
-        return view('web.QualityControl.home.perfect_company', $reDataArr);
+            // 企业--企业性质1企业法人 、2企业非法人、3事业法人、4事业非法人、5社团法人、6社团非法人、7机关法人、8机关非法人、9其它机构、10民办非企业单位、11个体 、12工会法人
+            $reDataArr['companyProp'] =  Staff::$companyPropArr;
+            $reDataArr['defaultCompanyProp'] = $info['company_prop'] ?? -1;// 列表页默认状态
+
+            // 企业--单位人数1、1-20、2、20-100、3、100-500、4、500以上
+            $reDataArr['companyPeoples'] =  Staff::$companyPeoplesNumArr;
+            $reDataArr['defaultCompanyPeoples'] = $info['company_peoples_num'] ?? -1;// 列表页默认状态
+            return view('web.QualityControl.home.perfect_company', $reDataArr);
+        }, $this->errMethod, $reDataArr, $this->errorView);
     }
 
     /**
@@ -181,61 +218,68 @@ class HomeController extends BasicRegController
      */
     public function select_company(Request $request)
     {
-        $this->InitParams($request);
-        $reDataArr = $this->reDataArr;
-        // 获得城市KV值--企业和用户有城市
-        $reDataArr['citys_kv'] = CTAPICitysBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'city_name']);
-        $reDataArr['defaultCity'] = $info['city_id'] ?? -1;// 默认
+        $reDataArr = [];// 可以传给视图的全局变量数组
+        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request){
+            // 正常流程的代码
 
-        // 所属行业--只有企业有
-        $reDataArr['industry_kv'] = CTAPIIndustryBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'industry_name']);
-        $reDataArr['defaultIndustry'] = $info['company_industry_id'] ?? -1;// 默认
+            $this->InitParams($request);
+            // $reDataArr = $this->reDataArr;
+            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+            // 获得城市KV值--企业和用户有城市
+            $reDataArr['citys_kv'] = CTAPICitysBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'city_name']);
+            $reDataArr['defaultCity'] = $info['city_id'] ?? -1;// 默认
 
-        // 拥有者类型1平台2企业4个人
-        $reDataArr['adminType'] =  CTAPIStaffBusiness::$adminType;
-        $reDataArr['defaultAdminType'] = -1;// 列表页默认状态
+            // 所属行业--只有企业有
+            $reDataArr['industry_kv'] = CTAPIIndustryBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'industry_name']);
+            $reDataArr['defaultIndustry'] = $info['company_industry_id'] ?? -1;// 默认
 
-        // 是否完善资料1待完善2已完善
-        $reDataArr['isPerfect'] =  CTAPIStaffBusiness::$isPerfectArr;
-        $reDataArr['defaultIsPerfect'] = -1;// 列表页默认状态
+            // 拥有者类型1平台2企业4个人
+            $reDataArr['adminType'] =  Staff::$adminTypeArr;
+            $reDataArr['defaultAdminType'] = -1;// 列表页默认状态
 
-        // 是否超级帐户2否1是
-        $reDataArr['issuper'] =  CTAPIStaffBusiness::$issuper;
-        $reDataArr['defaultIssuper'] = -1;// 列表页默认状态
+            // 是否完善资料1待完善2已完善
+            $reDataArr['isPerfect'] =  Staff::$isPerfectArr;
+            $reDataArr['defaultIsPerfect'] = -1;// 列表页默认状态
 
-        // 审核状态1待审核2审核通过4审核不通过
-        $reDataArr['openStatus'] =  CTAPIStaffBusiness::$openStatus;
-        $reDataArr['defaultOpenStatus'] = -1;// 列表页默认状态
+            // 是否超级帐户2否1是
+            $reDataArr['issuper'] =  Staff::$issuperArr;
+            $reDataArr['defaultIssuper'] = -1;// 列表页默认状态
 
-        // 状态 1正常 2冻结
-        $reDataArr['accountStatus'] =  CTAPIStaffBusiness::$accountStatus;
-        $reDataArr['defaultAccountStatus'] = -1;// 列表页默认状态
+            // 审核状态1待审核2审核通过4审核不通过
+            $reDataArr['openStatus'] =  Staff::$openStatusArr;
+            $reDataArr['defaultOpenStatus'] = -1;// 列表页默认状态
 
-        // 性别0未知1男2女
-        $reDataArr['sex'] =  CTAPIStaffBusiness::$sex;
-        $reDataArr['defaultSex'] = -1;// 列表页默认状态
+            // 状态 1正常 2冻结
+            $reDataArr['accountStatus'] =  Staff::$accountStatusArr;
+            $reDataArr['defaultAccountStatus'] = -1;// 列表页默认状态
 
-        // 企业--是否独立法人1独立法人 2非独立法人
-        $reDataArr['companyIsLegalPersion'] =  CTAPIStaffBusiness::$companyIsLegalPersionArr;
-        $reDataArr['defaultCompanyIsLegalPersion'] = -1;// 列表页默认状态
+            // 性别0未知1男2女
+            $reDataArr['sex'] =  Staff::$sexArr;
+            $reDataArr['defaultSex'] = -1;// 列表页默认状态
 
-        // 企业--企业类型1检测机构、2生产企业
-        $reDataArr['companyType'] =  CTAPIStaffBusiness::$companyTypeArr;
-        $reDataArr['defaultCompanyType'] = -1;// 列表页默认状态
+            // 企业--是否独立法人1独立法人 2非独立法人
+            $reDataArr['companyIsLegalPersion'] =  Staff::$companyIsLegalPersionArr;
+            $reDataArr['defaultCompanyIsLegalPersion'] = -1;// 列表页默认状态
 
-        // 企业--企业性质1企业法人 、2企业非法人、3事业法人、4事业非法人、5社团法人、6社团非法人、7机关法人、8机关非法人、9其它机构、10民办非企业单位、11个体 、12工会法人
-        $reDataArr['companyProp'] =  CTAPIStaffBusiness::$companyPropArr;
-        $reDataArr['defaultCompanyProp'] = -1;// 列表页默认状态
+            // 企业--企业类型1检测机构、2生产企业
+            $reDataArr['companyType'] =  Staff::$companyTypeArr;
+            $reDataArr['defaultCompanyType'] = -1;// 列表页默认状态
 
-        // 企业--单位人数1、1-20、2、20-100、3、100-500、4、500以上
-        $reDataArr['companyPeoples'] =  CTAPIStaffBusiness::$companyPeoplesNumArr;
-        $reDataArr['defaultCompanyPeoples'] = -1;// 列表页默认状态
+            // 企业--企业性质1企业法人 、2企业非法人、3事业法人、4事业非法人、5社团法人、6社团非法人、7机关法人、8机关非法人、9其它机构、10民办非企业单位、11个体 、12工会法人
+            $reDataArr['companyProp'] =  Staff::$companyPropArr;
+            $reDataArr['defaultCompanyProp'] = -1;// 列表页默认状态
 
-        // 企业--会员等级1非会员  2会员  4理事  8常务理事   16理事长
-        $reDataArr['companyGrade'] =  CTAPIStaffBusiness::$companyGradeArr;
-        $reDataArr['defaultCompanyGrade'] = -1;// 列表页默认状态
+            // 企业--单位人数1、1-20、2、20-100、3、100-500、4、500以上
+            $reDataArr['companyPeoples'] =  Staff::$companyPeoplesNumArr;
+            $reDataArr['defaultCompanyPeoples'] = -1;// 列表页默认状态
 
-        return view('web.QualityControl.home.select_company', $reDataArr);
+            // 企业--会员等级1非会员  2会员  4理事  8常务理事   16理事长
+            $reDataArr['companyGrade'] =  Staff::$companyGradeArr;
+            $reDataArr['defaultCompanyGrade'] = -1;// 列表页默认状态
+
+            return view('web.QualityControl.home.select_company', $reDataArr);
+
+        }, $this->errMethod, $reDataArr, $this->errorView);
     }
 
     /**
@@ -274,27 +318,31 @@ class HomeController extends BasicRegController
      */
     public function perfect_user(Request $request)
     {
-        $this->InitParams($request);
-        $reDataArr = $this->reDataArr;
-        $info = $this->user_info;
-        $user_type = $info['admin_type'] ?? 0;
-        // 非用户不可进行此操作！
-        if(empty($info) || $user_type != 4){
-//            $reDataArr['errorMsg'] = '您还没有注册！';
-//            $reDataArr['isShowBtn'] = (1 | 2);// 1:显示“回到首页”；2：显示“返回上页”
-//            return $this->errorView($reDataArr, 'error');
-            return redirect('web/login');
-        }
-        $handleKeyArr = [];
-        if($user_type == 4) array_push($handleKeyArr, 'company');// array_merge($handleKeyArr, ['industry', 'siteResources']); ;//
+        $reDataArr = [];// 可以传给视图的全局变量数组
+        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request){
+            // 正常流程的代码
 
-        if(!empty($handleKeyArr)) CTAPIStaffBusiness::handleData($request, $this, $info, $handleKeyArr);
-        $reDataArr['info'] = $info;
-        // 获得城市KV值
-        $reDataArr['citys_kv'] = CTAPICitysBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'city_name']);
-        $reDataArr['defaultCity'] = $info['city_id'] ?? -1;// 默认
+            $this->InitParams($request);
+            // $reDataArr = $this->reDataArr;
+            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+            $info = $this->user_info;
+            $user_type = $info['admin_type'] ?? 0;
+            // 非用户不可进行此操作！
+            if(empty($info) || $user_type != 4){
+//            throws('您还没有注册！', $this->getNotLoginErrCode());
+                return redirect('web/login');
+            }
+            $handleKeyArr = [];
+            if($user_type == 4) array_push($handleKeyArr, 'company');// array_merge($handleKeyArr, ['industry', 'siteResources']); ;//
 
-        return view('web.QualityControl.home.perfect_user', $reDataArr);
+            if(!empty($handleKeyArr)) CTAPIStaffBusiness::handleData($request, $this, $info, $handleKeyArr);
+            $reDataArr['info'] = $info;
+            // 获得城市KV值
+            $reDataArr['citys_kv'] = CTAPICitysBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'city_name']);
+            $reDataArr['defaultCity'] = $info['city_id'] ?? -1;// 默认
+
+            return view('web.QualityControl.home.perfect_user', $reDataArr);
+        }, $this->errMethod, $reDataArr, $this->errorView);
     }
 
     /**

@@ -2,6 +2,7 @@
 // 老师登录验证码
 namespace App\Business\Controller\API\QualityControl;
 
+use App\Models\QualityControl\SmsCode;
 use App\Services\DBRelation\RelationDB;
 use App\Services\Excel\ImportExport;
 use App\Services\Request\API\HttpRequest;
@@ -23,20 +24,6 @@ class CTAPISmsCodeBusiness extends BasicPublicCTAPIBusiness
 //        '1' => '已激活',
 //    ];
 
-    // 类型1登录/注册
-    public static $smsTypeArr = [
-        '1' => '登录/注册',
-    ];
-
-    // 状态 1待发送2已发送4已使用(登录)8发送失败
-    public static $smsStatusArr = [
-        '1' => '待发送',
-        '2' => '已发送',
-        '4' => '已使用',
-        '8' => '发送失败',
-    ];
-
-
     /**
      * 获得列表数据时，查询条件的参数拼接--有特殊的需要自己重写此方法
      *
@@ -48,6 +35,7 @@ class CTAPISmsCodeBusiness extends BasicPublicCTAPIBusiness
      * @author zouyan(305463219@qq.com)
      */
     public static function joinListParams(Request $request, Controller $controller, &$queryParams, $notLog = 0){
+        // 自己的参数查询拼接在这里-- 注意：多个id 的查询默认就已经有了，参数是 ids  多个用逗号分隔
         $staff_id = CommonRequest::getInt($request, 'staff_id');
         if(is_numeric($staff_id) && $staff_id > 0)  array_push($queryParams['where'], ['staff_id', '=', $staff_id]);
 

@@ -228,6 +228,7 @@ class CTAPIAbilitysBusiness extends BasicPublicCTAPIBusiness
      * @author zouyan(305463219@qq.com)
      */
     public static function joinListParams(Request $request, Controller $controller, &$queryParams, $notLog = 0){
+        // 自己的参数查询拼接在这里-- 注意：多个id 的查询默认就已经有了，参数是 ids  多个用逗号分隔
 
         $ability_type_id = CommonRequest::getInt($request, 'ability_type_id');
         if($ability_type_id > 0 )  array_push($queryParams['where'], ['ability_type_id', '=', $ability_type_id]);
@@ -238,8 +239,8 @@ class CTAPIAbilitysBusiness extends BasicPublicCTAPIBusiness
         $status = CommonRequest::get($request, 'status');
         if(strlen($status) > 0 && $status != 0)  Tool::appendParamQuery($queryParams, $status, 'status', [0, '0', ''], ',', false);
 
-        $ids = CommonRequest::get($request, 'ids');
-        if(strlen($ids) > 0 && $ids != 0)  Tool::appendParamQuery($queryParams, $ids, 'id', [0, '0', ''], ',', false);
+//        $ids = CommonRequest::get($request, 'ids');
+//        if(strlen($ids) > 0 && $ids != 0)  Tool::appendParamQuery($queryParams, $ids, 'id', [0, '0', ''], ',', false);
 
         // 方法最下面
         // 注意重写方法中，如果不是特殊的like，同样需要调起此默认like方法--特殊的写自己特殊的方法

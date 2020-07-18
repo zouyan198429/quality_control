@@ -75,7 +75,7 @@ class RegLog extends BasePublicModel
     protected $table = 'reg_log';
 
     // 拥有者类型1平台2企业4个人
-    public $adminTypeArr = [
+    public static $adminTypeArr = [
         '1' => '平台',
         '2' => '企业',
         '4' => '个人',
@@ -91,7 +91,7 @@ class RegLog extends BasePublicModel
      */
     public function getAdminTypeTextAttribute()
     {
-        return $this->adminTypeArr[$this->admin_type] ?? '';
+        return static::$adminTypeArr[$this->admin_type] ?? '';
     }
 
     /**

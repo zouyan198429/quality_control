@@ -75,7 +75,7 @@ class AbilityJoinLogs extends BasePublicModel
     protected $table = 'ability_join_logs';
 
     // 拥有者类型1平台2企业4个人
-    public $adminTypeArr = [
+    public static $adminTypeArr = [
         '1' => '平台',
         '2' => '企业',
         '4' => '个人',
@@ -92,7 +92,7 @@ class AbilityJoinLogs extends BasePublicModel
      */
     public function getAdminTypeTextAttribute()
     {
-        return $this->adminTypeArr[$this->admin_type] ?? '';
+        return static::$adminTypeArr[$this->admin_type] ?? '';
     }
 
     /**

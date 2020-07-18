@@ -274,6 +274,7 @@ class BasicCTAPIBusiness extends APIOperate
                     $queryParams['whereIn'][static::$primary_key] = explode(',', $ids);
                 }
             }
+
             $isExport = CommonRequest::getInt($request, 'is_export'); // 是否导出 0非导出 ；1导出数据
             if ($isExport == 1) $oprateBit = 1;
         }
@@ -427,8 +428,10 @@ class BasicCTAPIBusiness extends APIOperate
      * @author zouyan(305463219@qq.com)
      */
     public static function joinListParams(Request $request, Controller $controller, &$queryParams, $notLog = 0){
+        // 自己的参数查询拼接在这里-- 注意：多个id 的查询默认就已经有了，参数是 ids  多个用逗号分隔
 
-        // TODO 自己的参数查询拼接在这里
+        // TODO 自己的参数查询拼接在这里-- 注意：多个id 的查询默认就已经有了，参数是 ids  多个用逗号分隔
+
         // 方式一  --- 自己拼接
         // $type_id = CommonRequest::get($request, 'type_id');
         // if(is_numeric($type_id) )  array_push($queryParams['where'], ['type_id', '=', $type_id]);

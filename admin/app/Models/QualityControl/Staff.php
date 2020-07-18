@@ -92,58 +92,58 @@ class Staff extends BasePublicModel
     }
 
     // 拥有者类型1平台2企业4个人
-    public $adminTypeArr = [
+    public static $adminTypeArr = [
         '1' => '平台',
         '2' => '企业',
         '4' => '个人',
     ];
 
     // 是否完善资料1待完善2已完善
-    public $isPerfectArr = [
+    public static $isPerfectArr = [
         '1' => '待完善',
         '2' => '已完善',
     ];
 
     // 是否超级帐户2否1是
-    public $issuperArr = [
+    public static $issuperArr = [
         '2' => '普通帐户',
         '1' => '超级帐户',
     ];
 
     // 审核状态1待审核2审核通过4审核不通过
-    public $openStatusArr = [
+    public static $openStatusArr = [
         '1' => '待审核',
         '2' => '审核通过',
         '4' => '审核不通过',
     ];
 
     // 状态 1正常 2冻结
-    public $accountStatusArr = [
+    public static $accountStatusArr = [
         '1' => '正常',
         '2' => '冻结',
     ];
 
     // 性别0未知1男2女
-    public $sexArr = [
+    public static $sexArr = [
         '0' => '未知',
         '1' => '男',
         '2' => '女',
     ];
 
     // 企业--是否独立法人1独立法人 2非独立法人
-    public $companyIsLegalPersionArr = [
+    public static $companyIsLegalPersionArr = [
         '1' => '独立法人',
         '2' => '非独立法人',
     ];
 
     // 企业--企业类型1检测机构、2生产企业
-    public $companyTypeArr = [
+    public static $companyTypeArr = [
         '1' => '检测机构',
         '2' => '生产企业',
     ];
 
     // 企业--企业性质1企业法人 、2企业非法人、3事业法人、4事业非法人、5社团法人、6社团非法人、7机关法人、8机关非法人、9其它机构、10民办非企业单位、11个体 、12工会法人
-    public $companyPropArr = [
+    public static $companyPropArr = [
         '1' => '企业法人',
         '2' => '企业非法人',
         '3' => '事业法人',
@@ -159,7 +159,7 @@ class Staff extends BasePublicModel
     ];
 
     // 企业--单位人数1、1-20、2、20-100、3、100-500、4、500以上
-    public $companyPeoplesNumArr = [
+    public static $companyPeoplesNumArr = [
         '1' => '1-20',
         '2' => '20-100',
         '3' => '100-500',
@@ -167,7 +167,7 @@ class Staff extends BasePublicModel
     ];
 
     // 企业--会员等级1非会员  2会员  4理事  8常务理事   16理事长
-    public $companyGradeArr = [
+    public static $companyGradeArr = [
         '1' => '非会员',
         '2' => '会员',
         '4' => '理事',
@@ -186,7 +186,7 @@ class Staff extends BasePublicModel
      */
     public function getIsPerfectTextAttribute()
     {
-        return $this->isPerfectArr[$this->is_perfect] ?? '';
+        return static::$isPerfectArr[$this->is_perfect] ?? '';
     }
 
     /**
@@ -196,7 +196,7 @@ class Staff extends BasePublicModel
      */
     public function getAdminTypeTextAttribute()
     {
-        return $this->adminTypeArr[$this->admin_type] ?? '';
+        return static::$adminTypeArr[$this->admin_type] ?? '';
     }
 
     /**
@@ -206,7 +206,7 @@ class Staff extends BasePublicModel
      */
     public function getIssuperTextAttribute()
     {
-        return $this->issuperArr[$this->issuper] ?? '';
+        return static::$issuperArr[$this->issuper] ?? '';
     }
 
     /**
@@ -216,7 +216,7 @@ class Staff extends BasePublicModel
      */
     public function getOpenStatusTextAttribute()
     {
-        return $this->openStatusArr[$this->open_status] ?? '';
+        return static::$openStatusArr[$this->open_status] ?? '';
     }
 
     /**
@@ -226,7 +226,7 @@ class Staff extends BasePublicModel
      */
     public function getAccountStatusTextAttribute()
     {
-        return $this->accountStatusArr[$this->account_status] ?? '';
+        return static::$accountStatusArr[$this->account_status] ?? '';
     }
 
     /**
@@ -236,7 +236,7 @@ class Staff extends BasePublicModel
      */
     public function getSexTextAttribute()
     {
-        return $this->sexArr[$this->sex] ?? '';
+        return static::$sexArr[$this->sex] ?? '';
     }
 
     /**
@@ -246,7 +246,7 @@ class Staff extends BasePublicModel
      */
     public function getCompanyIsLegalPersionTextAttribute()
     {
-        return $this->companyIsLegalPersionArr[$this->company_is_legal_persion] ?? '';
+        return static::$companyIsLegalPersionArr[$this->company_is_legal_persion] ?? '';
     }
 
     /**
@@ -256,7 +256,7 @@ class Staff extends BasePublicModel
      */
     public function getCompanyTypeTextAttribute()
     {
-        return $this->companyTypeArr[$this->company_type] ?? '';
+        return static::$companyTypeArr[$this->company_type] ?? '';
     }
 
     /**
@@ -266,7 +266,7 @@ class Staff extends BasePublicModel
      */
     public function getCompanyPropTextAttribute()
     {
-        return $this->companyPropArr[$this->company_prop] ?? '';
+        return static::$companyPropArr[$this->company_prop] ?? '';
     }
 
     /**
@@ -276,7 +276,7 @@ class Staff extends BasePublicModel
      */
     public function getCompanyPeoplesNumTextAttribute()
     {
-        return $this->companyPeoplesNumArr[$this->company_peoples_num] ?? '';
+        return static::$companyPeoplesNumArr[$this->company_peoples_num] ?? '';
     }
 
     /**
@@ -286,7 +286,7 @@ class Staff extends BasePublicModel
      */
     public function getCompanyGradeTextAttribute()
     {
-        return $this->companyGradeArr[$this->company_grade] ?? '';
+        return static::$companyGradeArr[$this->company_grade] ?? '';
     }
 
     /**

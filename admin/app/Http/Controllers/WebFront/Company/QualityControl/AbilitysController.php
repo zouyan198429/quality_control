@@ -21,9 +21,15 @@ class AbilitysController extends BasicController
      */
     public function index(Request $request)
     {
-        $this->InitParams($request);
-        $reDataArr = $this->reDataArr;
-        return view('company.QualityControl.Abilitys.index', $reDataArr);
+        $reDataArr = [];// 可以传给视图的全局变量数组
+        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request){
+            // 正常流程的代码
+
+            $this->InitParams($request);
+            // $reDataArr = $this->reDataArr;
+            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+            return view('company.QualityControl.Abilitys.index', $reDataArr);
+        }, $this->errMethod, $reDataArr, $this->errorView);
     }
 
     /**
@@ -33,15 +39,22 @@ class AbilitysController extends BasicController
      * @return mixed
      * @author zouyan(305463219@qq.com)
      */
-//    public function select(Request $request)
-//    {
-//        $this->InitParams($request);
-//        $reDataArr = $this->reDataArr;
-//        $reDataArr['province_kv'] = CTAPIAbilitysBusiness::getCityByPid($request, $this,  0);
-//        $reDataArr['province_kv'] = CTAPIAbilitysBusiness::getChildListKeyVal($request, $this, 0, 1 + 0, 0);
-//        $reDataArr['province_id'] = 0;
-//        return view('company.QualityControl.Abilitys.select', $reDataArr);
-//    }
+    public function select(Request $request)
+    {
+        $reDataArr = [];// 可以传给视图的全局变量数组
+        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request){
+            // 正常流程的代码
+
+            $this->InitParams($request);
+            // $reDataArr = $this->reDataArr;
+            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+            $reDataArr['province_kv'] = CTAPIAbilitysBusiness::getCityByPid($request, $this,  0);
+            $reDataArr['province_kv'] = CTAPIAbilitysBusiness::getChildListKeyVal($request, $this, 0, 1 + 0, 0);
+            $reDataArr['province_id'] = 0;
+            return view('company.QualityControl.Abilitys.select', $reDataArr);
+
+        }, $this->errMethod, $reDataArr, $this->errorView);
+    }
 
     /**
      * 添加
@@ -53,26 +66,33 @@ class AbilitysController extends BasicController
      */
 //    public function add(Request $request,$id = 0)
 //    {
-//        $this->InitParams($request);
-//        $reDataArr = $this->reDataArr;
-//        $info = [
-//            'id'=>$id,
-//          //   'department_id' => 0,
-//        ];
-//        $operate = "添加";
+//        $reDataArr = [];// 可以传给视图的全局变量数组
+//        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request, &$id){
+//            // 正常流程的代码
 //
-//        if ($id > 0) { // 获得详情数据
-//            $operate = "修改";
-//            $handleKeyArr = ['projectStandards', 'projectSubmitItems'];
-//            $extParams = [
-//                'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+//            $this->InitParams($request);
+//            // $reDataArr = $this->reDataArr;
+//            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+//            $info = [
+//                'id'=>$id,
+//                //   'department_id' => 0,
 //            ];
-//            $info = CTAPIAbilitysBusiness::getInfoData($request, $this, $id, [], '', $extParams);
-//        }
-//        // $reDataArr = array_merge($reDataArr, $resultDatas);
-//        $reDataArr['info'] = $info;
-//        $reDataArr['operate'] = $operate;
-//        return view('company.QualityControl.Abilitys.add', $reDataArr);
+//            $operate = "添加";
+//
+//            if ($id > 0) { // 获得详情数据
+//                $operate = "修改";
+//                $handleKeyArr = ['projectStandards', 'projectSubmitItems'];
+//                $extParams = [
+//                    'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+//                ];
+//                $info = CTAPIAbilitysBusiness::getInfoData($request, $this, $id, [], '', $extParams);
+//            }
+//            // $reDataArr = array_merge($reDataArr, $resultDatas);
+//            $reDataArr['info'] = $info;
+//            $reDataArr['operate'] = $operate;
+//            return view('company.QualityControl.Abilitys.add', $reDataArr);
+//
+//        }, $this->errMethod, $reDataArr, $this->errorView);
 //    }
 
     /**
@@ -85,26 +105,29 @@ class AbilitysController extends BasicController
      */
     public function join(Request $request,$ids = '')
     {
-        $this->InitParams($request);
-        $reDataArr = $this->reDataArr;
-        if(empty($ids)) {
-            $reDataArr['errorMsg'] = '参数[ids]有误！';
-            $reDataArr['isShowBtn'] = 0;// 1:显示“回到首页”；2：显示“返回上页”
-            return $this->errorView($reDataArr, 'error');
-        }
-        // 根据条件获得项目列表数据
-        $mergeParams = [
-           // 'status' => 2,// 状态(1待开始 、2报名中、4进行中、8已结束 16 已取消【作废】)
-            'ids' => $ids
-        ];
-        CTAPIAbilitysBusiness::mergeRequest($request, $this, $mergeParams);
+        $reDataArr = [];// 可以传给视图的全局变量数组
+        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request, &$ids){
+            // 正常流程的代码
 
-        $relations = [];//  ['siteResources']
-        $handleKeyArr = ['projectStandards'];
-        $extParams = [
-            'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-        ];
-        $dataList = CTAPIAbilitysBusiness::getList($request, $this, 1, [], $relations, $extParams)['result']['data_list'] ?? [];
+            $this->InitParams($request);
+            // $reDataArr = $this->reDataArr;
+            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+            if(empty($ids)) {
+                throws('参数[ids]有误！');
+            }
+            // 根据条件获得项目列表数据
+            $mergeParams = [
+                // 'status' => 2,// 状态(1待开始 、2报名中、4进行中、8已结束 16 已取消【作废】)
+                'ids' => $ids
+            ];
+            CTAPIAbilitysBusiness::mergeRequest($request, $this, $mergeParams);
+
+            $relations = [];//  ['siteResources']
+            $handleKeyArr = ['projectStandards'];
+            $extParams = [
+                'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+            ];
+            $dataList = CTAPIAbilitysBusiness::getList($request, $this, 1, [], $relations, $extParams)['result']['data_list'] ?? [];
 
 //        $dbIds = array_values(array_unique(array_column($dataList,'id')));
 //        $idsArr = explode(',', $ids);
@@ -122,24 +145,17 @@ class AbilitysController extends BasicController
 //            Tool::appendParamQuery($queryParams, $diffIds, 'id', [0, '0', ''], ',', false);
 //            $diffDataList = CTAPIAbilitysBusiness::ajaxGetQueryListCTL($request, $this, '', $queryParams, [], 1);
 //            $abilityNameText = implode('、',Tool::getArrFields($diffDataList, 'ability_name'));// formatArrKeyVal($dataList, 'id', 'ability_name');
-//            $reDataArr['errorMsg'] = '项目[' . $abilityNameText . ']非可报名状态，不可报名！';
-//            $reDataArr['isShowBtn'] = 0;// 1:显示“回到首页”；2：显示“返回上页”
-//            return $this->errorView($reDataArr, 'error');
+//            throws('项目[' . $abilityNameText . ']非可报名状态，不可报名！');
 //        }
-        // 判断是否已经过了报名时间
-        try{
-             CTAPIAbilitysBusiness::judgeCanJoin( $request, $this, $dataList, 1 | 2 | 4);
-        } catch ( \Exception $e) {
-            $errStr = $e->getMessage();
-            $reDataArr['errorMsg'] = $errStr;
-            $reDataArr['isShowBtn'] = 0;// 1:显示“回到首页”；2：显示“返回上页”
-            return $this->errorView($reDataArr, 'error');
-        }
+            // 判断是否已经过了报名时间
+            CTAPIAbilitysBusiness::judgeCanJoin( $request, $this, $dataList, 1 | 2 | 4);
 
-        $reDataArr['data_list'] = $dataList;
-        $reDataArr['ids'] = $ids;
-        $reDataArr['data_num'] = count($dataList);
-        return view('company.QualityControl.Abilitys.join', $reDataArr);
+            $reDataArr['data_list'] = $dataList;
+            $reDataArr['ids'] = $ids;
+            $reDataArr['data_num'] = count($dataList);
+            return view('company.QualityControl.Abilitys.join', $reDataArr);
+
+        }, $this->errMethod, $reDataArr, $this->errorView);
     }
 
     /**
@@ -152,28 +168,31 @@ class AbilitysController extends BasicController
      */
     public function info(Request $request,$id = 0)
     {
-        $this->InitParams($request);
-        $reDataArr = $this->reDataArr;
-        if(!is_numeric($id) || $id <= 0){
-            $reDataArr['errorMsg'] = '参数[id]有误！';
-            $reDataArr['isShowBtn'] = 0;// 1:显示“回到首页”；2：显示“返回上页”
-            return $this->errorView($reDataArr, 'error');
-        }
-        $operate = "详情";
-        $handleKeyArr = ['projectStandards', 'projectSubmitItems'];
-        $extParams = [
-            'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-        ];
-        $info = CTAPIAbilitysBusiness::getInfoData($request, $this, $id, [], '', $extParams);
-        // $reDataArr = array_merge($reDataArr, $resultDatas);
-        if(empty($info)) {
-            $reDataArr['errorMsg'] = '记录不存在！';
-            $reDataArr['isShowBtn'] = 0;// 1:显示“回到首页”；2：显示“返回上页”
-            return $this->errorView($reDataArr, 'error');
-        }
-        $reDataArr['info'] = $info;
-        $reDataArr['operate'] = $operate;
-        return view('company.QualityControl.Abilitys.info', $reDataArr);
+        $reDataArr = [];// 可以传给视图的全局变量数组
+        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request, &$id){
+            // 正常流程的代码
+
+            $this->InitParams($request);
+            // $reDataArr = $this->reDataArr;
+            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+            if(!is_numeric($id) || $id <= 0){
+                throws('参数[id]有误！');
+            }
+            $operate = "详情";
+            $handleKeyArr = ['projectStandards', 'projectSubmitItems'];
+            $extParams = [
+                'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+            ];
+            $info = CTAPIAbilitysBusiness::getInfoData($request, $this, $id, [], '', $extParams);
+            // $reDataArr = array_merge($reDataArr, $resultDatas);
+            if(empty($info)) {
+                throws('记录不存在！');
+            }
+            $reDataArr['info'] = $info;
+            $reDataArr['operate'] = $operate;
+            return view('company.QualityControl.Abilitys.info', $reDataArr);
+
+        }, $this->errMethod, $reDataArr, $this->errorView);
     }
 
     /**
@@ -355,7 +374,8 @@ class AbilitysController extends BasicController
             $project_standard_id = CommonRequest::get($request, 'project_standard_id_' . $tem_id);// 数组或字符串[多个逗号分隔]
             if(is_string($project_standard_id)) $project_standard_id = explode(',', $project_standard_id);
             $project_standard_name = CommonRequest::get($request, 'project_standard_name_' . $tem_id);// 其它时：的  方法标准
-            if($project_standard_name != '') $project_standard_name = stripslashes($project_standard_name);
+            // if($project_standard_name != '') $project_standard_name = stripslashes($project_standard_name);
+            if($project_standard_name != '') $project_standard_name = replace_enter_char($project_standard_name, 1);
 
             if(empty($project_standard_id))  throws('参数[方法标准]有误！');
             if(!in_array(0, $project_standard_id)) $project_standard_name = '';

@@ -2,6 +2,7 @@
 // 帐号管理
 namespace App\Business\Controller\API\QualityControl;
 
+use App\Models\QualityControl\Staff;
 use App\Services\Captcha\CaptchaCode;
 use App\Services\DBRelation\RelationDB;
 use App\Services\Excel\ImportExport;
@@ -24,90 +25,6 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
 //        '0' => '未激活',
 //        '1' => '已激活',
 //    ];
-
-    // 拥有者类型1平台2企业4个人
-    public static $adminType = [
-        '1' => '平台',
-        '2' => '企业',
-        '4' => '个人',
-    ];
-
-    // 是否完善资料1待完善2已完善
-    public static $isPerfectArr = [
-        '1' => '待完善',
-        '2' => '已完善',
-    ];
-
-    // 是否超级帐户2否1是
-    public static $issuper = [
-        '2' => '普通帐户',
-        '1' => '超级帐户',
-    ];
-
-    // 审核状态1待审核2审核通过4审核不通过
-    public static $openStatus = [
-        '1' => '待审核',
-        '2' => '审核通过',
-        '4' => '审核不通过',
-    ];
-
-    // 状态 1正常 2冻结
-    public static $accountStatus = [
-        '1' => '正常',
-        '2' => '冻结',
-    ];
-
-    // 性别0未知1男2女
-    public static $sex = [
-        '0' => '未知',
-        '1' => '男',
-        '2' => '女',
-    ];
-
-    // 企业--是否独立法人1独立法人 2非独立法人
-    public static $companyIsLegalPersionArr = [
-        '1' => '独立法人',
-        '2' => '非独立法人',
-    ];
-
-    // 企业--企业类型1检测机构、2生产企业
-    public static $companyTypeArr = [
-        '1' => '检测机构',
-        '2' => '生产企业',
-    ];
-
-    // 企业--企业性质1企业法人 、2企业非法人、3事业法人、4事业非法人、5社团法人、6社团非法人、7机关法人、8机关非法人、9其它机构、10民办非企业单位、11个体 、12工会法人
-    public static $companyPropArr = [
-        '1' => '企业法人',
-        '2' => '企业非法人',
-        '3' => '事业法人',
-        '4' => '事业非法人',
-        '5' => '社团法人',
-        '6' => '社团非法人',
-        '7' => '机关法人',
-        '8' => '机关非法人',
-        '9' => '其它机构',
-        '10' => '民办非企业单位',
-        '11' => '个体',
-        '12' => '工会法人',
-    ];
-
-    // 企业--单位人数1、1-20、2、20-100、3、100-500、4、500以上
-    public static $companyPeoplesNumArr = [
-        '1' => '1-20',
-        '2' => '20-100',
-        '3' => '100-500',
-        '4' => '500以上',
-    ];
-
-    // 企业--会员等级1非会员  2会员  4理事  8常务理事   16理事长
-    public static $companyGradeArr = [
-        '1' => '非会员',
-        '2' => '会员',
-        '4' => '理事',
-        '8' => '常务理事',
-        '16' => '理事长',
-    ];
 
     /**
      * 手机验证码登录/注册
@@ -474,7 +391,7 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
      * @author zouyan(305463219@qq.com)
      */
     public static function joinListParams(Request $request, Controller $controller, &$queryParams, $notLog = 0){
-
+        // 自己的参数查询拼接在这里-- 注意：多个id 的查询默认就已经有了，参数是 ids  多个用逗号分隔
         $admin_type = CommonRequest::getInt($request, 'admin_type');
         if($admin_type > 0 )  array_push($queryParams['where'], ['admin_type', '=', $admin_type]);
 

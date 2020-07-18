@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin\QualityControl;
+namespace App\Http\Controllers\WebFront\Company\QualityControl;
 
 use App\Business\Controller\API\QualityControl\CTAPIAbilityJoinBusiness;
 use App\Http\Controllers\WorksController;
@@ -44,7 +44,7 @@ class AbilityJoinController extends BasicController
             $reDataArr['isGrant'] =  AbilityJoin::$isGrantArr;
             $reDataArr['defaultIsGrant'] = -1;// 列表页默认状态
 
-            return view('admin.QualityControl.AbilityJoin.index', $reDataArr);
+            return view('company.QualityControl.AbilityJoin.index', $reDataArr);
 
         }, $this->errMethod, $reDataArr, $this->errorView);
     }
@@ -68,7 +68,7 @@ class AbilityJoinController extends BasicController
 //            $reDataArr['province_kv'] = CTAPIAbilityJoinBusiness::getCityByPid($request, $this,  0);
 //            $reDataArr['province_kv'] = CTAPIAbilityJoinBusiness::getChildListKeyVal($request, $this, 0, 1 + 0, 0);
 //            $reDataArr['province_id'] = 0;
-//            return view('admin.QualityControl.AbilityJoin.select', $reDataArr);
+//            return view('company.QualityControl.AbilityJoin.select', $reDataArr);
 //
 //        }, $this->errMethod, $reDataArr, $this->errorView);
 //    }
@@ -103,7 +103,7 @@ class AbilityJoinController extends BasicController
 //            // $reDataArr = array_merge($reDataArr, $resultDatas);
 //            $reDataArr['info'] = $info;
 //            $reDataArr['operate'] = $operate;
-//            return view('admin.QualityControl.AbilityJoin.add', $reDataArr);
+//            return view('company.QualityControl.AbilityJoin.add', $reDataArr);
 //
 //        }, $this->errMethod, $reDataArr, $this->errorView);
 //    }
@@ -129,7 +129,7 @@ class AbilityJoinController extends BasicController
                 throws('参数[id]有误！');
             }
             $operate = "详情";
-            $handleKeyArr = ['company', 'joinItems'];
+            $handleKeyArr = [ 'joinItems'];// 'company',
             $extParams = [
                 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
             ];
@@ -138,20 +138,24 @@ class AbilityJoinController extends BasicController
             if(empty($info)) {
                 throws('记录不存在！');
             }
+            $user_info = $this->user_info;
+            if($info['admin_type'] != $user_info['admin_type'] || $info['staff_id'] != $this->user_id) throws('非法访问，您没有访问此记录的权限！');
+
+
             $reDataArr['info'] = $info;
             $reDataArr['operate'] = $operate;
-            return view('admin.QualityControl.AbilityJoin.info', $reDataArr);
+            return view('company.QualityControl.AbilityJoin.info', $reDataArr);
 
         }, $this->errMethod, $reDataArr, $this->errorView);
     }
 
     /**
      * @OA\Get(
-     *     path="/api/admin/ability_join/ajax_info",
+     *     path="/api/company/ability_join/ajax_info",
      *     tags={"大后台-能力验证-能力验证报名"},
      *     summary="能力验证报名--详情",
      *     description="根据单个id,查询详情记录......",
-     *     operationId="adminQualityControlAbilityJoinAjax_info",
+     *     operationId="companyQualityControlAbilityJoinAjax_info",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
      *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_ability_join_id_required"),
@@ -180,11 +184,11 @@ class AbilityJoinController extends BasicController
 
     /**
      * @OA\Post(
-     *     path="/api/admin/ability_join/ajax_save",
+     *     path="/api/company/ability_join/ajax_save",
      *     tags={"大后台-能力验证-能力验证报名"},
      *     summary="能力验证报名--新加/修改",
      *     description="根据单个id,新加/修改记录(id>0:修改；id=0:新加)......",
-     *     operationId="adminQualityControlAbilityJoinAjax_save",
+     *     operationId="companyQualityControlAbilityJoinAjax_save",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
      *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_ability_join_id_required"),
@@ -231,11 +235,11 @@ class AbilityJoinController extends BasicController
 
     /**
      * @OA\Get(
-     *     path="/api/admin/ability_join/ajax_alist",
+     *     path="/api/company/ability_join/ajax_alist",
      *     tags={"大后台-能力验证-能力验证报名"},
      *     summary="能力验证报名--列表",
      *     description="能力验证报名--列表......",
-     *     operationId="adminQualityControlAbilityJoinAjax_alist",
+     *     operationId="companyQualityControlAbilityJoinAjax_alist",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
      *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_ability_join_id_optional"),
@@ -255,8 +259,16 @@ class AbilityJoinController extends BasicController
      */
     public function ajax_alist(Request $request){
         $this->InitParams($request);
+
+        $user_info = $this->user_info;
+        // 根据条件获得项目列表数据
+        $mergeParams = [
+             'admin_type' => $user_info['admin_type'],
+            'staff_id' => $this->user_id,
+        ];
+        CTAPIAbilityJoinBusiness::mergeRequest($request, $this, $mergeParams);
         $relations = [];//  ['siteResources']
-        $handleKeyArr = ['company'];
+        $handleKeyArr = [];// 'company'
         $extParams = [
             'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
         ];
@@ -308,11 +320,11 @@ class AbilityJoinController extends BasicController
 
     /**
      * @OA\Post(
-     *     path="/api/admin/ability_join/ajax_del",
+     *     path="/api/company/ability_join/ajax_del",
      *     tags={"大后台-能力验证-能力验证报名"},
      *     summary="能力验证报名--删除",
      *     description="根据单个id,删除记录......",
-     *     operationId="adminQualityControlAbilityJoinAjax_del",
+     *     operationId="companyQualityControlAbilityJoinAjax_del",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
      *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_ability_join_id_required"),

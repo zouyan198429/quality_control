@@ -4007,4 +4007,85 @@ class Tool
         return true;
     }
 
+    // ********************视图**错误*****执行方法*******************开始***************************************************
+
+    /**
+     *
+     * 所有视图方法要调用的函数，以便后捕抓错误，--显示错误信息；或跳转到登录面【没有登录】
+     * @param object $obj 当前的控制器对象
+     * @param object $request 当前的控制器对象的request对象
+     * @param mixed $doFun 需要统计执行视图方法 的闭包函数  function(&$reDataArr){} ，
+     *   参数只有一个  $reDataArr ：代码执行中可以指定值，也会传入到错误视图中【使用】；
+     *   其它参数都通过 use传入函数内 如：use(&$namespace, &$expireNums)
+     * @param string  $errMethod 根据错误码执行自己独特的操作方法 参数 $request, $reDataArr, $errCode, $errStr
+     * @param array $reDataArr 在数组值中，用来判断权限的字段名称指定,以及其它想传到错误视图的变量
+     *   $reDataArr = [
+     *       'errorMsg' => '',// 错误文字 ，  您没有操作权限---此值是throws抛出的错误内容
+     *      'isShowBtn' => '',// // 1:显示“回到首页”；2：显示“返回上页”
+     *       ...
+     *  ];
+     * @param string $errorView 错误显示的视图
+     * @return mixed 返回视图或 继续 throws 错误到最外层
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function doViewPages(&$obj, $request, $doFun, $errMethod = 'errorViewDo', &$reDataArr = [], $errorView = 'error'){
+        // 判断是否已经过了报名时间
+        try{
+            if(is_callable($doFun)){
+                return $doFun($reDataArr);
+            }
+            throws('没有指定执行函数！');
+        } catch ( \Exception $e) {
+            $errStr = $e->getMessage();
+            $errCode = $e->getCode();
+//            switch($errCode){
+//                case 700:// 登录状态过期
+//                    break;
+//                case 1001:// 待补充企业资料
+//                    return redirect('web/perfect_company');
+//                    break;
+//                case 1002:// 待补充用户资料
+//                    return redirect('web/perfect_user');
+//                    break;
+//                default:
+//                    break;
+//            }
+            // 自已有定义错误处理方法，则执行
+            // 返回 bool类型，说明还要继续执行
+            if(method_exists($obj, $errMethod)){
+                $errRetun = $obj->{$errMethod}($request, $reDataArr, $errCode, $errStr);
+                // if(is_object($errRetun)) return $errRetun;// 是对象直接返回
+                if(!is_bool($errRetun))  return $errRetun;// 不是布尔类型，直接返回
+            }
+            // 没有登录或登录状态过期 -- 会跳转到配置文件配置的登录页
+            if($errCode == 999)  throws($e->getMessage(), $e->getCode());
+            $reDataArr['errCode'] = $errCode;
+            $reDataArr['errorMsg'] = $errStr;
+            // $reDataArr['isShowBtn'] = 0;// 1:显示“回到首页”；2：显示“返回上页”
+            return static::errorView($reDataArr, $errorView);
+        }
+    }
+
+
+    /**
+     * 错误页面视图
+     * @param array $reDataArr 在数组值中，用来判断权限的字段名称指定
+     *   $reDataArr = [
+     *       'errorMsg' => '',// 错误文字 ，  您没有操作权限
+     *      'isShowBtn' => '',// // 1:显示“回到首页”；2：显示“返回上页”
+     *  ];
+     * @param string $errorView 错误显示的视图
+     * @return mixed 返回视图
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function errorView($reDataArr = [], $errorView = 'error'){
+//        $reDataArr['errorMsg'] = '您没有操作权限！';
+//        $reDataArr['isShowBtn'] = 1;// 1:显示“回到首页”；2：显示“返回上页”
+        if(!isset($reDataArr['errorMsg'])) $reDataArr['errorMsg'] = '您没有操作权限！';
+        if(!isset($reDataArr['isShowBtn'])) $reDataArr['isShowBtn'] = 0;
+        return view($errorView, $reDataArr);
+    }
+
+    // ********************视图**错误*****执行方法*******************结束***************************************************
+
 }

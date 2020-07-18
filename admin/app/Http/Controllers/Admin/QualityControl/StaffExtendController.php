@@ -19,9 +19,16 @@ class StaffExtendController extends BasicController
      */
     public function index(Request $request)
     {
-        $this->InitParams($request);
-        $reDataArr = $this->reDataArr;
-        return view('admin.QualityControl.StaffExtend.index', $reDataArr);
+        $reDataArr = [];// 可以传给视图的全局变量数组
+        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request){
+            // 正常流程的代码
+
+            $this->InitParams($request);
+            // $reDataArr = $this->reDataArr;
+            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+            return view('admin.QualityControl.StaffExtend.index', $reDataArr);
+
+        }, $this->errMethod, $reDataArr, $this->errorView);
     }
 
     /**
@@ -33,12 +40,19 @@ class StaffExtendController extends BasicController
      */
 //    public function select(Request $request)
 //    {
-//        $this->InitParams($request);
-//        $reDataArr = $this->reDataArr;
-//        $reDataArr['province_kv'] = CTAPIStaffExtendBusiness::getCityByPid($request, $this,  0);
-//        $reDataArr['province_kv'] = CTAPIStaffExtendBusiness::getChildListKeyVal($request, $this, 0, 1 + 0, 0);
-//        $reDataArr['province_id'] = 0;
-//        return view('admin.QualityControl.StaffExtend.select', $reDataArr);
+//        $reDataArr = [];// 可以传给视图的全局变量数组
+//        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request){
+//            // 正常流程的代码
+//
+//            $this->InitParams($request);
+//            // $reDataArr = $this->reDataArr;
+//            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+//            $reDataArr['province_kv'] = CTAPIStaffExtendBusiness::getCityByPid($request, $this,  0);
+//            $reDataArr['province_kv'] = CTAPIStaffExtendBusiness::getChildListKeyVal($request, $this, 0, 1 + 0, 0);
+//            $reDataArr['province_id'] = 0;
+//            return view('admin.QualityControl.StaffExtend.select', $reDataArr);
+//
+//        }, $this->errMethod, $reDataArr, $this->errorView);
 //    }
 
     /**
@@ -51,22 +65,29 @@ class StaffExtendController extends BasicController
      */
     public function add(Request $request,$id = 0)
     {
-        $this->InitParams($request);
-        $reDataArr = $this->reDataArr;
-        $info = [
-            'id'=>$id,
-          //   'department_id' => 0,
-        ];
-        $operate = "添加";
+        $reDataArr = [];// 可以传给视图的全局变量数组
+        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request, &$id){
+            // 正常流程的代码
 
-        if ($id > 0) { // 获得详情数据
-            $operate = "修改";
-            $info = CTAPIStaffExtendBusiness::getInfoData($request, $this, $id, [], '', []);
-        }
-        // $reDataArr = array_merge($reDataArr, $resultDatas);
-        $reDataArr['info'] = $info;
-        $reDataArr['operate'] = $operate;
-        return view('admin.QualityControl.StaffExtend.add', $reDataArr);
+            $this->InitParams($request);
+            // $reDataArr = $this->reDataArr;
+            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+            $info = [
+                'id'=>$id,
+                //   'department_id' => 0,
+            ];
+            $operate = "添加";
+
+            if ($id > 0) { // 获得详情数据
+                $operate = "修改";
+                $info = CTAPIStaffExtendBusiness::getInfoData($request, $this, $id, [], '', []);
+            }
+            // $reDataArr = array_merge($reDataArr, $resultDatas);
+            $reDataArr['info'] = $info;
+            $reDataArr['operate'] = $operate;
+            return view('admin.QualityControl.StaffExtend.add', $reDataArr);
+
+        }, $this->errMethod, $reDataArr, $this->errorView);
     }
 
     /**

@@ -75,7 +75,7 @@ class AbilityJoinItems extends BasePublicModel
     protected $table = 'ability_join_items';
 
     // 拥有者类型1平台2企业4个人
-    public $adminTypeArr = [
+    public static $adminTypeArr = [
         '1' => '平台',
         '2' => '企业',
         '4' => '个人',
@@ -84,7 +84,7 @@ class AbilityJoinItems extends BasePublicModel
     // 状态(状态1已报名  2已取样  4已上传数据
     //   8已判定【如果有有问题、不满意 --还可以再取样--进入已取样状态】
     // 16已完成--不可再修改【打印证书后或大后台点《公布结果》】)
-    public $statusArr = [
+    public static $statusArr = [
         '1' => '已报名',
         '2' => '已取样',
         '4' => '已传数据',
@@ -93,7 +93,7 @@ class AbilityJoinItems extends BasePublicModel
     ];
 
     // 验证结果1待判定 2满意、4有问题、8不满意   16满意【补测满意】
-    public $resultStatusArr = [
+    public static $resultStatusArr = [
         '1' => '待判定',
         '2' => '满意',
         '4' => '有问题',
@@ -102,7 +102,7 @@ class AbilityJoinItems extends BasePublicModel
     ];
 
     // 是否取样1待取样--未取 2已取样--已取
-    public $isSampleArr = [
+    public static $isSampleArr = [
         '1' => '待取样',
         '2' => '已取样',
     ];
@@ -118,7 +118,7 @@ class AbilityJoinItems extends BasePublicModel
      */
     public function getAdminTypeTextAttribute()
     {
-        return $this->adminTypeArr[$this->admin_type] ?? '';
+        return static::$adminTypeArr[$this->admin_type] ?? '';
     }
 
     /**
@@ -128,7 +128,7 @@ class AbilityJoinItems extends BasePublicModel
      */
     public function getStatusTextAttribute()
     {
-        return $this->statusArr[$this->status] ?? '';
+        return static::$statusArr[$this->status] ?? '';
     }
 
     /**
@@ -138,7 +138,7 @@ class AbilityJoinItems extends BasePublicModel
      */
     public function getResultStatusTextAttribute()
     {
-        return $this->resultStatusArr[$this->result_status] ?? '';
+        return static::$resultStatusArr[$this->result_status] ?? '';
     }
 
     /**
@@ -148,7 +148,7 @@ class AbilityJoinItems extends BasePublicModel
      */
     public function getIsSampleTextAttribute()
     {
-        return $this->isSampleArr[$this->is_sample] ?? '';
+        return static::$isSampleArr[$this->is_sample] ?? '';
     }
 
     /**

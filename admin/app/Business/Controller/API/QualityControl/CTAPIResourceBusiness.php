@@ -52,6 +52,7 @@ class CTAPIResourceBusiness extends BasicPublicCTAPIBusiness
      * @author zouyan(305463219@qq.com)
      */
     public static function joinListParams(Request $request, Controller $controller, &$queryParams, $notLog = 0){
+        // 自己的参数查询拼接在这里-- 注意：多个id 的查询默认就已经有了，参数是 ids  多个用逗号分隔
 
         $ower_type = CommonRequest::getInt($request, 'ower_type');
         if($ower_type > 0 )  array_push($queryParams['where'], ['ower_type', '=', $ower_type]);
