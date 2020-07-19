@@ -90,7 +90,7 @@ function addCompany(company_id, company_name){
     document.write("            <%for(var j = 0; j<resource_list.length;j++){");
     document.write("                var jitem = resource_list[j];");
     document.write("                 %>");
-    document.write("               <a href=\"<%=jitem.resource_url%>\" target='_blank'>");
+    document.write("               <a href=\"<%=jitem.resource_url_format%>\" target='_blank'>");
         document.write("                    <%=jitem.resource_name%>--查看");
     // document.write("                <img  src=\"<%=jitem.resource_url%>\"  style=\"width:100px;\">");
     document.write("              </a>");
