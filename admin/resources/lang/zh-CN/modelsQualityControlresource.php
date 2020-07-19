@@ -41,7 +41,7 @@ return  [
         ],
         'resource_type' => [
             "field_name"=>'资源类型',
-            "message" => '{fieldName}{validValueIs}（1图片2excel）'
+            "message" => '{fieldName}{validValueIs}（1图片2excel 4 PDF、word 8 PDF16 word）'
         ],
         'resource_note' => [
             "field_name"=>'资源说明',

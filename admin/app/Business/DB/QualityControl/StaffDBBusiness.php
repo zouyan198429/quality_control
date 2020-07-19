@@ -612,6 +612,24 @@ class StaffDBBusiness extends BasePublicDBBusiness
         // $temNeedStaffIdOrHistoryId 当只有自己会用到时操作员工id和历史id时，用来判断是否需要获取 true:需要获取； false:不需要获取
         list($ownProperty, $temNeedStaffIdOrHistoryId) = array_values(static::getNeedStaffIdOrHistoryId());
 
+        // 新加时，加入特定的值---如果没有此下标是，默认的一维数组
+        $addArr = [
+            'admin_type' => $admin_type,
+            'company_id' => $organize_id,
+            'is_perfect' => 2,
+            'issuper' => 2,
+            'company_is_legal_persion' => 0,// 企业--是否独立法人1独立法人 2非独立法人
+            'company_type' => 0,// 企业类型1检测机构、2生产企业
+            'company_prop' => 0,// 企业性质1企业法人 、2企业非法人、3事业法人、4事业非法人、5社团法人、6社团非法人、7机关法人、8机关非法人、9其它机构、10民办非企业单位、11个体 、12工会法人
+            'company_peoples_num' => 0,// 单位人数1、1-20、2、20-100、3、100-500、4、500以上
+        ];
+        // 如果是超级管理员，不能改的值
+        $superDataArr = [
+            'is_perfect' => 2,// 是否完善资料1待完善2已完善
+            'issuper' => 1,// 是否超级帐户2否1是
+            'open_status' => 2,// 审核状态1待审核2审核通过4审核不通过
+            'account_status' => 1,// 状态 1正常 2冻结
+        ];
         // 对数据有效性进行校验
         $errsArr = [];// 错误数组
         $saveArr = [];// 最终可以保存的数据
@@ -713,25 +731,12 @@ class StaffDBBusiness extends BasePublicDBBusiness
                             continue 2;
                         }
                         // 新加时，加入特定的值
-                        $temSaveArr = array_merge($temSaveArr, [
-                            'admin_type' => $admin_type,
-                            'company_id' => $organize_id,
-                            'is_perfect' => 2,
-                            'issuper' => 2,
-                            'company_type' => 0,// 企业类型1检测机构、2生产企业
-                            'company_prop' => 0,// 企业性质1企业法人 、2企业非法人、3事业法人、4事业非法人、5社团法人、6社团非法人、7机关法人、8机关非法人、9其它机构、10民办非企业单位、11个体 、12工会法人
-                            'company_peoples_num' => 0,// 单位人数1、1-20、2、20-100、3、100-500、4、500以上
-                        ]);
+                        $temSaveArr = array_merge($addArr, $temSaveArr);
 
                     }else{
                         // 如果是超级管理员，则不能修改某些数据
                         $issuper = $infoData['issuper'] ?? 2;
-                        if($issuper == 1)  $temSaveArr = array_merge($temSaveArr, [
-                                'is_perfect' => 2,// 是否完善资料1待完善2已完善
-                                'issuper' => 1,// 是否超级帐户2否1是
-                                'open_status' => 2,// 审核状态1待审核2审核通过4审核不通过
-                                'account_status' => 1,// 状态 1正常 2冻结
-                            ]);
+                        if($issuper == 1)  $temSaveArr = array_merge($temSaveArr, $superDataArr);
                     }
                     // 且用户名不能重
                     // 用户名--唯一
@@ -744,8 +749,124 @@ class StaffDBBusiness extends BasePublicDBBusiness
 
                     break;
                 case 2:
+                    $aaa = '';
                     break;
                 case 4:
+                    $real_name = $info['real_name'] ?? '';// 用户名
+                    if(empty($real_name)) $recordErrText .= '姓名不能为空!<br/>';
+                    $sex = $info['sex'] ?? '';// 性别
+                    $sex = array_search($sex, $sexArr);
+                    if($sex === false) $recordErrText .= '性别有效值[' . implode('、', $sexArr) . ']!<br/>';// $sex_id = 0;
+                    $mobile = $info['mobile'] ?? '';
+                    $email = $info['email'] ?? '';
+                    $qq_number = $info['qq_number'] ?? '';
+                    $id_number = $info['id_number'] ?? '';
+                    $addr = $info['addr'] ?? '';
+                    $admin_username = $info['admin_username'] ?? '';
+                    $admin_password = $info['admin_password'] ?? '';
+                    $open_status = $info['open_status'] ?? '';
+                    $open_status = array_search($open_status, $openStatusArr);
+                    if($open_status === false) $recordErrText .= '审核状态有效值[' . implode('、', $openStatusArr) . ']!<br/>';
+                    $account_status = $info['account_status'] ?? '';
+                    $account_status = array_search($account_status, $accountStatusArr);
+                    if($account_status === false) $recordErrText .= '冻结状态有效值[' . implode('、', $accountStatusArr) . ']!<br/>';
+                    $valiDateParam = [
+                        ["var_name" => "real_name" ,"input" => $real_name,"require"=>"true","validator"=>"length","min"=>"1","max"=>"20","message"=>'用户名长度为1~ 20个字符！'],
+                        // ["var_name" => "mobile" ,"input" => $mobile,"require"=>"true", "validator"=>"", "message"=>'手机不能为空！'],
+                        ["var_name" => "mobile" ,"input"=>$mobile,"require"=>"true","validator"=>"mobile","message"=>'手机号格式有误！'],
+//                        ["var_name" => "admin_username" ,"input" => $admin_username,"require"=>"true","validator"=>"length","min"=>"6","max"=>"20","message"=>'用户名长度为6~ 20个字符！'],
+//                        ["var_name" => "admin_password" ,"input" => $admin_password,"require"=>"true","validator"=>"length","min"=>"6","max"=>"20","message"=>'登录密码长度为6~ 20个字符！'],
+                        ["var_name" => "email" ,"input" => $email,"require"=>"false","validator"=>"email","message"=>'email格式有误！'],
+                        ["var_name" => "qq_number" ,"input" => $qq_number,"require"=>"false","validator"=>"length","min"=>"6","max"=>"20","message"=>'QQ\email\微信长度为6~ 20个字符！'],
+                        ["var_name" => "id_number" ,"input" => $id_number,"require"=>"false","validator"=>"length","min"=>"14","max"=>"20","message"=>'身份证号长度为14~ 20个字符！'],
+                        ["var_name" => "addr" ,"input" => $addr,"require"=>"false","validator"=>"length","min"=>"2","max"=>"100","message"=>'身份证号长度为2~ 100个字符！'],
+                    ];
+                    if(!empty($admin_username)) array_push($valiDateParam, ["var_name" => "admin_username" ,"input" => $admin_username,"require"=>"false","validator"=>"length","min"=>"6","max"=>"20","message"=>'用户名长度为6~ 20个字符！']);
+                    if(!empty($admin_password)) array_push($valiDateParam, ["var_name" => "admin_password" ,"input" => $admin_password,"require"=>"false","validator"=>"length","min"=>"6","max"=>"20","message"=>'登录密码长度为6~ 20个字符！']);
+
+                    $errMsgArr = Tool::dataValid($valiDateParam, 2);
+                    if(is_array($errMsgArr) && isset($errMsgArr['errMsg']) && !empty($errMsgArr['errMsg'])){
+                        $recordErrText .= implode('<br/>', $errMsgArr['errMsg']);
+                        array_push($errsArr,'第' . ($k + 1) . '条记录[' . $real_name . ']:<br/>' . $recordErrText);
+                        continue 2;
+                    }
+                    // 没有错；判断记录是否已经存在
+                    // 查
+                    $queryParams = [
+                        'where' => [
+                            // ['id', '&' , '4=4'],
+                            ['admin_type', '=' ,$admin_type],
+                            // ['class_id', '=' ,$class_id],
+                            // ['student_number', $student_number],
+                            ['mobile', $mobile],
+                            //['admin_type',self::$admin_type],
+                        ],
+                        //            'select' => [
+                        //                'id','company_id','type_name','sort_num'
+                        //                //,'operate_staff_id','operate_staff_history_id'
+                        //                ,'created_at'
+                        //            ],
+                        // 'orderBy' => ['id'=>'desc'],
+                    ];
+                    $tem_organize_id = $organize_id;
+                    Tool::appendParamQuery($queryParams, $tem_organize_id, 'company_id', [0, '0', ''], ',', false);
+                    $infoData = static::getInfoByQuery(1, $queryParams, []);
+                    // if(is_object($infoData))  $infoData = $infoData->toArray();
+                    // 记录不存在，是新加，则必须要用帐号和密码
+                    $id = $infoData['id'] ?? 0;
+                    $temSaveArr = [
+                        'id' => $id,
+                        'admin_type' => $admin_type,
+                        'company_id' => $organize_id,
+                        'real_name' => $real_name,
+                        'sex' => $sex,
+                        'mobile' => $mobile,
+                        'email' => $email,
+                        'qq_number' => $qq_number,
+                        'id_number' => $id_number,
+                        'addr' => $addr,
+//                        'admin_username' => $admin_username,
+//                        'admin_password' => $admin_password,
+                        'open_status' => $open_status,
+                        'account_status' => $account_status,
+                    ];
+                    if(!empty($admin_username)) $temSaveArr['admin_username'] = $admin_username;
+                    if(!empty($admin_password)) $temSaveArr['admin_password'] = $admin_password;
+                    // 记录不存在--新加
+                    if(empty($infoData)){//  || count($infoData)<=0
+                        // 新加必须有帐号信息
+//                        $valiDateParam = [
+//                            ["var_name" => "admin_username" ,"input" => $admin_username,"require"=>"true","validator"=>"length","min"=>"6","max"=>"20","message"=>'用户名长度为6~ 20个字符！'],
+//                            ["var_name" => "admin_password" ,"input" => $admin_password,"require"=>"true","validator"=>"length","min"=>"6","max"=>"20","message"=>'登录密码长度为6~ 20个字符！'],
+//                        ];
+//                        $errMsgArr = Tool::dataValid($valiDateParam, 2);
+//                        if(is_array($errMsgArr) && isset($errMsgArr['errMsg']) && !empty($errMsgArr['errMsg'])){
+//                            $recordErrText .= implode('<br/>', $errMsgArr['errMsg']);
+//                            array_push($errsArr,'第' . ($k + 1) . '条记录[' . $real_name . ']:<br/>' . $recordErrText);
+//                            continue 2;
+//                        }
+                        // 手机号不能重
+                        if( static::judgeFieldExist($company_id, $id ,"mobile", $mobile, [['admin_type', $admin_type]],1)){
+                            $recordErrText .= '手机号已存在！';
+                            array_push($errsArr,'第' . ($k + 1) . '条记录[' . $real_name . ']:<br/>' . $recordErrText);
+                            continue 2;
+                        }
+                        $temSaveArr = array_merge($addArr, $temSaveArr );
+
+                    }else{
+                        // 如果是超级管理员，则不能修改某些数据
+                        $issuper = $infoData['issuper'] ?? 2;
+                        if($issuper == 1)  $temSaveArr = array_merge($temSaveArr, $superDataArr);
+                    }
+                    // 且用户名不能重
+                    // 用户名--唯一
+                    if( !empty($admin_username) && static::judgeFieldExist($company_id, $id ,"admin_username", $admin_username, [],1)){
+                        $recordErrText .= '用户名已存在！';
+                        array_push($errsArr,'第' . ($k + 1) . '条记录[' . $real_name . ']:<br/>' . $recordErrText);
+                        continue 2;
+                    }
+                    array_push($saveArr, $temSaveArr);
+
                     break;
                 default:
                     break;

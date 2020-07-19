@@ -1099,6 +1099,18 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
             case 2:
                 break;
             case 4:
+                $headArr = [
+                    '姓名' => 'real_name',
+                    '性别[未知|男|女]' => 'sex',
+                    '手机[唯一]' => 'mobile',
+                    '邮箱' => 'email',
+                    'QQ\email\微信' => 'qq_number',
+                    '身份证号' => 'id_number',
+                    '城市' => 'city_id',
+                    '通讯地址' => 'addr',
+                    '审核状态[待审核|审核通过|审核不通过]' => 'open_status',
+                    '冻结状态[正常|冻结]' => 'account_status',
+                ];
                 break;
             default:
                 break;
@@ -1295,6 +1307,11 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
             case 2:
                 break;
             case 4:
+                $headArr = ['real_name'=>'姓名', 'sex'=>'性别[未知|男|女]', 'mobile'=>'手机[唯一]', 'email'=>'邮箱', 'qq_number'=>'QQ\email\微信'
+                    , 'id_number'=>'身份证号', 'city_id'=>'城市', 'addr'=>'通讯地址'
+                    , 'open_status'=>'审核状态[待审核|审核通过|审核不通过]', 'account_status'=>'冻结状态[正常|冻结]'];
+                $fileName = '用户导入模版';
+                $sheetTitle = '用户';
                 break;
             default:
                 break;

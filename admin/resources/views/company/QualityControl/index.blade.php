@@ -214,13 +214,13 @@
               </a>
               <dl class="layui-nav-child">
                 <dd>
-                  <a lay-href="javascript:void(80);">基本信息</a>
+                  <a lay-href="{{ url('company/basic') }}">基本信息</a>
                 </dd>
+{{--                  <dd>--}}
+{{--                      <a lay-href="javascript:void(81);">企业简介</a>--}}
+{{--                  </dd>--}}
                   <dd>
-                      <a lay-href="javascript:void(81);">企业简介</a>
-                  </dd>
-                  <dd>
-                      <a lay-href="javascript:void(81);">能力附表</a>
+                      <a lay-href="{{ url('company/company_schedule') }}">能力附表</a>
                   </dd>
                   <dd>
                       <a lay-href="javascript:void(83);">开票信息</a>

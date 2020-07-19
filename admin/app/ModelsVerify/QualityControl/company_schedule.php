@@ -3,10 +3,10 @@ namespace App\ModelsVerify\QualityControl;
 
 use OpenApi\Annotations as OA;
 
-class resource extends BaseDBVerify
+class company_schedule extends BaseDBVerify
 {
-    public static $model_name = 'QualityControl\Resource';// 相对于Models的数据模型名称;在子类中定义，使用时用static::,不用self::
-    public static $table_name = 'resource';// 数据表名称
+    public static $model_name = 'QualityControl\CompanySchedule';// 相对于Models的数据模型名称;在子类中定义，使用时用static::,不用self::
+    public static $table_name = 'company_schedule';// 数据表名称
     // 需要从父的去掉的字段  -- 一维数组
     // 如 ['version_history_id', 'version_num_history']
     public static $delFields = [];
@@ -30,116 +30,6 @@ class resource extends BaseDBVerify
                     'valiDateParam' => [// 参数有值时验证信息；如需要多个验证--此值为二维数组【注意：此时的多语言resources\lang\zh-CN 下具体的表文件中的message也有用一维数组】
                         // "input"=>$_POST["market_id"],"require"=>"false","var_name" => "queue" ,
                         "validator"=>"integer","message" => '',// '{fieldName}' . ($langModel['valMustInt'] ?? '') .'!'
-                    ],
-                    'powerNum' => 0,// (2 | 4)  特殊权限[小心设置] 2新加时必填;8修改时如果有下标则判断必填[主键不要设置，不然新建不了] 4不可修改
-                ],
-                'version_num' => [
-                    "field_name" => '',//  $langModel['field_names']['version_num'] ?? '', //
-                    'data_type'=>'int',//数据类型 int
-                    // 'must_message' => '数据校验不通过，没有{fieldName}数据值！',// 必填时，无值的错误提示
-                    'valiDateParam' => [// 参数有值时验证信息；如需要多个验证--此值为二维数组【注意：此时的多语言resources\lang\zh-CN 下具体的表文件中的message也有用一维数组】
-                        // "input"=>$_POST["market_id"],"require"=>"false","var_name" => "queue" ,
-                        "validator"=>"integer","message" => '',// '{fieldName}' . ($langModel['valMustInt'] ?? '') .'!'
-                    ],
-                    'powerNum' => 0,// (2 | 4)  特殊权限[小心设置] 2新加时必填;8修改时如果有下标则判断必填[主键不要设置，不然新建不了] 4不可修改
-                ],
-                'version_history_id' => [
-                    "field_name" => '',//  $langModel['field_names']['version_history_id'] ?? '', //
-                    'data_type'=>'int',//数据类型 int
-                    // 'must_message' => '数据校验不通过，没有{fieldName}数据值！',// 必填时，无值的错误提示
-                    'valiDateParam' => [// 参数有值时验证信息；如需要多个验证--此值为二维数组【注意：此时的多语言resources\lang\zh-CN 下具体的表文件中的message也有用一维数组】
-                        // "input"=>$_POST["market_id"],"require"=>"false","var_name" => "queue" ,
-                        "validator"=>"integer","message" => '',// '{fieldName}' . ($langModel['valMustInt'] ?? '') .'!'
-                    ],
-                    'powerNum' => 0,// (2 | 4)  特殊权限[小心设置] 2新加时必填;8修改时如果有下标则判断必填[主键不要设置，不然新建不了] 4不可修改
-                ],
-                'version_num_history' => [
-                    "field_name" => '',//  $langModel['field_names']['version_num_history'] ?? '', //,
-                    'data_type'=>'int',//数据类型 int
-                    // 'must_message' => '数据校验不通过，没有{fieldName}数据值！',// 必填时，无值的错误提示
-                    'valiDateParam' => [// 参数有值时验证信息；如需要多个验证--此值为二维数组【注意：此时的多语言resources\lang\zh-CN 下具体的表文件中的message也有用一维数组】
-                        // "input"=>$_POST["market_id"],"require"=>"false","var_name" => "queue" ,
-                        "validator"=>"integer","message" => '',// '{fieldName}' . ($langModel['valMustInt'] ?? '') .'!'
-                    ],
-                    'powerNum' => 0,// (2 | 4)  特殊权限[小心设置] 2新加时必填;8修改时如果有下标则判断必填[主键不要设置，不然新建不了] 4不可修改
-                ],
-                'ower_type' => [
-                    "field_name" => '',// '拥有者类型',
-                    'data_type'=>'tinyint',//数据类型 int
-                    // 'must_message' => '数据校验不通过，没有{fieldName}数据值！',// 必填时，无值的错误提示
-                    'valiDateParam' => [// 参数有值时验证信息；如需要多个验证--此值为二维数组【注意：此时的多语言resources\lang\zh-CN 下具体的表文件中的message也有用一维数组】
-                        // "input"=>$_POST["market_id"],"require"=>"false","var_name" => "queue" ,
-                        "validator"=>"custom","regexp"=>"/^([01248]|16|32|64)$/","message" => '',// '{fieldName}' . ($langModel['validValueIs'] ?? '')  . '（1平台2城市分站4城市代理8商家16店铺32快跑人员64用户）'
-                    ],
-                    'powerNum' => 0,// (2 | 4)  特殊权限[小心设置] 2新加时必填;8修改时如果有下标则判断必填[主键不要设置，不然新建不了] 4不可修改
-                ],
-                'ower_id' => [
-                    "field_name" => '',// '拥有者',
-                    'data_type'=>'int',//数据类型 int
-                    // 'must_message' => '数据校验不通过，没有{fieldName}数据值！',// 必填时，无值的错误提示
-                    'valiDateParam' => [// 参数有值时验证信息；如需要多个验证--此值为二维数组【注意：此时的多语言resources\lang\zh-CN 下具体的表文件中的message也有用一维数组】
-                        // "input"=>$_POST["market_id"],"require"=>"false","var_name" => "queue" ,
-                        "validator"=>"integer","message" => '',// '{fieldName}' . ($langModel['valMustInt'] ?? '') .'!'
-                    ],
-                    'powerNum' => 0,// (2 | 4)  特殊权限[小心设置] 2新加时必填;8修改时如果有下标则判断必填[主键不要设置，不然新建不了] 4不可修改
-                ],
-                'type_self_id' => [
-                    "field_name" => '',// '类型自定义',
-                    'data_type'=>'int',//数据类型 int
-                    // 'must_message' => '数据校验不通过，没有{fieldName}数据值！',// 必填时，无值的错误提示
-                    'valiDateParam' => [// 参数有值时验证信息；如需要多个验证--此值为二维数组【注意：此时的多语言resources\lang\zh-CN 下具体的表文件中的message也有用一维数组】
-                        // "input"=>$_POST["market_id"],"require"=>"false","var_name" => "queue" ,
-                        "validator"=>"integer","message" => '',// '{fieldName}' . ($langModel['valMustInt'] ?? '') .'!'
-                    ],
-                    'powerNum' => 0,// (2 | 4)  特殊权限[小心设置] 2新加时必填;8修改时如果有下标则判断必填[主键不要设置，不然新建不了] 4不可修改
-                ],
-                'type_self_id_history' => [
-                    "field_name" => '',// '类型自定义历史',
-                    'data_type'=>'int',//数据类型 int
-                    // 'must_message' => '数据校验不通过，没有{fieldName}数据值！',// 必填时，无值的错误提示
-                    'valiDateParam' => [// 参数有值时验证信息；如需要多个验证--此值为二维数组【注意：此时的多语言resources\lang\zh-CN 下具体的表文件中的message也有用一维数组】
-                        // "input"=>$_POST["market_id"],"require"=>"false","var_name" => "queue" ,
-                        "validator"=>"integer","message" => '',// '{fieldName}' . ($langModel['valMustInt'] ?? '') .'!'
-                    ],
-                    'powerNum' => 0,// (2 | 4)  特殊权限[小心设置] 2新加时必填;8修改时如果有下标则判断必填[主键不要设置，不然新建不了] 4不可修改
-                ],
-                'resource_name' => [
-                    "field_name" => '',// '资源名称',
-                    'data_type'=>'varchar',//数据类型 int
-                    // 'must_message' => '数据校验不通过，没有{fieldName}数据值！',// 必填时，无值的错误提示
-                    'valiDateParam' => [// 参数有值时验证信息；如需要多个验证--此值为二维数组【注意：此时的多语言resources\lang\zh-CN 下具体的表文件中的message也有用一维数组】
-                        // "input"=>$_POST["market_id"],"require"=>"false","var_name" => "queue" ,
-                        "validator"=>"length","min"=>"0","max"=>"500","message" => '',// '{fieldName}' . ($langModel['valueLenIs'] ?? '') . ' 0~ 500 ' . ($langModel['numsCharacters'] ?? '') . '!'
-                    ],
-                    'powerNum' => 0,// (2 | 4)  特殊权限[小心设置] 2新加时必填;8修改时如果有下标则判断必填[主键不要设置，不然新建不了] 4不可修改
-                ],
-                'resource_type' => [
-                    "field_name" => '',// '资源类型',
-                    'data_type'=>'smallint',//数据类型 int
-                    // 'must_message' => '数据校验不通过，没有{fieldName}数据值！',// 必填时，无值的错误提示
-                    'valiDateParam' => [// 参数有值时验证信息；如需要多个验证--此值为二维数组【注意：此时的多语言resources\lang\zh-CN 下具体的表文件中的message也有用一维数组】
-                        // "input"=>$_POST["market_id"],"require"=>"false","var_name" => "queue" ,
-                        "validator"=>"custom","regexp"=>"/^([01248|16])$/","message" => '',// '{fieldName}' . ($langModel['validValueIs'] ?? '')  . '（1图片）'
-                    ],
-                    'powerNum' => 0,// (2 | 4)  特殊权限[小心设置] 2新加时必填;8修改时如果有下标则判断必填[主键不要设置，不然新建不了] 4不可修改
-                ],
-                'resource_note' => [
-                    "field_name" => '',// '资源说明',
-                    'data_type'=>'varchar',//数据类型 int
-                    // 'must_message' => '数据校验不通过，没有{fieldName}数据值！',// 必填时，无值的错误提示
-                    'valiDateParam' => [// 参数有值时验证信息；如需要多个验证--此值为二维数组【注意：此时的多语言resources\lang\zh-CN 下具体的表文件中的message也有用一维数组】
-                        // "input"=>$_POST["market_id"],"require"=>"false","var_name" => "queue" ,
-                        "validator"=>"length","min"=>"0","max"=>"2000","message" => '',// '{fieldName}' . ($langModel['valueLenIs'] ?? '') . ' 0~ 2000 ' . ($langModel['numsCharacters'] ?? '') . '!'
-                    ],
-                    'powerNum' => 0,// (2 | 4)  特殊权限[小心设置] 2新加时必填;8修改时如果有下标则判断必填[主键不要设置，不然新建不了] 4不可修改
-                ],
-                'resource_url' => [
-                    "field_name" => '',// '资源地址',
-                    'data_type'=>'varchar',//数据类型 int
-                    // 'must_message' => '数据校验不通过，没有{fieldName}数据值！',// 必填时，无值的错误提示
-                    'valiDateParam' => [// 参数有值时验证信息；如需要多个验证--此值为二维数组【注意：此时的多语言resources\lang\zh-CN 下具体的表文件中的message也有用一维数组】
-                        // "input"=>$_POST["market_id"],"require"=>"false","var_name" => "queue" ,
-                        "validator"=>"length","min"=>"0","max"=>"500","message" => '',// '{fieldName}' . ($langModel['valueLenIs'] ?? '') . ' 0~ 500 ' . ($langModel['numsCharacters'] ?? '') . '!'
                     ],
                     'powerNum' => 0,// (2 | 4)  特殊权限[小心设置] 2新加时必填;8修改时如果有下标则判断必填[主键不要设置，不然新建不了] 4不可修改
                 ],
@@ -186,7 +76,7 @@ class resource extends BaseDBVerify
             ]
         ];
         // 如果用父类的，则在此指定父类
-        // $tableConfig = projects::getVerifyRuleArr($dbFileTag);
+        // $tableConfig = brands::getVerifyRuleArr($dbFileTag);
         return $tableConfig;
     }
 
@@ -209,16 +99,16 @@ class resource extends BaseDBVerify
     //##################属性#######################################################
 
     /**
-     * 资源属性-资源名称
-     * @OA\Schema(
-     *   schema="Schema_QualityControl_resource_resource_name",
+     * 个人访问客户端属性-品牌名称
+     * @ OA\Schema(
+     *   schema="Schema_QualityControl_company_schedule_brand_name",
      *   type="string",
-     *   title="资源属性-资源名称",
-     *   description="资源属性-资源名称",
+     *   title="个人访问客户端属性-品牌名称",
+     *   description="个人访问客户端属性-品牌名称",
      *   default="",
      *   minLength=0,
-     *   maxLength=500,
-     *   example="",
+     *   maxLength=30,
+     *   example="川渝人家",
      * )
      *
      */
@@ -229,13 +119,13 @@ class resource extends BaseDBVerify
      *
      * 上面字段对应的查询参数--可填
      * @ OA\Parameter(
-     *      parameter="Schema_QualityControl_resource_brand_name_optional",
+     *      parameter="Schema_QualityControl_company_schedule_brand_name_optional",
      *      name="type_name",
      *      in="query",
      *      description="类型名称",
      *      required=false,
      *      deprecated=false,
-     *      @ OA\Schema(ref="#/components/schemas/Schema_QualityControl_resource_brand_name")
+     *      @ OA\Schema(ref="#/components/schemas/Schema_QualityControl_company_schedule_brand_name")
      * ),
      *
      *
@@ -245,89 +135,29 @@ class resource extends BaseDBVerify
      *
      * 上面字段对应的查询参数--必填
      * @ OA\Parameter(
-     *      parameter="Schema_QualityControl_resource_brand_name_required",
+     *      parameter="Schema_QualityControl_company_schedule_brand_name_required",
      *      name="type_name",
      *      in="query",
      *      description="类型名称",
      *      required=true,
      *      deprecated=false,
-     *      @ OA\Schema(ref="#/components/schemas/Schema_QualityControl_resource_brand_name")
+     *      @ OA\Schema(ref="#/components/schemas/Schema_QualityControl_company_schedule_brand_name")
      * ),
      *
      *
      */
     //***********************字段查询***结束****************************
 
-
-    /**
-     * 资源属性-资源类型1图片
-     * @OA\Schema(
-     *   schema="Schema_QualityControl_resource_resource_type",
-     *   type="integer",
-     *   format="int32",
-     *   title="资源属性-资源类型",
-     *   description="资源属性-资源类型:1图片",
-     *   default=1,
-     *   enum={"1"},
-     *   example="1",
-     * )
-     *
-     */
-
-    /**
-     * 资源属性-资源类型文字
-     * @OA\Schema(
-     *   schema="Schema_QualityControl_resource_resource_type_text",
-     *   type="string",
-     *   title="资源属性-资源类型文字",
-     *   description="资源属性-资源类型文字",
-     *   default="",
-     *   minLength=0,
-     *   maxLength=30,
-     *   example="图片",
-     * )
-     *
-     */
-
-    /**
-     * 资源属性-资源说明
-     * @OA\Schema(
-     *   schema="Schema_QualityControl_resource_resource_note",
-     *   type="string",
-     *   title="资源属性-资源说明",
-     *   description="资源属性-资源说明",
-     *   default="",
-     *   minLength=0,
-     *   maxLength=2000,
-     *   example="",
-     * )
-     *
-     */
-
-    /**
-     * 资源属性-资源地址
-     * @OA\Schema(
-     *   schema="Schema_QualityControl_resource_resource_url",
-     *   type="string",
-     *   title="资源属性-资源地址",
-     *   description="资源属性-资源地址",
-     *   default="",
-     *   minLength=0,
-     *   maxLength=500,
-     *   example="",
-     * )
-     *
-     */
     // 其它表会用到的属性字段
 
     /**
-     * 资源属性-id
+     * 个人访问客户端属性-id
      * @OA\Schema(
-     *   schema="Schema_QualityControl_resource_id",
+     *   schema="Schema_QualityControl_company_schedule_id",
      *   type="integer",
      *   format="int32",
-     *   title="资源属性-id",
-     *   description="资源属性-id",
+     *   title="个人访问客户端属性-id",
+     *   description="个人访问客户端属性-id",
      *   default=0,
      *   minimum="0",
      *   example="1",
@@ -341,13 +171,13 @@ class resource extends BaseDBVerify
      *
      * 上面字段对应的查询参数--可填
      * @OA\Parameter(
-     *      parameter="Schema_QualityControl_resource_id_optional",
+     *      parameter="Schema_QualityControl_company_schedule_id_optional",
      *      name="id",
      *      in="query",
      *      description="模板库分类-id",
      *      required=false,
      *      deprecated=false,
-     *      @OA\Schema(ref="#/components/schemas/Schema_QualityControl_resource_id")
+     *      @OA\Schema(ref="#/components/schemas/Schema_QualityControl_company_schedule_id")
      * ),
      *
      *
@@ -357,13 +187,13 @@ class resource extends BaseDBVerify
      *
      * 上面字段对应的查询参数--必填
      * @OA\Parameter(
-     *      parameter="Schema_QualityControl_resource_id_required",
+     *      parameter="Schema_QualityControl_company_schedule_id_required",
      *      name="id",
      *      in="query",
      *      description="模板库分类-id",
      *      required=true,
      *      deprecated=false,
-     *      @OA\Schema(ref="#/components/schemas/Schema_QualityControl_resource_id")
+     *      @OA\Schema(ref="#/components/schemas/Schema_QualityControl_company_schedule_id")
      * ),
      *
      *
@@ -374,13 +204,13 @@ class resource extends BaseDBVerify
      *
      * 上面字段对应的查询参数--可填
      * @OA\Parameter(
-     *      parameter="Schema_QualityControl_resource_id_optional_quote",
+     *      parameter="Schema_QualityControl_company_schedule_id_optional_quote",
      *      name="template_type_id",
      *      in="query",
      *      description="模板库分类-id",
      *      required=false,
      *      deprecated=false,
-     *      @OA\Schema(ref="#/components/schemas/Schema_QualityControl_resource_id")
+     *      @OA\Schema(ref="#/components/schemas/Schema_QualityControl_company_schedule_id")
      * ),
      *
      *
@@ -390,23 +220,25 @@ class resource extends BaseDBVerify
      *
      * 上面字段对应的查询参数--必填
      * @OA\Parameter(
-     *      parameter="Schema_QualityControl_resource_id_required_quote",
+     *      parameter="Schema_QualityControl_company_schedule_id_required_quote",
      *      name="template_type_id",
      *      in="query",
      *      description="模板库分类-id",
      *      required=true,
      *      deprecated=false,
-     *      @OA\Schema(ref="#/components/schemas/Schema_QualityControl_resource_id")
+     *      @OA\Schema(ref="#/components/schemas/Schema_QualityControl_company_schedule_id")
      * ),
      *
      *
      */
 
+
+
     //##################请求参数#######################################################
     /**
      * 模糊查询字段名--具体的表模型用
      * @OA\Parameter(
-     *      parameter="Parameter_QualityControl_resource_field",
+     *      parameter="Parameter_QualityControl_company_schedule_field",
      *      name="field",
      *      in="query",
      *      description="模糊查询字段名",
@@ -426,24 +258,11 @@ class resource extends BaseDBVerify
     // 有所有字段的对象
     /**
      * @OA\Schema(
-     *     schema="Schema_QualityControl_resource_obj",
-     *     title="资源",
-     *     description="资源列表",
+     *     schema="Schema_QualityControl_company_schedule_obj",
+     *     title="个人访问客户端",
+     *     description="个人访问客户端列表",
      *     required={},
      *     @OA\Property(property="id", ref="#/components/schemas/common_Schema_id"),
-     *     @OA\Property(property="version_num", ref="#/components/schemas/common_Schema_version_num"),
-     *     @OA\Property(property="version_history_id", ref="#/components/schemas/common_Schema_version_history_id"),
-     *     @OA\Property(property="version_num_history", ref="#/components/schemas/common_Schema_version_num_history"),
-     *     @OA\Property(property="ower_type", ref="#/components/schemas/common_Schema_QualityControl_ower_type"),
-     *     @OA\Property(property="ower_type_text", ref="#/components/schemas/common_Schema_QualityControl_ower_type_text"),
-     *     @OA\Property(property="ower_id", ref="#/components/schemas/common_Schema_QualityControl_ower_id"),
-     *     @OA\Property(property="type_self_id", ref="#/components/schemas/Schema_QualityControl_resource_type_self_id"),
-     *     @OA\Property(property="type_self_id_history", ref="#/components/schemas/Schema_QualityControl_resource_type_self_history_id"),
-     *     @OA\Property(property="resource_name", ref="#/components/schemas/Schema_QualityControl_resource_resource_name"),
-     *     @OA\Property(property="resource_type", ref="#/components/schemas/Schema_QualityControl_resource_resource_type"),
-     *     @OA\Property(property="resource_type_text", ref="#/components/schemas/Schema_QualityControl_resource_resource_type_text"),
-     *     @OA\Property(property="resource_note", ref="#/components/schemas/Schema_QualityControl_resource_resource_note"),
-     *     @OA\Property(property="resource_url", ref="#/components/schemas/Schema_QualityControl_resource_resource_url"),
      *     @OA\Property(property="operate_staff_id", ref="#/components/schemas/common_Schema_operate_staff_id"),
      *     @OA\Property(property="operate_staff_id_history", ref="#/components/schemas/common_Schema_operate_staff_id_history"),
      *     @OA\Property(property="created_at", ref="#/components/schemas/common_Schema_created_at"),
@@ -456,14 +275,14 @@ class resource extends BaseDBVerify
      * 单条记录请求体
      *
      * @OA\RequestBody(
-     *     request="RequestBody_QualityControl_info_resource",
+     *     request="RequestBody_QualityControl_info_company_schedule",
      *     description="单个增加",
      *     required=true,
-     *     @OA\JsonContent(ref="#/components/schemas/Schema_QualityControl_resource_obj"),
+     *     @OA\JsonContent(ref="#/components/schemas/Schema_QualityControl_company_schedule_obj"),
      *     @OA\MediaType(
      *         mediaType="application/xml",
      *         @OA\Schema(
-     *              @OA\Property(property="info", ref="#/components/schemas/Schema_QualityControl_resource_obj"),
+     *              @OA\Property(property="info", ref="#/components/schemas/Schema_QualityControl_company_schedule_obj"),
      *              @OA\Xml(
      *                  name="root",
      *                  wrapped=true
@@ -478,7 +297,7 @@ class resource extends BaseDBVerify
      * 多条记录请求体
      *
      * @OA\RequestBody(
-     *     request="RequestBody_QualityControl_multi_resource",
+     *     request="RequestBody_QualityControl_multi_company_schedule",
      *     description="批量增加",
      *     required=true,
      *     @OA\JsonContent(
@@ -486,7 +305,7 @@ class resource extends BaseDBVerify
      *          @OA\Property(
      *              property="data_list",
      *              type="array",
-     *              @OA\Items(ref="#/components/schemas/Schema_QualityControl_resource_obj"),
+     *              @OA\Items(ref="#/components/schemas/Schema_QualityControl_company_schedule_obj"),
      *          ),
      *     ),
      *     @OA\MediaType(
@@ -494,7 +313,7 @@ class resource extends BaseDBVerify
      *         @OA\Schema(
      *              @OA\Property(
      *                  property="data_list",
-     *                  @OA\Property(property="info", ref="#/components/schemas/Schema_QualityControl_resource_obj"),
+     *                  @OA\Property(property="info", ref="#/components/schemas/Schema_QualityControl_company_schedule_obj"),
      *              ),
      *              @OA\Xml(
      *                  name="root",
@@ -544,7 +363,7 @@ class resource extends BaseDBVerify
      *
      * 列表页
      *     @OA\Response(
-     *         response="Response_QualityControl_list_resource",
+     *         response="Response_QualityControl_list_company_schedule",
      *         description="操作成功返回",
      *         @OA\JsonContent(
      *              type="object",
@@ -557,7 +376,7 @@ class resource extends BaseDBVerify
      *                      property="data_list",
      *                      type="array",
      *                      description="当前页列表数据",
-     *                      @OA\Items(ref="#/components/schemas/Schema_QualityControl_resource_obj"),
+     *                      @OA\Items(ref="#/components/schemas/Schema_QualityControl_company_schedule_obj"),
      *                  ),
      *                  @OA\Property(property="total", ref="#/components/schemas/common_Schema_total"),
      *                  @OA\Property(property="page", ref="#/components/schemas/common_Schema_page"),
@@ -581,7 +400,7 @@ class resource extends BaseDBVerify
      *                      @OA\Property(
      *                          property="info",
      *                          type="array",
-     *                          @OA\Items(ref="#/components/schemas/Schema_QualityControl_resource_obj"),
+     *                          @OA\Items(ref="#/components/schemas/Schema_QualityControl_company_schedule_obj"),
      *                      ),
      *                  ),
      *                  @OA\Property(property="total", ref="#/components/schemas/common_Schema_total"),
@@ -619,7 +438,7 @@ class resource extends BaseDBVerify
      *  "errorMsg": "有错时的错误信息"
      * }
      *     @OA\Response(
-     *         response="Response_QualityControl_info_resource",
+     *         response="Response_QualityControl_info_company_schedule",
      *         description="操作成功返回",
      *         @OA\JsonContent(
      *              type="object",
@@ -627,7 +446,7 @@ class resource extends BaseDBVerify
      *              @OA\Property(
      *                  property="result",
      *                  type="object",
-     *                  @OA\Property(property="info",ref="#/components/schemas/Schema_QualityControl_resource_obj"),
+     *                  @OA\Property(property="info",ref="#/components/schemas/Schema_QualityControl_company_schedule_obj"),
      *               ),
      *              @OA\Property(property="errorMsg", ref="#/components/schemas/common_Schema_errorMsg"),
      *        ),
@@ -637,7 +456,7 @@ class resource extends BaseDBVerify
      *              @OA\Property(
      *                  property="result",
      *                  type="object",
-     *                  @OA\Property(property="info",ref="#/components/schemas/Schema_QualityControl_resource_obj",),
+     *                  @OA\Property(property="info",ref="#/components/schemas/Schema_QualityControl_company_schedule_obj",),
      *               ),
      *              @OA\Property(property="errorMsg", ref="#/components/schemas/common_Schema_errorMsg"),
      *              @OA\Xml(
@@ -668,18 +487,18 @@ class resource extends BaseDBVerify
      *  "errorMsg": "有错时的错误信息"
      * }
      *     @OA\Response(
-     *         response="Response_QualityControl_result_resource",
+     *         response="Response_QualityControl_result_company_schedule",
      *         description="操作成功返回",
      *         @OA\JsonContent(
      *              type="object",
      *              @OA\Property(property="apistatus", ref="#/components/schemas/common_Schema_apistatus"),
-     *              @OA\Property(property="result",ref="#/components/schemas/Schema_QualityControl_resource_obj"),
+     *              @OA\Property(property="result",ref="#/components/schemas/Schema_QualityControl_company_schedule_obj"),
      *              @OA\Property(property="errorMsg", ref="#/components/schemas/common_Schema_errorMsg"),
      *        ),
      *        @OA\XmlContent(
      *              type="object",
      *              @OA\Property(property="apistatus", ref="#/components/schemas/common_Schema_apistatus"),
-     *              @OA\Property(property="result",ref="#/components/schemas/Schema_QualityControl_resource_obj"),
+     *              @OA\Property(property="result",ref="#/components/schemas/Schema_QualityControl_company_schedule_obj"),
      *              @OA\Property(property="errorMsg", ref="#/components/schemas/common_Schema_errorMsg"),
      *              @OA\Xml(
      *                  name="root",

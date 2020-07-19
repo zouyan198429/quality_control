@@ -270,6 +270,14 @@ Route::get('admin/ability_join/info/{id}', 'Admin\QualityControl\AbilityJoinCont
 //Route::get('admin/ability_join/export', 'Admin\QualityControl\AbilityJoinController@export');// 导出
 //Route::get('admin/ability_join/import_template', 'Admin\QualityControl\AbilityJoinController@import_template');// 导入模版
 
+// 企业能力附表
+Route::get('admin/company_schedule', 'Admin\QualityControl\CompanyScheduleController@index');// 列表
+Route::get('admin/company_schedule/show/{company_id}', 'Admin\QualityControl\CompanyScheduleController@show');// 查看
+Route::get('admin/company_schedule/add/{id}', 'Admin\QualityControl\CompanyScheduleController@add');// 添加
+// Route::get('admin/company_schedule/select', 'Admin\QualityControl\CompanyScheduleController@select');// 选择-弹窗
+Route::get('admin/company_schedule/export', 'Admin\QualityControl\CompanyScheduleController@export');// 导出
+Route::get('admin/company_schedule/import_template', 'Admin\QualityControl\CompanyScheduleController@import_template');// 导入模版
+
 
 // 企业后台 company
 Route::get('company/login', 'WebFront\Company\QualityControl\IndexController@login');// login.html 登录
@@ -286,6 +294,7 @@ Route::get('company/logout', 'WebFront\Company\QualityControl\IndexController@lo
 Route::get('company/password', 'WebFront\Company\QualityControl\IndexController@password');//psdmodify.html 个人信息-修改密码--ok
 Route::get('company/info', 'WebFront\Company\QualityControl\IndexController@info');//myinfo.html 个人信息--显示--ok
 //Route::get('company/down_drive', 'WebFront\Company\QualityControl\IndexController@down_drive');// 下载网页打印机驱动
+Route::get('company/basic', 'WebFront\Company\QualityControl\IndexController@basic');// 修改企业基本信息
 
 // 能力验证
 Route::get('company/abilitys', 'WebFront\Company\QualityControl\AbilitysController@index');// 列表
@@ -303,6 +312,13 @@ Route::get('company/ability_join/info/{id}', 'WebFront\Company\QualityControl\Ab
 // Route::get('company/ability_join/select', 'WebFront\Company\QualityControl\AbilityJoinController@select');// 选择-弹窗
 //Route::get('company/ability_join/export', 'WebFront\Company\QualityControl\AbilityJoinController@export');// 导出
 //Route::get('company/ability_join/import_template', 'WebFront\Company\QualityControl\AbilityJoinController@import_template');// 导入模版
+
+// 企业能力附表
+Route::get('company/company_schedule', 'WebFront\Company\QualityControl\CompanyScheduleController@index');// 列表
+Route::get('company/company_schedule/add/{id}', 'WebFront\Company\QualityControl\CompanyScheduleController@add');// 添加
+// Route::get('company/company_schedule/select', 'WebFront\Company\QualityControl\CompanyScheduleController@select');// 选择-弹窗
+//Route::get('company/company_schedule/export', 'WebFront\Company\QualityControl\CompanyScheduleController@export');// 导出
+//Route::get('company/company_schedule/import_template', 'WebFront\Company\QualityControl\CompanyScheduleController@import_template');// 导入模版
 
 
 // 用户中心 user
