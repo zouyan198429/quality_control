@@ -38,10 +38,13 @@ class CompanyScheduleDBBusiness extends BasePublicDBBusiness
             throws('所属企业参数有误！');
         }
         // 判断企业信息是否存在
-        if(isset($saveData['company_id'])){
-            $companyInfo = StaffDBBusiness::getInfo($saveData['company_id']);
+       // $companyInfo = [];
+        if(!isset($saveData['company_id']) || !is_numeric($saveData['company_id']) || $saveData['company_id'] <= 0) throws('请选择所属企业！');
+       // if(isset($saveData['company_id'])){
+        $company_id = $saveData['company_id'];
+            $companyInfo = StaffDBBusiness::getInfo($company_id);
             if(empty($companyInfo))  throws('所属企业不存在！');
-        }
+        //}
 
         // 是否有图片资源
         $hasResource = false;
@@ -107,6 +110,19 @@ class CompanyScheduleDBBusiness extends BasePublicDBBusiness
                     ResourceDBBusiness::saveByIds($resourceArr, $resourceIds);
                 }
             }
+            // 如果是加，则增加企业能力附表数量
+            if(!$isModify){
+                if($company_id > 0){
+                    $queryParams = [
+                        'where' => [
+                            ['admin_type', $companyInfo['admin_type']],
+                            ['staff_id', $company_id],
+                        ],
+                        // 'select' => ['id', 'amount', 'status', 'my_order_no' ]
+                    ];
+                    StaffExtendDBBusiness::saveDecIncByQuery('schedule_num', 1,  'inc', $queryParams, []);
+                }
+            }
             if($isModify && ($ownProperty & 1) == 1){// 1：有历史表 ***_history;
                 static::compareHistory($id, 1);
             }
@@ -144,7 +160,11 @@ class CompanyScheduleDBBusiness extends BasePublicDBBusiness
 //        // $temIsOpen = $info['is_open'];
 //        if(in_array($temStatus, [2, 4]) ) throws('当前记录状态非待占桌，不可进行删除操作！');
 
-
+        $info = static::getInfo($id, ['id', 'company_id']);
+        if(empty($info)) throws('记录不存在！');
+        $company_id = $info['company_id'];
+        //$companyInfo = StaffDBBusiness::getInfo($company_id);
+        //if(empty($companyInfo))  throws('所属企业不存在！');
         DB::beginTransaction();
         try {
             // 删除图片资源关系
@@ -169,6 +189,16 @@ class CompanyScheduleDBBusiness extends BasePublicDBBusiness
             ResourceDBBusiness::del($queryParams);
             // 删除记录
             static::deleteByIds($id);
+            // 如果是删除，则减少能力附表数量
+            $queryParams = [
+                'where' => [
+                    // ['admin_type', $companyInfo['admin_type']],
+                    ['staff_id', $company_id],
+                ],
+                // 'select' => ['id', 'amount', 'status', 'my_order_no' ]
+            ];
+            StaffExtendDBBusiness::saveDecIncByQuery('schedule_num', 1,  'dec', $queryParams, []);
+
         } catch ( \Exception $e) {
             DB::rollBack();
 //            throws('操作失败；信息[' . $e->getMessage() . ']');

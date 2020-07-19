@@ -248,7 +248,7 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
     document.write("                <\/a>");
     document.write("                <%}%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.schedule(<%=item.id%>)\">");
-    document.write("                    <i class=\"ace-icon bigger-60\">能力附表<\/i>");
+    document.write("                    <i class=\"ace-icon bigger-60\">能力附表(<%=item.extend_info.schedule_num%>)<\/i>");
     document.write("                <\/a>");
     document.write("");
     document.write("            <\/td>");

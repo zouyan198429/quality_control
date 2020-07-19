@@ -2899,6 +2899,7 @@ class Tool
      *
      * @param array $reportsList 栏目记录数组 - 二维
      * @param int $type 多少维  1:一维[默认]；2 二维 --注意是资源的维度
+     * @return array
      * @author zouyan(305463219@qq.com)
      */
     public static function resoursceUrl(&$reportsList, $type = 2){
@@ -2913,6 +2914,7 @@ class Tool
      *
      * @param array $dataList 资源记录数组 - 二维 / 一维
      * @param int $type 多少维  1:一维[默认]；2 二维 --注意是资源的维度
+     * @return array
      * @author zouyan(305463219@qq.com)
      */
     public static function resourceUrl(&$dataList,$type = 2){
@@ -2920,13 +2922,17 @@ class Tool
             if(isset($dataList['site_resources'])){
                 $site_resources = $dataList['site_resources'] ?? [];
                 foreach($site_resources as $k=>$site_resource){
-                    $site_resources[$k]['resource_url'] = url($site_resource['resource_url']);
+                    $resource_url = url($site_resource['resource_url']);
+                    $site_resources[$k]['resource_url'] = $resource_url;
+                    $site_resources[$k] = array_merge($site_resources[$k], static::formatUrlByExtension($resource_url));
                 }
                 $dataList['site_resources'] = $site_resources;
             }
         }else{
             if(isset($dataList['resource_url'])){
-                $dataList['resource_url'] = url($dataList['resource_url']);
+                $resource_url = url($dataList['resource_url']);
+                $dataList['resource_url'] = $resource_url;
+                $dataList = array_merge($dataList, static::formatUrlByExtension($resource_url));
             }
         }
         return $dataList;
@@ -2937,22 +2943,61 @@ class Tool
      *
      * @param array $dataList 资源记录数组 - 二维 / 一维
      * @param int $type 多少维  1:一维[默认]；2 二维 --注意是资源的维度
+     * @return array
      * @author zouyan(305463219@qq.com)
      */
     public static function formatResource($data_list, $type = 2){
         $reList = [];
         if($type == 1) $data_list = [$data_list];
         foreach($data_list as $k => $v){
+            $resource_url = url($v['resource_url']);
             $temArr = [
                 'id' => $v['id'],
                 'resource_name' => $v['resource_name'],
-                'resource_url' => url($v['resource_url']),
+                'resource_url' => $resource_url,
                 'created_at' => $v['created_at'],
             ];
+            $temArr = array_merge($temArr, static::formatUrlByExtension($resource_url));
             array_push($reList, $temArr);
         }
         if($type == 1) $reList = $reList[0] ?? [];
         return $reList;
+    }
+
+    /**
+     * 通过扩展名，返回文件前端访问的特殊格式
+     *
+     * @param string $resource_url 方件地址 如  http://qualitycontrol.admin.cunwo.net/resource/company/10/pdfword/2020/07/19/20200719225926e22f3d6997188bf6.docx
+     * @return array  一维数组 ['resource_file_name' => '文件名', 'resource_file_extension' => '扩展名', 'resource_url_format' => '格式化后的地址']
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function formatUrlByExtension($resource_url){
+        // 获得扩展名
+        $url_file_name = basename($resource_url);// basename() 函数返回路径中的文件名部分。
+        $url_file_extension = pathinfo($url_file_name,PATHINFO_EXTENSION);
+        $resource_url_format = $resource_url;
+        switch(strtolower($url_file_extension)){
+            // PPT、Excel、Word 文件类型
+            // 不需要使用任何第三家扩展，使用 Office 官方提供的 Office Web Viewer 即可.
+            // https://view.officeapps.live.com/op/view.aspx?src={yourFileOnlinePath}
+            case 'doc':// word
+            case 'docx'://
+            case 'xls':// excel
+            case 'xlsx'://
+            case 'ppt':// ppt
+            case 'pptx'://
+                $resource_url_format = 'https://view.officeapps.live.com/op/view.aspx?src=' . $resource_url;
+                break;
+//                    case 'aa'://
+//                        break;
+            default:
+                break;
+        }
+        return [
+            'resource_file_name' => $url_file_name,// 文件名
+            'resource_file_extension' => strtolower($url_file_extension),// 扩展名
+            'resource_url_format' => $resource_url_format// 格式化后的地址
+        ];
     }
 
     /**
