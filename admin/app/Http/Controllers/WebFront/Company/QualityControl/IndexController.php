@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\WebFront\Company\QualityControl;
 
+use App\Business\Controller\API\QualityControl\CTAPICitysBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIIndustryBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
 // use App\Business\Controller\API\RunBuy\CTAPITablesBusiness;
 use App\Http\Controllers\WorksController;
@@ -161,6 +163,190 @@ class IndexController extends BasicController
 
         }, $this->errMethod, $reDataArr, $this->errorView);
     }
+
+    /**
+     * 修改企业基本信息
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function basic(Request $request)
+    {
+        $reDataArr = [];// 可以传给视图的全局变量数组
+        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request){
+            // 正常流程的代码
+
+            $this->InitParams($request);
+            // $reDataArr = $this->reDataArr;
+            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+            $id = $this->user_id;
+            $info = [
+                'id'=>$id,
+                //   'department_id' => 0,
+            ];
+            $operate = "添加";
+
+            if ($id > 0) { // 获得详情数据
+                $operate = "修改";
+                $handleKeyArr = [];
+               array_push($handleKeyArr, 'siteResources');// array_merge($handleKeyArr, ['industry', 'siteResources']); ;//
+
+                $extParams = [
+                    'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                ];
+                $info = CTAPIStaffBusiness::getInfoData($request, $this, $id, [], '', $extParams);
+            }
+            // $reDataArr = array_merge($reDataArr, $resultDatas);
+            $reDataArr['info'] = $info;
+            $reDataArr['operate'] = $operate;
+            // 获得城市KV值--企业和用户有城市
+            // 获得城市KV值
+            $reDataArr['citys_kv'] = CTAPICitysBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'city_name']);
+            $reDataArr['defaultCity'] = $info['city_id'] ?? -1;// 默认
+
+            // 是否完善资料1待完善2已完善
+            $reDataArr['isPerfect'] =  Staff::$isPerfectArr;
+            $reDataArr['defaultIsPerfect'] = $info['is_perfect'] ?? -1;// 列表页默认状态
+
+            // 只有企业有
+            // 所属行业
+            $reDataArr['industry_kv'] = CTAPIIndustryBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'industry_name']);
+            $reDataArr['defaultIndustry'] = $info['company_industry_id'] ?? -1;// 默认
+
+            // 企业--企业性质1企业法人 、2企业非法人、3事业法人、4事业非法人、5社团法人、6社团非法人、7机关法人、8机关非法人、9其它机构、10民办非企业单位、11个体 、12工会法人
+            $reDataArr['companyProp'] = Staff::$companyPropArr;
+            $reDataArr['defaultCompanyProp'] = $info['company_prop'] ?? -1;// 列表页默认状态
+
+            // 企业--单位人数1、1-20、2、20-100、3、100-500、4、500以上
+            $reDataArr['companyPeoples'] = Staff::$companyPeoplesNumArr;
+            $reDataArr['defaultCompanyPeoples'] = $info['company_peoples_num'] ?? -1;// 列表页默认状态
+
+            // 企业--会员等级1非会员  2会员  4理事  8常务理事   16理事长
+            $reDataArr['companyGrade'] =  Staff::$companyGradeArr;
+            $company_grade = ($id > 0) ? $info['company_grade'] : CommonRequest::get($request, 'company_grade');
+            if(strlen($company_grade) <= 0 ) $company_grade = -1;
+            $reDataArr['defaultCompanyGrade'] = $company_grade;// $info['company_grade'] ?? -1;// 列表页默认状态
+
+
+            return view('company.QualityControl.admin.basic', $reDataArr);
+
+        }, $this->errMethod, $reDataArr, $this->errorView);
+    }
+
+
+    /**
+     * ajax保存数据
+     *
+     * @param int $id
+     * @return mixed Response
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_basic_save(Request $request)
+    {
+        $this->InitParams($request);
+        $user_info = $this->user_info;
+        $id = $this->user_id;// CommonRequest::getInt($request, 'id');
+        $company_name = CommonRequest::get($request, 'company_name');
+        $company_credit_code = CommonRequest::get($request, 'company_credit_code');
+        $company_is_legal_persion = CommonRequest::getInt($request, 'company_is_legal_persion');
+        if($company_is_legal_persion != 1) $company_is_legal_persion = 2;
+        $company_legal_credit_code = CommonRequest::get($request, 'company_legal_credit_code');
+        $company_legal_name = CommonRequest::get($request, 'company_legal_name');
+        $city_id = CommonRequest::getInt($request, 'city_id');
+        $company_type = CommonRequest::getInt($request, 'company_type');
+        $company_prop = CommonRequest::get($request, 'company_prop');
+        $addr = CommonRequest::get($request, 'addr');
+        $zip_code = CommonRequest::get($request, 'zip_code');
+        $fax = CommonRequest::get($request, 'fax');
+        $email = CommonRequest::get($request, 'email');
+        $company_legal = CommonRequest::get($request, 'company_legal');
+        $company_peoples_num = CommonRequest::getInt($request, 'company_peoples_num');
+        $company_industry_id = CommonRequest::getInt($request, 'company_industry_id');
+        $company_certificate_no = CommonRequest::get($request, 'company_certificate_no');
+        $company_contact_name = CommonRequest::get($request, 'company_contact_name');
+        $company_contact_mobile = CommonRequest::get($request, 'company_contact_mobile');
+        $company_contact_tel = CommonRequest::get($request, 'company_contact_tel');
+//        $is_perfect = CommonRequest::getInt($request, 'is_perfect');
+        // 可能会用的参数
+        $admin_username = CommonRequest::get($request, 'admin_username');
+//        $admin_password = CommonRequest::get($request, 'admin_password');
+//        $sure_password = CommonRequest::get($request, 'sure_password');
+        $userInfo = [];
+
+        // 图片资源
+        $resource_id = CommonRequest::get($request, 'resource_id');
+        // 如果是字符，则转为数组
+        if(is_string($resource_id) || is_numeric($resource_id)){
+            if(strlen(trim($resource_id)) > 0){
+                $resource_id = explode(',' ,$resource_id);
+            }
+        }
+        if(!is_array($resource_id)) $resource_id = [];
+
+        // 再转为字符串
+        $resource_ids = implode(',', $resource_id);
+        if(!empty($resource_ids)) $resource_ids = ',' . $resource_ids . ',';
+
+        $saveData = [
+            'admin_type' => $user_info['admin_type'],// static::$ADMIN_TYPE,
+//            'is_perfect' => $is_perfect,
+            'company_name' => $company_name,
+            'company_credit_code' => $company_credit_code,
+            'company_is_legal_persion' => $company_is_legal_persion,
+            'company_legal_credit_code' => $company_legal_credit_code,
+            'company_legal_name' => $company_legal_name,
+            'city_id' => $city_id,
+            'company_type' => $company_type,
+            'company_prop' => $company_prop,
+            'addr' => $addr,
+            'zip_code' => $zip_code,
+            'fax' => $fax,
+            'email' => $email,
+            'company_legal' => $company_legal,
+            'company_peoples_num' => $company_peoples_num,
+            'company_industry_id' => $company_industry_id,
+            'company_certificate_no' => $company_certificate_no,
+            'company_contact_name' => $company_contact_name,
+            'company_contact_mobile' => $company_contact_mobile,
+            'company_contact_tel' => $company_contact_tel,
+            'admin_username' => $admin_username,
+            // 'resource_id' => $resource_id[0] ?? 0,// 第一个图片资源的id
+            'resource_ids' => $resource_ids,// 图片资源id串(逗号分隔-未尾逗号结束)
+            'resourceIds' => $resource_id,// 此下标为图片资源关系
+        ];
+//        if($admin_password != '' || $sure_password != ''){
+//            if ($admin_password != $sure_password){
+//                return ajaxDataArr(0, null, '密码和确定密码不一致！');
+//            }
+//            $saveData['admin_password'] = $admin_password;
+//        }
+        // 超级帐户 不可 冻结
+//        if(isset($userInfo['issuper']) && $userInfo['issuper'] != 1){
+//            $saveData['account_status'] = $account_status;
+//        }
+
+        if($id <= 0) {// 新加;要加入的特别字段
+            $addNewData = [
+                // 'account_password' => $account_password,
+//                'is_perfect' => 1,
+                'company_grade' => 1,// 新加的会员默认等级为非会员单位
+                'issuper' => 2,
+//                'company_type' => 0,// 企业类型1检测机构、2生产企业
+//                'company_prop' => 0,// 企业性质1企业法人 、2企业非法人、3事业法人、4事业非法人、5社团法人、6社团非法人、7机关法人、8机关非法人、9其它机构、10民办非企业单位、11个体 、12工会法人
+//                'company_peoples_num' => 0,// 单位人数1、1-20、2、20-100、3、100-500、4、500以上
+                'open_status' => 2,// 审核状态1待审核2审核通过4审核不通过
+                'account_status' => 1// 状态 1正常 2冻结
+            ];
+            $saveData = array_merge($saveData, $addNewData);
+        }
+        $extParams = [
+            'judgeDataKey' => 'replace',// 数据验证的下标
+        ];
+        $resultDatas = CTAPIStaffBusiness::replaceById($request, $this, $saveData, $id, $extParams, true);
+        return ajaxDataArr(1, $resultDatas, '');
+    }
+
 
     /**
      * err404

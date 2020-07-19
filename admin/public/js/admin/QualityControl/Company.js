@@ -80,6 +80,22 @@ var otheraction = {
         });
         return false;
     },
+    schedule : function(id){// 查看能力附表
+        //获得表单各name的值
+        var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
+        console.log(SCHEDULE_SHOW_URL);
+        console.log(data);
+        var url_params = get_url_param(data);// parent.get_url_param(data);
+        var weburl = SCHEDULE_SHOW_URL + id + '?' + url_params;
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = "能力附表";
+        layeriframe(weburl,tishi,950,600,SHOW_CLOSE_OPERATE);
+        return false;
+    }
 };
 
 
@@ -231,6 +247,9 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
     document.write("                    <i class=\"ace-icon fa fa-trash-o bigger-60\"> 删除<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.schedule(<%=item.id%>)\">");
+    document.write("                    <i class=\"ace-icon bigger-60\">能力附表<\/i>");
+    document.write("                <\/a>");
     document.write("");
     document.write("            <\/td>");
     document.write("        <\/tr>");

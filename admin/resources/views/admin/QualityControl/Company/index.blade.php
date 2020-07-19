@@ -230,6 +230,9 @@
 
       var OPEN_OPERATE_URL = "{{ url('api/admin/company/ajax_open') }}";//审核操作(通过/不通过)
       var ACCOUNT_STATUS_URL = "{{ url('api/admin/company/ajax_frozen') }}";//操作(冻结/解冻)
+
+
+      var SCHEDULE_SHOW_URL = "{{ url('admin/company_schedule/show')}}/";//查看企业能力附表 + 企业id
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
   <script src="{{ asset('js/admin/QualityControl/Company.js') }}"  type="text/javascript"></script>

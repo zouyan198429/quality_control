@@ -2150,12 +2150,40 @@ function getDiffTime(leftTime){
     return returnObj;
 }
 
+// 获得文件名称
+// filePath  为 $("#file").val();
+function getUpFileName(filePath){
+    console.log('filePath=', filePath);
+    var fileName = '';// getFileName(filePath);
+    // filePath.indexOf("jpg")!=-1 || filePath.indexOf("png")!=-1
+    if(filePath.length > 0){
+        // $(".fileerrorTip").html("").hide();
+        var arr = filePath.split('\\');
+        fileName = arr[arr.length-1];
+        // $(".showFileName").html(fileName);
+    }else{
+        // $(".showFileName").html("");
+        // $(".fileerrorTip").html("您未上传文件，或者您上传文件类型有误！").show();
+        // return false;
+    }
+    console.log('fileName=', fileName);
+    return fileName;
+}
+
+// 获得文件名称
+// o  为 $("#file").val();
+function getFileName(o){
+    var pos=o.lastIndexOf("\\");
+    return o.substring(pos+1);
+}
+
 // 单个文件上传
 // fileObj 文件上传对象
 // ajaxUrl 上传文件处理url
 // operate_num 关闭时的操作0不做任何操作1刷新当前页面2刷新当前列表页面--当前页 ; 4 刷新当前列表页面-第一页
+//                          5 执行回调函数 -- 有一个参数 ret  调用上传后接口返回值
 // otherParams 其它参数 {'键':值,...}
-function upLoadFileSingle(fileObj, ajaxUrl, operate_num, otherParams) {
+function upLoadFileSingle(fileObj, ajaxUrl, operate_num, otherParams, doFun) {
     if (fileObj.files.length == 0) {
         return false;
     }
@@ -2211,6 +2239,9 @@ function upLoadFileSingle(fileObj, ajaxUrl, operate_num, otherParams) {
                         case 4:
                             //刷新当前列表页面-第一页
                             reset_list(false, true, true, 2);
+                            break;
+                        case 5:// 执行回调函数 -- 有一个参数 ret  调用上传后接口返回值
+                            doFun && doFun(ret);
                             break;
                         default:
                     }

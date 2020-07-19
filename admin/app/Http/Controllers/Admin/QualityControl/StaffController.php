@@ -616,7 +616,11 @@ class StaffController extends BasicController
         $organize_id = 0;
         if($this->user_type == 2 && static::$ADMIN_TYPE == 4){
             $organize_id = $this->own_organize_id;
+        }else if(static::$ADMIN_TYPE == 4){
+            $organize_id = CommonRequest::getInt($request, 'company_id');
+            if(!is_numeric($organize_id) || $organize_id <= 0) throws('所属企业参数有误！');
         }
+
         $mergeParams = [
             'admin_type' => static::$ADMIN_TYPE,// 类型1平台2企业4个人
             'company_id' => $organize_id,

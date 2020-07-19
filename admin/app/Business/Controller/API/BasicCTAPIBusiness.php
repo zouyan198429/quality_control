@@ -973,17 +973,17 @@ class BasicCTAPIBusiness extends APIOperate
     {
         $company_id = $controller->company_id;
         $user_id = $controller->user_id;
-        $id = CommonRequest::getInt($request, 'id');
-        // 调用删除接口
-        $apiParams = [
-            'company_id' => $company_id,
-            'id' => $id,
-            'operate_staff_id' => $user_id,
-            'modifAddOprate' => 1,
-        ];
-        static::exeDBBusinessMethodCT($request, $controller, '',  'delById', $apiParams, $company_id, $notLog);
-        return ajaxDataArr(1, $id, '');
-        // return static::delAjaxBase($request, $controller, '', $notLog);
+//        $id = CommonRequest::getInt($request, 'id');
+//        // 调用删除接口
+//        $apiParams = [
+//            'company_id' => $company_id,
+//            'id' => $id,
+//            'operate_staff_id' => $user_id,
+//            'modifAddOprate' => 1,
+//        ];
+//        static::exeDBBusinessMethodCT($request, $controller, '',  'delById', $apiParams, $company_id, $notLog);
+//        return ajaxDataArr(1, $id, '');
+         return static::delAjaxBase($request, $controller, '', $notLog);
 
     }
 

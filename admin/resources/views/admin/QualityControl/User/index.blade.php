@@ -25,7 +25,7 @@
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
 
-        
+
           <span>
                 <input type="hidden" name="company_id"  value="{{ $info['company_id'] ?? '' }}" />
                 <span class="company_name">{{ $info['user_company_name'] ?? '' }}</span>
@@ -105,12 +105,12 @@
           </select>
         <select style="width:90px; height:28px;" name="field">
             <option value="admin_username">用户名</option>
-            <option value="real_name">真实姓名</option> 
+            <option value="real_name">真实姓名</option>
             <option value="mobile">手机</option>
             <option value="qq_number">QQ/微信</option>
             <option value="email">邮箱</option>
             <option value="id_number">身份证号</option>
-            <option value="addr">通讯地址</option> 
+            <option value="addr">通讯地址</option>
         </select>
         <input type="text" value=""    name="keyword"  placeholder="请输入关键字" style="width: 100px;"/>
         <button class="btn btn-normal search_frm">搜索</button>
@@ -120,7 +120,9 @@
   <div class="table-header">
     <button class="btn btn-danger  btn-xs batch_del"  onclick="action.batchDel(this)">批量删除</button>
     <button class="btn btn-success  btn-xs export_excel"  onclick="action.batchExportExcel(this)" >导出[按条件]</button>
-    <button class="btn btn-success  btn-xs export_excel"  onclick="action.exportExcel(this)" >导出[勾选]</button> 
+    <button class="btn btn-success  btn-xs export_excel"  onclick="action.exportExcel(this)" >导出[勾选]</button>
+    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcelTemplate(this)">导入模版[EXCEL]</button>
+    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcel(this)">导入</button>
     <div style="display:none;" ><input type="file" class="import_file img_input"></div>{{--导入file对象--}}
       <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.openSelected(this, 2)" >审核通过[勾选]</button>
       <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.openSelected(this, 4)" >审核不通过[勾选]</button>
@@ -156,7 +158,7 @@
           </label>
         </th>
         <th>ID</th>
-        
+
         <th>姓名</th>
         <th>性别</th>
         <th>手机号</th>
@@ -169,7 +171,7 @@
         <th>审核</th>
         <th>状态</th>
         <th>上次登录</th>
-      <th>创建时间</th> 
+      <th>创建时间</th>
       <th>操作</th>
     </tr>
     </thead>

@@ -1,0 +1,185 @@
+<?php
+// 企业能力附表
+namespace App\Business\Controller\API\QualityControl;
+
+use App\Services\DBRelation\RelationDB;
+use App\Services\Excel\ImportExport;
+use App\Services\Request\API\HttpRequest;
+use App\Services\SMS\LimitSMS;
+use App\Services\Tool;
+use Illuminate\Http\Request;
+use App\Services\Request\CommonRequest;
+use App\Http\Controllers\BaseController as Controller;
+use Illuminate\Support\Facades\Hash;
+
+class CTAPICompanyScheduleBusiness extends BasicPublicCTAPIBusiness
+{
+    public static $model_name = 'API\QualityControl\CompanyScheduleAPI';
+    public static $table_name = 'company_schedule';// 表名称
+
+    // 是否激活(0:未激活；1：已激活)
+//    public static $isActiveArr = [
+//        '0' => '未激活',
+//        '1' => '已激活',
+//    ];
+
+    /**
+     * 特殊的验证 关键字 -单个 的具体验证----具体的子类----重写此方法来实现具体的验证
+     *
+     * @param array $mustFields 表对象字段验证时，要必填的字段，指定必填字须，为后面的表字须验证做准备---一维数组
+     * @param array $judgeData 需要验证的数据---数组-- 根据实际情况的维数不同。
+     * @param string $key 验证规则的关键字 -单个
+     * @param array $tableLangConfig 多语言单个数据表配置数组--也就是表多语言的那个配置数组
+     * @param array $extParams 其它扩展参数，
+     * @return  array 错误：非空数组；正确：空数组
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function singleJudgeDataByKey(&$mustFields = [], &$judgeData = [], $key = '', $tableLangConfig = [], $extParams = []){
+        if(!is_array($mustFields)) $mustFields = [];
+        $errMsgs = [];// 错误信息的数组--一维数组，可以指定下标
+        // if( (is_string($key) && strlen($key) <= 0 ) || (is_array($key))) return $errMsgs;
+        switch($key){
+            case 'add':// 添加；
+
+                break;
+            case 'modify':// 修改
+                break;
+            case 'replace':// 新加或修改
+
+                $id = $extParams['id'] ?? 0;
+                if($id > 0){
+
+                }
+
+                break;
+            default:
+                break;
+        }
+        return $errMsgs;
+    }
+
+    /**
+     * 获得列表数据时，查询条件的参数拼接--有特殊的需要自己重写此方法--每个字类都有此方法
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $queryParams 已有的查询条件数组
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  null 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function joinListParams(Request $request, Controller $controller, &$queryParams, $notLog = 0){
+        // 自己的参数查询拼接在这里-- 注意：多个id 的查询默认就已经有了，参数是 ids  多个用逗号分隔
+
+        // TODO 自己的参数查询拼接在这里-- 注意：多个id 的查询默认就已经有了，参数是 ids  多个用逗号分隔
+
+        // 所属企业-个人
+         $company_id = CommonRequest::getInt($request, 'company_id');
+         if(is_numeric($company_id) && $company_id > 0)  array_push($queryParams['where'], ['company_id', '=', $company_id]);
+
+        // 资源id
+        $resource_id = CommonRequest::getInt($request, 'resource_id');
+        if(is_numeric($resource_id) && $resource_id > 0)  array_push($queryParams['where'], ['resource_id', '=', $resource_id]);
+
+        // 方法最下面
+        // 注意重写方法中，如果不是特殊的like，同样需要调起此默认like方法--特殊的写自己特殊的方法
+        static::joinListParamsLike($request, $controller, $queryParams, $notLog);
+    }
+
+    /**
+     * 格式化数据 --如果有格式化，肯定会重写---本地数据库主要用这个来格式化数据
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $data_list 需要格式化的数据---二维数组(如果是一维数组，是转成二维数组后的数据)
+     * @param array $handleKeyArr 其它扩展参数，// 一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。--名称关键字，尽可能与关系名一样
+     * @param boolean 原数据类型 true:二维[默认];false:一维
+     * @return  boolean true
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function handleDataFormat(Request $request, Controller $controller, &$data_list, $handleKeyArr, $isMulti = true){
+
+        // 重写开始
+
+        $isNeedHandle = false;// 是否真的需要遍历处理数据 false:不需要：true:需要 ；只要有一个需要处理就标记
+
+        //        if(!empty($data_list) ){
+        // 获得所属企业名称
+        $companyKv = [];
+        if(in_array('company', $handleKeyArr)){
+            $companyIdArr = array_values(array_filter(array_column($data_list,'company_id')));// 资源id数组，并去掉值为0的
+            // 主键为下标的二维数组
+            if(!empty($companyIdArr)) $companyKv = Tool::formatArrKeyVal(CTAPIStaffBusiness::getListByIds($request, $controller, $companyIdArr, [], [], 'id'), 'id', 'company_name');
+            if(!$isNeedHandle && !empty($companyKv)) $isNeedHandle = true;
+        }
+
+        // 处理图片
+        $resourceDataArr = [];
+        if(in_array('siteResources', $handleKeyArr)){
+            $resourceIdArr = array_values(array_filter(array_column($data_list,'resource_id')));// 资源id数组，并去掉值为0的
+            if(!empty($resourceIdArr)) $resourceDataArr = Tool::arrUnderReset(CTAPIResourceBusiness::getResourceByIds($request, $controller, $resourceIdArr), 'id', 2);// getListByIds($request, $controller, implode(',', $resourceIdArr));
+            if(!$isNeedHandle && !empty($resourceDataArr)) $isNeedHandle = true;
+        }
+
+        //        }
+
+        // 改为不返回，好让数据下面没有数据时，有一个空对象，方便前端或其它应用处理数据
+        // if(!$isNeedHandle){// 不处理，直接返回 // if(!$isMulti) $data_list = $data_list[0] ?? [];
+        //    return true;
+        // }
+
+        foreach($data_list as $k => $v){
+            //            // 公司名称
+            //            $data_list[$k]['company_name'] = $v['company_info']['company_name'] ?? '';
+            //            if(isset($data_list[$k]['company_info'])) unset($data_list[$k]['company_info']);
+
+            // 获得所属企业名称 ---如果是普通用户
+            if(in_array('company', $handleKeyArr)){
+                $data_list[$k]['user_company_name'] = $companyKv[$v['company_id']] ?? '';
+            }
+
+            // 资源url
+            if(in_array('siteResources', $handleKeyArr)){
+                // $resource_list = [];
+                $resource_list = $resourceDataArr[$v['resource_id']] ?? [];
+                if(isset($v['site_resources'])){
+                    Tool::resourceUrl($v, 2);
+                    $resource_list = Tool::formatResource($v['site_resources'], 2);
+                    unset($data_list[$k]['site_resources']);
+                }
+                $data_list[$k]['resource_list'] = $resource_list;
+            }
+        }
+
+        // 重写结束
+        return true;
+    }
+
+    /**
+     * 删除单条数据--有特殊的需要自己重写此方法
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  mixed 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function delAjax(Request $request, Controller $controller, $notLog = 0)
+    {
+        $company_id = $controller->company_id;
+        $user_id = $controller->user_id;
+        $id = CommonRequest::getInt($request, 'id');
+        // 调用删除接口
+        $apiParams = [
+            'company_id' => $company_id,
+            'id' => $id,
+            'operate_staff_id' => $user_id,
+            'modifAddOprate' => 1,
+        ];
+        static::exeDBBusinessMethodCT($request, $controller, '',  'delById', $apiParams, $company_id, $notLog);
+        return ajaxDataArr(1, $id, '');
+        // return static::delAjaxBase($request, $controller, '', $notLog);
+
+    }
+
+}
