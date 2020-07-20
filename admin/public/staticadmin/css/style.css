@@ -42,7 +42,9 @@ input[type='submit'] { color:#fff; background:#018CDA; border:0; height:26px; pa
 input[type='file'] { border:0; padding:5px 5px 5px 0; }
 select { height:24px; line-height:24px; }
 
-.btn{background:#d9d9d9;border-width:1px;vertical-align:middle;height:21px;padding-left:0.15em;padding-right:0.15em;border: 1px solid; border-color: #c0c0c0 #555 #555 #c0c0c0;}
+.btn{background:#d9d9d9;border-width:1px;
+    height: 24px;
+    vertical-align:middle;height:21px;padding-left:0.15em;padding-right:0.15em;border: 1px solid; border-color: #c0c0c0 #555 #555 #c0c0c0;}
 
 /* 按钮 */
 .btn {
