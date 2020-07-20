@@ -20,7 +20,7 @@ Class Validate{
      * @var array
      */
     private $validator = array(
-        "email"=>'/^([.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\\.[a-zA-Z0-9_-])+$/',
+        "email" => "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$/", //'/^([.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\\.[a-zA-Z0-9_-]+)$/',
         "phone"=>'/^(([0-9]{2,3})|([0-9]{3}-))?((0[0-9]{2,3})|0[0-9]{2,3}-)?[1-9][0-9]{6,7}(-[0-9]{1,4})?$/',
         "mobile"=>'/^1[0-9]{10}$/',
         "url"=>'/^http:(\\/){2}[A-Za-z0-9]+.[A-Za-z0-9]+[\\/=?%-&_~`@\\[\\]\':+!]*([^<>\"\"])*$/',
@@ -52,7 +52,7 @@ Class Validate{
      */
     public function getValidator(){
         return $this->validator;
-    }  
+    }
     /**
      * 获得验证规则,传递给控制器或视图使用;主要是给下标前面加 regex_
      */
@@ -63,7 +63,7 @@ Class Validate{
             $re_regex_arr['regex_'.$k]=$v;
         }
         return $re_regex_arr;
-    }  
+    }
 
     /**
      * 验证数组中的值
@@ -81,9 +81,9 @@ Class Validate{
      *  请填写正确的EMAIL
      * ? >
      * </code>
-     * 
-     * @param 
-     * @return string 字符串类型的返回结果 
+     *
+     * @param
+     * @return string 字符串类型的返回结果
      */
     public function validate(){
         if (!is_array($this->validateparam)){//不是数组，则返回 false
@@ -179,7 +179,7 @@ Class Validate{
      * Length是验证字符串或数字的长度是否在一顶的范围内，min和max用来配合使用，min是最小的长度，max是最大的长度，如果不写max则被认为是长度必须等于min;
      * Range是数字是否在某个范围内，min和max用来配合使用。
      * 值得注意的是，如果需要判断的规则比较复杂，建议直接写正则表达式。
-     * 
+     *
      * 单个加入要验证的内容
      * $validateparam 一个一维数组,格式:array("var_name" => "验证变量名[可为空]" ,"input"=>$_POST["ac_name"], "require"=>"true", "message"=>$lang['article_class_add_name_null']),//分类名称不能为空
      * @return void
@@ -192,7 +192,7 @@ Class Validate{
     /**
      * 得到验证的错误信息
      *
-     * @param 
+     * @param
      * @return string 字符串类型[json]的返回结果
      */
     private function getError(){
@@ -231,7 +231,7 @@ Class Validate{
      *
      * @brief 是否为 ""、NULL、FALSE、array()、var $var、未定义; 以及没有任何属性的对象都将被认为是空的
      * 、0、"0" 认为是不为空
-     * @details 
+     * @details
      * @param string $record 需要判断的数据
      * @return boolean  为空返回true,非空返回false
      *
@@ -246,7 +246,7 @@ Class Validate{
             if(($record === 0) || ($record === '0')){
                // echo '变量为0';
                 return FALSE;
-            }else{                
+            }else{
                 // echo '变量为空';
                 return TRUE;
             }

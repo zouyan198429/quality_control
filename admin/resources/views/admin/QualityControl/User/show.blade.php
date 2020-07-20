@@ -25,8 +25,8 @@
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
 
-
-          <span>
+          <input type="hidden" name="company_hidden"  value="1" />
+          <span style="display: none;">
                 <input type="hidden" name="company_id"  value="{{ $info['company_id'] ?? '' }}" />
                 <span class="company_name">{{ $info['user_company_name'] ?? '' }}</span>
                 <button  type="button"  class="btn btn-danger  btn-xs ace-icon fa fa-plus-circle bigger-60"  onclick="otheraction.selectCompany(this)">选择企业</button>
@@ -122,7 +122,7 @@
     <button class="btn btn-success  btn-xs export_excel"  onclick="action.batchExportExcel(this)" >导出[按条件]</button>
     <button class="btn btn-success  btn-xs export_excel"  onclick="action.exportExcel(this)" >导出[勾选]</button>
     <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcelTemplate(this)">导入模版[EXCEL]</button>
-      <button class="btn btn-success  btn-xs import_excel"  onclick="otheraction.iframeImport(0)">导入</button>
+      <button class="btn btn-success  btn-xs import_excel"  onclick="otheraction.iframeImport({{ $info['company_id'] ?? '0' }})">导入</button>
 {{--    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcel(this)">导入</button>--}}
 {{--    <div style="display:none;" ><input type="file" class="import_file img_input"></div>{ {--导入file对象--}}
       <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.openSelected(this, 2)" >审核通过[勾选]</button>
@@ -136,20 +136,20 @@
         <col width="50">
 
         <col>
-        <col width="50">
+{{--        <col width="50">--}}
         <col width="105">
 
         <col >
-        <col >
+{{--        <col >--}}
         <!-- <col >
         <col width="75">
         <col width="75"> -->
         <col>
 
         <col width="75">
+{{--        <col width="160">--}}
         <col width="160">
-        <col width="160">
-        <col width="250">
+        <col width="180">
     </colgroup>
     <thead>
     <tr>
@@ -161,7 +161,7 @@
         <th>ID</th>
 
         <th>姓名</th>
-        <th>性别</th>
+{{--        <th>性别</th>--}}
         <th>手机号</th>
        <!--  <th>城市</th>
         <th>邮箱</th>
@@ -169,10 +169,10 @@
 
         <th>所属企业</th>
         <th>完善资料</th>
-        <th>审核</th>
-        <th>状态</th>
-        <th>上次登录</th>
-      <th>创建时间</th>
+{{--        <th>审核</th>--}}
+        <th>审核<hr/>状态</th>
+{{--        <th>上次登录</th>--}}
+      <th>上次登录<hr/>创建时间</th>
       <th>操作</th>
     </tr>
     </thead>
@@ -222,6 +222,6 @@
       var IFRAME_IMPORT_URL = "{{url('admin/user/import_bath')}}/";// 导入
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/User.js?58') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/User_show.js?58') }}"  type="text/javascript"></script>
 </body>
 </html>

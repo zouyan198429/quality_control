@@ -16,7 +16,8 @@ use Illuminate\Support\Facades\Cache;
 class IndexController extends BasicController
 {
     public function test(Request $request){
-        phpinfo();
+
+         phpinfo();
         die;
         $extParams['sqlParams']['whereIn']['id'] = 123;
         pr($extParams);

@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Admin\QualityControl;
 
+use App\Business\Controller\API\QualityControl\CTAPICitysBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIIndustryBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
 use App\Http\Controllers\WorksController;
+use App\Models\QualityControl\Staff;
 use App\Services\Request\CommonRequest;
 use App\Services\Tool;
 use Illuminate\Http\Request;
@@ -92,6 +95,134 @@ class UserController extends StaffController
         ];
         $resultDatas = CTAPIStaffBusiness::replaceById($request, $this, $saveData, $id, $extParams, true);
         return ajaxDataArr(1, $resultDatas, '');
+    }
+
+    /**
+     * 添加--导入
+     *
+     * @param Request $request
+     * @param int $company_id
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function import_bath(Request $request,$company_id = 0)
+    {
+        $reDataArr = [];// 可以传给视图的全局变量数组
+        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request, &$company_id){
+            // 正常流程的代码
+
+            $this->InitParams($request);
+            // $reDataArr = $this->reDataArr;
+            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+
+            $info = [
+                'company_id'=>$company_id,
+                'user_company_name' => '',
+            ];
+            if ($company_id > 0) { // 获得详情数据
+                $info = CTAPIStaffBusiness::getInfoData($request, $this, $company_id, [], '', []);
+                $info['user_company_name'] = $info['company_name'] ?? '';
+            }
+            $info['company_id'] = $company_id ?? 0;
+            // $reDataArr = array_merge($reDataArr, $resultDatas);
+            $reDataArr['info'] = $info;
+            $company_hidden = CommonRequest::getInt($request, 'company_hidden');
+            $reDataArr['company_hidden'] = $company_hidden;// =1 : 隐藏企业选择
+
+            return view('admin.QualityControl.User.import', $reDataArr);
+
+        }, $this->errMethod, $reDataArr, $this->errorView);
+    }
+
+    /**
+     * 首页--单个企业的员工
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function show(Request $request,$company_id = 0)
+    {
+        $reDataArr = [];// 可以传给视图的全局变量数组
+        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request, &$company_id){
+            // 正常流程的代码
+
+            $this->InitParams($request);
+            // $reDataArr = $this->reDataArr;
+            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+
+            $info = [];
+            $companyInfo = CTAPIStaffBusiness::getInfoData($request, $this, $company_id, [], '', []);
+            if(empty($companyInfo)) throws('企业信息不存在！');
+            $info['company_id'] = $company_id;
+            $info['user_company_name'] = $companyInfo['company_name'] ?? '';
+            $company_id = CommonRequest::getInt($request, 'company_id');
+
+            $reDataArr['info'] = $info;
+
+            // 获得城市KV值--企业和用户有城市
+            if(in_array(static::$ADMIN_TYPE , [2, 4])) {
+                $reDataArr['citys_kv'] = CTAPICitysBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'city_name']);
+                $reDataArr['defaultCity'] = -1;// 默认
+            }
+
+            // 所属行业--只有企业有
+            if(static::$ADMIN_TYPE == 2){
+                $reDataArr['industry_kv'] = CTAPIIndustryBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'industry_name']);
+                $reDataArr['defaultIndustry'] = -1;// 默认
+
+            }
+
+            // 拥有者类型1平台2企业4个人
+            $reDataArr['adminType'] =  Staff::$adminTypeArr;
+            $reDataArr['defaultAdminType'] = -1;// 列表页默认状态
+
+            // 是否完善资料1待完善2已完善
+            $reDataArr['isPerfect'] =  Staff::$isPerfectArr;
+            $reDataArr['defaultIsPerfect'] = -1;// 列表页默认状态
+
+            // 是否超级帐户2否1是
+            $reDataArr['issuper'] =  Staff::$issuperArr;
+            $reDataArr['defaultIssuper'] = -1;// 列表页默认状态
+
+            // 审核状态1待审核2审核通过4审核不通过
+            $reDataArr['openStatus'] =  Staff::$openStatusArr;
+            $reDataArr['defaultOpenStatus'] = -1;// 列表页默认状态
+
+            // 状态 1正常 2冻结
+            $reDataArr['accountStatus'] =  Staff::$accountStatusArr;
+            $reDataArr['defaultAccountStatus'] = -1;// 列表页默认状态
+
+            // 性别0未知1男2女
+            $reDataArr['sex'] =  Staff::$sexArr;
+            $reDataArr['defaultSex'] = -1;// 列表页默认状态
+
+            // 企业--是否独立法人1独立法人 2非独立法人
+            $reDataArr['companyIsLegalPersion'] =  Staff::$companyIsLegalPersionArr;
+            $reDataArr['defaultCompanyIsLegalPersion'] = -1;// 列表页默认状态
+
+            // 企业--企业类型1检测机构、2生产企业
+            $reDataArr['companyType'] =  Staff::$companyTypeArr;
+            $reDataArr['defaultCompanyType'] = -1;// 列表页默认状态
+
+            // 企业--企业性质1企业法人 、2企业非法人、3事业法人、4事业非法人、5社团法人、6社团非法人、7机关法人、8机关非法人、9其它机构、10民办非企业单位、11个体 、12工会法人
+            $reDataArr['companyProp'] =  Staff::$companyPropArr;
+            $reDataArr['defaultCompanyProp'] = -1;// 列表页默认状态
+
+            // 企业--单位人数1、1-20、2、20-100、3、100-500、4、500以上
+            $reDataArr['companyPeoples'] =  Staff::$companyPeoplesNumArr;
+            $reDataArr['defaultCompanyPeoples'] = -1;// 列表页默认状态
+
+            // 企业--会员等级1非会员  2会员  4理事  8常务理事   16理事长
+            $reDataArr['companyGrade'] =  Staff::$companyGradeArr;
+            $company_grade = CommonRequest::get($request, 'company_grade');
+            if(strlen($company_grade) <= 0 ) $company_grade = -1;
+            $reDataArr['defaultCompanyGrade'] = $company_grade;// 列表页默认状态
+            $reDataArr['company_grade'] = $company_grade;
+
+            return view('admin.QualityControl.' . static::$VIEW_NAME . '.show', $reDataArr);
+
+        }, $this->errMethod, $reDataArr, $this->errorView);
     }
 
 }

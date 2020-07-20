@@ -2,6 +2,7 @@
 // 帐号管理
 namespace App\Business\DB\QualityControl;
 
+use App\Models\QualityControl\Staff;
 use App\Services\Map\Map;
 use App\Services\Tool;
 use Carbon\Carbon;
@@ -419,7 +420,6 @@ class StaffDBBusiness extends BasePublicDBBusiness
         try {
             foreach($company_ids as $company_id){
                 $staffCount = static::getStaffCount($company_id, $count_type);
-
                 $updateFields = [
                     'staff_num' => $staffCount,
                 ];
@@ -428,7 +428,7 @@ class StaffDBBusiness extends BasePublicDBBusiness
                     'staff_id' => $company_id,
                 ];
                 $mainObj = null;
-                StaffExtendDBBusiness::firstOrCreate($mainObj, $searchConditon, $updateFields );
+                StaffExtendDBBusiness::updateOrCreate($mainObj, $searchConditon, $updateFields );
             }
         } catch ( \Exception $e) {
             DB::rollBack();
@@ -581,30 +581,29 @@ class StaffDBBusiness extends BasePublicDBBusiness
         if(empty($saveData)) return $returnIds;
         $selModelObj = static::getModelObj();
         // 拥有者类型1平台2企业4个人
-        $adminTypeArr = Tool::getAttr($selModelObj, 'adminTypeArr', 0);
+        $adminTypeArr = Staff::$adminTypeArr;// Tool::getAttr($selModelObj, 'adminTypeArr', 1);
         // 是否完善资料1待完善2已完善
-        $isPerfectArr = Tool::getAttr($selModelObj, 'isPerfectArr', 0);
+        $isPerfectArr = Staff::$isPerfectArr;// Tool::getAttr($selModelObj, 'isPerfectArr', 1);
         // 是否超级帐户2否1是
-        $issuperArr = Tool::getAttr($selModelObj, 'issuperArr', 0);
+        $issuperArr = Staff::$issuperArr;// Tool::getAttr($selModelObj, 'issuperArr', 1);
         // 审核状态1待审核2审核通过4审核不通过
-        $openStatusArr = Tool::getAttr($selModelObj, 'openStatusArr', 0);
+        $openStatusArr = Staff::$openStatusArr;// Tool::getAttr($selModelObj, 'openStatusArr', 1);
         // 状态 1正常 2冻结
-        $accountStatusArr = Tool::getAttr($selModelObj, 'accountStatusArr', 0);
+        $accountStatusArr = Staff::$accountStatusArr;// Tool::getAttr($selModelObj, 'accountStatusArr', 1);
         // 性别0未知1男2女
-        $sexArr = Tool::getAttr($selModelObj, 'sexArr', 0);
+        $sexArr = Staff::$sexArr;// Tool::getAttr($selModelObj, 'sexArr', 1);
         // 企业--是否独立法人1独立法人 2非独立法人
-        $companyIsLegalPersionArr = Tool::getAttr($selModelObj, 'companyIsLegalPersionArr', 0);
+        $companyIsLegalPersionArr = Staff::$companyIsLegalPersionArr;// Tool::getAttr($selModelObj, 'companyIsLegalPersionArr', 1);
         // 企业--企业类型1检测机构、2生产企业
-        $companyTypeArr = Tool::getAttr($selModelObj, 'companyTypeArr', 0);
+        $companyTypeArr = Staff::$companyTypeArr;// Tool::getAttr($selModelObj, 'companyTypeArr', 1);
         // 企业--企业性质1企业法人 、2企业非法人、3事业法人、4事业非法人、5社团法人、6社团非法人、7机关法人、8机关非法人、
         //  9其它机构、10民办非企业单位、11个体 、12工会法人
-        $companyPropArr = Tool::getAttr($selModelObj, 'companyPropArr', 0);
+        $companyPropArr = Staff::$companyPropArr;// Tool::getAttr($selModelObj, 'companyPropArr', 1);
         // 企业--单位人数1、1-20、2、20-100、3、100-500、4、500以上
-        $companyPeoplesNumArr = Tool::getAttr($selModelObj, 'companyPeoplesNumArr', 0);
+        $companyPeoplesNumArr = Staff::$companyPeoplesNumArr;// Tool::getAttr($selModelObj, 'companyPeoplesNumArr', 1);
         // 企业--会员等级1非会员  2会员  4理事  8常务理事   16理事长
-        $companyGradeArr = Tool::getAttr($selModelObj, 'companyGradeArr', 0);
+        $companyGradeArr = Staff::$companyGradeArr;// Tool::getAttr($selModelObj, 'companyGradeArr', 1);
         if(!in_array($admin_type, array_keys($adminTypeArr))) throws('参数[admin_type]有误！');
-
 
         $operate_staff_id_history = config('public.operate_staff_id_history', 0);// 0;--写上，不然后面要去取，但现在的系统不用历史表
 
@@ -630,6 +629,10 @@ class StaffDBBusiness extends BasePublicDBBusiness
             'open_status' => 2,// 审核状态1待审核2审核通过4审核不通过
             'account_status' => 1,// 状态 1正常 2冻结
         ];
+        // 获得城市KV值
+        $cityKV = [];
+        if($admin_type == 4) $cityKV = CitysDBBusiness::getKeyVals(['key' => 'id', 'val' => 'city_name']);
+        // throws(json_encode($cityKV));
         // 对数据有效性进行校验
         $errsArr = [];// 错误数组
         $saveArr = [];// 最终可以保存的数据
@@ -761,6 +764,9 @@ class StaffDBBusiness extends BasePublicDBBusiness
                     $email = $info['email'] ?? '';
                     $qq_number = $info['qq_number'] ?? '';
                     $id_number = $info['id_number'] ?? '';
+                    $city_id = $info['city_id'] ?? '';
+                    $city_id = array_search($city_id, $cityKV);
+                    if($city_id === false) $recordErrText .= '城市有效值[' . implode('、', $cityKV) . ']!<br/>';// $sex_id = 0;
                     $addr = $info['addr'] ?? '';
                     $admin_username = $info['admin_username'] ?? '';
                     $admin_password = $info['admin_password'] ?? '';
@@ -824,11 +830,13 @@ class StaffDBBusiness extends BasePublicDBBusiness
                         'email' => $email,
                         'qq_number' => $qq_number,
                         'id_number' => $id_number,
+                        'city_id' => $city_id,
                         'addr' => $addr,
 //                        'admin_username' => $admin_username,
 //                        'admin_password' => $admin_password,
                         'open_status' => $open_status,
                         'account_status' => $account_status,
+                        'isBatchOperate' => 1,// 标识是批量导入
                     ];
                     if(!empty($admin_username)) $temSaveArr['admin_username'] = $admin_username;
                     if(!empty($admin_password)) $temSaveArr['admin_password'] = $admin_password;
@@ -888,6 +896,11 @@ class StaffDBBusiness extends BasePublicDBBusiness
             static::replaceById($info, $company_id, $id, $operate_staff_id, $modifAddOprate);
             array_push($returnIds, $id);
 
+        }
+
+        if($admin_type == 4){
+            // 根据企业id更企业员工人数
+            static::updateStaffNum($organize_id);;
         }
         return $returnIds;
     }

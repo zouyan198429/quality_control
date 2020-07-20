@@ -1330,8 +1330,9 @@ function resolve_baidu_template(template_id,json_data,html_id){
 //iframe的高[数字]
 //tishi 标题
 //operate_num关闭时的操作0不做任何操作1刷新当前页面2刷新当前列表页面
+//                          3 执行回调函数 -- 无参数
 //sure_close_tishi 关闭窗口提示文字
-function layeriframe(weburl,tishi,heightnum,widthnum,operate_num,sure_close_tishi){
+function layeriframe(weburl,tishi,heightnum,widthnum,operate_num,sure_close_tishi, doFun){
 	 layer.open({
 		type: 2,
 		//shade: [0.5, '#000'],
@@ -1374,7 +1375,12 @@ function layeriframe(weburl,tishi,heightnum,widthnum,operate_num,sure_close_tish
                                           break;
                                     case 2:
                                         //刷新当前列表页面
-                                        parent.reset_list(true, true, false, 2);
+                                        let list_fun_name = window.parent.LIST_FUNCTION_NAME || 'reset_list';
+                                        eval( 'window.parent.' + list_fun_name + '(' + true +', ' + true +', ' + false +', 2)');
+                                        // parent.reset_list(true, true, false, 2);
+                                        break;
+                                    case 3:// 执行回调函数
+                                        doFun && doFun();
                                         break;
                                     default:
                             }

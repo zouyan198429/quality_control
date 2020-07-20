@@ -1,4 +1,34 @@
 
+var SUBMIT_FORM = true;//防止多次点击提交
+
+//获取当前窗口索引
+var PARENT_LAYER_INDEX = parent.layer.getFrameIndex(window.name);
+//让层自适应iframe
+////parent.layer.iframeAuto(PARENT_LAYER_INDEX);
+// parent.layer.full(PARENT_LAYER_INDEX);// 用这个
+//关闭iframe
+$(document).on("click",".closeIframe",function(){
+    iframeclose(PARENT_LAYER_INDEX);
+});
+//刷新父窗口列表
+// reset_total 是否重新从数据库获取总页数 true:重新获取,false不重新获取
+function parent_only_reset_list(reset_total){
+    // window.parent.reset_list(true, true, reset_total, 2);//刷新父窗口列表
+    let list_fun_name = window.parent.LIST_FUNCTION_NAME || 'reset_list';
+    eval( 'window.parent.' + list_fun_name + '(' + true +', ' + true +', ' + reset_total +', 2)');
+}
+//关闭弹窗,并刷新父窗口列表
+// reset_total 是否重新从数据库获取总页数 true:重新获取,false不重新获取
+function parent_reset_list_iframe_close(reset_total){
+    // window.parent.reset_list(true, true, reset_total, 2);//刷新父窗口列表
+    let list_fun_name = window.parent.LIST_FUNCTION_NAME || 'reset_list';
+    eval( 'window.parent.' + list_fun_name + '(' + true +', ' + true +', ' + reset_total +', 2)');
+    parent.layer.close(PARENT_LAYER_INDEX);
+}
+//关闭弹窗
+function parent_reset_list(){
+    parent.layer.close(PARENT_LAYER_INDEX);
+}
 $(function(){
 
     $('.search_frm').trigger("click");// 触发搜索事件
@@ -80,36 +110,34 @@ var otheraction = {
         });
         return false;
     },
-    schedule : function(id){// 查看能力附表
+    selectCompany: function(obj){// 选择商家
+        var recordObj = $(obj);
         //获得表单各name的值
-        var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
-        console.log(SCHEDULE_SHOW_URL);
-        console.log(data);
-        var url_params = get_url_param(data);// parent.get_url_param(data);
-        var weburl = SCHEDULE_SHOW_URL + id + '?' + url_params;
+        var weburl = SELECT_COMPANY_URL;
         console.log(weburl);
         // go(SHOW_URL + id);
         // location.href='/pms/Supplier/show?supplier_id='+id;
         // var weburl = SHOW_URL + id;
         // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
-        var tishi = "能力附表";
-        layeriframe(weburl,tishi,950,600,SHOW_CLOSE_OPERATE);
+        var tishi = '选择所属企业';//"查看供应商";
+        console.log('weburl', weburl);
+        layeriframe(weburl,tishi,700,450,0);
         return false;
     },
-    staff_num : function(id){// 查看员工
+    iframeImport : function(id){// 弹窗导入
         //获得表单各name的值
         var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
-        console.log(STAFF_SHOW_URL);
+        console.log(IFRAME_IMPORT_URL);
         console.log(data);
-        var url_params = get_url_param(data);// parent.get_url_param(data);
-        var weburl = STAFF_SHOW_URL  + id ;// + '?company_id=' + id ;// + url_params;// + id + '?' + url_params;
+        var url_params = get_url_param(data);// parent.get_url_param(data)
+        var weburl = IFRAME_IMPORT_URL + id + '?' + url_params;
         console.log(weburl);
         // go(SHOW_URL + id);
         // location.href='/pms/Supplier/show?supplier_id='+id;
         // var weburl = SHOW_URL + id;
         // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
-        var tishi = "员工管理";
-        layeriframe(weburl,tishi,1050,700,2);
+        var tishi = "导入";
+        layeriframe(weburl,tishi,950,600,IFRAME_MODIFY_CLOSE_OPERATE);
         return false;
     }
 };
@@ -194,6 +222,32 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
     });
 }
 
+// 获得选中的企业id 数组
+function getSelectedCompanyIds(){
+    var company_ids = [];
+    var company_id = $('input[name=company_id]').val();
+    company_ids.push(company_id);
+    console.log('company_ids' , company_ids);
+    return company_ids;
+}
+
+// 取消
+// company_id 企业id
+function removeCompany(company_id){
+    var seled_company_id = $('input[name=company_id]').val();
+    if(company_id == seled_company_id){
+        $('input[name=company_id]').val('');
+        $('.company_name').html('');
+    }
+}
+
+// 增加
+// company_id 企业id, 多个用,号分隔
+function addCompany(company_id, company_name){
+    $('input[name=company_id]').val(company_id);
+    $('.company_name').html(company_name);
+}
+
 (function() {
     document.write("");
     document.write("    <!-- 前端模板部分 -->");
@@ -216,19 +270,20 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
     document.write("                <\/label>");
     document.write("            <\/td>");
     document.write("            <td><%=item.id%><\/td>");
-    document.write("            <td><%=item.city_name%><\/td>");
-    document.write("            <td><%=item.company_name%><\/td>");
-    document.write("            <td><%=item.industry_name%><\/td>");
-    document.write("            <td><%=item.extend_info.staff_num%><\/td>");
-    document.write("            <td><%=item.company_certificate_no%><\/td>");
-    document.write("            <td><%=item.company_contact_name%><\/td>");
-    document.write("            <td><%=item.company_contact_mobile%><\/td>");
+    // document.write("            <td><%=item.client_id%><\/td>");
+
+    document.write("            <td><%=item.real_name%>(<%=item.sex_text%>)<\/td>");
+    // document.write("            <td><%=item.sex_text%><\/td>");
+    document.write("            <td><%=item.mobile%><\/td>");
+    //document.write("            <td><%=item.city_name%><\/td>");
+    //document.write("            <td><%=item.email%><\/td>");
+    //document.write("            <td><%=item.qq_number%><\/td>");
+    document.write("            <td><%=item.user_company_name%><\/td>");
     document.write("            <td><%=item.is_perfect_text%><\/td>");
-    document.write("            <td><%=item.open_status_text%><\/td>");
-    document.write("            <td><%=item.account_status_text%><\/td>");
-    document.write("            <td><%=item.created_at%><\/td>");
+    // document.write("            <td><%=item.open_status_text%><\/td>");
+    document.write("            <td><%=item.open_status_text%><hr/><%=item.account_status_text%><\/td>");
     // document.write("            <td><%=item.lastlogintime%><\/td>");
-    // document.write("            <td><%=item.created_at%><\/td>");
+    document.write("            <td><%=item.lastlogintime%><hr/><%=item.created_at%><\/td>");
     // document.write("            <td><%=item.updated_at%><\/td>");
     // document.write("            <td><%=item.sort_num%><\/td>");
     document.write("            <td>");
@@ -263,12 +318,6 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
     document.write("                    <i class=\"ace-icon fa fa-trash-o bigger-60\"> 删除<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
-    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.schedule(<%=item.id%>)\">");
-    document.write("                    <i class=\"ace-icon bigger-60\">能力附表(<%=item.extend_info.schedule_num%>)<\/i>");
-    document.write("                <\/a>");
-    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.staff_num(<%=item.id%>)\">");
-    document.write("                    <i class=\"ace-icon bigger-60\">员工(<%=item.extend_info.staff_num%>)<\/i>");
-    document.write("                <\/a>");
     document.write("");
     document.write("            <\/td>");
     document.write("        <\/tr>");

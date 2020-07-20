@@ -93,6 +93,22 @@ var otheraction = {
         console.log('weburl', weburl);
         layeriframe(weburl,tishi,700,450,0);
         return false;
+    },
+    iframeImport : function(id){// 弹窗导入
+        //获得表单各name的值
+        var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
+        console.log(IFRAME_IMPORT_URL);
+        console.log(data);
+        var url_params = get_url_param(data);// parent.get_url_param(data)
+        var weburl = IFRAME_IMPORT_URL + id + '?' + url_params;
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = "导入";
+        layeriframe(weburl,tishi,950,600,IFRAME_MODIFY_CLOSE_OPERATE);
+        return false;
     }
 };
 
@@ -225,7 +241,7 @@ function addCompany(company_id, company_name){
     document.write("            <\/td>");
     document.write("            <td><%=item.id%><\/td>");
     // document.write("            <td><%=item.client_id%><\/td>");
-    
+
     document.write("            <td><%=item.real_name%><\/td>");
     document.write("            <td><%=item.sex_text%><\/td>");
     document.write("            <td><%=item.mobile%><\/td>");
