@@ -1329,8 +1329,12 @@ function resolve_baidu_template(template_id,json_data,html_id){
 //iframe的宽[数字]
 //iframe的高[数字]
 //tishi 标题
-//operate_num关闭时的操作0不做任何操作1刷新当前页面2刷新当前列表页面
+//operate_num关闭时的操作0不做任何操作1刷新当前页面
+//                          2刷新当前列表页面--[适合更新操作-不更新总数]
+//                          22刷新当前列表页面--[适合新加操作-更新总数]
 //                          3 执行回调函数 -- 无参数
+//                         4刷新当前页面--当前页操作5刷新当前列表页面--当前页操作[适合更新操作-不更新总数]
+//                                                  6刷新当前列表页面--自己页面操作时[适合新加操作-更新总数]
 //sure_close_tishi 关闭窗口提示文字
 function layeriframe(weburl,tishi,heightnum,widthnum,operate_num,sure_close_tishi, doFun){
 	 layer.open({
@@ -1366,21 +1370,44 @@ function layeriframe(weburl,tishi,heightnum,widthnum,operate_num,sure_close_tish
                             btn: ['确定','取消'] //按钮
                         }, function(){
                             layer.close(index_query);
+                            let list_fun_name = '';
                             switch (operate_num){
                                     case 0:
                                         break;
                                     case 1:
-                                          //刷新当前页面
+                                          //刷新当前页面-父页操作时
                                           parent.location.reload();
                                           break;
                                     case 2:
-                                        //刷新当前列表页面
-                                        let list_fun_name = window.parent.LIST_FUNCTION_NAME || 'reset_list';
-                                        eval( 'window.parent.' + list_fun_name + '(' + true +', ' + true +', ' + false +', 2)');
+                                        //刷新当前列表页面-父页操作时--[适合更新操作-不更新总数]
+                                        list_fun_name = window.parent.LIST_FUNCTION_NAME || 'reset_list';
+                                        eval( 'parent.' + list_fun_name + '(' + true +', ' + true +', ' + false +', 2)');
+                                        // parent.reset_list(true, true, false, 2);
+                                        break;
+                                    case 22:
+                                        //刷新当前列表页面-父页操作时--[适合新加操作-更新总数]
+                                        list_fun_name = window.parent.LIST_FUNCTION_NAME || 'reset_list';
+                                        eval( 'parent.' + list_fun_name + '(' + true +', ' + true +', ' + true +', 2)');
                                         // parent.reset_list(true, true, false, 2);
                                         break;
                                     case 3:// 执行回调函数
                                         doFun && doFun();
+                                        break;
+                                    case 4:
+                                        //刷新当前页面-自己页面
+                                        location.reload();
+                                        break;
+                                    case 5:
+                                        //刷新当前列表页面-自己页面操作时[适合更新操作-不更新总数]
+                                        list_fun_name = LIST_FUNCTION_NAME || 'reset_list';
+                                        eval( '' + list_fun_name + '(' + true +', ' + true +', ' + false +', 2)');
+                                        // parent.reset_list(true, true, false, 2);
+                                        break;
+                                    case 6:
+                                        //刷新当前列表页面-自己页面操作时[适合新加操作-更新总数]
+                                        list_fun_name = LIST_FUNCTION_NAME || 'reset_list';
+                                        eval( '' + list_fun_name + '(' + true +', ' + true +', ' + true +', 2)');
+                                        // parent.reset_list(true, true, false, 2);
                                         break;
                                     default:
                             }

@@ -220,6 +220,7 @@
 
       var SELECT_COMPANY_URL = "{{url('admin/company/select')}}";// 选择所属企业
       var IFRAME_IMPORT_URL = "{{url('admin/user/import_bath')}}/";// 导入
+
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
   <script src="{{ asset('js/admin/QualityControl/User_show.js?58') }}"  type="text/javascript"></script>
