@@ -540,7 +540,7 @@ class StaffDBBusiness extends BasePublicDBBusiness
             $delQueryParams = [
                 'where' => [
                     ['admin_type', $admin_type],
-                    ['issuper', 2],
+                    ['issuper','<>', 1],
                 ],
             ];
             Tool::appendParamQuery($delQueryParams, $id, 'id', [0, '0', ''], ',', false);
@@ -924,7 +924,7 @@ class StaffDBBusiness extends BasePublicDBBusiness
             $saveQueryParams = [
                 'where' => [
                     ['open_status', 1], // 自由点，让他都可以改 ，就注释掉
-                    ['issuper', 2],
+                    ['issuper', '<>' , 1],
                     ['admin_type', $admin_type],
                 ],
 //                            'select' => [
@@ -982,7 +982,7 @@ class StaffDBBusiness extends BasePublicDBBusiness
                 'where' => [
                    //  ['account_status', 1],
                     ['admin_type', $admin_type],
-                    ['issuper', 2],
+                    ['issuper', '<>', 1],
                 ],
 //                            'select' => [
 //                                'id','title','sort_num','volume'
@@ -999,6 +999,7 @@ class StaffDBBusiness extends BasePublicDBBusiness
             // 加入 id
             Tool::appendParamQuery($saveQueryParams, $id, 'id');
             Tool::appendParamQuery($saveQueryParams, $organize_id, 'company_id', [0, '0', ''], ',', false);
+            // pr($saveQueryParams);
             $modifyNum = static::save($updateData, $saveQueryParams);
         } catch ( \Exception $e) {
             DB::rollBack();
