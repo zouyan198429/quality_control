@@ -104,7 +104,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/staff/ajax_get_ids', 'Admin\QualityControl\StaffController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
         $api->any('admin/staff/ajax_open', 'Admin\QualityControl\StaffController@ajax_open');// 审核操作(通过/不通过)
-        $api->post('admin/staff/ajax_frozen', 'Admin\QualityControl\StaffController@ajax_frozen');// 操作(冻结/解冻)
+        $api->any('admin/staff/ajax_frozen', 'Admin\QualityControl\StaffController@ajax_frozen');// 操作(冻结/解冻)
 
         // 企业帐号管理
         $api->any('admin/company/ajax_alist', 'Admin\QualityControl\CompanyController@ajax_alist');//ajax获得列表数据

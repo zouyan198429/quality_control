@@ -393,12 +393,20 @@ class StaffController extends BasicController
 //            $saveData['account_status'] = $account_status;
 //        }
 
-//        if($id <= 0) {// 新加;要加入的特别字段
-//            $addNewData = [
-//                // 'account_password' => $account_password,
-//            ];
-//            $saveData = array_merge($saveData, $addNewData);
-//        }
+        if($id <= 0) {// 新加;要加入的特别字段
+            $addNewData = [
+                // 'account_password' => $account_password,
+//                'is_perfect' => 1,
+                'company_grade' => 1,// 新加的会员默认等级为非会员单位
+                'issuper' => 2,
+//                'company_type' => 0,// 企业类型1检测机构、2生产企业
+//                'company_prop' => 0,// 企业性质1企业法人 、2企业非法人、3事业法人、4事业非法人、5社团法人、6社团非法人、7机关法人、8机关非法人、9其它机构、10民办非企业单位、11个体 、12工会法人
+//                'company_peoples_num' => 0,// 单位人数1、1-20、2、20-100、3、100-500、4、500以上
+                'open_status' => 2,// 审核状态1待审核2审核通过4审核不通过
+                'account_status' => 1// 状态 1正常 2冻结
+            ];
+            $saveData = array_merge($saveData, $addNewData);
+        }
         $extParams = [
             'judgeDataKey' => 'replace',// 数据验证的下标
         ];
