@@ -31,7 +31,7 @@
 {{--                    <input type="text" class="inp wnormal"  name="sort_num" value="{{ $info['sort_num'] ?? '' }}" placeholder="请输入排序"  onkeyup="isnum(this) " onafterpaste="isnum(this)"  />--}}
 {{--                </td>--}}
 {{--            </tr>--}}
-            <tr>
+            <tr  @if (isset($company_hidden) && $company_hidden == 1 ) style="display: none;"  @endif>
                 <th>所属企业<span class="must">*</span></th>
                 <td>
                     <input type="hidden" name="company_id"  value="{{ $info['company_id'] ?? '' }}" />

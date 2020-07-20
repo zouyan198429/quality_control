@@ -1295,7 +1295,7 @@ class Tool
      * @author zouyan(305463219@qq.com)
      */
     public static function formatOneArrVals(&$paramVals = '', $excludeVals = [0, '0', ''], $valsSeparator = ',', $operate_type = (1 | 2 | 4 | 8)){
-        if(!is_array($paramVals) && !is_string($paramVals)) {
+        if(!is_array($paramVals) && !is_string($paramVals) && !is_numeric($paramVals)) {
             $paramVals = [];
             return false;
         }

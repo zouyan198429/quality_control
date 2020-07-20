@@ -113,6 +113,17 @@ class StaffController extends BasicController
             if(strlen($company_grade) <= 0 ) $company_grade = -1;
             $reDataArr['defaultCompanyGrade'] = $company_grade;// 列表页默认状态
             $reDataArr['company_grade'] = $company_grade;
+
+            $company_id = CommonRequest::getInt($request, 'company_id');
+            $info = [];
+            if(is_numeric($company_id) && $company_id > 0){
+                // 获得企业信息
+                $companyInfo = CTAPIStaffBusiness::getInfoData($request, $this, $company_id);
+                if(empty($companyInfo)) throws('企业信息不存在！');
+                $info['company_id'] = $company_id;
+                $info['user_company_name'] = $companyInfo['company_name'] ?? '';
+            }
+            $reDataArr['info'] = $info;
             return view('admin.QualityControl.' . static::$VIEW_NAME . '.index', $reDataArr);
 
         }, $this->errMethod, $reDataArr, $this->errorView);
@@ -221,7 +232,6 @@ class StaffController extends BasicController
                 //   'department_id' => 0,
             ];
             $operate = "添加";
-
             if ($id > 0) { // 获得详情数据
                 $operate = "修改";
                 $handleKeyArr = [];
@@ -238,7 +248,17 @@ class StaffController extends BasicController
                 if(!$this->batchJudgeRecordOperateAuth($info, $powerFields, 0, 0, 0, true)){
                     throws('您没有操作权限！');
                 }
+            }else{
+                $company_id = CommonRequest::getInt($request, 'company_id');
+                if(is_numeric($company_id) && $company_id > 0){
+                    // 获得企业信息
+                    $companyInfo = CTAPIStaffBusiness::getInfoData($request, $this, $company_id);
+                    if(empty($companyInfo)) throws('企业信息不存在！');
+                    $info['company_id'] = $company_id;
+                    $info['user_company_name'] = $companyInfo['company_name'] ?? '';
+                }
             }
+
             // $reDataArr = array_merge($reDataArr, $resultDatas);
             $reDataArr['info'] = $info;
             $reDataArr['operate'] = $operate;
@@ -274,7 +294,8 @@ class StaffController extends BasicController
                 if(strlen($company_grade) <= 0 ) $company_grade = -1;
                 $reDataArr['defaultCompanyGrade'] = $company_grade;// $info['company_grade'] ?? -1;// 列表页默认状态
             }
-
+            $company_hidden = CommonRequest::getInt($request, 'company_hidden');
+            $reDataArr['company_hidden'] = $company_hidden;// =1 : 隐藏企业选择
             return view('admin.QualityControl.' . static::$VIEW_NAME . '.add', $reDataArr);
 
         }, $this->errMethod, $reDataArr, $this->errorView);

@@ -233,6 +233,7 @@
 
 
       var SCHEDULE_SHOW_URL = "{{ url('admin/company_schedule/show')}}/";//查看企业能力附表 + 企业id
+      var STAFF_SHOW_URL = "{{ url('admin/user/show')}}/";//查看企业能力附表 + 企业id
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
   <script src="{{ asset('js/admin/QualityControl/Company.js') }}"  type="text/javascript"></script>

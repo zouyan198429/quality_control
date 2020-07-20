@@ -108,7 +108,6 @@ $(function(){
     });
 
 });
-
 // 上传成功后的回调
 function finishUpfile(ret){
     let reset_total = true;

@@ -215,9 +215,12 @@ Route::get('admin/company/import_template', 'Admin\QualityControl\CompanyControl
 // 个从帐号管理
 Route::get('admin/user', 'Admin\QualityControl\UserController@index');// 列表
 Route::get('admin/user/add/{id}', 'Admin\QualityControl\UserController@add');// 添加
+Route::get('admin/user/show/{company_id}', 'Admin\QualityControl\UserController@show');// 查看
+Route::get('admin/user/show_add/{id}', 'Admin\QualityControl\UserController@show_add');// 添加
 // Route::get('admin/user/select', 'Admin\QualityControl\UserController@select');// 选择-弹窗
 Route::get('admin/user/export', 'Admin\QualityControl\UserController@export');// 导出
 Route::get('admin/user/import_template', 'Admin\QualityControl\UserController@import_template');// 导入模版
+Route::get('admin/user/import_bath/{company_id}', 'Admin\QualityControl\UserController@import_bath');// 导入批量
 
 // 行业[一级分类]
 Route::get('admin/industry', 'Admin\QualityControl\IndustryController@index');// 列表
