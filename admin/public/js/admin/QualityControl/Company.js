@@ -109,7 +109,7 @@ var otheraction = {
         // var weburl = SHOW_URL + id;
         // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
         var tishi = "员工管理";
-        layeriframe(weburl,tishi,1050,700,2);
+        layeriframe(weburl,tishi,1050,700,5);
         return false;
     }
 };

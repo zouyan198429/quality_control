@@ -4,7 +4,7 @@
 
     <!-- 模态框（Modal）还需要开 /bootstrap.min.css  和  bootstrap.min.js -->
     {{--@include('public.alert_layer')--}}
-    <!-- /.main-container --> 
+    <!-- /.main-container -->
     <!-- basic scripts -->
     {{--111
     <!--[if !IE]> -->

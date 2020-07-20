@@ -210,6 +210,7 @@
 
       var OPEN_OPERATE_URL = "{{ url('api/admin/company/ajax_open') }}";//审核操作(通过/不通过)
       var ACCOUNT_STATUS_URL = "{{ url('api/admin/company/ajax_frozen') }}";//操作(冻结/解冻)
+
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
   <script src="{{ asset('js/admin/QualityControl/company_select.js') }}"  type="text/javascript"></script>
