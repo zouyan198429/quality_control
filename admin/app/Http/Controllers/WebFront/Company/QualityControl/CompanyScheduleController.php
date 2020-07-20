@@ -205,6 +205,12 @@ class CompanyScheduleController extends BasicController
      */
     public function ajax_alist(Request $request){
         $this->InitParams($request);
+        $user_info = $this->user_info;
+        // 根据条件获得项目列表数据
+        $mergeParams = [
+            'company_id' => $this->user_id,
+        ];
+        CTAPICompanyScheduleBusiness::mergeRequest($request, $this, $mergeParams);
         $relations = [];//  ['siteResources']
         $extParams = [
             'handleKeyArr' => ['siteResources'],//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
