@@ -26,22 +26,28 @@
                 </div>
 
 				<div class="form-item company_input">
-                    <label for="username" class="form-label">用户名</label>
+                    <label for="username" class="form-label">登录帐号</label>
                     <div class="form-input">
                     	<input type="text" name="admin_username"  autocomplete="off" value="" class="w480">
+                        <p class="gray">用户名以字母数字组合，长度4~20位。可以包含数字、字母。注册成功后不可修改！</p>
                    	</div>
+                    
                 </div>
                 <div class="form-item company_input">
                     <label for="password" class="form-label">密码</label>
                     <div class="form-input">
                    		<input type="password" name="admin_password"  autocomplete="off" value="" class="w480">
+                        <p class="gray">请输入帐号密码。密码需由6-16个字符（数字、字母、下划线）组成，区分大小写</p>
                     </div>
+                    
                 </div>
                 <div class="form-item company_input">
                     <label for="password" class="form-label">确认密码</label>
                     <div class="form-input">
                     	<input type="password" name="repass"  autocomplete="off" value="" class="w480">
+                        <p class="gray">再输入一次登录密码</p>
                     </div>
+                    
                 </div>
                 <div class="form-item company_input">
                     <label for="password" class="form-label">图形验证码</label>
@@ -58,6 +64,7 @@
                     <label for="username" class="form-label"> 姓名 <span class="red">*</span> </label>
                     <div class="form-input">
                         <input type="text" name="real_name" autocomplete="off" value="{{ $info['real_name'] ?? '' }}" class="w480">
+                        <p class="gray">请输入真实姓名</p>
                     </div>
                 </div>
                 <div class="form-item user_input">
