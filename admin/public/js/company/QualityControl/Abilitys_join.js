@@ -151,6 +151,17 @@ function ajax_form(){
     if(!judge_validate(4,'联系电话',tel,false,'length',1,30)){
         return false;
     }
+    var index_query = layer.confirm('请仔细检查各项报名信息，谨防填选错误！<br/>提交后不能修改！', {
+        btn: ['确认提交','返回检查'] //按钮
+    }, function(){
+        ajax_save(ids);
+        layer.close(index_query);
+    }, function(){
+    });
+}
+
+// 验证通过后，ajax保存
+function ajax_save(ids){
 
     // 验证通过
     SUBMIT_FORM = false;//标记为已经提交过

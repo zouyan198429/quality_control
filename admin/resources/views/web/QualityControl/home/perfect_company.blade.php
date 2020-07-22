@@ -60,10 +60,10 @@
 				</div>
 
 				<div class="form-item">
-				    <label for="text" class="form-label">企业类型 <span class="red">*</span> </label>
+				    <label for="text" class="form-label">企业类别 <span class="red">*</span> </label>
 				    <div class="form-input">
-                        <label  for="company_type_one"> <input type="radio" id="company_type_one" name="company_type" value="1" title="检测机构" style="margin:0; " @if (isset($info['company_type']) && $info['company_type'] == 1 ) checked @endif> 检测机构</label>&nbsp;
-                        <label  for="company_type_two"><input type="radio" id="company_type_two"  name="company_type" value="2" title="生产企业" style="margin:0; " @if (isset($info['company_type']) && $info['company_type'] == 2 ) checked @endif> 生产企业</label>&nbsp;
+                        <label  for="company_type_one"> <input type="radio" id="company_type_one" name="company_type" value="1" title="检测机构" style="margin:0; " @if (isset($info['company_type']) && $info['company_type'] == 1 ) checked @endif> 检验检测机构</label>&nbsp;
+                        <label  for="company_type_two"><input type="radio" id="company_type_two"  name="company_type" value="2" title="生产企业" style="margin:0; " @if (isset($info['company_type']) && $info['company_type'] == 2 ) checked @endif> 生产企业内部实验室</label>&nbsp;
 					</div>
 				</div>
 				<div class="form-item">
@@ -88,7 +88,7 @@
 				    <label for="text" class="form-label">邮编</label>
 				    <div class="form-input"><input type="text" name="zip_code" class="form-control" autocomplete="off" value="{{ $info['zip_code'] ?? '' }}"></div>
 				</div>
-				<div class="form-item">
+				<div class="form-item" style="display: none;">
 				    <label for="text" class="form-label">传真</label>
 				    <div class="form-input"><input type="text" name="fax" class="form-control" autocomplete="off" value="{{ $info['fax'] ?? '' }}"></div>
 				</div>
@@ -157,7 +157,7 @@
                     </div>
                 </div>
                 <div class="form-item">
-                    <label for="text" class="form-label">证书编号 <span class="red">*</span></label>
+                    <label for="text" class="form-label">资质认定证书编号 <span class="red">*</span></label>
                     <div class="form-input"><input type="text" name="company_certificate_no" class="form-control" autocomplete="off" value="{{ $info['company_certificate_no'] ?? '' }}"></div>
                 </div>
                 <div class="form-item">
@@ -169,7 +169,7 @@
 				    <div class="form-input"><input type="text" name="company_contact_mobile" class="form-control" autocomplete="off" value="{{ $info['company_contact_mobile'] ?? '' }}"></div>
 				</div>
                 <div class="form-item">
-                    <label for="text" class="form-label">联系电话<span class="red">*</span></label>
+                    <label for="text" class="form-label">固定电话<span class="red">*</span></label>
                     <div class="form-input"><input type="text" name="company_contact_tel" class="form-control" autocomplete="off" value="{{ $info['company_contact_tel'] ?? '' }}"></div>
                 </div>
 				<div class="form-item read_and_agree">
