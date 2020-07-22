@@ -3944,7 +3944,13 @@ class Tool
         return true;
     }
 
-    /**
+    // appendParamQuery 方法的扩展--重点是传入的值不会转为数组，不改变原来的值
+    public static function appendParamQueryExtend(&$queryParams, $paramVals = '', $fieldName = '', $excludeVals = [0, '0', ''], $valsSeparator = ',', $hasInIsMerge = false)
+    {
+        return static::appendParamQuery($queryParams, $paramVals, $fieldName, $excludeVals, $valsSeparator, $hasInIsMerge);
+    }
+
+        /**
      * 根据参数的名称，获得参数传入值，并加入查询条件中。
      *
      * @param array $queryParams 已有的查询条件数组
@@ -4132,5 +4138,6 @@ class Tool
     }
 
     // ********************视图**错误*****执行方法*******************结束***************************************************
+
 
 }

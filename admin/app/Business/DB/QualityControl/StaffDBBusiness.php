@@ -526,7 +526,7 @@ class StaffDBBusiness extends BasePublicDBBusiness
                     if(!is_numeric($staffCount) || $staffCount > 0){
                         // 有必要才格式化数据
                         if(empty($formatDataList)) $formatDataList = Tool::arrUnderReset($dataListArr, 'id', 1);
-                        throws('企业【' . ($formatDataList[$temStaffId]['company_name'] ?? '') . '】有员工【' . $staffCount . '人】，不可进删除操作！<br/>如果确实要删除，请先删除或解绑员工！');
+                        throws('企业【' . ($formatDataList[$temStaffId]['company_name'] ?? '') . '】有员工【' . $staffCount . '人】，不可以删除操作！<br/>如果确实要删除，请先删除或解绑员工！');
                     }
 
                 }

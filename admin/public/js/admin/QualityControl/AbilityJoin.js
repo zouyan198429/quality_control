@@ -16,6 +16,27 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
     reset_list(is_read_page, false, reset_total, do_num);
     // initList();
 }
+
+//业务逻辑部分
+var otheraction = {
+    getSample : function(id){// 弹窗取样
+        //获得表单各name的值
+        var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
+        console.log(IFRAME_SAMPLE_URL);
+        console.log(data);
+        var url_params = get_url_param(data);// parent.get_url_param(data)
+        var weburl = IFRAME_SAMPLE_URL + id + '?' + url_params;
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = "取样";
+        layeriframe(weburl,tishi,950,600,IFRAME_MODIFY_CLOSE_OPERATE);
+        return false;
+    }
+};
+
 (function() {
     document.write("");
     document.write("    <!-- 前端模板部分 -->");
@@ -55,6 +76,9 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
     document.write("                    <i class=\"ace-icon fa fa-check bigger-60\"> 查看<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"otheraction.getSample(<%=item.id%>)\">");
+    document.write("                    <i class=\"ace-icon fa fa-check bigger-60\"> 取样<\/i>");
+    document.write("                <\/a>");
     // document.write("                <%if( can_modify){%>");
     // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.iframeModify(<%=item.id%>)\">");
     // document.write("                    <i class=\"ace-icon fa fa-pencil bigger-60\"> 编辑<\/i>");

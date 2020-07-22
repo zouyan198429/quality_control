@@ -125,6 +125,8 @@
       var IMPORT_EXCEL_TEMPLATE_URL = "{{ url('admin/ability_join/import_template') }}";//导入EXCEL模版地址
       var IMPORT_EXCEL_URL = "{{ url('api/admin/ability_join/import') }}";//导入EXCEL地址
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
+
+      var IFRAME_SAMPLE_URL = "{{url('admin/ability_join/get_sample/')}}/";//添加/修改页面地址前缀 + id
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
   <script src="{{ asset('js/admin/QualityControl/AbilityJoin.js?0') }}"  type="text/javascript"></script>

@@ -273,6 +273,8 @@ Route::get('admin/ability_join/info/{id}', 'Admin\QualityControl\AbilityJoinCont
 //Route::get('admin/ability_join/export', 'Admin\QualityControl\AbilityJoinController@export');// 导出
 //Route::get('admin/ability_join/import_template', 'Admin\QualityControl\AbilityJoinController@import_template');// 导入模版
 
+Route::get('admin/ability_join/get_sample/{id}', 'Admin\QualityControl\AbilityJoinController@get_sample');// 取样
+
 // 企业能力附表
 Route::get('admin/company_schedule', 'Admin\QualityControl\CompanyScheduleController@index');// 列表
 Route::get('admin/company_schedule/show/{company_id}', 'Admin\QualityControl\CompanyScheduleController@show');// 查看
