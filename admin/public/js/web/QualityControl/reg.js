@@ -145,7 +145,7 @@ function ajax_form(){
 
         // 验证信息
         var admin_username = $('input[name=admin_username]').val();
-        var judgeuser =judge_validate(1,'用户名',admin_username,true,'length',6,20);
+        var judgeuser =judge_validate(1,'登录帐号',admin_username,true,'length',6,20);
         if(judgeuser != ''){
             layer_alert(judgeuser,3,0);
             // err_alert('<font color="#000000">' + judgeuser + '</font>');

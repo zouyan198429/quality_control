@@ -229,7 +229,7 @@ function ajax_form(){
     }
 
     var company_certificate_no = $('input[name=company_certificate_no]').val();
-    if(!judge_validate(4,'证书编号',company_certificate_no,true,'length',4,30)){
+    if(!judge_validate(4,'资质认定证书编号',company_certificate_no,true,'length',4,30)){
         return false;
     }
 
@@ -244,7 +244,7 @@ function ajax_form(){
     }
 
     var company_contact_tel = $('input[name=company_contact_tel]').val();
-    if(!judge_validate(4,'联系电话',company_contact_tel,true,'length',6,20)){
+    if(!judge_validate(4,'固定电话',company_contact_tel,true,'length',6,20)){
         return false;
     }
 
