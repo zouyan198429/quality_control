@@ -82,24 +82,27 @@ class CTAPIAbilityJoinItemsStandardsBusiness extends BasicPublicCTAPIBusiness
         if(in_array('project_standards', $handleKeyArr)){
             $standardIdsArr = array_values(array_filter(array_column($data_list,'project_standard_id')));// 资源id数组，并去掉值为0的
             // 查询条件
-            $standardList = [];
-            if(!empty($standardIdsArr)){
-                // 获得企业信息
-                $standardQueryParams = [
-                    'where' => [
-                        // ['type_id', 5],
-                        //                //['mobile', $keyword],
-                    ],
-                    //            'select' => [
-                    //                'id','company_id','position_name','sort_num'
-                    //                //,'operate_staff_id','operate_staff_id_history'
-                    //                ,'created_at'
-                    //            ],
-                    // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
-                ];
-                Tool::appendParamQuery($standardQueryParams, $standardIdsArr, 'id', [0, '0', ''], ',', false);
-                $standardList = CTAPIProjectStandardsBusiness::getBaseListData($request, $controller, '', $standardQueryParams,[], 1,  1)['data_list'] ?? [];
-            }
+//            $standardList = [];
+//            if(!empty($standardIdsArr)){
+//                // 获得企业信息
+//                $standardQueryParams = [
+//                    'where' => [
+//                        // ['type_id', 5],
+//                        //                //['mobile', $keyword],
+//                    ],
+//                    //            'select' => [
+//                    //                'id','company_id','position_name','sort_num'
+//                    //                //,'operate_staff_id','operate_staff_id_history'
+//                    //                ,'created_at'
+//                    //            ],
+//                    // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
+//                ];
+//                Tool::appendParamQuery($standardQueryParams, $standardIdsArr, 'id', [0, '0', ''], ',', false);
+//                $standardList = CTAPIProjectStandardsBusiness::getBaseListData($request, $controller, '', $standardQueryParams,[], 1,  1)['data_list'] ?? [];
+//            }
+
+            $extParams = [];
+            $standardList =  CTAPIProjectStandardsBusiness::getFVFormatList( $request,  $controller,  ['id' => $standardIdsArr], false,[], $extParams);
             if(!empty($standardList)){
                 $standardDataList = Tool::arrUnderReset($standardList, 'id', 1);
                 $standardKVList = Tool::formatArrKeyVal($standardList, 'id', 'name');
