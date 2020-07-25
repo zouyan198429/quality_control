@@ -19,21 +19,9 @@
   <div class="mmhead" id="mywork">
 
     @include('common.pageParams')
-{{--      只有非会员单位可以手动添加，其它等级的需要再操作--}}
-{{--      @if(isset($company_grade) && $company_grade == 1)--}}
-{{--        <div class="tabbox" >--}}
-{{--          <a href="javascript:void(0);" class="on" onclick="action.iframeModify(0)">添加单位</a>--}}
-{{--        </div>--}}
-{{--      @endif--}}
+ 
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
-      <div class="msearch fr">
-
-        {{--<select class="wmini" name="province_id">--}}
-          {{--<option value="">全部</option>--}}
-          {{--@foreach ($province_kv as $k=>$txt)--}}
-            {{--<option value="{{ $k }}"  @if(isset($province_id) && $province_id == $k) selected @endif >{{ $txt }}</option>--}}
-          {{--@endforeach--}}
-        {{--</select>--}}
+      <div class="msearch fr"> 
           <select class="wmini" name="city_id" style="width: 80px;">
               <option value="">城市</option>
               @foreach ($citys_kv as $k=>$txt)
@@ -113,47 +101,26 @@
               @endforeach
           </select>
         <select style="width:90px; height:28px;" name="field">
-            <option value="company_name">单位名称</option>
-{{--            <option value="admin_username">用户名</option>--}}
-{{--            <option value="company_credit_code">统一社会信用代码</option>--}}
-{{--            <option value="company_legal_credit_code">主体机构统一社会信用代码</option>--}}
-{{--            <option value="company_legal_name">主体机构</option>--}}
-{{--            <option value="company_legal">法人代表</option>--}}
-{{--            <option value="company_certificate_no">证书编号</option>--}}
+            <option value="company_name">单位名称</option> 
             <option value="company_contact_name">联系人</option>
             <option value="company_contact_mobile">联系人手机</option>
             <option value="company_contact_tel">联系电话</option>
-            <option value="addr">通讯地址</option>
-{{--            <option value="zip_code">邮编</option>--}}
-{{--            <option value="fax">传真</option>--}}
-{{--            <option value="email">企业邮箱</option>--}}
+            <option value="addr">通讯地址</option> 
         </select>
         <input type="text" value=""    name="keyword"  placeholder="请输入关键字" style="width: 100px;"/>
         <button class="btn btn-normal search_frm">搜索</button>
       </div>
     </form>
   </div>
-{{--  <div class="table-header">--}}
-{{--    <button class="btn btn-danger  btn-xs batch_del"  onclick="action.batchDel(this)">批量删除</button>--}}
-{{--    <button class="btn btn-success  btn-xs export_excel"  onclick="action.batchExportExcel(this)" >导出[按条件]</button>--}}
-{{--    <button class="btn btn-success  btn-xs export_excel"  onclick="action.exportExcel(this)" >导出[勾选]</button>--}}
-{{--    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcelTemplate(this)">导入模版[EXCEL]</button>--}}
-{{--    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcel(this)">导入</button>--}}
-{{--    <div style="display:none;" ><input type="file" class="import_file img_input"></div>{ {--导入file对象--} }--}}
-{{--      <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.openSelected(this, 2)" >审核通过[勾选]</button>--}}
-{{--      <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.openSelected(this, 4)" >审核不通过[勾选]</button>--}}
-{{--    <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.frozenSelected(this, 2)" >冻结[勾选]</button>--}}
-{{--    <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.frozenSelected(this, 1)" >解冻[勾选]</button>--}}
-{{--  </div>--}}
+ 
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
-{{--        <col width="50">--}}
-{{--        <col width="60">--}}
+ 
         <col width="60">
         <col>
         <col width="90">
         <col width="200">
-{{--        <col width="150">--}}
+ 
     </colgroup>
     <thead>
     <tr>

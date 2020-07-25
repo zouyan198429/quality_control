@@ -57,7 +57,7 @@ $(function(){
     });
 
     // 短信登录不用图形验证码
-    if(false){
+    if(true){
         $('.' +  CAPTCHA_IMG_CLASS + '').first().click();
     }
     // $('.' +  CAPTCHA_IMG_CLASS + '').each(function(){
