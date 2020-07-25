@@ -21,6 +21,7 @@ class APIOperate extends BaseBusiness
     public static $database_model_dir_name = '';// 对应的数据库模型目录名称
     public static $model_name = '';// 中间层 App\Business\API 下面的表名称 API\RunBuy\CountSenderRegAPI
     public static $table_name = '';// 表名称
+    public static $record_class = __CLASS__;// 当前的类名称 App\Business\***\***\**\***
 
     // 具体的表，根据实际情况继承修改下面属性--与默认值不同时
     public static $primary_key = 'id';// 主键字段名 id --默认

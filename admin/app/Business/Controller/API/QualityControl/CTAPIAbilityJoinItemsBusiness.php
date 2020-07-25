@@ -16,6 +16,7 @@ class CTAPIAbilityJoinItemsBusiness extends BasicPublicCTAPIBusiness
 {
     public static $model_name = 'API\QualityControl\AbilityJoinItemsAPI';
     public static $table_name = 'ability_join_items';// 表名称
+    public static $record_class = __CLASS__;// 当前的类名称 App\Business\***\***\**\***
 
     // 是否激活(0:未激活；1：已激活)
 //    public static $isActiveArr = [
@@ -102,7 +103,7 @@ class CTAPIAbilityJoinItemsBusiness extends BasicPublicCTAPIBusiness
 //            }
 
             $extParams = [];
-            $abilityList =  CTAPIAbilitysBusiness::getFVFormatList( $request,  $controller,  ['id' => $abilityIdsArr], false,[], $extParams);
+            $abilityList =  CTAPIAbilitysBusiness::getFVFormatList( $request,  $controller, 1, 1,  ['id' => $abilityIdsArr], false,[], $extParams);
             if(!empty($abilityList)){
                 $abilityDataList = Tool::arrUnderReset($abilityList, 'id', 1);
                 $abilityKVList = Tool::formatArrKeyVal($abilityList, 'id', 'ability_name');
@@ -135,7 +136,7 @@ class CTAPIAbilityJoinItemsBusiness extends BasicPublicCTAPIBusiness
 //            }
 
             $extParams =[];
-            $companyList =  CTAPIStaffBusiness::getFVFormatList( $request,  $controller,  ['id' => $staffIdsArr], false,[], $extParams);
+            $companyList =  CTAPIStaffBusiness::getFVFormatList( $request,  $controller, 1, 1,  ['id' => $staffIdsArr], false,[], $extParams);
             if(!empty($companyList)){
                 $companyDataList = Tool::arrUnderReset($companyList, 'id', 1);
                 $companyKVList = Tool::formatArrKeyVal($companyList, 'id', 'company_name');
@@ -175,7 +176,7 @@ class CTAPIAbilityJoinItemsBusiness extends BasicPublicCTAPIBusiness
             $extParams = [
                 'handleKeyArr' => ['project_standards'],//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
             ];
-            $joinItemStandardList =  CTAPIAbilityJoinItemsStandardsBusiness::getFVFormatList( $request,  $controller,  ['ability_join_item_id' => $joinStandardIdsArr], false,[], $extParams);
+            $joinItemStandardList =  CTAPIAbilityJoinItemsStandardsBusiness::getFVFormatList( $request,  $controller, 1, 1,  ['ability_join_item_id' => $joinStandardIdsArr], false,[], $extParams);
 
             if(!empty($joinItemStandardList)){
                 $joinItemStandardKeyDataList = Tool::arrUnderReset($joinItemStandardList, 'ability_join_item_id', 2);
@@ -207,7 +208,7 @@ class CTAPIAbilityJoinItemsBusiness extends BasicPublicCTAPIBusiness
 //                }
 
                 $extParams = [];
-                $projectStandardsList =  CTAPIProjectStandardsBusiness::getFVFormatList( $request,  $controller,  ['ability_id' => $abilityIdArr], false,[], $extParams);
+                $projectStandardsList =  CTAPIProjectStandardsBusiness::getFVFormatList( $request,  $controller, 1, 1,  ['ability_id' => $abilityIdArr], false,[], $extParams);
 
                 if(!empty($projectStandardsList)) $projectStandardsArr = Tool::arrUnderReset($projectStandardsList, 'ability_id', 2);
                 if(!$isNeedHandle && !empty($projectStandardsArr)) $isNeedHandle = true;

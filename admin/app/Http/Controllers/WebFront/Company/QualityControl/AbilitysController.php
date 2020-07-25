@@ -4,6 +4,7 @@ namespace App\Http\Controllers\WebFront\Company\QualityControl;
 
 use App\Business\Controller\API\QualityControl\CTAPIAbilityJoinBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIAbilitysBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIStaffExtendBusiness;
 use App\Http\Controllers\WorksController;
 use App\Services\Request\CommonRequest;
 use App\Services\Tool;
@@ -423,6 +424,24 @@ class AbilitysController extends BasicController
             'judgeDataKey' => 'replace',// 数据验证的下标
         ];
         $resultDatas = CTAPIAbilityJoinBusiness::replaceById($request, $this, $saveData, $ability_join_id, $extParams, true);
+        return ajaxDataArr(1, $resultDatas, '');
+    }
+
+    /**
+     * ajax保存数据--报名
+     *
+     * @param int $id
+     * @return Response
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_company_extend(Request $request)
+    {
+        $this->InitParams($request);
+        $company_id = $this->user_id;
+        $userInfo = $this->user_info;
+        // 获得企业扩展
+        $resultDatas = CTAPIStaffExtendBusiness::getFVFormatList( $request,  $this, 4, 1,  ['staff_id' => $company_id, 'admin_type' => $userInfo['admin_type']], false,[], []);
+        pr($resultDatas);
         return ajaxDataArr(1, $resultDatas, '');
     }
 

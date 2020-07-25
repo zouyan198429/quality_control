@@ -16,6 +16,7 @@ class CTAPIAbilityJoinItemsResultsBusiness extends BasicPublicCTAPIBusiness
 {
     public static $model_name = 'API\QualityControl\AbilityJoinItemsResultsAPI';
     public static $table_name = 'ability_join_items_results';// 表名称
+    public static $record_class = __CLASS__;// 当前的类名称 App\Business\***\***\**\***
 
     // 是否激活(0:未激活；1：已激活)
 //    public static $isActiveArr = [

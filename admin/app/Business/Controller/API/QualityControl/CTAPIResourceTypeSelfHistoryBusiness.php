@@ -12,5 +12,6 @@ class CTAPIResourceTypeSelfHistoryBusiness extends CTAPIResourceTypeSelfBusiness
 {
     public static $model_name = 'API\QualityControl\ResourceTypeSelfHistoryAPI';
     public static $table_name = 'resource_type_self_history';// 表名称
+    public static $record_class = __CLASS__;// 当前的类名称 App\Business\***\***\**\***
 
 }

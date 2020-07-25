@@ -17,6 +17,7 @@ class CTAPIAbilitysBusiness extends BasicPublicCTAPIBusiness
 {
     public static $model_name = 'API\QualityControl\AbilitysAPI';
     public static $table_name = 'abilitys';// 表名称
+    public static $record_class = __CLASS__;// 当前的类名称 App\Business\***\***\**\***
 
     // 是否激活(0:未激活；1：已激活)
 //    public static $isActiveArr = [
@@ -103,7 +104,7 @@ class CTAPIAbilitysBusiness extends BasicPublicCTAPIBusiness
 //                $projectStandardsList = CTAPIProjectStandardsBusiness::getBaseListData($request, $controller, '', $projectStandardsQueryParams,[], 1,  1)['data_list'] ?? [];
 //            }
             $extParams = [];
-            $projectStandardsList =  CTAPIProjectStandardsBusiness::getFVFormatList( $request,  $controller,  ['ability_id' => $abilityIdArr], false,[], $extParams);
+            $projectStandardsList =  CTAPIProjectStandardsBusiness::getFVFormatList( $request,  $controller, 1, 1,  ['ability_id' => $abilityIdArr], false,[], $extParams);
             if(!empty($projectStandardsList)) $projectStandardsArr = Tool::arrUnderReset($projectStandardsList, 'ability_id', 2);
             if(!$isNeedHandle && !empty($projectStandardsArr)) $isNeedHandle = true;
         }
@@ -130,7 +131,7 @@ class CTAPIAbilitysBusiness extends BasicPublicCTAPIBusiness
 //                $projectSubmitItemsList = CTAPIProjectSubmitItemsBusiness::getBaseListData($request, $controller, '', $projectSubmitItemsQueryParams,[], 1,  1)['data_list'] ?? [];
 //            }
             $extParams = [];
-            $projectSubmitItemsList =  CTAPIProjectSubmitItemsBusiness::getFVFormatList( $request,  $controller,  ['ability_id' => $abilityIdArr], false,[], $extParams);
+            $projectSubmitItemsList =  CTAPIProjectSubmitItemsBusiness::getFVFormatList( $request,  $controller, 1, 1,  ['ability_id' => $abilityIdArr], false,[], $extParams);
             if(!empty($projectSubmitItemsList)) $projectSubmitItemsArr = Tool::arrUnderReset($projectSubmitItemsList, 'ability_id', 2);
             if(!$isNeedHandle && !empty($projectSubmitItemsArr)) $isNeedHandle = true;
         }
@@ -156,7 +157,7 @@ class CTAPIAbilitysBusiness extends BasicPublicCTAPIBusiness
 //                $joinItemDataList = CTAPIAbilityJoinItemsBusiness::ajaxGetQueryListCTL($request, $controller, '', $queryParams, [], 1);
 
                 $extParams = [];
-                $joinItemDataList =  CTAPIAbilityJoinItemsBusiness::getFVFormatList( $request,  $controller,  [
+                $joinItemDataList =  CTAPIAbilityJoinItemsBusiness::getFVFormatList( $request,  $controller, 1, 1,  [
                     'ability_id' => $abilityIds , 'admin_type' => $user_info['admin_type'],'staff_id' =>  $user_info['id']], false,[], $extParams);
                 if(!empty($joinItemDataList)) $joinedAbilityIds = array_values(array_unique(array_column($joinItemDataList,'ability_id')));
 

@@ -10,6 +10,7 @@ class ResourceDBBusiness extends BasePublicDBBusiness
 {
     public static $model_name = 'QualityControl\Resource';
     public static $table_name = 'resource';// 表名称
+    public static $record_class = __CLASS__;// 当前的类名称 App\Business\***\***\**\***
     // 获得记录历史id
     public static function getIdHistory($mainId = 0, &$mainDBObj = null, &$historyDBObj = null){
         // $mainDBObj = null ;
