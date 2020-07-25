@@ -22,11 +22,41 @@
                 <div class="layui-tab login-tag hd">
                     <input type="hidden" name="form_type" value="user_login" />
                     <ul class="layui-tab-title">
-                        <li class="layui-this"  data-type="user_login"><i id="i-user" ></i>个人登录</li>
-                        <li data-type="compnay_login" ><i id="i-com"></i>企业登录</li>
+                        <li class="layui-this"  data-type="compnay_login" ><i id="i-com"></i>企业登录</li>
+                        <li data-type="user_login"><i id="i-user" ></i>个人登录</li>
                     </ul>
                     <div class="layui-tab-content">
-                        <div class="layui-tab-item layui-show">
+                        
+                        <div class="layui-tab-item  layui-show">
+                            <div class="bd login-mm" style="width:360px; margin:0 auto;">
+                                <ul>
+                                    <p>企业帐号登录</p>
+                                    <form class="am-form compnay_login" action="#"  method="post" >
+                                        <div class="form-group layui-form-item">
+                                            <input type="text" name="admin_username" class="form-control" placeholder="输入帐号"   value="">
+                                        </div>
+                                        <div class="form-group layui-form-item">
+                                            <input type="password" name="admin_password" class="form-control fl"   placeholder="输入密码"   value="">
+                                            <div class="c"></div>
+                                        </div>
+                                        <div class="form-group layui-form-item">
+<!--                                             <label for="password" class="form-label">图形验证码</label>
+ -->                                            <div class="form-input">
+                                                <label>
+                                                    <input type="text" name="captcha_code" lay-verify="required" placeholder="图形验证码" class="layui-input" style="width:100px; display: inline-block;">
+                                                </label>
+                                                <input type="hidden" name="captcha_key" />
+                                                <img src="" class="layadmin-user-login-codeimg" id="LAY-user-get-vercode" >
+                                            </div>
+                                        </div>
+
+                                        <a href="javascript:void(0);" class="btn btn-block submitBtn" >登录</a>
+                                    </form>
+
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="layui-tab-item">
                             <div class="bd login-mm" style="width:360px; margin:0 auto;">
 
                             <ul>
@@ -58,35 +88,6 @@
                             </ul>
                             </div>
 
-                        </div>
-                        <div class="layui-tab-item">
-                            <div class="bd login-mm" style="width:360px; margin:0 auto;">
-                                <ul>
-                                    <p>企业帐号登录</p>
-                                    <form class="am-form compnay_login" action="#"  method="post" >
-                                        <div class="form-group layui-form-item">
-                                            <input type="text" name="admin_username" class="form-control" placeholder="输入帐号"   value="">
-                                        </div>
-                                        <div class="form-group layui-form-item">
-                                            <input type="password" name="admin_password" class="form-control fl"   placeholder="输入密码"   value="">
-                                            <div class="c"></div>
-                                        </div>
-                                        <div class="form-group layui-form-item">
-<!--                                             <label for="password" class="form-label">图形验证码</label>
- -->                                            <div class="form-input">
-                                                <label>
-                                                    <input type="text" name="captcha_code" lay-verify="required" placeholder="图形验证码" class="layui-input" style="width:100px; display: inline-block;">
-                                                </label>
-                                                <input type="hidden" name="captcha_key" />
-                                                <img src="" class="layadmin-user-login-codeimg" id="LAY-user-get-vercode" >
-                                            </div>
-                                        </div>
-
-                                        <a href="javascript:void(0);" class="btn btn-block submitBtn" >登录</a>
-                                    </form>
-
-                                </ul>
-                            </div>
                         </div>
                     </div>
                 </div>
