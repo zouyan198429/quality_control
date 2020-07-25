@@ -13,6 +13,7 @@ class BaseAPIBusiness extends BaseBusiness
     public static $model_name = '';
     public static $APIRequestName = '';// 具体的api request请求类名称
     public static $table_name = '';// 表名称
+    public static $record_class = __CLASS__;// 当前的类名称 App\Business\***\***\**\***
 
     // 根据API具体名称，返回API对象
     // $modelName Business\Controller 目录下 [Controller|API|Block]\[API|Block|DB]\CTDBCity  [Business]  部分

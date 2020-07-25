@@ -19,6 +19,7 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
 {
     public static $model_name = 'API\QualityControl\StaffAPI';
     public static $table_name = 'staff';// 表名称
+    public static $record_class = __CLASS__;// 当前的类名称 App\Business\***\***\**\***
 
     // 是否激活(0:未激活；1：已激活)
 //    public static $isActiveArr = [
@@ -1396,7 +1397,7 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
 //            }
 
             $extParams =[];
-            $companyCertificateList =  CTAPICompanyCertificateBusiness::getFVFormatList( $request,  $controller,  ['type_id' => 5, 'company_id' => $companyIdArr], false,[], $extParams);
+            $companyCertificateList =  CTAPICompanyCertificateBusiness::getFVFormatList( $request,  $controller, 1, 1,  ['type_id' => 5, 'company_id' => $companyIdArr], false,[], $extParams);
 
             $resourceIdArr = array_values(array_filter(array_column($companyCertificateList,'resource_id')));// 资源id数组，并去掉值为0的
             if(!empty($resourceIdArr)) $resourceDataArr = Tool::arrUnderReset(CTAPIResourceBusiness::getResourceByIds($request, $controller, $resourceIdArr), 'id', 2);// getListByIds($request, $controller, implode(',', $resourceIdArr));

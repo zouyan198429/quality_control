@@ -16,44 +16,6 @@ use Illuminate\Support\Facades\Cache;
 class IndexController extends BasicController
 {
     public function test(Request $request){
-       $extParams = [
-            'handleKeyArr' => [
-                'objName' => '生成对象相关的',
-                'format' =>[// 格式化数据用
-
-                ],
-                'handleKeyArr' =>  [
-                    'ability' => [
-                        'objName' => '生成对象相关的',
-                        'format' =>[// 格式化数据用
-
-                        ],
-                        'handleKeyArr' => [// 下一个数据获取
-
-                        ]
-                    ]
-                    , 'joinItemsStandards'=> [
-                        'objName' => '生成对象相关的',
-                        'format' =>[// 格式化数据用
-
-                        ],
-                        'handleKeyArr' => [
-
-                        ]
-                    ]
-                    , 'projectStandards'=> [
-                        'objName' => '生成对象相关的',
-                        'format' =>[// 格式化数据用
-
-                        ],
-                        'handleKeyArr' => [
-
-                        ]
-                    ]
-                ]
-            ],
-        ];
-
         phpinfo();
         die;
         $extParams['sqlParams']['whereIn']['id'] = 123;

@@ -1332,19 +1332,30 @@ class Tool
     /**
      * 返回以原数组某个值为下标的新数组
      *
-     * @param array $array
-     * @param string $key
+     * @param array $array 二维数组
+     * @param string|array $key  单个的字符串 ；  多个  : 逗号,分隔的字符串 或 [一维数组]
      * @param int $type 1一维数组2二维数组
+     * @param string $key_split 如果是多个字段值为键，时的数据下标
      * @return array
      */
-    public static function arrUnderReset($array, $key, $type = 1){
+    public static function arrUnderReset($array, $key, $type = 1, $key_split = '_'){
         if (is_array($array)){
             $tmp = [];
+            // 字符多个，则转为数组
+            if (!is_array($key) && strpos($key, ',') !== false) $key = explode(',', $key);
             foreach ($array as $v) {
+                $t_key = '';
+                if(is_array($key)){
+                    // 获得字段的值
+                    $t_key = implode($key_split, static::getArrFormatFields($v, $key, true));
+                }else{
+                    $t_key = $v[$key];
+                }
+
                 if ($type === 1){
-                    $tmp[$v[$key]] = $v;
+                    $tmp[$t_key] = $v;
                 }elseif($type === 2){
-                    $tmp[$v[$key]][] = $v;
+                    $tmp[$t_key][] = $v;
                 }
             }
             return $tmp;
@@ -1467,6 +1478,7 @@ class Tool
      */
     public static function formatArrKeys(&$array, $keys, $needNotIn = false){
         $newArr = [];
+        if(empty($array) || empty($keys)) return $array;
         foreach($keys as $new_k => $old_k){
             if(!isset($array[$old_k])){// 不存在
                 if($needNotIn){// true：空值
@@ -1481,6 +1493,18 @@ class Tool
     }
 
     /**
+     * 一维数组返回指定下标数组的一维数组,-以原数组下标为准，
+     *
+     * @param array $array 一维数组
+     * @param array $keys 要获取的下标数组 -维 [ '下标' ]
+     * @param boolean $needNotIn  keys在数组中不存在的，false:不要，true：空值
+     * @return array 一维数组
+     */
+    public static function formatArrByKeys(&$array, $keys, $needNotIn = false){
+        return static::formatArrKeys($array, Tool::arrEqualKeyVal($keys), $needNotIn);
+    }
+
+    /**
      * 一/二维数组返回指定下标数组的新的二维维数组,-以原数组下标为准，
      *
      * @param array $array 一/二维数组
@@ -1489,7 +1513,7 @@ class Tool
      * @return array 一/二维数组
      */
     public static function formatTwoArrKeys(&$array, $keys, $needNotIn = false){
-
+         if(empty($array) || empty($keys)) return $array;
         // 如果是一维数组
         if (!static::isMultiArr($array)){
             self::formatArrKeys($array, $keys, $needNotIn );
@@ -4139,5 +4163,144 @@ class Tool
 
     // ********************视图**错误*****执行方法*******************结束***************************************************
 
+    /**
+     * 对数据进行格式化--单条记录 单个配置 、数据的格式化
+     * @param array $info  单条数据  --- 一维数组
+     * @param array $temDataList  配置需要格式化的相关数据  一维或二维数组  --  单条数据对应的关系数据
+     * @param string $k  配置的下标--默认关系在单条数据中加入的下标[需要的话]
+     * @param array $return_data  单个格式化配置
+     *
+     *[// 对数据进行格式化
+     *   'old_data' => [// --只能一维数组 原数据的处理及说明
+     *       'ubound_operate' => 2,// 原数据的处理1 保存原数据及下标-如果下级有新字段，会自动更新;2不保存原数据[默认]---是否用新的下标由下面的 'ubound_name' 决定
+     *       // 第一次缩小范围，需要的字段  -- 要获取的下标数组 -维 [ '新下标名' => '原下标名' ]  ---为空，则按原来的返回
+     *      // 如果新下标和原下标相同，则可以用这个方法去转  Tool::arrEqualKeyVal(['shop_id', 'shop_name', 'linkman', 'mobile']), true )
+     *      'ubound_name' => 'city',// 新数据的下标--可为空，则不返回,最好不要和原数据下标相同，如果相同，则原数据会把新数据覆盖
+     *      'fields_arr' => [],// 需要获得的字段；
+     *      'ubound_keys' => [],// 如果是结果是二维数组，下标要改为指定的字段值，下标[多个值_分隔]  ---这个是字段的一维数组
+     *      'ubound_type' =>1, 数组字段为下标时，按字段值以应的下标的 数组是一维还是二维 1一维数组【默认】; 2二维数组
+     *  ],
+     *   // 一/二维数组 键值对 可为空或没有此下标：不需要 Tool::formatArrKeyVal($areaCityList, $kv['key'], $kv['val'])
+     *  'k_v' => ['key' => 'id', 'val' => 'person_name', 'ubound_name' => '下标名称'],
+     *  // 一/二维数组 只要其中的某一个字段：
+     *  'one_field' => ['key' => 'id', 'return_type' => "返回类型1原数据['字段值'][一维返回一维数组，二维返回一维数组];2按分隔符分隔的字符", 'ubound_name' => '下标名称', 'split' => '、'],
+     *  // 一/二维数组 获得指定的多个字段值
+     * 'many_fields' =>[ 'ubound_name' => '', 'fields_arr'=> [ '新下标名' => '原下标名' ],'reset_ubound' => 2;// 是否重新排序下标 1：重新０.．． ,'ubound_keys' => ['说明：看上面old_data的同字段说明'], 'ubound_type' =>1],ubound_type说明：看上面old_data的同字段说明
+     * @param array $returnFields  新加入的字段['字段名1' => '字段名1' ]
+     * @return array  新增的字段 一维数组
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function formatConfigRelationInfo(&$info, $temDataList, $k, $return_data, &$returnFields){
+        if(empty($info)) return $returnFields;
+        // if(empty($temDataList)) return $returnFields;// 没有数据
+        // 对数据进行处理
+        if(empty($return_data)) {// 没有格式化要求
+            $info[$k] = $temDataList;
+            $returnFields[$k] = $k;
+            return $returnFields;
+        }
 
+        // 根据配置格式化数据
+        $isFormated = false;// 是否进行过格式化 true:有；false:无
+        foreach($return_data as $t_k => $t_config){
+            if(empty($t_config)) continue;
+            switch($t_k) {
+                case 'old_data'://--只能一维数组
+                    // 原数据的处理1 保存原数据及下标;2不保存原数据--是否用新的下标由下面的 'ubound_name'
+                    $tem_ubound_operate = $t_config['ubound_operate'] ?? 2;
+                    $tem_ubound_old = $k;
+                    if($tem_ubound_operate == 2){
+                        $tem_ubound_old = $t_config['ubound_name'] ?? '';
+                    }
+                    $tem_fields_arr = $t_config['fields_arr'] ?? [];//   -维[ '新下标名' => '原下标名' ]
+                    $uboundKeys = $t_config['ubound_keys'] ?? [];// 如果是二维数组，下标要改为指定的字段值，下标[多个值_分隔]  ---这个是字段的一维数组
+                    $ubound_type = $t_config['ubound_type'] ?? 1;// 数组字段为下标时，按字段值以应的下标的 数组是一维还是二维 1一维数组【默认】2二维数组
+
+                    if($tem_ubound_old != ''){
+                        $operateDataList = $temDataList;// 要操作的数据
+                        $formatedData = empty($tem_fields_arr) ? $operateDataList : static::formatTwoArrKeys($operateDataList, $tem_fields_arr, true);// getArrFormatFields($operateDataList, $tem_fields_arr, true);
+
+                        $temIsMulti = Tool::isMultiArr($formatedData, false);
+                        // 是二维数组才转换
+                        if($temIsMulti && !empty($uboundKeys)) $formatedData = Tool::arrUnderReset($formatedData, array_values($uboundKeys), $ubound_type, '_');
+
+                        $info[$tem_ubound_old] = $formatedData;
+                        $isFormated = true;
+                        $returnFields[$tem_ubound_old] = $tem_ubound_old;
+                    }
+                    break;
+                case 'k_v':// 一/二维数组
+                    static::isMultiArr($t_config, true);// 如果是一维数组，转为二维数组
+                    foreach($t_config as $tem_kv_info) {
+                        $tem_kv_key = $tem_kv_info['key'] ?? '';
+                        $tem_kv_val = $tem_kv_info['val'] ?? '';
+                        $tem_kv_ubound_name = $tem_kv_info['ubound_name'] ?? '';
+                        if (strlen($tem_kv_key) > 0 && strlen($tem_kv_val) > 0 && strlen($tem_kv_ubound_name) > 0) {
+                            $operateDataList = $temDataList;// 要操作的数据
+                            $info[$tem_kv_ubound_name] = static::formatArrKeyVal($operateDataList, $tem_kv_key, $tem_kv_val);
+                            $isFormated = true;
+                            $returnFields[$tem_kv_ubound_name] = $tem_kv_ubound_name;
+                        }
+                    }
+                    break;
+                case 'one_field':// 一/二维数组
+                    static::isMultiArr($t_config, true);// 如果是一维数组，转为二维数组
+                    foreach($t_config as $tem_one_info){
+                        $operateDataList = $temDataList;// 要操作的数据
+                        $tem_one_key = $tem_one_info['key'] ?? '';
+                        // 返回类型1原数据[一维返回一维数组，二维返回一维数组];2按分隔符分隔的字符
+                        $tem_one_return_type = $tem_one_info['return_type'] ?? 1;
+                        $tem_one_ubound_name = $tem_one_info['ubound_name'] ?? '';// 下标
+                        $tem_one_split = $tem_one_info['split'] ?? '';
+                        $tem_one_fieldArr = static::getArrFields($operateDataList, $tem_one_key);
+                        if($tem_one_return_type == 2){// 2按分隔符分隔的字符
+                            $info[$tem_one_ubound_name] = implode($tem_one_split, $tem_one_fieldArr);
+                        }else{
+                            $info[$tem_one_ubound_name] = $tem_one_fieldArr;
+                        }
+                        $isFormated = true;
+                        $returnFields[$tem_one_ubound_name] = $tem_one_ubound_name;
+                    }
+                    break;
+                case 'many_fields':// 一/二维数组
+                    static::isMultiArr($t_config, true);// 如果是一维数组，转为二维数组
+                    foreach($t_config as $tem_one_info){
+                        $tem_ubound_old = $tem_one_info['ubound_name'] ?? '';
+                        $tem_fields_arr = $tem_one_info['fields_arr'] ?? [];//   -维[ '新下标名' => '原下标名' ]
+                        $tem_reset_ubound = $tem_one_info['reset_ubound'] ?? 2;// 是否重新排序下标 1：重新０.．．
+                        $uboundKeys = $tem_one_info['ubound_keys'] ?? [];// 如果是二维数组，下标要改为指定的字段值，下标[多个值_分隔]  ---这个是字段的一维数组
+                        $ubound_type = $tem_one_info['ubound_type'] ?? 1;// 数组字段为下标时，按字段值以应的下标的 数组是一维还是二维 1一维数组【默认】2二维数组
+
+                        if($tem_ubound_old != ''){
+                            $operateDataList = $temDataList;// 要操作的数据
+                            $tem_val_arr = empty($tem_fields_arr) ? $operateDataList : static::formatTwoArrKeys($operateDataList, $tem_fields_arr, true);// getArrFormatFields($operateDataList, $tem_fields_arr, true);
+
+                            if($tem_reset_ubound == 1){
+                                $info[$tem_ubound_old] = array_values($tem_val_arr) ;
+                            }else{
+
+                                $temIsMulti = Tool::isMultiArr($tem_val_arr, false);
+                                // 是二维数组才转换
+                                if($temIsMulti && !empty($uboundKeys)) $tem_val_arr = Tool::arrUnderReset($tem_val_arr, array_values($uboundKeys), $ubound_type, '_');
+                                $info[$tem_ubound_old] = $tem_val_arr;
+                            }
+                            // $info[$tem_ubound_old] = ($tem_reset_ubound == 1) ? array_values($tem_val_arr) : $tem_val_arr;
+                            $isFormated = true;
+                            $returnFields[$tem_ubound_old] = $tem_ubound_old;
+                        }
+
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        if(!$isFormated) {// 没有格式化
+            $info[$k] = $temDataList;
+            $returnFields[$k] = $k;
+            return $returnFields;
+        }
+        return $returnFields;
+    }
 }

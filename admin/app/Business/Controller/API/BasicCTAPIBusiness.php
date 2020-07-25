@@ -16,6 +16,7 @@ class BasicCTAPIBusiness extends APIOperate
     public static $database_model_dir_name = '';// 对应的数据库模型目录名称
     public static $model_name = '';// 中间层 App\Business\API 下面的表名称 API\RunBuy\CountSenderRegAPI
     public static $table_name = '';// 表名称
+    public static $record_class = __CLASS__;// 当前的类名称 App\Business\***\***\**\***
 
 
     /**
@@ -128,6 +129,8 @@ class BasicCTAPIBusiness extends APIOperate
      *
      * @param Request $request 请求信息
      * @param Controller $controller 控制对象
+     * @param int $operate_type 操作为型  1 所有[默认] all 2 ：指定返回数量 limit_num 4：只返回一条 one_num
+     * @param int $page_size 2时返回的数量
      * @param array $fieldValParams
      *  $fieldValParams = [
      *      'ability_join_id' => [// 格式一
@@ -142,7 +145,10 @@ class BasicCTAPIBusiness extends APIOperate
      *    $extParams = [
      *        'useQueryParams' => '是否用来拼接查询条件，true:用[默认];false：不用'
      *        'sqlParams' => [// 其它sql条件[覆盖式],下面是常用的，其它的也可以
-     *           'where' => '如果有值，则替换where'
+     *            // '如果有值，则替换where'
+     *           'where' => [// -- 可填 如 默认条件 'type_id' => 5  'admin_type' => $user_info['admin_type'],'staff_id' =>  $user_info['id']
+     *               ['type_id', 5],
+     *           ],
      *           'select' => '如果有值，则替换select'
      *           'orderBy' => '如果有值，则替换orderBy'
      *           'whereIn' => '如果有值，则替换whereIn'
@@ -151,6 +157,9 @@ class BasicCTAPIBusiness extends APIOperate
      *           'whereNotBetween' => '如果有值，则替换whereNotBetween'
      *       ],
      *       'handleKeyArr'=> [],// 一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。--名称关键字，尽可能与关系名一样
+     *       'relationFormatConfigs'=> [],// 相关表数组格式化配置 具体格式请看  formatRelationList方法的参数
+     *       'listHandleKeyArr'=> [],// 一维数组，对列表二维数数据【批量】需要处理的标记--与 handleKeyArr 功能相同， 重写 handleRelationDataFormat 方法实现
+     *       'infoHandleKeyArr'=> [],// 一维数组，对详情一维数数据【单个】需要处理的标记 -- 重写 infoRelationFormatExtend 方法  temDataList[表间关系才用上的，这里不用] 可传空值
      *       'formatDataUbound' => [// 格式化数据[取指下下标、排除指定下标、修改下标名称]具体参数使用说明，请参阅 Tool::formatArrUbound 方法  --为空数组代表不格式化
      *           'needNotIn' => true, // keys在数组中不存在的，false:不要，true：空值 -- 用true的时候多
      *           'includeUboundArr' => [],// 要获取的下标数组 [优先]--一维数组，可为空[ '新下标名' => '原下标名' ]  Tool::arrEqualKeyVal(['shop_id', 'shop_name', 'linkman', 'mobile'])
@@ -158,12 +167,12 @@ class BasicCTAPIBusiness extends APIOperate
      *       ]
      *   ];
      * @param int $notLog 是否需要登陆 0需要1不需要
-     * @return  null 列表数据
+     * @return  null 列表数据 一维或二维数组
      * @author zouyan(305463219@qq.com)
      */
-    public static function getFVFormatList(Request $request, Controller $controller, $fieldValParams = [], $fieldEmptyQuery = false, $relations = '', $extParams = [], $notLog = 0)
+    public static function getFVFormatList(Request $request, Controller $controller, $operate_type = 1, $page_size = 1, $fieldValParams = [], $fieldEmptyQuery = false, $relations = '', $extParams = [], $notLog = 0)
     {
-        $dataList = [];
+        $dataArr = [];
         $isEmpeyVals = true;//  查询字段值是否都为空; true:都为空，false:有值
         // 获得信息
         $queryParams = [
@@ -200,9 +209,26 @@ class BasicCTAPIBusiness extends APIOperate
 //        ];
 
         // 查询字段有值  或  查询字段无值  但是  指定 强制查询时
-        if(!$isEmpeyVals || ($isEmpeyVals && $fieldEmptyQuery))$dataList = static::getList($request, $controller, 1, $queryParams, $relations, $extParams, $notLog)['result']['data_list'] ?? [];
-
-        return $dataList;
+        if(!$isEmpeyVals || ($isEmpeyVals && $fieldEmptyQuery)){
+            switch ($operate_type)
+            {
+                case 1:
+                    $dataArr = static::getList($request, $controller, 1, $queryParams, $relations, $extParams, $notLog)['result']['data_list'] ?? [];
+                    break;
+                case 2:
+                    $company_id = $controller->company_id;
+                    $dataArr = static::getLimitDataQuery($request, $controller, $company_id, $page_size, $queryParams, $relations, $extParams, $notLog);
+                    break;
+                case 4:
+                    $company_id = $controller->company_id;
+                    $dataArr = static::getInfoDataByQuery($request, $controller, $company_id, $queryParams, $relations, $extParams, $notLog);
+                    break;
+                default:
+//                    $str = md5($str);
+                    break;
+            }
+        }
+        return $dataArr;
     }
 
     /**
@@ -224,6 +250,9 @@ class BasicCTAPIBusiness extends APIOperate
      *           'whereNotBetween' => '如果有值，则替换whereNotBetween'
      *       ],
      *       'handleKeyArr'=> [],// 一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。--名称关键字，尽可能与关系名一样
+     *       'relationFormatConfigs'=> [],// 相关表数组格式化配置 具体格式请看  formatRelationList方法的参数
+     *       'listHandleKeyArr'=> [],// 一维数组，对列表二维数数据【批量】需要处理的标记--与 handleKeyArr 功能相同， 重写 handleRelationDataFormat 方法实现
+     *       'infoHandleKeyArr'=> [],// 一维数组，对详情一维数数据【单个】需要处理的标记 -- 重写 infoRelationFormatExtend 方法  temDataList[表间关系才用上的，这里不用] 可传空值
      *       'formatDataUbound' => [// 格式化数据[取指下下标、排除指定下标、修改下标名称]具体参数使用说明，请参阅 Tool::formatArrUbound 方法  --为空数组代表不格式化
      *           'needNotIn' => true, // keys在数组中不存在的，false:不要，true：空值 -- 用true的时候多
      *           'includeUboundArr' => [],// 要获取的下标数组 [优先]--一维数组，可为空[ '新下标名' => '原下标名' ]  Tool::arrEqualKeyVal(['shop_id', 'shop_name', 'linkman', 'mobile'])
@@ -294,6 +323,9 @@ class BasicCTAPIBusiness extends APIOperate
      *           'whereNotBetween' => '如果有值，则替换whereNotBetween'
      *       ],
      *       'handleKeyArr'=> [],// 一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。--名称关键字，尽可能与关系名一样
+     *       'relationFormatConfigs'=> [],// 相关表数组格式化配置 具体格式请看  formatRelationList方法的参数
+     *       'listHandleKeyArr'=> [],// 一维数组，对列表二维数数据【批量】需要处理的标记--与 handleKeyArr 功能相同， 重写 handleRelationDataFormat 方法实现
+     *       'infoHandleKeyArr'=> [],// 一维数组，对详情一维数数据【单个】需要处理的标记 -- 重写 infoRelationFormatExtend 方法  temDataList[表间关系才用上的，这里不用] 可传空值
      *       'formatDataUbound' => [// 格式化数据[取指下下标、排除指定下标、修改下标名称]具体参数使用说明，请参阅 Tool::formatArrUbound 方法  --为空数组代表不格式化
      *           'needNotIn' => true, // keys在数组中不存在的，false:不要，true：空值 -- 用true的时候多
      *           'includeUboundArr' => [],// 要获取的下标数组 [优先]--一维数组，可为空[ '新下标名' => '原下标名' ]  Tool::arrEqualKeyVal(['shop_id', 'shop_name', 'linkman', 'mobile'])
@@ -374,6 +406,33 @@ class BasicCTAPIBusiness extends APIOperate
         // 一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
         $handleKeyArr = $extParams['handleKeyArr'] ?? [];
         if(!empty($handleKeyArr)) static::handleData($request, $controller, $data_list, $handleKeyArr);
+
+        // 一维数组，对列表二维数数据【批量】需要处理的标记--与 handleKeyArr 功能相同， 重写 handleRelationDataFormat 方法实现
+        $listHandleKeyArr = $extParams['listHandleKeyArr'] ?? [];
+        $returnFields = [];
+        if(!empty($listHandleKeyArr)){
+            // 如果是一维数组，则转为二维数组
+            $isMulti = Tool::isMultiArr($data_list, true);
+            $main_list = [];
+            static::handleRelationDataFormat($request, $controller, $main_list, $data_list, $listHandleKeyArr, $returnFields);
+            if(!$isMulti) $data_list = $data_list[0] ?? [];
+
+        }
+        // 一维数组，对详情一维数数据【单个】需要处理的标记 -- 重写 infoRelationFormatExtend 方法  temDataList[表间关系才用上的，这里不用] 可传空值
+        $infoHandleKeyArr = $extParams['infoHandleKeyArr'] ?? [];
+        if(!empty($infoHandleKeyArr)){
+            $isMulti = Tool::isMultiArr($data_list, true);
+            $temRelationDataList = [];
+            foreach($data_list as $k => $v_info){
+                static::infoRelationFormatExtend($request, $controller, $data_list[$k], $temRelationDataList, $infoHandleKeyArr, $returnFields);
+            }
+            if(!$isMulti) $data_list = $data_list[0] ?? [];
+        }
+
+        // 相关表数组格式化配置 具体格式请看  formatRelationList方法的参数
+        $relationFormatConfigs = $extParams['relationFormatConfigs'] ?? [];
+        if(!empty($relationFormatConfigs)) static::formatRelationList($request, $controller, $data_list, $relationFormatConfigs);
+
 
         // 对查询结果进行for循环处理
         static::forFormatListData($request, $controller, $data_list, $notLog);
@@ -608,7 +667,7 @@ class BasicCTAPIBusiness extends APIOperate
      * @param Controller $controller 控制对象
      * @param array $data_list 需要格式化的数据---二维数组(如果是一维数组，是转成二维数组后的数据)
      * @param array $handleKeyArr 其它扩展参数，// 一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。--名称关键字，尽可能与关系名一样
-     * @param boolean 原数据类型 true:二维[默认];false:一维
+     * @param boolean 原数据类型 true:二维[默认];false:一维  ----没有用了，到不到
      * @return  boolean true
      * @author zouyan(305463219@qq.com)
      */
@@ -691,6 +750,7 @@ class BasicCTAPIBusiness extends APIOperate
         // 重写结束
         return true;
     }
+
     // ~~~~~~~~~~~~~~~~~详情开始~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     /**
      * 根据id获得单条数据
@@ -708,6 +768,9 @@ class BasicCTAPIBusiness extends APIOperate
      *           'exceptUboundArr' => [], // 要排除的下标数组 --一维数组，可为空[ '原下标名' ,....]
      *       ],
      *       'handleKeyArr'=> [],// 一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。--名称关键字，尽可能与关系名一样
+     *       'relationFormatConfigs'=> [],// 相关表数组格式化配置 具体格式请看  formatRelationList方法的参数
+     *       'listHandleKeyArr'=> [],// 一维数组，对列表二维数数据【批量】需要处理的标记--与 handleKeyArr 功能相同， 重写 handleRelationDataFormat 方法实现
+     *       'infoHandleKeyArr'=> [],// 一维数组，对详情一维数数据【单个】需要处理的标记 -- 重写 infoRelationFormatExtend 方法  temDataList[表间关系才用上的，这里不用] 可传空值
      *   ];
      * @param int $notLog 是否需要登陆 0需要1不需要
      * @return  array 单条数据 - -维数组
@@ -730,6 +793,33 @@ class BasicCTAPIBusiness extends APIOperate
         // 一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
         $handleKeyArr = $extParams['handleKeyArr'] ?? [];
         if(!empty($handleKeyArr)) static::handleData($request, $controller, $info, $handleKeyArr);
+
+        // 一维数组，对列表二维数数据【批量】需要处理的标记--与 handleKeyArr 功能相同， 重写 handleRelationDataFormat 方法实现
+        $listHandleKeyArr = $extParams['listHandleKeyArr'] ?? [];
+        $returnFields = [];
+        if(!empty($listHandleKeyArr)){
+            // 如果是一维数组，则转为二维数组
+            $isMulti = Tool::isMultiArr($info, true);
+            $main_list = [];
+            static::handleRelationDataFormat($request, $controller, $main_list, $info, $listHandleKeyArr, $returnFields);
+            if(!$isMulti) $info = $info[0] ?? [];
+
+        }
+        // 一维数组，对详情一维数数据【单个】需要处理的标记 -- 重写 infoRelationFormatExtend 方法  temDataList[表间关系才用上的，这里不用] 可传空值
+        $infoHandleKeyArr = $extParams['infoHandleKeyArr'] ?? [];
+        if(!empty($infoHandleKeyArr)){
+            $isMulti = Tool::isMultiArr($info, true);
+            $temRelationDataList = [];
+            foreach($info as $k => $v_info){
+                static::infoRelationFormatExtend($request, $controller, $info[$k], $temRelationDataList, $infoHandleKeyArr, $returnFields);
+            }
+            if(!$isMulti) $info = $info[0] ?? [];
+        }
+
+        // 相关表数组格式化配置 具体格式请看  formatRelationList方法的参数
+        $relationFormatConfigs = $extParams['relationFormatConfigs'] ?? [];
+        if(!empty($relationFormatConfigs)) static::formatRelationList($request, $controller, $info, $relationFormatConfigs);
+
 
         // 格式化数据
         static::formatInfoData($request, $controller,$info, $notLog);
@@ -784,6 +874,9 @@ class BasicCTAPIBusiness extends APIOperate
      *           'exceptUboundArr' => [], // 要排除的下标数组 --一维数组，可为空[ '原下标名' ,....]
      *       ],
      *       'handleKeyArr'=> [],// 一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。--名称关键字，尽可能与关系名一样
+     *       'relationFormatConfigs'=> [],// 相关表数组格式化配置 具体格式请看  formatRelationList方法的参数
+     *       'listHandleKeyArr'=> [],// 一维数组，对列表二维数数据【批量】需要处理的标记--与 handleKeyArr 功能相同， 重写 handleRelationDataFormat 方法实现
+     *       'infoHandleKeyArr'=> [],// 一维数组，对详情一维数数据【单个】需要处理的标记 -- 重写 infoRelationFormatExtend 方法  temDataList[表间关系才用上的，这里不用] 可传空值
      *   ];
      * @param int $notLog 是否需要登陆 0需要1不需要
      * @return  array 单条数据 - -维数组
@@ -806,6 +899,33 @@ class BasicCTAPIBusiness extends APIOperate
         // 一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
         $handleKeyArr = $extParams['handleKeyArr'] ?? [];
         if(!empty($handleKeyArr)) static::handleData($request, $controller, $info, $handleKeyArr);
+
+        // 一维数组，对列表二维数数据【批量】需要处理的标记--与 handleKeyArr 功能相同， 重写 handleRelationDataFormat 方法实现
+        $listHandleKeyArr = $extParams['listHandleKeyArr'] ?? [];
+        $returnFields = [];
+        if(!empty($listHandleKeyArr)){
+            // 如果是一维数组，则转为二维数组
+            $isMulti = Tool::isMultiArr($info, true);
+            $main_list = [];
+            static::handleRelationDataFormat($request, $controller,$main_list, $info, $listHandleKeyArr, $returnFields);
+            if(!$isMulti) $info = $info[0] ?? [];
+
+        }
+        // 一维数组，对详情一维数数据【单个】需要处理的标记 -- 重写 infoRelationFormatExtend 方法  temDataList[表间关系才用上的，这里不用] 可传空值
+        $infoHandleKeyArr = $extParams['infoHandleKeyArr'] ?? [];
+        if(!empty($infoHandleKeyArr)){
+            $isMulti = Tool::isMultiArr($info, true);
+            $temRelationDataList = [];
+            foreach($info as $k => $v_info){
+                static::infoRelationFormatExtend($request, $controller, $info[$k], $temRelationDataList, $infoHandleKeyArr, $returnFields);
+            }
+            if(!$isMulti) $info = $info[0] ?? [];
+        }
+
+        // 相关表数组格式化配置 具体格式请看  formatRelationList方法的参数
+        $relationFormatConfigs = $extParams['relationFormatConfigs'] ?? [];
+        if(!empty($relationFormatConfigs)) static::formatRelationList($request, $controller, $info, $relationFormatConfigs);
+
 
         $temFormatData = $extParams['formatDataUbound'] ?? [];// 格式化数据 具体参数使用说明，请参阅 Tool::formatArrUbound 方法  --为空数组代表不格式化
         Tool::formatArrUboundDo($info, $temFormatData);//格式化数据[取指下下标、排除指定下标、修改下标名称]
@@ -845,6 +965,9 @@ class BasicCTAPIBusiness extends APIOperate
      *           'exceptUboundArr' => [], // 要排除的下标数组 --一维数组，可为空[ '原下标名' ,....]
      *       ],
      *       'handleKeyArr'=> [],// 一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。--名称关键字，尽可能与关系名一样
+     *       'relationFormatConfigs'=> [],// 相关表数组格式化配置 具体格式请看  formatRelationList方法的参数
+     *       'listHandleKeyArr'=> [],// 一维数组，对列表二维数数据【批量】需要处理的标记--与 handleKeyArr 功能相同， 重写 handleRelationDataFormat 方法实现
+     *       'infoHandleKeyArr'=> [],// 一维数组，对详情一维数数据【单个】需要处理的标记 -- 重写 infoRelationFormatExtend 方法  temDataList[表间关系才用上的，这里不用] 可传空值
      *   ];
      * @param int $notLog 是否需要登陆 0需要1不需要
      * @return  array 单条数据 - -维数组
@@ -867,8 +990,35 @@ class BasicCTAPIBusiness extends APIOperate
         $handleKeyArr = $extParams['handleKeyArr'] ?? [];
         if(!empty($handleKeyArr)) static::handleData($request, $controller, $infoList, $handleKeyArr);
 
+        // 一维数组，对列表二维数数据【批量】需要处理的标记--与 handleKeyArr 功能相同， 重写 handleRelationDataFormat 方法实现
+        $listHandleKeyArr = $extParams['listHandleKeyArr'] ?? [];
+        $returnFields = [];
+        if(!empty($listHandleKeyArr)){
+            // 如果是一维数组，则转为二维数组
+            $isMulti = Tool::isMultiArr($infoList, true);
+            $main_list = [];
+            static::handleRelationDataFormat($request, $controller, $main_list, $infoList, $listHandleKeyArr, $returnFields);
+            if(!$isMulti) $infoList = $infoList[0] ?? [];
+
+        }
+        // 一维数组，对详情一维数数据【单个】需要处理的标记 -- 重写 infoRelationFormatExtend 方法  temDataList[表间关系才用上的，这里不用] 可传空值
+        $infoHandleKeyArr = $extParams['infoHandleKeyArr'] ?? [];
+        if(!empty($infoHandleKeyArr)){
+            $isMulti = Tool::isMultiArr($infoList, true);
+            $temRelationDataList = [];
+            foreach($infoList as $k => $v_info){
+                static::infoRelationFormatExtend($request, $controller, $infoList[$k], $temRelationDataList, $infoHandleKeyArr, $returnFields);
+            }
+            if(!$isMulti) $infoList = $infoList[0] ?? [];
+        }
+
+        // 相关表数组格式化配置 具体格式请看  formatRelationList方法的参数
+        $relationFormatConfigs = $extParams['relationFormatConfigs'] ?? [];
+        if(!empty($relationFormatConfigs)) static::formatRelationList($request, $controller, $infoList, $relationFormatConfigs);
+
         $temFormatData = $extParams['formatDataUbound'] ?? [];// 格式化数据 具体参数使用说明，请参阅 Tool::formatArrUbound 方法  --为空数组代表不格式化
         Tool::formatArrUboundDo($infoList, $temFormatData);//格式化数据[取指下下标、排除指定下标、修改下标名称]
+
         return $infoList;
     }
 
@@ -921,6 +1071,9 @@ class BasicCTAPIBusiness extends APIOperate
      *           'exceptUboundArr' => [], // 要排除的下标数组 --一维数组，可为空[ '原下标名' ,....]
      *       ],
      *       'handleKeyArr'=> [],// 一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。--名称关键字，尽可能与关系名一样
+     *       'relationFormatConfigs'=> [],// 相关表数组格式化配置 具体格式请看  formatRelationList方法的参数
+     *       'listHandleKeyArr'=> [],// 一维数组，对列表二维数数据【批量】需要处理的标记--与 handleKeyArr 功能相同， 重写 handleRelationDataFormat 方法实现
+     *       'infoHandleKeyArr'=> [],// 一维数组，对详情一维数数据【单个】需要处理的标记 -- 重写 infoRelationFormatExtend 方法  temDataList[表间关系才用上的，这里不用] 可传空值
      *   ];
      * @param int $notLog 是否需要登陆 0需要1不需要
      * @return  array 列表数据 - 二维数组
@@ -975,12 +1128,12 @@ class BasicCTAPIBusiness extends APIOperate
         if(empty($queryParams)){
             $queryParams = $defaultQueryParams;
         }
-        $temFormatData = [
-            'formatDataUbound' => $extParams['formatDataUbound'] ?? [],// 格式化数据 具体参数使用说明，请参阅 Tool::formatArrUbound 方法
-        ];
-        if(isset($extParams['handleKeyArr'])) $temFormatData['handleKeyArr'] = $extParams['handleKeyArr'] ?? [];
+//        $temFormatData = [
+//            'formatDataUbound' => $extParams['formatDataUbound'] ?? [],// 格式化数据 具体参数使用说明，请参阅 Tool::formatArrUbound 方法
+//        ];
+//        if(isset($extParams['handleKeyArr'])) $temFormatData['handleKeyArr'] = $extParams['handleKeyArr'] ?? [];
 
-        $result = static::getList($request, $controller, 1 + 0, $queryParams, $relations, $temFormatData, $notLog);
+        $result = static::getList($request, $controller, 1 + 0, $queryParams, $relations, $extParams, $notLog);// , $temFormatData, $notLog);
         // 格式化数据
         $data_list = $result['result']['data_list'] ?? [];
 //        RelationDB::resolvingRelationData($data_list, $relations);// 根据关系设置，格式化数据 -- 已经在getList方法中处理过
@@ -1463,23 +1616,29 @@ class BasicCTAPIBusiness extends APIOperate
     }
     // ***********通过组织条件获得kv***结束************************************************************
 
+    // ***********相关表数据获取配置及数据的格式化***开始************************************************************
+
     /**
      * 表数据关系处理
      *
      * @param Request $request 请求信息
      * @param Controller $controller 控制对象
-     * @param array $dataList  一维或二维数据 当前需要处理的
+     * @param array $data_list  一维或二维数据 当前需要处理的
      * @param string $funKey  功能关键字下标 -- 可为空:不返回功能配置，返回页面配置
      * @param int $notLog 是否需要登陆 0需要1不需要
-     * @return  array 配置数据
+     * @return array   新增的字段 一维数组 新加入的字段['字段名1' => '字段名1' ]
      * @author zouyan(305463219@qq.com)
      */
-    public static function formatRelationList(Request $request, Controller $controller, &$dataList = [], $relationConfig = []){
+    public static function formatRelationList(Request $request, Controller $controller, &$data_list = [], $relationConfig = []){
 
+        /**
+         *
         $relationConfig = [
-            [
+            'relation_key' => [// 下标为定义的关键字
                 // 获得数据相关的
                 'toClass' => 'App\Business\Controller\API\QualityControl\CTAPIStaffBusiness',// 对应的类--必填
+                'toObjFormatListMethod' => '',//  定义关系表数据列表静态方法名 【用这个比较好】-- 可填 ，参数 $request, $controller , &$data_list[多条条主记录] , &$toDataList[关系表记录-一维或二维], &$returnFields[在主记录中新生成的下标]
+                'toObjFormatInfoMethod' => '',//  定义关系表数据详情静态方法名 【一般不用这个--存在重复处理】-- 可填 ，可以提前对数据进行格式化处理--特别处理 参数 $request, $controller , &$info[单条主记录] , &$temDataList[关系表记录-一维或二维], &$returnFields[在主记录中新生成的下标]
                 'extParams' => [// 可填
                     'sqlParams' => [
                         'where' => [// -- 可填 如 默认条件 'type_id' => 5  'admin_type' => $user_info['admin_type'],'staff_id' =>  $user_info['id']
@@ -1496,6 +1655,9 @@ class BasicCTAPIBusiness extends APIOperate
                 'fieldRelations' => [// 字段对应 1 个或多个字段--必填
                     'staff_id' => 'id'// 原表的字段 =》 对应表的字段
                 ],
+                // 特别注明：数据格式化的步聚是： 1、listHandleKeyArr  对列表数据进行特别处理 ；2 return_data 关系配置设置的方式处理、；3、infoHandleKeyArr 对单条记录特别处理的关键字
+                'listHandleKeyArr' => [],// 对列表数据进行特别处理的关键字  - 维数组，, 具体的业务逻辑需要自己重写方法 handleRelationDataFormat
+                'infoHandleKeyArr' => [],// 对单条记录的 关系数据 特别处理的关键字 一维数组, 具体的业务逻辑需要自己重写方法 infoRelationFormatExtend
                 'fieldEmptyQuery' => false, // 如果参数字段值都为空时，是否还查询数据 true:查询 ；false:不查[默认]-- 选填
                 'relations' => [],// 关系--选填-- 一般不用了
                 // 下面是对数据进行解析的处理
@@ -1506,38 +1668,51 @@ class BasicCTAPIBusiness extends APIOperate
                         // 第一次缩小范围，需要的字段  -- 要获取的下标数组 -维 [ '新下标名' => '原下标名' ]  ---为空，则按原来的返回
                         // 如果新下标和原下标相同，则可以用这个方法去转  Tool::arrEqualKeyVal(['shop_id', 'shop_name', 'linkman', 'mobile']), true )
                         'ubound_name' => 'city',// 新数据的下标--可为空，则不返回,最好不要和原数据下标相同，如果相同，则原数据会把新数据覆盖
-                        'fields_arr' => [],
+                        'fields_arr' => [],// 需要获得的字段；
+                        'ubound_keys' => [],// 如果是结果是二维数组，下标要改为指定的字段值，下标[多个值_分隔]  ---这个是字段的一维数组
+                        'ubound_type' =>1, 数组字段为下标时，按字段值以应的下标的 数组是一维还是二维 1一维数组【默认】; 2二维数组
                     ],
                     // 一/二维数组 键值对 可为空或没有此下标：不需要 Tool::formatArrKeyVal($areaCityList, $kv['key'], $kv['val'])
                     'k_v' => ['key' => 'id', 'val' => 'person_name', 'ubound_name' => '下标名称'],
                     // 一/二维数组 只要其中的某一个字段：
                     'one_field' => ['key' => 'id', 'return_type' => "返回类型1原数据['字段值'][一维返回一维数组，二维返回一维数组];2按分隔符分隔的字符", 'ubound_name' => '下标名称', 'split' => '、'],
-                ],
+                    // 一/二维数组 获得指定的多个字段值
+                   'many_fields' =>[ 'ubound_name' => '', 'fields_arr'=> [ '新下标名' => '原下标名' ],'reset_ubound' => 2;// 是否重新排序下标 1：重新０.．． ,'ubound_keys' => ['说明：看上面old_data的同字段说明'], 'ubound_type' =>1],ubound_type说明：看上面old_data的同字段说明
+                  ],
 
                 'relationConfig' => [// 下一个关系
 
                 ]
             ]
         ];
-
-        if(empty($dataList) || empty($relationConfig)) return true;
+         *
+         *
+         */
+        $returnFields =[];
+        if(empty($data_list) || empty($relationConfig)) return $returnFields;
 
         // 如果是一维数组，则转为二维数组
         $isMulti = Tool::isMultiArr($data_list, true);
 
         $isNeedHandle = false;// 是否真的需要遍历处理数据 false:不需要：true:需要 ；只要有一个需要处理就标记
 
-        $dataFieldVals = [];// 缓存的字段及值数组
+        $dataFieldVals = [];// 缓存的字段及值数组-- 单个字段的 = 》 值【1或多个】
 
         $relationDataList = [];// 关系获取到的数据数组 下标为: 关系配置的key
 
         foreach($relationConfig as $k => $relationInfo){
 
             $toObjClass = $relationInfo['toClass'];// 对应的类
+            // 定义关系表数据列表静态方法名 【用这个比较好】 -- 可填 ，可以提前对数据进行格式化处理--特别处理 参数 $request, $controller , &$data_list[多条条主记录] , &$toDataList[关系表记录-一维或二维], &$returnFields[在主记录中新生成的下标]
+            $toObjFormatListMethod = $relationInfo['toObjFormatListMethod'] ?? '';// 自定义的对关系表数据处理的静态方法名
             $extParams = $relationInfo['extParams'] ?? [];// 其它扩展参数
-            $fieldRelations = $relationInfo['fieldRelations'];// 字段对应 1 个或多个字段   原表的字段 =》 对应表的字段
+            // 1：1:1 还是 2： 1:n 的关系 [默认]
+            $relationType = $relationInfo['relationType'] ?? 2;
+            $fieldRelations = $relationInfo['fieldRelations'] ?? [];// 字段对应 1 个或多个字段   原表的字段 =》 对应表的字段
+            if(empty($fieldRelations)) continue;
             $fieldEmptyQuery = $relationInfo['fieldEmptyQuery'] ?? false;// 如果参数字段值都为空时，是否还查询数据 true:查询 ；false:不查[默认]
             $relations = $relationInfo['relations'] ?? [];// 关系
+            $listHandleKeyArr = $relationInfo['listHandleKeyArr'] ?? [];// 对列表数据进行特别处理的关键字  - 维数组，, 具体的业务逻辑需要自己重写方法 handleRelationDataFormat
             $relationChildConfig = $relationInfo['relationConfig'] ?? [];// 下一级关系
             $fieldValParams = [];
             foreach($fieldRelations as $f_field => $t_field){
@@ -1571,13 +1746,28 @@ class BasicCTAPIBusiness extends APIOperate
                 $relationInfo['extParams']['formatDataUbound']['exceptUboundArr'] = $exceptUboundArr;
             }
 
-            $toDataList =  $toObjClass::getFVFormatList( $request,  $controller, $fieldValParams, $fieldEmptyQuery, $relations, $extParams);
+            $toDataList =  $toObjClass::getFVFormatList( $request,  $controller, 1, 1, $fieldValParams, $fieldEmptyQuery, $relations, $extParams);
             if(!$isNeedHandle && !empty($toDataList)) $isNeedHandle = true;
             if(!empty($toDataList)){
-                if(!empty($relationChildConfig)) static::formatRelationList($request, $controller, $toDataList, $relationChildConfig);
-                $relationDataList[$k] = $toDataList;
-            }
+                if(!empty($relationChildConfig)){
+                    $temNextAddFields = static::formatRelationList($request, $controller, $toDataList, $relationChildConfig);
+                    if(!empty($temNextAddFields)){// 下一级增加了的字段
+                        $tem_fields_arr = $relationInfo['return_data']['old_data']['fields_arr'] ?? [];
+                        if(!empty($tem_fields_arr)) $relationConfig[$k]['return_data']['old_data']['fields_arr']= array_merge($tem_fields_arr, Tool::arrEqualKeyVal($temNextAddFields));// $temNextAddFields );
+                    }
+                }
+                // toObjFormatListMethod 【一般不用这个--存在重复处理】 定义静态方法名，可以提前对数据进行格式化处理--特别处理
+                //          参数 $request, $controller , &$data_list[多条条主记录] , &$toDataList[关系表记录-一维或二维], &$returnFields[在主记录中新生成的下标]
+                if(!empty($toObjFormatListMethod)) $toObjClass::{$toObjFormatListMethod}($request, $controller, $data_list, $toDataList, $returnFields);
+                // 当前类对数据列表进行特别处理【自定义】
 
+                // 如果是一维数组，则转为二维数组
+                $temIsMulti = Tool::isMultiArr($toDataList, true);
+                $toObjClass::handleRelationDataFormat($request, $controller, $data_list, $toDataList, $listHandleKeyArr, $returnFields);
+                if(!$temIsMulti) $toDataList = $toDataList[0] ?? [];
+                // 对数据进行格式化-- 变为 一维或二维数组--数组下标为关系字段值，多个用_分隔
+                $relationDataList[$k] = Tool::arrUnderReset($toDataList, array_values($fieldRelations), $relationType, '_');
+            }
 
 //        if(!empty($projectStandardsList)) $projectStandardsArr = Tool::arrUnderReset($projectStandardsList, 'ability_id', 2);
 //        if(!$isNeedHandle && !empty($projectStandardsArr)) $isNeedHandle = true;
@@ -1591,31 +1781,321 @@ class BasicCTAPIBusiness extends APIOperate
         // }
 
         foreach($data_list as $k => $v){
-            static::formatRelationInfo($dataList[$k], $relationConfig, $relationDataList);
+           static::formatRelationInfo($request, $controller, $data_list[$k], $relationConfig, $relationDataList, $returnFields);
         }
 
-
         if(!$isMulti) $data_list = $data_list[0] ?? [];
+        return $returnFields;
     }
 
     /**
      * 对数据进行格式化
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
      * @param array $info  单条数据  --- 一维数组
-     * @param array $relationConfigArr  配置信息
-     * @param array $relationDataList  配置需要格式化的相关数据 下标为配置 $relationConfigArr 对应的key   key => 它的值为二维数组
-     * @return  mixed
+     * @param array $relationConfigArr  配置信息 --  return_data为空，则按 下标key返回
+     *
+     * @param array $relationDataList  配置需要格式化的相关数据  一维或二维数组    下标为配置 $relationConfigArr 对应的key   key => 它的值为一维或二维数组
+     * @param array $returnFields  新加入的字段['字段名1' => '字段名1' ]
+     * @return array  新增的字段 一维数组
      * @author zouyan(305463219@qq.com)
      */
-    public static function formatRelationInfo(&$info = [], $relationConfigArr = [], $relationDataList = []){
+    public static function formatRelationInfo(Request $request, Controller $controller, &$info, $relationConfigArr, $relationDataList, &$returnFields){
+        /**
+         *
+        $relationConfigArr = [
+            'relation_key' => [// 下标为定义的关键字
+                // 获得数据相关的
+                'toClass' => 'App\Business\Controller\API\QualityControl\CTAPIStaffBusiness',// 对应的类--必填
+                'toObjFormatListMethod' => '',//  定义关系表数据列表静态方法名 【用这个比较好】-- 可填 ，参数 $request, $controller , &$data_list[多条条主记录] , &$toDataList[关系表记录-一维或二维], &$returnFields[在主记录中新生成的下标]
+                'toObjFormatInfoMethod' => '',//  定义关系表数据详情静态方法名 【一般不用这个--存在重复处理】-- 可填 ，可以提前对数据进行格式化处理--特别处理 参数 $request, $controller , &$info[单条主记录] , &$temDataList[关系表记录-一维或二维], &$returnFields[在主记录中新生成的下标]
+                'extParams' => [// 可填
+                    'sqlParams' => [
+                        'where' => [// -- 可填 如 默认条件 'type_id' => 5  'admin_type' => $user_info['admin_type'],'staff_id' =>  $user_info['id']
+                            ['type_id', 5],
+                        ],
+                    ],
+                    'handleKeyArr' => [],// 可填 一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。--名称关键字，尽可能与关系名一样
+                    'formatDataUbound' => [// 可填  格式化数据[取指下下标、排除指定下标、修改下标名称]具体参数使用说明，请参阅 Tool::formatArrUbound 方法  --为空数组代表不格式化
+                        'needNotIn' => true, // keys在数组中不存在的，false:不要，true：空值 -- 用true的时候多
+                        'includeUboundArr' => [],// 要获取的下标数组 [优先]--一维数组，可为空[ '新下标名' => '原下标名' ]  Tool::arrEqualKeyVal(['shop_id', 'shop_name', 'linkman', 'mobile'])
+                        'exceptUboundArr' => [], // 要排除的下标数组 --一维数组，可为空[ '原下标名' ,....]
+                    ]
+                ],
+                'fieldRelations' => [// 字段对应 1 个或多个字段--必填
+                    'staff_id' => 'id'// 原表的字段 =》 对应表的字段
+                ],
+                // 特别注明：格式化的数据是 toClass 对象的数据；数据格式化的步聚是： 1、listHandleKeyArr  对列表数据进行特别处理 ；2 return_data 关系配置设置的方式处理、；3、infoHandleKeyArr 对单条记录特别处理的关键字
+                'listHandleKeyArr' => [],// 对列表数据进行特别处理的关键字  - 维数组，, 具体的业务逻辑需要自己重写方法 handleRelationDataFormat
+                'infoHandleKeyArr' => [],// 对单条记录 关系数据 特别处理的关键字 一维数组, 具体的业务逻辑需要自己重写方法 infoRelationFormatExtend
+                'fieldEmptyQuery' => false, // 如果参数字段值都为空时，是否还查询数据 true:查询 ；false:不查[默认]-- 选填
+                'relations' => [],// 关系--选填-- 一般不用了
+                // 下面是对数据进行解析的处理
+                'relationType' => 2,// 1：1:1 还是 2： 1:n 的关系 [默认]
+                'return_data' => [// 对数据进行格式化
+                    'old_data' => [// --只能一维数组 原数据的处理及说明
+                        'ubound_operate' => 2,// 原数据的处理1 保存原数据及下标-如果下级有新字段，会自动更新;2不保存原数据[默认]---是否用新的下标由下面的 'ubound_name' 决定
+                        // 第一次缩小范围，需要的字段  -- 要获取的下标数组 -维 [ '新下标名' => '原下标名' ]  ---为空，则按原来的返回
+                        // 如果新下标和原下标相同，则可以用这个方法去转  Tool::arrEqualKeyVal(['shop_id', 'shop_name', 'linkman', 'mobile']), true )
+                        'ubound_name' => 'city',// 新数据的下标--可为空，则不返回,最好不要和原数据下标相同，如果相同，则原数据会把新数据覆盖
+                        'fields_arr' => [],// 需要获得的字段；
+                       'ubound_keys' => [],// 如果是结果是二维数组，下标要改为指定的字段值，下标[多个值_分隔]  ---这个是字段的一维数组
+                       'ubound_type' =>1, 数组字段为下标时，按字段值以应的下标的 数组是一维还是二维 1一维数组【默认】; 2二维数组
+                    ],
+                    // 一/二维数组 键值对 可为空或没有此下标：不需要 Tool::formatArrKeyVal($areaCityList, $kv['key'], $kv['val'])
+                    'k_v' => ['key' => 'id', 'val' => 'person_name', 'ubound_name' => '下标名称'],
+                    // 一/二维数组 只要其中的某一个字段：
+                    'one_field' => ['key' => 'id', 'return_type' => "返回类型1原数据['字段值'][一维返回一维数组，二维返回一维数组];2按分隔符分隔的字符", 'ubound_name' => '下标名称', 'split' => '、'],
+                   // 一/二维数组 获得指定的多个字段值
+                   'many_fields' =>[ 'ubound_name' => '', 'fields_arr'=> [ '新下标名' => '原下标名' ],'reset_ubound' => 2;// 是否重新排序下标 1：重新０.．．  ,'ubound_keys' => ['说明：看上面old_data的同字段说明'], 'ubound_type' =>1],ubound_type说明：看上面old_data的同字段说明
+                ],
+
+                'relationConfig' => [// 下一个关系
+
+                ]
+            ]
+        ];
+         *
+         */
+
+        if(empty($relationConfigArr)) return $returnFields;//  || empty($relationDataList)
+        if(empty($info)) return $returnFields;
+        // $relationKeys = array_keys($relationConfigArr);
         foreach($relationConfigArr as $k => $relationInfo){
-            $temDataList = $relationDataList[$k] ?? [];
-            $return_data = $relationInfo['return_data'] ?? [];
+            $temDataList = $relationDataList[$k] ?? [];// 获得的关系数据 -- 一维、二维数组
+
+            $toObjClass = $relationInfo['toClass'];// 对应的类
+            // 定义静态方法名 -- 可填 ，可以提前对数据进行格式化处理--特别处理 参数 $request, $controller , &$info[单条主记录] , &$temDataList[关系表记录-一维或二维], &$returnFields[在主记录中新生成的下标]
+            $toObjFormatInfoMethod = $relationInfo['toObjFormatInfoMethod'] ?? '';// 自定义的对关系表数据处理的静态方法名
+
+            $infoHandleKeyArr = $relationInfo['infoHandleKeyArr'] ?? [];// 对单条记录特别处理的关键字 一维数组, 具体的业务逻辑需要自己重写方法 infoRelationFormatExtend
+
+            $return_data = $relationInfo['return_data'] ?? [];// 数据处理配置
             // 1：1:1 还是 2： 1:n 的关系 [默认]
-            $relationType = $relationInfo['relationType'] ?? 2;
+            // $relationType = $relationInfo['relationType'] ?? 2;
+
+            $fieldRelations = $relationInfo['fieldRelations'];// 字段对应 1 个或多个字段   原表的字段 =》 对应表的字段
+
+            $relationfieldKeys = array_keys($fieldRelations);// 主记录的关系字段数组 --- 一维数组
+            // 获得主字段的值
+            if(empty($relationfieldKeys)) continue;
+            $temDataList = $temDataList[implode('_', Tool::getArrFormatFields($info, $relationfieldKeys, true))] ?? [];
+            // if(empty($temDataList)) continue;
+            // toObjFormatInfoMethod 【一般不用这个--存在重复处理】 定义静态方法名，可以提前对数据进行格式化处理--特别处理
+            //          参数 $request, $controller , &$info[单条主记录] , &$temDataList[关系表记录-一维或二维], &$returnFields[在主记录中新生成的下标]
+            if(!empty($toObjFormatInfoMethod)) $toObjClass::{$toObjFormatInfoMethod}($request, $controller, $info, $temDataList, $returnFields);
+            // 单条记录 单个配置 、数据的格式化
+            Tool::formatConfigRelationInfo($info, $temDataList, $k, $return_data, $returnFields);
+            // 自已类的格式化处理
+            $toObjClass::infoRelationFormatExtend($request, $controller, $info, $temDataList, $infoHandleKeyArr, $returnFields);
 
         }
 
-
+        return $returnFields;
     }
 
+    // ***********各表自己***特殊的数据处理方法******需要重写*************开始**************************************
+    /**
+     * 格式化关系数据 --如果有格式化，肯定会重写---本地数据库主要用这个来格式化数据
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $main_list 关系主记录要格式化的数据
+     * @param array $data_list 需要格式化的从记录数据---二维数组(如果是一维数组，是转成二维数组后的数据)
+     * @param array $handleKeyArr 其它扩展参数，// 一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。--名称关键字，尽可能与关系名一样
+     * @param array $returnFields  新加入的字段['字段名1' => '字段名1' ]
+     * @return array  新增的字段 一维数组
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function handleRelationDataFormat(Request $request, Controller $controller, &$main_list, &$data_list, $handleKeyArr, &$returnFields = []){
+        // if(empty($data_list)) return $returnFields;
+        // 重写开始
+
+//        if(in_array('mergeZeroName', $handleKeyArr)){
+//          // ...对 $data_list做特殊处理
+//        }
+
+        // 重写结束
+        return $returnFields;
+    }
+
+    /**
+     * 对单条数据关系进行格式化--具体的可以重写
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $info  单条数据  --- 一维数组
+     * @param array $temDataList  关系数据  --- 一维或二维数组 -- 主要操作这个数据到  $info 的特别业务数据
+     *                              如果是二维数组：下标已经是他们关系字段的值，多个则用_分隔好的
+     * @param array $infoHandleKeyArr 其它扩展参数，// 一维数组，单条 数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+     * @param array $returnFields  新加入的字段['字段名1' => '字段名1' ]
+     * @return array  新增的字段 一维数组
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function infoRelationFormatExtend(Request $request, Controller $controller, &$info, &$temDataList, $infoHandleKeyArr, &$returnFields){
+        // if(empty($info)) return $returnFields;
+        // $returnFields[$tem_ubound_old] = $tem_ubound_old;
+
+//        if(in_array('company', $infoHandleKeyArr)){
+//
+//        }
+
+        return $returnFields;
+    }
+    // ***********各表自己***特殊的数据处理方法******需要重写*************结束**************************************
+
+    // ~~~~~~~~~~配置相关的~~~~~~~~~~
+
+    /**
+     * 获得处理关系表数据的配置信息--重写此方法
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $relationKeys
+     * @param array $extendParams  扩展参数---可能会用
+     * @return  array 表关系配置信息
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function getRelationConfigs(Request $request, Controller $controller, $relationKeys = [], $extendParams = []){
+        if(empty($relationKeys)) return [];
+        $user_info = $controller->user_info;
+        $user_id = $controller->user_id;
+        $user_type = $controller->user_type;
+        // 关系配置
+        $relationFormatConfigs = [
+            // 下标 'relationConfig' => []// 下一个关系
+            // 获得企业名称
+//            'company_info' => CTAPIStaffBusiness::getPrimaryRelationConfigVal($request, $controller
+//                , ['admin_type' => 'admin_type', 'staff_id' => 'id']
+//                , 1, ['one_field' =>['key' => 'company_name', 'return_type' => 2, 'ubound_name' => 'company_name', 'split' => '、'],]
+//                ,'','', ['where' => [['admin_type', 2]]], '', []),
+        ];
+        return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
+    }
+    // 配置基类
+    /**
+     * 获得主键的关系配置信息【单个配置】 调用 具体的类::此方法 --- 通过自己的类调就可以自动获得当前的类名
+     *  --- 有下标， =》 配置数组
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param string $primaryKey 配置的下标
+     * @param array $fieldRelations 字段关系数组 ['admin_type' => 'admin_type','staff_id' => 'id']
+     * [// 字段对应 1 个或多个字段--必填
+     *       'admin_type' => 'admin_type',
+     *      'staff_id' => 'id'// 原表的字段 =》 对应表的字段
+     *  ]
+     * @param int $relationType 1：1:1 还是 2： 1:n 的关系 [默认]
+     * @param array $return_data // 对数据进行格式化 --  为空，则按  $primaryKey 为下标返回数据  ；具体格式参见 Tool::formatConfigRelationInfo 参数说明
+     *                                   也可以参见：formatRelationList 方法的参数说明
+     * @param string $toObjFormatListMethod 定义关系表数据列表静态方法名 【用这个比较好】-- 可填 ，参数 $request, $controller , &$data_list[多条条主记录] , &$toDataList[关系表记录-一维或二维], &$returnFields[在主记录中新生成的下标]
+     * @param string $toObjFormatInfoMethod  定义关系表数据详情静态方法名 【一般不用这个--存在重复处理】-- 可填 ，可以提前对数据进行格式化处理--特别处理 参数 $request, $controller , &$info[单条主记录] , &$temDataList[关系表记录-一维或二维], &$returnFields[在主记录中新生成的下标]
+     * @param array $childRelationConfig  下一级关系
+     * @param array $sqlParams  其它 sql条件，主要用  where : [ 'where' => ['admin_type', 2],] //  [// -- 可填 如 默认条件 'type_id' => 5  'admin_type' => $user_info['admin_type'],'staff_id' =>  $user_info['id']
+
+     *        [// 其它sql条件[覆盖式],下面是常用的，其它的也可以
+     *           'where' => '如果有值，则替换where'
+     *           'select' => '如果有值，则替换select'
+     *           'orderBy' => '如果有值，则替换orderBy'
+     *           'whereIn' => '如果有值，则替换whereIn'
+     *           'whereNotIn' => '如果有值，则替换whereNotIn'
+     *           'whereBetween' => '如果有值，则替换whereBetween'
+     *           'whereNotBetween' => '如果有值，则替换whereNotBetween'
+     *       ],
+     * @param string $toClass 可为空，通过自己的类调就可以自动获得当前的类名
+     * @param array $extendParams  扩展参数---可能会用--优先级最高
+     * [
+     *   'extendConfig' => [],// 扩展配置--具体有哪些参数可参见 formatRelationList 方法的配置下标
+     *                          如 ：['listHandleKeyArr' => [..],'infoHandleKeyArr' => [],]
+     * ]
+     * @return  array 表关系配置信息
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function getPrimaryRelationConfigs(Request $request, Controller $controller, $primaryKey, $fieldRelations, $relationType = 2, $return_data = [], $toObjFormatListMethod = '', $toObjFormatInfoMethod = '', $childRelationConfig = [], $sqlParams = [], $toClass = '', $extendParams = []){
+
+        $user_info = $controller->user_info;
+        $user_id = $controller->user_id;
+        $user_type = $controller->user_type;
+
+        if(empty($toClass)) $toClass = static::$record_class;
+        $primaryRelationConfig = [];
+        $primaryRelationConfig[$primaryKey] = static::getPrimaryRelationConfigVal($request, $controller, $fieldRelations, $relationType, $return_data, $toObjFormatListMethod, $toObjFormatInfoMethod, $childRelationConfig, $sqlParams, $toClass, $extendParams);
+        return $primaryRelationConfig;
+    }
+
+    /**
+     * 获得主键的关系配置信息【单个配置】 调用 具体的类::此方法 --- 通过自己的类调就可以自动获得当前的类名 --- 没有下标，只是配置数组
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $fieldRelations 字段关系数组 ['admin_type' => 'admin_type','staff_id' => 'id']
+     * [// 字段对应 1 个或多个字段--必填
+     *       'admin_type' => 'admin_type',
+     *      'staff_id' => 'id'// 原表的字段 =》 对应表的字段
+     *  ]
+     * @param int $relationType 1：1:1 还是 2： 1:n 的关系 [默认]
+     * @param array $return_data // 对数据进行格式化 --  为空，则按  $primaryKey 为下标返回数据  ；具体格式参见 Tool::formatConfigRelationInfo 参数说明
+     *                                   也可以参见：formatRelationList 方法的参数说明
+     * @param string $toObjFormatListMethod 定义关系表数据列表静态方法名 【用这个比较好】-- 可填 ，参数 $request, $controller , &$data_list[多条条主记录] , &$toDataList[关系表记录-一维或二维], &$returnFields[在主记录中新生成的下标]
+     * @param string $toObjFormatInfoMethod  定义关系表数据详情静态方法名 【一般不用这个--存在重复处理】-- 可填 ，可以提前对数据进行格式化处理--特别处理 参数 $request, $controller , &$info[单条主记录] , &$temDataList[关系表记录-一维或二维], &$returnFields[在主记录中新生成的下标]
+     * @param array $childRelationConfig  下一级关系
+     * @param array $sqlParams  其它 sql条件，主要用  where : [ 'where' => ['admin_type', 2],] //  [// -- 可填 如 默认条件 'type_id' => 5  'admin_type' => $user_info['admin_type'],'staff_id' =>  $user_info['id']
+
+     *        [// 其它sql条件[覆盖式],下面是常用的，其它的也可以
+     *           'where' => '如果有值，则替换where'
+     *           'select' => '如果有值，则替换select'
+     *           'orderBy' => '如果有值，则替换orderBy'
+     *           'whereIn' => '如果有值，则替换whereIn'
+     *           'whereNotIn' => '如果有值，则替换whereNotIn'
+     *           'whereBetween' => '如果有值，则替换whereBetween'
+     *           'whereNotBetween' => '如果有值，则替换whereNotBetween'
+     *       ],
+     * @param string $toClass 可为空，通过自己的类调就可以自动获得当前的类名
+     * @param array $extendParams  扩展参数---可能会用--优先级最高
+     * [
+     *   'extendConfig' => [],// 扩展配置--具体有哪些参数可参见 formatRelationList 方法的配置下标
+     *                          如 ：['listHandleKeyArr' => [..],'infoHandleKeyArr' => [],]
+     * ]
+     * @return  array 表关系配置信息
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function getPrimaryRelationConfigVal(Request $request, Controller $controller, $fieldRelations, $relationType = 2, $return_data = []
+        , $toObjFormatListMethod = '', $toObjFormatInfoMethod = '', $childRelationConfig = [], $sqlParams = []
+        , $toClass = '', $extendParams = [])
+    {
+        $user_info = $controller->user_info;
+        $user_id = $controller->user_id;
+        $user_type = $controller->user_type;
+
+        if(empty($toClass)) $toClass = static::$record_class;
+        $extendConfig = $extendParams['extendConfig'] ?? [];
+
+        $returnConfig = [// 获得相关的  企业名称 company_name
+            'toClass' => $toClass,// 'App\Business\Controller\API\QualityControl\CTAPIStaffBusiness',
+            'toObjFormatListMethod' => $toObjFormatListMethod,//  定义关系表数据列表静态方法名 【用这个比较好】-- 可填 ，参数 $request, $controller , &$data_list[多条条主记录] , &$toDataList[关系表记录-一维或二维], &$returnFields[在主记录中新生成的下标]
+            'toObjFormatInfoMethod' => $toObjFormatInfoMethod,//  定义关系表数据详情静态方法名 【一般不用这个--存在重复处理】-- 可填 ，可以提前对数据进行格式化处理--特别处理 参数 $request, $controller , &$info[单条主记录] , &$temDataList[关系表记录-一维或二维], &$returnFields[在主记录中新生成的下标]
+            'extParams' => $sqlParams,
+//            [// 可填
+//                'sqlParams' => [
+//                    'where' => [// -- 可填 如 默认条件 'type_id' => 5  'admin_type' => $user_info['admin_type'],'staff_id' =>  $user_info['id']
+//                        ['admin_type', 2],
+//                    ],
+//                ],
+//            ],
+            'fieldRelations' => $fieldRelations,
+//            [// 字段对应 1 个或多个字段--必填
+//                'admin_type' => 'admin_type',
+//                'staff_id' => 'id'// 原表的字段 =》 对应表的字段
+//            ],
+            'relationType' => $relationType,// 1,// 1：1:1 还是 2： 1:n 的关系 [默认]
+            'return_data' => $return_data,
+//            [// 对数据进行格式化
+//                // 一/二维数组 只要其中的某一个字段：
+//                'one_field' =>['key' => 'company_name', 'return_type' => 2, 'ubound_name' => 'company_name', 'split' => '、'],
+//            ],
+            'relationConfig' => $childRelationConfig// 下一个关系
+        ];
+        return (empty($extendConfig)) ? $returnConfig : array_merge($returnConfig, $extendConfig);
+    }
+
+    // ***********相关表数据获取配置及数据的格式化***结束************************************************************
 }

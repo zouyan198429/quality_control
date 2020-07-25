@@ -12,6 +12,7 @@ class BasicCTDBBusiness extends BaseBusiness
     public static $database_model_dir_name = '';// 对应的数据库模型目录名称
     public static $model_name = '';// 中间层 App\Business\DB 下面的表名称 RunBuy\CountSenderReg
     public static $table_name = '';// 表名称
+    public static $record_class = __CLASS__;// 当前的类名称 App\Business\***\***\**\***
 
     // 实例化数据中间层对象
     public static function requestGetObj(Request $request, Controller $controller, &$modelObj = null){

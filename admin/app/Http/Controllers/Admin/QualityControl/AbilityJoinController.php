@@ -153,13 +153,12 @@ class AbilityJoinController extends BasicController
                     ]
                 ];
                 $extParams = [
-                    'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                     'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                 ];
                 $info = CTAPIAbilityJoinBusiness::getInfoData($request, $this, $id, [], '', $extParams);
 //            }
             // $reDataArr = array_merge($reDataArr, $resultDatas);
             $reDataArr['info'] = $info;
-            pr($reDataArr);
 //            $reDataArr['operate'] = $operate;
             return view('admin.QualityControl.AbilityJoin.get_sample', $reDataArr);
 
@@ -187,10 +186,12 @@ class AbilityJoinController extends BasicController
                 throws('参数[id]有误！');
             }
             $operate = "详情";
-            $handleKeyArr = ['company', 'joinItems'];
+            $handleKeyArr = ['joinItems'];
             $extParams = [
-                'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                'relationFormatConfigs'=> CTAPIAbilityJoinBusiness::getRelationConfigs($request, $this, ['join_items'], []),
             ];
+
             $info = CTAPIAbilityJoinBusiness::getInfoData($request, $this, $id, [], '', $extParams);
             // $reDataArr = array_merge($reDataArr, $resultDatas);
             if(empty($info)) {
@@ -314,11 +315,12 @@ class AbilityJoinController extends BasicController
     public function ajax_alist(Request $request){
         $this->InitParams($request);
         $relations = [];//  ['siteResources']
-        $handleKeyArr = ['company'];
-        $extParams = [
-            'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-        ];
+        // $handleKeyArr = ['company'];
 
+        $extParams = [
+           // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+            'relationFormatConfigs'=> CTAPIAbilityJoinBusiness::getRelationConfigs($request, $this, ['company_info'], []),
+        ];
         return  CTAPIAbilityJoinBusiness::getList($request, $this, 2 + 4, [], $relations, $extParams);
     }
 

@@ -16,12 +16,85 @@ class CTAPIAbilityJoinBusiness extends BasicPublicCTAPIBusiness
 {
     public static $model_name = 'API\QualityControl\AbilityJoinAPI';
     public static $table_name = 'ability_join';// 表名称
+    public static $record_class = __CLASS__;// 当前的类名称 App\Business\***\***\**\***
 
     // 是否激活(0:未激活；1：已激活)
 //    public static $isActiveArr = [
 //        '0' => '未激活',
 //        '1' => '已激活',
 //    ];
+
+
+    /**
+     * 获得处理关系表数据的配置信息--重写此方法
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $relationKeys
+     * @param array $extendParams  扩展参数---可能会用
+     * @return  array 表关系配置信息
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function getRelationConfigs(Request $request, Controller $controller, $relationKeys = [], $extendParams = []){
+        if(empty($relationKeys)) return [];
+         $user_info = $controller->user_info;
+         $user_id = $controller->user_id;
+         $user_type = $controller->user_type;
+             // 关系配置
+        $relationFormatConfigs = [
+            // 获得企业名称 1:1
+            'company_info' => CTAPIStaffBusiness::getPrimaryRelationConfigVal($request, $controller
+                , ['admin_type' => 'admin_type', 'staff_id' => 'id']
+                , 1
+                , ['one_field' =>['key' => 'company_name', 'return_type' => 2, 'ubound_name' => 'company_name', 'split' => '、'],]// 企业名称
+                ,'',''
+                ,[], ['where' => [['admin_type', 2]]], '', []),
+            // 报名项目 1:n
+            'join_items' => CTAPIAbilityJoinItemsBusiness::getPrimaryRelationConfigVal($request, $controller
+                , ['id' => 'ability_join_id']
+                , 2
+                , [
+                   //  'one_field' =>['key' => 'company_name', 'return_type' => 2, 'ubound_name' => 'company_name', 'split' => '、']
+                  ]
+                ,'','',[
+                     // 下一级关系 报名项所属的项目 -- 的名称 1:1
+                    'ability_info' => CTAPIAbilitysBusiness::getPrimaryRelationConfigVal($request, $controller
+                        , ['ability_id' => 'id']
+                        , 1, ['one_field' =>['key' => 'ability_name', 'return_type' => 2, 'ubound_name' => 'ability_name', 'split' => '、'],]// 项目名称  测试4
+                        ,'',''
+                        ,[], [], '', []),
+                    // 下一级关系的  能力验证报名项-项目标准 1:n
+                    'join_item_standards' => CTAPIAbilityJoinItemsStandardsBusiness::getPrimaryRelationConfigVal($request, $controller
+                        , ['id' => 'ability_join_item_id']
+                        , 2
+                        , [
+                            'old_data' => ['ubound_operate' => 1, 'ubound_name' => '','fields_arr' => [], 'ubound_keys' => ['project_standard_id'], 'ubound_type' =>1],
+                            // 项目报名项的标准方法 中的 选中的 标准id 数组
+                            'one_field' =>['key' => 'project_standard_id', 'return_type' => 1, 'ubound_name' => 'join_item_standard_ids', 'split' => ','] // [0,25]
+                        ]
+                        ,'',''
+                        ,[
+                            // 获得报名项选的方法对应的名称 1:1
+                            'project_standard_info' => CTAPIProjectStandardsBusiness::getPrimaryRelationConfigVal($request, $controller
+                                , ['project_standard_id' => 'id']
+                                , 1, ['one_field' =>['key' => 'name', 'return_type' => 2, 'ubound_name' => 'project_standard_id_name', 'split' => '、'],]// 项目名称 方法1
+                                ,'',''
+                                ,[], [], '', []),
+                        ], [], '', ['extendConfig' => ['listHandleKeyArr' => ['mergeZeroName']]]),
+                    // 下一级关系 报名项所属的项目 的标准【方法】 1:n
+                    'project_standards_list' => CTAPIProjectStandardsBusiness::getPrimaryRelationConfigVal($request, $controller
+                        , ['ability_id' => 'ability_id']
+                        , 2, [
+                            // [[ 'id' => 26,  'tag_name' => '方法2'], ... ]
+                            'many_fields' =>[ 'ubound_name' => 'project_standards', 'fields_arr'=> ['id' => 'id', 'tag_name' => 'name'],'reset_ubound' => 2],// 是否重新排序下标 1：重新０.．． ]
+                            'one_field' =>['key' => 'name', 'return_type' => 2, 'ubound_name' => 'project_standards_text', 'split' => '<br/>']// 方法2<br/>方法1
+                        ]
+                        ,'',''
+                        ,[], [], '', []),
+                ], [], '', []),
+        ];
+        return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
+    }
 
     /**
      * 特殊的验证 关键字 -单个 的具体验证----具体的子类----重写此方法来实现具体的验证
@@ -101,7 +174,7 @@ class CTAPIAbilityJoinBusiness extends BasicPublicCTAPIBusiness
 //                $companyList = CTAPIStaffBusiness::getBaseListData($request, $controller, '', $companyQueryParams,[], 1,  1)['data_list'] ?? [];
 //            }
             $extParams =[];
-            $companyList =  CTAPIStaffBusiness::getFVFormatList( $request,  $controller,  ['id' => $staffIdsArr], false,[], $extParams);
+            $companyList =  CTAPIStaffBusiness::getFVFormatList( $request,  $controller, 1, 1,  ['id' => $staffIdsArr], false,[], $extParams);
             if(!empty($companyList)){
                 $companyDataList = Tool::arrUnderReset($companyList, 'id', 1);
                 $companyKVList = Tool::formatArrKeyVal($companyList, 'id', 'company_name');
@@ -142,7 +215,7 @@ class CTAPIAbilityJoinBusiness extends BasicPublicCTAPIBusiness
                 'handleKeyArr' => ['ability', 'joinItemsStandards', 'projectStandards'],//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
             ];
             // $businessName = 'App\Business\Controller\API\QualityControl\CTAPIAbilityJoinItemsBusiness';
-            $joinItemList =  CTAPIAbilityJoinItemsBusiness::getFVFormatList( $request,  $controller,  ['ability_join_id' => $joinIdsArr], false,[], $extParams);
+            $joinItemList =  CTAPIAbilityJoinItemsBusiness::getFVFormatList( $request,  $controller, 1, 1,  ['ability_join_id' => $joinIdsArr], false,[], $extParams);
             if(!empty($joinItemList)){
                 $joinItemKeyDataList = Tool::arrUnderReset($joinItemList, 'ability_join_id', 2);
             }

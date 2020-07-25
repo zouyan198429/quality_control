@@ -12,6 +12,7 @@ class CompanyScheduleDBBusiness extends BasePublicDBBusiness
 {
     public static $model_name = 'QualityControl\CompanySchedule';
     public static $table_name = 'company_schedule';// 表名称
+    public static $record_class = __CLASS__;// 当前的类名称 App\Business\***\***\**\***
 
     /**
      * 根据id新加或修改单条数据-id 为0 新加，返回新的对象数组[-维],  > 0 ：修改对应的记录，返回true

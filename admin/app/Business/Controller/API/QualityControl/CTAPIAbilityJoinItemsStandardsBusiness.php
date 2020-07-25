@@ -16,6 +16,7 @@ class CTAPIAbilityJoinItemsStandardsBusiness extends BasicPublicCTAPIBusiness
 {
     public static $model_name = 'API\QualityControl\AbilityJoinItemsStandardsAPI';
     public static $table_name = 'ability_join_items_standards';// 表名称
+    public static $record_class = __CLASS__;// 当前的类名称 App\Business\***\***\**\***
 
     // 是否激活(0:未激活；1：已激活)
 //    public static $isActiveArr = [
@@ -102,7 +103,7 @@ class CTAPIAbilityJoinItemsStandardsBusiness extends BasicPublicCTAPIBusiness
 //            }
 
             $extParams = [];
-            $standardList =  CTAPIProjectStandardsBusiness::getFVFormatList( $request,  $controller,  ['id' => $standardIdsArr], false,[], $extParams);
+            $standardList =  CTAPIProjectStandardsBusiness::getFVFormatList( $request,  $controller, 1, 1,  ['id' => $standardIdsArr], false,[], $extParams);
             if(!empty($standardList)){
                 $standardDataList = Tool::arrUnderReset($standardList, 'id', 1);
                 $standardKVList = Tool::formatArrKeyVal($standardList, 'id', 'name');
@@ -163,4 +164,56 @@ class CTAPIAbilityJoinItemsStandardsBusiness extends BasicPublicCTAPIBusiness
         static::joinListParamsLike($request, $controller, $queryParams, $notLog);
     }
 
+
+    /**
+     * 格式化关系数据 --如果有格式化，肯定会重写---本地数据库主要用这个来格式化数据
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $main_list 关系主记录要格式化的数据
+     * @param array $data_list 需要格式化的从记录数据---二维数组(如果是一维数组，是转成二维数组后的数据)
+     * @param array $handleKeyArr 其它扩展参数，// 一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。--名称关键字，尽可能与关系名一样
+     * @param array $returnFields  新加入的字段['字段名1' => '字段名1' ]
+     * @return array  新增的字段 一维数组
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function handleRelationDataFormat(Request $request, Controller $controller, &$main_list, &$data_list, $handleKeyArr, &$returnFields = []){
+        // if(empty($data_list)) return $returnFields;
+        // 重写开始
+
+        if(in_array('mergeZeroName', $handleKeyArr)){
+             foreach($data_list as $k => $v){
+                 $project_standard_id = $v['project_standard_id'];
+                 if($project_standard_id > 0 && isset($v['project_standard_id_name']) ){
+                     $data_list[$k]['project_standard_name'] = $v['project_standard_id_name'];
+                 }
+             }
+        }
+
+        // 重写结束
+        return $returnFields;
+    }
+
+    /**
+     * 对单条数据关系进行格式化--具体的可以重写
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $info  单条数据  --- 一维数组
+     * @param array $temDataList  关系数据  --- 一维或二维数组 -- 主要操作这个数据到  $info 的特别业务数据
+     *                              如果是二维数组：下标已经是他们关系字段的值，多个则用_分隔好的
+     * @param array $infoHandleKeyArr 其它扩展参数，// 一维数组，单条 数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+     * @param array $returnFields  新加入的字段['字段名1' => '字段名1' ]
+     * @return array  新增的字段 一维数组
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function infoRelationFormatExtend(Request $request, Controller $controller, &$info, &$temDataList, $infoHandleKeyArr, &$returnFields){
+        // if(empty($info)) return $returnFields;
+        // $returnFields[$tem_ubound_old] = $tem_ubound_old;
+
+//        if(in_array('mergeZeroName', $infoHandleKeyArr)){
+//            // pr($temDataList);
+//        }
+
+        return $returnFields;
+    }
 }

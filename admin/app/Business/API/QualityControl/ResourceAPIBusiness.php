@@ -9,6 +9,7 @@ class ResourceAPIBusiness extends BasePublicAPIBusiness
 {
     public static $model_name = 'QualityControl\Resource';
     public static $table_name = 'resource';// 表名称
+    public static $record_class = __CLASS__;// 当前的类名称 App\Business\***\***\**\***
     /**
      * 根据资源id，删除资源及数据表记录
      *

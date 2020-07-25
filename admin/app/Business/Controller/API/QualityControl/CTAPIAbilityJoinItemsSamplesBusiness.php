@@ -16,6 +16,7 @@ class CTAPIAbilityJoinItemsSamplesBusiness extends BasicPublicCTAPIBusiness
 {
     public static $model_name = 'API\QualityControl\AbilityJoinItemsSamplesAPI';
     public static $table_name = 'ability_join_items_samples';// 表名称
+    public static $record_class = __CLASS__;// 当前的类名称 App\Business\***\***\**\***
 
     // 是否激活(0:未激活；1：已激活)
 //    public static $isActiveArr = [

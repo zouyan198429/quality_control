@@ -9,6 +9,7 @@ class BaseBusiness
 {
     public static $database_model_dir_name = '';// 对应的数据库模型目录名称
     public static $table_name = '';// 表名称
+    public static $record_class = __CLASS__;// 当前的类名称 App\Business\***\***\**\***
 
     /**
      * 功能：获得models数据表说明内容
