@@ -82,24 +82,27 @@ class CTAPIAbilityJoinItemsBusiness extends BasicPublicCTAPIBusiness
         if(in_array('ability', $handleKeyArr)){
             $abilityIdsArr = array_values(array_filter(array_column($data_list,'ability_id')));// 资源id数组，并去掉值为0的
             // 查询条件
-            $abilityList = [];
-            if(!empty($abilityIdsArr)){
-                // 获得企业信息
-                $abilityQueryParams = [
-                    'where' => [
-                        // ['type_id', 5],
-                        //                //['mobile', $keyword],
-                    ],
-                    //            'select' => [
-                    //                'id','company_id','position_name','sort_num'
-                    //                //,'operate_staff_id','operate_staff_id_history'
-                    //                ,'created_at'
-                    //            ],
-                    // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
-                ];
-                Tool::appendParamQuery($abilityQueryParams, $abilityIdsArr, 'id', [0, '0', ''], ',', false);
-                $abilityList = CTAPIAbilitysBusiness::getBaseListData($request, $controller, '', $abilityQueryParams,[], 1,  1)['data_list'] ?? [];
-            }
+//            $abilityList = [];
+//            if(!empty($abilityIdsArr)){
+//                // 获得企业信息
+//                $abilityQueryParams = [
+//                    'where' => [
+//                        // ['type_id', 5],
+//                        //                //['mobile', $keyword],
+//                    ],
+//                    //            'select' => [
+//                    //                'id','company_id','position_name','sort_num'
+//                    //                //,'operate_staff_id','operate_staff_id_history'
+//                    //                ,'created_at'
+//                    //            ],
+//                    // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
+//                ];
+//                Tool::appendParamQuery($abilityQueryParams, $abilityIdsArr, 'id', [0, '0', ''], ',', false);
+//                $abilityList = CTAPIAbilitysBusiness::getBaseListData($request, $controller, '', $abilityQueryParams,[], 1,  1)['data_list'] ?? [];
+//            }
+
+            $extParams = [];
+            $abilityList =  CTAPIAbilitysBusiness::getFVFormatList( $request,  $controller,  ['id' => $abilityIdsArr], false,[], $extParams);
             if(!empty($abilityList)){
                 $abilityDataList = Tool::arrUnderReset($abilityList, 'id', 1);
                 $abilityKVList = Tool::formatArrKeyVal($abilityList, 'id', 'ability_name');
@@ -112,24 +115,27 @@ class CTAPIAbilityJoinItemsBusiness extends BasicPublicCTAPIBusiness
         if(in_array('company', $handleKeyArr)){
             $staffIdsArr = array_values(array_filter(array_column($data_list,'staff_id')));// 资源id数组，并去掉值为0的
             // 查询条件
-            $companyList = [];
-            if(!empty($staffIdsArr)){
-                // 获得企业信息
-                $companyQueryParams = [
-                    'where' => [
-                        // ['type_id', 5],
-                        //                //['mobile', $keyword],
-                    ],
-                    //            'select' => [
-                    //                'id','company_id','position_name','sort_num'
-                    //                //,'operate_staff_id','operate_staff_id_history'
-                    //                ,'created_at'
-                    //            ],
-                    // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
-                ];
-                Tool::appendParamQuery($companyQueryParams, $staffIdsArr, 'id', [0, '0', ''], ',', false);
-                $companyList = CTAPIStaffBusiness::getBaseListData($request, $controller, '', $companyQueryParams,[], 1,  1)['data_list'] ?? [];
-            }
+//            $companyList = [];
+//            if(!empty($staffIdsArr)){
+//                // 获得企业信息
+//                $companyQueryParams = [
+//                    'where' => [
+//                        // ['type_id', 5],
+//                        //                //['mobile', $keyword],
+//                    ],
+//                    //            'select' => [
+//                    //                'id','company_id','position_name','sort_num'
+//                    //                //,'operate_staff_id','operate_staff_id_history'
+//                    //                ,'created_at'
+//                    //            ],
+//                    // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
+//                ];
+//                Tool::appendParamQuery($companyQueryParams, $staffIdsArr, 'id', [0, '0', ''], ',', false);
+//                $companyList = CTAPIStaffBusiness::getBaseListData($request, $controller, '', $companyQueryParams,[], 1,  1)['data_list'] ?? [];
+//            }
+
+            $extParams =[];
+            $companyList =  CTAPIStaffBusiness::getFVFormatList( $request,  $controller,  ['id' => $staffIdsArr], false,[], $extParams);
             if(!empty($companyList)){
                 $companyDataList = Tool::arrUnderReset($companyList, 'id', 1);
                 $companyKVList = Tool::formatArrKeyVal($companyList, 'id', 'company_name');
@@ -142,29 +148,35 @@ class CTAPIAbilityJoinItemsBusiness extends BasicPublicCTAPIBusiness
         if(in_array('joinItemsStandards', $handleKeyArr)){
             $joinStandardIdsArr = array_values(array_filter(array_column($data_list,'id')));// 资源id数组，并去掉值为0的
             // 查询条件
-            $joinItemStandardList = [];
-            if(!empty($joinStandardIdsArr)){
-                // 获得企业信息
-                $joinItemStandardQueryParams = [
-                    'where' => [
-                        // ['type_id', 5],
-                        //                //['mobile', $keyword],
-                    ],
-                    //            'select' => [
-                    //                'id','company_id','position_name','sort_num'
-                    //                //,'operate_staff_id','operate_staff_id_history'
-                    //                ,'created_at'
-                    //            ],
-                    // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
-                ];
-                Tool::appendParamQuery($joinItemStandardQueryParams, $joinStandardIdsArr, 'ability_join_item_id', [0, '0', ''], ',', false);
-                // $joinItemStandardList = CTAPIAbilityJoinItemsBusiness::getBaseListData($request, $controller, '', $joinItemStandardQueryParams, [], 1,  1)['data_list'] ?? [];
+//            $joinItemStandardList = [];
+//            if(!empty($joinStandardIdsArr)){
+//                // 获得企业信息
+//                $joinItemStandardQueryParams = [
+//                    'where' => [
+//                        // ['type_id', 5],
+//                        //                //['mobile', $keyword],
+//                    ],
+//                    //            'select' => [
+//                    //                'id','company_id','position_name','sort_num'
+//                    //                //,'operate_staff_id','operate_staff_id_history'
+//                    //                ,'created_at'
+//                    //            ],
+//                    // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
+//                ];
+//                Tool::appendParamQuery($joinItemStandardQueryParams, $joinStandardIdsArr, 'ability_join_item_id', [0, '0', ''], ',', false);
+//                // $joinItemStandardList = CTAPIAbilityJoinItemsBusiness::getBaseListData($request, $controller, '', $joinItemStandardQueryParams, [], 1,  1)['data_list'] ?? [];
+//
+//                $extParams = [
+//                    'handleKeyArr' => ['project_standards'],//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+//                ];
+//                $joinItemStandardList = CTAPIAbilityJoinItemsStandardsBusiness::getList($request, $controller, 1, $joinItemStandardQueryParams, [], $extParams)['result']['data_list'] ?? [];
+//            }
 
-                $extParams = [
-                    'handleKeyArr' => ['project_standards'],//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-                ];
-                $joinItemStandardList = CTAPIAbilityJoinItemsStandardsBusiness::getList($request, $controller, 1, $joinItemStandardQueryParams, [], $extParams)['result']['data_list'] ?? [];
-            }
+            $extParams = [
+                'handleKeyArr' => ['project_standards'],//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+            ];
+            $joinItemStandardList =  CTAPIAbilityJoinItemsStandardsBusiness::getFVFormatList( $request,  $controller,  ['ability_join_item_id' => $joinStandardIdsArr], false,[], $extParams);
+
             if(!empty($joinItemStandardList)){
                 $joinItemStandardKeyDataList = Tool::arrUnderReset($joinItemStandardList, 'ability_join_item_id', 2);
 
@@ -174,25 +186,29 @@ class CTAPIAbilityJoinItemsBusiness extends BasicPublicCTAPIBusiness
             // 获得项目标准
             if(in_array('projectStandards', $handleKeyArr)){
                 $abilityIdArr = array_values(array_filter(array_column($data_list,'ability_id')));// 资源id数组，并去掉值为0的
-                $projectStandardsList = [];
-                // 查询条件
-                if(!empty($abilityIdArr)){
-                    // 获得企业资质证书
-                    $projectStandardsQueryParams = [
-                        'where' => [
-                            // ['type_id', 5],
-                            //                //['mobile', $keyword],
-                        ],
-                        //            'select' => [
-                        //                'id','company_id','position_name','sort_num'
-                        //                //,'operate_staff_id','operate_staff_id_history'
-                        //                ,'created_at'
-                        //            ],
-                        // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
-                    ];
-                    Tool::appendParamQuery($projectStandardsQueryParams, $abilityIdArr, 'ability_id', [0, '0', ''], ',', false);
-                    $projectStandardsList = CTAPIProjectStandardsBusiness::getBaseListData($request, $controller, '', $projectStandardsQueryParams,[], 1,  1)['data_list'] ?? [];
-                }
+//                $projectStandardsList = [];
+//                // 查询条件
+//                if(!empty($abilityIdArr)){
+//                    // 获得企业资质证书
+//                    $projectStandardsQueryParams = [
+//                        'where' => [
+//                            // ['type_id', 5],
+//                            //                //['mobile', $keyword],
+//                        ],
+//                        //            'select' => [
+//                        //                'id','company_id','position_name','sort_num'
+//                        //                //,'operate_staff_id','operate_staff_id_history'
+//                        //                ,'created_at'
+//                        //            ],
+//                        // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
+//                    ];
+//                    Tool::appendParamQuery($projectStandardsQueryParams, $abilityIdArr, 'ability_id', [0, '0', ''], ',', false);
+//                    $projectStandardsList = CTAPIProjectStandardsBusiness::getBaseListData($request, $controller, '', $projectStandardsQueryParams,[], 1,  1)['data_list'] ?? [];
+//                }
+
+                $extParams = [];
+                $projectStandardsList =  CTAPIProjectStandardsBusiness::getFVFormatList( $request,  $controller,  ['ability_id' => $abilityIdArr], false,[], $extParams);
+
                 if(!empty($projectStandardsList)) $projectStandardsArr = Tool::arrUnderReset($projectStandardsList, 'ability_id', 2);
                 if(!$isNeedHandle && !empty($projectStandardsArr)) $isNeedHandle = true;
             }
@@ -298,5 +314,4 @@ class CTAPIAbilityJoinItemsBusiness extends BasicPublicCTAPIBusiness
         // 注意重写方法中，如果不是特殊的like，同样需要调起此默认like方法--特殊的写自己特殊的方法
         static::joinListParamsLike($request, $controller, $queryParams, $notLog);
     }
-
 }

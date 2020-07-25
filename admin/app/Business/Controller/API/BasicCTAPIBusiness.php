@@ -121,6 +121,90 @@ class BasicCTAPIBusiness extends APIOperate
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~通用方法~~~~~~~~如果有特殊的不同，可以自己重写相关方法~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     // ~~~~~~~~~~~~~~~~~列表开始~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+    /**
+     * 根据字段=》值数组；获得数据[格式化后的数据]
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $fieldValParams
+     *  $fieldValParams = [
+     *      'ability_join_id' => [// 格式一
+     *          'vals' => "字段值[可以是字符'多个逗号分隔'或一维数组] ",// -- 此种格式，必须指定此下标【值下标】
+     *          'excludeVals' => "过滤掉的值 默认[0, '0', '']",
+     *      ],// 格式二
+     *      'id' =>  "字段值[可以是字符'多个逗号分隔'或一维数组]"
+     *   ];
+     * @param boolean $fieldEmptyQuery 如果参数字段值都为空时，是否还查询数据 true:查询 ；false:不查
+     * @param mixed $relations 关系
+     * @param array $extParams 其它扩展参数，
+     *    $extParams = [
+     *        'useQueryParams' => '是否用来拼接查询条件，true:用[默认];false：不用'
+     *        'sqlParams' => [// 其它sql条件[覆盖式],下面是常用的，其它的也可以
+     *           'where' => '如果有值，则替换where'
+     *           'select' => '如果有值，则替换select'
+     *           'orderBy' => '如果有值，则替换orderBy'
+     *           'whereIn' => '如果有值，则替换whereIn'
+     *           'whereNotIn' => '如果有值，则替换whereNotIn'
+     *           'whereBetween' => '如果有值，则替换whereBetween'
+     *           'whereNotBetween' => '如果有值，则替换whereNotBetween'
+     *       ],
+     *       'handleKeyArr'=> [],// 一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。--名称关键字，尽可能与关系名一样
+     *       'formatDataUbound' => [// 格式化数据[取指下下标、排除指定下标、修改下标名称]具体参数使用说明，请参阅 Tool::formatArrUbound 方法  --为空数组代表不格式化
+     *           'needNotIn' => true, // keys在数组中不存在的，false:不要，true：空值 -- 用true的时候多
+     *           'includeUboundArr' => [],// 要获取的下标数组 [优先]--一维数组，可为空[ '新下标名' => '原下标名' ]  Tool::arrEqualKeyVal(['shop_id', 'shop_name', 'linkman', 'mobile'])
+     *           'exceptUboundArr' => [], // 要排除的下标数组 --一维数组，可为空[ '原下标名' ,....]
+     *       ]
+     *   ];
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  null 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function getFVFormatList(Request $request, Controller $controller, $fieldValParams = [], $fieldEmptyQuery = false, $relations = '', $extParams = [], $notLog = 0)
+    {
+        $dataList = [];
+        $isEmpeyVals = true;//  查询字段值是否都为空; true:都为空，false:有值
+        // 获得信息
+        $queryParams = [
+            'where' => [
+                // ['type_id', 5],
+                //                //['mobile', $keyword],
+            ],
+            //            'select' => [
+            //                'id','company_id','position_name','sort_num'
+            //                //,'operate_staff_id','operate_staff_id_history'
+            //                ,'created_at'
+            //            ],
+            'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
+        ];
+        foreach($fieldValParams as $field => $valConfig){
+            $excludeVals = [0, '0', ''];
+            $fieldVals = [];
+            // 是数组
+            if(is_array($valConfig) && isset($valConfig['vals'])){
+                if(isset($valConfig['excludeVals']) && is_array($valConfig['excludeVals'])){
+                    $excludeVals = $valConfig['excludeVals'];
+                }
+                $fieldVals = $valConfig['vals'] ;
+            }else{
+                $fieldVals = $valConfig;
+            }
+            if(!empty($excludeVals))  Tool::formatOneArrVals($fieldVals, $excludeVals);
+            if( ( (is_string($fieldVals) || is_numeric($fieldVals)) && strlen($fieldVals) > 0) || (is_array($fieldVals) && !empty($fieldVals)) ) $isEmpeyVals = false;
+            Tool::appendParamQuery($queryParams, $fieldVals, $field, $excludeVals, ',', false);
+        }
+        if(!isset($extParams['useQueryParams'])) $extParams['useQueryParams'] = false;
+//        $extParams = [
+//            'handleKeyArr' => ['ability', 'joinItemsStandards', 'projectStandards'],//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+//        ];
+
+        // 查询字段有值  或  查询字段无值  但是  指定 强制查询时
+        if(!$isEmpeyVals || ($isEmpeyVals && $fieldEmptyQuery))$dataList = static::getList($request, $controller, 1, $queryParams, $relations, $extParams, $notLog)['result']['data_list'] ?? [];
+
+        return $dataList;
+    }
+
     /**
      * 获得列表数据--根据ids
      *
@@ -1379,5 +1463,159 @@ class BasicCTAPIBusiness extends APIOperate
     }
     // ***********通过组织条件获得kv***结束************************************************************
 
+    /**
+     * 表数据关系处理
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $dataList  一维或二维数据 当前需要处理的
+     * @param string $funKey  功能关键字下标 -- 可为空:不返回功能配置，返回页面配置
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  array 配置数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function formatRelationList(Request $request, Controller $controller, &$dataList = [], $relationConfig = []){
+
+        $relationConfig = [
+            [
+                // 获得数据相关的
+                'toClass' => 'App\Business\Controller\API\QualityControl\CTAPIStaffBusiness',// 对应的类--必填
+                'extParams' => [// 可填
+                    'sqlParams' => [
+                        'where' => [// -- 可填 如 默认条件 'type_id' => 5  'admin_type' => $user_info['admin_type'],'staff_id' =>  $user_info['id']
+                            ['type_id', 5],
+                        ],
+                    ],
+                    'handleKeyArr' => [],// 可填 一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。--名称关键字，尽可能与关系名一样
+                    'formatDataUbound' => [// 可填  格式化数据[取指下下标、排除指定下标、修改下标名称]具体参数使用说明，请参阅 Tool::formatArrUbound 方法  --为空数组代表不格式化
+                        'needNotIn' => true, // keys在数组中不存在的，false:不要，true：空值 -- 用true的时候多
+                        'includeUboundArr' => [],// 要获取的下标数组 [优先]--一维数组，可为空[ '新下标名' => '原下标名' ]  Tool::arrEqualKeyVal(['shop_id', 'shop_name', 'linkman', 'mobile'])
+                        'exceptUboundArr' => [], // 要排除的下标数组 --一维数组，可为空[ '原下标名' ,....]
+                    ]
+                ],
+                'fieldRelations' => [// 字段对应 1 个或多个字段--必填
+                    'staff_id' => 'id'// 原表的字段 =》 对应表的字段
+                ],
+                'fieldEmptyQuery' => false, // 如果参数字段值都为空时，是否还查询数据 true:查询 ；false:不查[默认]-- 选填
+                'relations' => [],// 关系--选填-- 一般不用了
+                // 下面是对数据进行解析的处理
+                'relationType' => 2,// 1：1:1 还是 2： 1:n 的关系 [默认]
+                'return_data' => [// 对数据进行格式化
+                    'old_data' => [// --只能一维数组 原数据的处理及说明
+                        'ubound_operate' => 2,// 原数据的处理1 保存原数据及下标-如果下级有新字段，会自动更新;2不保存原数据[默认]---是否用新的下标由下面的 'ubound_name' 决定
+                        // 第一次缩小范围，需要的字段  -- 要获取的下标数组 -维 [ '新下标名' => '原下标名' ]  ---为空，则按原来的返回
+                        // 如果新下标和原下标相同，则可以用这个方法去转  Tool::arrEqualKeyVal(['shop_id', 'shop_name', 'linkman', 'mobile']), true )
+                        'ubound_name' => 'city',// 新数据的下标--可为空，则不返回,最好不要和原数据下标相同，如果相同，则原数据会把新数据覆盖
+                        'fields_arr' => [],
+                    ],
+                    // 一/二维数组 键值对 可为空或没有此下标：不需要 Tool::formatArrKeyVal($areaCityList, $kv['key'], $kv['val'])
+                    'k_v' => ['key' => 'id', 'val' => 'person_name', 'ubound_name' => '下标名称'],
+                    // 一/二维数组 只要其中的某一个字段：
+                    'one_field' => ['key' => 'id', 'return_type' => "返回类型1原数据['字段值'][一维返回一维数组，二维返回一维数组];2按分隔符分隔的字符", 'ubound_name' => '下标名称', 'split' => '、'],
+                ],
+
+                'relationConfig' => [// 下一个关系
+
+                ]
+            ]
+        ];
+
+        if(empty($dataList) || empty($relationConfig)) return true;
+
+        // 如果是一维数组，则转为二维数组
+        $isMulti = Tool::isMultiArr($data_list, true);
+
+        $isNeedHandle = false;// 是否真的需要遍历处理数据 false:不需要：true:需要 ；只要有一个需要处理就标记
+
+        $dataFieldVals = [];// 缓存的字段及值数组
+
+        $relationDataList = [];// 关系获取到的数据数组 下标为: 关系配置的key
+
+        foreach($relationConfig as $k => $relationInfo){
+
+            $toObjClass = $relationInfo['toClass'];// 对应的类
+            $extParams = $relationInfo['extParams'] ?? [];// 其它扩展参数
+            $fieldRelations = $relationInfo['fieldRelations'];// 字段对应 1 个或多个字段   原表的字段 =》 对应表的字段
+            $fieldEmptyQuery = $relationInfo['fieldEmptyQuery'] ?? false;// 如果参数字段值都为空时，是否还查询数据 true:查询 ；false:不查[默认]
+            $relations = $relationInfo['relations'] ?? [];// 关系
+            $relationChildConfig = $relationInfo['relationConfig'] ?? [];// 下一级关系
+            $fieldValParams = [];
+            foreach($fieldRelations as $f_field => $t_field){
+                if(isset($dataFieldVals[$f_field])) {
+                    $f_field_vals = $dataFieldVals[$f_field];
+                }else{
+                    $f_field_vals = array_values(array_unique(array_column($data_list, $f_field)));// 值数组 一维 [1,2,3]
+                    $dataFieldVals[$f_field] = $f_field_vals;
+                }
+
+                $fieldValParams[$t_field] = $f_field_vals;// ['id' => [1,2,3]]
+            }
+            // 字段处理
+            $needFields = array_values($fieldRelations);
+            // 如果存在下级关系
+            if(!empty($relationChildConfig)){
+                foreach($relationChildConfig as $t_k => $t_childConfig){
+                    $childFieldRelations = $t_childConfig['fieldRelations'];// 字段对应 1 个或多个字段   原表的字段 =》 对应表的字段
+                    if(!empty($childFieldRelations)) $needFields = array_values(array_unique(array_merge($needFields, array_keys($childFieldRelations))));
+                }
+            }
+
+            $includeUboundArr = $relationInfo['extParams']['formatDataUbound']['includeUboundArr'] ?? [];
+            if(!empty($includeUboundArr)){// 加入需要用到的字段
+                $includeUboundArr = array_merge($includeUboundArr, Tool::arrEqualKeyVal($needFields));
+                $relationInfo['extParams']['formatDataUbound']['includeUboundArr'] = $includeUboundArr;
+            }
+            $exceptUboundArr = $relationInfo['extParams']['formatDataUbound']['exceptUboundArr'] ?? [];
+            if(!empty($exceptUboundArr)){// 去掉排除的字段
+                $exceptUboundArr = array_values(array_diff($exceptUboundArr, $needFields));
+                $relationInfo['extParams']['formatDataUbound']['exceptUboundArr'] = $exceptUboundArr;
+            }
+
+            $toDataList =  $toObjClass::getFVFormatList( $request,  $controller, $fieldValParams, $fieldEmptyQuery, $relations, $extParams);
+            if(!$isNeedHandle && !empty($toDataList)) $isNeedHandle = true;
+            if(!empty($toDataList)){
+                if(!empty($relationChildConfig)) static::formatRelationList($request, $controller, $toDataList, $relationChildConfig);
+                $relationDataList[$k] = $toDataList;
+            }
+
+
+//        if(!empty($projectStandardsList)) $projectStandardsArr = Tool::arrUnderReset($projectStandardsList, 'ability_id', 2);
+//        if(!$isNeedHandle && !empty($projectStandardsArr)) $isNeedHandle = true;
+        }
+
+
+        // 对数据进行格式化操作
+        // 改为不返回，好让数据下面没有数据时，有一个空对象，方便前端或其它应用处理数据
+        // if(!$isNeedHandle){// 不处理，直接返回 // if(!$isMulti) $data_list = $data_list[0] ?? [];
+        //    return true;
+        // }
+
+        foreach($data_list as $k => $v){
+            static::formatRelationInfo($dataList[$k], $relationConfig, $relationDataList);
+        }
+
+
+        if(!$isMulti) $data_list = $data_list[0] ?? [];
+    }
+
+    /**
+     * 对数据进行格式化
+     * @param array $info  单条数据  --- 一维数组
+     * @param array $relationConfigArr  配置信息
+     * @param array $relationDataList  配置需要格式化的相关数据 下标为配置 $relationConfigArr 对应的key   key => 它的值为二维数组
+     * @return  mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function formatRelationInfo(&$info = [], $relationConfigArr = [], $relationDataList = []){
+        foreach($relationConfigArr as $k => $relationInfo){
+            $temDataList = $relationDataList[$k] ?? [];
+            $return_data = $relationInfo['return_data'] ?? [];
+            // 1：1:1 还是 2： 1:n 的关系 [默认]
+            $relationType = $relationInfo['relationType'] ?? 2;
+
+        }
+
+
+    }
 
 }

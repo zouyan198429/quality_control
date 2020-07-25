@@ -82,24 +82,26 @@ class CTAPIAbilityJoinBusiness extends BasicPublicCTAPIBusiness
         if(in_array('company', $handleKeyArr)){
             $staffIdsArr = array_values(array_filter(array_column($data_list,'staff_id')));// 资源id数组，并去掉值为0的
             // 查询条件
-            $companyList = [];
-            if(!empty($staffIdsArr)){
-                // 获得企业信息
-                $companyQueryParams = [
-                    'where' => [
-                        // ['type_id', 5],
-                        //                //['mobile', $keyword],
-                    ],
-                    //            'select' => [
-                    //                'id','company_id','position_name','sort_num'
-                    //                //,'operate_staff_id','operate_staff_id_history'
-                    //                ,'created_at'
-                    //            ],
-                    // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
-                ];
-                Tool::appendParamQuery($companyQueryParams, $staffIdsArr, 'id', [0, '0', ''], ',', false);
-                $companyList = CTAPIStaffBusiness::getBaseListData($request, $controller, '', $companyQueryParams,[], 1,  1)['data_list'] ?? [];
-            }
+//            $companyList = [];
+//            if(!empty($staffIdsArr)){
+//                // 获得企业信息
+//                $companyQueryParams = [
+//                    'where' => [
+//                        // ['type_id', 5],
+//                        //                //['mobile', $keyword],
+//                    ],
+//                    //            'select' => [
+//                    //                'id','company_id','position_name','sort_num'
+//                    //                //,'operate_staff_id','operate_staff_id_history'
+//                    //                ,'created_at'
+//                    //            ],
+//                    // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
+//                ];
+//                Tool::appendParamQuery($companyQueryParams, $staffIdsArr, 'id', [0, '0', ''], ',', false);
+//                $companyList = CTAPIStaffBusiness::getBaseListData($request, $controller, '', $companyQueryParams,[], 1,  1)['data_list'] ?? [];
+//            }
+            $extParams =[];
+            $companyList =  CTAPIStaffBusiness::getFVFormatList( $request,  $controller,  ['id' => $staffIdsArr], false,[], $extParams);
             if(!empty($companyList)){
                 $companyDataList = Tool::arrUnderReset($companyList, 'id', 1);
                 $companyKVList = Tool::formatArrKeyVal($companyList, 'id', 'company_name');
@@ -112,32 +114,37 @@ class CTAPIAbilityJoinBusiness extends BasicPublicCTAPIBusiness
         if(in_array('joinItems', $handleKeyArr)){
             $joinIdsArr = array_values(array_filter(array_column($data_list,'id')));// 资源id数组，并去掉值为0的
             // 查询条件
-            $joinItemList = [];
-            if(!empty($joinIdsArr)){
+//            $joinItemList = [];
+//            if(!empty($joinIdsArr)){
                 // 获得企业信息
-                $joinItemQueryParams = [
-                    'where' => [
-                        // ['type_id', 5],
-                        //                //['mobile', $keyword],
-                    ],
-                    //            'select' => [
-                    //                'id','company_id','position_name','sort_num'
-                    //                //,'operate_staff_id','operate_staff_id_history'
-                    //                ,'created_at'
-                    //            ],
-                    // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
-                ];
-                Tool::appendParamQuery($joinItemQueryParams, $joinIdsArr, 'ability_join_id', [0, '0', ''], ',', false);
-                // $joinItemList = CTAPIAbilityJoinItemsBusiness::getBaseListData($request, $controller, '', $joinItemQueryParams, [], 1,  1)['data_list'] ?? [];
+//                $joinItemQueryParams = [
+//                    'where' => [
+//                        // ['type_id', 5],
+//                        //                //['mobile', $keyword],
+//                    ],
+//                    //            'select' => [
+//                    //                'id','company_id','position_name','sort_num'
+//                    //                //,'operate_staff_id','operate_staff_id_history'
+//                    //                ,'created_at'
+//                    //            ],
+//                    // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
+//                ];
+//                Tool::appendParamQuery($joinItemQueryParams, $joinIdsArr, 'ability_join_id', [0, '0', ''], ',', false);
+//                // $joinItemList = CTAPIAbilityJoinItemsBusiness::getBaseListData($request, $controller, '', $joinItemQueryParams, [], 1,  1)['data_list'] ?? [];
+//
+//                $extParams = [
+//                    'handleKeyArr' => ['ability', 'joinItemsStandards', 'projectStandards'],//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+//                ];
+//                $joinItemList = CTAPIAbilityJoinItemsBusiness::getList($request, $controller, 1, $joinItemQueryParams, [], $extParams)['result']['data_list'] ?? [];
+//            }
 
-                $extParams = [
-                    'handleKeyArr' => ['ability', 'joinItemsStandards', 'projectStandards'],//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-                ];
-                $joinItemList = CTAPIAbilityJoinItemsBusiness::getList($request, $controller, 1, $joinItemQueryParams, [], $extParams)['result']['data_list'] ?? [];
-            }
+            $extParams = [
+                'handleKeyArr' => ['ability', 'joinItemsStandards', 'projectStandards'],//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+            ];
+            // $businessName = 'App\Business\Controller\API\QualityControl\CTAPIAbilityJoinItemsBusiness';
+            $joinItemList =  CTAPIAbilityJoinItemsBusiness::getFVFormatList( $request,  $controller,  ['ability_join_id' => $joinIdsArr], false,[], $extParams);
             if(!empty($joinItemList)){
                 $joinItemKeyDataList = Tool::arrUnderReset($joinItemList, 'ability_join_id', 2);
-
             }
             if(!$isNeedHandle && !empty($joinItemKeyDataList)) $isNeedHandle = true;
 

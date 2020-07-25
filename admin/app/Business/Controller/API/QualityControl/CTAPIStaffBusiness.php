@@ -1375,25 +1375,29 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
         // 处理图片-- 营业执照
         if(in_array('siteResources', $handleKeyArr)){
             $companyIdArr = array_values(array_filter(array_column($data_list,'id')));// 资源id数组，并去掉值为0的
-            $companyCertificateList = [];
-            if(!empty($companyIdArr)){
-                // 获得企业资质证书
-                $companyCertificateQueryParams = [
-                    'where' => [
-                         ['type_id', 5],
-//                //['mobile', $keyword],
-                    ],
-//            'select' => [
-//                'id','company_id','position_name','sort_num'
-//                //,'operate_staff_id','operate_staff_id_history'
-//                ,'created_at'
-//            ],
-                    // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
-                ];
-                Tool::appendParamQuery($companyCertificateQueryParams, $companyIdArr, 'company_id', [0, '0', ''], ',', false);
-                // $companyCertificateList = CTAPICompanyCertificateBusiness::getList($request, $controller, 1,$companyCertificateQueryParams);
-                $companyCertificateList = CTAPICompanyCertificateBusiness::getBaseListData($request, $controller, '', $companyCertificateQueryParams,[], 1,  1)['data_list'] ?? [];
-            }
+//            $companyCertificateList = [];
+//            if(!empty($companyIdArr)){
+//                // 获得企业资质证书
+//                $companyCertificateQueryParams = [
+//                    'where' => [
+//                         ['type_id', 5],
+////                //['mobile', $keyword],
+//                    ],
+////            'select' => [
+////                'id','company_id','position_name','sort_num'
+////                //,'operate_staff_id','operate_staff_id_history'
+////                ,'created_at'
+////            ],
+//                    // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
+//                ];
+//                Tool::appendParamQuery($companyCertificateQueryParams, $companyIdArr, 'company_id', [0, '0', ''], ',', false);
+//                // $companyCertificateList = CTAPICompanyCertificateBusiness::getList($request, $controller, 1,$companyCertificateQueryParams);
+//                $companyCertificateList = CTAPICompanyCertificateBusiness::getBaseListData($request, $controller, '', $companyCertificateQueryParams,[], 1,  1)['data_list'] ?? [];
+//            }
+
+            $extParams =[];
+            $companyCertificateList =  CTAPICompanyCertificateBusiness::getFVFormatList( $request,  $controller,  ['type_id' => 5, 'company_id' => $companyIdArr], false,[], $extParams);
+
             $resourceIdArr = array_values(array_filter(array_column($companyCertificateList,'resource_id')));// 资源id数组，并去掉值为0的
             if(!empty($resourceIdArr)) $resourceDataArr = Tool::arrUnderReset(CTAPIResourceBusiness::getResourceByIds($request, $controller, $resourceIdArr), 'id', 2);// getListByIds($request, $controller, implode(',', $resourceIdArr));
             if(!$isNeedHandle && !empty($resourceDataArr)) $isNeedHandle = true;
