@@ -182,9 +182,17 @@ class HomeController extends BasicRegController
                 return redirect('web/login');
             }
             $handleKeyArr = [];
-            if($user_type == 2) array_push($handleKeyArr, 'siteResources');// array_merge($handleKeyArr, ['industry', 'siteResources']); ;//
+            $handleKeyConfigArr = [];
+            if($user_type == 2){
+                array_push($handleKeyArr, 'siteResources');// array_merge($handleKeyArr, ['industry', 'siteResources']); ;//
+                array_push($handleKeyConfigArr, 'certificate_info');
+            }
 
-            if(!empty($handleKeyArr)) CTAPIStaffBusiness::handleData($request, $this, $info, $handleKeyArr);
+            // if(!empty($handleKeyArr)) CTAPIStaffBusiness::handleData($request, $this, $info, $handleKeyArr);
+            if(!empty($handleKeyConfigArr)){
+                $relationFormatConfigs = CTAPIStaffBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []);
+                CTAPIStaffBusiness::formatRelationList( $request, $this, $info, $relationFormatConfigs);
+            }
             $reDataArr['info'] = $info;
             // 获得城市KV值
             $reDataArr['citys_kv'] = CTAPICitysBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'city_name']);
@@ -299,11 +307,14 @@ class HomeController extends BasicRegController
 
         $relations = [];//  ['siteResources']
         $handleKeyArr = [];
+        $handleKeyConfigArr = [];
         array_push($handleKeyArr, 'industry');// array_merge($handleKeyArr, ['industry', 'siteResources']); ;//
+        array_push($handleKeyConfigArr, 'industry_info');
         $handleKeyArr = array_merge($handleKeyArr, ['extend', 'city']);
-
+        $handleKeyConfigArr = array_merge($handleKeyConfigArr, ['extend_info', 'city_info']);
         $extParams = [
-            'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+            // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+            'relationFormatConfigs'=> CTAPIStaffBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
         ];
 
         return  CTAPIStaffBusiness::getList($request, $this, 2 + 4, [], $relations, $extParams);
@@ -576,7 +587,10 @@ class HomeController extends BasicRegController
             'id_number' => $id_number,
             'city_id' => $city_id,
             'addr' => $addr,
+            // 'force_company_num' => 1,
         ];
+        // 如果改变了所属企业,需要重新统计员工数
+        if(isset($saveData['company_id']) && $company_id != $this->user_info['company_id']) $saveData['force_company_num'] = 1;
 
         if($admin_username != '') $saveData['admin_username'] = $admin_username;
         if($admin_password != '' || $sure_password != ''){

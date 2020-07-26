@@ -89,6 +89,9 @@ class UserController extends StaffController
                 'account_status' => 1// 状态 1正常 2冻结
             ];
             $saveData = array_merge($saveData, $addNewData);
+        }else{
+            // 如果改变了所属企业,需要重新统计员工数
+            if(isset($saveData['company_id']) && $company_id != $userInfo['company_id']) $saveData['force_company_num'] = 1;
         }
         $extParams = [
             'judgeDataKey' => 'replace',// 数据验证的下标

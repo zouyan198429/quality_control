@@ -1,4 +1,6 @@
 
+var SUBMIT_FORM = true;//防止多次点击提交
+
 $(function(){
 
     $('.search_frm').trigger("click");// 触发搜索事件
@@ -20,6 +22,7 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
 var otheraction = {
     joinSelected: function(obj){//报名选中的码
         var recordObj = $(obj);
+        if (!SUBMIT_FORM) return false;//false，则返回
 
         // var operateText = '报名';
         // // var index_query = layer.confirm('确定' + operateText + '当前记录？', {
@@ -35,31 +38,97 @@ var otheraction = {
         // // });
         // return false;
 
-        var operateText = '报名';
 
-        var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
-        if(ids == ''){
-            err_alert('请选择需要' + operateText + '的项目');
-            return false;
-        }
-
-        //获得表单各name的值
-        var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
-        console.log(JOIN_URL);
+        // 判断是否有能力附表
+        // 验证通过
+        SUBMIT_FORM = false;//标记为已经提交过
+        var data = {};
+        console.log(COMPANY_EXTEND_URL);
         console.log(data);
-        var url_params = get_url_param(data);// parent.get_url_param(data)
-        var weburl = JOIN_URL + ids + '?' + url_params;
-        console.log(weburl);
-        // go(SHOW_URL + id);
-        // location.href='/pms/Supplier/show?supplier_id='+id;
-        // var weburl = SHOW_URL + id;
-        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
-        var tishi = "";//"添加/修改供应商";
-        tishi = operateText + tishi;
-        layeriframe(weburl,tishi,950,600,IFRAME_MODIFY_CLOSE_OPERATE);
+        var layer_index = layer.load();
+        $.ajax({
+            'type' : 'POST',
+            'url' : COMPANY_EXTEND_URL,
+            'headers':get_ajax_headers({}, ADMIN_AJAX_TYPE_NUM),
+            'data' : data,
+            'dataType' : 'json',
+            'success' : function(ret){
+                console.log(ret);
+                SUBMIT_FORM = true;
+                if(!ret.apistatus){//失败
+                    SUBMIT_FORM = true;//标记为未提交过
+                    //alert('失败');
+                    err_alert(ret.errorMsg);
+                }else{//成功
+                    // go(LIST_URL);
+                    var schedule_num = ret.result['schedule_num'];
+                    console.log('schedule_num=',schedule_num);
+                    if(schedule_num <= 0){
+                        var index_query = layer.confirm('温馨提示：<br/>您还没有上传能力附表!<br/>请上传能力附表后再进行能力验证报名！<br/>感谢您的理解和支持。', {
+                            btn: ['上传能力附表','关闭'] //按钮
+                        }, function(){
+                            layer.close(index_query);
+                            var href = COMPANY_SCHEDULE_URL;//
+                            layuiGoIframe(href, '能力附表');
+                            return false;
+                        }, function(){
+                        });
+                    }else{
+                        joinPage();
+                    }
+
+                    // countdown_alert("操作成功!",1,5);
+                    // parent_only_reset_list(false);
+                    // wait_close_popus(2,PARENT_LAYER_INDEX);
+                    // layer.msg('操作成功！', {
+                    //     icon: 1,
+                    //     shade: 0.3,
+                    //     time: 3000 //2秒关闭（如果不配置，默认是3秒）
+                    // }, function(){
+                    //     var reset_total = true; // 是否重新从数据库获取总页数 true:重新获取,false不重新获取
+                    //     if(id > 0) reset_total = false;
+                    //     parent_reset_list_iframe_close(reset_total);// 刷新并关闭
+                    //     //do something
+                    // });
+                    // var supplier_id = ret.result['supplier_id'];
+                    //if(SUPPLIER_ID_VAL <= 0 && judge_integerpositive(supplier_id)){
+                    //    SUPPLIER_ID_VAL = supplier_id;
+                    //    $('input[name="supplier_id"]').val(supplier_id);
+                    //}
+                    // save_success();
+                }
+                layer.close(layer_index)//手动关闭
+            }
+        });
         return false;
     }
 };
+
+function joinPage(){
+    var operateText = '报名';
+
+    var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+    if(ids == ''){
+        err_alert('请选择需要' + operateText + '的项目');
+        return false;
+    }
+    //获得表单各name的值
+    var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
+    console.log(JOIN_URL);
+    console.log(data);
+    var url_params = get_url_param(data);// parent.get_url_param(data)
+    var weburl = JOIN_URL + ids + '?' + url_params;
+    console.log(weburl);
+    // go(SHOW_URL + id);
+    // location.href='/pms/Supplier/show?supplier_id='+id;
+    // var weburl = SHOW_URL + id;
+    // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+    var tishi = "";//"添加/修改供应商";
+    tishi = operateText + tishi;
+    layeriframe(weburl,tishi,950,600,IFRAME_MODIFY_CLOSE_OPERATE);
+    return false;
+}
+
 (function() {
     document.write("");
     document.write("    <!-- 前端模板部分 -->");

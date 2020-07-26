@@ -136,24 +136,24 @@ class AbilityJoinController extends BasicController
                  $handleKeyArr = ['company', 'joinItems'];
 
                 $user_info = $this->user_info;
-                $handleKeyArr = [
-                    'company' => [
-                        'toClass' => 'App\Business\Controller\API\QualityControl\CTAPIStaffBusiness',// 对应的类
-                        'defaultWhere' => [],// 默认条件 'type_id' => 5  'admin_type' => $user_info['admin_type'],'staff_id' =>  $user_info['id']
-                        'fields' => [// 字段对应 1 个或多个字段
-                            'staff_id' => 'id'// 原表的字段 =》 对应表的字段
-                        ],
-                        'relation' => '',// 1:1 还是 1:n 的关系
-
-                    ],
-                    'joinItems' => [
-                        'ability' => [],
-                        'joinItemsStandards' => [],
-                        'projectStandards' => [],
-                    ]
-                ];
+//                $handleKeyArr = [
+//                    'company' => [
+//                        'toClass' => 'App\Business\Controller\API\QualityControl\CTAPIStaffBusiness',// 对应的类
+//                        'defaultWhere' => [],// 默认条件 'type_id' => 5  'admin_type' => $user_info['admin_type'],'staff_id' =>  $user_info['id']
+//                        'fields' => [// 字段对应 1 个或多个字段
+//                            'staff_id' => 'id'// 原表的字段 =》 对应表的字段
+//                        ],
+//                        'relation' => '',// 1:1 还是 1:n 的关系
+//
+//                    ],
+//                    'joinItems' => [
+//                        'ability' => [],
+//                        'joinItemsStandards' => [],
+//                        'projectStandards' => [],
+//                    ]
+//                ];
                 $extParams = [
-                     'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                     // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                 ];
                 $info = CTAPIAbilityJoinBusiness::getInfoData($request, $this, $id, [], '', $extParams);
 //            }
@@ -186,7 +186,7 @@ class AbilityJoinController extends BasicController
                 throws('参数[id]有误！');
             }
             $operate = "详情";
-            $handleKeyArr = ['joinItems'];
+            // $handleKeyArr = ['joinItems'];
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                 'relationFormatConfigs'=> CTAPIAbilityJoinBusiness::getRelationConfigs($request, $this, ['join_items'], []),

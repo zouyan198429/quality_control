@@ -70,202 +70,202 @@ class CTAPIAbilityJoinItemsBusiness extends BasicPublicCTAPIBusiness
      * @return  boolean true
      * @author zouyan(305463219@qq.com)
      */
-    public static function handleDataFormat(Request $request, Controller $controller, &$data_list, $handleKeyArr, $isMulti = true){
-
-        // 重写开始
-
-        $isNeedHandle = false;// 是否真的需要遍历处理数据 false:不需要：true:需要 ；只要有一个需要处理就标记
-
-        //        if(!empty($data_list) ){
-        // 获得能力验证名称
-        $abilityDataList = [];// 能力id 为下标 二维数组
-        $abilityKVList = [];// 能力id => 能力验证名称 的键值对
-        if(in_array('ability', $handleKeyArr)){
-            $abilityIdsArr = array_values(array_filter(array_column($data_list,'ability_id')));// 资源id数组，并去掉值为0的
-            // 查询条件
-//            $abilityList = [];
-//            if(!empty($abilityIdsArr)){
-//                // 获得企业信息
-//                $abilityQueryParams = [
-//                    'where' => [
-//                        // ['type_id', 5],
-//                        //                //['mobile', $keyword],
-//                    ],
-//                    //            'select' => [
-//                    //                'id','company_id','position_name','sort_num'
-//                    //                //,'operate_staff_id','operate_staff_id_history'
-//                    //                ,'created_at'
-//                    //            ],
-//                    // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
-//                ];
-//                Tool::appendParamQuery($abilityQueryParams, $abilityIdsArr, 'id', [0, '0', ''], ',', false);
-//                $abilityList = CTAPIAbilitysBusiness::getBaseListData($request, $controller, '', $abilityQueryParams,[], 1,  1)['data_list'] ?? [];
-//            }
-
-            $extParams = [];
-            $abilityList =  CTAPIAbilitysBusiness::getFVFormatList( $request,  $controller, 1, 1,  ['id' => $abilityIdsArr], false,[], $extParams);
-            if(!empty($abilityList)){
-                $abilityDataList = Tool::arrUnderReset($abilityList, 'id', 1);
-                $abilityKVList = Tool::formatArrKeyVal($abilityList, 'id', 'ability_name');
-            }
-            if(!$isNeedHandle && !empty($abilityDataList)) $isNeedHandle = true;
-        }
-        // 企业信息
-        $companyDataList = [];// 企业id 为下标 二维数组
-        $companyKVList = [];// 企业id => 企业名称 的键值对
-        if(in_array('company', $handleKeyArr)){
-            $staffIdsArr = array_values(array_filter(array_column($data_list,'staff_id')));// 资源id数组，并去掉值为0的
-            // 查询条件
-//            $companyList = [];
-//            if(!empty($staffIdsArr)){
-//                // 获得企业信息
-//                $companyQueryParams = [
-//                    'where' => [
-//                        // ['type_id', 5],
-//                        //                //['mobile', $keyword],
-//                    ],
-//                    //            'select' => [
-//                    //                'id','company_id','position_name','sort_num'
-//                    //                //,'operate_staff_id','operate_staff_id_history'
-//                    //                ,'created_at'
-//                    //            ],
-//                    // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
-//                ];
-//                Tool::appendParamQuery($companyQueryParams, $staffIdsArr, 'id', [0, '0', ''], ',', false);
-//                $companyList = CTAPIStaffBusiness::getBaseListData($request, $controller, '', $companyQueryParams,[], 1,  1)['data_list'] ?? [];
-//            }
-
-            $extParams =[];
-            $companyList =  CTAPIStaffBusiness::getFVFormatList( $request,  $controller, 1, 1,  ['id' => $staffIdsArr], false,[], $extParams);
-            if(!empty($companyList)){
-                $companyDataList = Tool::arrUnderReset($companyList, 'id', 1);
-                $companyKVList = Tool::formatArrKeyVal($companyList, 'id', 'company_name');
-            }
-            if(!$isNeedHandle && !empty($companyDataList)) $isNeedHandle = true;
-        }
-
-        // 获得报名的标准方法
-        $joinItemStandardKeyDataList = [];// 报名主表 id 为下标 二维数组
-        if(in_array('joinItemsStandards', $handleKeyArr)){
-            $joinStandardIdsArr = array_values(array_filter(array_column($data_list,'id')));// 资源id数组，并去掉值为0的
-            // 查询条件
-//            $joinItemStandardList = [];
-//            if(!empty($joinStandardIdsArr)){
-//                // 获得企业信息
-//                $joinItemStandardQueryParams = [
-//                    'where' => [
-//                        // ['type_id', 5],
-//                        //                //['mobile', $keyword],
-//                    ],
-//                    //            'select' => [
-//                    //                'id','company_id','position_name','sort_num'
-//                    //                //,'operate_staff_id','operate_staff_id_history'
-//                    //                ,'created_at'
-//                    //            ],
-//                    // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
-//                ];
-//                Tool::appendParamQuery($joinItemStandardQueryParams, $joinStandardIdsArr, 'ability_join_item_id', [0, '0', ''], ',', false);
-//                // $joinItemStandardList = CTAPIAbilityJoinItemsBusiness::getBaseListData($request, $controller, '', $joinItemStandardQueryParams, [], 1,  1)['data_list'] ?? [];
+//    public static function handleDataFormat(Request $request, Controller $controller, &$data_list, $handleKeyArr, $isMulti = true){
 //
-//                $extParams = [
-//                    'handleKeyArr' => ['project_standards'],//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-//                ];
-//                $joinItemStandardList = CTAPIAbilityJoinItemsStandardsBusiness::getList($request, $controller, 1, $joinItemStandardQueryParams, [], $extParams)['result']['data_list'] ?? [];
+//        // 重写开始
+//
+//        $isNeedHandle = false;// 是否真的需要遍历处理数据 false:不需要：true:需要 ；只要有一个需要处理就标记
+//
+//        //        if(!empty($data_list) ){
+//        // 获得能力验证名称
+//        $abilityDataList = [];// 能力id 为下标 二维数组
+//        $abilityKVList = [];// 能力id => 能力验证名称 的键值对
+//        if(in_array('ability', $handleKeyArr)){
+//            $abilityIdsArr = array_values(array_filter(array_column($data_list,'ability_id')));// 资源id数组，并去掉值为0的
+//            // 查询条件
+////            $abilityList = [];
+////            if(!empty($abilityIdsArr)){
+////                // 获得企业信息
+////                $abilityQueryParams = [
+////                    'where' => [
+////                        // ['type_id', 5],
+////                        //                //['mobile', $keyword],
+////                    ],
+////                    //            'select' => [
+////                    //                'id','company_id','position_name','sort_num'
+////                    //                //,'operate_staff_id','operate_staff_id_history'
+////                    //                ,'created_at'
+////                    //            ],
+////                    // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
+////                ];
+////                Tool::appendParamQuery($abilityQueryParams, $abilityIdsArr, 'id', [0, '0', ''], ',', false);
+////                $abilityList = CTAPIAbilitysBusiness::getBaseListData($request, $controller, '', $abilityQueryParams,[], 1,  1)['data_list'] ?? [];
+////            }
+//
+//            $extParams = [];
+//            $abilityList =  CTAPIAbilitysBusiness::getFVFormatList( $request,  $controller, 1, 1,  ['id' => $abilityIdsArr], false,[], $extParams);
+//            if(!empty($abilityList)){
+//                $abilityDataList = Tool::arrUnderReset($abilityList, 'id', 1);
+//                $abilityKVList = Tool::formatArrKeyVal($abilityList, 'id', 'ability_name');
 //            }
-
-            $extParams = [
-                'handleKeyArr' => ['project_standards'],//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-            ];
-            $joinItemStandardList =  CTAPIAbilityJoinItemsStandardsBusiness::getFVFormatList( $request,  $controller, 1, 1,  ['ability_join_item_id' => $joinStandardIdsArr], false,[], $extParams);
-
-            if(!empty($joinItemStandardList)){
-                $joinItemStandardKeyDataList = Tool::arrUnderReset($joinItemStandardList, 'ability_join_item_id', 2);
-
-            }
-            if(!$isNeedHandle && !empty($joinItemStandardKeyDataList)) $isNeedHandle = true;
-
-            // 获得项目标准
-            if(in_array('projectStandards', $handleKeyArr)){
-                $abilityIdArr = array_values(array_filter(array_column($data_list,'ability_id')));// 资源id数组，并去掉值为0的
-//                $projectStandardsList = [];
-//                // 查询条件
-//                if(!empty($abilityIdArr)){
-//                    // 获得企业资质证书
-//                    $projectStandardsQueryParams = [
-//                        'where' => [
-//                            // ['type_id', 5],
-//                            //                //['mobile', $keyword],
-//                        ],
-//                        //            'select' => [
-//                        //                'id','company_id','position_name','sort_num'
-//                        //                //,'operate_staff_id','operate_staff_id_history'
-//                        //                ,'created_at'
-//                        //            ],
-//                        // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
-//                    ];
-//                    Tool::appendParamQuery($projectStandardsQueryParams, $abilityIdArr, 'ability_id', [0, '0', ''], ',', false);
-//                    $projectStandardsList = CTAPIProjectStandardsBusiness::getBaseListData($request, $controller, '', $projectStandardsQueryParams,[], 1,  1)['data_list'] ?? [];
+//            if(!$isNeedHandle && !empty($abilityDataList)) $isNeedHandle = true;
+//        }
+//        // 企业信息
+//        $companyDataList = [];// 企业id 为下标 二维数组
+//        $companyKVList = [];// 企业id => 企业名称 的键值对
+//        if(in_array('company', $handleKeyArr)){
+//            $staffIdsArr = array_values(array_filter(array_column($data_list,'staff_id')));// 资源id数组，并去掉值为0的
+//            // 查询条件
+////            $companyList = [];
+////            if(!empty($staffIdsArr)){
+////                // 获得企业信息
+////                $companyQueryParams = [
+////                    'where' => [
+////                        // ['type_id', 5],
+////                        //                //['mobile', $keyword],
+////                    ],
+////                    //            'select' => [
+////                    //                'id','company_id','position_name','sort_num'
+////                    //                //,'operate_staff_id','operate_staff_id_history'
+////                    //                ,'created_at'
+////                    //            ],
+////                    // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
+////                ];
+////                Tool::appendParamQuery($companyQueryParams, $staffIdsArr, 'id', [0, '0', ''], ',', false);
+////                $companyList = CTAPIStaffBusiness::getBaseListData($request, $controller, '', $companyQueryParams,[], 1,  1)['data_list'] ?? [];
+////            }
+//
+//            $extParams =[];
+//            $companyList =  CTAPIStaffBusiness::getFVFormatList( $request,  $controller, 1, 1,  ['id' => $staffIdsArr], false,[], $extParams);
+//            if(!empty($companyList)){
+//                $companyDataList = Tool::arrUnderReset($companyList, 'id', 1);
+//                $companyKVList = Tool::formatArrKeyVal($companyList, 'id', 'company_name');
+//            }
+//            if(!$isNeedHandle && !empty($companyDataList)) $isNeedHandle = true;
+//        }
+//
+//        // 获得报名的标准方法
+//        $joinItemStandardKeyDataList = [];// 报名主表 id 为下标 二维数组
+//        if(in_array('joinItemsStandards', $handleKeyArr)){
+//            $joinStandardIdsArr = array_values(array_filter(array_column($data_list,'id')));// 资源id数组，并去掉值为0的
+//            // 查询条件
+////            $joinItemStandardList = [];
+////            if(!empty($joinStandardIdsArr)){
+////                // 获得企业信息
+////                $joinItemStandardQueryParams = [
+////                    'where' => [
+////                        // ['type_id', 5],
+////                        //                //['mobile', $keyword],
+////                    ],
+////                    //            'select' => [
+////                    //                'id','company_id','position_name','sort_num'
+////                    //                //,'operate_staff_id','operate_staff_id_history'
+////                    //                ,'created_at'
+////                    //            ],
+////                    // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
+////                ];
+////                Tool::appendParamQuery($joinItemStandardQueryParams, $joinStandardIdsArr, 'ability_join_item_id', [0, '0', ''], ',', false);
+////                // $joinItemStandardList = CTAPIAbilityJoinItemsBusiness::getBaseListData($request, $controller, '', $joinItemStandardQueryParams, [], 1,  1)['data_list'] ?? [];
+////
+////                $extParams = [
+////                    'handleKeyArr' => ['project_standards'],//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+////                ];
+////                $joinItemStandardList = CTAPIAbilityJoinItemsStandardsBusiness::getList($request, $controller, 1, $joinItemStandardQueryParams, [], $extParams)['result']['data_list'] ?? [];
+////            }
+//
+//            $extParams = [
+//                'handleKeyArr' => ['project_standards'],//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+//            ];
+//            $joinItemStandardList =  CTAPIAbilityJoinItemsStandardsBusiness::getFVFormatList( $request,  $controller, 1, 1,  ['ability_join_item_id' => $joinStandardIdsArr], false,[], $extParams);
+//
+//            if(!empty($joinItemStandardList)){
+//                $joinItemStandardKeyDataList = Tool::arrUnderReset($joinItemStandardList, 'ability_join_item_id', 2);
+//
+//            }
+//            if(!$isNeedHandle && !empty($joinItemStandardKeyDataList)) $isNeedHandle = true;
+//
+//            // 获得项目标准
+//            if(in_array('projectStandards', $handleKeyArr)){
+//                $abilityIdArr = array_values(array_filter(array_column($data_list,'ability_id')));// 资源id数组，并去掉值为0的
+////                $projectStandardsList = [];
+////                // 查询条件
+////                if(!empty($abilityIdArr)){
+////                    // 获得企业资质证书
+////                    $projectStandardsQueryParams = [
+////                        'where' => [
+////                            // ['type_id', 5],
+////                            //                //['mobile', $keyword],
+////                        ],
+////                        //            'select' => [
+////                        //                'id','company_id','position_name','sort_num'
+////                        //                //,'operate_staff_id','operate_staff_id_history'
+////                        //                ,'created_at'
+////                        //            ],
+////                        // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
+////                    ];
+////                    Tool::appendParamQuery($projectStandardsQueryParams, $abilityIdArr, 'ability_id', [0, '0', ''], ',', false);
+////                    $projectStandardsList = CTAPIProjectStandardsBusiness::getBaseListData($request, $controller, '', $projectStandardsQueryParams,[], 1,  1)['data_list'] ?? [];
+////                }
+//
+//                $extParams = [];
+//                $projectStandardsList =  CTAPIProjectStandardsBusiness::getFVFormatList( $request,  $controller, 1, 1,  ['ability_id' => $abilityIdArr], false,[], $extParams);
+//
+//                if(!empty($projectStandardsList)) $projectStandardsArr = Tool::arrUnderReset($projectStandardsList, 'ability_id', 2);
+//                if(!$isNeedHandle && !empty($projectStandardsArr)) $isNeedHandle = true;
+//            }
+//        }
+//
+//        //        }
+//        // 改为不返回，好让数据下面没有数据时，有一个空对象，方便前端或其它应用处理数据
+//        // if(!$isNeedHandle){// 不处理，直接返回 // if(!$isMulti) $data_list = $data_list[0] ?? [];
+//        //    return true;
+//        // }
+//
+//        foreach($data_list as $k => $v){
+//            //            // 公司名称
+//            //            $data_list[$k]['company_name'] = $v['company_info']['company_name'] ?? '';
+//            //            if(isset($data_list[$k]['company_info'])) unset($data_list[$k]['company_info']);
+//
+//
+//            // 获得能力验证名称
+//            if(in_array('ability', $handleKeyArr)){
+//                $data_list[$k]['ability_info'] = $abilityDataList[$v['ability_id']] ?? '';
+//                $data_list[$k]['ability_name'] = $abilityKVList[$v['ability_id']] ?? '';
+//            }
+//
+//            // 企业信息
+//            if(in_array('company', $handleKeyArr)){
+//                $data_list[$k]['company_info'] = $companyDataList[$v['staff_id']] ?? '';
+//                $data_list[$k]['company_name'] = $companyKVList[$v['staff_id']] ?? '';
+//            }
+//            // 获得报名的标准方法
+//            if(in_array('joinItemsStandards', $handleKeyArr)){
+//                $tem_arr = $joinItemStandardKeyDataList[$v['id']] ?? [];
+//                // $data_list[$k]['join_item_standards'] = $tem_arr;
+//                $data_list[$k]['join_item_standards'] = Tool::arrUnderReset($tem_arr, 'project_standard_id', 1);
+//                $data_list[$k]['join_item_standard_ids'] = array_values(array_column($tem_arr,'project_standard_id'));// 资源id数组，并去掉值为0的
+//            }
+//
+//            // 获得项目标准
+//            if(in_array('projectStandards', $handleKeyArr)){
+//                //  [{'id': 0, 'tag_name': '标签名称'},..]
+//                $configArr = [];
+//                $temArr = $projectStandardsArr[$v['ability_id']] ?? [];
+//                foreach($temArr as $info){
+//                    array_push($configArr, [
+//                        'id' => $info['id'],
+//                        'tag_name' => $info['name'],
+//                    ]);
 //                }
-
-                $extParams = [];
-                $projectStandardsList =  CTAPIProjectStandardsBusiness::getFVFormatList( $request,  $controller, 1, 1,  ['ability_id' => $abilityIdArr], false,[], $extParams);
-
-                if(!empty($projectStandardsList)) $projectStandardsArr = Tool::arrUnderReset($projectStandardsList, 'ability_id', 2);
-                if(!$isNeedHandle && !empty($projectStandardsArr)) $isNeedHandle = true;
-            }
-        }
-
-        //        }
-        // 改为不返回，好让数据下面没有数据时，有一个空对象，方便前端或其它应用处理数据
-        // if(!$isNeedHandle){// 不处理，直接返回 // if(!$isMulti) $data_list = $data_list[0] ?? [];
-        //    return true;
-        // }
-
-        foreach($data_list as $k => $v){
-            //            // 公司名称
-            //            $data_list[$k]['company_name'] = $v['company_info']['company_name'] ?? '';
-            //            if(isset($data_list[$k]['company_info'])) unset($data_list[$k]['company_info']);
-
-
-            // 获得能力验证名称
-            if(in_array('ability', $handleKeyArr)){
-                $data_list[$k]['ability_info'] = $abilityDataList[$v['ability_id']] ?? '';
-                $data_list[$k]['ability_name'] = $abilityKVList[$v['ability_id']] ?? '';
-            }
-
-            // 企业信息
-            if(in_array('company', $handleKeyArr)){
-                $data_list[$k]['company_info'] = $companyDataList[$v['staff_id']] ?? '';
-                $data_list[$k]['company_name'] = $companyKVList[$v['staff_id']] ?? '';
-            }
-            // 获得报名的标准方法
-            if(in_array('joinItemsStandards', $handleKeyArr)){
-                $tem_arr = $joinItemStandardKeyDataList[$v['id']] ?? [];
-                // $data_list[$k]['join_item_standards'] = $tem_arr;
-                $data_list[$k]['join_item_standards'] = Tool::arrUnderReset($tem_arr, 'project_standard_id', 1);
-                $data_list[$k]['join_item_standard_ids'] = array_values(array_column($tem_arr,'project_standard_id'));// 资源id数组，并去掉值为0的
-            }
-
-            // 获得项目标准
-            if(in_array('projectStandards', $handleKeyArr)){
-                //  [{'id': 0, 'tag_name': '标签名称'},..]
-                $configArr = [];
-                $temArr = $projectStandardsArr[$v['ability_id']] ?? [];
-                foreach($temArr as $info){
-                    array_push($configArr, [
-                        'id' => $info['id'],
-                        'tag_name' => $info['name'],
-                    ]);
-                }
-                $data_list[$k]['project_standards'] = $configArr;
-                $data_list[$k]['project_standards_text'] = implode('<br/>', Tool::getArrFields($temArr, 'name'));
-            }
-
-        }
-
-        // 重写结束
-        return true;
-    }
+//                $data_list[$k]['project_standards'] = $configArr;
+//                $data_list[$k]['project_standards_text'] = implode('<br/>', Tool::getArrFields($temArr, 'name'));
+//            }
+//
+//        }
+//
+//        // 重写结束
+//        return true;
+//    }
 
     /**
      * 获得列表数据时，查询条件的参数拼接--有特殊的需要自己重写此方法--每个字类都有此方法
@@ -314,5 +314,101 @@ class CTAPIAbilityJoinItemsBusiness extends BasicPublicCTAPIBusiness
         // 方法最下面
         // 注意重写方法中，如果不是特殊的like，同样需要调起此默认like方法--特殊的写自己特殊的方法
         static::joinListParamsLike($request, $controller, $queryParams, $notLog);
+    }
+
+
+    // ****表关系***需要重写的方法**********开始***********************************
+    /**
+     * 获得处理关系表数据的配置信息--重写此方法
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $relationKeys
+     * @param array $extendParams  扩展参数---可能会用
+     * @return  array 表关系配置信息
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function getRelationConfigs(Request $request, Controller $controller, $relationKeys = [], $extendParams = []){
+        if(empty($relationKeys)) return [];
+        $user_info = $controller->user_info;
+        $user_id = $controller->user_id;
+        $user_type = $controller->user_type;
+        // 关系配置
+        $relationFormatConfigs = [
+            // 下标 'relationConfig' => []// 下一个关系
+            // 获得企业名称
+//            'company_info' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
+//                , ['admin_type' => 'admin_type', 'staff_id' => 'id']
+//                , 1, 2
+//                ,'','', [], ['where' => [['admin_type', 2]]], '', []),
+        ];
+        return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
+    }
+    /**
+     * 获得要返回数据的return_data数据---每个对象，重写此方法
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param int $return_num 指定要获得的关系数据类型格式化后的数据 编号 1[占用：原数据] 2 4 8..
+     * @return  array 表关系配置信息
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function getRelationConfigReturnData(Request $request, Controller $controller, $return_num = 0){
+        $return_data = [];// 为空，则会返回对应键=> 对应的数据， 具体的 结构可以参考 Tool::formatConfigRelationInfo  $return_data参数格式
+
+        if(($return_num & 1) == 1) {// 返回源数据--特别的可以参考这个配置
+            $return_data['old_data'] = ['ubound_operate' => 1, 'ubound_name' => '', 'fields_arr' => [], 'ubound_keys' => [], 'ubound_type' =>1];
+        }
+
+//        if(($return_num & 2) == 2){// 给上一级返回下标名称 ability_name => '项目名称'
+//            $one_field = ['key' => 'ability_name', 'return_type' => 2, 'ubound_name' => 'ability_name', 'split' => '、'];// 获得名称
+//            if(!isset($return_data['one_field'])) $return_data['one_field'] = [];
+//            array_push($return_data['one_field'], $one_field);
+//        }
+
+        if(($return_num & 2) == 2){// 企业已报名的项目id 数组  ability_id_joined => [1,25]
+            $one_field = ['key' => 'ability_id', 'return_type' => 1, 'ubound_name' => 'ability_id_joined', 'split' => ','];
+            if(!isset($return_data['one_field'])) $return_data['one_field'] = [];
+            array_push($return_data['one_field'], $one_field);
+        }
+
+        if(($return_num & 4) == 4){// 标准id 数组  join_item_standard_ids => [0,25]
+            $many_fields = [ 'ubound_name' => 'ability_join_items', 'fields_arr'=> Tool::arrEqualKeyVal(['id', 'admin_type' , 'staff_id', 'ability_id', 'ability_join_items_standards'],true),'reset_ubound' => 0];
+            if(!isset($return_data['many_fields'])) $return_data['many_fields'] = [];
+            array_push($return_data['many_fields'], $many_fields);
+        }
+        return $return_data;
+    }
+    // ****表关系***需要重写的方法**********结束***********************************
+
+    /**
+     * 对单条数据关系进行格式化--具体的可以重写
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $info  单条数据  --- 一维数组
+     * @param array $temDataList  关系数据  --- 一维或二维数组 -- 主要操作这个数据到  $info 的特别业务数据
+     *                              如果是二维数组：下标已经是他们关系字段的值，多个则用_分隔好的
+     * @param array $infoHandleKeyArr 其它扩展参数，// 一维数组，单条 数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+     * @param array $returnFields  新加入的字段['字段名1' => '字段名1' ]
+     * @return array  新增的字段 一维数组
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function infoRelationFormatExtend(Request $request, Controller $controller, &$info, &$temDataList, $infoHandleKeyArr, &$returnFields){
+        // if(empty($info)) return $returnFields;
+        // $returnFields[$tem_ubound_old] = $tem_ubound_old;
+
+        // 判断企业是否已经报名
+        if(in_array('judgeJoined', $infoHandleKeyArr)){
+            $is_joined = 0;
+            $is_joined_text = '未报名';
+            if(!empty($temDataList)){
+                $is_joined = 1;
+                $is_joined_text = '已报名';
+            }
+            $info['is_joined'] = $is_joined;
+            $info['is_joined_text'] = $is_joined_text;
+        }
+
+        return $returnFields;
     }
 }

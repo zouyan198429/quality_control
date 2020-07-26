@@ -80,9 +80,10 @@ class AbilitysController extends BasicController
 
             if ($id > 0) { // 获得详情数据
                 $operate = "修改";
-                $handleKeyArr = ['projectStandards', 'projectSubmitItems'];
+                // $handleKeyArr = ['projectStandards', 'projectSubmitItems'];
                 $extParams = [
-                    'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                    // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                    'relationFormatConfigs'=> CTAPIAbilitysBusiness::getRelationConfigs($request, $this, ['project_standards_list', 'project_submit_items_list'], []),
                 ];
                 $info = CTAPIAbilitysBusiness::getInfoData($request, $this, $id, [], '', $extParams);
             }
@@ -115,9 +116,10 @@ class AbilitysController extends BasicController
                 throws('参数[id]有误！');
             }
             $operate = "详情";
-            $handleKeyArr = ['projectStandards', 'projectSubmitItems'];
+            // $handleKeyArr = ['projectStandards', 'projectSubmitItems'];
             $extParams = [
-                'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                'relationFormatConfigs'=> CTAPIAbilitysBusiness::getRelationConfigs($request, $this, ['project_standards_list', 'project_submit_items_list'], []),
             ];
             $info = CTAPIAbilitysBusiness::getInfoData($request, $this, $id, [], '', $extParams);
             // $reDataArr = array_merge($reDataArr, $resultDatas);
@@ -291,9 +293,10 @@ class AbilitysController extends BasicController
         $this->InitParams($request);
 
         $relations = [];//  ['siteResources']
-        $handleKeyArr = ['projectStandards', 'projectSubmitItems'];
+        // $handleKeyArr = ['projectStandards', 'projectSubmitItems'];
         $extParams = [
-            'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+            // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+            'relationFormatConfigs'=> CTAPIAbilitysBusiness::getRelationConfigs($request, $this, ['project_standards_list', 'project_submit_items_list'], []),
         ];
 
         return  CTAPIAbilitysBusiness::getList($request, $this, 2 + 4, [], $relations, $extParams);
