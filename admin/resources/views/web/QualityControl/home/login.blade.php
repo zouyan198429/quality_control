@@ -20,13 +20,13 @@
 			<div class="bd-right" style="background:#fff;">
 
                 <div class="layui-tab login-tag hd">
-                    <input type="hidden" name="form_type" value="user_login" />
+                    <input type="hidden" name="form_type" value="compnay_login" />
                     <ul class="layui-tab-title">
                         <li class="layui-this"  data-type="compnay_login" ><i id="i-com"></i>企业登录</li>
                         <li data-type="user_login"><i id="i-user" ></i>个人登录</li>
                     </ul>
                     <div class="layui-tab-content">
-                        
+
                         <div class="layui-tab-item  layui-show">
                             <div class="bd login-mm" style="width:360px; margin:0 auto;">
                                 <ul>

@@ -21,7 +21,7 @@
                     <label for="password" class="form-label">帐户类型</label>
                     <div class="form-input">
                         <label  for="company_type_radio"><input type="radio" id="company_type_radio" name="admin_type" value="2" title="企业帐号" checked>企业帐号</label>&nbsp;&nbsp;
-                        <label  for="user_type_radio"><input type="radio" id="user_type_radio" name="admin_type" value="4" title="个人帐号">个人帐号</label>&nbsp;&nbsp;
+                        <label  for="user_type_radio"><input type="radio" id="user_type_radio" name="admin_type" value="4" title="个人帐号" disabled>个人帐号（暂不开放）</label>&nbsp;&nbsp;
                     </div>
                 </div>
 
