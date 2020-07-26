@@ -59,6 +59,68 @@ class CTAPICompanyScheduleBusiness extends BasicPublicCTAPIBusiness
         return $errMsgs;
     }
 
+<<<<<<< HEAD
+=======
+    // ****表关系***需要重写的方法**********开始***********************************
+    /**
+     * 获得处理关系表数据的配置信息--重写此方法
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $relationKeys
+     * @param array $extendParams  扩展参数---可能会用
+     * @return  array 表关系配置信息
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function getRelationConfigs(Request $request, Controller $controller, $relationKeys = [], $extendParams = []){
+        if(empty($relationKeys)) return [];
+        $user_info = $controller->user_info;
+        $user_id = $controller->user_id;
+        $user_type = $controller->user_type;
+        // 关系配置
+        $relationFormatConfigs = [
+            // 下标 'relationConfig' => []// 下一个关系
+            // 获得企业名称
+            'company_info' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
+                , ['company_id' => 'id']
+                , 1, 16
+                ,'','', [], ['where' => [['admin_type', 2]]], '', []),
+            'resource_list' => CTAPIResourceBusiness::getTableRelationConfigInfo($request, $controller
+                , ['resource_id' => 'id']
+                , 2, 0
+                ,'','', [], [], '', ['extendConfig' => ['listHandleKeyArr' => ['format_resource'], 'infoHandleKeyArr' => ['resource_list']]]),
+        ];
+        return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
+    }
+
+    /**
+     * 获得要返回数据的return_data数据---每个对象，重写此方法
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param int $return_num 指定要获得的关系数据类型格式化后的数据 编号 1[占用：原数据] 2 4 8..
+     * @return  array 表关系配置信息
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function getRelationConfigReturnData(Request $request, Controller $controller, $return_num = 0){
+        $return_data = [];// 为空，则会返回对应键=> 对应的数据， 具体的 结构可以参考 Tool::formatConfigRelationInfo  $return_data参数格式
+
+        if(($return_num & 1) == 1) {// 返回源数据--特别的可以参考这个配置
+            $return_data['old_data'] = ['ubound_operate' => 1, 'ubound_name' => '', 'fields_arr' => [], 'ubound_keys' => [], 'ubound_type' =>1];
+        }
+
+//        if(($return_num & 2) == 2){// 给上一级返回名称 company_name 下标
+//            $one_field = ['key' => 'company_name', 'return_type' => 2, 'ubound_name' => 'company_name', 'split' => '、'];// 获得名称
+//            if(!isset($return_data['one_field'])) $return_data['one_field'] = [];
+//            array_push($return_data['one_field'], $one_field);
+//        }
+
+        return $return_data;
+    }
+    // ****表关系***需要重写的方法**********结束***********************************
+
+
+>>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
     /**
      * 获得列表数据时，查询条件的参数拼接--有特殊的需要自己重写此方法--每个字类都有此方法
      *
@@ -98,6 +160,7 @@ class CTAPICompanyScheduleBusiness extends BasicPublicCTAPIBusiness
      * @return  boolean true
      * @author zouyan(305463219@qq.com)
      */
+<<<<<<< HEAD
     public static function handleDataFormat(Request $request, Controller $controller, &$data_list, $handleKeyArr, $isMulti = true){
 
         // 重写开始
@@ -155,6 +218,65 @@ class CTAPICompanyScheduleBusiness extends BasicPublicCTAPIBusiness
         // 重写结束
         return true;
     }
+=======
+//    public static function handleDataFormat(Request $request, Controller $controller, &$data_list, $handleKeyArr, $isMulti = true){
+//
+//        // 重写开始
+//
+//        $isNeedHandle = false;// 是否真的需要遍历处理数据 false:不需要：true:需要 ；只要有一个需要处理就标记
+//
+//        //        if(!empty($data_list) ){
+//        // 获得所属企业名称
+//        $companyKv = [];
+//        if(in_array('company', $handleKeyArr)){
+//            $companyIdArr = array_values(array_filter(array_column($data_list,'company_id')));// 资源id数组，并去掉值为0的
+//            // 主键为下标的二维数组
+//            if(!empty($companyIdArr)) $companyKv = Tool::formatArrKeyVal(CTAPIStaffBusiness::getListByIds($request, $controller, $companyIdArr, [], [], 'id'), 'id', 'company_name');
+//            if(!$isNeedHandle && !empty($companyKv)) $isNeedHandle = true;
+//        }
+//
+//        // 处理图片
+//        $resourceDataArr = [];
+//        if(in_array('siteResources', $handleKeyArr)){
+//            $resourceIdArr = array_values(array_filter(array_column($data_list,'resource_id')));// 资源id数组，并去掉值为0的
+//            if(!empty($resourceIdArr)) $resourceDataArr = Tool::arrUnderReset(CTAPIResourceBusiness::getResourceByIds($request, $controller, $resourceIdArr), 'id', 2);// getListByIds($request, $controller, implode(',', $resourceIdArr));
+//            if(!$isNeedHandle && !empty($resourceDataArr)) $isNeedHandle = true;
+//        }
+//
+//        //        }
+//
+//        // 改为不返回，好让数据下面没有数据时，有一个空对象，方便前端或其它应用处理数据
+//        // if(!$isNeedHandle){// 不处理，直接返回 // if(!$isMulti) $data_list = $data_list[0] ?? [];
+//        //    return true;
+//        // }
+//
+//        foreach($data_list as $k => $v){
+//            //            // 公司名称
+//            //            $data_list[$k]['company_name'] = $v['company_info']['company_name'] ?? '';
+//            //            if(isset($data_list[$k]['company_info'])) unset($data_list[$k]['company_info']);
+//
+//            // 获得所属企业名称 ---如果是普通用户
+//            if(in_array('company', $handleKeyArr)){
+//                $data_list[$k]['user_company_name'] = $companyKv[$v['company_id']] ?? '';
+//            }
+//
+//            // 资源url
+//            if(in_array('siteResources', $handleKeyArr)){
+//                // $resource_list = [];
+//                $resource_list = $resourceDataArr[$v['resource_id']] ?? [];
+//                if(isset($v['site_resources'])){
+//                    Tool::resourceUrl($v, 2);
+//                    $resource_list = Tool::formatResource($v['site_resources'], 2);
+//                    unset($data_list[$k]['site_resources']);
+//                }
+//                $data_list[$k]['resource_list'] = $resource_list;
+//            }
+//        }
+//
+//        // 重写结束
+//        return true;
+//    }
+>>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
 
     /**
      * 删除单条数据--有特殊的需要自己重写此方法

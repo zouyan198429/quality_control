@@ -65,8 +65,13 @@
             <tr>
                 <th>企业类型<span class="must">*</span></th>
                 <td>
+<<<<<<< HEAD
                     <label><input type="radio" name="company_type" value="1" @if (isset($info['company_type']) && $info['company_type'] == 1 ) checked @endif>检测机构</label>&nbsp;&nbsp;&nbsp;&nbsp;
                     <label><input type="radio" name="company_type" value="2" @if (isset($info['company_type']) && $info['company_type'] == 2 ) checked @endif>生产企业</label>
+=======
+                    <label><input type="radio" name="company_type" value="1" @if (isset($info['company_type']) && $info['company_type'] == 1 ) checked @endif>检验检测机构</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <label><input type="radio" name="company_type" value="2" @if (isset($info['company_type']) && $info['company_type'] == 2 ) checked @endif>生产企业内部实验室</label>
+>>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
 
                 </td>
             </tr>
@@ -93,12 +98,20 @@
                     <input type="text" class="inp wnormal"  name="zip_code" value="{{ $info['zip_code'] ?? '' }}" placeholder="请输入邮编"/>
                 </td>
             </tr>
+<<<<<<< HEAD
             <tr>
+=======
+            <!-- <tr>
+>>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
                 <th>传真<span class="must"></span></th>
                 <td>
                     <input type="text" class="inp wnormal"  name="fax" value="{{ $info['fax'] ?? '' }}" placeholder="请输入传真"/>
                 </td>
+<<<<<<< HEAD
             </tr>
+=======
+            </tr> -->
+>>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
             <tr>
                 <th>企业邮箱<span class="must"></span></th>
                 <td>
@@ -161,7 +174,11 @@
                 </td>
             </tr>
             <tr>
+<<<<<<< HEAD
                 <th>证书编号<span class="must">*</span></th>
+=======
+                <th>资质认定证书编号<span class="must">*</span></th>
+>>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
                 <td>
                     <input type="text" class="inp wnormal"  name="company_certificate_no" value="{{ $info['company_certificate_no'] ?? '' }}" placeholder="请输入证书编号"/>
                 </td>
@@ -179,7 +196,11 @@
                 </td>
             </tr>
             <tr>
+<<<<<<< HEAD
                 <th>联系电话<span class="must">*</span></th>
+=======
+                <th>固定电话<span class="must">*</span></th>
+>>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
                 <td>
                     <input type="text" class="inp wnormal"  name="company_contact_tel" value="{{ $info['company_contact_tel'] ?? '' }}" placeholder="请输入联系电话"/>
                 </td>

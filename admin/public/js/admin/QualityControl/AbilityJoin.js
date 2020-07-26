@@ -76,9 +76,15 @@ var otheraction = {
     document.write("                    <i class=\"ace-icon fa fa-check bigger-60\"> 查看<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
+<<<<<<< HEAD
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"otheraction.getSample(<%=item.id%>)\">");
     document.write("                    <i class=\"ace-icon fa fa-check bigger-60\"> 取样<\/i>");
     document.write("                <\/a>");
+=======
+    // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"otheraction.getSample(<%=item.id%>)\">");
+    // document.write("                    <i class=\"ace-icon fa fa-check bigger-60\"> 取样<\/i>");
+    // document.write("                <\/a>");
+>>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
     // document.write("                <%if( can_modify){%>");
     // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.iframeModify(<%=item.id%>)\">");
     // document.write("                    <i class=\"ace-icon fa fa-pencil bigger-60\"> 编辑<\/i>");

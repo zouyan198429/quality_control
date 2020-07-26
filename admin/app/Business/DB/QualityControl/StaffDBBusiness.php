@@ -63,6 +63,20 @@ class StaffDBBusiness extends BasePublicDBBusiness
             throws('用户名不能为空!！');
         }
 
+<<<<<<< HEAD
+=======
+        // 修改时 需要强制更新员工数量
+        $forceCompanyNum =  false;
+        $companyNumIds = [];// 需要更新的企业id数组
+        if(isset($saveData['force_company_num'])){
+            $forceCompanyNum =  true;
+            if(isset($saveData['company_id']) && is_numeric($saveData['company_id']) && $saveData['company_id'] > 0 ){
+                array_push($companyNumIds, $saveData['company_id']);
+            }
+            unset($saveData['force_company_num']);
+        }
+
+>>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
         // 是否批量操作标识 true:批量操作； false:单个操作 ---因为如果批量操作，有些操作就不能每个操作都执行，也要批量操作---为了运行效率
         // 有此下标就代表批量操作
         $isBatchOperate = false;
@@ -198,6 +212,15 @@ class StaffDBBusiness extends BasePublicDBBusiness
                 $resultDatas = static::getInfo($id);
                 $logCount = '新加';
             }else{// 修改
+<<<<<<< HEAD
+=======
+                if($forceCompanyNum){
+                    $info_old = static::getInfo($id);
+                    $tem_company_id = $info_old['company_id'];
+                    if($tem_company_id > 0 && !in_array($tem_company_id, $companyNumIds)) array_push($companyNumIds, $tem_company_id);
+
+                }
+>>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
                 $modelObj = null;
                 $saveBoolen = static::saveById($saveData, $id,$modelObj);
                 $resultDatas = static::getInfo($id);
@@ -331,6 +354,11 @@ class StaffDBBusiness extends BasePublicDBBusiness
                 if(!$isBatchOperate && $resultDatas['admin_type'] == 4 && is_numeric($resultDatas['company_id']) && $resultDatas['company_id'] > 0){
                     static::updateStaffNum($resultDatas['company_id']);
                 }
+<<<<<<< HEAD
+=======
+            }else if($forceCompanyNum && !empty($companyNumIds)){// 修改时 需要强制更新员工数量
+                static::updateStaffNum($companyNumIds);
+>>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
             }
             // 如果是修改信息
             if($isModify){

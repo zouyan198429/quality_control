@@ -4,6 +4,10 @@ namespace App\Http\Controllers\WebFront\Company\QualityControl;
 
 use App\Business\Controller\API\QualityControl\CTAPIAbilityJoinBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIAbilitysBusiness;
+<<<<<<< HEAD
+=======
+use App\Business\Controller\API\QualityControl\CTAPIStaffExtendBusiness;
+>>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
 use App\Http\Controllers\WorksController;
 use App\Services\Request\CommonRequest;
 use App\Services\Tool;
@@ -81,9 +85,16 @@ class AbilitysController extends BasicController
 //
 //            if ($id > 0) { // 获得详情数据
 //                $operate = "修改";
+<<<<<<< HEAD
 //                $handleKeyArr = ['projectStandards', 'projectSubmitItems'];
 //                $extParams = [
 //                    'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+=======
+//                // $handleKeyArr = ['projectStandards', 'projectSubmitItems'];
+//                $extParams = [
+//                    // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+//                    'relationFormatConfigs'=> CTAPIAbilitysBusiness::getRelationConfigs($request, $this, ['project_standards_list', 'project_submit_items_list'], []),
+>>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
 //                ];
 //                $info = CTAPIAbilitysBusiness::getInfoData($request, $this, $id, [], '', $extParams);
 //            }
@@ -115,6 +126,10 @@ class AbilitysController extends BasicController
             if(empty($ids)) {
                 throws('参数[ids]有误！');
             }
+<<<<<<< HEAD
+=======
+            $info = $this->user_info;
+>>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
             // 根据条件获得项目列表数据
             $mergeParams = [
                 // 'status' => 2,// 状态(1待开始 、2报名中、4进行中、8已结束 16 已取消【作废】)
@@ -123,9 +138,16 @@ class AbilitysController extends BasicController
             CTAPIAbilitysBusiness::mergeRequest($request, $this, $mergeParams);
 
             $relations = [];//  ['siteResources']
+<<<<<<< HEAD
             $handleKeyArr = ['projectStandards'];
             $extParams = [
                 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+=======
+            // $handleKeyArr = ['projectStandards'];
+            $extParams = [
+                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                'relationFormatConfigs'=> CTAPIAbilitysBusiness::getRelationConfigs($request, $this, ['project_standards_list', 'project_submit_items_list'], []),
+>>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
             ];
             $dataList = CTAPIAbilitysBusiness::getList($request, $this, 1, [], $relations, $extParams)['result']['data_list'] ?? [];
 
@@ -150,6 +172,32 @@ class AbilitysController extends BasicController
             // 判断是否已经过了报名时间
             CTAPIAbilitysBusiness::judgeCanJoin( $request, $this, $dataList, 1 | 2 | 4);
 
+<<<<<<< HEAD
+=======
+            // 获得企业今年的报名
+            $currentNow = Carbon::now();
+            $extParams = [
+                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                // 'relationFormatConfigs'=> CTAPIAbilityJoinBusiness::getRelationConfigs($request, $this, ['join_items_save'], []),
+            ];
+            $joinedInfo = CTAPIAbilityJoinBusiness::getFVFormatList( $request,  $this, 4, 1
+                , ['join_year' => $currentNow->year, 'staff_id' => $this->user_id, 'admin_type' => $info['admin_type'] ], false, [], $extParams);
+            // $ability_join_items = $joinedInfo['ability_join_items'] ?? [];
+            // 已经有报名
+            if(!empty($joinedInfo)){
+                // 非 16 已评定   32 已完成
+                if(!in_array($joinedInfo['status'], [16, 32])){
+                    $reDataArr['joinInfo'] = [
+                        'ability_code' => $joinedInfo['ability_code'],
+                        'contacts' => $joinedInfo['contacts'],
+                        'mobile' => $joinedInfo['mobile'],
+                        'tel' => $joinedInfo['tel'],
+                    ];
+                }
+            }
+
+
+>>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
             $reDataArr['data_list'] = $dataList;
             $reDataArr['ids'] = $ids;
             $reDataArr['data_num'] = count($dataList);
@@ -179,9 +227,16 @@ class AbilitysController extends BasicController
                 throws('参数[id]有误！');
             }
             $operate = "详情";
+<<<<<<< HEAD
             $handleKeyArr = ['projectStandards', 'projectSubmitItems'];
             $extParams = [
                 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+=======
+            // $handleKeyArr = ['projectStandards', 'projectSubmitItems'];
+            $extParams = [
+                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                'relationFormatConfigs'=> CTAPIAbilitysBusiness::getRelationConfigs($request, $this, ['project_standards_list', 'project_submit_items_list'], []),
+>>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
             ];
             $info = CTAPIAbilitysBusiness::getInfoData($request, $this, $id, [], '', $extParams);
             // $reDataArr = array_merge($reDataArr, $resultDatas);
@@ -358,6 +413,10 @@ class AbilitysController extends BasicController
         $handleKeyArr = ['projectStandards'];
         $extParams = [
             // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+<<<<<<< HEAD
+=======
+            // 'relationFormatConfigs'=> CTAPIAbilitysBusiness::getRelationConfigs($request, $this, ['project_standards_list'], []),
+>>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
         ];
         $dataList = CTAPIAbilitysBusiness::getList($request, $this, 1, [], $relations, $extParams)['result']['data_list'] ?? [];
         // 判断是否已经过了报名时间
@@ -368,7 +427,34 @@ class AbilitysController extends BasicController
         $currentNow = Carbon::now()->toDateTimeString();
         // $ability_code = '';// 单号 生成  2020NLYZ0001
 
+<<<<<<< HEAD
         $ability_join_items = [];
+=======
+        $ability_join_id = 0;
+
+        $ability_join_items = [];
+
+        $info = $this->user_info;
+
+        // 获得企业今年的报名
+        $extParams = [
+            // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+            'relationFormatConfigs'=> CTAPIAbilityJoinBusiness::getRelationConfigs($request, $this, ['join_items_save'], []),
+        ];
+        $joinedInfo = CTAPIAbilityJoinBusiness::getFVFormatList( $request,  $this, 4, 1
+            , ['join_year' => Carbon::now()->year, 'staff_id' => $this->user_id, 'admin_type' => $info['admin_type'] ], false, [], $extParams);
+        // 已经有报名-- 一个企业当前有报名，用当前的号
+        $ability_code = '';
+        if(!empty($joinedInfo)){
+            $ability_code = $joinedInfo['ability_code'];
+            // 非 16 已评定   32 已完成
+            if(!in_array($joinedInfo['status'], [16, 32])){
+                $ability_join_id = $joinedInfo['id'];
+                $ability_join_items = $joinedInfo['ability_join_items'] ?? [];
+            }
+        }
+
+>>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
         foreach($ids as $tem_id){
             $ability_join_items_standards = [];
             $project_standard_id = CommonRequest::get($request, 'project_standard_id_' . $tem_id);// 数组或字符串[多个逗号分隔]
@@ -379,13 +465,22 @@ class AbilitysController extends BasicController
 
             if(empty($project_standard_id))  throws('参数[方法标准]有误！');
             if(!in_array(0, $project_standard_id)) $project_standard_name = '';
+<<<<<<< HEAD
+=======
+
+>>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
             foreach($project_standard_id as $tem_sid){
                 array_push($ability_join_items_standards, [
                     'project_standard_id' => $tem_sid,
                     'project_standard_name' => ($tem_sid == 0) ? $project_standard_name : '',
                 ]);
             }
+<<<<<<< HEAD
             array_push($ability_join_items, [
+=======
+
+            $temItemInfo = [
+>>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
                 'admin_type' => $user_info['admin_type'],
                 'staff_id' => $user_info['id'],
                 // 'ability_code' => $ability_code,
@@ -395,23 +490,44 @@ class AbilitysController extends BasicController
                 'retry_no' => 0,
                 'is_sample' => 1,
                 'ability_join_items_standards' => $ability_join_items_standards,
+<<<<<<< HEAD
             ]);
+=======
+            ];
+            if(!empty($ability_code)) $temItemInfo['ability_code'] = $ability_code;
+            if($ability_join_id > 0)  $temItemInfo['ability_join_id'] = $ability_join_id;
+
+            array_push($ability_join_items, $temItemInfo);
+>>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
         }
 
         $saveData = [
             'admin_type' => $user_info['admin_type'],
             'staff_id' => $user_info['id'],
             // 'ability_code' => $ability_code,// 单号 生成  2020NLYZ0001
+<<<<<<< HEAD
             'join_time' => $currentNow,
+=======
+>>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
             'contacts' => $contacts,
             'mobile' => $mobile,
             'tel' => $tel,
             'items_num' => count($ability_join_items),
             'ability_join_items' => $ability_join_items
         ];
+<<<<<<< HEAD
         $ability_join_id = 0;
         if($ability_join_id <= 0) {// 新加;要加入的特别字段
             $addNewData = [
+=======
+        if(!empty($ability_code)) $saveData['ability_code'] = $ability_code;
+
+        if($ability_join_id <= 0) {// 新加;要加入的特别字段
+            $addNewData = [
+                'join_year' => Carbon::now()->year,
+                'join_time' => $currentNow,
+
+>>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
                 'status' => 1,
                 'passed_num' => 0,
                 'is_print' => 1,
@@ -419,6 +535,11 @@ class AbilitysController extends BasicController
             ];
             $saveData = array_merge($saveData, $addNewData);
         }
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
         $extParams = [
             'judgeDataKey' => 'replace',// 数据验证的下标
         ];
@@ -427,6 +548,26 @@ class AbilitysController extends BasicController
     }
 
     /**
+<<<<<<< HEAD
+=======
+     * ajax保存数据--报名
+     *
+     * @param int $id
+     * @return Response
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_company_extend(Request $request)
+    {
+        $this->InitParams($request);
+        $company_id = $this->user_id;
+        $userInfo = $this->user_info;
+        // 获得企业扩展
+        $resultDatas = CTAPIStaffExtendBusiness::getFVFormatList( $request,  $this, 4, 1,  ['staff_id' => $company_id, 'admin_type' => $userInfo['admin_type']], false,[], []);
+        return ajaxDataArr(1, $resultDatas, '');
+    }
+
+    /**
+>>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
      * @OA\Get(
      *     path="/api/company/abilitys/ajax_alist",
      *     tags={"大后台-能力验证-能力验证"},
@@ -459,11 +600,19 @@ class AbilitysController extends BasicController
         CTAPIAbilitysBusiness::mergeRequest($request, $this, $mergeParams);
 
         $relations = [];//  ['siteResources']
+<<<<<<< HEAD
         $handleKeyArr = ['projectStandards', 'projectSubmitItems', 'joined'];
         $extParams = [
             'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
         ];
 
+=======
+        // $handleKeyArr = ['projectStandards', 'projectSubmitItems', 'joined'];
+        $extParams = [
+            // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+            'relationFormatConfigs'=> CTAPIAbilitysBusiness::getRelationConfigs($request, $this, ['project_standards_list', 'project_submit_items_list', 'ability_join_items_info'], []),
+        ];
+>>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
         return  CTAPIAbilitysBusiness::getList($request, $this, 2 + 4, [], $relations, $extParams);
     }
 

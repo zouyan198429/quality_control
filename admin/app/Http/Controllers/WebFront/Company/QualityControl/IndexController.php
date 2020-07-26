@@ -181,6 +181,7 @@ class IndexController extends BasicController
             // $reDataArr = $this->reDataArr;
             $reDataArr = array_merge($reDataArr, $this->reDataArr);
             $id = $this->user_id;
+<<<<<<< HEAD
             $info = [
                 'id'=>$id,
                 //   'department_id' => 0,
@@ -197,6 +198,34 @@ class IndexController extends BasicController
                 ];
                 $info = CTAPIStaffBusiness::getInfoData($request, $this, $id, [], '', $extParams);
             }
+=======
+            $info = $this->user_info;
+//            $info = [
+//                'id'=>$id,
+//                //   'department_id' => 0,
+//            ];
+            $operate = "添加";
+
+//            if ($id > 0) { // 获得详情数据
+                $operate = "修改";
+                $handleKeyArr = [];
+                $handleKeyConfigArr = [];
+               array_push($handleKeyArr, 'siteResources');// array_merge($handleKeyArr, ['industry', 'siteResources']); ;//
+               array_push($handleKeyConfigArr, 'certificate_info');
+
+//                $extParams = [
+//                    // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+//                    'relationFormatConfigs'=> CTAPIStaffBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
+//                ];
+//                $info = CTAPIStaffBusiness::getInfoData($request, $this, $id, [], '', $extParams);
+                // if(!empty($handleKeyArr)) CTAPIStaffBusiness::handleData($request, $this, $info, $handleKeyArr);
+                if(!empty($handleKeyConfigArr)){
+                    $relationFormatConfigs = CTAPIStaffBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []);
+                    CTAPIStaffBusiness::formatRelationList( $request, $this, $info, $relationFormatConfigs);
+                }
+
+//            }
+>>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
             // $reDataArr = array_merge($reDataArr, $resultDatas);
             $reDataArr['info'] = $info;
             $reDataArr['operate'] = $operate;

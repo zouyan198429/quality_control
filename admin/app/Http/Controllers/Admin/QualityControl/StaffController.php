@@ -235,10 +235,26 @@ class StaffController extends BasicController
             if ($id > 0) { // 获得详情数据
                 $operate = "修改";
                 $handleKeyArr = [];
+<<<<<<< HEAD
                 if(static::$ADMIN_TYPE == 2) array_push($handleKeyArr, 'siteResources');// array_merge($handleKeyArr, ['industry', 'siteResources']); ;//
                 if(static::$ADMIN_TYPE == 4) array_push($handleKeyArr, 'company');
                 $extParams = [
                     'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+=======
+                $handleKeyConfigArr = [];
+                if(static::$ADMIN_TYPE == 2){
+                    array_push($handleKeyArr, 'siteResources');// array_merge($handleKeyArr, ['industry', 'siteResources']); ;//
+                    array_push($handleKeyConfigArr, 'certificate_info');
+                }
+                if(static::$ADMIN_TYPE == 4){
+                    array_push($handleKeyArr, 'company');
+                    array_push($handleKeyConfigArr, 'company_info');
+                }
+                $extParams = [
+                    // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                     'relationFormatConfigs'=> CTAPIStaffBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
+
+>>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
                 ];
                 $info = CTAPIStaffBusiness::getInfoData($request, $this, $id, [], '', $extParams);
                 $this->judgeUserPower($request, $info);
@@ -473,12 +489,32 @@ class StaffController extends BasicController
 
         $relations = [];//  ['siteResources']
         $handleKeyArr = [];
+<<<<<<< HEAD
         if(static::$ADMIN_TYPE == 2) array_push($handleKeyArr, 'industry');// array_merge($handleKeyArr, ['industry', 'siteResources']); ;//
         if(in_array(static::$ADMIN_TYPE, [2, 4])) $handleKeyArr = array_merge($handleKeyArr, ['extend', 'city']);
         if(static::$ADMIN_TYPE == 4) array_push($handleKeyArr, 'company');
 
         $extParams = [
             'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+=======
+        $handleKeyConfigArr = [];
+        if(static::$ADMIN_TYPE == 2){
+            array_push($handleKeyArr, 'industry');// array_merge($handleKeyArr, ['industry', 'siteResources']); ;//
+            array_push($handleKeyConfigArr, 'industry_info');
+        }
+        if(in_array(static::$ADMIN_TYPE, [2, 4])){
+            $handleKeyArr = array_merge($handleKeyArr, ['extend', 'city']);
+            $handleKeyConfigArr = array_merge($handleKeyConfigArr, ['extend_info', 'city_info']);
+        }
+        if(static::$ADMIN_TYPE == 4){
+            array_push($handleKeyArr, 'company');
+            array_push($handleKeyConfigArr, 'company_info');
+        }
+
+        $extParams = [
+            // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+            'relationFormatConfigs'=> CTAPIStaffBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
+>>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
         ];
 
         return  CTAPIStaffBusiness::getList($request, $this, 2 + 4, [], $relations, $extParams);
@@ -520,12 +556,32 @@ class StaffController extends BasicController
         CTAPIStaffBusiness::mergeRequest($request, $this, $mergeParams);
         $relations = [];//  ['siteResources']
         $handleKeyArr = [];
+<<<<<<< HEAD
         if(static::$ADMIN_TYPE == 2) array_push($handleKeyArr, 'industry');// array_merge($handleKeyArr, ['industry', 'siteResources']); ;//
         if(in_array(static::$ADMIN_TYPE, [2, 4])) $handleKeyArr = array_merge($handleKeyArr, ['extend', 'city']);
         if(static::$ADMIN_TYPE == 4) array_push($handleKeyArr, 'company');
 
         $extParams = [
             'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+=======
+        $handleKeyConfigArr = [];
+        if(static::$ADMIN_TYPE == 2){
+            array_push($handleKeyArr, 'industry');// array_merge($handleKeyArr, ['industry', 'siteResources']); ;//
+            array_push($handleKeyConfigArr, 'industry_info');
+        }
+        if(in_array(static::$ADMIN_TYPE, [2, 4])){
+            $handleKeyArr = array_merge($handleKeyArr, ['extend', 'city']);
+            $handleKeyConfigArr = array_merge($handleKeyConfigArr, ['extend_info', 'city_info']);
+        }
+        if(static::$ADMIN_TYPE == 4){
+            array_push($handleKeyArr, 'company');
+            array_push($handleKeyConfigArr, 'company_info');
+        }
+
+        $extParams = [
+            // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+            'relationFormatConfigs'=> CTAPIStaffBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
+>>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
         ];
 
 
