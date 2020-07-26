@@ -55,8 +55,9 @@ class AbilityJoinDBBusiness extends BasePublicDBBusiness
         try {
             $isModify = false;
 
-            $ability_code = '';
-            if($id <= 0){
+            $ability_code = $saveData['ability_code'] ?? '';
+            // 没有单号，则重新生成
+            if(empty($ability_code)){// $id <= 0
                 $ability_code = AbilityCodeDBBusiness::getAbilityCode();// 单号 生成  2020NLYZ0001
             }
 
@@ -77,6 +78,7 @@ class AbilityJoinDBBusiness extends BasePublicDBBusiness
                 $addNewData = [
                     // 'company_id' => $company_id,
                      'ability_code' => $ability_code,// 单号 生成  2020NLYZ0001
+                    'join_year' => Carbon::now()->year,
                     'join_time' => $currentNow,
                     'status' => 1,
                     'passed_num' => 0,
@@ -128,18 +130,24 @@ class AbilityJoinDBBusiness extends BasePublicDBBusiness
                         'operate_staff_id_history' => $operate_staff_id_history,
                     ];
                     // 新加时
-                    if(!$isModify){
-                        $appendArr = array_merge($appendArr, [
-                            'ability_join_id' => $id,
-                            'ability_code' => $ability_code,
-                            'join_time' => $currentNow,
-                        ]);
-                    }
+//                    if(!$isModify){
+//                        $appendArr = array_merge($appendArr, [
+//                            'ability_join_id' => $id,
+//                            'ability_code' => $ability_code,
+//                            'join_time' => $currentNow,
+//                        ]);
+//                    }
                     // Tool::arrAppendKeys($ability_join_items, $appendArr);
                     foreach($ability_join_items as $k => $join_item_info){
                         $join_item_id = $join_item_info['id'] ?? 0;
                         if(isset($join_item_info['id'])) unset($join_item_info['id']);
+
                         Tool::arrAppendKeys($join_item_info, $appendArr);
+                        if($join_item_id <= 0 ) Tool::arrAppendKeys($join_item_info, [
+                            'ability_join_id' => $id,
+                            'ability_code' => $ability_code,
+                            'join_time' => $currentNow,
+                        ]);
                         AbilityJoinItemsDBBusiness::replaceById($join_item_info, $company_id, $join_item_id, $operate_staff_id, $modifAddOprate);
                         // 移除当前的id
                         $recordUncode = array_search($join_item_id, $joinItemsIds);

@@ -24,7 +24,7 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
     document.write("");
     document.write("        <%for(var i = 0; i<data_list.length;i++){");
     document.write("        var item = data_list[i];");
-    document.write("        var staff_info = item.staff_info;");// || {'real_name':'','mobile':''} 
+    document.write("        var staff_info = item.staff_info;");// || {'real_name':'','mobile':''}
     //document.write("        var can_modify = false;");
    // document.write("        if( item.issuper==0 ){");
     document.write("        can_modify = true;");
@@ -41,7 +41,7 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
     document.write("            <td><%=item.id%><\/td>");
     // document.write("            <td><%=staff_info.real_name%><\/td>");
     // document.write("            <td><%=(staff_info.real_name ||  '')%><\/td>");
-    document.write("            <td><%=staff_info.real_name%>(<%=staff_info.mobile%>)<\/td>");
+    document.write("            <td><%=item.staff_show_name%>(<%=item.staff_mobile%>)<\/td>");
     document.write("            <td><%=item.country_code%><%=item.mobile%><\/td>");
     document.write("            <td><%=item.sms_code%><\/td>");
     document.write("            <td><%=item.sms_type_text%><\/td>");

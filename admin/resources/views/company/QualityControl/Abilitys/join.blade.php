@@ -52,22 +52,25 @@
                 <fieldset class="layui-elem-field layui-field-title">
                     <legend>联系人</legend>
                 </fieldset>
+                @if(isset($joinInfo['contacts']) )
+                <p class="gray">您已有报名【{{ $joinInfo['ability_code'] ?? '' }}】，此次报名会合并到已报名记录中，以下是已有的联系方法，您可以修改！</p>
+                @endif
                 <div class="layui-form-item">
                     <label class="layui-form-label">姓名</label>
                     <div class="layui-input-block">
-                        <input type="text" name="contacts" lay-verify="title" autocomplete="off" placeholder="请输入姓名" class="layui-input">
+                        <input type="text" name="contacts" value="{{ $joinInfo['contacts'] ?? '' }}"  lay-verify="title" autocomplete="off" placeholder="请输入姓名" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">手机</label>
                     <div class="layui-input-block">
-                        <input type="text" name="mobile" lay-verify="title" autocomplete="off" placeholder="请输入手机" class="layui-input">
+                        <input type="text" name="mobile" value="{{ $joinInfo['mobile'] ?? '' }}"  lay-verify="title" autocomplete="off" placeholder="请输入手机" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">联系电话</label>
                     <div class="layui-input-block">
-                        <input type="text" name="tel" lay-verify="title" autocomplete="off" placeholder="请输入电话" class="layui-input">
+                        <input type="text" name="tel" value="{{ $joinInfo['tel'] ?? '' }}"  lay-verify="title" autocomplete="off" placeholder="请输入电话" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">

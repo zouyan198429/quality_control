@@ -129,7 +129,7 @@ class BasicCTAPIBusiness extends APIOperate
      *
      * @param Request $request 请求信息
      * @param Controller $controller 控制对象
-     * @param int $operate_type 操作为型  1 所有[默认] all 2 ：指定返回数量 limit_num 4：只返回一条 one_num
+     * @param int $operate_type 操作为型  1 所有[默认] all 二维 2 ：指定返回数量 limit_num 1：一维 ，>1 二维 4：只返回一条 one_num 一维
      * @param int $page_size 2时返回的数量
      * @param array $fieldValParams
      *  $fieldValParams = [
@@ -144,17 +144,17 @@ class BasicCTAPIBusiness extends APIOperate
      * @param array $extParams 其它扩展参数，
      *    $extParams = [
      *        'useQueryParams' => '是否用来拼接查询条件，true:用[默认];false：不用'
-     *        'sqlParams' => [// 其它sql条件[覆盖式],下面是常用的，其它的也可以
-     *            // '如果有值，则替换where'
+     *        'sqlParams' => [// 其它sql条件[拼接/覆盖式],下面是常用的，其它的也可以
+     *            // '如果有值，则替换where' --拼接
      *           'where' => [// -- 可填 如 默认条件 'type_id' => 5  'admin_type' => $user_info['admin_type'],'staff_id' =>  $user_info['id']
      *               ['type_id', 5],
      *           ],
-     *           'select' => '如果有值，则替换select'
-     *           'orderBy' => '如果有值，则替换orderBy'
-     *           'whereIn' => '如果有值，则替换whereIn'
-     *           'whereNotIn' => '如果有值，则替换whereNotIn'
-     *           'whereBetween' => '如果有值，则替换whereBetween'
-     *           'whereNotBetween' => '如果有值，则替换whereNotBetween'
+     *           'select' => '如果有值，则替换select'--覆盖
+     *           'orderBy' => '如果有值，则替换orderBy'--覆盖
+     *           'whereIn' => '如果有值，则替换whereIn' --拼接
+     *           'whereNotIn' => '如果有值，则替换whereNotIn' --拼接
+     *           'whereBetween' => '如果有值，则替换whereBetween' --拼接
+     *           'whereNotBetween' => '如果有值，则替换whereNotBetween' --拼接
      *       ],
      *       'handleKeyArr'=> [],// 一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。--名称关键字，尽可能与关系名一样
      *       'relationFormatConfigs'=> [],// 相关表数组格式化配置 具体格式请看  formatRelationList方法的参数
@@ -185,7 +185,7 @@ class BasicCTAPIBusiness extends APIOperate
             //                //,'operate_staff_id','operate_staff_id_history'
             //                ,'created_at'
             //            ],
-            'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
+            // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
         ];
         foreach($fieldValParams as $field => $valConfig){
             $excludeVals = [0, '0', ''];
@@ -207,6 +207,20 @@ class BasicCTAPIBusiness extends APIOperate
 //        $extParams = [
 //            'handleKeyArr' => ['ability', 'joinItemsStandards', 'projectStandards'],//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
 //        ];
+        // 对数据进行拼接处理
+        if(isset($extParams['sqlParams'])){
+            $sqlParams = $extParams['sqlParams'] ?? [];
+            foreach($sqlParams as $tKey => $tVals){
+                if(isset($queryParams[$tKey]) && in_array($tKey, ['where',  'whereIn', 'whereNotIn', 'whereBetween', 'whereNotBetween'])){// 'select', 'orderBy',
+                    $queryParams[$tKey] = array_merge($queryParams[$tKey], $tVals);
+                }else{
+                    $queryParams[$tKey] = $tVals;
+                }
+
+            }
+            unset($extParams['sqlParams']);
+        }
+
 
         // 查询字段有值  或  查询字段无值  但是  指定 强制查询时
         if(!$isEmpeyVals || ($isEmpeyVals && $fieldEmptyQuery)){
@@ -1676,6 +1690,9 @@ class BasicCTAPIBusiness extends APIOperate
                     'k_v' => ['key' => 'id', 'val' => 'person_name', 'ubound_name' => '下标名称'],
                     // 一/二维数组 只要其中的某一个字段：
                     'one_field' => ['key' => 'id', 'return_type' => "返回类型1原数据['字段值'][一维返回一维数组，二维返回一维数组];2按分隔符分隔的字符", 'ubound_name' => '下标名称', 'split' => '、'],
+                    一/二维数组 -- 只针对关系是 1:1的 即 关系数据是一维数组的情况--目的是平移指定字段到上一层
+                  如果新下标和原下标相同，则可以用这个方法去转  Tool::arrEqualKeyVal(['shop_id', 'shop_name', 'linkman', 'mobile']), true )
+                    'fields_merge' => ['merge_fields' => -维[ '新下标名' => '原下标名' ]]
                     // 一/二维数组 获得指定的多个字段值
                    'many_fields' =>[ 'ubound_name' => '', 'fields_arr'=> [ '新下标名' => '原下标名' ],'reset_ubound' => 2;// 是否重新排序下标 1：重新０.．． ,'ubound_keys' => ['说明：看上面old_data的同字段说明'], 'ubound_type' =>1],ubound_type说明：看上面old_data的同字段说明
                   ],
@@ -1746,6 +1763,9 @@ class BasicCTAPIBusiness extends APIOperate
                 $relationInfo['extParams']['formatDataUbound']['exceptUboundArr'] = $exceptUboundArr;
             }
 
+//            if($toObjClass == 'App\Business\Controller\API\QualityControl\CTAPICompanyCertificateBusiness'){
+//                pr($extParams);
+//            }
             $toDataList =  $toObjClass::getFVFormatList( $request,  $controller, 1, 1, $fieldValParams, $fieldEmptyQuery, $relations, $extParams);
             if(!$isNeedHandle && !empty($toDataList)) $isNeedHandle = true;
             if(!empty($toDataList)){
@@ -1846,7 +1866,10 @@ class BasicCTAPIBusiness extends APIOperate
                     'k_v' => ['key' => 'id', 'val' => 'person_name', 'ubound_name' => '下标名称'],
                     // 一/二维数组 只要其中的某一个字段：
                     'one_field' => ['key' => 'id', 'return_type' => "返回类型1原数据['字段值'][一维返回一维数组，二维返回一维数组];2按分隔符分隔的字符", 'ubound_name' => '下标名称', 'split' => '、'],
-                   // 一/二维数组 获得指定的多个字段值
+                    一/二维数组 -- 只针对关系是 1:1的 即 关系数据是一维数组的情况--目的是平移指定字段到上一层
+                    如果新下标和原下标相同，则可以用这个方法去转  Tool::arrEqualKeyVal(['shop_id', 'shop_name', 'linkman', 'mobile']), true )
+                    'fields_merge' => ['merge_fields' => -维[ '新下标名' => '原下标名' ]]
+                    // 一/二维数组 获得指定的多个字段值
                    'many_fields' =>[ 'ubound_name' => '', 'fields_arr'=> [ '新下标名' => '原下标名' ],'reset_ubound' => 2;// 是否重新排序下标 1：重新０.．．  ,'ubound_keys' => ['说明：看上面old_data的同字段说明'], 'ubound_type' =>1],ubound_type说明：看上面old_data的同字段说明
                 ],
 
@@ -1945,6 +1968,7 @@ class BasicCTAPIBusiness extends APIOperate
 
     // ~~~~~~~~~~配置相关的~~~~~~~~~~
 
+    // ****表关系***需要重写的方法**********开始***********************************
     /**
      * 获得处理关系表数据的配置信息--重写此方法
      *
@@ -1964,13 +1988,40 @@ class BasicCTAPIBusiness extends APIOperate
         $relationFormatConfigs = [
             // 下标 'relationConfig' => []// 下一个关系
             // 获得企业名称
-//            'company_info' => CTAPIStaffBusiness::getPrimaryRelationConfigVal($request, $controller
+//            'company_info' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
 //                , ['admin_type' => 'admin_type', 'staff_id' => 'id']
-//                , 1, ['one_field' =>['key' => 'company_name', 'return_type' => 2, 'ubound_name' => 'company_name', 'split' => '、'],]
-//                ,'','', ['where' => [['admin_type', 2]]], '', []),
+//                , 1, 2
+//                ,'','', [], ['where' => [['admin_type', 2]]], '', []),
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }
+
+    /**
+     * 获得要返回数据的return_data数据---每个对象，重写此方法
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param int $return_num 指定要获得的关系数据类型格式化后的数据 编号 1[占用：原数据] 2 4 8..
+     * @return  array 表关系配置信息
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function getRelationConfigReturnData(Request $request, Controller $controller, $return_num = 0){
+        $return_data = [];// 为空，则会返回对应键=> 对应的数据， 具体的 结构可以参考 Tool::formatConfigRelationInfo  $return_data参数格式
+
+        if(($return_num & 1) == 1) {// 返回源数据--特别的可以参考这个配置
+            $return_data['old_data'] = ['ubound_operate' => 1, 'ubound_name' => '', 'fields_arr' => [], 'ubound_keys' => [], 'ubound_type' =>1];
+        }
+
+//        if(($return_num & 2) == 2){// 给上一级返回名称 company_name 下标
+//            $one_field = ['key' => 'company_name', 'return_type' => 2, 'ubound_name' => 'company_name', 'split' => '、'];// 获得名称
+//            if(!isset($return_data['one_field'])) $return_data['one_field'] = [];
+//            array_push($return_data['one_field'], $one_field);
+//        }
+
+        return $return_data;
+    }
+    // ****表关系***需要重写的方法**********结束***********************************
+
     // 配置基类
     /**
      * 获得主键的关系配置信息【单个配置】 调用 具体的类::此方法 --- 通过自己的类调就可以自动获得当前的类名
@@ -2073,7 +2124,7 @@ class BasicCTAPIBusiness extends APIOperate
             'toClass' => $toClass,// 'App\Business\Controller\API\QualityControl\CTAPIStaffBusiness',
             'toObjFormatListMethod' => $toObjFormatListMethod,//  定义关系表数据列表静态方法名 【用这个比较好】-- 可填 ，参数 $request, $controller , &$data_list[多条条主记录] , &$toDataList[关系表记录-一维或二维], &$returnFields[在主记录中新生成的下标]
             'toObjFormatInfoMethod' => $toObjFormatInfoMethod,//  定义关系表数据详情静态方法名 【一般不用这个--存在重复处理】-- 可填 ，可以提前对数据进行格式化处理--特别处理 参数 $request, $controller , &$info[单条主记录] , &$temDataList[关系表记录-一维或二维], &$returnFields[在主记录中新生成的下标]
-            'extParams' => $sqlParams,
+            // 'extParams' => ['sqlParams' => $sqlParams],
 //            [// 可填
 //                'sqlParams' => [
 //                    'where' => [// -- 可填 如 默认条件 'type_id' => 5  'admin_type' => $user_info['admin_type'],'staff_id' =>  $user_info['id']
@@ -2094,8 +2145,60 @@ class BasicCTAPIBusiness extends APIOperate
 //            ],
             'relationConfig' => $childRelationConfig// 下一个关系
         ];
+        if(!empty($sqlParams)) $returnConfig['extParams']['sqlParams'] = $sqlParams;
         return (empty($extendConfig)) ? $returnConfig : array_merge($returnConfig, $extendConfig);
     }
+
+    /**
+     * 获得主键的关系配置信息【单个配置】 调用 具体的类::此方法 --- 通过自己的类调就可以自动获得当前的类名 --- 没有下标，只是配置数组
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $fieldRelations 字段关系数组 ['admin_type' => 'admin_type','staff_id' => 'id']
+     * [// 字段对应 1 个或多个字段--必填
+     *       'admin_type' => 'admin_type',
+     *      'staff_id' => 'id'// 原表的字段 =》 对应表的字段
+     *  ]
+     * @param int $relationType 1：1:1 还是 2： 1:n 的关系 [默认]
+     * @param int $return_num 指定要获得的关系数据类型格式化后的数据 编号 1[占用：原数据] 2 4 8..
+     * @param string $toObjFormatListMethod 定义关系表数据列表静态方法名 【用这个比较好】-- 可填 ，参数 $request, $controller , &$data_list[多条条主记录] , &$toDataList[关系表记录-一维或二维], &$returnFields[在主记录中新生成的下标]
+     * @param string $toObjFormatInfoMethod  定义关系表数据详情静态方法名 【一般不用这个--存在重复处理】-- 可填 ，可以提前对数据进行格式化处理--特别处理 参数 $request, $controller , &$info[单条主记录] , &$temDataList[关系表记录-一维或二维], &$returnFields[在主记录中新生成的下标]
+     * @param array $childRelationConfig  下一级关系
+     * @param array $sqlParams  其它 sql条件，主要用  where : [ 'where' => ['admin_type', 2],] //  [// -- 可填 如 默认条件 'type_id' => 5  'admin_type' => $user_info['admin_type'],'staff_id' =>  $user_info['id']
+
+     *        [// 其它sql条件[覆盖式],下面是常用的，其它的也可以
+     *           'where' => '如果有值，则替换where'
+     *           'select' => '如果有值，则替换select'
+     *           'orderBy' => '如果有值，则替换orderBy'
+     *           'whereIn' => '如果有值，则替换whereIn'
+     *           'whereNotIn' => '如果有值，则替换whereNotIn'
+     *           'whereBetween' => '如果有值，则替换whereBetween'
+     *           'whereNotBetween' => '如果有值，则替换whereNotBetween'
+     *       ],
+     * @param string $toClass 可为空，通过自己的类调就可以自动获得当前的类名
+     * @param array $extendParams  扩展参数---可能会用--优先级最高
+     * [
+     *   'extendConfig' => [],// 扩展配置--具体有哪些参数可参见 formatRelationList 方法的配置下标
+     *                          如 ：['listHandleKeyArr' => [..],'infoHandleKeyArr' => [],]
+     * ]
+     * @return  array 表关系配置信息
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function getTableRelationConfigInfo(Request $request, Controller $controller, $fieldRelations, $relationType = 2
+        , $return_num = 0, $toObjFormatListMethod = '', $toObjFormatInfoMethod = '', $childRelationConfig = [], $sqlParams = []
+        , $toClass = '', $extendParams = []){
+
+        // ['one_field' =>['key' => 'company_name', 'return_type' => 2, 'ubound_name' => 'company_name', 'split' => '、'],]
+        $return_data = static::getRelationConfigReturnData($request, $controller, $return_num); // 对数据进行格式化 --  为空，则按  $primaryKey 为下标返回数据  ；具体格式参见 Tool::formatConfigRelationInfo 参数说明  也可以参见：formatRelationList 方法的参数说明
+        // $sqlParams = ['where' => [['admin_type', 2]]];
+
+        return static::getPrimaryRelationConfigVal($request, $controller, $fieldRelations
+            , $relationType
+            , $return_data
+            ,$toObjFormatListMethod, $toObjFormatInfoMethod
+            ,$childRelationConfig, $sqlParams, $toClass, $extendParams);
+    }
+
 
     // ***********相关表数据获取配置及数据的格式化***结束************************************************************
 }
