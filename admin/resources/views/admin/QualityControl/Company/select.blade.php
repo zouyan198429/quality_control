@@ -19,9 +19,9 @@
   <div class="mmhead" id="mywork">
 
     @include('common.pageParams')
- 
+
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
-      <div class="msearch fr"> 
+      <div class="msearch fr">
           <select class="wmini" name="city_id" style="width: 80px;">
               <option value="">城市</option>
               @foreach ($citys_kv as $k=>$txt)
@@ -101,26 +101,26 @@
               @endforeach
           </select>
         <select style="width:90px; height:28px;" name="field">
-            <option value="company_name">单位名称</option> 
+            <option value="company_name">单位名称</option>
             <option value="company_contact_name">联系人</option>
             <option value="company_contact_mobile">联系人手机</option>
             <option value="company_contact_tel">联系电话</option>
-            <option value="addr">通讯地址</option> 
+            <option value="addr">通讯地址</option>
         </select>
         <input type="text" value=""    name="keyword"  placeholder="请输入关键字" style="width: 100px;"/>
         <button class="btn btn-normal search_frm">搜索</button>
       </div>
     </form>
   </div>
- 
+
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
- 
+
         <col width="60">
         <col>
         <col width="90">
         <col width="200">
- 
+
     </colgroup>
     <thead>
     <tr>
