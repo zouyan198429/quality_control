@@ -211,6 +211,7 @@ $api->version('v1', function ($api) {
 //        $api->post('admin/ability_join/import', 'Admin\QualityControl\AbilityJoinController@import');// 导入excel
 //        $api->post('admin/ability_join/ajax_get_ids', 'Admin\QualityControl\AbilityJoinController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
+        $api->post('admin/ability_join/ajax_save_sample', 'Admin\QualityControl\AbilityJoinController@ajax_save_sample');// 保存取样
         // 企业能力附表
         $api->any('admin/company_schedule/ajax_alist', 'Admin\QualityControl\CompanyScheduleController@ajax_alist');//ajax获得列表数据
         $api->post('admin/company_schedule/ajax_del', 'Admin\QualityControl\CompanyScheduleController@ajax_del');// 删除
@@ -267,6 +268,17 @@ $api->version('v1', function ($api) {
 
 //        $api->post('company/ability_join/import', 'WebFront\Company\QualityControl\AbilityJoinController@import');// 导入excel
 //        $api->post('company/ability_join/ajax_get_ids', 'WebFront\Company\QualityControl\AbilityJoinController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        // 能力验证--项目管理
+        $api->any('company/ability_join_item/ajax_alist', 'WebFront\Company\QualityControl\AbilityJoinItemsController@ajax_alist');//ajax获得列表数据
+//        $api->post('company/ability_join_item/ajax_del', 'WebFront\Company\QualityControl\AbilityJoinItemsController@ajax_del');// 删除
+//        $api->post('company/ability_join_item/ajax_save', 'WebFront\Company\QualityControl\AbilityJoinItemsController@ajax_save');// 新加/修改
+//        $api->post('company/ability_join_item/ajax_get_child', 'WebFront\Company\QualityControl\AbilityJoinItemsController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+//        $api->post('company/ability_join_item/ajax_get_areachild', 'WebFront\Company\QualityControl\AbilityJoinItemsController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+//        $api->post('company/ability_join_item/ajax_import_staff','WebFront\Company\QualityControl\AbilityJoinItemsController@ajax_import'); // 导入员工
+
+//        $api->post('company/ability_join_item/import', 'WebFront\Company\QualityControl\AbilityJoinItemsController@import');// 导入excel
+//        $api->post('company/ability_join_item/ajax_get_ids', 'WebFront\Company\QualityControl\AbilityJoinItemsController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
         // 企业能力附表
         $api->any('company/company_schedule/ajax_alist', 'WebFront\Company\QualityControl\CompanyScheduleController@ajax_alist');//ajax获得列表数据

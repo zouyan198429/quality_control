@@ -244,6 +244,13 @@ class CTAPIAbilityJoinBusiness extends BasicPublicCTAPIBusiness
                 , 2// 企业名称
                 ,'',''
                 ,[], ['where' => [['admin_type', 2]]], '', []),
+            // 获得企业信息
+            'company_info_data' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
+                , ['admin_type' => 'admin_type', 'staff_id' => 'id']
+                , 1
+                , 1// 企业名称
+                ,'',''
+                ,[], ['where' => [['admin_type', 2]]], '', []),
             // 报名项目 1:n -- 读取到报名项
             'join_items' => CTAPIAbilityJoinItemsBusiness::getTableRelationConfigInfo($request, $controller
                 , ['id' => 'ability_join_id']
@@ -291,6 +298,58 @@ class CTAPIAbilityJoinBusiness extends BasicPublicCTAPIBusiness
                         ,'',''
                         ,[
                         ], [], '', []),
+                ], [], '', []),
+            // 报名项目 1:n -- 读取到报名项 --取样页使用
+            'join_items_get' => CTAPIAbilityJoinItemsBusiness::getTableRelationConfigInfo($request, $controller
+                , ['id' => 'ability_join_id']
+                , 2
+                ,0
+                ,'','',[
+                    // 下一级关系 报名项所属的项目 -- 的名称 1:1
+                    'ability_info' => CTAPIAbilitysBusiness::getTableRelationConfigInfo($request, $controller
+                        , ['ability_id' => 'id']
+                        , 1, 2// 项目名称  测试4
+                        ,'',''
+                        ,[], [], '', []),
+                    // 下一级关系 每一项的取样结果  1:n
+                    'join_item_reslut_list' => CTAPIAbilityJoinItemsResultsBusiness::getTableRelationConfigInfo($request, $controller
+                        , ['id' => 'ability_join_item_id']
+                        , 2, 4// 项目名称  测试4
+                        ,'',''
+                        ,[
+                            // 下一级关系 每一项的取样具体数据  1:n
+                            'join_items_samples_list' => CTAPIAbilityJoinItemsSamplesBusiness::getTableRelationConfigInfo($request, $controller
+                                , ['id' => 'result_id']// , 'ability_join_item_id' => 'ability_join_item_id', 'retry_no' => 'retry_no'
+                                , 2, 1// 项目名称  测试4
+                                ,'',''
+                                ,[], ['orderBy' => ['sample_one'=>'asc', 'id'=>'desc']], '', []),
+                        ], [], '', []),
+                ], [], '', []),
+            // 报名项目 1:n -- 读取到报名项 --取样保存页使用
+            'join_items_sample_save' => CTAPIAbilityJoinItemsBusiness::getTableRelationConfigInfo($request, $controller
+                , ['id' => 'ability_join_id']
+                , 2
+                ,0
+                ,'','',[
+                    // 下一级关系 报名项所属的项目 -- 的名称 1:1
+                    'ability_info' => CTAPIAbilitysBusiness::getTableRelationConfigInfo($request, $controller
+                        , ['ability_id' => 'id']
+                        , 1, 2// 项目名称  测试4
+                        ,'',''
+                        ,[], [], '', []),
+                    // 下一级关系 每一项的取样结果  1:1
+//                    'join_item_reslut_info' => CTAPIAbilityJoinItemsResultsBusiness::getTableRelationConfigInfo($request, $controller
+//                        , ['id' => 'ability_join_item_id']
+//                        , 1, 1// 项目名称  测试4
+//                        ,'',''
+//                        ,[
+//                            // 下一级关系 每一项的取样具体数据  1:n
+////                            'join_items_samples_list' => CTAPIAbilityJoinItemsSamplesBusiness::getTableRelationConfigInfo($request, $controller
+////                                , ['id' => 'result_id']// , 'ability_join_item_id' => 'ability_join_item_id', 'retry_no' => 'retry_no'
+////                                , 1, 1// 项目名称  测试4
+////                                ,'',''
+////                                ,[], ['orderBy' => ['sample_one'=>'asc', 'id'=>'desc']], '', []),
+//                        ], [], '', []),
                 ], [], '', []),
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
