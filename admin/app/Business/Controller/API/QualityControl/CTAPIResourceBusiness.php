@@ -136,9 +136,6 @@ class CTAPIResourceBusiness extends BasicPublicCTAPIBusiness
         }
         return $errMsgs;
     }
-<<<<<<< HEAD
-/**
-=======
 
     // ****表关系***需要重写的方法**********开始***********************************
     /**
@@ -249,7 +246,6 @@ class CTAPIResourceBusiness extends BasicPublicCTAPIBusiness
         return $returnFields;
     }
     /**
->>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
      * 上传文件
      * post参数 photo 文件；name  文件名称;note 资源说明[可为空];;;;
      * @param Request $request 请求信息

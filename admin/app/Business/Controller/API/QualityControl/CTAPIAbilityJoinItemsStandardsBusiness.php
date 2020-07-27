@@ -60,86 +60,6 @@ class CTAPIAbilityJoinItemsStandardsBusiness extends BasicPublicCTAPIBusiness
     }
 
 
-<<<<<<< HEAD
-    /**
-     * 格式化数据 --如果有格式化，肯定会重写---本地数据库主要用这个来格式化数据
-     *
-     * @param Request $request 请求信息
-     * @param Controller $controller 控制对象
-     * @param array $data_list 需要格式化的数据---二维数组(如果是一维数组，是转成二维数组后的数据)
-     * @param array $handleKeyArr 其它扩展参数，// 一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。--名称关键字，尽可能与关系名一样
-     * @param boolean 原数据类型 true:二维[默认];false:一维
-     * @return  boolean true
-     * @author zouyan(305463219@qq.com)
-     */
-    public static function handleDataFormat(Request $request, Controller $controller, &$data_list, $handleKeyArr, $isMulti = true){
-
-        // 重写开始
-        $isNeedHandle = false;// 是否真的需要遍历处理数据 false:不需要：true:需要 ；只要有一个需要处理就标记
-
-        //        if(!empty($data_list) ){
-        // 项目标准
-        $standardDataList = [];// 项目标准id 为下标 二维数组
-        $standardKVList = [];// 项目标准id => 企业名称 的键值对
-        if(in_array('project_standards', $handleKeyArr)){
-            $standardIdsArr = array_values(array_filter(array_column($data_list,'project_standard_id')));// 资源id数组，并去掉值为0的
-            // 查询条件
-//            $standardList = [];
-//            if(!empty($standardIdsArr)){
-//                // 获得企业信息
-//                $standardQueryParams = [
-//                    'where' => [
-//                        // ['type_id', 5],
-//                        //                //['mobile', $keyword],
-//                    ],
-//                    //            'select' => [
-//                    //                'id','company_id','position_name','sort_num'
-//                    //                //,'operate_staff_id','operate_staff_id_history'
-//                    //                ,'created_at'
-//                    //            ],
-//                    // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
-//                ];
-//                Tool::appendParamQuery($standardQueryParams, $standardIdsArr, 'id', [0, '0', ''], ',', false);
-//                $standardList = CTAPIProjectStandardsBusiness::getBaseListData($request, $controller, '', $standardQueryParams,[], 1,  1)['data_list'] ?? [];
-//            }
-
-            $extParams = [];
-            $standardList =  CTAPIProjectStandardsBusiness::getFVFormatList( $request,  $controller,  ['id' => $standardIdsArr], false,[], $extParams);
-            if(!empty($standardList)){
-                $standardDataList = Tool::arrUnderReset($standardList, 'id', 1);
-                $standardKVList = Tool::formatArrKeyVal($standardList, 'id', 'name');
-            }
-            if(!$isNeedHandle && !empty($standardDataList)) $isNeedHandle = true;
-        }
-
-
-
-        //        }
-        // 改为不返回，好让数据下面没有数据时，有一个空对象，方便前端或其它应用处理数据
-        // if(!$isNeedHandle){// 不处理，直接返回 // if(!$isMulti) $data_list = $data_list[0] ?? [];
-        //    return true;
-        // }
-
-        foreach($data_list as $k => $v){
-            //            // 公司名称
-            //            $data_list[$k]['company_name'] = $v['company_info']['company_name'] ?? '';
-            //            if(isset($data_list[$k]['company_info'])) unset($data_list[$k]['company_info']);
-
-
-            // 项目标准
-            if(in_array('project_standards', $handleKeyArr)){
-                $data_list[$k]['standard_info'] = $standardDataList[$v['project_standard_id']] ?? '';
-                if($v['project_standard_id'] != 0){
-                    // $data_list[$k]['standard_name'] = $standardKVList[$v['project_standard_id']] ?? '';
-                    $data_list[$k]['project_standard_name'] = $standardKVList[$v['project_standard_id']] ?? '';
-                }
-            }
-        }
-
-        // 重写结束
-        return true;
-    }
-=======
     // ****表关系***需要重写的方法**********开始***********************************
     /**
      * 获得处理关系表数据的配置信息--重写此方法
@@ -278,7 +198,6 @@ class CTAPIAbilityJoinItemsStandardsBusiness extends BasicPublicCTAPIBusiness
 //        // 重写结束
 //        return true;
 //    }
->>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
 
     /**
      * 获得列表数据时，查询条件的参数拼接--有特殊的需要自己重写此方法--每个字类都有此方法
@@ -305,8 +224,6 @@ class CTAPIAbilityJoinItemsStandardsBusiness extends BasicPublicCTAPIBusiness
         static::joinListParamsLike($request, $controller, $queryParams, $notLog);
     }
 
-<<<<<<< HEAD
-=======
 
     /**
      * 格式化关系数据 --如果有格式化，肯定会重写---本地数据库主要用这个来格式化数据
@@ -337,7 +254,6 @@ class CTAPIAbilityJoinItemsStandardsBusiness extends BasicPublicCTAPIBusiness
         return $returnFields;
     }
 
->>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
     /**
      * 对单条数据关系进行格式化--具体的可以重写
      * @param Request $request 请求信息
@@ -350,18 +266,6 @@ class CTAPIAbilityJoinItemsStandardsBusiness extends BasicPublicCTAPIBusiness
      * @return array  新增的字段 一维数组
      * @author zouyan(305463219@qq.com)
      */
-<<<<<<< HEAD
-    public static function infoRelationFormatExtend(Request $request, Controller $controller, &$info, $temDataList, $infoHandleKeyArr, &$returnFields){
-        // if(empty($info)) return $returnFields;
-        // $returnFields[$tem_ubound_old] = $tem_ubound_old;
-
-        if(in_array('mergeZeroName', $infoHandleKeyArr)){
-            pr($info);
-        }
-
-        return $returnFields;
-    }
-=======
     public static function infoRelationFormatExtend(Request $request, Controller $controller, &$info, &$temDataList, $infoHandleKeyArr, &$returnFields){
         // if(empty($info)) return $returnFields;
         // $returnFields[$tem_ubound_old] = $tem_ubound_old;
@@ -373,5 +277,4 @@ class CTAPIAbilityJoinItemsStandardsBusiness extends BasicPublicCTAPIBusiness
         return $returnFields;
     }
 
->>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
 }

@@ -693,8 +693,6 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
         return $errMsgs;
     }
 
-<<<<<<< HEAD
-=======
 
     // ****表关系***需要重写的方法**********开始***********************************
     /**
@@ -793,7 +791,6 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
 
     // ****表关系***需要重写的方法**********结束***********************************
 
->>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
     /**
      * 判断后机号是否已经存在 true:已存在;false：不存在
      *
@@ -1433,138 +1430,6 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
      * @return  boolean true
      * @author zouyan(305463219@qq.com)
      */
-<<<<<<< HEAD
-    public static function handleDataFormat(Request $request, Controller $controller, &$data_list, $handleKeyArr, $isMulti = true){
-
-        // 重写开始
-
-
-        $isNeedHandle = false;// 是否真的需要遍历处理数据 false:不需要：true:需要 ；只要有一个需要处理就标记
-        // 城市数据
-        $cityArr = [];
-        // 行业数据
-        $industryArr = [];
-        // 人员扩展信息数据
-        $extendArr = [];
-        // 图片资源
-        $companyCertificateKV = [];// 企业id => 资源id 的kv值一维数组
-        $resourceDataArr = [];
-        // 获得所属企业名称 ---如果是普通用户
-        $companyKv = [];
-
-        //        if(!empty($data_list) ){
-        // 获得所属城市
-        if(in_array('city', $handleKeyArr)){
-            $cityIdArr = array_values(array_filter(array_column($data_list,'city_id')));// 资源id数组，并去掉值为0的
-            // 主键为下标的二维数组
-            if(!empty($cityIdArr)) $cityArr = Tool::arrUnderReset(CTAPICitysBusiness::getListByIds($request, $controller, $cityIdArr), 'id', 1);
-            if(!$isNeedHandle && !empty($cityArr)) $isNeedHandle = true;
-        }
-        // 获得所属行业
-        if(in_array('industry', $handleKeyArr)){
-            $industryIdArr = array_values(array_filter(array_column($data_list,'company_industry_id')));// 资源id数组，并去掉值为0的
-            // 主键为下标的二维数组
-            if(!empty($industryIdArr)) $industryArr = Tool::arrUnderReset(CTAPIIndustryBusiness::getListByIds($request, $controller, $industryIdArr), 'id', 1);
-            if(!$isNeedHandle && !empty($industryArr)) $isNeedHandle = true;
-        }
-        // 获得人员扩展信息
-        if(in_array('extend', $handleKeyArr)){
-            $extendIdArr = array_values(array_filter(array_column($data_list,'id')));// 资源id数组，并去掉值为0的
-            // 主键为下标的二维数组
-            if(!empty($extendIdArr)) $extendArr = Tool::arrUnderReset(CTAPIStaffExtendBusiness::getListByIds($request, $controller, $extendIdArr, [], [], 'staff_id'), 'staff_id', 1);
-            if(!$isNeedHandle && !empty($extendArr)) $isNeedHandle = true;
-        }
-
-        // 处理图片-- 营业执照
-        if(in_array('siteResources', $handleKeyArr)){
-            $companyIdArr = array_values(array_filter(array_column($data_list,'id')));// 资源id数组，并去掉值为0的
-//            $companyCertificateList = [];
-//            if(!empty($companyIdArr)){
-//                // 获得企业资质证书
-//                $companyCertificateQueryParams = [
-//                    'where' => [
-//                         ['type_id', 5],
-////                //['mobile', $keyword],
-//                    ],
-////            'select' => [
-////                'id','company_id','position_name','sort_num'
-////                //,'operate_staff_id','operate_staff_id_history'
-////                ,'created_at'
-////            ],
-//                    // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
-//                ];
-//                Tool::appendParamQuery($companyCertificateQueryParams, $companyIdArr, 'company_id', [0, '0', ''], ',', false);
-//                // $companyCertificateList = CTAPICompanyCertificateBusiness::getList($request, $controller, 1,$companyCertificateQueryParams);
-//                $companyCertificateList = CTAPICompanyCertificateBusiness::getBaseListData($request, $controller, '', $companyCertificateQueryParams,[], 1,  1)['data_list'] ?? [];
-//            }
-
-            $extParams =[];
-            $companyCertificateList =  CTAPICompanyCertificateBusiness::getFVFormatList( $request,  $controller,  ['type_id' => 5, 'company_id' => $companyIdArr], false,[], $extParams);
-
-            $resourceIdArr = array_values(array_filter(array_column($companyCertificateList,'resource_id')));// 资源id数组，并去掉值为0的
-            if(!empty($resourceIdArr)) $resourceDataArr = Tool::arrUnderReset(CTAPIResourceBusiness::getResourceByIds($request, $controller, $resourceIdArr), 'id', 2);// getListByIds($request, $controller, implode(',', $resourceIdArr));
-            if(!$isNeedHandle && !empty($resourceDataArr)) $isNeedHandle = true;
-            $companyCertificateKV = Tool::formatArrKeyVal($companyCertificateList, 'company_id', 'resource_id');// 企业id => 资源id 的kv值一维数组
-        }
-
-        // 获得所属企业名称 ---如果是普通用户
-        if(in_array('company', $handleKeyArr)){
-            $companyIdArr = array_values(array_filter(array_column($data_list,'company_id')));// 资源id数组，并去掉值为0的
-            // 主键为下标的二维数组
-            if(!empty($companyIdArr)) $companyKv = Tool::formatArrKeyVal(CTAPIStaffBusiness::getListByIds($request, $controller, $companyIdArr, [], [], 'id'), 'id', 'company_name');
-            if(!$isNeedHandle && !empty($companyKv)) $isNeedHandle = true;
-        }
-
-        //        }
-
-        // 改为不返回，好让数据下面没有数据时，有一个空对象，方便前端或其它应用处理数据
-//        if(!$isNeedHandle){// 不处理，直接返回 // if(!$isMulti) $data_list = $data_list[0] ?? [];
-//            return true;
-//        }
-
-        foreach($data_list as $k => $v){
-            //            // 公司名称
-            //            $data_list[$k]['company_name'] = $v['company_info']['company_name'] ?? '';
-            //            if(isset($data_list[$k]['company_info'])) unset($data_list[$k]['company_info']);
-
-            // 获得所属城市
-            if(in_array('city', $handleKeyArr)){
-                $data_list[$k]['city_info'] = $cityArr[$v['city_id']] ?? [];
-                $data_list[$k]['city_name'] = $cityArr[$v['city_id']]['city_name'] ?? [];
-            }
-
-            // 获得所属行业
-            if(in_array('industry', $handleKeyArr)){
-                $data_list[$k]['industry_info'] = $industryArr[$v['company_industry_id']] ?? [];
-                $data_list[$k]['industry_name'] = $industryArr[$v['company_industry_id']]['industry_name'] ?? [];
-
-            }
-            // 获得人员扩展信息
-            if(in_array('extend', $handleKeyArr)){
-                $data_list[$k]['extend_info'] = $extendArr[$v['id']] ?? [];
-
-            }
-            // 资源url
-            if(in_array('siteResources', $handleKeyArr)){
-                // $resource_list = [];
-                $resource_id = $companyCertificateKV[$v['id']] ?? 0;
-                $resource_list = $resourceDataArr[$resource_id] ?? [];
-                if(isset($v['site_resources'])){
-                    Tool::resourceUrl($v, 2);
-                    $resource_list = Tool::formatResource($v['site_resources'], 2);
-                    unset($data_list[$k]['site_resources']);
-                }
-                $data_list[$k]['resource_list'] = $resource_list;
-            }
-            // 获得所属企业名称 ---如果是普通用户
-            if(in_array('company', $handleKeyArr)){
-                $data_list[$k]['user_company_name'] = $companyKv[$v['company_id']] ?? '';
-            }
-
-        }
-        // 重写结束
-        return true;
-=======
 //    public static function handleDataFormat(Request $request, Controller $controller, &$data_list, $handleKeyArr, $isMulti = true){
 //
 //        // 重写开始
@@ -1736,7 +1601,6 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
 
         // 重写结束
         return $returnFields;
->>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
     }
 
 }

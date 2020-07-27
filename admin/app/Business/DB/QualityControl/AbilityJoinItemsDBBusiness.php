@@ -114,32 +114,20 @@ class AbilityJoinItemsDBBusiness extends BasePublicDBBusiness
                         'operate_staff_id_history' => $operate_staff_id_history,
                     ];
                     // 新加时
-<<<<<<< HEAD
-                    if(!$isModify){
-                        $appendArr = array_merge($appendArr, [
-                            'ability_join_item_id' => $id,
-                        ]);
-                    }
-=======
 //                    if(!$isModify){
 //                        $appendArr = array_merge($appendArr, [
 //                            'ability_join_item_id' => $id,
 //                        ]);
 //                    }
->>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
                     // Tool::arrAppendKeys($ability_join_items, $appendArr);
                     foreach($ability_join_items_standards as $k => $join_item_standard_info){
                         $join_item_standard_id = $join_item_standard_info['id'] ?? 0;
                         if(isset($join_item_standard_info['id'])) unset($join_item_standard_info['id']);
-<<<<<<< HEAD
-                        Tool::arrAppendKeys($join_item_standard_info, $appendArr);
-=======
 
                         Tool::arrAppendKeys($join_item_standard_info, $appendArr);
                         if($join_item_standard_id <= 0) Tool::arrAppendKeys($join_item_standard_info, [
                             'ability_join_item_id' => $id,
                         ]);
->>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
                         AbilityJoinItemsStandardsDBBusiness::replaceById($join_item_standard_info, $company_id, $join_item_standard_id, $operate_staff_id, $modifAddOprate);
 
                     }

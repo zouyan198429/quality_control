@@ -57,11 +57,7 @@ $(function(){
     });
 
     // 短信登录不用图形验证码
-<<<<<<< HEAD
-    if(false){
-=======
     if(true){
->>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
         $('.' +  CAPTCHA_IMG_CLASS + '').first().click();
     }
     // $('.' +  CAPTCHA_IMG_CLASS + '').each(function(){

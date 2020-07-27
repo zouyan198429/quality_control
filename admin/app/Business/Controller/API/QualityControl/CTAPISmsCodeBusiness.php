@@ -62,46 +62,6 @@ class CTAPISmsCodeBusiness extends BasicPublicCTAPIBusiness
      * @return  boolean true
      * @author zouyan(305463219@qq.com)
      */
-<<<<<<< HEAD
-    public static function handleDataFormat(Request $request, Controller $controller, &$data_list, $handleKeyArr, $isMulti = true){
-
-        // 重写开始
-
-        $isNeedHandle = false;// 是否真的需要遍历处理数据 false:不需要：true:需要 ；只要有一个需要处理就标记
-
-        $staffArr = [];
-
-        //        if(!empty($data_list) ){
-        // 获得所属老师
-        if(in_array('staff', $handleKeyArr)){
-            $staffIdArr = array_values(array_filter(array_column($data_list,'staff_id')));// 资源id数组，并去掉值为0的
-            // 主键为下标的二维数组
-            if(!empty($staffIdArr)) $staffArr = Tool::arrUnderReset(CTAPIStaffBusiness::getListByIds($request, $controller, $staffIdArr), 'id', 1);
-            if(!$isNeedHandle && !empty($staffArr)) $isNeedHandle = true;
-        }
-
-        //        }
-
-        // 改为不返回，好让数据下面没有数据时，有一个空对象，方便前端或其它应用处理数据
-//        if(!$isNeedHandle){// 不处理，直接返回 // if(!$isMulti) $data_list = $data_list[0] ?? [];
-//            return true;
-//        }
-
-        foreach($data_list as $k => $v){
-            //            // 公司名称
-            //            $data_list[$k]['company_name'] = $v['company_info']['company_name'] ?? '';
-            //            if(isset($data_list[$k]['company_info'])) unset($data_list[$k]['company_info']);
-
-            // 获得所属老师
-            if(in_array('staff', $handleKeyArr)){
-                $data_list[$k]['staff_info'] = $staffArr[$v['staff_id']] ?? [];
-            }
-        }
-
-        // 重写结束
-        return true;
-    }
-=======
 //    public static function handleDataFormat(Request $request, Controller $controller, &$data_list, $handleKeyArr, $isMulti = true){
 //
 //        // 重写开始
@@ -140,7 +100,6 @@ class CTAPISmsCodeBusiness extends BasicPublicCTAPIBusiness
 //        // 重写结束
 //        return true;
 //    }
->>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
 
     /**
      * 特殊的验证 关键字 -单个 的具体验证----具体的子类----重写此方法来实现具体的验证
@@ -177,8 +136,6 @@ class CTAPISmsCodeBusiness extends BasicPublicCTAPIBusiness
         return $errMsgs;
     }
 
-<<<<<<< HEAD
-=======
 
     // ****表关系***需要重写的方法**********开始***********************************
     /**
@@ -234,5 +191,4 @@ class CTAPISmsCodeBusiness extends BasicPublicCTAPIBusiness
     // ****表关系***需要重写的方法**********结束***********************************
 
 
->>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
 }

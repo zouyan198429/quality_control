@@ -3,10 +3,7 @@
 namespace App\Http\Controllers\Admin\QualityControl;
 
 use App\Business\Controller\API\QualityControl\CTAPISmsCodeBusiness;
-<<<<<<< HEAD
-=======
 use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
->>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
 use App\Http\Controllers\WorksController;
 use App\Models\QualityControl\SmsCode;
 use App\Services\Request\CommonRequest;
@@ -217,12 +214,8 @@ class SmsCodeController extends BasicController
         $this->InitParams($request);
         $relations = [];//  ['siteResources']
         $extParams = [
-<<<<<<< HEAD
-            'handleKeyArr' => ['staff'],//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-=======
            // 'handleKeyArr' => ['staff'],//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
             'relationFormatConfigs'=> CTAPISmsCodeBusiness::getRelationConfigs($request, $this, ['staff_info'], []),
->>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
         ];
         return  CTAPISmsCodeBusiness::getList($request, $this, 2 + 4, [], $relations, $extParams);
     }

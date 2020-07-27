@@ -59,8 +59,6 @@ class CTAPICompanyScheduleBusiness extends BasicPublicCTAPIBusiness
         return $errMsgs;
     }
 
-<<<<<<< HEAD
-=======
     // ****表关系***需要重写的方法**********开始***********************************
     /**
      * 获得处理关系表数据的配置信息--重写此方法
@@ -120,7 +118,6 @@ class CTAPICompanyScheduleBusiness extends BasicPublicCTAPIBusiness
     // ****表关系***需要重写的方法**********结束***********************************
 
 
->>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
     /**
      * 获得列表数据时，查询条件的参数拼接--有特殊的需要自己重写此方法--每个字类都有此方法
      *
@@ -160,65 +157,6 @@ class CTAPICompanyScheduleBusiness extends BasicPublicCTAPIBusiness
      * @return  boolean true
      * @author zouyan(305463219@qq.com)
      */
-<<<<<<< HEAD
-    public static function handleDataFormat(Request $request, Controller $controller, &$data_list, $handleKeyArr, $isMulti = true){
-
-        // 重写开始
-
-        $isNeedHandle = false;// 是否真的需要遍历处理数据 false:不需要：true:需要 ；只要有一个需要处理就标记
-
-        //        if(!empty($data_list) ){
-        // 获得所属企业名称
-        $companyKv = [];
-        if(in_array('company', $handleKeyArr)){
-            $companyIdArr = array_values(array_filter(array_column($data_list,'company_id')));// 资源id数组，并去掉值为0的
-            // 主键为下标的二维数组
-            if(!empty($companyIdArr)) $companyKv = Tool::formatArrKeyVal(CTAPIStaffBusiness::getListByIds($request, $controller, $companyIdArr, [], [], 'id'), 'id', 'company_name');
-            if(!$isNeedHandle && !empty($companyKv)) $isNeedHandle = true;
-        }
-
-        // 处理图片
-        $resourceDataArr = [];
-        if(in_array('siteResources', $handleKeyArr)){
-            $resourceIdArr = array_values(array_filter(array_column($data_list,'resource_id')));// 资源id数组，并去掉值为0的
-            if(!empty($resourceIdArr)) $resourceDataArr = Tool::arrUnderReset(CTAPIResourceBusiness::getResourceByIds($request, $controller, $resourceIdArr), 'id', 2);// getListByIds($request, $controller, implode(',', $resourceIdArr));
-            if(!$isNeedHandle && !empty($resourceDataArr)) $isNeedHandle = true;
-        }
-
-        //        }
-
-        // 改为不返回，好让数据下面没有数据时，有一个空对象，方便前端或其它应用处理数据
-        // if(!$isNeedHandle){// 不处理，直接返回 // if(!$isMulti) $data_list = $data_list[0] ?? [];
-        //    return true;
-        // }
-
-        foreach($data_list as $k => $v){
-            //            // 公司名称
-            //            $data_list[$k]['company_name'] = $v['company_info']['company_name'] ?? '';
-            //            if(isset($data_list[$k]['company_info'])) unset($data_list[$k]['company_info']);
-
-            // 获得所属企业名称 ---如果是普通用户
-            if(in_array('company', $handleKeyArr)){
-                $data_list[$k]['user_company_name'] = $companyKv[$v['company_id']] ?? '';
-            }
-
-            // 资源url
-            if(in_array('siteResources', $handleKeyArr)){
-                // $resource_list = [];
-                $resource_list = $resourceDataArr[$v['resource_id']] ?? [];
-                if(isset($v['site_resources'])){
-                    Tool::resourceUrl($v, 2);
-                    $resource_list = Tool::formatResource($v['site_resources'], 2);
-                    unset($data_list[$k]['site_resources']);
-                }
-                $data_list[$k]['resource_list'] = $resource_list;
-            }
-        }
-
-        // 重写结束
-        return true;
-    }
-=======
 //    public static function handleDataFormat(Request $request, Controller $controller, &$data_list, $handleKeyArr, $isMulti = true){
 //
 //        // 重写开始
@@ -276,7 +214,6 @@ class CTAPICompanyScheduleBusiness extends BasicPublicCTAPIBusiness
 //        // 重写结束
 //        return true;
 //    }
->>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
 
     /**
      * 删除单条数据--有特殊的需要自己重写此方法

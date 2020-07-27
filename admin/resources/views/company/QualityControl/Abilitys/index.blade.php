@@ -114,16 +114,10 @@
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
 
       var JOIN_URL = "{{ url('company/abilitys/join/') }}/";//报名地址
-<<<<<<< HEAD
-  </script>
-  <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/company/QualityControl/Abilitys.js') }}"  type="text/javascript"></script>
-=======
       var COMPANY_EXTEND_URL = "{{ url('api/company/abilitys/ajax_company_extend') }}/";//验证是否有上传能力附表
       var COMPANY_SCHEDULE_URL = "{{ url('company/company_schedule') }}/";//能力附表列表地址
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
   <script src="{{ asset('js/company/QualityControl/Abilitys.js') }}?4"  type="text/javascript"></script>
->>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
 </body>
 </html>

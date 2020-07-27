@@ -14,8 +14,6 @@ class CTAPIResourceModuleBusiness extends BasicPublicCTAPIBusiness
     public static $table_name = 'resource_module';// 表名称
     public static $record_class = __CLASS__;// 当前的类名称 App\Business\***\***\**\***
 
-<<<<<<< HEAD
-=======
 
     // ****表关系***需要重写的方法**********开始***********************************
     /**
@@ -71,5 +69,4 @@ class CTAPIResourceModuleBusiness extends BasicPublicCTAPIBusiness
     }
     // ****表关系***需要重写的方法**********结束***********************************
 
->>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
 }

@@ -4184,12 +4184,9 @@ class Tool
      *  'k_v' => ['key' => 'id', 'val' => 'person_name', 'ubound_name' => '下标名称'],
      *  // 一/二维数组 只要其中的某一个字段：
      *  'one_field' => ['key' => 'id', 'return_type' => "返回类型1原数据['字段值'][一维返回一维数组，二维返回一维数组];2按分隔符分隔的字符", 'ubound_name' => '下标名称', 'split' => '、'],
-<<<<<<< HEAD
-=======
      *  一/二维数组 -- 只针对关系是 1:1的 即 关系数据是一维数组的情况--目的是平移指定字段到上一层
      *  如果新下标和原下标相同，则可以用这个方法去转  Tool::arrEqualKeyVal(['shop_id', 'shop_name', 'linkman', 'mobile']), true )
      *  'fields_merge' => ['merge_fields' => -维[ '新下标名' => '原下标名' ]]
->>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
      *  // 一/二维数组 获得指定的多个字段值
      * 'many_fields' =>[ 'ubound_name' => '', 'fields_arr'=> [ '新下标名' => '原下标名' ],'reset_ubound' => 2;// 是否重新排序下标 1：重新０.．． ,'ubound_keys' => ['说明：看上面old_data的同字段说明'], 'ubound_type' =>1],ubound_type说明：看上面old_data的同字段说明
      * @param array $returnFields  新加入的字段['字段名1' => '字段名1' ]
@@ -4268,8 +4265,6 @@ class Tool
                         $returnFields[$tem_one_ubound_name] = $tem_one_ubound_name;
                     }
                     break;
-<<<<<<< HEAD
-=======
                 case 'fields_merge':// 一/二维数组 -- 只针对关系是 1:1的
                     $isMulti = static::isMultiArr($temDataList, false);
                     if(!$isMulti && !empty($temDataList)){
@@ -4286,7 +4281,6 @@ class Tool
                         }
                     }
                     break;
->>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
                 case 'many_fields':// 一/二维数组
                     static::isMultiArr($t_config, true);// 如果是一维数组，转为二维数组
                     foreach($t_config as $tem_one_info){

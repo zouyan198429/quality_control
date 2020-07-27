@@ -1,9 +1,6 @@
 
-<<<<<<< HEAD
-=======
 var SUBMIT_FORM = true;//防止多次点击提交
 
->>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
 $(function(){
 
     $('.search_frm').trigger("click");// 触发搜索事件
@@ -25,10 +22,7 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
 var otheraction = {
     joinSelected: function(obj){//报名选中的码
         var recordObj = $(obj);
-<<<<<<< HEAD
-=======
         if (!SUBMIT_FORM) return false;//false，则返回
->>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
 
         // var operateText = '报名';
         // // var index_query = layer.confirm('确定' + operateText + '当前记录？', {
@@ -44,33 +38,6 @@ var otheraction = {
         // // });
         // return false;
 
-<<<<<<< HEAD
-        var operateText = '报名';
-
-        var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
-        if(ids == ''){
-            err_alert('请选择需要' + operateText + '的项目');
-            return false;
-        }
-
-        //获得表单各name的值
-        var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
-        console.log(JOIN_URL);
-        console.log(data);
-        var url_params = get_url_param(data);// parent.get_url_param(data)
-        var weburl = JOIN_URL + ids + '?' + url_params;
-        console.log(weburl);
-        // go(SHOW_URL + id);
-        // location.href='/pms/Supplier/show?supplier_id='+id;
-        // var weburl = SHOW_URL + id;
-        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
-        var tishi = "";//"添加/修改供应商";
-        tishi = operateText + tishi;
-        layeriframe(weburl,tishi,950,600,IFRAME_MODIFY_CLOSE_OPERATE);
-        return false;
-    }
-};
-=======
 
         // 判断是否有能力附表
         // 验证通过
@@ -162,7 +129,6 @@ function joinPage(){
     return false;
 }
 
->>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
 (function() {
     document.write("");
     document.write("    <!-- 前端模板部分 -->");

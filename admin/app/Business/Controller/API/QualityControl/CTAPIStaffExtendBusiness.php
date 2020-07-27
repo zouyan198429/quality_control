@@ -58,8 +58,6 @@ class CTAPIStaffExtendBusiness extends BasicPublicCTAPIBusiness
         }
         return $errMsgs;
     }
-<<<<<<< HEAD
-=======
 
     // ****表关系***需要重写的方法**********开始***********************************
     /**
@@ -115,5 +113,4 @@ class CTAPIStaffExtendBusiness extends BasicPublicCTAPIBusiness
     }
     // ****表关系***需要重写的方法**********结束***********************************
 
->>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
 }

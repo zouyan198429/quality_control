@@ -61,172 +61,6 @@ class CTAPIAbilitysBusiness extends BasicPublicCTAPIBusiness
     }
 
 
-<<<<<<< HEAD
-    /**
-     * 格式化数据 --如果有格式化，肯定会重写---本地数据库主要用这个来格式化数据
-     *
-     * @param Request $request 请求信息
-     * @param Controller $controller 控制对象
-     * @param array $data_list 需要格式化的数据---二维数组(如果是一维数组，是转成二维数组后的数据)
-     * @param array $handleKeyArr 其它扩展参数，// 一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。--名称关键字，尽可能与关系名一样
-     * @param boolean 原数据类型 true:二维[默认];false:一维
-     * @return  boolean true
-     * @author zouyan(305463219@qq.com)
-     */
-    public static function handleDataFormat(Request $request, Controller $controller, &$data_list, $handleKeyArr, $isMulti = true){
-
-        // 重写开始
-
-        $isNeedHandle = false;// 是否真的需要遍历处理数据 false:不需要：true:需要 ；只要有一个需要处理就标记
-
-        $projectStandardsArr = [];// 项目标准
-        $projectSubmitItemsArr = [];// 验证数据项
-        //        if(!empty($data_list) ){
-        // 获得项目标准
-        if(in_array('projectStandards', $handleKeyArr)){
-            $abilityIdArr = array_values(array_filter(array_column($data_list,'id')));// 资源id数组，并去掉值为0的
-            $projectStandardsList = [];
-            // 查询条件
-//            if(!empty($abilityIdArr)){
-//                // 获得企业资质证书
-//                $projectStandardsQueryParams = [
-//                    'where' => [
-//                        // ['type_id', 5],
-//    //                //['mobile', $keyword],
-//                    ],
-//    //            'select' => [
-//    //                'id','company_id','position_name','sort_num'
-//    //                //,'operate_staff_id','operate_staff_id_history'
-//    //                ,'created_at'
-//    //            ],
-//                    // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
-//                ];
-//                Tool::appendParamQuery($projectStandardsQueryParams, $abilityIdArr, 'ability_id', [0, '0', ''], ',', false);
-//                $projectStandardsList = CTAPIProjectStandardsBusiness::getBaseListData($request, $controller, '', $projectStandardsQueryParams,[], 1,  1)['data_list'] ?? [];
-//            }
-            $extParams = [];
-            $projectStandardsList =  CTAPIProjectStandardsBusiness::getFVFormatList( $request,  $controller,  ['ability_id' => $abilityIdArr], false,[], $extParams);
-            if(!empty($projectStandardsList)) $projectStandardsArr = Tool::arrUnderReset($projectStandardsList, 'ability_id', 2);
-            if(!$isNeedHandle && !empty($projectStandardsArr)) $isNeedHandle = true;
-        }
-        // 获得验证数据项
-        if(in_array('projectSubmitItems', $handleKeyArr)){
-            $abilityIdArr = array_values(array_filter(array_column($data_list,'id')));// 资源id数组，并去掉值为0的
-//            $projectSubmitItemsList = [];
-//            // 查询条件
-//            if(!empty($abilityIdArr)){
-//                // 获得企业资质证书
-//                $projectSubmitItemsQueryParams = [
-//                    'where' => [
-//                        // ['type_id', 5],
-//                        //                //['mobile', $keyword],
-//                    ],
-//                    //            'select' => [
-//                    //                'id','company_id','position_name','sort_num'
-//                    //                //,'operate_staff_id','operate_staff_id_history'
-//                    //                ,'created_at'
-//                    //            ],
-//                    // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
-//                ];
-//                Tool::appendParamQuery($projectSubmitItemsQueryParams, $abilityIdArr, 'ability_id', [0, '0', ''], ',', false);
-//                $projectSubmitItemsList = CTAPIProjectSubmitItemsBusiness::getBaseListData($request, $controller, '', $projectSubmitItemsQueryParams,[], 1,  1)['data_list'] ?? [];
-//            }
-            $extParams = [];
-            $projectSubmitItemsList =  CTAPIProjectSubmitItemsBusiness::getFVFormatList( $request,  $controller,  ['ability_id' => $abilityIdArr], false,[], $extParams);
-            if(!empty($projectSubmitItemsList)) $projectSubmitItemsArr = Tool::arrUnderReset($projectSubmitItemsList, 'ability_id', 2);
-            if(!$isNeedHandle && !empty($projectSubmitItemsArr)) $isNeedHandle = true;
-        }
-
-
-        // 判断自己是否已经报名
-        $joinedAbilityIds = [];// 已报名的项目ID数组
-        if(in_array('joined', $handleKeyArr)){
-
-            $user_info = $controller->user_info;
-            $abilityIds = array_values(array_unique(array_column($data_list,'id')));
-            if(!empty($abilityIds)){
-                // 还得查一下不是状态2的记录，再获得kv把
-//                $queryParams = [
-//                    'where' => [
-//                        ['admin_type', $user_info['admin_type']],
-//                        ['staff_id', $user_info['id']],
-//                        // ['ability_id', $id],
-//                    ],
-//                    // 'select' => ['id', 'amount', 'status', 'my_order_no' ]
-//                ];
-//                Tool::appendParamQuery($queryParams, $abilityIds, 'ability_id', [0, '0', ''], ',', false);
-//                $joinItemDataList = CTAPIAbilityJoinItemsBusiness::ajaxGetQueryListCTL($request, $controller, '', $queryParams, [], 1);
-
-                $extParams = [];
-                $joinItemDataList =  CTAPIAbilityJoinItemsBusiness::getFVFormatList( $request,  $controller,  [
-                    'ability_id' => $abilityIds , 'admin_type' => $user_info['admin_type'],'staff_id' =>  $user_info['id']], false,[], $extParams);
-                if(!empty($joinItemDataList)) $joinedAbilityIds = array_values(array_unique(array_column($joinItemDataList,'ability_id')));
-
-            }
-        }
-
-
-        //        }
-        // 改为不返回，好让数据下面没有数据时，有一个空对象，方便前端或其它应用处理数据
-        // if(!$isNeedHandle){// 不处理，直接返回 // if(!$isMulti) $data_list = $data_list[0] ?? [];
-        //    return true;
-        // }
-
-        foreach($data_list as $k => $v){
-        //            // 公司名称
-        //            $data_list[$k]['company_name'] = $v['company_info']['company_name'] ?? '';
-        //            if(isset($data_list[$k]['company_info'])) unset($data_list[$k]['company_info']);
-
-            // 格式化发布时间
-            if(isset($v['created_at']) && !empty($v['created_at'])){
-                $data_list[$k]['created_at_format'] = judgeDate($v['created_at'],'Y-m-d');
-            }
-
-            // 获得项目标准
-            if(in_array('projectStandards', $handleKeyArr)){
-                //  [{'id': 0, 'tag_name': '标签名称'},..]
-                $configArr = [];
-                $temArr = $projectStandardsArr[$v['id']] ?? [];
-                foreach($temArr as $info){
-                    array_push($configArr, [
-                        'id' => $info['id'],
-                        'tag_name' => $info['name'],
-                    ]);
-                }
-                $data_list[$k]['project_standards'] = $configArr;
-                $data_list[$k]['project_standards_text'] = implode('<br/>', Tool::getArrFields($temArr, 'name'));
-            }
-            // 获得验证数据项
-            if(in_array('projectSubmitItems', $handleKeyArr)){
-                //  [{'id': 0, 'tag_name': '标签名称'},..]
-                $configArr = [];
-                $temArr = $projectSubmitItemsArr[$v['id']] ?? [];
-                foreach($temArr as $info){
-                    array_push($configArr, [
-                        'id' => $info['id'],
-                        'tag_name' => $info['name'],
-                    ]);
-                }
-                $data_list[$k]['submit_items'] = $configArr;
-                $data_list[$k]['submit_items_text'] = implode('<br/>', Tool::getArrFields($temArr, 'name'));
-            }
-            // 判断自己是否已经报名
-            if(in_array('joined', $handleKeyArr)){
-                $is_joined = 0;
-                $is_joined_text = '未报名';
-                if(in_array($v['id'], $joinedAbilityIds)){
-                    $is_joined = 1;
-                    $is_joined_text = '已报名';
-                }
-                $data_list[$k]['is_joined'] = $is_joined;
-                $data_list[$k]['is_joined_text'] = $is_joined_text;
-            }
-        }
-
-        // 重写结束
-        return true;
-    }
-=======
     // ****表关系***需要重写的方法**********开始***********************************
     /**
      * 获得处理关系表数据的配置信息--重写此方法
@@ -459,7 +293,6 @@ class CTAPIAbilitysBusiness extends BasicPublicCTAPIBusiness
 //        // 重写结束
 //        return true;
 //    }
->>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
 
     /**
      * 获得列表数据时，查询条件的参数拼接--有特殊的需要自己重写此方法--每个字类都有此方法
@@ -555,8 +388,5 @@ class CTAPIAbilitysBusiness extends BasicPublicCTAPIBusiness
             }
         }
     }
-<<<<<<< HEAD
-=======
 
->>>>>>> 03194bebf1bfe858d89f59f73d7fe347d2316221
 }
