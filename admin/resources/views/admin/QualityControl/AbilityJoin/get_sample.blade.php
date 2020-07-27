@@ -28,27 +28,27 @@
                 <tbody>
                   <tr>
                     <th>报名企业</th>
-                    <td>西安某某有限公司</td>
+                    <td>{{ $info['company_info_data']['company_name'] ?? '' }}</td>
                     <th>会员等级</th>
-                    <td>理事</td>
+                    <td>{{ $info['company_info_data']['company_grade_text'] ?? '' }}</td>
                   </tr>
 				  <tr>
 				    <th>CMA证书号</th>
-				    <td>234634563456345</td>
+				    <td>{{ $info['company_info_data']['company_certificate_no'] ?? '' }}</td>
 				    <th></th>
 				    <td></td>
 				  </tr>
                   <tr>
                     <th>联系人</th>
-                    <td>张小明</td>
+                    <td>{{ $info['contacts'] ?? '' }}</td>
                     <th>联系电话</th>
-                    <td>18955688564</td>
+                    <td>{{ $info['mobile'] ?? '' }}({{ $info['tel'] ?? '' }})</td>
                   </tr>
                   <tr>
                     <th>报名时间</th>
-                    <td>2020-05-22 12:23</td>
+                    <td>{{ $info['join_time'] ?? '' }}</td>
                     <th>取样时间</th>
-                    <td>2020-05-28 12:23</td>
+                    <td>{{ $info['sample_time'] ?? '' }}</td>
                   </tr>
 
 
@@ -72,8 +72,10 @@
               <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
                 <legend>取样编号</legend>
               </fieldset>
-
+                <form class="am-form am-form-horizontal" method="post"  id="addForm">
+                    <input type="hidden" name="id" value="{{ $info['id'] ?? 0 }}"/>
               <table class="layui-table">
+
                 <thead>
                   <tr>
                     <th>项目</th>
@@ -85,44 +87,41 @@
                     <th>补测取样编号3</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr>
-                    <td>蔬菜中毒死蜱</td>
-                    <td><input type="text" name="title" lay-verify="title" autocomplete="off" class="layui-input"></td>
-                    <td><input type="text" name="title" lay-verify="title" autocomplete="off" class="layui-input"></td>
-                    <td><input type="text" name="title" lay-verify="title" autocomplete="off" class="layui-input"></td>
-                    <td><input type="text" name="title" lay-verify="title" autocomplete="off" class="layui-input"></td>
-                    <td><input type="text" name="title" lay-verify="title" autocomplete="off" class="layui-input"></td>
-                    <td><input type="text" name="title" lay-verify="title" autocomplete="off" class="layui-input"></td>
+                <tbody id="samples_list">
+
+                @foreach ($info['join_items_get'] as $k => $item_info)
+                    <?php
+                    $item_id = $item_info['id'];
+                    $retry_no = $item_info['retry_no'];// 是否补测 0正常测 1补测1 2 补测2 .....
+                    $record_samples_num = $retry_no + 1;// 当前的取样编号 1 2 。。
+                    $status = $item_info['status'];
+                    $result_status = $item_info['result_status'];
+                    $is_read_only = false;
+                    if(in_array($status, [16]) || in_array($result_status, [2, 16])) $is_read_only = true;
+                    ?>
+                  <tr data-samples_num="1" data-project_name="{{ $item_info['ability_name'] ?? '' }}" data-join_item_id="{{ $item_info['id'] ?? '' }}">
+                    <td>
+                        {{ $item_info['ability_name'] ?? '' }}
+                        <input type="hidden" name="join_item_ids[]" value="{{ $item_info['id'] ?? '' }}">
+                        <input type="hidden" name="join_item_names[]" value="{{ $item_info['ability_name'] ?? '' }}">
+                    </td>
+                    <td><input type="text" name="items_samples_{{ $item_info['id'] ?? '' }}_1[]" value="{{ $item_info['join_item_reslut_list'][$item_id . '_0' ]['join_items_samples_list']['0']['sample_one'] ?? '' }}"  @if ($record_samples_num != 1 || $is_read_only) readonly @endif lay-verify="title" autocomplete="off" class="layui-input" onkeyup="isnum(this) " onafterpaste="isnum(this)"  ></td>
+                    <td><input type="text" name="items_samples_{{ $item_info['id'] ?? '' }}_1[]" value="{{ $item_info['join_item_reslut_list'][$item_id . '_0' ]['join_items_samples_list']['1']['sample_one'] ?? '' }}"   @if ($record_samples_num != 1 || $is_read_only ) readonly @endif lay-verify="title" autocomplete="off" class="layui-input" onkeyup="isnum(this) " onafterpaste="isnum(this)"  ></td>
+                    <td><input type="text" name="items_samples_{{ $item_info['id'] ?? '' }}_1[]" value="{{ $item_info['join_item_reslut_list'][$item_id . '_0' ]['join_items_samples_list']['2']['sample_one'] ?? '' }}"   @if ($record_samples_num != 1 || $is_read_only ) readonly @endif lay-verify="title" autocomplete="off" class="layui-input" onkeyup="isnum(this) " onafterpaste="isnum(this)"  ></td>
+                    <td><input type="text" name="items_samples_{{ $item_info['id'] ?? '' }}_2[]" value="{{ $item_info['join_item_reslut_list'][$item_id . '_1' ]['join_items_samples_list']['0']['sample_one'] ?? '' }}"  @if ($record_samples_num != 2 || $is_read_only ) readonly @endif lay-verify="title" autocomplete="off" class="layui-input" onkeyup="isnum(this) " onafterpaste="isnum(this)"  ></td>
+                    <td><input type="text" name="items_samples_{{ $item_info['id'] ?? '' }}_2[]" value="{{ $item_info['join_item_reslut_list'][$item_id . '_1' ]['join_items_samples_list']['1']['sample_one'] ?? '' }}"  @if ($record_samples_num != 2 || $is_read_only ) readonly @endif lay-verify="title" autocomplete="off" class="layui-input" onkeyup="isnum(this) " onafterpaste="isnum(this)"  ></td>
+                    <td><input type="text" name="items_samples_{{ $item_info['id'] ?? '' }}_2[]" value="{{ $item_info['join_item_reslut_list'][$item_id . '_1' ]['join_items_samples_list']['2']['sample_one'] ?? '' }}"  @if ($record_samples_num != 2 || $is_read_only ) readonly @endif lay-verify="title" autocomplete="off" class="layui-input" onkeyup="isnum(this) " onafterpaste="isnum(this)"  ></td>
                   </tr>
-                  <tr>
-                    <td>饮料中环己基氨基磺酸钠(甜蜜素)  </td>
-                    <td><input type="text" name="title" lay-verify="title" autocomplete="off" class="layui-input"></td>
-                    <td><input type="text" name="title" lay-verify="title" autocomplete="off" class="layui-input"></td>
-                    <td><input type="text" name="title" lay-verify="title" autocomplete="off" class="layui-input"></td>
-                    <td><input type="text" name="title" lay-verify="title" autocomplete="off" class="layui-input"></td>
-                    <td><input type="text" name="title" lay-verify="title" autocomplete="off" class="layui-input"></td>
-                    <td><input type="text" name="title" lay-verify="title" autocomplete="off" class="layui-input"></td>
-                  </tr>
-                  <tr>
-                    <td>蔬菜中毒死蜱</td>
-                    <td><input type="text" name="title" lay-verify="title" autocomplete="off" class="layui-input"></td>
-                    <td><input type="text" name="title" lay-verify="title" autocomplete="off" class="layui-input"></td>
-                    <td><input type="text" name="title" lay-verify="title" autocomplete="off" class="layui-input"></td>
-                    <td><input type="text" name="title" lay-verify="title" autocomplete="off" class="layui-input"></td>
-                    <td><input type="text" name="title" lay-verify="title" autocomplete="off" class="layui-input"></td>
-                    <td><input type="text" name="title" lay-verify="title" autocomplete="off" class="layui-input"></td>
-                  </tr>
+                @endforeach
                 </tbody>
               </table>
               <div class="layui-form-item">
                   <div class="layui-input-block">
-                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
-                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    <button type="button"  class="layui-btn" lay-submit="" lay-filter="demo1" id="submitBtn">立即提交</button>
+{{--                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>--}}
                   </div>
                 </div>
-
-
+                </form>
             </div>
         </div>
 
@@ -135,11 +134,10 @@
 @include('public.dynamic_list_foot')
 
 <script type="text/javascript">
-    var SAVE_URL = "{{ url('api/admin/user/ajax_save') }}";// ajax保存记录地址
-    var LIST_URL = "{{url('admin/user')}}";//保存成功后跳转到的地址
+    var SAVE_URL = "{{ url('api/admin/ability_join/ajax_save_sample') }}";// ajax保存取样地址
+    var LIST_URL = "{{url('admin/ability_join')}}";//保存成功后跳转到的地址
 
-    var SELECT_COMPANY_URL = "{{url('admin/company/select')}}";// 选择所属企业
 </script>
-<script src="{{ asset('/js/admin/QualityControl/User_edit.js') }}"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/AbilityJoin_get_sample.js') }}"  type="text/javascript"></script>
 </body>
 </html>

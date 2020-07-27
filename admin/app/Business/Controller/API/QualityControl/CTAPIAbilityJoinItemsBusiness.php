@@ -341,6 +341,18 @@ class CTAPIAbilityJoinItemsBusiness extends BasicPublicCTAPIBusiness
 //                , ['admin_type' => 'admin_type', 'staff_id' => 'id']
 //                , 1, 2
 //                ,'','', [], ['where' => [['admin_type', 2]]], '', []),
+            // 获得项目
+            'ability_info' => CTAPIAbilitysBusiness::getTableRelationConfigInfo($request, $controller
+                , ['ability_id' => 'id']
+                , 1, 1 | 2
+                ,'','', [], [], '', []),
+            // 下一级关系 每一项的取样结果  1:1
+            'join_item_reslut_info' => CTAPIAbilityJoinItemsResultsBusiness::getTableRelationConfigInfo($request, $controller
+                , ['id' => 'ability_join_item_id', 'retry_no' => 'retry_no']
+                , 1, 1// 项目名称  测试4
+                ,'',''
+                ,[
+                ], [], '', []),
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }

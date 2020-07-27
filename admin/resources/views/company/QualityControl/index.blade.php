@@ -170,7 +170,7 @@
                           <a lay-href="{{ url('company/abilitys') }}">能力验证</a>
                       </dd>
                       <dd>
-                          <a lay-href="{{ url('company/ability_join') }}">已报名项目</a>
+                          <a lay-href="{{ url('company/ability_join_item') }}">已报名项目</a>
                       </dd>
                   </dl>
               </li>

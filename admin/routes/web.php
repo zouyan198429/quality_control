@@ -318,6 +318,14 @@ Route::get('company/ability_join/info/{id}', 'WebFront\Company\QualityControl\Ab
 //Route::get('company/ability_join/export', 'WebFront\Company\QualityControl\AbilityJoinController@export');// 导出
 //Route::get('company/ability_join/import_template', 'WebFront\Company\QualityControl\AbilityJoinController@import_template');// 导入模版
 
+// 能力验证--项目管理
+Route::get('company/ability_join_item', 'WebFront\Company\QualityControl\AbilityJoinItemsController@index');// 列表
+//Route::get('company/ability_join_item/add/{id}', 'WebFront\Company\QualityControl\AbilityJoinItemsController@add');// 添加
+//Route::get('company/ability_join_item/info/{id}', 'WebFront\Company\QualityControl\AbilityJoinItemsController@info');// 查看-详情
+// Route::get('company/ability_join_item/select', 'WebFront\Company\QualityControl\AbilityJoinItemsController@select');// 选择-弹窗
+//Route::get('company/ability_join_item/export', 'WebFront\Company\QualityControl\AbilityJoinItemsController@export');// 导出
+//Route::get('company/ability_join_item/import_template', 'WebFront\Company\QualityControl\AbilityJoinItemsController@import_template');// 导入模版
+
 // 企业能力附表
 Route::get('company/company_schedule', 'WebFront\Company\QualityControl\CompanyScheduleController@index');// 列表
 Route::get('company/company_schedule/add/{id}', 'WebFront\Company\QualityControl\CompanyScheduleController@add');// 添加

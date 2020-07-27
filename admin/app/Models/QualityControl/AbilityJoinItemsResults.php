@@ -74,4 +74,43 @@ class AbilityJoinItemsResults extends BasePublicModel
      */
     protected $table = 'ability_join_items_results';
 
+
+    // 验证结果1待判定 2满意、4有问题、8不满意   16满意【补测满意】
+    public static $resultStatusArr = [
+        '1' => '待判定',
+        '2' => '满意',
+        '4' => '有问题',
+        '8' => '不满意',
+        '16' => '满意【补】',
+    ];
+
+    // 是否上传数据1待传 --未传  2 已传
+    public static $submitStatusArr = [
+        '1' => '未传',
+        '2' => '已传',
+    ];
+
+    // 表里没有的字段
+    protected $appends = ['result_status_text', 'submit_status_text'];
+
+
+    /**
+     * 获取验证结果文字
+     *
+     * @return string
+     */
+    public function getResultStatusTextAttribute()
+    {
+        return static::$resultStatusArr[$this->result_status] ?? '';
+    }
+
+    /**
+     * 获取验证结果文字
+     *
+     * @return string
+     */
+    public function getSubmitStatusTextAttribute()
+    {
+        return static::$submitStatusArr[$this->submit_status] ?? '';
+    }
 }

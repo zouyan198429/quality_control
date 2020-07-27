@@ -109,6 +109,10 @@ class CTAPIAbilityJoinItemsResultsBusiness extends BasicPublicCTAPIBusiness
 //            array_push($return_data['one_field'], $one_field);
 //        }
 
+        if(($return_num & 4) == 4) {// 返回源数据--特别的可以参考这个配置
+            $return_data['old_data'] = ['ubound_operate' => 1, 'ubound_name' => '', 'fields_arr' => [], 'ubound_keys' => ['ability_join_item_id', 'retry_no'], 'ubound_type' =>1];
+        }
+
         return $return_data;
     }
     // ****表关系***需要重写的方法**********结束***********************************
