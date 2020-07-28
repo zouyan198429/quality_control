@@ -6,6 +6,7 @@ use App\Business\Controller\API\QualityControl\CTAPIAbilityJoinItemsBusiness;
 use App\Http\Controllers\WorksController;
 use App\Services\Request\CommonRequest;
 use App\Services\Tool;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class AbilityJoinItemsController extends BasicController
@@ -91,6 +92,74 @@ class AbilityJoinItemsController extends BasicController
 //    }
 
     /**
+     * 数据上报
+     *
+     * @param Request $request
+     * @param int $id 报名附表 项目相关表id
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function sample_result(Request $request,$id = 0)
+    {
+        $reDataArr = [];// 可以传给视图的全局变量数组
+        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request, &$id){
+            // 正常流程的代码
+
+            $this->InitParams($request);
+            // $reDataArr = $this->reDataArr;
+            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+
+            if(!is_numeric($id) || $id <= 0){
+                throws('参数[id]有误！');
+            }
+            $operate = "数据上报";
+            // $handleKeyArr = ['joinItems'];
+            $extParams = [
+                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                 'relationFormatConfigs'=> CTAPIAbilityJoinItemsBusiness::getRelationConfigs($request, $this, ['ability_info', 'join_item_reslut_info_updata', 'project_submit_items_list'], []),// , 'join_items'
+            ];
+
+            $info = CTAPIAbilityJoinItemsBusiness::getInfoData($request, $this, $id, [], '', $extParams);
+            // $reDataArr = array_merge($reDataArr, $resultDatas);
+            if(empty($info)) {
+                throws('记录不存在！');
+            }
+            $user_info = $this->user_info;
+            if($info['admin_type'] != $user_info['admin_type'] || $info['staff_id'] != $this->user_id) throws('非法访问，您没有访问此记录的权限！');
+
+            if(!in_array($info['status'], [2]) || !in_array($info['is_sample'], [2])) throws('非已取样状态，不可进行此操作');
+             // 所用仪器
+            $results_instrument_list = $info['join_item_reslut_info_updata']['results_instrument_list'] ?? [];
+            // -- 没有，则默认加入一条为0的
+            if(empty($results_instrument_list)){
+                if(!isset($info['join_item_reslut_info_updata']['results_instrument_list'])) $info['join_item_reslut_info_updata']['results_instrument_list'] = [];
+                array_push($info['join_item_reslut_info_updata']['results_instrument_list'], ['id'=> 0]);
+            }
+             // 检测标准物质
+            $results_standard_list = $info['join_item_reslut_info_updata']['results_standard_list'] ?? [];
+            // -- 没有，则默认加入一条为0的
+            if(empty($results_standard_list)){
+                if(!isset($info['join_item_reslut_info_updata']['results_standard_list'])) $info['join_item_reslut_info_updata']['results_standard_list'] = [];
+                array_push($info['join_item_reslut_info_updata']['results_standard_list'], ['id'=> 0]);
+            }
+
+             // 检测方法依据
+            $results_method_list = $info['join_item_reslut_info_updata']['results_method_list'] ?? [];
+            // -- 没有，则默认加入一条为0的
+            if(empty($results_method_list)){
+                if(!isset($info['join_item_reslut_info_updata']['results_method_list'])) $info['join_item_reslut_info_updata']['results_method_list'] = [];
+                array_push($info['join_item_reslut_info_updata']['results_method_list'], ['id'=> 0]);
+            }
+
+            // pr($info);
+            $reDataArr['info'] = $info;
+            $reDataArr['operate'] = $operate;
+            return view('company.QualityControl.AbilityJoinItems.sample_result', $reDataArr);
+
+        }, $this->errMethod, $reDataArr, $this->errorView);
+    }
+
+    /**
      * @OA\Get(
      *     path="/api/company/ability_join_items/ajax_info",
      *     tags={"大后台-能力验证-能力验证报名项"},
@@ -173,6 +242,172 @@ class AbilityJoinItemsController extends BasicController
 //        $resultDatas = CTAPIAbilityJoinItemsBusiness::replaceById($request, $this, $saveData, $id, $extParams, true);
 //        return ajaxDataArr(1, $resultDatas, '');
 //    }
+    /**
+     * ajax保存数据
+     *
+     * @param int $id
+     * @return Response
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_save_result_sample(Request $request)
+    {
+        $this->InitParams($request);
+        $id = CommonRequest::getInt($request, 'id');// 报名项的数据表id
+        // CommonRequest::judgeEmptyParams($request, 'id', $id);
+
+        if(!is_numeric($id) || $id <= 0){
+            throws('参数[id]有误！');
+        }
+        $operate = "数据上报";
+        // $handleKeyArr = ['joinItems'];
+        $extParams = [
+            // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+             'relationFormatConfigs'=> CTAPIAbilityJoinItemsBusiness::getRelationConfigs($request, $this, ['join_item_reslut_info_save', 'project_submit_items_list'], []),// , 'join_items'
+        ];
+
+        $info = CTAPIAbilityJoinItemsBusiness::getInfoData($request, $this, $id, [], '', $extParams);
+        // $reDataArr = array_merge($reDataArr, $resultDatas);
+        if(empty($info)) {
+            throws('记录不存在！');
+        }
+        $user_info = $this->user_info;
+        if($info['admin_type'] != $user_info['admin_type'] || $info['staff_id'] != $this->user_id) throws('非法访问，您没有访问此记录的权限！');
+
+        if(!in_array($info['status'], [2]) || !in_array($info['is_sample'], [2])) throws('非已取样状态，不可进行此操作');
+        $item_reslut_info = $info['join_item_reslut_info_save'] ?? [];
+        if(empty($item_reslut_info)) throws('还没有能力验证单次结果记录');
+
+        // 领样列表
+        $items_samples_list = $item_reslut_info['items_samples_list'] ?? [];
+        if(empty($items_samples_list)) throws('您还没有领样记录！');
+
+        // 每个样品，需要获得的数据信息
+        $project_submit_items_list = $info['project_submit_items_list'] ?? [];
+        if(empty($project_submit_items_list)) throws('样品验证数据项不存在！');
+
+        // 开始获得数据--样品
+        $join_items_sample_result = [];
+        foreach($items_samples_list as $k => $sample_info){
+            $tem_sample_id = $sample_info['id'];
+            foreach($project_submit_items_list as $t_k => $submit_item_info){
+                $tem_sample_item_id = $submit_item_info['id'];
+
+                $sample_result = CommonRequest::get($request, 'sample_result_' . $tem_sample_id . '_' . $tem_sample_item_id);
+                if($sample_result == '') throws('样品编号：' . $sample_info['sample_one'] . '-【' . $submit_item_info['name'] .'】不能为空！');
+                array_push($join_items_sample_result, [
+                    'ability_join_item_id' =>  $sample_info['ability_join_item_id'],
+                    'retry_no' =>  $sample_info['retry_no'],
+                    'result_id' =>  $sample_info['result_id'],
+                    'sample_id' =>  $tem_sample_id,
+                    'submit_item_id' =>  $tem_sample_item_id,
+                    'sample_result' =>  $sample_result,
+                ]);
+            }
+        }
+
+        // 检测所用仪器
+        $instrument_arr = [];
+        // id
+        $instrument_id = CommonRequest::get($request, 'instrument_id');
+        Tool::formatOneArrVals($instrument_id, [null, ''], ',', 1 | 8);
+        // 名称/型号
+        $instrument_model = CommonRequest::get($request, 'instrument_model');
+        Tool::formatOneArrVals($instrument_model, [null, ''], ',', 1 | 8);
+        // 出厂编号
+        $factory_number = CommonRequest::get($request, 'factory_number');
+        Tool::formatOneArrVals($factory_number, [null, ''], ',', 1 | 8);
+        // 检定日期
+        $check_date = CommonRequest::get($request, 'check_date');
+        Tool::formatOneArrVals($check_date, [null, ''], ',', 1 | 8);
+        // 有效期
+        $valid_date = CommonRequest::get($request, 'valid_date');
+        Tool::formatOneArrVals($valid_date, [null, ''], ',', 1 | 8);
+        foreach($instrument_id as $k => $instrument_id_val){
+            if($instrument_model[$k] == '') throws('检测所用仪器名称/型号不能为空');
+            array_push($instrument_arr,[
+                'id' => $instrument_id[$k],
+                'ability_join_item_id' => $item_reslut_info['ability_join_item_id'],
+                'retry_no' => $item_reslut_info['retry_no'],
+                'result_id' => $item_reslut_info['id'],
+                'instrument_model' => $instrument_model[$k],
+                'factory_number' => $factory_number[$k],
+                'check_date' => $check_date[$k],
+                'valid_date' => $valid_date[$k],
+            ]);
+        }
+
+        // 标准物质
+        $standard_arr = [];
+        // id
+        $standard_id = CommonRequest::get($request, 'standard_id');
+        Tool::formatOneArrVals($standard_id, [null, ''], ',', 1 | 8);
+        // 名称
+        $standard_name = CommonRequest::get($request, 'standard_name');
+        Tool::formatOneArrVals($standard_name, [null, ''], ',', 1 | 8);
+        // 生产单位
+        $produce_unit = CommonRequest::get($request, 'produce_unit');
+        Tool::formatOneArrVals($produce_unit, [null, ''], ',', 1 | 8);
+        // 批号
+        $batch_number = CommonRequest::get($request, 'batch_number');
+        Tool::formatOneArrVals($batch_number, [null, ''], ',', 1 | 8);
+        // 有效期
+        $standard_valid_date = CommonRequest::get($request, 'standard_valid_date');
+        Tool::formatOneArrVals($standard_valid_date, [null, ''], ',', 1 | 8);
+        foreach($standard_id as $k => $standard_id_val){
+            if($standard_name[$k] == '') throws('标准物质名称不能为空');
+            array_push($standard_arr,[
+                'id' => $standard_id[$k],
+                'ability_join_item_id' => $item_reslut_info['ability_join_item_id'],
+                'retry_no' => $item_reslut_info['retry_no'],
+                'result_id' => $item_reslut_info['id'],
+                'name' => $standard_name[$k],
+                'produce_unit' => $produce_unit[$k],
+                'batch_number' => $batch_number[$k],
+                'valid_date' => $standard_valid_date[$k],
+            ]);
+        }
+
+        // 方法依据
+        $method_arr = [];
+        // id
+        $method_id = CommonRequest::get($request, 'method_id');
+        Tool::formatOneArrVals($method_id, [null, ''], ',', 1 | 8);
+        // 内容
+        $content = CommonRequest::get($request, 'content');
+        Tool::formatOneArrVals($content, [null, ''], ',', 1 | 8);
+        foreach($method_id as $k => $method_id_val){
+            if($content[$k] == '') throws('方法依据内容不能为空');
+            array_push($method_arr,[
+                'id' => $method_id[$k],
+                'ability_join_item_id' => $item_reslut_info['ability_join_item_id'],
+                'retry_no' => $item_reslut_info['retry_no'],
+                'result_id' => $item_reslut_info['id'],
+                'content' => replace_enter_char($content[$k], 1),
+            ]);
+        }
+        $currentNow = Carbon::now()->toDateTimeString();
+        $saveData = [
+            'status' => 4,
+            'join_items_result' => [// 能力验证单次结果
+                'id' => $item_reslut_info['id'],
+                'submit_status' => 2,
+                'submit_time' => $currentNow,
+                // ''
+            ]
+        ];
+
+//        if($id <= 0) {// 新加;要加入的特别字段
+//            $addNewData = [
+//                // 'account_password' => $account_password,
+//            ];
+//            $saveData = array_merge($saveData, $addNewData);
+//        }
+        $extParams = [
+            'judgeDataKey' => 'replace',// 数据验证的下标
+        ];
+        $resultDatas = CTAPIAbilityJoinItemsBusiness::replaceById($request, $this, $saveData, $id, $extParams, true);
+        return ajaxDataArr(1, $resultDatas, '');
+    }
 
     /**
      * @OA\Get(

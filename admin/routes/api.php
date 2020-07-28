@@ -280,6 +280,8 @@ $api->version('v1', function ($api) {
 //        $api->post('company/ability_join_item/import', 'WebFront\Company\QualityControl\AbilityJoinItemsController@import');// 导入excel
 //        $api->post('company/ability_join_item/ajax_get_ids', 'WebFront\Company\QualityControl\AbilityJoinItemsController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
+        $api->any('company/ability_join_item/ajax_save_result_sample', 'WebFront\Company\QualityControl\AbilityJoinItemsController@ajax_save_result_sample');// 新加/修改 -- 数据提交
+
         // 企业能力附表
         $api->any('company/company_schedule/ajax_alist', 'WebFront\Company\QualityControl\CompanyScheduleController@ajax_alist');//ajax获得列表数据
         $api->post('company/company_schedule/ajax_del', 'WebFront\Company\QualityControl\CompanyScheduleController@ajax_del');// 删除
