@@ -93,7 +93,7 @@
     var LIST_URL = "{{url('company/abilitys')}}";//保存成功后跳转到的地址
 
 </script>
-<script src="{{ asset('/js/company/QualityControl/Abilitys_join.js?19') }}"  type="text/javascript"></script>
+<script src="{{ asset('/js/company/QualityControl/Abilitys_join.js?192') }}"  type="text/javascript"></script>
 </body>
 </html>
 
