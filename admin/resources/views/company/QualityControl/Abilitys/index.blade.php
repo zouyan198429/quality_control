@@ -104,6 +104,6 @@
       var COMPANY_SCHEDULE_URL = "{{ url('company/company_schedule') }}/";//能力附表列表地址
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/company/QualityControl/Abilitys.js') }}?4"  type="text/javascript"></script>
+  <script src="{{ asset('js/company/QualityControl/Abilitys.js') }}?44"  type="text/javascript"></script>
 </body>
 </html>
