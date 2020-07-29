@@ -51,13 +51,10 @@ class CompanyScheduleDBBusiness extends BasePublicDBBusiness
         $hasResource = false;
 
         $resourceIds = [];
-        $resource_ids = $saveData['resource_ids'] ?? '';// 图片资源id串(逗号分隔-未尾逗号结束)
-        if(isset($saveData['resourceIds'])){
-            $hasResource = true;
-            $resourceIds = $saveData['resourceIds'];
-            unset($saveData['resourceIds']);
-            $saveData['resource_id'] = $resourceIds[0] ?? 0;// 第一个图片资源的id
+        if(Tool::getInfoUboundVal($saveData, 'resourceIds', $hasResource, $resourceIds, 1)){
+             $saveData['resource_id'] = $resourceIds[0] ?? 0;// 第一个图片资源的id
         }
+        $resource_ids = $saveData['resource_ids'] ?? '';// 图片资源id串(逗号分隔-未尾逗号结束)
         // if(isset($saveData['resource_ids']))  unset($saveData['resource_ids']);
         // if(isset($saveData['resource_id']))  unset($saveData['resource_id']);
 

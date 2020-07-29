@@ -2,6 +2,7 @@
 // 能力验证取样登记表
 namespace App\Business\DB\QualityControl;
 
+use App\Services\Tool;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -38,11 +39,7 @@ class AbilityJoinItemsSamplesDBBusiness extends BasePublicDBBusiness
         // 能力验证取样登记样品结果
         $items_sample_result = [];
         $has_sample_result = false;// 是否有 false:没有 ； true:有
-        if(isset($saveData['items_sample_result'])){
-            $items_sample_result = $saveData['items_sample_result'];
-            unset($saveData['items_sample_result']);
-            $has_sample_result = true;
-        }
+        Tool::getInfoUboundVal($saveData, 'items_sample_result', $has_sample_result, $items_sample_result, 1);
 
         $operate_staff_id_history = config('public.operate_staff_id_history', 0);// 0;--写上，不然后面要去取，但现在的系统不用历史表
         // 保存前的处理

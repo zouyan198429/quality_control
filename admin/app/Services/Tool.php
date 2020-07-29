@@ -1137,6 +1137,29 @@ class Tool
 
     // 数组操作
     /**
+     * 获得一维数组中的某个下标值【如果存在】及这个下标值是否存在
+     *
+     * @param array $info 需要处理的一维数组
+     * @param string $ubound 要判断的下标
+     * @param boolean $has_ubound 下标是否存在 true:存在 ，false:不存在
+     * @param mixed $ubound_val 这个下标的值
+     * @param int $operate_num 操作 1：如果存在unset 去掉此下标
+     * @return boolean 返回 是否存在 true:存在 ，false:不存在
+     */
+    public static function getInfoUboundVal(&$info = [], $ubound = '', &$has_ubound = false, &$ubound_val = '', $operate_num = 1 ){
+        if($ubound == '') return $has_ubound;
+        // 样品编号
+//        $ubound_val = [];
+//        $has_ubound = false;// 样品编号 false:没有 ； true:有
+        if(isset($info[$ubound])){
+            $ubound_val = $info[$ubound];
+            if(($operate_num & 1) == 1) unset($info[$ubound]);
+            $has_ubound = true;
+        }
+        return $has_ubound;
+    }
+
+    /**
      * 将数组中的标签替换为数组｛下标为标签｝对应的值
      *
      * @param array $dataArr 需要替换的数组 任一维数组

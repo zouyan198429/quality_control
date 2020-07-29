@@ -213,11 +213,8 @@ class AbilityJoinDBBusiness extends BasePublicDBBusiness
         // 样品编号
         $sample_num_data = [];
         $has_sample_num = false;// 样品编号 false:没有 ； true:有
-        if(isset($saveData['sample_num_data'])){
-            $sample_num_data = $saveData['sample_num_data'];
-            unset($saveData['sample_num_data']);
-            $has_sample_num = true;
-        }
+        Tool::getInfoUboundVal($saveData, 'sample_num_data', $has_sample_num, $sample_num_data, 1);
+
 
         if(empty($sample_num_data)) return $id;
 

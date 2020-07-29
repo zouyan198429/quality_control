@@ -2,6 +2,7 @@
 // 能力验证单次结果
 namespace App\Business\DB\QualityControl;
 
+use App\Services\Tool;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -37,50 +38,30 @@ class AbilityJoinItemsResultsDBBusiness extends BasePublicDBBusiness
         // 能力验证检测所用仪器
         $results_instrument = [];
         $has_results_instrument = false;// 是否有 false:没有 ； true:有
-        if(isset($saveData['results_instrument'])){
-            $results_instrument = $saveData['results_instrument'];
-            unset($saveData['results_instrument']);
-            $has_results_instrument = true;
-        }
+        Tool::getInfoUboundVal($saveData, 'results_instrument', $has_results_instrument, $results_instrument, 1);
 
         // 能力验证检测标准物质
         $results_standard = [];
         $has_results_standard = false;// 是否有 false:没有 ； true:有
-        if(isset($saveData['results_standard'])){
-            $results_standard = $saveData['results_standard'];
-            unset($saveData['results_standard']);
-            $has_results_standard = true;
-        }
+        Tool::getInfoUboundVal($saveData, 'results_standard', $has_results_standard, $results_standard, 1);
 
         // 检测方法依据
         $results_method = [];
         $has_results_method = false;// 是否有 false:没有 ； true:有
-        if(isset($saveData['results_method'])){
-            $results_method = $saveData['results_method'];
-            unset($saveData['results_method']);
-            $has_results_method = true;
-        }
+        Tool::getInfoUboundVal($saveData, 'results_method', $has_results_method, $results_method, 1);
 
         // 能力验证取样登记表
         $items_samples = [];
         $has_items_samples = false;// 是否有 false:没有 ； true:有
-        if(isset($saveData['items_samples'])){
-            $items_samples = $saveData['items_samples'];
-            unset($saveData['items_samples']);
-            $has_items_samples = true;
-        }
+        Tool::getInfoUboundVal($saveData, 'items_samples', $has_items_samples, $items_samples, 1);
 
         // 是否有图片资源
         $hasResource = false;
-
         $resourceIds = [];
-        $resource_ids = $saveData['resource_ids'] ?? '';// 图片资源id串(逗号分隔-未尾逗号结束)
-        if(isset($saveData['resourceIds'])){
-            $hasResource = true;
-            $resourceIds = $saveData['resourceIds'];
-            unset($saveData['resourceIds']);
+        if(Tool::getInfoUboundVal($saveData, 'resourceIds', $hasResource, $resourceIds, 1)){
             // $saveData['resource_id'] = $resourceIds[0] ?? 0;// 第一个图片资源的id
         }
+        $resource_ids = $saveData['resource_ids'] ?? '';// 图片资源id串(逗号分隔-未尾逗号结束)
         // if(isset($saveData['resource_ids']))  unset($saveData['resource_ids']);
         // if(isset($saveData['resource_id']))  unset($saveData['resource_id']);
 

@@ -39,20 +39,12 @@ class AbilityJoinItemsDBBusiness extends BasePublicDBBusiness
         // 能力验证报名项-项目标准
         $ability_join_items_standards = [];
         $has_join_item_standards = false;// 是否有 false:没有 ； true:有
-        if(isset($saveData['ability_join_items_standards'])){
-            $ability_join_items_standards = $saveData['ability_join_items_standards'];
-            unset($saveData['ability_join_items_standards']);
-            $has_join_item_standards = true;
-        }
+        Tool::getInfoUboundVal($saveData, 'ability_join_items_standards', $has_join_item_standards, $ability_join_items_standards, 1);
 
         // 能力验证单次结果
         $join_items_result = [];
         $has_items_result = false;// 是否有 false:没有 ； true:有
-        if(isset($saveData['join_items_result'])){
-            $join_items_result = $saveData['join_items_result'];
-            unset($saveData['join_items_result']);
-            $has_items_result = true;
-        }
+        Tool::getInfoUboundVal($saveData, 'join_items_result', $has_items_result, $join_items_result, 1);
 
         $operate_staff_id_history = config('public.operate_staff_id_history', 0);// 0;--写上，不然后面要去取，但现在的系统不用历史表
         // 保存前的处理
