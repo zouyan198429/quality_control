@@ -53,19 +53,19 @@
                 </fieldset>
                 <div class="layui-form-item">
                     <label class="layui-form-label">姓名</label>
-                    <div class="layui-input-block">
+                    <div class="layui-form-mid layui-word-aux">
                         {{ $info['contacts'] ?? '' }}
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">手机</label>
-                    <div class="layui-input-block">
+                    <div class="layui-form-mid layui-word-aux">
                         {{ $info['mobile'] ?? '' }}
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">联系电话</label>
-                    <div class="layui-input-block">
+                    <div class="layui-form-mid layui-word-aux">
                         {{ $info['tel'] ?? '' }}
                     </div>
                 </div>

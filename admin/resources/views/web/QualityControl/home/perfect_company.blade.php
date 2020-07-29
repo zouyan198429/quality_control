@@ -169,7 +169,7 @@
 				    <div class="form-input"><input type="text" name="company_contact_mobile" class="form-control" autocomplete="off" value="{{ $info['company_contact_mobile'] ?? '' }}"></div>
 				</div>
                 <div class="form-item">
-                    <label for="text" class="form-label">固定电话<span class="red">*</span></label>
+                    <label for="text" class="form-label">固定电话<span class="red"></span></label>
                     <div class="form-input"><input type="text" name="company_contact_tel" class="form-control" autocomplete="off" value="{{ $info['company_contact_tel'] ?? '' }}"></div>
                 </div>
 				<div class="form-item read_and_agree">
@@ -227,6 +227,6 @@
 {{--<script src="{{asset('js/baguetteBox.js/highlight.min.js')}}" async></script>--}}
 <!-- zui js -->
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
-<script src="{{ asset('/js/web/QualityControl/perfect_company.js') }}"  type="text/javascript"></script>
+<script src="{{ asset('/js/web/QualityControl/perfect_company.js') }}?1"  type="text/javascript"></script>
 @component('component.upfileincludejs')
 @endcomponent

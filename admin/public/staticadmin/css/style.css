@@ -57,6 +57,7 @@ select { height:24px; line-height:24px; }
     cursor: pointer;
     text-align: center;
     vertical-align: middle;
+    height: 24px;
     border: 0 none;
     border-radius: 2px 2px 2px 2px;
 	background-color: #348fd4;
