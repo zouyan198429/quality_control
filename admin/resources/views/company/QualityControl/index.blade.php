@@ -25,21 +25,12 @@
               <i class="layui-icon layui-icon-shrink-right" id="LAY_app_flexible"></i>
             </a>
           </li>
-          {{--<li class="layui-nav-item layui-hide-xs" lay-unselect>--}}
-            {{--<a href="http://www.layui.com/admin/" target="_blank" title="前台">--}}
-              {{--<i class="layui-icon layui-icon-website"></i>--}}
-            {{--</a>--}}
-          {{--</li>--}}
+          
           <li class="layui-nav-item" lay-unselect>
             <a href="javascript:;" layadmin-event="refresh" title="刷新">
               <i class="layui-icon layui-icon-refresh-3"></i>
             </a>
-          </li>
-          {{----}}
-          {{--<li class="layui-nav-item layui-hide-xs" lay-unselect>--}}
-            {{--<input type="text" placeholder="搜索..." autocomplete="off" class="layui-input layui-input-search" layadmin-event="serach" lay-action="{{ url('layui/template/search') }}?keywords=">--}}
-          {{--</li>--}}
-          {{----}}
+          </li> 
         </ul>
         <ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
 
@@ -56,12 +47,7 @@
               <i class="layui-icon layui-icon-theme"></i>
             </a>
           </li>
-
-          {{--<li class="layui-nav-item layui-hide-xs" lay-unselect>--}}
-            {{--<a href="javascript:;" layadmin-event="note">--}}
-              {{--<i class="layui-icon layui-icon-note"></i>--}}
-            {{--</a>--}}
-          {{--</li>--}}
+ 
 
           <li class="layui-nav-item layui-hide-xs" lay-unselect>
             <a href="javascript:;" layadmin-event="fullscreen">
@@ -98,24 +84,7 @@
           </div>
 
           <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
-            {{--<li data-name="home" class="layui-nav-item layui-nav-itemed">--}}
-              {{--<a href="javascript:;" lay-tips="主页" lay-direction="2">--}}
-                {{--<i class="layui-icon layui-icon-home"></i>--}}
-                {{--<cite>主页</cite>--}}
-              {{--</a>--}}
-              {{--<dl class="layui-nav-child">--}}
-                {{--<dd data-name="console" class="layui-this">--}}
-                  {{--<a lay-href="{{ url('layui/home/console') }}">控制台</a>--}}
-                  {{--<a lay-href="{{ url('/help/index.html') }}">控制台</a>--}}
-                {{--</dd>--}}
-                {{--<dd data-name="console">--}}
-                  {{--<a lay-href="{{ url('layui/home/homepage1') }}">主页一</a>--}}
-                {{--</dd>--}}
-                {{--<dd data-name="console">--}}
-                  {{--<a lay-href="{{ url('layui/home/homepage2') }}">主页二</a>--}}
-                {{--</dd>--}}
-              {{--</dl>--}}
-            {{--</li>--}}
+ 
 
           <!--   <li data-name="user" class="layui-nav-item">
               <a href="javascript:;" lay-tips="面授培训" lay-direction="2">
@@ -174,7 +143,7 @@
                       </dd>
                   </dl>
               </li>
-              <li data-name="user" class="layui-nav-item">
+             <!-- <li data-name="user" class="layui-nav-item">
                   <a href="javascript:;" lay-tips="员工管理" lay-direction="2">
                       <i class="layui-icon layui-icon-component"></i>
                       <cite>员工管理</cite>
@@ -185,7 +154,7 @@
                       </dd>
                   </dl>
               </li>
-             <!--  <li data-name="user" class="layui-nav-item">
+               <li data-name="user" class="layui-nav-item">
                   <a href="javascript:;" lay-tips="发票管理" lay-direction="2">
                       <i class="layui-icon layui-icon-component"></i>
                       <cite>发票管理</cite>
@@ -222,7 +191,7 @@
                   <dd>
                       <a lay-href="{{ url('company/company_schedule') }}">能力附表</a>
                   </dd>
-                  <dd>
+<!--                   <dd>
                       <a lay-href="javascript:void(83);">开票信息</a>
                   </dd>
                   <dd>
@@ -233,7 +202,7 @@
                   </dd>
                   <dd>
                       <a lay-href="javascript:void(86);">我的会籍</a>
-                  </dd>
+                  </dd> -->
               </dl>
             </li>
           </ul>
@@ -258,7 +227,6 @@
         </div>
         <div class="layui-tab" lay-unauto lay-allowClose="true" lay-filter="layadmin-layout-tabs">
           <ul class="layui-tab-title" id="LAY_app_tabsheader">
-            {{--<li lay-id="{{ url('layui/home/console') }}" lay-attr="{{ url('layui/home/console') }}" class="layui-this"><i class="layui-icon layui-icon-home"></i></li>--}}
             <li lay-id="{{ url('/help/index.html') }}" lay-attr="{{ url('/help/index.html') }}" class="layui-this"><i class="layui-icon layui-icon-home"></i></li>
           </ul>
         </div>
@@ -268,8 +236,7 @@
       <!-- 主体内容 -->
       <div class="layui-body" id="LAY_app_body">
         <div class="layadmin-tabsbody-item layui-show">
-          {{--<iframe src="{{ url('layui/home/console') }}" frameborder="0" class="layadmin-iframe"></iframe>--}}
-          <iframe src="{{ url('/help/index.html') }}" frameborder="0" class="layadmin-iframe"></iframe>
+          <iframe src="/help/index.html" frameborder="0" class="layadmin-iframe"></iframe>
         </div>
       </div>
 
@@ -279,7 +246,6 @@
   </div>
 
   <script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.js')}}"></script>
-  {{--<script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.all.js')}}"></script>--}}
 
   <script>
   layui.config({
@@ -288,18 +254,7 @@
     index: 'lib/index' //主入口模块
   }).use('index');
   </script>
-  {{--
-  <!-- 百度统计 -->
-  <script>
-  var _hmt = _hmt || [];
-  (function() {
-    var hm = document.createElement("script");
-    hm.src = "https://hm.baidu.com/hm.js?d214947968792b839fd669a4decaaffc";
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(hm, s);
-  })();
-  </script>
-  --}}
+ 
 </body>
 </html>
 

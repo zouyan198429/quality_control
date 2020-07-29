@@ -12,20 +12,20 @@
   <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/css/layui.css')}}" media="all">
   <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/style/admin.css')}}" media="all">
 </head>
-<body>
-
-{{--<div id="crumb"><i class="fa fa-reorder fa-fw" aria-hidden="true"></i> 我的同事</div>--}}
+<body> 
 <div class="mm">
   <div class="mmhead" id="mywork">
 
     @include('common.pageParams')
-    <div class="tabbox" >
-      <a href="javascript:void(0);" class="on" onclick="otheraction.joinSelected(this)">报名</a>
+    <div class="layui-card-header">
+        <h3 style="width:120px; float: left;">报名项目</h3>
+        <div class="tabbox"  style="float: right; width:72px;" >
+          <a href="javascript:void(0);" class="on" onclick="otheraction.joinSelected(this)">报名</a>
+        </div>
     </div>
+    
     <form onsubmit="return false;" class="form-horizontal" style="display: none;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
-
-
         <select style="width:80px; height:28px;" name="field">
           <option value="ability_name">检测项目</option>
         </select>
@@ -39,17 +39,11 @@
     <colgroup>
         <col width="50">
         <col width="50">
+        <col> 
         <col>
-       <!--  <col width="60"> -->
-{{--        <col width="80">--}}
-        <col>
-        <col>
-{{--        <col>--}}
-{{--        <col width="">--}}
+        <col> 
         <col width="90">
-        <col width="90">
-{{--        <col width="">--}}
-{{--        <col width="90">--}}
+        <col width="90"> 
         <col width="150">
     </colgroup>
     <thead>
@@ -60,18 +54,11 @@
         </label>
       </th>
       <th>ID</th>
-      <th>检测项目</th>
-        <!-- <th>预估参加数</th> -->
-{{--        <th>报名企业</th>--}}
+      <th>检测项目</th> 
         <th>发布时间</th>
-        <th>报名时间</th>
-        <!-- <th>方法标准</th> -->
-{{--        <th>验证数据项</th>--}}
-{{--        <th>提交时限</th>--}}
+        <th>报名时间</th> 
         <th>状态</th>
-        <th>是否报名</th>
-{{--        <th>是否公布结果</th>--}}
-{{--        <th>公布时间</th>--}}
+        <th>是否报名</th> 
       <th>操作</th>
     </tr>
     </thead>
@@ -88,7 +75,6 @@
 
   <script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>
   <script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.all.js')}}"></script>
-  {{--<script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.js')}}"></script>--}}
   @include('public.dynamic_list_foot')
 
   <script type="text/javascript">

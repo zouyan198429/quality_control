@@ -13,13 +13,11 @@
   <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/style/admin.css')}}" media="all">
 </head>
 <body>
-
-{{--<div id="crumb"><i class="fa fa-reorder fa-fw" aria-hidden="true"></i> 我的同事</div>--}}
+ 
 <div class="mm">
   <div class="mmhead" id="mywork">
 
-    @include('common.pageParams')
-{{--      只有非会员单位可以手动添加，其它等级的需要再操作--}}
+    @include('common.pageParams') 
       @if(isset($company_grade) && $company_grade == 1)
         <div class="tabbox" >
           <a href="javascript:void(0);" class="on" onclick="action.iframeModify(0)">添加单位</a>
@@ -136,10 +134,7 @@
   <div class="table-header">
     <button class="btn btn-danger  btn-xs batch_del"  onclick="action.batchDel(this)">批量删除</button>
     <button class="btn btn-success  btn-xs export_excel"  onclick="action.batchExportExcel(this)" >导出[按条件]</button>
-    <button class="btn btn-success  btn-xs export_excel"  onclick="action.exportExcel(this)" >导出[勾选]</button>
-{{--    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcelTemplate(this)">导入模版[EXCEL]</button>--}}
-{{--    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcel(this)">导入</button>--}}
-{{--    <div style="display:none;" ><input type="file" class="import_file img_input"></div>{ {--导入file对象--} }--}}
+    <button class="btn btn-success  btn-xs export_excel"  onclick="action.exportExcel(this)" >导出[勾选]</button> 
       <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.openSelected(this, 2)" >审核通过[勾选]</button>
       <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.openSelected(this, 4)" >审核不通过[勾选]</button>
     <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.frozenSelected(this, 2)" >冻结[勾选]</button>
@@ -160,8 +155,7 @@
         <col width="120">
         <col width="50">
         <col width="160">
-        <col width="200">
-{{--        <col width="150">--}}
+        <col width="200"> 
     </colgroup>
     <thead>
     <tr>
@@ -182,11 +176,7 @@
         <th>完善资料</th>
         <th>审核</th>
         <th>状态</th>
-        <th>注册时间</th>
-{{--        <th>上次登录</th>--}}
-{{--      <th>创建时间</th>--}}
-{{--      <th>更新时间</th>--}}
-      {{--<th>排序[降序]</th>--}}
+        <th>注册时间</th> 
       <th>操作</th>
     </tr>
     </thead>

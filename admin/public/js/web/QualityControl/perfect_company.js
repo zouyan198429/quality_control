@@ -244,7 +244,7 @@ function ajax_form(){
     }
 
     var company_contact_tel = $('input[name=company_contact_tel]').val();
-    if(!judge_validate(4,'固定电话',company_contact_tel,true,'length',6,20)){
+    if(!judge_validate(4,'固定电话',company_contact_tel,false,'length',6,20)){
         return false;
     }
 

@@ -14,7 +14,6 @@
 </head>
 <body>
 
-{{--<div id="crumb"><i class="fa fa-reorder fa-fw" aria-hidden="true"></i> {{ $operate ?? '' }}员工</div>--}}
 <div class="mm">
         <table class="table1">
             <tr>
@@ -22,13 +21,7 @@
                 <td>
                     {{ $info['ability_name'] ?? '' }}
                 </td>
-            </tr>
-{{--            <tr>--}}
-{{--                <th>预估参加实验数<span class="must"></span></th>--}}
-{{--                <td>--}}
-{{--                    {{ $info['estimate_add_num'] ?? '' }}--}}
-{{--                </td>--}}
-{{--            </tr>--}}
+            </tr> 
             <tr>
                 <th>报名起止时间<span class="must"></span></th>
                 <td>
@@ -60,8 +53,7 @@
 </div>
 <script type="text/javascript" src="{{asset('laydate/laydate.js')}}"></script>
 <script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>
-<script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.all.js')}}"></script>
-{{--<script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.js')}}"></script>--}}
+<script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.all.js')}}"></script> 
 @include('public.dynamic_list_foot')
 <script type="text/javascript">
 

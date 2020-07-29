@@ -13,15 +13,11 @@
   <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/style/admin.css')}}" media="all">
 </head>
 <body>
-
-{{--<div id="crumb"><i class="fa fa-reorder fa-fw" aria-hidden="true"></i> 我的同事</div>--}}
+ 
 <div class="mm">
   <div class="mmhead" id="mywork">
 
-    @include('common.pageParams')
-{{--    <div class="tabbox" >--}}
-{{--      <a href="javascript:void(0);" class="on" onclick="action.iframeModify(0)">添加项目</a>--}}
-{{--    </div>--}}
+    @include('common.pageParams') 
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
           <select class="wmini" name="status" style="width: 80px;">
@@ -60,13 +56,10 @@
         <col width="50">
         <col width="50">
         <col>
-{{--        <col>--}}
         <col  width="150">
         <col width="75">
         <col width="75">
-        <col width="70">
-{{--        <col width="75">--}}
-{{--        <col width="75">--}}
+        <col width="70"> 
         <col width="150">
     </colgroup>
     <thead>
@@ -78,13 +71,10 @@
       </th>
         <th>ID</th>
         <th>能力验证代码</th>
-{{--        <th>单位</th>--}}
         <th>报名时间</th>
         <th>报名项目</th>
         <th>满意项目</th>
-        <th>状态</th>
-{{--        <th>打印证书</th>--}}
-{{--        <th>领取证书</th>--}}
+        <th>状态</th> 
         <th>操作</th>
     </tr>
     </thead>
@@ -101,7 +91,6 @@
 
   <script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>
   <script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.all.js')}}"></script>
-  {{--<script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.js')}}"></script>--}}
   @include('public.dynamic_list_foot')
 
   <script type="text/javascript">
