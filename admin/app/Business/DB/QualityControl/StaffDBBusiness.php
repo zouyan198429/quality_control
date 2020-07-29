@@ -494,13 +494,18 @@ class StaffDBBusiness extends BasePublicDBBusiness
      * @param int  $company_id 企业id
      * @param string $id id 多个用，号分隔
      * @param int $operate_staff_id 操作人id
-     * @param int $admin_type 类型1平台2企业4个人-- 要操作的数据的
-     * @param int $organize_id 操作的企业id 可以为0：不指定具体的企业
      * @param int $modifAddOprate 修改时是否加操作人，1:加;0:不加[默认]
+     * @param array $extendParams 其它参数--扩展用参数
+     *  [
+     *      'admin_type' => 2,型1平台2企业4个人-- 要操作的数据的
+     *       'organize_id' => 3,操作的企业id 可以为0：不指定具体的企业
+     *  ]
      * @return  int 记录id值
      * @author zouyan(305463219@qq.com)
      */
-    public static function delById($company_id, $id, $operate_staff_id = 0, $admin_type = 0, $organize_id = 0, $modifAddOprate = 0){
+    public static function delById($company_id, $id, $operate_staff_id = 0, $modifAddOprate = 0, $extendParams = []){
+        $admin_type = $extendParams['admin_type'] ?? 0;// 型1平台2企业4个人-- 要操作的数据的
+        $organize_id = $extendParams['organize_id'] ?? 0;// 操作的企业id 可以为0：不指定具体的企业
 
         if(strlen($id) <= 0){
             throws('操作记录标识不能为空！');

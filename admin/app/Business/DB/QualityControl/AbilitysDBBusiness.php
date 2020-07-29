@@ -101,114 +101,147 @@ class AbilitysDBBusiness extends BasePublicDBBusiness
 
             // 如果有方法标准 修改
             if($has_project_standard){
-                $standardListArr = [];
-                $standardIds = [];
-                if($isModify){// 是修改
-                    // 获得所有的方法标准
-                    $queryParams = [
-                        'where' => [
-//                ['company_id', $organize_id],
-                            ['ability_id', $id],
-//                ['teacher_status',1],
-                        ],
-                        // 'select' => ['id', 'amount', 'status', 'my_order_no' ]
-                    ];
-                    $standardDataListObj = ProjectStandardsDBBusiness::getAllList($queryParams, []);
-                    $standardListArr = $standardDataListObj->toArray();
-                    if(!empty($standardListArr)) $standardIds = array_values(array_unique(array_column($standardListArr,'id')));
-                }
-
                 $standardNum = count($project_standards);
-                foreach($project_standards as $k => $standard_info){
+                $saveStandardData = [];
+                foreach($project_standards as $k => $standard_info) {
                     $standard_id = $standard_info['id'];
-                    $saveStandardData = [
+                    array_push($saveStandardData, [
+                        'id' => $standard_id,
                         'ability_id' => $id,
                         'name' => $standard_info['name'],
                         'sort_num' => $standardNum - $k,
-                    ];
-                    if($operate_staff_id > 0) $saveStandardData['operate_staff_id'] = $operate_staff_id;
-                    if($operate_staff_id_history > 0) $saveStandardData['operate_staff_id_history'] = $operate_staff_id_history;
-                    // 不存在的id
-                    if( $standard_id > 0 && !empty($standardIds) && !in_array($standard_id, $standardIds))  $standard_id = 0;
-//                    if($standard_id <= 0 ){
-                        ProjectStandardsDBBusiness::replaceById($saveStandardData, $company_id, $standard_id, $operate_staff_id, $modifAddOprate);
-//                    }else{
-                        // 可能会是修改
-//                        $updateFields = $saveStandardData;
-//                        $searchConditon = [
-//                            'ability_id' => $id,
-//                            'id' => $standard_id,
-//                        ];
-//                        $standardObj = null;
-//                        ProjectStandardsDBBusiness::firstOrCreate($standardObj, $searchConditon, $updateFields );
-//                    }
-                    // 移除当前的id
-                    $recordUncode = array_search($standard_id, $standardIds);
-                    if($recordUncode !== false) unset($standardIds[$recordUncode]);// 存在，则移除
-
+                    ]);
                 }
-                if($isModify && !empty($standardIds)) {// 是修改 且不为空
-                    // 删除记录
-                    ProjectStandardsDBBusiness::deleteByIds($standardIds);
-                }
-
-
+                $project_standard_ids = ProjectStandardsDBBusiness::updateByDataList(['ability_id' => $id], ['ability_id' => $id]
+                    , $saveStandardData, $isModify, $operate_staff_id, $operate_staff_id_history
+                    , 'id', $company_id, $modifAddOprate, []);
             }
+//            if($has_project_standard){
+//                $standardListArr = [];
+//                $standardIds = [];
+//                if($isModify){// 是修改
+//                    // 获得所有的方法标准
+//                    $queryParams = [
+//                        'where' => [
+////                ['company_id', $organize_id],
+//                            ['ability_id', $id],
+////                ['teacher_status',1],
+//                        ],
+//                        // 'select' => ['id', 'amount', 'status', 'my_order_no' ]
+//                    ];
+//                    $standardDataListObj = ProjectStandardsDBBusiness::getAllList($queryParams, []);
+//                    $standardListArr = $standardDataListObj->toArray();
+//                    if(!empty($standardListArr)) $standardIds = array_values(array_unique(array_column($standardListArr,'id')));
+//                }
+//
+//                $standardNum = count($project_standards);
+//                foreach($project_standards as $k => $standard_info){
+//                    $standard_id = $standard_info['id'];
+//                    $saveStandardData = [
+//                        'ability_id' => $id,
+//                        'name' => $standard_info['name'],
+//                        'sort_num' => $standardNum - $k,
+//                    ];
+//                    if($operate_staff_id > 0) $saveStandardData['operate_staff_id'] = $operate_staff_id;
+//                    if($operate_staff_id_history > 0) $saveStandardData['operate_staff_id_history'] = $operate_staff_id_history;
+//                    // 不存在的id
+//                    if( $standard_id > 0 && !empty($standardIds) && !in_array($standard_id, $standardIds))  $standard_id = 0;
+////                    if($standard_id <= 0 ){
+//                        ProjectStandardsDBBusiness::replaceById($saveStandardData, $company_id, $standard_id, $operate_staff_id, $modifAddOprate);
+////                    }else{
+//                        // 可能会是修改
+////                        $updateFields = $saveStandardData;
+////                        $searchConditon = [
+////                            'ability_id' => $id,
+////                            'id' => $standard_id,
+////                        ];
+////                        $standardObj = null;
+////                        ProjectStandardsDBBusiness::firstOrCreate($standardObj, $searchConditon, $updateFields );
+////                    }
+//                    // 移除当前的id
+//                    $recordUncode = array_search($standard_id, $standardIds);
+//                    if($recordUncode !== false) unset($standardIds[$recordUncode]);// 存在，则移除
+//
+//                }
+//                if($isModify && !empty($standardIds)) {// 是修改 且不为空
+//                    // 删除记录
+//                    ProjectStandardsDBBusiness::deleteByIds($standardIds);
+//                }
+//
+//
+//            }
 
 
             // 如果有验证数据项 修改
             if($has_submit_item){
-                $submitItemListArr = [];
-                $submitItemIds = [];
-                if($isModify){// 是修改
-                    // 获得所有的方法标准
-                    $queryParams = [
-                        'where' => [
-//                ['company_id', $organize_id],
-                            ['ability_id', $id],
-//                ['teacher_status',1],
-                        ],
-                        // 'select' => ['id', 'amount', 'status', 'my_order_no' ]
-                    ];
-                    $standardDataListObj = ProjectSubmitItemsDBBusiness::getAllList($queryParams, []);
-                    $submitItemListArr = $standardDataListObj->toArray();
-                    if(!empty($submitItemListArr)) $submitItemIds = array_values(array_unique(array_column($submitItemListArr,'id')));
-                }
-
+                // 处理数据
                 $submitNum = count($submit_items);
-                foreach($submit_items as $k => $submit_info){
+                $saveStandardData = [];
+                foreach($submit_items as $k => $submit_info) {
                     $standard_id = $submit_info['id'];
-                    $saveStandardData = [
+                    array_push($saveStandardData, [
+                        'id' => $standard_id,
                         'ability_id' => $id,
                         'name' => $submit_info['name'],
                         'sort_num' => $submitNum - $k,
-                    ];
-                    if($operate_staff_id > 0) $saveStandardData['operate_staff_id'] = $operate_staff_id;
-                    if($operate_staff_id_history > 0) $saveStandardData['operate_staff_id_history'] = $operate_staff_id_history;
-                    // 不存在的id
-                    if( $standard_id > 0 && !empty($submitItemIds) && !in_array($standard_id, $submitItemIds))  $standard_id = 0;
-//                    if($standard_id <= 0 ){
-                    ProjectSubmitItemsDBBusiness::replaceById($saveStandardData, $company_id, $standard_id, $operate_staff_id, $modifAddOprate);
-//                    }else{
-                    // 可能会是修改
-//                        $updateFields = $saveStandardData;
-//                        $searchConditon = [
-//                            'ability_id' => $id,
-//                            'id' => $standard_id,
-//                        ];
-//                        $standardObj = null;
-//                        ProjectSubmitItemsDBBusiness::firstOrCreate($standardObj, $searchConditon, $updateFields );
-//                    }
-                    // 移除当前的id
-                    $recordUncode = array_search($standard_id, $submitItemIds);
-                    if($recordUncode !== false) unset($submitItemIds[$recordUncode]);// 存在，则移除
-
+                    ]);
                 }
-                if($isModify && !empty($submitItemIds)) {// 是修改 且不为空
-                    // 删除记录
-                    ProjectSubmitItemsDBBusiness::deleteByIds($submitItemIds);
-                }
+                $submit_item_ids = ProjectSubmitItemsDBBusiness::updateByDataList(['ability_id' => $id], ['ability_id' => $id]
+                    , $saveStandardData, $isModify, $operate_staff_id, $operate_staff_id_history
+                    , 'id', $company_id, $modifAddOprate, []);
             }
+//            if($has_submit_item){
+//                $submitItemListArr = [];
+//                $submitItemIds = [];
+//                if($isModify){// 是修改
+//                    // 获得所有的方法标准
+//                    $queryParams = [
+//                        'where' => [
+////                ['company_id', $organize_id],
+//                            ['ability_id', $id],
+////                ['teacher_status',1],
+//                        ],
+//                        // 'select' => ['id', 'amount', 'status', 'my_order_no' ]
+//                    ];
+//                    $standardDataListObj = ProjectSubmitItemsDBBusiness::getAllList($queryParams, []);
+//                    $submitItemListArr = $standardDataListObj->toArray();
+//                    if(!empty($submitItemListArr)) $submitItemIds = array_values(array_unique(array_column($submitItemListArr,'id')));
+//                }
+//
+//                $submitNum = count($submit_items);
+//                foreach($submit_items as $k => $submit_info){
+//                    $standard_id = $submit_info['id'];
+//                    $saveStandardData = [
+//                        'ability_id' => $id,
+//                        'name' => $submit_info['name'],
+//                        'sort_num' => $submitNum - $k,
+//                    ];
+//                    if($operate_staff_id > 0) $saveStandardData['operate_staff_id'] = $operate_staff_id;
+//                    if($operate_staff_id_history > 0) $saveStandardData['operate_staff_id_history'] = $operate_staff_id_history;
+//                    // 不存在的id
+//                    if( $standard_id > 0 && !empty($submitItemIds) && !in_array($standard_id, $submitItemIds))  $standard_id = 0;
+////                    if($standard_id <= 0 ){
+//                    ProjectSubmitItemsDBBusiness::replaceById($saveStandardData, $company_id, $standard_id, $operate_staff_id, $modifAddOprate);
+////                    }else{
+//                    // 可能会是修改
+////                        $updateFields = $saveStandardData;
+////                        $searchConditon = [
+////                            'ability_id' => $id,
+////                            'id' => $standard_id,
+////                        ];
+////                        $standardObj = null;
+////                        ProjectSubmitItemsDBBusiness::firstOrCreate($standardObj, $searchConditon, $updateFields );
+////                    }
+//                    // 移除当前的id
+//                    $recordUncode = array_search($standard_id, $submitItemIds);
+//                    if($recordUncode !== false) unset($submitItemIds[$recordUncode]);// 存在，则移除
+//
+//                }
+//                if($isModify && !empty($submitItemIds)) {// 是修改 且不为空
+//                    // 删除记录
+//                    ProjectSubmitItemsDBBusiness::deleteByIds($submitItemIds);
+//                }
+//            }
 
         } catch ( \Exception $e) {
             DB::rollBack();
@@ -228,10 +261,11 @@ class AbilitysDBBusiness extends BasePublicDBBusiness
      * @param int $id id
      * @param int $operate_staff_id 操作人id
      * @param int $modifAddOprate 修改时是否加操作人，1:加;0:不加[默认]
+     * @param array $extendParams 其它参数--扩展用参数
      * @return  int 记录id值
      * @author zouyan(305463219@qq.com)
      */
-    public static function delById($company_id, $id, $operate_staff_id = 0, $modifAddOprate = 0){
+    public static function delById($company_id, $id, $operate_staff_id = 0, $modifAddOprate = 0, $extendParams = []){
 
         if(strlen($id) <= 0){
             throws('操作记录标识不能为空！');

@@ -301,6 +301,148 @@ class BaseDBBusiness extends BaseBusiness
     }
 
     /**
+     * 通过列表更新数据【新加 id = 0/ 修改 id > 0】
+     * @param array  $fieldRelations 查询用 要执行的表字段与主表的值  ['staff_id' => 'id'// 相系表的字段 =》 在主表中的值: 一维数组或多个，分隔的字符]
+     * @param array  $newFieldVals  如果新加时，需要默认加入的字段及值  -- 一维数组  ['字段' => '值'，...]
+     * @param array  $newDataList 需要操作的记录  一维或二维数组 , 为 空：清空
+     * @param int  $isModify 是否先读取所有的  true/1:读取所有的【默认】  false/0: 不读取 -- 确认是只是新加可以用这个
+     * @param int $operate_staff_id 操作人id
+     * @param int $operate_staff_id_history 操作人历史id
+     * @param string  $id_field 主键字段名称 id--默认
+     * @param int  $company_id 企业id
+     * @param int $modifAddOprate 修改时是否加操作人，1:加;0:不加[默认]
+     * @param array  $extendParams 其它扩展参数
+     *  $extendParams = [
+     *      'del' => [// 删除用
+     *          'del_type' => 1,// 删除方式  1：批量删除 static::deleteByIds($dbIds) [默认] 2: 多次单个删除：static::delById($company_id, $tem_id, $operate_staff_id, $modifAddOprate, $extendParams);
+     *          'extend_params' => [],// 删除的扩展参数 一维数组  del_type = 2时：用 -- 具体可有的参数：请看 delById 方法的扩展参数
+     *      ],
+     *      'sqlParams' => [// 其它sql条件[拼接/覆盖式],下面是常用的，其它的也可以---查询用
+     *          // '如果有值，则替换where' --拼接
+     *          'where' => [// -- 可填 如 默认条件 'type_id' => 5  'admin_type' => $user_info['admin_type'],'staff_id' =>  $user_info['id']
+     *          ['type_id', 5],
+     *          ],
+     *          'select' => '如果有值，则替换select',// --覆盖
+     *          'orderBy' => '如果有值，则替换orderBy',//--覆盖
+     *          'whereIn' => '如果有值，则替换whereIn',// --拼接
+     *          'whereNotIn' => '如果有值，则替换whereNotIn',//  --拼接
+     *          'whereBetween' => '如果有值，则替换whereBetween',//  --拼接
+     *          'whereNotBetween' => '如果有值，则替换whereNotBetween',//  --拼接
+     *      ],
+     *  ];
+     * @return  array 最终的id 值数组 一维
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function updateByDataList($fieldRelations = [], $newFieldVals = [], $newDataList = [], $isModify = 1
+        , $operate_staff_id = 0, $operate_staff_id_history = 0
+        , $id_field = 'id', $company_id = 0, $modifAddOprate = 0, $extendParams = []){
+        $lastIds = [];// 最终的id 值数组
+        if(empty($fieldRelations)) return $lastIds;
+        Tool::isMultiArr($newDataList, true);
+
+        $dataList = [];
+        $dbIds = [];
+        if($isModify){// 是修改
+            // 获得所有的方法标准
+            $queryParams = [
+                'where' => [
+//                ['company_id', $organize_id],
+                    //    ['ability_join_item_id', $id],
+//                ['teacher_status',1],
+                ],
+                // 'select' => ['id', 'amount', 'status', 'my_order_no' ]
+            ];
+
+            // 对数据进行拼接处理
+            if(isset($extendParams['sqlParams'])){
+                $sqlParams = $extendParams['sqlParams'] ?? [];
+                foreach($sqlParams as $tKey => $tVals){
+                    if(isset($queryParams[$tKey]) && in_array($tKey, ['where',  'whereIn', 'whereNotIn', 'whereBetween', 'whereNotBetween'])){// 'select', 'orderBy',
+                        $queryParams[$tKey] = array_merge($queryParams[$tKey], $tVals);
+                    }else{
+                        $queryParams[$tKey] = $tVals;
+                    }
+
+                }
+                unset($extendParams['sqlParams']);
+            }
+            foreach($fieldRelations as $field => $field_vals){
+                Tool::appendParamQuery($queryParams, $field_vals, $field, ['']);
+                // 加入到新加入中
+                if(!is_array($field_vals) && !isset($newFieldVals[$field])) $newFieldVals[$field] = $field_vals;
+            }
+            $dataListObj = static::getAllList($queryParams, []);
+            $dataList = $dataListObj->toArray();
+            if(!empty($dataList)) $dbIds = array_values(array_unique(array_column($dataList, $id_field)));
+        }
+
+        DB::beginTransaction();
+        try {
+            if(!empty($newDataList)){
+//                $appendArr = [
+//                    'operate_staff_id' => $operate_staff_id,
+//                    'operate_staff_id_history' => $operate_staff_id_history,
+//                ];
+                // $ownProperty  自有属性值;
+                // $temNeedStaffIdOrHistoryId 当只有自己会用到时操作员工id和历史id时，用来判断是否需要获取 true:需要获取； false:不需要获取
+                list($ownProperty, $temNeedStaffIdOrHistoryId) = array_values(static::getNeedStaffIdOrHistoryId());
+                // 新加时
+                //                    if(!$isModify){
+                //                        $appendArr = array_merge($appendArr, [
+                //                            'ability_join_item_id' => $id,
+                //                        ]);
+                //                    }
+                // Tool::arrAppendKeys($ability_join_items, $appendArr);
+                foreach($newDataList as $k => $info){
+                    $operate_id = $info[$id_field] ?? 0;
+                    if(isset($info[$id_field])) unset($info[$id_field]);
+
+                    // 不存在的id
+                    if( $operate_id > 0 && !empty($dbIds) && !in_array($operate_id, $dbIds))  $operate_id = 0;
+
+//                    Tool::arrAppendKeys($info, $appendArr);
+                    if($operate_id > 0 ){
+                        // 加入操作人员信息
+                        if($temNeedStaffIdOrHistoryId && $modifAddOprate) static::addOprate($info, $operate_staff_id,$operate_staff_id_history, 1);
+                    }else{
+                        // 加入操作人员信息
+                        if($temNeedStaffIdOrHistoryId) static::addOprate($info, $operate_staff_id,$operate_staff_id_history, 1);
+                    }
+                    if($operate_id <= 0){
+                        if(!empty($newFieldVals)) Tool::arrAppendKeys($info, $newFieldVals);
+                    }
+                    static::replaceById($info, $company_id, $operate_id, $operate_staff_id, $modifAddOprate);
+                    array_push($lastIds, $operate_id);
+                }
+                // 移除当前的id
+                $recordUncode = array_search($operate_id, $dbIds);
+                if($recordUncode !== false) unset($dbIds[$recordUncode]);// 存在，则移除
+            }
+            if($isModify && !empty($dbIds)) {// 是修改 且不为空
+                $del_type = $extendParams['del']['del_type'] ?? 1;
+                $del_extend_params = $extendParams['del']['extend_params'] ?? [];
+                // 删除记录
+                if($del_type == 2){
+//                    foreach($dbIds as $tem_id){
+//                        static::delById($company_id, $tem_id, $operate_staff_id, $modifAddOprate, $del_extend_params);
+//                    }
+                    // 已经是可以批量删除了
+                    static::delById($company_id, $dbIds, $operate_staff_id, $modifAddOprate, $del_extend_params);
+                }else{
+                    $modelObj = null;
+                    static::deleteByIds($dbIds, $modelObj, $id_field);
+                }
+            }
+        } catch ( \Exception $e) {
+            DB::rollBack();
+            throws($e->getMessage());
+            // throws($e->getMessage());
+        }
+        DB::commit();
+        return $lastIds;
+    }
+
+    /**
      * 根据条件删除接口
      *
      * @param int $company_id 公司id
@@ -334,6 +476,142 @@ class BaseDBBusiness extends BaseBusiness
 //        Common::getObjByModelName(static::$model_name, $modelObj);
         static::getModelObj($modelObj );
         return CommonDB::delByIds($modelObj, $ids, $fieldName, $valsSeparator, $excludeVals);
+    }
+
+    /**
+     * 根据单条id删除--可以重写此方法-- 作废，用下面的  delById 方法
+     *
+     * @param int  $company_id 企业id
+     * @param int $id id
+     * @param int $operate_staff_id 操作人id
+     * @param int $modifAddOprate 修改时是否加操作人，1:加;0:不加[默认]
+     * @param array $extendParams 其它参数--扩展用参数
+     * @return  int 记录id值
+     * @author zouyan(305463219@qq.com)
+     */
+//    public static function delById($company_id, $id, $operate_staff_id = 0, $modifAddOprate = 0, $extendParams = []){
+//
+//        if(strlen($id) <= 0){
+//            throws('操作记录标识不能为空！');
+//        }
+////        $info = static::getInfo($id);
+////        if(empty($info)) throws('记录不存在');
+//        // if($info['status'] != 1) throws('当前记录非【待开始】状态，不可删除！');
+//        DB::beginTransaction();
+//        try {
+//            // 删除主记录
+//            static::deleteByIds($id);
+//            // 其它操作
+//
+//
+//        } catch ( \Exception $e) {
+//            DB::rollBack();
+//            throws($e->getMessage());
+//            // throws($e->getMessage());
+//        }
+//        DB::commit();
+//        return $id;
+//    }
+
+    /**
+     * 根据id删除--可批量删除-可以重写此方法
+     * @param int  $company_id 企业id
+     * @param string $id id 多个用，号分隔  或 一维数组
+     * @param int $operate_staff_id 操作人id
+     * @param int $modifAddOprate 修改时是否加操作人，1:加;0:不加[默认]
+     * @param array $extendParams 其它参数--扩展用参数
+     * [
+     *      'primary_field' => 'id',// 主键字段 默认：id
+     *      'sqlParams' => [// 其它sql条件[拼接/覆盖式],下面是常用的，其它的也可以---查询用
+     *          // '如果有值，则替换where' --拼接
+     *          'where' => [// -- 可填 如 默认条件 'type_id' => 5  'admin_type' => $user_info['admin_type'],'staff_id' =>  $user_info['id']
+     *          ['type_id', 5],
+     *          ],
+     *          'select' => '如果有值，则替换select',// --覆盖
+     *          'orderBy' => '如果有值，则替换orderBy',//--覆盖
+     *          'whereIn' => '如果有值，则替换whereIn',// --拼接
+     *          'whereNotIn' => '如果有值，则替换whereNotIn',//  --拼接
+     *          'whereBetween' => '如果有值，则替换whereBetween',//  --拼接
+     *          'whereNotBetween' => '如果有值，则替换whereNotBetween',//  --拼接
+     *      ],
+     * ]
+     * @return  int 记录id值
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function delById($company_id, $id, $operate_staff_id = 0, $modifAddOprate = 0, $extendParams = []){
+
+        if(is_string($id) && strlen($id) <= 0){
+            throws('操作记录标识不能为空！');
+        }
+        if(empty($id)){
+            throws('操作记录标识不能为空！');
+        }
+
+//        $info = static::getInfo($id);
+//        if(empty($info)) throws('记录不存在');
+//        $staff_id = $info['staff_id'];
+//        $dataListObj = null;
+        $dataListArr = [];
+        $abilityIds = [];
+        $primary_field = $extendParams['primary_field'] ?? 'id';
+        // 获得需要删除的数据
+        $queryParams = [
+            'where' => [
+//                ['company_id', $organize_id],
+                //  ['admin_type', $admin_type],
+//                ['teacher_status',1],
+            ],
+            // 'select' => ['id', 'amount', 'status', 'my_order_no' ]
+        ];
+        // 对数据进行拼接处理
+        if(isset($extendParams['sqlParams'])){
+            $sqlParams = $extendParams['sqlParams'] ?? [];
+            foreach($sqlParams as $tKey => $tVals){
+                if(isset($queryParams[$tKey]) && in_array($tKey, ['where',  'whereIn', 'whereNotIn', 'whereBetween', 'whereNotBetween'])){// 'select', 'orderBy',
+                    $queryParams[$tKey] = array_merge($queryParams[$tKey], $tVals);
+                }else{
+                    $queryParams[$tKey] = $tVals;
+                }
+
+            }
+            unset($extendParams['sqlParams']);
+        }
+        Tool::appendParamQuery($queryParams, $id, $primary_field, [0, '0', ''], ',', false);
+
+//        $dataListObj = static::getAllList($queryParams, []);
+//        // $dataListObj = static::getListByIds($id);
+//
+//        $dataListArr = $dataListObj->toArray();
+//        if(empty($dataListArr)) throws('没有需要删除的数据');
+//        // 用户删除要用到的
+//        $abilityIds = array_values(array_unique(array_column($dataListArr,'ability_id')));
+
+        DB::beginTransaction();
+        try {
+
+            // 删除主记录
+            static::del($queryParams);
+            // static::deleteByIds($id);
+            // 如果是删除，则减少报名数量
+//            foreach($abilityIds as $ability_id){
+//                if($ability_id > 0){
+//                    $queryParams = [
+//                        'where' => [
+//                            ['id', $ability_id],
+//                        ],
+//                        // 'select' => ['id', 'amount', 'status', 'my_order_no' ]
+//                    ];
+//                    AbilitysDBBusiness::saveDecIncByQuery('join_num', 1,  'dec', $queryParams, []);
+//                }
+//            }
+
+        } catch ( \Exception $e) {
+            DB::rollBack();
+            throws($e->getMessage());
+            // throws($e->getMessage());
+        }
+        DB::commit();
+        return $id;
     }
 
     /**

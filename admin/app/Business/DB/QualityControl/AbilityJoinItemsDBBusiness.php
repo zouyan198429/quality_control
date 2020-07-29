@@ -2,6 +2,7 @@
 // 能力验证报名项表
 namespace App\Business\DB\QualityControl;
 
+use App\Models\QualityControl\AbilityJoinItemsResults;
 use App\Services\Tool;
 use Illuminate\Support\Facades\DB;
 
@@ -37,11 +38,20 @@ class AbilityJoinItemsDBBusiness extends BasePublicDBBusiness
 
         // 能力验证报名项-项目标准
         $ability_join_items_standards = [];
-        $has_join_item_standards = false;// 是否有能力验证报名项-项目标准修改 false:没有 ； true:有
+        $has_join_item_standards = false;// 是否有 false:没有 ； true:有
         if(isset($saveData['ability_join_items_standards'])){
             $ability_join_items_standards = $saveData['ability_join_items_standards'];
             unset($saveData['ability_join_items_standards']);
             $has_join_item_standards = true;
+        }
+
+        // 能力验证单次结果
+        $join_items_result = [];
+        $has_items_result = false;// 是否有 false:没有 ； true:有
+        if(isset($saveData['join_items_result'])){
+            $join_items_result = $saveData['join_items_result'];
+            unset($saveData['join_items_result']);
+            $has_items_result = true;
         }
 
         $operate_staff_id_history = config('public.operate_staff_id_history', 0);// 0;--写上，不然后面要去取，但现在的系统不用历史表
@@ -91,55 +101,69 @@ class AbilityJoinItemsDBBusiness extends BasePublicDBBusiness
 
             // 如果有能力验证报名项-项目标准 修改
             if($has_join_item_standards){
-                $joinItemsStandardListArr = [];
-                $joinItemsStandardIds = [];
-                if($isModify){// 是修改
-                    // 获得所有的方法标准
-                    $queryParams = [
-                        'where' => [
-//                ['company_id', $organize_id],
-                            ['ability_join_item_id', $id],
-//                ['teacher_status',1],
-                        ],
-                        // 'select' => ['id', 'amount', 'status', 'my_order_no' ]
-                    ];
-                    $joinItemsStandardDataListObj = AbilityJoinItemsStandardsDBBusiness::getAllList($queryParams, []);
-                    $joinItemsStandardListArr = $joinItemsStandardDataListObj->toArray();
-                    if(!empty($joinItemsStandardListArr)) $joinItemsStandardIds = array_values(array_unique(array_column($joinItemsStandardListArr,'id')));
-                }
-
-                if(!empty($ability_join_items_standards)){
-                    $appendArr = [
-                        'operate_staff_id' => $operate_staff_id,
-                        'operate_staff_id_history' => $operate_staff_id_history,
-                    ];
-                    // 新加时
-//                    if(!$isModify){
-//                        $appendArr = array_merge($appendArr, [
+                $join_item_standard_ids = AbilityJoinItemsStandardsDBBusiness::updateByDataList(['ability_join_item_id' => $id], ['ability_join_item_id' => $id]
+                    , $ability_join_items_standards, $isModify, $operate_staff_id, $operate_staff_id_history
+                    , 'id', $company_id, $modifAddOprate, []);
+//                $joinItemsStandardListArr = [];
+//                $joinItemsStandardIds = [];
+//                if($isModify){// 是修改
+//                    // 获得所有的方法标准
+//                    $queryParams = [
+//                        'where' => [
+////                ['company_id', $organize_id],
+//                            ['ability_join_item_id', $id],
+////                ['teacher_status',1],
+//                        ],
+//                        // 'select' => ['id', 'amount', 'status', 'my_order_no' ]
+//                    ];
+//                    $joinItemsStandardDataListObj = AbilityJoinItemsStandardsDBBusiness::getAllList($queryParams, []);
+//                    $joinItemsStandardListArr = $joinItemsStandardDataListObj->toArray();
+//                    if(!empty($joinItemsStandardListArr)) $joinItemsStandardIds = array_values(array_unique(array_column($joinItemsStandardListArr,'id')));
+//                }
+//
+//                if(!empty($ability_join_items_standards)){
+//                    $appendArr = [
+//                        'operate_staff_id' => $operate_staff_id,
+//                        'operate_staff_id_history' => $operate_staff_id_history,
+//                    ];
+//                    // 新加时
+////                    if(!$isModify){
+////                        $appendArr = array_merge($appendArr, [
+////                            'ability_join_item_id' => $id,
+////                        ]);
+////                    }
+//                    // Tool::arrAppendKeys($ability_join_items, $appendArr);
+//                    foreach($ability_join_items_standards as $k => $join_item_standard_info){
+//                        $join_item_standard_id = $join_item_standard_info['id'] ?? 0;
+//                        if(isset($join_item_standard_info['id'])) unset($join_item_standard_info['id']);
+//
+//                        Tool::arrAppendKeys($join_item_standard_info, $appendArr);
+//                        if($join_item_standard_id <= 0) Tool::arrAppendKeys($join_item_standard_info, [
 //                            'ability_join_item_id' => $id,
 //                        ]);
+//                        AbilityJoinItemsStandardsDBBusiness::replaceById($join_item_standard_info, $company_id, $join_item_standard_id, $operate_staff_id, $modifAddOprate);
+//
 //                    }
-                    // Tool::arrAppendKeys($ability_join_items, $appendArr);
-                    foreach($ability_join_items_standards as $k => $join_item_standard_info){
-                        $join_item_standard_id = $join_item_standard_info['id'] ?? 0;
-                        if(isset($join_item_standard_info['id'])) unset($join_item_standard_info['id']);
-
-                        Tool::arrAppendKeys($join_item_standard_info, $appendArr);
-                        if($join_item_standard_id <= 0) Tool::arrAppendKeys($join_item_standard_info, [
-                            'ability_join_item_id' => $id,
-                        ]);
-                        AbilityJoinItemsStandardsDBBusiness::replaceById($join_item_standard_info, $company_id, $join_item_standard_id, $operate_staff_id, $modifAddOprate);
-
-                    }
-                    // 移除当前的id
-                    $recordUncode = array_search($join_item_standard_id, $joinItemsStandardIds);
-                    if($recordUncode !== false) unset($joinItemsStandardIds[$recordUncode]);// 存在，则移除
-                }
-                if($isModify && !empty($joinItemsStandardIds)) {// 是修改 且不为空
-                    // 删除记录
-                    AbilityJoinItemsStandardsDBBusiness::deleteByIds($joinItemsStandardIds);
-                }
+//                    // 移除当前的id
+//                    $recordUncode = array_search($join_item_standard_id, $joinItemsStandardIds);
+//                    if($recordUncode !== false) unset($joinItemsStandardIds[$recordUncode]);// 存在，则移除
+//                }
+//                if($isModify && !empty($joinItemsStandardIds)) {// 是修改 且不为空
+//                    // 删除记录
+//                    AbilityJoinItemsStandardsDBBusiness::deleteByIds($joinItemsStandardIds);
+//                }
             }
+
+            // 能力验证单次结果修改
+            if($has_items_result){
+                if($isModify) $resultDatas = static::getInfo($id);
+                $retry_no = $resultDatas['retry_no'] ?? 0;
+                $items_result_ids = AbilityJoinItemsResultsDBBusiness::updateByDataList(['ability_join_item_id' => $id, 'retry_no' => $retry_no]
+                    , ['ability_join_item_id' => $id, 'retry_no' => $retry_no]
+                    , $join_items_result, $isModify, $operate_staff_id, $operate_staff_id_history
+                    , 'id', $company_id, $modifAddOprate, []);
+            }
+
             // 如果是加，则增加报名数量
             if(!$isModify){
                 $ability_id = $saveData['ability_id'] ?? 0;
@@ -172,10 +196,11 @@ class AbilityJoinItemsDBBusiness extends BasePublicDBBusiness
      * @param string $id id 多个用，号分隔
      * @param int $operate_staff_id 操作人id
      * @param int $modifAddOprate 修改时是否加操作人，1:加;0:不加[默认]
+     * @param array $extendParams 其它参数--扩展用参数
      * @return  int 记录id值
      * @author zouyan(305463219@qq.com)
      */
-    public static function delById($company_id, $id, $operate_staff_id = 0, $modifAddOprate = 0){
+    public static function delById($company_id, $id, $operate_staff_id = 0, $modifAddOprate = 0, $extendParams = []){
 
         if(is_string($id) && strlen($id) <= 0){
             throws('操作记录标识不能为空！');
