@@ -110,6 +110,8 @@
       var IMPORT_EXCEL_TEMPLATE_URL = "{{ url('company/ability_join_item/import_template') }}";//导入EXCEL模版地址
       var IMPORT_EXCEL_URL = "{{ url('api/company/ability_join_item/import') }}";//导入EXCEL地址
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
+
+      var IFRAME_SAMPLE_RESULT_URL = "{{url('company/ability_join_item/sample_result/')}}/";//上报数据页面地址前缀 + id
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
   <script src="{{ asset('js/company/QualityControl/AbilityJoinItem.js?0') }}"  type="text/javascript"></script>

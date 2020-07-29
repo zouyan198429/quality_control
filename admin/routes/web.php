@@ -326,6 +326,8 @@ Route::get('company/ability_join_item', 'WebFront\Company\QualityControl\Ability
 //Route::get('company/ability_join_item/export', 'WebFront\Company\QualityControl\AbilityJoinItemsController@export');// 导出
 //Route::get('company/ability_join_item/import_template', 'WebFront\Company\QualityControl\AbilityJoinItemsController@import_template');// 导入模版
 
+Route::get('company/ability_join_item/sample_result/{id}', 'WebFront\Company\QualityControl\AbilityJoinItemsController@sample_result');// 数据上报
+
 // 企业能力附表
 Route::get('company/company_schedule', 'WebFront\Company\QualityControl\CompanyScheduleController@index');// 列表
 Route::get('company/company_schedule/add/{id}', 'WebFront\Company\QualityControl\CompanyScheduleController@add');// 添加
