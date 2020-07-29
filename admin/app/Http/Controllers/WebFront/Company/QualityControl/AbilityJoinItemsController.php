@@ -119,6 +119,7 @@ class AbilityJoinItemsController extends BasicController
                  'relationFormatConfigs'=> CTAPIAbilityJoinItemsBusiness::getRelationConfigs($request, $this, ['ability_info', 'join_item_reslut_info_updata', 'project_submit_items_list'], []),// , 'join_items'
             ];
 
+
             $info = CTAPIAbilityJoinItemsBusiness::getInfoData($request, $this, $id, [], '', $extParams);
             // $reDataArr = array_merge($reDataArr, $resultDatas);
             if(empty($info)) {
@@ -127,7 +128,7 @@ class AbilityJoinItemsController extends BasicController
             $user_info = $this->user_info;
             if($info['admin_type'] != $user_info['admin_type'] || $info['staff_id'] != $this->user_id) throws('非法访问，您没有访问此记录的权限！');
 
-            if(!in_array($info['status'], [2]) || !in_array($info['is_sample'], [2])) throws('非已取样状态，不可进行此操作');
+             if(!in_array($info['status'], [2]) || !in_array($info['is_sample'], [2])) throws('非已取样状态，不可进行此操作');
              // 所用仪器
             $results_instrument_list = $info['join_item_reslut_info_updata']['results_instrument_list'] ?? [];
             // -- 没有，则默认加入一条为0的
@@ -273,6 +274,7 @@ class AbilityJoinItemsController extends BasicController
         $user_info = $this->user_info;
         if($info['admin_type'] != $user_info['admin_type'] || $info['staff_id'] != $this->user_id) throws('非法访问，您没有访问此记录的权限！');
 
+
         if(!in_array($info['status'], [2]) || !in_array($info['is_sample'], [2])) throws('非已取样状态，不可进行此操作');
         $item_reslut_info = $info['join_item_reslut_info_save'] ?? [];
         if(empty($item_reslut_info)) throws('还没有能力验证单次结果记录');
@@ -285,16 +287,21 @@ class AbilityJoinItemsController extends BasicController
         $project_submit_items_list = $info['project_submit_items_list'] ?? [];
         if(empty($project_submit_items_list)) throws('样品验证数据项不存在！');
 
+        $currentNow = Carbon::now()->toDateTimeString();
+
         // 开始获得数据--样品
-        $join_items_sample_result = [];
         foreach($items_samples_list as $k => $sample_info){
             $tem_sample_id = $sample_info['id'];
+            $join_items_sample_result = [];
+            $sample_result_list = $sample_info['sample_result_list'] ?? [];// 当前样品，所有的数据
+            if(isset($sample_info['sample_result_list'])) unset($sample_info['sample_result_list']);
             foreach($project_submit_items_list as $t_k => $submit_item_info){
                 $tem_sample_item_id = $submit_item_info['id'];
 
                 $sample_result = CommonRequest::get($request, 'sample_result_' . $tem_sample_id . '_' . $tem_sample_item_id);
                 if($sample_result == '') throws('样品编号：' . $sample_info['sample_one'] . '-【' . $submit_item_info['name'] .'】不能为空！');
                 array_push($join_items_sample_result, [
+                    'id' => $sample_result_list[$tem_sample_id . '_' . $tem_sample_item_id] ?? 0,
                     'ability_join_item_id' =>  $sample_info['ability_join_item_id'],
                     'retry_no' =>  $sample_info['retry_no'],
                     'result_id' =>  $sample_info['result_id'],
@@ -303,6 +310,13 @@ class AbilityJoinItemsController extends BasicController
                     'sample_result' =>  $sample_result,
                 ]);
             }
+            $items_samples_list[$k] = array_merge($sample_info, [
+                'submit_status' => 2,
+                'submit_time' => $currentNow,
+                'items_sample_result' => $join_items_sample_result,// 只有这个没有id,操作时，再去先查询
+            ]);
+
+
         }
 
         // 检测所用仪器
@@ -385,14 +399,38 @@ class AbilityJoinItemsController extends BasicController
                 'content' => replace_enter_char($content[$k], 1),
             ]);
         }
-        $currentNow = Carbon::now()->toDateTimeString();
+
+        // 图片资源
+
+        // 图片资源
+        $resource_id = CommonRequest::get($request, 'resource_id');
+        // 如果是字符，则转为数组
+        Tool::formatOneArrVals($resource_id, [null, ''], ',', 1 | 8);
+//        if(is_string($resource_id) || is_numeric($resource_id)){
+//            if(strlen(trim($resource_id)) > 0){
+//                $resource_id = explode(',' ,$resource_id);
+//            }
+//        }
+        if(!is_array($resource_id)) $resource_id = [];
+        if(empty($resource_id)) throws('请选择要上传的图片资料！');
+
+        // 再转为字符串
+        $resource_ids = implode(',', $resource_id);
+        if(!empty($resource_ids)) $resource_ids = ',' . $resource_ids . ',';
+
         $saveData = [
             'status' => 4,
             'join_items_result' => [// 能力验证单次结果
                 'id' => $item_reslut_info['id'],
                 'submit_status' => 2,
                 'submit_time' => $currentNow,
-                // ''
+                'results_instrument' => $instrument_arr,// 能力验证检测所用仪器
+                'results_standard' => $standard_arr,// 能力验证检测标准物质
+                'results_method' => $method_arr,// 检测方法依据
+                'items_samples' => $items_samples_list,// 能力验证取样登记表
+                // 'resource_id' => $resource_id[0] ?? 0,// 第一个图片资源的id
+                'resource_ids' => $resource_ids,// 图片资源id串(逗号分隔-未尾逗号结束)
+                'resourceIds' => $resource_id,// 此下标为图片资源关系
             ]
         ];
 
@@ -404,7 +442,9 @@ class AbilityJoinItemsController extends BasicController
 //        }
         $extParams = [
             'judgeDataKey' => 'replace',// 数据验证的下标
+            // 'methodName' => 'save_result_sample', // 数据上传保存方法
         ];
+
         $resultDatas = CTAPIAbilityJoinItemsBusiness::replaceById($request, $this, $saveData, $id, $extParams, true);
         return ajaxDataArr(1, $resultDatas, '');
     }

@@ -235,6 +235,7 @@ class CTAPICompanyScheduleBusiness extends BasicPublicCTAPIBusiness
             'id' => $id,
             'operate_staff_id' => $user_id,
             'modifAddOprate' => 1,
+            'extendParams' => []
         ];
         static::exeDBBusinessMethodCT($request, $controller, '',  'delById', $apiParams, $company_id, $notLog);
         return ajaxDataArr(1, $id, '');

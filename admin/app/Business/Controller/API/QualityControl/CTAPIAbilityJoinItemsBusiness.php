@@ -390,6 +390,12 @@ class CTAPIAbilityJoinItemsBusiness extends BasicPublicCTAPIBusiness
                                 , 2, 4
                                 ,'','', [], [], '', []),
                         ], [], '', []),
+                    // 企业上传的图片资料信息
+                    'resource_list' => CTAPIResourceBusiness::getTableRelationConfigInfo($request, $controller
+                        , ['id' => 'column_id']
+                        , 2, 0
+                        ,'','', [], ['where' => [['column_type', 4]]], ''
+                        , ['extendConfig' => ['listHandleKeyArr' => ['format_resource'], 'infoHandleKeyArr' => ['resource_list']]]),
                 ], [], '', []),
             // 下一级关系 能力验证单次结果  1:1 -- 获得当前正在操作的要上传数据的结果 -- 上传数据--保存用
             'join_item_reslut_info_save' => CTAPIAbilityJoinItemsResultsBusiness::getTableRelationConfigInfo($request, $controller
@@ -402,6 +408,12 @@ class CTAPIAbilityJoinItemsBusiness extends BasicPublicCTAPIBusiness
                         , ['ability_join_item_id' => 'ability_join_item_id', 'retry_no' => 'retry_no', 'id' => 'result_id']
                         , 2, 1
                         ,'','', [
+                            // 提交的登记样品结果 1：n
+                            'sample_result_list' => CTAPIAbilityJoinItemsSampleResultBusiness::getTableRelationConfigInfo($request, $controller
+                                , ['ability_join_item_id' => 'ability_join_item_id', 'retry_no' => 'retry_no', 'result_id' => 'result_id', 'id' => 'sample_id']
+                                , 2, 4
+                                ,'','', [], [], '', []),
+
                         ], [], '', []),
                 ], [], '', []),
         ];

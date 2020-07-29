@@ -1231,6 +1231,7 @@ class BasicCTAPIBusiness extends APIOperate
 //            'id' => $id,
 //            'operate_staff_id' => $user_id,
 //            'modifAddOprate' => 1,
+//             'extendParams' => []
 //        ];
 //        static::exeDBBusinessMethodCT($request, $controller, '',  'delById', $apiParams, $company_id, $notLog);
 //        return ajaxDataArr(1, $id, '');
@@ -1900,6 +1901,7 @@ class BasicCTAPIBusiness extends APIOperate
             $fieldRelations = $relationInfo['fieldRelations'];// 字段对应 1 个或多个字段   原表的字段 =》 对应表的字段
 
             $relationfieldKeys = array_keys($fieldRelations);// 主记录的关系字段数组 --- 一维数组
+
             // 获得主字段的值
             if(empty($relationfieldKeys)) continue;
             $temDataList = $temDataList[implode('_', Tool::getArrFormatFields($info, $relationfieldKeys, true))] ?? [];

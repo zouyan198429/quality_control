@@ -206,7 +206,6 @@ class CTAPIResourceBusiness extends BasicPublicCTAPIBusiness
     public static function handleRelationDataFormat(Request $request, Controller $controller, &$main_list, &$data_list, $handleKeyArr, &$returnFields = []){
         // if(empty($data_list)) return $returnFields;
         // 重写开始
-
         if(in_array('format_resource', $handleKeyArr)){
             $data_list = Tool::formatResource($data_list, 2);
         }
@@ -230,7 +229,6 @@ class CTAPIResourceBusiness extends BasicPublicCTAPIBusiness
     public static function infoRelationFormatExtend(Request $request, Controller $controller, &$info, &$temDataList, $infoHandleKeyArr, &$returnFields){
         // if(empty($info)) return $returnFields;
         // $returnFields[$tem_ubound_old] = $tem_ubound_old;
-
         if(in_array('resource_list', $infoHandleKeyArr)){
             // $resource_list = [];
             $resource_list = $temDataList;// $resourceDataArr[$info['resource_id']] ?? [];

@@ -2980,6 +2980,8 @@ class Tool
                 'resource_name' => $v['resource_name'],
                 'resource_url' => $resource_url,
                 'created_at' => $v['created_at'],
+                'column_type' => $v['column_type'] ?? 0,
+                'column_id' => $v['column_id'] ?? 0,
             ];
             $temArr = array_merge($temArr, static::formatUrlByExtension($resource_url));
             array_push($reList, $temArr);
@@ -4322,4 +4324,5 @@ class Tool
         }
         return $returnFields;
     }
+
 }

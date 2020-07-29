@@ -485,9 +485,11 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
             'company_id' => $company_id,
             'id' => $id,
             'operate_staff_id' => $user_id,
-            'admin_type' => $adminType,
-            'organize_id' => $organize_id,
             'modifAddOprate' => 1,
+            'extendParams' => [
+                'admin_type' => $adminType,
+                'organize_id' => $organize_id,
+            ]
         ];
         static::exeDBBusinessMethodCT($request, $controller, '',  'delById', $apiParams, $company_id, $notLog);
         return ajaxDataArr(1, $id, '');

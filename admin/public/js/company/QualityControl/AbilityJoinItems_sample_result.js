@@ -2,7 +2,7 @@
 var SUBMIT_FORM = true;//防止多次点击提交
 
 //获取当前窗口索引
-var PARENT_LAYER_INDEX = null;// parent.layer.getFrameIndex(window.name);
+var PARENT_LAYER_INDEX = parent.layer.getFrameIndex(window.name);
 //让层自适应iframe
 ////parent.layer.iframeAuto(PARENT_LAYER_INDEX);
 // parent.layer.full(PARENT_LAYER_INDEX);// 用这个
@@ -30,6 +30,15 @@ function parent_reset_list(){
     parent.layer.close(PARENT_LAYER_INDEX);
 }
 
+window.onload = function() {
+    var layer_index = layer.load();
+    initPic();
+    layer.close(layer_index)//手动关闭
+};
+function initPic(){
+    baguetteBox.run('.baguetteBoxOne');
+    // baguetteBox.run('.baguetteBoxTwo');
+}
 $(function(){
     //提交
     $(document).on("click","#submitBtn",function(){
@@ -252,10 +261,37 @@ function ajax_form(){
         return false;
     }
 
+    // 判断是否上传图片
+    var uploader = $('#myUploader').data('zui.uploader');
+    var files = uploader.getFiles();
+    var filesCount = files.length;
+
+    var imgObj = $('#myUploader').closest('.resourceBlock').find(".upload_img");
+
+    if( (!judge_list_checked(imgObj,3)) && filesCount <=0 ) {//没有选中的
+        layer_alert('请选择要上传的图片资料！',3,0);
+        return false;
+    }
+
     var index_query = layer.confirm('请仔细检查各项数据信息，谨防填选错误！<br/>提交后不能修改！', {
         btn: ['确认提交','返回检查'] //按钮
     }, function(){
-        ajax_save(id);
+        // 上传图片
+        if(filesCount > 0){
+            var layer_index = layer.load();
+            uploader.start();
+            var intervalId = setInterval(function(){
+                var status = uploader.getState();
+                console.log('获取上传队列状态代码',uploader.getState());
+                if(status == 1){
+                    layer.close(layer_index)//手动关闭
+                    clearInterval(intervalId);
+                    ajax_save(id);
+                }
+            },1000);
+        }else{
+            ajax_save(id);
+        }
         layer.close(index_query);
     }, function(){
     });

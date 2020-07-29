@@ -53,8 +53,9 @@ class AppServiceProvider extends ServiceProvider
 //            'templates'                 => 'App\Models\DogTools\Templates',           // 小狗工具-模板库图片
 //            'teacher_templates'                 => 'App\Models\DogTools\TeacherTemplates',           // 小狗工具-老师卡片图片
 //            'classes'                 => 'App\Models\DogTools\Classes',           // 小狗工具-班级图片
-            'company_certificate'                 => 'App\Models\QualityControl\CompanyCertificate',           // 质检-企业资质证书图片
-            'company_schedule'                 => 'App\Models\QualityControl\CompanySchedule',           // 企业能力附表 pdf或word
+            'company_certificate'                 => 'App\Models\QualityControl\CompanyCertificate',           // 1质检-企业资质证书图片
+            'company_schedule'                 => 'App\Models\QualityControl\CompanySchedule',           // 2企业能力附表 pdf或word
+            'company_ability'                 => 'App\Models\QualityControl\AbilityJoinItemsResults',           // 4企业能力验证上传图片
         ]);
 
         DB::listen(function ($query) {
