@@ -54,8 +54,7 @@ upload_url 上传对象 服务器接收地址 your/file/upload/url
                     <button type="button" class="close">×</button>
                 </div>
                 <div class="uploader-files file-list file-list-grid"></div>
-                <div>
-                    <hr class="divider">
+                <div> 
                     <div class="uploader-status pull-right text-muted"></div>
                     <button type="button" class="btn btn-link uploader-btn-browse"><i class="icon icon-plus"></i> 选择文件</button>
                     <button type="button" class="btn btn-link uploader-btn-start"><i class="icon icon-cloud-upload"></i> 开始上传</button>

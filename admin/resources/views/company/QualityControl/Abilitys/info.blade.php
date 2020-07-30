@@ -11,10 +11,16 @@
     @include('admin.layout_public.pagehead')
     <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/css/layui.css')}}" media="all">
     <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/style/admin.css')}}" media="all">
+    <style>
+    .table1 {
+        margin:0;
+        min-height: 100%;
+    }
+    </style>
 </head>
 <body>
-
-<div class="mm">
+<div class="layui-fluid"> 
+  <div class="layui-card">
         <table class="table1">
             <tr>
                 <th>检测项目<span class="must"></span></th>
@@ -50,6 +56,7 @@
             </tr>
 
         </table>
+    </div> 
 </div>
 <script type="text/javascript" src="{{asset('laydate/laydate.js')}}"></script>
 <script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>
@@ -58,6 +65,6 @@
 <script type="text/javascript">
 
 </script>
-<script src="{{ asset('/js/company/QualityControl/Abilitys_info.js?0') }}"  type="text/javascript"></script>
+<script src="{{ asset('/js/company/QualityControl/Abilitys_info.js?04') }}"  type="text/javascript"></script>
 </body>
 </html>

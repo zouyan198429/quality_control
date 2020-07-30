@@ -14,10 +14,7 @@
 <body>
 
 <div class="layui-fluid">
-    <div class="layui-card">
-{{--        <div class="layui-row layui-card-header">--}}
-{{--            <h3>报名</h3>--}}
-{{--        </div>--}}
+    <div class="layui-card"> 
 
         <div class="layui-row layui-card-body">
 

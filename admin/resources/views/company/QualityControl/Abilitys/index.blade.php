@@ -4,7 +4,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>开启头部工具栏 - 数据表格</title>
+  <title>能力验证--项目列表</title>
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -13,64 +13,72 @@
   <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/style/admin.css')}}" media="all">
 </head>
 <body> 
-<div class="mm">
-  <div class="mmhead" id="mywork">
+<div class="layui-fluid">
+  <div class="layui-row">
+      <div class="layui-col-md12">
 
-    @include('common.pageParams')
-    <div class="layui-card-header">
-        <h3 style="width:120px; float: left;">报名项目</h3>
-        <div class="tabbox"  style="float: right; width:72px;" >
-          <a href="javascript:void(0);" class="on" onclick="otheraction.joinSelected(this)">报名</a>
+        <div class="layui-card">
+
+          @include('common.pageParams')
+
+          <div class="layui-card-header">
+              <h3 style="width:120px; float: left;">报名项目</h3>
+              <div class="layui-btn-group layuiadmin-btn-group" >
+                <a href="javascript:void(0);" class="layui-btn layui-btn-sm layui-btn-normal" onclick="otheraction.joinSelected(this)"> 立即报名 </a>
+              </div> 
+          </div>
+          <form onsubmit="return false;" class="form-horizontal" style="display: none;" role="form" method="post" id="search_frm" action="#">
+            <div class="msearch fr">
+              <select style="width:80px; height:28px;" name="field">
+                <option value="ability_name">检测项目</option>
+              </select>
+              <input type="text" value=""    name="keyword"  placeholder="请输入关键字"/>
+              <button class="btn btn-normal search_frm">搜索</button>
+            </div>
+          </form>
+
+          
+          
+          <div class="layui-card-body">
+              <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
+                <colgroup>
+                    <col width="50">
+                    <col width="50">
+                    <col>  
+                    <col width="300"> 
+                    <col width="90">
+                    <col width="90"> 
+                    <col width="90">
+                </colgroup>
+                <thead>
+                <tr>
+                 <th>
+                    <label class="pos-rel">
+                      <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>
+                    </label>
+                  </th>
+                  <th>ID</th>
+                  <th>检测项目</th> 
+<!--                     <th>发布时间</th>
+ -->                    <th>报名时间</th> 
+                    <th>状态</th>
+                    <th>是否报名</th> 
+                  <th>操作</th>
+                </tr>
+                </thead>
+                <tbody id="data_list">
+                </tbody>
+              </table>
+              <div class="mmfoot">
+                <div class="mmfleft"></div>
+                <div class="pagination">
+                </div>
+              </div>
+
+          </div>
         </div>
     </div>
-    
-    <form onsubmit="return false;" class="form-horizontal" style="display: none;" role="form" method="post" id="search_frm" action="#">
-      <div class="msearch fr">
-        <select style="width:80px; height:28px;" name="field">
-          <option value="ability_name">检测项目</option>
-        </select>
-        <input type="text" value=""    name="keyword"  placeholder="请输入关键字"/>
-        <button class="btn btn-normal search_frm">搜索</button>
-      </div>
-    </form>
   </div>
-
-  <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
-    <colgroup>
-        <col width="50">
-        <col width="50">
-        <col> 
-        <col>
-        <col> 
-        <col width="90">
-        <col width="90"> 
-        <col width="150">
-    </colgroup>
-    <thead>
-    <tr>
-     <th>
-        <label class="pos-rel">
-          <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>
-        </label>
-      </th>
-      <th>ID</th>
-      <th>检测项目</th> 
-        <th>发布时间</th>
-        <th>报名时间</th> 
-        <th>状态</th>
-        <th>是否报名</th> 
-      <th>操作</th>
-    </tr>
-    </thead>
-    <tbody id="data_list">
-    </tbody>
-  </table>
-  <div class="mmfoot">
-    <div class="mmfleft"></div>
-    <div class="pagination">
-    </div>
-  </div>
-
 </div>
 
   <script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>
@@ -104,6 +112,6 @@
       var COMPANY_SCHEDULE_URL = "{{ url('company/company_schedule') }}/";//能力附表列表地址
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/company/QualityControl/Abilitys.js') }}?44"  type="text/javascript"></script>
+  <script src="{{ asset('js/company/QualityControl/Abilitys.js?32') }}"  type="text/javascript"></script>
 </body>
 </html>
