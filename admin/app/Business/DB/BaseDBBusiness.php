@@ -413,10 +413,12 @@ class BaseDBBusiness extends BaseBusiness
                     }
                     static::replaceById($info, $company_id, $operate_id, $operate_staff_id, $modifAddOprate);
                     array_push($lastIds, $operate_id);
+                    // 移除当前的id
+                    if($operate_id){
+                        $recordUncode = array_search($operate_id, $dbIds);
+                        if($recordUncode !== false) unset($dbIds[$recordUncode]);// 存在，则移除
+                    }
                 }
-                // 移除当前的id
-                $recordUncode = array_search($operate_id, $dbIds);
-                if($recordUncode !== false) unset($dbIds[$recordUncode]);// 存在，则移除
             }
             if($isModify && !empty($dbIds)) {// 是修改 且不为空
                 $del_type = $extendParams['del']['del_type'] ?? 1;

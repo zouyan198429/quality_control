@@ -93,57 +93,57 @@ class AbilityJoinItemsDBBusiness extends BasePublicDBBusiness
 
             // 如果有能力验证报名项-项目标准 修改
             if($has_join_item_standards){
-//                $join_item_standard_ids = AbilityJoinItemsStandardsDBBusiness::updateByDataList(['ability_join_item_id' => $id], ['ability_join_item_id' => $id]
-//                    , $ability_join_items_standards, $isModify, $operate_staff_id, $operate_staff_id_history
-//                    , 'id', $company_id, $modifAddOprate, []);
-                $joinItemsStandardListArr = [];
-                $joinItemsStandardIds = [];
-                if($isModify){// 是修改
-                    // 获得所有的方法标准
-                    $queryParams = [
-                        'where' => [
-//                ['company_id', $organize_id],
-                            ['ability_join_item_id', $id],
-//                ['teacher_status',1],
-                        ],
-                        // 'select' => ['id', 'amount', 'status', 'my_order_no' ]
-                    ];
-                    $joinItemsStandardDataListObj = AbilityJoinItemsStandardsDBBusiness::getAllList($queryParams, []);
-                    $joinItemsStandardListArr = $joinItemsStandardDataListObj->toArray();
-                    if(!empty($joinItemsStandardListArr)) $joinItemsStandardIds = array_values(array_unique(array_column($joinItemsStandardListArr,'id')));
-                }
-
-                if(!empty($ability_join_items_standards)){
-                    $appendArr = [
-                        'operate_staff_id' => $operate_staff_id,
-                        'operate_staff_id_history' => $operate_staff_id_history,
-                    ];
-                    // 新加时
-//                    if(!$isModify){
-//                        $appendArr = array_merge($appendArr, [
+                $join_item_standard_ids = AbilityJoinItemsStandardsDBBusiness::updateByDataList(['ability_join_item_id' => $id], ['ability_join_item_id' => $id]
+                    , $ability_join_items_standards, $isModify, $operate_staff_id, $operate_staff_id_history
+                    , 'id', $company_id, $modifAddOprate, []);
+//                $joinItemsStandardListArr = [];
+//                $joinItemsStandardIds = [];
+//                if($isModify){// 是修改
+//                    // 获得所有的方法标准
+//                    $queryParams = [
+//                        'where' => [
+////                ['company_id', $organize_id],
+//                            ['ability_join_item_id', $id],
+////                ['teacher_status',1],
+//                        ],
+//                        // 'select' => ['id', 'amount', 'status', 'my_order_no' ]
+//                    ];
+//                    $joinItemsStandardDataListObj = AbilityJoinItemsStandardsDBBusiness::getAllList($queryParams, []);
+//                    $joinItemsStandardListArr = $joinItemsStandardDataListObj->toArray();
+//                    if(!empty($joinItemsStandardListArr)) $joinItemsStandardIds = array_values(array_unique(array_column($joinItemsStandardListArr,'id')));
+//                }
+//
+//                if(!empty($ability_join_items_standards)){
+//                    $appendArr = [
+//                        'operate_staff_id' => $operate_staff_id,
+//                        'operate_staff_id_history' => $operate_staff_id_history,
+//                    ];
+//                    // 新加时
+////                    if(!$isModify){
+////                        $appendArr = array_merge($appendArr, [
+////                            'ability_join_item_id' => $id,
+////                        ]);
+////                    }
+//                    // Tool::arrAppendKeys($ability_join_items, $appendArr);
+//                    foreach($ability_join_items_standards as $k => $join_item_standard_info){
+//                        $join_item_standard_id = $join_item_standard_info['id'] ?? 0;
+//                        if(isset($join_item_standard_info['id'])) unset($join_item_standard_info['id']);
+//
+//                        Tool::arrAppendKeys($join_item_standard_info, $appendArr);
+//                        if($join_item_standard_id <= 0) Tool::arrAppendKeys($join_item_standard_info, [
 //                            'ability_join_item_id' => $id,
 //                        ]);
+//                        AbilityJoinItemsStandardsDBBusiness::replaceById($join_item_standard_info, $company_id, $join_item_standard_id, $operate_staff_id, $modifAddOprate);
+//
 //                    }
-                    // Tool::arrAppendKeys($ability_join_items, $appendArr);
-                    foreach($ability_join_items_standards as $k => $join_item_standard_info){
-                        $join_item_standard_id = $join_item_standard_info['id'] ?? 0;
-                        if(isset($join_item_standard_info['id'])) unset($join_item_standard_info['id']);
-
-                        Tool::arrAppendKeys($join_item_standard_info, $appendArr);
-                        if($join_item_standard_id <= 0) Tool::arrAppendKeys($join_item_standard_info, [
-                            'ability_join_item_id' => $id,
-                        ]);
-                        AbilityJoinItemsStandardsDBBusiness::replaceById($join_item_standard_info, $company_id, $join_item_standard_id, $operate_staff_id, $modifAddOprate);
-
-                    }
-                    // 移除当前的id
-                    $recordUncode = array_search($join_item_standard_id, $joinItemsStandardIds);
-                    if($recordUncode !== false) unset($joinItemsStandardIds[$recordUncode]);// 存在，则移除
-                }
-                if($isModify && !empty($joinItemsStandardIds)) {// 是修改 且不为空
-                    // 删除记录
-                    AbilityJoinItemsStandardsDBBusiness::deleteByIds($joinItemsStandardIds);
-                }
+//                    // 移除当前的id
+//                    $recordUncode = array_search($join_item_standard_id, $joinItemsStandardIds);
+//                    if($recordUncode !== false) unset($joinItemsStandardIds[$recordUncode]);// 存在，则移除
+//                }
+//                if($isModify && !empty($joinItemsStandardIds)) {// 是修改 且不为空
+//                    // 删除记录
+//                    AbilityJoinItemsStandardsDBBusiness::deleteByIds($joinItemsStandardIds);
+//                }
             }
 
             // 能力验证单次结果修改
