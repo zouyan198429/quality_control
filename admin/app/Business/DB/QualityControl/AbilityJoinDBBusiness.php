@@ -106,75 +106,75 @@ class AbilityJoinDBBusiness extends BasePublicDBBusiness
             }
 
             // 如果有能力验证报名项 修改
-//            if($has_join_item){
-//                $sample_result_ids = AbilityJoinItemsDBBusiness::updateByDataList(['ability_join_id' => $id]
-//                    , [
-//                        'ability_join_id' => $id,
-//                        'ability_code' => $ability_code,
-//                        'join_time' => $currentNow,
-//                    ]
-//                    , $ability_join_items, $isModify, $operate_staff_id, $operate_staff_id_history
-//                    , 'id', $company_id, $modifAddOprate, [
-//                           'del' => [// 删除用
-//                               'del_type' => 2,// 删除方式  1：批量删除 static::deleteByIds($dbIds) [默认] 2: 多次单个删除：static::delById($company_id, $tem_id, $operate_staff_id, $modifAddOprate, $extendParams);
-//                               'extend_params' => [],// 删除的扩展参数 一维数组  del_type = 2时：用
-//                           ],
-//                    ]);
-//            }
             if($has_join_item){
-                $joinItemsListArr = [];
-                $joinItemsIds = [];
-                if($isModify){// 是修改
-                    // 获得所有的方法标准
-                    $queryParams = [
-                        'where' => [
-//                ['company_id', $organize_id],
-                            ['ability_join_id', $id],
-//                ['teacher_status',1],
-                        ],
-                        // 'select' => ['id', 'amount', 'status', 'my_order_no' ]
-                    ];
-                    $joinItemsDataListObj = AbilityJoinItemsDBBusiness::getAllList($queryParams, []);
-                    $joinItemsListArr = $joinItemsDataListObj->toArray();
-                    if(!empty($joinItemsListArr)) $joinItemsIds = array_values(array_unique(array_column($joinItemsListArr,'id')));
-                }
-
-                if(!empty($ability_join_items)){
-                    $appendArr = [
-                        'operate_staff_id' => $operate_staff_id,
-                        'operate_staff_id_history' => $operate_staff_id_history,
-                    ];
-                    // 新加时
-//                    if(!$isModify){
-//                        $appendArr = array_merge($appendArr, [
+                $sample_result_ids = AbilityJoinItemsDBBusiness::updateByDataList(['ability_join_id' => $id]
+                    , [
+                        'ability_join_id' => $id,
+                        'ability_code' => $ability_code,
+                        'join_time' => $currentNow,
+                    ]
+                    , $ability_join_items, $isModify, $operate_staff_id, $operate_staff_id_history
+                    , 'id', $company_id, $modifAddOprate, [
+                           'del' => [// 删除用
+                               'del_type' => 2,// 删除方式  1：批量删除 static::deleteByIds($dbIds) [默认] 2: 多次单个删除：static::delById($company_id, $tem_id, $operate_staff_id, $modifAddOprate, $extendParams);
+                               'extend_params' => [],// 删除的扩展参数 一维数组  del_type = 2时：用
+                           ],
+                    ]);
+            }
+//            if($has_join_item){
+//                $joinItemsListArr = [];
+//                $joinItemsIds = [];
+//                if($isModify){// 是修改
+//                    // 获得所有的方法标准
+//                    $queryParams = [
+//                        'where' => [
+////                ['company_id', $organize_id],
+//                            ['ability_join_id', $id],
+////                ['teacher_status',1],
+//                        ],
+//                        // 'select' => ['id', 'amount', 'status', 'my_order_no' ]
+//                    ];
+//                    $joinItemsDataListObj = AbilityJoinItemsDBBusiness::getAllList($queryParams, []);
+//                    $joinItemsListArr = $joinItemsDataListObj->toArray();
+//                    if(!empty($joinItemsListArr)) $joinItemsIds = array_values(array_unique(array_column($joinItemsListArr,'id')));
+//                }
+//
+//                if(!empty($ability_join_items)){
+//                    $appendArr = [
+//                        'operate_staff_id' => $operate_staff_id,
+//                        'operate_staff_id_history' => $operate_staff_id_history,
+//                    ];
+//                    // 新加时
+////                    if(!$isModify){
+////                        $appendArr = array_merge($appendArr, [
+////                            'ability_join_id' => $id,
+////                            'ability_code' => $ability_code,
+////                            'join_time' => $currentNow,
+////                        ]);
+////                    }
+//                    // Tool::arrAppendKeys($ability_join_items, $appendArr);
+//                    foreach($ability_join_items as $k => $join_item_info){
+//                        $join_item_id = $join_item_info['id'] ?? 0;
+//                        if(isset($join_item_info['id'])) unset($join_item_info['id']);
+//
+//                        Tool::arrAppendKeys($join_item_info, $appendArr);
+//                        if($join_item_id <= 0 ) Tool::arrAppendKeys($join_item_info, [
 //                            'ability_join_id' => $id,
 //                            'ability_code' => $ability_code,
 //                            'join_time' => $currentNow,
 //                        ]);
+//                        AbilityJoinItemsDBBusiness::replaceById($join_item_info, $company_id, $join_item_id, $operate_staff_id, $modifAddOprate);
+//                        // 移除当前的id
+//                        $recordUncode = array_search($join_item_id, $joinItemsIds);
+//                        if($recordUncode !== false) unset($joinItemsIds[$recordUncode]);// 存在，则移除
 //                    }
-                    // Tool::arrAppendKeys($ability_join_items, $appendArr);
-                    foreach($ability_join_items as $k => $join_item_info){
-                        $join_item_id = $join_item_info['id'] ?? 0;
-                        if(isset($join_item_info['id'])) unset($join_item_info['id']);
-
-                        Tool::arrAppendKeys($join_item_info, $appendArr);
-                        if($join_item_id <= 0 ) Tool::arrAppendKeys($join_item_info, [
-                            'ability_join_id' => $id,
-                            'ability_code' => $ability_code,
-                            'join_time' => $currentNow,
-                        ]);
-                        AbilityJoinItemsDBBusiness::replaceById($join_item_info, $company_id, $join_item_id, $operate_staff_id, $modifAddOprate);
-                        // 移除当前的id
-                        $recordUncode = array_search($join_item_id, $joinItemsIds);
-                        if($recordUncode !== false) unset($joinItemsIds[$recordUncode]);// 存在，则移除
-                    }
-                }
-                if($isModify && !empty($joinItemsIds)) {// 是修改 且不为空
-                    // 删除记录
-                    // AbilityJoinItemsDBBusiness::deleteByIds($joinItemsIds);
-                    AbilityJoinItemsDBBusiness::delById($company_id, $joinItemsIds, $operate_staff_id, $modifAddOprate, []);
-                }
-            }
+//                }
+//                if($isModify && !empty($joinItemsIds)) {// 是修改 且不为空
+//                    // 删除记录
+//                    // AbilityJoinItemsDBBusiness::deleteByIds($joinItemsIds);
+//                    AbilityJoinItemsDBBusiness::delById($company_id, $joinItemsIds, $operate_staff_id, $modifAddOprate, []);
+//                }
+//            }
         } catch ( \Exception $e) {
             DB::rollBack();
             throws($e->getMessage());
