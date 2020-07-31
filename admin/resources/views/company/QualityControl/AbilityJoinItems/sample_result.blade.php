@@ -16,19 +16,20 @@
     <style>
     .layui-form-label {
     }
+    .gray {
+        color:#999;
+        line-height: 160%;
+    }
     </style>
 </head>
 <body>
 
 <div class="layui-fluid">
-    <div class="layui-card">
-{{--        <div class="layui-row layui-card-header">--}}
-{{--            <h3>数据上报</h3>--}}
-{{--        </div>--}}
+    <div class="layui-card"> 
 
         <div class="layui-row layui-card-body">
 
-            <form class="am-form am-form-horizontal" method="post"  id="addForm">
+            <form class="layui-form" method="post"  id="addForm">
                 <input type="hidden" name="id" value="{{ $info['id'] ?? 0 }}"/>
 
                 <fieldset class="layui-elem-field layui-field-title">
@@ -36,8 +37,9 @@
                 </fieldset>
                 @foreach ($info['join_item_reslut_info_updata']['items_samples_list'] as $k => $sample_info)
                 <div class="layui-form-item">
-                    <label class="layui-form-label">样品编号： {{ $sample_info['sample_one'] ?? '' }} </label>
+                    <label class="layui-form-label">样品编号： </label>
                     <div class="layui-input-block sample_list" data-sample_one="{{ $sample_info['sample_one'] ?? '' }}">
+                       编号 {{ $sample_info['sample_one'] ?? '' }} 
                     {{-- 样品id _需要收集项目的数据项目的数据类型id --}}
                         <?php $sample_result_list = $sample_info['sample_result_list'] ?>
                         @foreach ($info['project_submit_items_list'] as $t_k => $submit_info)
@@ -70,12 +72,14 @@
                             <label class="layui-form-label">检定日期</label>
                             <div class="layui-input-block">
                                 <input type="text" name="check_date[]" value="{{ $instrument_info['check_date'] ?? '' }}"  lay-verify="title" autocomplete="off" placeholder="请输入检定日期" class="layui-input">
+                                <p class="gray">格式如：2020-05-20</p>
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label">有效期</label>
                             <div class="layui-input-block">
                                 <input type="text" name="valid_date[]" value="{{ $instrument_info['valid_date'] ?? '' }}"  lay-verify="title" autocomplete="off" placeholder="请输入有效期" class="layui-input">
+                                <p class="gray">格式如：2020-05-20</p>
                             </div>
                         </div>
                     </div>
@@ -109,6 +113,7 @@
                             <label class="layui-form-label">有效期</label>
                             <div class="layui-input-block">
                                 <input type="text" name="standard_valid_date[]" value="{{ $standard_info['valid_date'] ?? '' }}" lay-verify="title" autocomplete="off" placeholder="请输入有效期" class="layui-input">
+                                <p class="gray">格式如：2020-05-20</p>
                             </div>
                         </div>
                     </div>
