@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>管理后台</title>
+  <title>数据上报---管理后台</title>
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -13,13 +13,17 @@
     <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/style/admin.css')}}" media="all">
     <link rel="stylesheet" href="{{asset('layuiadmin_quality/layui/css/layui.css')}}" media="all">
     <link rel="stylesheet" href="{{asset('layuiadmin_quality/style/admin.css')}}" media="all">
+    <style>
+    .layui-form-label {
+    }
+    </style>
 </head>
 <body>
 
 <div class="layui-fluid">
     <div class="layui-card">
 {{--        <div class="layui-row layui-card-header">--}}
-{{--            <h3>数据上报- 蔬菜中毒死蜱</h3>--}}
+{{--            <h3>数据上报</h3>--}}
 {{--        </div>--}}
 
         <div class="layui-row layui-card-body">
@@ -128,8 +132,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">图片上传</label>
                     <div class="layui-input-block">
-{{--                        <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">--}}
-
+ 
                         <div class="alert alert-warning alert-dismissable">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                             <p>一次最多上传20张图片。</p>
@@ -155,8 +158,7 @@
                 <div class="layui-form-item">
                     <div class="layui-input-block">
                         <button  type="button"  class="layui-btn" lay-submit="" lay-filter="demo1"  id="submitBtn">立即提交</button>
-{{--                        <button type="reset" class="layui-btn layui-btn-primary">保存草稿</button>--}}
-                    </div>
+                     </div>
                 </div>
             </form>
 
