@@ -36,7 +36,7 @@
                     <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
                         <colgroup>
                             <col width="60">
-                            <col width="">
+                            <col width="150">
                             <col width="">
                             <col width="">
                             <col width="180">
@@ -51,8 +51,8 @@
                             </th> -->
                             <th>ID</th>
                             <th>文档类型</th>
-                            <th>word文件</th>
                             <th>pdf文件</th>
+                            <th>word文件</th>
                             <th>创建时间</th>
                             <th>操作</th>
                         </tr>
@@ -102,6 +102,6 @@
     var SELECT_COMPANY_URL = "{{url('company/company/select')}}";// 选择所属企业
 </script>
 <script src="{{asset('js/common/list.js')}}"></script>
-<script src="{{ asset('js/company/QualityControl/CompanyNewSchedule.js?8') }}"  type="text/javascript"></script>
+<script src="{{ asset('js/company/QualityControl/CompanyNewSchedule.js?18') }}"  type="text/javascript"></script>
 </body>
 </html>

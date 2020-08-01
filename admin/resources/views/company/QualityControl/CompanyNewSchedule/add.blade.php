@@ -41,7 +41,7 @@
         <tr>
             <th>文档类型<span class="must">*</span></th>
             <td>
-                <select class="wnormal" name="type_id" style="width: 100px;">
+                <select class="wnormal" name="type_id" style="width: 280px;">
                     <option value="">请选择文档类型</option>
                     @foreach ($type_ids as $k=>$txt)
                         <option value="{{ $k }}"  @if(isset($defaultTypeId) && $defaultTypeId == $k) selected @endif >{{ $txt }}</option>
