@@ -25,12 +25,12 @@
               <i class="layui-icon layui-icon-shrink-right" id="LAY_app_flexible"></i>
             </a>
           </li>
-          
+
           <li class="layui-nav-item" lay-unselect>
             <a href="javascript:;" layadmin-event="refresh" title="刷新">
               <i class="layui-icon layui-icon-refresh-3"></i>
             </a>
-          </li> 
+          </li>
         </ul>
         <ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
 
@@ -47,7 +47,7 @@
               <i class="layui-icon layui-icon-theme"></i>
             </a>
           </li>
- 
+
 
           <li class="layui-nav-item layui-hide-xs" lay-unselect>
             <a href="javascript:;" layadmin-event="fullscreen">
@@ -84,7 +84,7 @@
           </div>
 
           <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
- 
+
 
           <!--   <li data-name="user" class="layui-nav-item">
               <a href="javascript:;" lay-tips="面授培训" lay-direction="2">
@@ -189,7 +189,7 @@
 {{--                      <a lay-href="javascript:void(81);">企业简介</a>--}}
 {{--                  </dd>--}}
                   <dd>
-                      <a lay-href="{{ url('company/company_schedule') }}">能力附表</a>
+                      <a lay-href="{{ url('company/company_new_schedule') }}">能力附表</a>
                   </dd>
 <!--                   <dd>
                       <a lay-href="javascript:void(83);">开票信息</a>
@@ -232,7 +232,7 @@
         </div>
       </div>
 
- 
+
 
       <!-- 主体内容 -->
       <div class="layui-body" id="LAY_app_body">
@@ -255,7 +255,7 @@
     index: 'lib/index' //主入口模块
   }).use('index');
   </script>
- 
+
 </body>
 </html>
 

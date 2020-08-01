@@ -223,6 +223,20 @@ $api->version('v1', function ($api) {
         $api->post('admin/company_schedule/import', 'Admin\QualityControl\CompanyScheduleController@import');// 导入excel
         $api->post('admin/company_schedule/ajax_get_ids', 'Admin\QualityControl\CompanyScheduleController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
+        // 企业能力附表
+        $api->any('admin/company_new_schedule/ajax_alist', 'Admin\QualityControl\CompanyNewScheduleController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/company_new_schedule/ajax_del', 'Admin\QualityControl\CompanyNewScheduleController@ajax_del');// 删除
+        $api->any('admin/company_new_schedule/ajax_save', 'Admin\QualityControl\CompanyNewScheduleController@ajax_save');// 新加/修改
+        $api->post('admin/company_new_schedule/ajax_get_child', 'Admin\QualityControl\CompanyNewScheduleController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/company_new_schedule/ajax_get_areachild', 'Admin\QualityControl\CompanyNewScheduleController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/company_new_schedule/ajax_import_staff','Admin\QualityControl\CompanyNewScheduleController@ajax_import'); // 导入员工
+
+        $api->post('admin/company_new_schedule/import', 'Admin\QualityControl\CompanyNewScheduleController@import');// 导入excel
+        $api->post('admin/company_new_schedule/ajax_get_ids', 'Admin\QualityControl\CompanyNewScheduleController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        $api->post('admin/company_new_schedule/up_word', 'Admin\QualityControl\CompanyNewScheduleController@up_word');// 上传word地址
+        $api->post('admin/company_new_schedule/up_pdf', 'Admin\QualityControl\CompanyNewScheduleController@up_pdf');// 上传pdf地址
+
         // 企业后台 company
         // 验证码 -- ok
 //        $api->get('company/ajax_captcha', 'WebFront\Company\QualityControl\IndexController@ajax_captcha');// api生成验证码
@@ -292,6 +306,20 @@ $api->version('v1', function ($api) {
 
         $api->post('company/company_schedule/import', 'WebFront\Company\QualityControl\CompanyScheduleController@import');// 导入excel
 //        $api->post('company/company_schedule/ajax_get_ids', 'WebFront\Company\QualityControl\CompanyScheduleController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        // 企业能力附表
+        $api->any('company/company_new_schedule/ajax_alist', 'WebFront\Company\QualityControl\CompanyNewScheduleController@ajax_alist');//ajax获得列表数据
+        $api->post('company/company_new_schedule/ajax_del', 'WebFront\Company\QualityControl\CompanyNewScheduleController@ajax_del');// 删除
+        $api->post('company/company_new_schedule/ajax_save', 'WebFront\Company\QualityControl\CompanyNewScheduleController@ajax_save');// 新加/修改
+//        $api->post('company/company_new_schedule/ajax_get_child', 'WebFront\Company\QualityControl\CompanyNewScheduleController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+//        $api->post('company/company_new_schedule/ajax_get_areachild', 'WebFront\Company\QualityControl\CompanyNewScheduleController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+//        $api->post('company/company_new_schedule/ajax_import_staff','WebFront\Company\QualityControl\CompanyNewScheduleController@ajax_import'); // 导入员工
+
+        $api->post('company/company_new_schedule/import', 'WebFront\Company\QualityControl\CompanyNewScheduleController@import');// 导入excel
+//        $api->post('company/company_new_schedule/ajax_get_ids', 'WebFront\Company\QualityControl\CompanyNewScheduleController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        $api->post('company/company_new_schedule/up_word', 'WebFront\Company\QualityControl\CompanyNewScheduleController@up_word');// 上传word地址
+        $api->post('company/company_new_schedule/up_pdf', 'WebFront\Company\QualityControl\CompanyNewScheduleController@up_pdf');// 上传pdf地址
 
         // 用户中心 user
         // 验证码 -- ok

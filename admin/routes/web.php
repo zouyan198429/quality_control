@@ -283,6 +283,14 @@ Route::get('admin/company_schedule/add/{id}', 'Admin\QualityControl\CompanySched
 Route::get('admin/company_schedule/export', 'Admin\QualityControl\CompanyScheduleController@export');// 导出
 Route::get('admin/company_schedule/import_template', 'Admin\QualityControl\CompanyScheduleController@import_template');// 导入模版
 
+// 企业能力附表-最新
+Route::get('admin/company_new_schedule', 'Admin\QualityControl\CompanyNewScheduleController@index');// 列表
+Route::get('admin/company_new_schedule/show/{company_id}', 'Admin\QualityControl\CompanyNewScheduleController@show');// 查看
+Route::get('admin/company_new_schedule/add/{id}', 'Admin\QualityControl\CompanyNewScheduleController@add');// 添加
+// Route::get('admin/company_new_schedule/select', 'Admin\QualityControl\CompanyNewScheduleController@select');// 选择-弹窗
+Route::get('admin/company_new_schedule/export', 'Admin\QualityControl\CompanyNewScheduleController@export');// 导出
+Route::get('admin/company_new_schedule/import_template', 'Admin\QualityControl\CompanyNewScheduleController@import_template');// 导入模版
+
 
 // 企业后台 company
 Route::get('company/login', 'WebFront\Company\QualityControl\IndexController@login');// login.html 登录
@@ -335,6 +343,12 @@ Route::get('company/company_schedule/add/{id}', 'WebFront\Company\QualityControl
 //Route::get('company/company_schedule/export', 'WebFront\Company\QualityControl\CompanyScheduleController@export');// 导出
 //Route::get('company/company_schedule/import_template', 'WebFront\Company\QualityControl\CompanyScheduleController@import_template');// 导入模版
 
+// 企业能力附表
+Route::get('company/company_new_schedule', 'WebFront\Company\QualityControl\CompanyNewScheduleController@index');// 列表
+Route::get('company/company_new_schedule/add/{id}', 'WebFront\Company\QualityControl\CompanyNewScheduleController@add');// 添加
+// Route::get('company/company_new_schedule/select', 'WebFront\Company\QualityControl\CompanyNewScheduleController@select');// 选择-弹窗
+//Route::get('company/company_new_schedule/export', 'WebFront\Company\QualityControl\CompanyNewScheduleController@export');// 导出
+//Route::get('company/company_new_schedule/import_template', 'WebFront\Company\QualityControl\CompanyNewScheduleController@import_template');// 导入模版
 
 // 用户中心 user
 Route::get('user/login', 'WebFront\User\QualityControl\IndexController@login');// login.html 登录
