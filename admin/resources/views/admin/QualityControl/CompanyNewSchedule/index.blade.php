@@ -61,7 +61,7 @@
         <col width="60">
         <col width="">
         <col width="">
-        <col width="">
+{{--        <col width="">--}}
 {{--        <col width="150">--}}
 {{--        <col width="150">--}}
         <col width="150">
@@ -78,8 +78,9 @@
 {{--      <th>所属客户端</th>--}}
       <th>所属企业</th>
       <th>文档类型</th>
-      <th>pdf文件</th>
-      <th>excel文件</th>
+      <th>文件</th>
+{{--      <th>pdf文件</th>--}}
+{{--      <th>excel文件</th>--}}
       <th>创建时间</th>
 {{--      <th>更新时间</th>--}}
       {{--<th>排序[降序]</th>--}}
@@ -127,6 +128,6 @@
       var SELECT_COMPANY_URL = "{{url('admin/company/select')}}";// 选择所属企业
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/CompanyNewSchedule.js') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/CompanyNewSchedule.js') }}?1"  type="text/javascript"></script>
 </body>
 </html>

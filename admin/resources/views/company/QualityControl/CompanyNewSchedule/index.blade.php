@@ -39,7 +39,7 @@
 {{--                            <col width="60">--}}
                             <col width="150">
                             <col width="">
-                            <col width="">
+{{--                            <col width="">--}}
                             <col width="180">
                             <col width="90">
                         </colgroup>
@@ -52,8 +52,9 @@
                             </th> -->
 {{--                            <th>ID</th>--}}
                             <th>文档类型</th>
-                            <th>pdf文件</th>
-                            <th>excel文件</th>
+                            <th>文件</th>
+{{--                            <th>pdf文件</th>--}}
+{{--                            <th>excel文件</th>--}}
                             <th>创建时间</th>
                             <th>操作</th>
                         </tr>
