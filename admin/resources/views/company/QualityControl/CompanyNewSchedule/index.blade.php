@@ -21,7 +21,7 @@
                 <div class="layui-card-header">
                     能力附表
                     <div class="layui-btn-group layuiadmin-btn-group" >
-                        <a href="javascript:void(0);" class="layui-btn layui-btn-sm layui-btn-normal" onclick="otheraction.upExcelFile(0)">添加excel文档</a>
+                        <a href="javascript:void(0);" class="layui-btn layui-btn-sm layui-btn-normal" onclick="otheraction.upExcelFile(0)">上传excel文件</a>
                         <a href="javascript:void(0);" class="layui-btn layui-btn-sm layui-btn-normal" onclick="action.iframeModify(0)">上传PDF文件</a>
                     </div>
 
@@ -104,7 +104,7 @@
     var SELECT_COMPANY_URL = "{{url('company/company/select')}}";// 选择所属企业
 
     var IFRAME_UPEXCEL_URL = "{{url('company/company_new_schedule/add_excel/')}}/";//添加/修改页面地址前缀 + id
-    var IFRAME_UPEXCEL_URL_TITLE = "Excel文档" ;// 详情弹窗显示提示  [添加/修改] +  栏目/主题
+    var IFRAME_UPEXCEL_URL_TITLE = "excel文件" ;// 详情弹窗显示提示  [添加/修改] +  栏目/主题
 </script>
 <script src="{{asset('js/common/list.js')}}"></script>
 <script src="{{ asset('js/company/QualityControl/CompanyNewSchedule.js?19') }}"  type="text/javascript"></script>

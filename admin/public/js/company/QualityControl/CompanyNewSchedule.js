@@ -50,7 +50,7 @@ var otheraction = {
         if(id > 0){
             operateText = "修改";
         }
-        tishi = operateText + tishi;
+        tishi = '上传' + tishi;// operateText + tishi;
         layeriframe(weburl,tishi,950,600,IFRAME_MODIFY_CLOSE_OPERATE);
         return false;
     }
