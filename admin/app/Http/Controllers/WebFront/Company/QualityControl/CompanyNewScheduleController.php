@@ -82,6 +82,46 @@ class CompanyNewScheduleController extends BasicController
 //        }, $this->errMethod, $reDataArr, $this->errorView);
 //    }
 
+
+    /**
+     * 添加 excel
+     *
+     * @param Request $request
+     * @param int $id
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function add_excel(Request $request,$id = 0)
+    {
+        $reDataArr = [];// 可以传给视图的全局变量数组
+        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request, &$id){
+            // 正常流程的代码
+
+            $this->InitParams($request);
+            // $reDataArr = $this->reDataArr;
+            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+            $info = [
+                'id'=>$id,
+                //   'department_id' => 0,
+            ];
+            $operate = "添加";
+
+            if ($id > 0) { // 获得详情数据
+                $operate = "修改";
+                $info = CTAPICompanyScheduleBusiness::getInfoData($request, $this, $id, [], '', []);
+                if(empty($info)) throws('记录不存在！');
+                // $user_info = $this->user_info;
+                if( $info['company_id'] != $this->user_id) throws('非法访问，您没有访问此记录的权限！');
+
+            }
+            // $reDataArr = array_merge($reDataArr, $resultDatas);
+            $reDataArr['info'] = $info;
+            $reDataArr['operate'] = $operate;
+            return view('company.QualityControl.CompanyNewSchedule.add_excel', $reDataArr);
+
+        }, $this->errMethod, $reDataArr, $this->errorView);
+    }
+
     /**
      * 添加
      *
@@ -120,7 +160,9 @@ class CompanyNewScheduleController extends BasicController
             $reDataArr['info'] = $info;
             $reDataArr['operate'] = $operate;
 
-            $reDataArr['type_ids'] = CompanySchedule::$typeIdArr;
+            $typeIdArr = CompanySchedule::$typeIdArr;
+            if(isset($typeIdArr['0'])) unset($typeIdArr['0']);
+            $reDataArr['type_ids'] = $typeIdArr;
             $reDataArr['defaultTypeId'] = $info['type_id'] ?? -1;// 默认
 
             return view('company.QualityControl.CompanyNewSchedule.add', $reDataArr);
@@ -199,18 +241,19 @@ class CompanyNewScheduleController extends BasicController
         if(empty($userInfo)) throws('企业记录不存在！');
 
         // word资源
-        $resource_id = CommonRequest::get($request, 'resource_id');
-        // 如果是字符，则转为数组
-        if(is_string($resource_id) || is_numeric($resource_id)){
-            if(strlen(trim($resource_id)) > 0){
-                $resource_id = explode(',' ,$resource_id);
-            }
-        }
-        if(!is_array($resource_id)) $resource_id = [];
-
-        // 再转为字符串
-        $resource_ids = implode(',', $resource_id);
-        if(!empty($resource_ids)) $resource_ids = ',' . $resource_ids . ',';
+        $resource_id = [];
+//        $resource_id = CommonRequest::get($request, 'resource_id');
+//        // 如果是字符，则转为数组
+//        if(is_string($resource_id) || is_numeric($resource_id)){
+//            if(strlen(trim($resource_id)) > 0){
+//                $resource_id = explode(',' ,$resource_id);
+//            }
+//        }
+//        if(!is_array($resource_id)) $resource_id = [];
+//
+//        // 再转为字符串
+//        $resource_ids = implode(',', $resource_id);
+//        if(!empty($resource_ids)) $resource_ids = ',' . $resource_ids . ',';
 
         // pdf资源
         $resource_id_pdf = CommonRequest::get($request, 'resource_id_pdf');
@@ -232,8 +275,8 @@ class CompanyNewScheduleController extends BasicController
         $saveData = [
             'company_id' => $organize_id,
             'type_id' => $type_id,
-             'resource_id' => $resource_id[0] ?? 0,// word资源的id
-            'resource_ids' => $resource_ids,// word资源id串(逗号分隔-未尾逗号结束)
+//             'resource_id' => $resource_id[0] ?? 0,// word资源的id
+//            'resource_ids' => $resource_ids,// word资源id串(逗号分隔-未尾逗号结束)
             'resource_id_pdf' => $resource_id_pdf[0] ?? 0,// pdf资源的id
             'resource_ids_pdf' => $resource_ids_pdf,// pdf资源id串(逗号分隔-未尾逗号结束)
             'resourceIds' => array_merge($resource_id, $resource_id_pdf),// 此下标为图片资源关系
@@ -415,7 +458,7 @@ class CompanyNewScheduleController extends BasicController
         if(empty($userInfo)) throws('企业记录不存在！');
 
         // 上传并保存文件
-        $result = CTAPIResourceBusiness::fileSingleUpload($request, $this, 4);
+        $result = CTAPIResourceBusiness::fileSingleUpload($request, $this, 2);
         if($result['apistatus'] == 0) return $result;
         // 文件上传成功
         // /srv/www/dogtools/admin/public/resource/company/5/excel/2020/06/21/2020062115463441018048779bab4a.xlsx
@@ -437,7 +480,8 @@ class CompanyNewScheduleController extends BasicController
 
         $saveData = [
             'company_id' => $organize_id,
-            // 'resource_id' => $resource_id[0] ?? 0,// 第一个图片资源的id
+            'type_id' => 0,
+            'resource_id' => $resource_id[0] ?? 0,// 第一个图片资源的id
             'resource_ids' => $resource_ids,// 图片资源id串(逗号分隔-未尾逗号结束)
             'resourceIds' => $resource_id,// 此下标为图片资源关系
         ];

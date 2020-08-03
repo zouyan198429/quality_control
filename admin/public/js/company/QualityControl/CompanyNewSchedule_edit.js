@@ -92,6 +92,17 @@ $(function(){
         //     layer_alert("请选择所属企业",3,0);
         //     return false;
         // }
+
+
+        var type_id = $('select[name=type_id]').val();
+        var judge_seled = judge_validate(1,'文档类型',type_id,true,'digit','','');
+        if(judge_seled != ''){
+            fileObj.value = ''; //虽然file的value不能设为有字符的值，但是可以设置为空值
+            layer_alert("请选择文档类型",3,0);
+            //err_alert('<font color="#000000">' + judge_seled + '</font>');
+            return false;
+        }
+
         // 获得文件名
         var filePath = $(this).val();
         console.log('filePath=', filePath);
@@ -113,6 +124,7 @@ $(function(){
                 fileObject.closest('td').find('.file_name').html(fileName);
                 if(file_type == 'pdf'){
                     fileObject.closest('td').find('input[name=resource_id_pdf]').val(file_id);
+                    ajax_form();// 直接提交表单
                 }else{
                     fileObject.closest('td').find('input[name=resource_id]').val(file_id);
                 }
@@ -207,13 +219,13 @@ function ajax_form(){
         return false;
     }
 
-    var resource_id = $('input[name=resource_id]').val();
-    var judge_seled = judge_validate(1,'word文件上传',resource_id,true,'digit','','');
-    if(judge_seled != ''){
-        layer_alert("请上传word文件",3,0);
-        //err_alert('<font color="#000000">' + judge_seled + '</font>');
-        return false;
-    }
+    // var resource_id = $('input[name=resource_id]').val();
+    // var judge_seled = judge_validate(1,'word文件上传',resource_id,true,'digit','','');
+    // if(judge_seled != ''){
+    //     layer_alert("请上传word文件",3,0);
+    //     //err_alert('<font color="#000000">' + judge_seled + '</font>');
+    //     return false;
+    // }
 
     // 验证通过
     SUBMIT_FORM = false;//标记为已经提交过
@@ -239,16 +251,16 @@ function ajax_form(){
                 // countdown_alert("操作成功!",1,5);
                 // parent_only_reset_list(false);
                 // wait_close_popus(2,PARENT_LAYER_INDEX);
-                layer.msg('操作成功！', {
-                    icon: 1,
-                    shade: 0.3,
-                    time: 3000 //2秒关闭（如果不配置，默认是3秒）
-                }, function(){
+                // layer.msg('操作成功！', {
+                //     icon: 1,
+                //     shade: 0.3,
+                //     time: 3000 //2秒关闭（如果不配置，默认是3秒）
+                // }, function(){
                     var reset_total = true; // 是否重新从数据库获取总页数 true:重新获取,false不重新获取
                     if(id > 0) reset_total = false;
                     parent_reset_list_iframe_close(reset_total);// 刷新并关闭
                     //do something
-                });
+                // });
                 // var supplier_id = ret.result['supplier_id'];
                 //if(SUPPLIER_ID_VAL <= 0 && judge_integerpositive(supplier_id)){
                 //    SUPPLIER_ID_VAL = supplier_id;

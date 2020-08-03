@@ -21,7 +21,8 @@
                 <div class="layui-card-header">
                     能力附表
                     <div class="layui-btn-group layuiadmin-btn-group" >
-                        <a href="javascript:void(0);" class="layui-btn layui-btn-sm layui-btn-normal" onclick="action.iframeModify(0)">添加能力附表</a>
+                        <a href="javascript:void(0);" class="layui-btn layui-btn-sm layui-btn-normal" onclick="otheraction.upExcelFile(0)">添加excel文档</a>
+                        <a href="javascript:void(0);" class="layui-btn layui-btn-sm layui-btn-normal" onclick="action.iframeModify(0)">上传PDF文件</a>
                     </div>
 
                 </div>
@@ -35,7 +36,7 @@
 
                     <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
                         <colgroup>
-                            <col width="60">
+{{--                            <col width="60">--}}
                             <col width="150">
                             <col width="">
                             <col width="">
@@ -49,10 +50,10 @@
                                 <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>
                               </label>
                             </th> -->
-                            <th>ID</th>
+{{--                            <th>ID</th>--}}
                             <th>文档类型</th>
                             <th>pdf文件</th>
-                            <th>word文件</th>
+                            <th>excel文件</th>
                             <th>创建时间</th>
                             <th>操作</th>
                         </tr>
@@ -85,7 +86,7 @@
     var ADD_URL = "{{ url('company/company_new_schedule/add/0') }}"; //添加url
 
     var IFRAME_MODIFY_URL = "{{url('company/company_new_schedule/add/')}}/";//添加/修改页面地址前缀 + id
-    var IFRAME_MODIFY_URL_TITLE = "能力附表" ;// 详情弹窗显示提示  [添加/修改] +  栏目/主题
+    var IFRAME_MODIFY_URL_TITLE = "能力附表-上传PDF文件" ;// 详情弹窗显示提示  [添加/修改] +  栏目/主题
     var IFRAME_MODIFY_CLOSE_OPERATE = 0 ;// 详情弹窗operate_num关闭时的操作0不做任何操作1刷新当前页面2刷新当前列表页面
 
     var SHOW_URL = "{{url('company/company_new_schedule/info/')}}/";//显示页面地址前缀 + id
@@ -100,8 +101,11 @@
     var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
 
     var SELECT_COMPANY_URL = "{{url('company/company/select')}}";// 选择所属企业
+
+    var IFRAME_UPEXCEL_URL = "{{url('company/company_new_schedule/add_excel/')}}/";//添加/修改页面地址前缀 + id
+    var IFRAME_UPEXCEL_URL_TITLE = "Excel文档" ;// 详情弹窗显示提示  [添加/修改] +  栏目/主题
 </script>
 <script src="{{asset('js/common/list.js')}}"></script>
-<script src="{{ asset('js/company/QualityControl/CompanyNewSchedule.js?18') }}"  type="text/javascript"></script>
+<script src="{{ asset('js/company/QualityControl/CompanyNewSchedule.js?19') }}"  type="text/javascript"></script>
 </body>
 </html>

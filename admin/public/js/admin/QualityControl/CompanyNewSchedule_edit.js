@@ -206,13 +206,13 @@ function ajax_form(){
         return false;
     }
 
-    var resource_id = $('input[name=resource_id]').val();
-    var judge_seled = judge_validate(1,'word文件上传',resource_id,true,'digit','','');
-    if(judge_seled != ''){
-        layer_alert("请上传word文件",3,0);
-        //err_alert('<font color="#000000">' + judge_seled + '</font>');
-        return false;
-    }
+    // var resource_id = $('input[name=resource_id]').val();
+    // var judge_seled = judge_validate(1,'word文件上传',resource_id,true,'digit','','');
+    // if(judge_seled != ''){
+    //     layer_alert("请上传word文件",3,0);
+    //     //err_alert('<font color="#000000">' + judge_seled + '</font>');
+    //     return false;
+    // }
 
     // 验证通过
     SUBMIT_FORM = false;//标记为已经提交过

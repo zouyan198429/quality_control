@@ -129,7 +129,7 @@ class BasicCTAPIBusiness extends APIOperate
      *
      * @param Request $request 请求信息
      * @param Controller $controller 控制对象
-     * @param int $operate_type 操作为型  1 所有[默认] all 二维 2 ：指定返回数量 limit_num 1：一维 ，>1 二维 4：只返回一条 one_num 一维
+     * @param int $operate_type 操作为型  1 所有[默认] all 二维 2 ：指定返回数量 limit_num 1：一维 ，>1 二维 4：只返回一条 one_num 一维 ， 8：获得数量值
      * @param int $page_size 2时返回的数量
      * @param array $fieldValParams
      *  $fieldValParams = [
@@ -228,6 +228,10 @@ class BasicCTAPIBusiness extends APIOperate
             {
                 case 1:
                     $dataArr = static::getList($request, $controller, 1, $queryParams, $relations, $extParams, $notLog)['result']['data_list'] ?? [];
+                    break;
+                case 8:// 获得数量值
+                    $queryParams['count'] = 0;
+                    $dataArr = static::getList($request, $controller, 1, $queryParams, $relations, $extParams, $notLog)['result']['total'] ?? 0;
                     break;
                 case 2:
                     $company_id = $controller->company_id;

@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/css/layui.css?88')}}" media="all">
     <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/style/admin.css?8')}}" media="all">
     <style>
-    .gray { 
+    .gray {
     color: #999;
     margin-top:10px;
      }
@@ -35,7 +35,7 @@
 <div class="mm">
     <form class="am-form am-form-horizontal" method="post"  id="addForm">
         <input type="hidden" name="id" value="{{ $info['id'] ?? 0 }}"/>
-    <p class="red tip1" ><i class="ace-icon fa fa-info-circle  bigger-60"></i> 请上传资质认定的全部附表，每次上传一个文档的PDF版本和WORD版本。</p>
+    <p class="red tip1" ><i class="ace-icon fa fa-info-circle  bigger-60"></i> 请上传资质认定的全部附表，每次上传一个文档的PDF版本。</p>
     <table class="table1">
 
         <tr>
@@ -59,23 +59,23 @@
                 <span>请上传pdf格式的文档</span>
             </td>
         </tr>
-        <tr>
-            <th>word文件上传<span class="must">*</span></th>
-            <td>
-                <span class="file_name"></span>
-                <input type="hidden" name="resource_id" value="">
-                <button type="button" class="btn btn-success  btn-xs import_excel"  onclick="otheraction.importExcel(this)">上传文件</button>
-                <div style="display:none;" ><input type="file" data-file_type="doc" class="import_file img_input"></div>{{--导入file对象--}}
-                <span>请上传doc格式的文档</span>
-                <p class="gray">word文件内容要和pdf文件的内容保持一致!</p>
-            </td>
-        </tr>
-        <tr>
-            <th> </th>
-            <td>
-            <div class="k20"></div>
-            <button class="btn btn-l wnormal"  id="submitBtn" >提交</button></td>
-        </tr>
+{{--        <tr>--}}
+{{--            <th>word文件上传<span class="must">*</span></th>--}}
+{{--            <td>--}}
+{{--                <span class="file_name"></span>--}}
+{{--                <input type="hidden" name="resource_id" value="">--}}
+{{--                <button type="button" class="btn btn-success  btn-xs import_excel"  onclick="otheraction.importExcel(this)">上传文件</button>--}}
+{{--                <div style="display:none;" ><input type="file" data-file_type="doc" class="import_file img_input"></div>--}}{{--导入file对象--}}
+{{--                <span>请上传doc格式的文档</span>--}}
+{{--                <p class="gray">word文件内容要和pdf文件的内容保持一致!</p>--}}
+{{--            </td>--}}
+{{--        </tr>--}}
+{{--        <tr>--}}
+{{--            <th> </th>--}}
+{{--            <td>--}}
+{{--            <div class="k20"></div>--}}
+{{--            <button class="btn btn-l wnormal"  id="submitBtn" >提交</button></td>--}}
+{{--        </tr>--}}
 
     </table>
     </form>
@@ -95,6 +95,6 @@
     var UPLOAD_WORD_URL = "{{ url('api/company/company_new_schedule/up_word') }}";//上传word地址
     var UPLOAD_PDF_URL = "{{ url('api/company/company_new_schedule/up_pdf') }}";//上传pdf地址
 </script>
-<script src="{{ asset('/js/company/QualityControl/CompanyNewSchedule_edit.js') }}?1"  type="text/javascript"></script>
+<script src="{{ asset('/js/company/QualityControl/CompanyNewSchedule_edit.js') }}?4"  type="text/javascript"></script>
 </body>
 </html>

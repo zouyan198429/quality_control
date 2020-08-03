@@ -61,16 +61,16 @@
                     <span>请上传pdf格式的文档</span>
                 </td>
             </tr>
-            <tr>
-                <th>word文件上传<span class="must">*</span></th>
-                <td>
-                    <span class="file_name"></span>
-                    <input type="hidden" name="resource_id" value="">
-                    <button type="button" class="btn btn-success  btn-xs import_excel"  onclick="otheraction.importExcel(this)">上传文件</button>
-                    <div style="display:none;" ><input type="file" data-file_type="doc" class="import_file img_input"></div>{{--导入file对象--}}
-                    <span>请上传doc格式的文档</span>
-                </td>
-            </tr>
+{{--            <tr>--}}
+{{--                <th>word文件上传<span class="must">*</span></th>--}}
+{{--                <td>--}}
+{{--                    <span class="file_name"></span>--}}
+{{--                    <input type="hidden" name="resource_id" value="">--}}
+{{--                    <button type="button" class="btn btn-success  btn-xs import_excel"  onclick="otheraction.importExcel(this)">上传文件</button>--}}
+{{--                    <div style="display:none;" ><input type="file" data-file_type="doc" class="import_file img_input"></div>--}}{{--导入file对象--}}
+{{--                    <span>请上传doc格式的文档</span>--}}
+{{--                </td>--}}
+{{--            </tr>--}}
             <tr>
                 <th> </th>
                 <td><button class="btn btn-l wnormal"  id="submitBtn" >提交</button></td>

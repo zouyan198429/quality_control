@@ -192,18 +192,19 @@ class CompanyNewScheduleController extends BasicController
         if(empty($userInfo)) throws('企业记录不存在！');
 
         // word资源
-        $resource_id = CommonRequest::get($request, 'resource_id');
-        // 如果是字符，则转为数组
-        if(is_string($resource_id) || is_numeric($resource_id)){
-            if(strlen(trim($resource_id)) > 0){
-                $resource_id = explode(',' ,$resource_id);
-            }
-        }
-        if(!is_array($resource_id)) $resource_id = [];
-
-        // 再转为字符串
-        $resource_ids = implode(',', $resource_id);
-        if(!empty($resource_ids)) $resource_ids = ',' . $resource_ids . ',';
+        $resource_id = [];
+//        $resource_id = CommonRequest::get($request, 'resource_id');
+//        // 如果是字符，则转为数组
+//        if(is_string($resource_id) || is_numeric($resource_id)){
+//            if(strlen(trim($resource_id)) > 0){
+//                $resource_id = explode(',' ,$resource_id);
+//            }
+//        }
+//        if(!is_array($resource_id)) $resource_id = [];
+//
+//        // 再转为字符串
+//        $resource_ids = implode(',', $resource_id);
+//        if(!empty($resource_ids)) $resource_ids = ',' . $resource_ids . ',';
 
         // pdf资源
         $resource_id_pdf = CommonRequest::get($request, 'resource_id_pdf');
@@ -225,8 +226,8 @@ class CompanyNewScheduleController extends BasicController
         $saveData = [
             'company_id' => $organize_id,
             'type_id' => $type_id,
-             'resource_id' => $resource_id[0] ?? 0,// word资源的id
-            'resource_ids' => $resource_ids,// word资源id串(逗号分隔-未尾逗号结束)
+//             'resource_id' => $resource_id[0] ?? 0,// word资源的id
+//            'resource_ids' => $resource_ids,// word资源id串(逗号分隔-未尾逗号结束)
             'resource_id_pdf' => $resource_id_pdf[0] ?? 0,// pdf资源的id
             'resource_ids_pdf' => $resource_ids_pdf,// pdf资源id串(逗号分隔-未尾逗号结束)
             'resourceIds' => array_merge($resource_id, $resource_id_pdf),// 此下标为图片资源关系

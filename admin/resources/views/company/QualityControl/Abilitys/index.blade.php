@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/css/layui.css')}}" media="all">
   <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/style/admin.css')}}" media="all">
 </head>
-<body> 
+<body>
 <div class="layui-fluid">
   <div class="layui-row">
       <div class="layui-col-md12">
@@ -25,7 +25,7 @@
               <h3 style="width:120px; float: left;">报名项目</h3>
               <div class="layui-btn-group layuiadmin-btn-group" >
                 <a href="javascript:void(0);" class="layui-btn layui-btn-sm layui-btn-normal" onclick="otheraction.joinSelected(this)"> 立即报名 </a>
-              </div> 
+              </div>
           </div>
           <form onsubmit="return false;" class="form-horizontal" style="display: none;" role="form" method="post" id="search_frm" action="#">
             <div class="msearch fr">
@@ -37,17 +37,17 @@
             </div>
           </form>
 
-          
-          
+
+
           <div class="layui-card-body">
               <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
                 <colgroup>
                     <col width="50">
                     <col width="50">
-                    <col>  
-                    <col width="300"> 
+                    <col>
+                    <col width="300">
                     <col width="90">
-                    <col width="90"> 
+                    <col width="90">
                     <col width="90">
                 </colgroup>
                 <thead>
@@ -58,11 +58,11 @@
                     </label>
                   </th>
                   <th>ID</th>
-                  <th>检测项目</th> 
+                  <th>检测项目</th>
 <!--                     <th>发布时间</th>
- -->                    <th>报名时间</th> 
+ -->                    <th>报名时间</th>
                     <th>状态</th>
-                    <th>是否报名</th> 
+                    <th>是否报名</th>
                   <th>操作</th>
                 </tr>
                 </thead>
@@ -108,7 +108,7 @@
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
 
       var JOIN_URL = "{{ url('company/abilitys/join/') }}/";//报名地址
-      var COMPANY_EXTEND_URL = "{{ url('api/company/abilitys/ajax_company_extend') }}/";//验证是否有上传能力附表
+      var COMPANY_EXTEND_URL = "{{ url('api/company/abilitys/ajax_schedule_num') }}/";//验证是否有上传能力附表 ajax_company_extend
       var COMPANY_SCHEDULE_URL = "{{ url('company/company_schedule') }}/";//能力附表列表地址
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
