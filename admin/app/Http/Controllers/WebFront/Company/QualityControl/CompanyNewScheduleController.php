@@ -297,6 +297,82 @@ class CompanyNewScheduleController extends BasicController
     }
 
     /**
+     * ajax保存数据--excel保存
+     *
+     * @param int $id
+     * @return Response
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_excel_save(Request $request)
+    {
+        $this->InitParams($request);
+        $id = CommonRequest::getInt($request, 'id');
+        // CommonRequest::judgeEmptyParams($request, 'id', $id);
+        // 企业 的 个人--只能读自己的人员信息
+        $organize_id = $this->user_id;// CommonRequest::getInt($request, 'company_id');
+        if(!is_numeric($organize_id) || $organize_id <= 0) throws('所属企业参数有误！');
+
+        $userInfo = $this->getStaffInfo($organize_id);
+        if(empty($userInfo)) throws('企业记录不存在！');
+
+        // word资源
+//        $resource_id = [];
+        $resource_id = CommonRequest::get($request, 'resource_id');
+        // 如果是字符，则转为数组
+        if(is_string($resource_id) || is_numeric($resource_id)){
+            if(strlen(trim($resource_id)) > 0){
+                $resource_id = explode(',' ,$resource_id);
+            }
+        }
+        if(!is_array($resource_id)) $resource_id = [];
+
+        // 再转为字符串
+        $resource_ids = implode(',', $resource_id);
+        if(!empty($resource_ids)) $resource_ids = ',' . $resource_ids . ',';
+
+        // pdf资源
+        $resource_id_pdf = [];
+//        $resource_id_pdf = CommonRequest::get($request, 'resource_id_pdf');
+//        // 如果是字符，则转为数组
+//        if(is_string($resource_id_pdf) || is_numeric($resource_id_pdf)){
+//            if(strlen(trim($resource_id_pdf)) > 0){
+//                $resource_id_pdf = explode(',' ,$resource_id_pdf);
+//            }
+//        }
+//        if(!is_array($resource_id_pdf)) $resource_id_pdf = [];
+//
+//        // 再转为字符串
+//        $resource_ids_pdf = implode(',', $resource_id_pdf);
+//        if(!empty($resource_ids_pdf)) $resource_ids_pdf = ',' . $resource_ids_pdf . ',';
+
+        $type_id = 0;// CommonRequest::getInt($request, 'type_id');
+
+
+        $saveData = [
+            'company_id' => $organize_id,
+            'type_id' => $type_id,
+             'resource_id' => $resource_id[0] ?? 0,// word资源的id
+            'resource_ids' => $resource_ids,// word资源id串(逗号分隔-未尾逗号结束)
+//            'resource_id_pdf' => $resource_id_pdf[0] ?? 0,// pdf资源的id
+//            'resource_ids_pdf' => $resource_ids_pdf,// pdf资源id串(逗号分隔-未尾逗号结束)
+            'resourceIds' => array_merge($resource_id, $resource_id_pdf),// 此下标为图片资源关系
+        ];
+
+//        if($id <= 0) {// 新加;要加入的特别字段
+//            $addNewData = [
+//                // 'account_password' => $account_password,
+//            ];
+//            $saveData = array_merge($saveData, $addNewData);
+//        }
+        $extParams = [
+            'judgeDataKey' => 'replace',// 数据验证的下标
+            'methodName' =>  'replaceByIdNew',
+        ];
+        $resultDatas = CTAPICompanyScheduleBusiness::replaceById($request, $this, $saveData, $id, $extParams, true);
+        return ajaxDataArr(1, $resultDatas, '');
+    }
+
+    /**
      * @OA\Get(
      *     path="/api/company/quality_control/company_new_schedule/ajax_alist",
      *     tags={"大后台-能力验证-能力附表"},
@@ -514,7 +590,7 @@ class CompanyNewScheduleController extends BasicController
         if(empty($userInfo)) throws('企业记录不存在！');
 
         // 上传并保存文件
-        return CTAPIResourceBusiness::fileSingleUpload($request, $this, 8);
+        return CTAPIResourceBusiness::filePlupload($request, $this, 8);
     }
 
     /**
@@ -536,6 +612,49 @@ class CompanyNewScheduleController extends BasicController
         if(empty($userInfo)) throws('企业记录不存在！');
 
         // 上传并保存文件
-        return CTAPIResourceBusiness::fileSingleUpload($request, $this, 16);
+        return CTAPIResourceBusiness::filePlupload($request, $this, 16);
+    }
+
+    /**
+     * 单文件上传-上传excel
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function up_excel(Request $request)
+    {
+        $this->InitParams($request);
+        // $this->company_id = 1;
+        // 企业 的 个人--只能读自己的人员信息
+        $organize_id = $this->user_id;// CommonRequest::getInt($request, 'company_id');
+        if(!is_numeric($organize_id) || $organize_id <= 0) throws('所属企业参数有误！');
+
+        $userInfo = $this->getStaffInfo($organize_id);
+        if(empty($userInfo)) throws('企业记录不存在！');
+
+        // 上传并保存文件
+        return CTAPIResourceBusiness::filePlupload($request, $this, 2);
+    }
+    /**
+     * 单文件上传-上传图片
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function up_img(Request $request)
+    {
+        $this->InitParams($request);
+        // $this->company_id = 1;
+        // 企业 的 个人--只能读自己的人员信息
+        $organize_id = $this->user_id;// CommonRequest::getInt($request, 'company_id');
+        if(!is_numeric($organize_id) || $organize_id <= 0) throws('所属企业参数有误！');
+
+        $userInfo = $this->getStaffInfo($organize_id);
+        if(empty($userInfo)) throws('企业记录不存在！');
+
+        // 上传并保存文件
+        return CTAPIResourceBusiness::filePlupload($request, $this, 1);
     }
 }

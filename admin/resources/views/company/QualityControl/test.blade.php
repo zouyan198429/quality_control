@@ -11,8 +11,8 @@
     <!-- zui css -->
     <link rel="stylesheet" href="{{asset('dist/css/zui.min.css') }}">
     @include('admin.layout_public.pagehead')
-    <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/css/layui.css?88')}}" media="all">
-    <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/style/admin.css?8')}}" media="all">
+{{--    <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/css/layui.css?88')}}" media="all">--}}
+{{--    <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/style/admin.css?8')}}" media="all">--}}
     <style>
     .gray {
     color: #999;
@@ -41,50 +41,26 @@
     <table class="table1">
 
         <tr>
-            <th>文档类型<span class="must">*</span></th>
-            <td>
-                <select class="wnormal" name="type_id" style="width: 280px;">
-                    <option value="">请选择文档类型</option>
-                    @foreach ($type_ids as $k=>$txt)
-                        <option value="{{ $k }}"  @if(isset($defaultTypeId) && $defaultTypeId == $k) selected @endif >{{ $txt }}</option>
-                    @endforeach
-                </select>
-            </td>
-        </tr>
-        <tr>
             <th>PDF文件上传<span class="must">*</span></th>
             <td>
-                <input type="hidden" name="resource_id_pdf" value=""/>
 
-                <div class="alert alert-warning alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <p>请上传一个pdf格式的文件</p>
-                </div>
-                <div class="row  baguetteBoxOne gallery ">
-                    <div class="col-xs-6">
-                        @component('component.upfileone.piconecode')
-                            @slot('fileList')
-                                large
-                            @endslot
-                            @slot('upload_url')
-                                {{ url('api/admin/upload') }}
-                            @endslot
-                        @endcomponent
+                <div  class="uploader" data-ride="uploader" data-url="your/file/upload/url" id="myUploader">
+                    <div class="uploader-message text-center">
+                        <div class="content"></div>
+                        <button type="button" class="close">×</button>
+                    </div>
+                    <div class="uploader-files file-list file-list-grid"></div>
+                    <div>
+                        <hr class="divider">
+                        <div class="uploader-status pull-right text-muted"></div>
+                        <button type="button" class="btn btn-link uploader-btn-browse"><i class="icon icon-plus"></i> 选择文件</button>
+                        <button type="button" class="btn btn-link uploader-btn-start"><i class="icon icon-cloud-upload"></i> 开始上传</button>
                     </div>
                 </div>
-{{--                <span>请上传pdf格式的文档</span>--}}
+
+                <span>请上传pdf格式的文档</span>
             </td>
         </tr>
-{{--        <tr>--}}
-{{--            <th>PDF文件上传<span class="must">*</span></th>--}}
-{{--            <td>--}}
-{{--                <span class="file_name"></span>--}}
-{{--                <input type="hidden" name="resource_id_pdf" value="">--}}
-{{--                <button type="button" class="btn btn-success  btn-xs import_excel"  onclick="otheraction.importExcel(this)">上传文件</button>--}}
-{{--                <div style="display:none;" ><input type="file" data-file_type="pdf" class="import_file img_input"></div>--}}{{--导入file对象--}}
-{{--                <span>请上传pdf格式的文档</span>--}}
-{{--            </td>--}}
-{{--        </tr>--}}
 {{--        <tr>--}}
 {{--            <th>word文件上传<span class="must">*</span></th>--}}
 {{--            <td>--}}
@@ -120,19 +96,39 @@
 
     var UPLOAD_WORD_URL = "{{ url('api/company/company_new_schedule/up_word') }}";//上传word地址
     var UPLOAD_PDF_URL = "{{ url('api/company/company_new_schedule/up_pdf') }}";//上传pdf地址
+    var UPLOAD_IMG_URL = "{{ url('api/company/company_new_schedule/up_img') }}";//上传img地址
 
-    var FLASH_SWF_URL = "{{asset('dist/lib/uploader/Moxie.swf') }}";// flash 上传组件地址  默认为 lib/uploader/Moxie.swf
-    var SILVERLIGHT_XAP_URL = "{{asset('dist/lib/uploader/Moxie.xap') }}";// silverlight_xap_url silverlight 上传组件地址  默认为 lib/uploader/Moxie.xap  请确保在文件上传页面能够通过此地址访问到此文件。
+    $(function(){
+        $('#myUploader').uploader({
+            url: UPLOAD_PDF_URL,
+            lang: 'zh_cn',// 界面语言 默认情况下设置为空值，会从浏览器 <html lang=""> 属性上获取语言设置，但有也可以手动指定为以下选项：'zh_cn'：简体中文；'zh_tw'：繁体中文；
+            file_data_name:'photo',//   文件域在表单中的名称  默认 'file'
+            onUploadFile: function(file) {
+                console.log('上传成功', file);
+            }
+        });
+        //提交
+        $(document).on("click","#submitBtn",function(){
 
+            // 判断是否上传图片
+            var uploader = $('#myUploader').data('zui.uploader');
+            var files = uploader.getFiles();
+            console.log('files', files);
+            var filesCount = files.length;
+            console.log('filesCount', filesCount);
+            return false;
+        });
+    });
 </script>
 <link rel="stylesheet" href="{{asset('js/baguetteBox.js/baguetteBox.min.css')}}">
 <script src="{{asset('js/baguetteBox.js/baguetteBox.min.js')}}" async></script>
 {{--<script src="{{asset('js/baguetteBox.js/highlight.min.js')}}" async></script>--}}
 <!-- zui js -->
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
-<script src="{{ asset('/js/company/QualityControl/CompanyNewSchedule_edit.js') }}?6"  type="text/javascript"></script>
+{{--<script src="{{ asset('/js/company/QualityControl/CompanyNewSchedule_edit.js') }}?4"  type="text/javascript"></script>--}}
 
 <link href="{{asset('dist/lib/uploader/zui.uploader.min.css') }}" rel="stylesheet">
 <script src="{{asset('dist/lib/uploader/zui.uploader.min.js') }}"></script>{{--此文件引用一次就可以了--}}
+
 </body>
 </html>

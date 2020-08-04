@@ -18,14 +18,15 @@ use Illuminate\Support\Facades\Cache;
 class IndexController extends BasicController
 {
     public function test(Request $request){
-        $extParams['sqlParams']['whereIn']['id'] = 123;
-        pr($extParams);
-            $this->InitParams($request);
-        $reDataArr = $this->reDataArr;
-        //pr($this->getUserInfo());
-        //die;
-        pr($this->user_id);
-        echo '1111';
+//        $extParams['sqlParams']['whereIn']['id'] = 123;
+//        pr($extParams);
+//            $this->InitParams($request);
+//        $reDataArr = $this->reDataArr;
+//        //pr($this->getUserInfo());
+//        //die;
+//        pr($this->user_id);
+//        echo '1111';
+        return view('company.QualityControl.test', []);
     }
 
     /**
