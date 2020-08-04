@@ -109,7 +109,7 @@
 
       var JOIN_URL = "{{ url('company/abilitys/join/') }}/";//报名地址
       var COMPANY_EXTEND_URL = "{{ url('api/company/abilitys/ajax_schedule_num') }}/";//验证是否有上传能力附表 ajax_company_extend
-      var COMPANY_SCHEDULE_URL = "{{ url('company/company_schedule') }}/";//能力附表列表地址
+      var COMPANY_SCHEDULE_URL = "{{ url('company/company_new_schedule') }}/";//能力附表列表地址
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
   <script src="{{ asset('js/company/QualityControl/Abilitys.js?32') }}"  type="text/javascript"></script>
