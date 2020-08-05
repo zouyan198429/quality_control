@@ -21,9 +21,7 @@
                 <div class="layui-card-header">
                     能力附表
                     <div class="layui-btn-group layuiadmin-btn-group" >
-                        <a href="javascript:void(0);" class="layui-btn layui-btn-sm layui-btn-normal"  onclick="otheraction.down_moban()">
-                            <i class="ace-icon fa fa-cloud-download bigger-60"> 能力附表Execl模板文件</i>
-                        </a>
+                        <a href="javascript:void(0);" class="layui-btn" style="background: none; color:#1E9FFF;"  onclick="otheraction.down_moban()">能力附表Execl模板文件</a>
                         <a href="javascript:void(0);" class="layui-btn layui-btn-sm layui-btn-normal" onclick="otheraction.upExcelFile(0)">上传excel文件</a>
                         <a href="javascript:void(0);" class="layui-btn layui-btn-sm layui-btn-normal" onclick="action.iframeModify(0)">上传PDF文件</a>
                     </div>
