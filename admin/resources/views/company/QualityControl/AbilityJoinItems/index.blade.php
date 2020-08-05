@@ -44,8 +44,7 @@
                     <col >
                     <col >
                     <col width="75">
-                    <col width="75">
-                    <col width="80">
+                    <col width="75"> 
                     <col width="80"> 
                     <col width="150">
                 </colgroup>
@@ -55,8 +54,7 @@
                     <th>ID</th>
                     <th>检测项目</th>
                     <th>发布时间</th>
-                    <th>报名时间</th>
-                    <th>项目状态</th>
+                    <th>报名时间</th> 
                     <th>是否取样</th>
                     <th>上传数据</th>
                     <th>验证结果</th> 
@@ -108,6 +106,6 @@
       var IFRAME_SAMPLE_RESULT_URL = "{{url('company/ability_join_item/sample_result/')}}/";//上报数据页面地址前缀 + id
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/company/QualityControl/AbilityJoinItem.js?0') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/company/QualityControl/AbilityJoinItem.js?20') }}"  type="text/javascript"></script>
 </body>
 </html>
