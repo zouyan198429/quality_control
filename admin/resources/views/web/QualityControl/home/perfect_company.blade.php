@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/css/layui.css')}}" media="all">
     @include('web.QualityControl.layout_public.pagehead')
     <!-- zui css -->
-    <link rel="stylesheet" href="{{asset('dist/css/zui.min.css') }}">
+    <link rel="stylesheet" href="{{asset('dist/css/zui.min.css') }}">     
 </head>
 <body style=" background:#f8f8f8; ">
     @include('web.QualityControl.layout_public.header')
@@ -110,7 +110,7 @@
 
                         <div class="alert alert-warning alert-dismissable">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                            <p>一次最多上传1张图片。</p>
+                            <p>一次最多上传1张图片，jpg或png格式，小于4M。</p>
                         </div>
                         <div class="row  baguetteBoxOne gallery ">
                             <div class="col-xs-12">
