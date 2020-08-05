@@ -158,7 +158,11 @@
                 </div>
                 <div class="form-item">
                     <label for="text" class="form-label">资质认定证书编号 <span class="red">*</span></label>
-                    <div class="form-input"><input type="text" name="company_certificate_no" class="form-control" autocomplete="off" value="{{ $info['company_certificate_no'] ?? '' }}"></div>
+                    <div class="form-input"><input type="number" name="company_certificate_no" class="form-control" autocomplete="off" value="{{ $info['company_certificate_no'] ?? '' }}">
+
+                        <p class="gray">是12位数字！</p>
+
+                    </div>
                 </div>
                 <div class="form-item">
                     <label for="text" class="form-label">联系人<span class="red">*</span></label>
