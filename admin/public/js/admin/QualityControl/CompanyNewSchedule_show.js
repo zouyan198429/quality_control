@@ -48,7 +48,7 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
 }
 
 //业务逻辑部分
-// var otheraction = {
+var otheraction = {
 //     selectCompany: function(obj){// 选择商家
 //         var recordObj = $(obj);
 //         //获得表单各name的值
@@ -62,8 +62,17 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
 //         console.log('weburl', weburl);
 //         layeriframe(weburl,tishi,700,450,0);
 //         return false;
-//     }
-// };
+//     },
+    down_file:function(resource_url){//下载网页打印机驱动
+        var layer_index = layer.load();//layer.msg('加载中', {icon: 16});
+        //layer_alert("已打印"+print_nums+"打印第"+begin_page+"页-第"+end_page+"页;每次打"+per_page_num+"页",3);
+        var url = DOWN_FILE_URL + '?resource_url=' + resource_url;
+        console.log('下载文件：', url);
+        // PrintOneURL(url);
+        go(url);
+        layer.close(layer_index)//手动关闭
+    }
+};
 // // 获得选中的企业id 数组
 // function getSelectedCompanyIds(){
 //     var company_ids = [];
@@ -145,10 +154,14 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
     document.write("            <%for(var j = 0; j<resource_list.length;j++){");
     document.write("                var jitem = resource_list[j];");
     document.write("                 %>");
-    document.write("               <a href=\"<%=jitem.resource_url_format%>\" target='_blank'>");
-    document.write("                    <%=jitem.resource_name%>--查看");
+    document.write("                    <%=jitem.resource_name%>");
+    document.write("               <a href=\"<%=jitem.resource_url_format%>\"  class=\"btn btn-mini btn-success\"  target='_blank'>");
+    document.write("                    <i class=\"ace-icon fa fa-eye bigger-60\"> 查看<\/i>");
     // document.write("                <img  src=\"<%=jitem.resource_url%>\"  style=\"width:100px;\">");
     document.write("              </a>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"otheraction.down_file('<%=jitem.resource_url_old%>')\">");
+    document.write("                    <i class=\"ace-icon fa fa-cloud-download bigger-60\"> 下载<\/i>");
+    document.write("                <\/a>");
     document.write("            <%}%>");
     document.write("           <\/td>");
     document.write("            <td><%=item.created_at%><\/td>");

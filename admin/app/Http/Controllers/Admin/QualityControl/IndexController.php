@@ -331,4 +331,22 @@ class IndexController extends BasicController
 //        if(is_string($res)) echo $res;
 //    }
 
+    /**
+     * 下载文件
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function down_file(Request $request)
+    {
+//        $this->InitParams($request);
+        // $this->source = 2;
+//        $reDataArr = $this->reDataArr;
+        // 下载二维码文件
+        $publicPath = Tool::getPath('public');
+        $fileName = CommonRequest::get($request, 'resource_url');// '/CLodopPrint_Setup_for_Win32NT.exe';
+        $res = DownFile::downFilePath(2, $publicPath . $fileName);
+        if(is_string($res)) echo $res;
+    }
 }

@@ -3005,6 +3005,7 @@ class Tool
                 'created_at' => $v['created_at'],
                 'column_type' => $v['column_type'] ?? 0,
                 'column_id' => $v['column_id'] ?? 0,
+                'resource_url_old' => $v['resource_url'],
             ];
             $temArr = array_merge($temArr, static::formatUrlByExtension($resource_url));
             array_push($reList, $temArr);

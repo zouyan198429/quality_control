@@ -198,6 +198,7 @@ Route::get('admin/password', 'Admin\QualityControl\IndexController@password');//
 Route::get('admin/info', 'Admin\QualityControl\IndexController@info');//myinfo.html 个人信息--显示--ok
 //Route::get('admin/down_drive', 'Admin\QualityControl\IndexController@down_drive');// 下载网页打印机驱动
 
+Route::get('admin/down_file', 'Admin\QualityControl\IndexController@down_file');// 下载文件
 // 系统管理员
 Route::get('admin/staff', 'Admin\QualityControl\StaffController@index');// 列表
 Route::get('admin/staff/add/{id}', 'Admin\QualityControl\StaffController@add');// 添加
@@ -309,6 +310,7 @@ Route::get('company/info', 'WebFront\Company\QualityControl\IndexController@info
 //Route::get('company/down_drive', 'WebFront\Company\QualityControl\IndexController@down_drive');// 下载网页打印机驱动
 Route::get('company/basic', 'WebFront\Company\QualityControl\IndexController@basic');// 修改企业基本信息
 
+Route::get('company/down_file', 'WebFront\Company\QualityControl\IndexController@down_file');// 下载文件
 // 能力验证
 Route::get('company/abilitys', 'WebFront\Company\QualityControl\AbilitysController@index');// 列表
 Route::get('company/abilitys/info/{id}', 'WebFront\Company\QualityControl\AbilitysController@info');// 查看-详情

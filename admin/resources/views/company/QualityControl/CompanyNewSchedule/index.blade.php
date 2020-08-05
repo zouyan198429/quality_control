@@ -105,8 +105,11 @@
 
     var IFRAME_UPEXCEL_URL = "{{url('company/company_new_schedule/add_excel/')}}/";//添加/修改页面地址前缀 + id
     var IFRAME_UPEXCEL_URL_TITLE = "excel文件" ;// 详情弹窗显示提示  [添加/修改] +  栏目/主题
+
+
+    var DOWN_FILE_URL = "{{ url('company/down_file') }}";// 下载网页打印机驱动
 </script>
 <script src="{{asset('js/common/list.js')}}"></script>
-<script src="{{ asset('js/company/QualityControl/CompanyNewSchedule.js?19') }}"  type="text/javascript"></script>
+<script src="{{ asset('js/company/QualityControl/CompanyNewSchedule.js?20') }}"  type="text/javascript"></script>
 </body>
 </html>

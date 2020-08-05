@@ -126,8 +126,9 @@
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
 
       var SELECT_COMPANY_URL = "{{url('admin/company/select')}}";// 选择所属企业
+      var DOWN_FILE_URL = "{{ url('admin/down_file') }}";// 下载网页打印机驱动
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/CompanyNewSchedule.js') }}?1"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/CompanyNewSchedule.js') }}?2"  type="text/javascript"></script>
 </body>
 </html>
