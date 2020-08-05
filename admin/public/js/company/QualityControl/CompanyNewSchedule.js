@@ -62,7 +62,16 @@ var otheraction = {
             // PrintOneURL(url);
             go(url);
             layer.close(layer_index)//手动关闭
-     }
+     },
+    down_moban:function(){//下载excel模板
+        var layer_index = layer.load();//layer.msg('加载中', {icon: 16});
+        //layer_alert("已打印"+print_nums+"打印第"+begin_page+"页-第"+end_page+"页;每次打"+per_page_num+"页",3);
+        var url = DOWN_MOBAN_URL;
+        console.log('下载文件：', url);
+        // PrintOneURL(url);
+        go(url);
+        layer.close(layer_index)//手动关闭
+    }
 };
 // 获得选中的企业id 数组
 function getSelectedCompanyIds(){

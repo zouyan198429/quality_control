@@ -7,6 +7,7 @@ use App\Business\Controller\API\QualityControl\CTAPIResourceBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
 use App\Http\Controllers\WorksController;
 use App\Models\QualityControl\CompanySchedule;
+use App\Services\File\DownFile;
 use App\Services\Request\CommonRequest;
 use App\Services\Tool;
 use Illuminate\Http\Request;
@@ -656,5 +657,25 @@ class CompanyNewScheduleController extends BasicController
 
         // 上传并保存文件
         return CTAPIResourceBusiness::filePlupload($request, $this, 1);
+    }
+
+    /**
+     * 下载文件
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function down_moban(Request $request)
+    {
+//        $this->InitParams($request);
+        // $this->source = 2;
+//        $reDataArr = $this->reDataArr;
+        // 下载二维码文件
+        $publicPath = Tool::getPath('public');
+        $fileName = '/download/moban.xlsx';
+
+        $res = DownFile::downFilePath(2, $publicPath . $fileName);
+        if(is_string($res)) echo $res;
     }
 }

@@ -353,6 +353,7 @@ Route::get('company/company_new_schedule/add_excel/{id}', 'WebFront\Company\Qual
 //Route::get('company/company_new_schedule/export', 'WebFront\Company\QualityControl\CompanyNewScheduleController@export');// 导出
 //Route::get('company/company_new_schedule/import_template', 'WebFront\Company\QualityControl\CompanyNewScheduleController@import_template');// 导入模版
 
+Route::get('company/company_new_schedule/down_moban', 'WebFront\Company\QualityControl\CompanyNewScheduleController@down_moban');// 下载文件模板
 // 用户中心 user
 Route::get('user/login', 'WebFront\User\QualityControl\IndexController@login');// login.html 登录
 Route::get('user/reg', 'WebFront\User\QualityControl\IndexController@reg');// 注册

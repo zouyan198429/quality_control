@@ -21,6 +21,9 @@
                 <div class="layui-card-header">
                     能力附表
                     <div class="layui-btn-group layuiadmin-btn-group" >
+                        <a href="javascript:void(0);" class="layui-btn layui-btn-sm layui-btn-normal"  onclick="otheraction.down_moban()">
+                            <i class="ace-icon fa fa-cloud-download bigger-60"> 能力附表Execl模板文件</i>
+                        </a>
                         <a href="javascript:void(0);" class="layui-btn layui-btn-sm layui-btn-normal" onclick="otheraction.upExcelFile(0)">上传excel文件</a>
                         <a href="javascript:void(0);" class="layui-btn layui-btn-sm layui-btn-normal" onclick="action.iframeModify(0)">上传PDF文件</a>
                     </div>
@@ -107,9 +110,10 @@
     var IFRAME_UPEXCEL_URL_TITLE = "excel文件" ;// 详情弹窗显示提示  [添加/修改] +  栏目/主题
 
 
+    var DOWN_MOBAN_URL = "{{ url('company/company_new_schedule/down_moban') }}";// 下载excel模板文件
     var DOWN_FILE_URL = "{{ url('company/down_file') }}";// 下载网页打印机驱动
 </script>
 <script src="{{asset('js/common/list.js')}}"></script>
-<script src="{{ asset('js/company/QualityControl/CompanyNewSchedule.js?20') }}"  type="text/javascript"></script>
+<script src="{{ asset('js/company/QualityControl/CompanyNewSchedule.js?21') }}"  type="text/javascript"></script>
 </body>
 </html>

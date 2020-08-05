@@ -5,6 +5,7 @@ namespace App\Http\Controllers\WebFront\Company\QualityControl;
 use App\Business\Controller\API\QualityControl\CTAPICompanyScheduleBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIResourceBusiness;
 use App\Http\Controllers\WorksController;
+use App\Services\File\DownFile;
 use App\Services\Request\CommonRequest;
 use App\Services\Tool;
 use Illuminate\Http\Request;
