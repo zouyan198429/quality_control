@@ -34,6 +34,7 @@
                     </div>
                 </form>
                 <div class="layui-card-body" pad15>
+                    <p style="color: red; padding-bottom:10px;">注：<strong>需要同时上传pdf和Execl两种文档; </strong><br >pdf文件需要是盖省局章子的能力附表扫描件；<br >Execl文件参考右上角的 “<a href="javascript:void(0);"  style="background: none; color:#1E9FFF;"  onclick="otheraction.down_moban()">能力附表Execl模板文件</a>”，下载后对照模板文件的格式检查。</p>
 
                     <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
                         <colgroup>
