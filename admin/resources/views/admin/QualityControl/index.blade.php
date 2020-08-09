@@ -117,6 +117,27 @@
               {{--</dl>--}}
             {{--</li>--}}
 
+              <li data-name="user" class="layui-nav-item">
+                  <a href="javascript:;" lay-tips="信息审核" lay-direction="2">
+                      <i class="layui-icon layui-icon-component"></i>
+                      <cite>信息审核</cite>
+                  </a>
+                  <dl class="layui-nav-child">
+                      <dd>
+                          <a lay-href="{{ url('admin/company') }}?open_status=1">新注册单位审核</a>
+                      </dd>
+                        <dd>
+                            <a lay-href="{{ url('admin/user') }}?open_status=1">新注册个人审核</a>
+                        </dd>
+                      <dd>
+                          <a lay-href="{{ url('admin/user') }}?role_num=8&sign_status=1">授权签字人审核</a>
+                      </dd>
+{{--                      <dd>--}}
+{{--                          <a lay-href="javascript:void(01);">证书审核</a>--}}
+{{--                      </dd>--}}
+
+                  </dl>
+              </li>
             <li data-name="user" class="layui-nav-item">
               <a href="javascript:;" lay-tips="会员管理" lay-direction="2">
                 <i class="layui-icon layui-icon-component"></i>

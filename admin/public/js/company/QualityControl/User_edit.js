@@ -84,20 +84,20 @@ function getSeledSign(){
 
 //业务逻辑部分
 var otheraction = {
-    selectCompany: function(obj){// 选择商家
-        var recordObj = $(obj);
-        //获得表单各name的值
-        var weburl = SELECT_COMPANY_URL;
-        console.log(weburl);
-        // go(SHOW_URL + id);
-        // location.href='/pms/Supplier/show?supplier_id='+id;
-        // var weburl = SHOW_URL + id;
-        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
-        var tishi = '选择所属企业';//"查看供应商";
-        console.log('weburl', weburl);
-        layeriframe(weburl,tishi,700,450,0);
-        return false;
-    }
+    // selectCompany: function(obj){// 选择商家
+    //     var recordObj = $(obj);
+    //     //获得表单各name的值
+    //     var weburl = SELECT_COMPANY_URL;
+    //     console.log(weburl);
+    //     // go(SHOW_URL + id);
+    //     // location.href='/pms/Supplier/show?supplier_id='+id;
+    //     // var weburl = SHOW_URL + id;
+    //     // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+    //     var tishi = '选择所属企业';//"查看供应商";
+    //     console.log('weburl', weburl);
+    //     layeriframe(weburl,tishi,700,450,0);
+    //     return false;
+    // }
 };
 //ajax提交表单
 function ajax_form(){
@@ -110,12 +110,12 @@ function ajax_form(){
     }
 
     // 所属企业
-    var company_id = $('input[name=company_id]').val();
-    var judge_seled = judge_validate(1,'所属企业',company_id,true,'positive_int','','');
-    if(judge_seled != ''){
-        layer_alert("请选择所属企业",3,0);
-        return false;
-    }
+    // var company_id = $('input[name=company_id]').val();
+    // var judge_seled = judge_validate(1,'所属企业',company_id,true,'positive_int','','');
+    // if(judge_seled != ''){
+    //     layer_alert("请选择所属企业",3,0);
+    //     return false;
+    // }
 
     var real_name = $('input[name=real_name]').val();
     if(!judge_validate(4,'姓名',real_name,true,'length',1,20)){
@@ -208,13 +208,13 @@ function ajax_form(){
         }
     }
 
-    var is_perfect = $('input[name=is_perfect]:checked').val() || '';
-    var judge_seled = judge_validate(1,'是否完善资料',is_perfect,true,'custom',/^[12]$/,"");
-    if(judge_seled != ''){
-        layer_alert("请选择是否完善资料",3,0);
-        //err_alert('<font color="#000000">' + judge_seled + '</font>');
-        return false;
-    }
+    // var is_perfect = $('input[name=is_perfect]:checked').val() || '';
+    // var judge_seled = judge_validate(1,'是否完善资料',is_perfect,true,'custom',/^[12]$/,"");
+    // if(judge_seled != ''){
+    //     layer_alert("请选择是否完善资料",3,0);
+    //     //err_alert('<font color="#000000">' + judge_seled + '</font>');
+    //     return false;
+    // }
 
     // 验证通过
     SUBMIT_FORM = false;//标记为已经提交过
@@ -264,27 +264,27 @@ function ajax_form(){
 }
 
 // 获得选中的企业id 数组
-function getSelectedCompanyIds(){
-    var company_ids = [];
-    var company_id = $('input[name=company_id]').val();
-    company_ids.push(company_id);
-    console.log('company_ids' , company_ids);
-    return company_ids;
-}
+// function getSelectedCompanyIds(){
+//     var company_ids = [];
+//     var company_id = $('input[name=company_id]').val();
+//     company_ids.push(company_id);
+//     console.log('company_ids' , company_ids);
+//     return company_ids;
+// }
 
 // 取消
 // company_id 企业id
-function removeCompany(company_id){
-    var seled_company_id = $('input[name=company_id]').val();
-    if(company_id == seled_company_id){
-        $('input[name=company_id]').val('');
-        $('.company_name').html('');
-    }
-}
+// function removeCompany(company_id){
+//     var seled_company_id = $('input[name=company_id]').val();
+//     if(company_id == seled_company_id){
+//         $('input[name=company_id]').val('');
+//         $('.company_name').html('');
+//     }
+// }
 
 // 增加
 // company_id 企业id, 多个用,号分隔
-function addCompany(company_id, company_name){
-    $('input[name=company_id]').val(company_id);
-    $('.company_name').html(company_name);
-}
+// function addCompany(company_id, company_name){
+//     $('input[name=company_id]').val(company_id);
+//     $('.company_name').html(company_name);
+// }

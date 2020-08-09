@@ -103,11 +103,30 @@
                   <option value="{{ $k }}"  @if(isset($defaultCompanyGrade) && $defaultCompanyGrade == $k) selected @endif >{{ $txt }}</option>
               @endforeach
           </select>
+          <select class="wmini" name="role_num" style="width: 80px;">
+              <option value="">角色</option>
+              @foreach ($roleNum as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultRoleNum) && $defaultRoleNum == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
+          <select class="wmini" name="sign_status" style="width: 80px;">
+              <option value="">授权人审核状态</option>
+              @foreach ($signStatus as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultSignStatus) && $defaultSignStatus == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
+          <select class="wmini" name="sign_is_food" style="width: 80px;">
+              <option value="">是否食品</option>
+              @foreach ($signIsFood as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultSignIsFood) && $defaultSignIsFood == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
         <select style="width:90px; height:28px;" name="field">
             <option value="admin_username">用户名</option>
             <option value="real_name">真实姓名</option>
             <option value="mobile">手机</option>
             <option value="qq_number">QQ/微信</option>
+            <option value="position_name">职位</option>
             <option value="email">邮箱</option>
             <option value="id_number">身份证号</option>
             <option value="addr">通讯地址</option>
@@ -127,6 +146,8 @@
 {{--    <div style="display:none;" ><input type="file" class="import_file img_input"></div>{ {--导入file对象--}}
       <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.openSelected(this, 2)" >审核通过[勾选]</button>
       <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.openSelected(this, 4)" >审核不通过[勾选]</button>
+      <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.signSelected(this, 2)" >授权人审核通过[勾选]</button>
+      <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.signSelected(this, 4)" >授权人审核不通过[勾选]</button>
     <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.frozenSelected(this, 2)" >冻结[勾选]</button>
     <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.frozenSelected(this, 1)" >解冻[勾选]</button>
   </div>
@@ -135,7 +156,7 @@
         <col width="50">
         <col width="50">
 
-        <col>
+        <col width="60">
         <col width="50">
         <col width="105">
 
@@ -145,10 +166,13 @@
         <col width="75">
         <col width="75"> -->
         <col>
+        <col>
+        <col  width="75">
+        <col width="75" >
 
         <col width="75">
         <col width="160">
-        <col width="160">
+{{--        <col width="160">--}}
         <col width="250">
     </colgroup>
     <thead>
@@ -168,11 +192,14 @@
         <th>微信号</th> -->
 
         <th>所属企业</th>
+        <th>职位</th>
+        <th>角色</th>
+        <th>签字范围<hr/>签字审核状态</th>
         <th>完善资料</th>
         <th>审核</th>
         <th>状态</th>
-        <th>上次登录</th>
-      <th>创建时间</th>
+{{--        <th>上次登录</th>--}}
+      <th>上次登录<hr/>创建时间</th>
       <th>操作</th>
     </tr>
     </thead>
@@ -214,6 +241,7 @@
       var IMPORT_EXCEL_URL = "{{ url('api/admin/user/import') }}";//导入EXCEL地址
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
 
+      var SIGN_OPERATE_URL = "{{ url('api/admin/user/ajax_sign') }}";//授权人审核操作(通过/不通过)
       var OPEN_OPERATE_URL = "{{ url('api/admin/user/ajax_open') }}";//审核操作(通过/不通过)
       var ACCOUNT_STATUS_URL = "{{ url('api/admin/user/ajax_frozen') }}";//操作(冻结/解冻)
 
@@ -222,6 +250,6 @@
       var IFRAME_IMPORT_URL = "{{url('admin/user/import_bath')}}/";// 导入
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/User.js?58') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/User.js?59') }}"  type="text/javascript"></script>
 </body>
 </html>

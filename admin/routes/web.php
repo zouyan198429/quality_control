@@ -311,6 +311,17 @@ Route::get('company/info', 'WebFront\Company\QualityControl\IndexController@info
 Route::get('company/basic', 'WebFront\Company\QualityControl\IndexController@basic');// 修改企业基本信息
 
 Route::get('company/down_file', 'WebFront\Company\QualityControl\IndexController@down_file');// 下载文件
+
+// 个从帐号管理
+Route::get('company/user', 'WebFront\Company\QualityControl\UserController@index');// 列表
+Route::get('company/user/add/{id}', 'WebFront\Company\QualityControl\UserController@add');// 添加
+// Route::get('company/user/show/{company_id}', 'WebFront\Company\QualityControl\UserController@show');// 查看
+//Route::get('company/user/show_add/{id}', 'WebFront\Company\QualityControl\UserController@show_add');// 添加
+// Route::get('company/user/select', 'WebFront\Company\QualityControl\UserController@select');// 选择-弹窗
+Route::get('company/user/export', 'WebFront\Company\QualityControl\UserController@export');// 导出
+Route::get('company/user/import_template', 'WebFront\Company\QualityControl\UserController@import_template');// 导入模版
+Route::get('company/user/import_bath/{company_id}', 'WebFront\Company\QualityControl\UserController@import_bath');// 导入批量
+
 // 能力验证
 Route::get('company/abilitys', 'WebFront\Company\QualityControl\AbilitysController@index');// 列表
 Route::get('company/abilitys/info/{id}', 'WebFront\Company\QualityControl\AbilitysController@info');// 查看-详情

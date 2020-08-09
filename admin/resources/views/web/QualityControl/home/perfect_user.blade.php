@@ -8,7 +8,7 @@
     <div class="line-blue"></div>
 	<div id="main">
 		<div class="reg" style="box-shadow:  0 0 8px #ddd" >
- 
+
             <div class="hd-reg" >
                 <h2>完善个人资料</h2>
             </div>
@@ -26,8 +26,8 @@
 						<button   type="button" class="btn btn-gray"   onclick="otheraction.selectCompany(this)">选择所属企业</button>
 					</div>
 				</div>
-				
-                
+
+
                 <div class="form-item">
                     <label for="text" class="form-label">邮箱<span class="red">*</span> </label>
                     <div class="form-input">
@@ -35,7 +35,7 @@
                     <p class="gray">用于接收通知等。</p>
                     </div>
                 </div>
-                
+
 
                 <div class="form-item">
                     <label for="text" class="form-label">微信号<span class="red">*</span></label>
@@ -47,6 +47,12 @@
                     <label for="text" class="form-label">身份证号<span class="red">*</span></label>
                     <div class="form-input">
                     <input type="text" name="id_number" autocomplete="off" value="{{ $info['id_number'] ?? '' }}" class="w480">
+                    </div>
+                </div>
+                <div class="form-item">
+                    <label for="text" class="form-label">职位<span class="red"></span></label>
+                    <div class="form-input">
+                        <input type="text" name="position_name" autocomplete="off" value="{{ $info['position_name'] ?? '' }}" class="w480">
                     </div>
                 </div>
                 <div class="form-item">

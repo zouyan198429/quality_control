@@ -131,6 +131,7 @@ $api->version('v1', function ($api) {
         $api->any('admin/user/import', 'Admin\QualityControl\UserController@import');// 导入excel
         $api->post('admin/user/ajax_get_ids', 'Admin\QualityControl\UserController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
+        $api->any('admin/user/ajax_sign', 'Admin\QualityControl\UserController@ajax_sign');// 授权人审核操作(通过/不通过)
         $api->any('admin/user/ajax_open', 'Admin\QualityControl\UserController@ajax_open');// 审核操作(通过/不通过)
         $api->post('admin/user/ajax_frozen', 'Admin\QualityControl\UserController@ajax_frozen');// 操作(冻结/解冻)
 
@@ -260,6 +261,20 @@ $api->version('v1', function ($api) {
         // 上传图片
         $api->post('company/upload', 'WebFront\Company\QualityControl\UploadController@index');
         $api->post('company/upload/ajax_del', 'WebFront\Company\QualityControl\UploadController@ajax_del');// 根据id删除文件
+
+        // 个人帐号管理
+        $api->any('company/user/ajax_alist', 'WebFront\Company\QualityControl\UserController@ajax_alist');//ajax获得列表数据
+        $api->any('company/user/ajax_del', 'WebFront\Company\QualityControl\UserController@ajax_del');// 删除
+        $api->post('company/user/ajax_save', 'WebFront\Company\QualityControl\UserController@ajax_save');// 新加/修改
+        $api->post('company/user/ajax_get_child', 'WebFront\Company\QualityControl\UserController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('company/user/ajax_get_areachild', 'WebFront\Company\QualityControl\UserController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('company/user/ajax_import_staff','WebFront\Company\QualityControl\UserController@ajax_import'); // 导入员工
+
+        $api->any('company/user/import', 'WebFront\Company\QualityControl\UserController@import');// 导入excel
+        $api->post('company/user/ajax_get_ids', 'WebFront\Company\QualityControl\UserController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        $api->any('company/user/ajax_open', 'WebFront\Company\QualityControl\UserController@ajax_open');// 审核操作(通过/不通过)
+        $api->post('company/user/ajax_frozen', 'WebFront\Company\QualityControl\UserController@ajax_frozen');// 操作(冻结/解冻)
 
         // 能力验证
         $api->any('company/abilitys/ajax_alist', 'WebFront\Company\QualityControl\AbilitysController@ajax_alist');//ajax获得列表数据

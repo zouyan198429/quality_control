@@ -175,9 +175,30 @@ class Staff extends BasePublicModel
         '16' => '理事长',
     ];
 
+    // 角色1法人  2最高管理者  4技术负责人  8授权签字人
+    public static $roleNumArr = [
+        '1' => '法人',
+        '2' => '最高管理者',
+        '4' => '技术负责人',
+        '8' => '授权签字人',
+    ];
+
+    // 授权人审核状态 1待审核 2 审核通过  4 审核未通过
+    public static $signStatusArr = [
+        '1' => '待审核',
+        '2' => '审核通过',
+        '4' => '审核未通过',
+    ];
+
+    // 是否食品1食品  2非食品
+    public static $signIsFoodArr = [
+        '1' => '食品',
+        '2' => '非食品',
+    ];
+
     // 表里没有的字段
     protected $appends = ['is_perfect_text', 'admin_type_text', 'issuper_text', 'open_status_text', 'account_status_text', 'sex_text', 'company_is_legal_persion_text'
-        , 'company_type_text', 'company_prop_text', 'company_peoples_num_text', 'company_grade_text'];
+        , 'company_type_text', 'company_prop_text', 'company_peoples_num_text', 'company_grade_text', 'role_num_text', 'sign_status_text', 'sign_is_food_text'];
 
     /**
      * 获取用户的是否完善资料文字
@@ -287,6 +308,44 @@ class Staff extends BasePublicModel
     public function getCompanyGradeTextAttribute()
     {
         return static::$companyGradeArr[$this->company_grade] ?? '';
+    }
+
+    /**
+     * 获取角色文字
+     *
+     * @return string
+     */
+    public function getRoleNumTextAttribute()
+    {
+        $return_arr = [];
+        $role_num = $this->role_num;
+        if($role_num <= 0 ) return '';
+        foreach(static::$roleNumArr as $k => $v){
+           if(($k & $role_num) == $k)  array_push($return_arr, $v);
+        }
+        return implode('、', $return_arr);
+
+        // return static::$roleNumArr[$this->role_num] ?? '';
+    }
+
+    /**
+     * 获取授权人审核状态文字
+     *
+     * @return string
+     */
+    public function getSignStatusTextAttribute()
+    {
+        return static::$signStatusArr[$this->sign_status] ?? '';
+    }
+
+    /**
+     * 获取授权人审核状态文字
+     *
+     * @return string
+     */
+    public function getSignIsFoodTextAttribute()
+    {
+        return static::$signIsFoodArr[$this->sign_is_food] ?? '';
     }
 
     /**

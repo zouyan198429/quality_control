@@ -14,7 +14,7 @@
 <body>
 
 <div class="layui-fluid">
-    <div class="layui-card"> 
+    <div class="layui-card">
 
         <div class="layui-row layui-card-body">
 
@@ -38,9 +38,9 @@
                           <label><input type="checkbox" name="project_standard_id_{{ $info['id'] ?? '' }}[]" value="{{ $p_info['id'] ?? '' }}">{{ $p_info['tag_name'] ?? '' }}</label>&nbsp;&nbsp;&nbsp;&nbsp;
                         <br>
                         @endforeach
-                         <label><input type="checkbox" name="project_standard_id_{{ $info['id'] ?? '' }}[]" value="0">其他</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                         <label><input type="checkbox" class="otherCheckbox" name="project_standard_id_{{ $info['id'] ?? '' }}[]" value="0">其他</label>&nbsp;&nbsp;&nbsp;&nbsp;
                         <br>
-                        <textarea name="project_standard_name_{{ $info['id'] ?? '' }}" id="" cols="50" rows="4"></textarea>
+                        <textarea name="project_standard_name_{{ $info['id'] ?? '' }}" class="project_standard_name" cols="50" rows="4" readonly="readonly"></textarea>
                     </div>
                 </div>
                     @if ($data_num > ($k + 1) )<hr>@endif
@@ -90,7 +90,7 @@
     var LIST_URL = "{{url('company/abilitys')}}";//保存成功后跳转到的地址
 
 </script>
-<script src="{{ asset('/js/company/QualityControl/Abilitys_join.js?192') }}"  type="text/javascript"></script>
+<script src="{{ asset('/js/company/QualityControl/Abilitys_join.js?208') }}"  type="text/javascript"></script>
 </body>
 </html>
 

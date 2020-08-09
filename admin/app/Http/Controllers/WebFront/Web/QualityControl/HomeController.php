@@ -566,6 +566,7 @@ class HomeController extends BasicRegController
 //        $mobile = CommonRequest::get($request, 'mobile');
         $qq_number = CommonRequest::get($request, 'qq_number');
         $id_number = CommonRequest::get($request, 'id_number');
+        $position_name = CommonRequest::get($request, 'position_name');
         $city_id = CommonRequest::getInt($request, 'city_id');
         $addr = CommonRequest::get($request, 'addr');
         // 可能会用的参数
@@ -585,6 +586,7 @@ class HomeController extends BasicRegController
             'email' => $email,
             'qq_number' => $qq_number,
             'id_number' => $id_number,
+            'position_name' => $position_name,
             'city_id' => $city_id,
             'addr' => $addr,
             // 'force_company_num' => 1,

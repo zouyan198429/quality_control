@@ -432,6 +432,15 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
         $company_grade = CommonRequest::getInt($request, 'company_grade');
         if(is_numeric($company_grade) && $company_grade > 0 )  array_push($queryParams['where'], ['company_grade', '=', $company_grade]);
 
+        $role_num = CommonRequest::getInt($request, 'role_num');
+        if(is_numeric($role_num) && $role_num > 0 )  array_push($queryParams['where'], ['role_num', '&', $role_num . '=' . $role_num]);
+
+        $sign_is_food = CommonRequest::getInt($request, 'sign_is_food');
+        if(is_numeric($sign_is_food) && $sign_is_food > 0 )  array_push($queryParams['where'], ['sign_is_food', '=', $sign_is_food]);
+
+        $sign_status = CommonRequest::getInt($request, 'sign_status');
+        if(is_numeric($sign_status) && $sign_status > 0 )  array_push($queryParams['where'], ['sign_status', '=', $sign_status]);
+
         // 方法最下面
         // 注意重写方法中，如果不是特殊的like，同样需要调起此默认like方法--特殊的写自己特殊的方法
         static::joinListParamsLike($request, $controller, $queryParams, $notLog);
@@ -1205,12 +1214,16 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
                     '性别[未知|男|女]' => 'sex',
                     '手机[唯一]' => 'mobile',
                     '邮箱' => 'email',
-                    'QQ\email\微信' => 'qq_number',
+                    'QQ\微信' => 'qq_number',
                     '身份证号' => 'id_number',
+                    '职位' => 'position_name',
                     '城市' => 'city_id',
                     '通讯地址' => 'addr',
-                    '审核状态[待审核|审核通过|审核不通过]' => 'open_status',
-                    '冻结状态[正常|冻结]' => 'account_status',
+                    '角色[法人|最高管理者|技术负责人|授权签字人]' => 'role_num',
+                    '签字范围' => 'sign_range',
+                    '签字是否食品[食品|非食品]' => 'sign_is_food',
+//                    '审核状态[待审核|审核通过|审核不通过]' => 'open_status',
+//                    '冻结状态[正常|冻结]' => 'account_status',
                 ];
                 break;
             default:
@@ -1255,6 +1268,39 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
             'modifAddOprate' => 0,
         ];
         $modifyNum = static::exeDBBusinessMethodCT($request, $controller, '',  'openStatusById', $apiParams, $company_id, $notLog);
+        return $modifyNum;
+        // return static::delAjaxBase($request, $controller, '', $notLog);
+
+    }
+
+    /**
+     * 授权人 开启 批量 或 单条数据
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param int $admin_type 类型1平台2企业4个人
+     * @param int $organize_id 操作的所属企业id 可以为0：没有所属企业--企业后台，操作用户时用来限制，只能操作自己企业的用户
+     * @param string $id 记录id，多个用逗号分隔
+     * @param int $sign_status 操作 状态 2审核通过     4审核不通过
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  int 修改的数量   array 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function signAjax(Request $request, Controller $controller, $admin_type = 1, $organize_id = 0, $id = 0, $sign_status = 2, $notLog = 0)
+    {
+        $company_id = $controller->company_id;
+        $user_id = $controller->user_id;
+        // 调用新加或修改接口
+        $apiParams = [
+            'company_id' => $company_id,
+            'admin_type' => $admin_type,
+            'organize_id' => $organize_id,
+            'id' => $id,
+            'sign_status' => $sign_status,
+            'operate_staff_id' => $user_id,
+            'modifAddOprate' => 0,
+        ];
+        $modifyNum = static::exeDBBusinessMethodCT($request, $controller, '',  'signStatusById', $apiParams, $company_id, $notLog);
         return $modifyNum;
         // return static::delAjaxBase($request, $controller, '', $notLog);
 
@@ -1373,7 +1419,8 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
                     break;
                 case 4:
                     $headArr = ['user_company_name'=>'所属企业', 'real_name'=>'姓名', 'sex_text'=>'性别', 'mobile'=>'手机号',
-                        'email'=>'邮箱', 'qq_number'=>'微信号', 'id_number'=>'身份证号', 'city_name'=>'城市', 'addr'=>'通讯地址',
+                        'email'=>'邮箱', 'qq_number'=>'微信号', 'id_number'=>'身份证号', 'position_name'=>'职位', 'city_name'=>'城市',
+                        'addr'=>'通讯地址','role_num_text'=>'角色','sign_range'=>'签字范围','sign_is_food_text'=>'签字是否食品','sign_status_text'=>'签字审核状态',
                         'is_perfect_text'=>'完善资料', 'open_status_text'=>'审核', 'account_status_text'=>'状态',
                         'lastlogintime'=>'上次登录', 'created_at'=>'创建时间'];
                     $fileName = '用户';
@@ -1408,9 +1455,10 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
             case 2:
                 break;
             case 4:
-                $headArr = ['real_name'=>'姓名', 'sex'=>'性别[未知|男|女]', 'mobile'=>'手机[唯一]', 'email'=>'邮箱', 'qq_number'=>'QQ\email\微信'
-                    , 'id_number'=>'身份证号', 'city_id'=>'城市', 'addr'=>'通讯地址'
-                    , 'open_status'=>'审核状态[待审核|审核通过|审核不通过]', 'account_status'=>'冻结状态[正常|冻结]'];
+                $headArr = ['real_name'=>'姓名', 'sex'=>'性别[未知|男|女]', 'mobile'=>'手机[唯一]', 'email'=>'邮箱', 'qq_number'=>'QQ\微信'
+                    , 'id_number'=>'身份证号', 'position_name'=>'职位', 'city_id'=>'城市', 'addr'=>'通讯地址'
+                    ,'role_num'=>'角色[法人|最高管理者|技术负责人|授权签字人]','sign_range'=>'签字范围','sign_is_food'=>'签字是否食品[食品|非食品]'
+                    ];// , 'open_status'=>'审核状态[待审核|审核通过|审核不通过]', 'account_status'=>'冻结状态[正常|冻结]'
                 $fileName = '用户导入模版';
                 $sheetTitle = '用户';
                 break;

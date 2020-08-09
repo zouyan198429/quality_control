@@ -41,6 +41,52 @@ $(function(){
         //});
         return false;
     });
+    //其它 textarea 点击事件
+    $(document).on("click",".project_standard_name",function(){
+        var obj = $(this);
+        var value = obj.val();
+        var readonly = obj.attr('readonly');
+        console.log('value=', value);
+        console.log('readonly=', readonly);
+        if(readonly == 'readonly'){// 只读时
+            var otherCheckObj = obj.closest('div').find(".otherCheckbox");
+            if(!otherCheckObj.is(':checked')){// 没有选中
+                layer_alert("如果要指定其他方法标准！<br/>请先勾选‘其他’，再输入内容！",3,0);
+            }
+        }
+
+        return false;
+    });
+    //其它 复选框 点击事件
+    $(document).on("change",".otherCheckbox",function(){
+        var otherCheckObj = $(this);
+        var isChecked = otherCheckObj.is(':checked');
+        console.log('isChecked=', isChecked);
+        var textareaObj = otherCheckObj.closest('div').find(".project_standard_name");
+        var textareaVal = textareaObj.val();
+        console.log('textareaVal=', textareaVal);
+
+        if(isChecked) {// 选中
+            textareaObj.removeAttr('readonly');
+        }
+        if(!isChecked && textareaVal != ''){
+            var index_query = layer.confirm('您确定取消吗？<br/>取消后输入框内容将清空！', {
+                btn: ['确定','取消'] //按钮
+            }, function(){
+                textareaObj.attr('readonly', 'readonly');
+                textareaObj.val('');
+                layer.close(index_query);
+            }, function(){
+                console.log('点了取消按钮');
+                otherCheckObj.prop('checked', true);
+                // textareaObj.removeAttr('readonly');
+            });
+        }else if(!isChecked){
+            textareaObj.attr('readonly', 'readonly');
+        }
+
+        return false;
+    });
 });
 
 //ajax提交表单

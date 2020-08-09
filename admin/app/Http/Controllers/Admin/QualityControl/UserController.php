@@ -34,6 +34,7 @@ class UserController extends StaffController
         $mobile = CommonRequest::get($request, 'mobile');
         $qq_number = CommonRequest::get($request, 'qq_number');
         $id_number = CommonRequest::get($request, 'id_number');
+        $position_name = CommonRequest::get($request, 'position_name');
         $city_id = CommonRequest::getInt($request, 'city_id');
         $addr = CommonRequest::get($request, 'addr');
         $is_perfect = CommonRequest::getInt($request, 'is_perfect');
@@ -41,6 +42,32 @@ class UserController extends StaffController
         $admin_username = CommonRequest::get($request, 'admin_username');
         $admin_password = CommonRequest::get($request, 'admin_password');
         $sure_password = CommonRequest::get($request, 'sure_password');
+
+        // 角色
+        $role_nums = CommonRequest::get($request, 'role_nums');
+        // 如果是字符，则转为数组
+        Tool::formatOneArrVals($role_nums, [null, ''], ',', 1 | 2 | 4 | 8);
+        if(!is_array($role_nums)) $role_nums = [];
+
+        $sign_status = 1;// 授权人审核状态 1待审核 2 审核通过  4 审核未通过
+
+        $sign_range = CommonRequest::get($request, 'sign_range');
+        $sign_is_food = CommonRequest::getInt($request, 'sign_is_food');
+        if(!in_array('8', $role_nums)){// 不包含授权签 字人
+            $sign_range = '';
+            $sign_is_food = 0;
+            $sign_status = 0;
+        }else{// 包含授权签 字人
+            if($sign_is_food != 1) $sign_is_food = 2;
+        }
+        // 生成最终的角色值
+        $last_role_num = 0;
+        foreach($role_nums as $tem_role_num){
+            $last_role_num |= $tem_role_num;
+        }
+
+
+
         $userInfo = [];
         if($id > 0){
             $userInfo = $this->judgePower($request, $id);
@@ -49,6 +76,14 @@ class UserController extends StaffController
             $powerFields = [];// ['organize_id' => 'company_id', 'personal_id' => 'id'];
             if(!$this->batchJudgeRecordOperateAuth($userInfo, $powerFields, 0, 0, 0, true)){
                 return ajaxDataArr(0, null, '您没有操作权限！');
+            }
+            // 判断授权范围是否有改动
+            if($sign_status > 0){
+                $newSignInfo = ['sign_range' => $sign_range, 'sign_is_food' => $sign_is_food];
+                $oldSignInfo = Tool::getArrFormatFields($userInfo, ['sign_range', 'sign_is_food'], false);
+                if(Tool::isEqualArr($newSignInfo, $oldSignInfo, 1) ){// 相等无变化
+                    $sign_status = $userInfo['sign_status'];
+                }
             }
         }
         $saveData = [
@@ -61,8 +96,13 @@ class UserController extends StaffController
             'email' => $email,
             'qq_number' => $qq_number,
             'id_number' => $id_number,
+            'position_name' => $position_name,
             'city_id' => $city_id,
             'addr' => $addr,
+            'role_num' => $last_role_num,
+            'sign_range' => $sign_range,
+            'sign_is_food' => $sign_is_food,
+            'sign_status' => $sign_status,
         ];
         if(!empty($admin_username)) $saveData['admin_username'] = $admin_username;
         if($admin_password != '' || $sure_password != ''){

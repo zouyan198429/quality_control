@@ -31,7 +31,7 @@
                 <span class="company_name">{{ $info['user_company_name'] ?? '' }}</span>
                 <button  type="button"  class="btn btn-danger  btn-xs ace-icon fa fa-plus-circle bigger-60"  onclick="otheraction.selectCompany(this)">选择企业</button>
           </span>
-          <select class="wmini" name="city_id" style="width: 80px;">
+          <select class="wmini" name="city_id" style="width: 80px;display: none;">
               <option value="">城市</option>
               @foreach ($citys_kv as $k=>$txt)
                   <option value="{{ $k }}"  @if(isset($defaultCity) && $defaultCity == $k) selected @endif >{{ $txt }}</option>
@@ -133,23 +133,26 @@
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
         <col width="50">
-        <col width="50">
+{{--        <col width="50">--}}
 
-        <col>
+        <col width="85">
 {{--        <col width="50">--}}
         <col width="105">
 
+{{--        <col >--}}
+{{--        <col  width="60">--}}
+        <col  width="120">
         <col >
 {{--        <col >--}}
         <!-- <col >
         <col width="75">
         <col width="75"> -->
-        <col>
+{{--        <col width="75">--}}
 
         <col width="75">
 {{--        <col width="160">--}}
         <col width="160">
-        <col width="180">
+        <col width="130">
     </colgroup>
     <thead>
     <tr>
@@ -158,17 +161,20 @@
             <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>
           </label>
         </th>
-        <th>ID</th>
+{{--        <th>ID</th>--}}
 
-        <th>姓名</th>
+        <th>姓名(性别)<hr/>城市</th>
 {{--        <th>性别</th>--}}
-        <th>手机号</th>
+        <th>手机号<hr/>完善资料</th>
        <!--  <th>城市</th>
         <th>邮箱</th>
         <th>微信号</th> -->
 
-        <th>所属企业</th>
-        <th>完善资料</th>
+{{--        <th>所属企业</th>--}}
+{{--        <th>职位</th>--}}
+        <th>职位<hr/>角色</th>
+        <th>签字范围<hr/>签字审核状态</th>
+{{--        <th>完善资料</th>--}}
 {{--        <th>审核</th>--}}
         <th>审核<hr/>状态</th>
 {{--        <th>上次登录</th>--}}
@@ -223,6 +229,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/User_show.js?58') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/User_show.js?67') }}"  type="text/javascript"></script>
 </body>
 </html>

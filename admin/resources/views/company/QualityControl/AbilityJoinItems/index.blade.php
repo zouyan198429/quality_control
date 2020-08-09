@@ -20,7 +20,7 @@
         <div class="layui-card">
             @include('common.pageParams')
             <div class="layui-card-header">
-                  <h3 style="width:120px; float: left;">已报名项目</h3> 
+                  <h3 style="width:120px; float: left;">已报名项目</h3>
             </div>
 
             <form onsubmit="return false;" class="form-horizontal" style="display: none;" role="form" method="post" id="search_frm" action="#">
@@ -35,29 +35,29 @@
                 <input type="text" value=""    name="keyword"  placeholder="请输入关键字"/>
                 <button class="btn btn-normal search_frm">搜索</button>
               </div>
-            </form> 
+            </form>
           <div class="layui-card-body">
               <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
                 <colgroup>
-                    <col width="50">
+{{--                    <col width="50">--}}
                     <col>
                     <col >
                     <col >
                     <col width="75">
-                    <col width="75"> 
-                    <col width="80"> 
+                    <col width="75">
+                    <col width="80">
                     <col width="150">
                 </colgroup>
                 <thead>
                 <tr>
-             
-                    <th>ID</th>
+
+{{--                    <th>ID</th>--}}
                     <th>检测项目</th>
                     <th>发布时间</th>
-                    <th>报名时间</th> 
+                    <th>报名时间</th>
                     <th>是否取样</th>
                     <th>上传数据</th>
-                    <th>验证结果</th> 
+                    <th>验证结果</th>
                     <th>操作</th>
                 </tr>
                 </thead>
@@ -106,6 +106,6 @@
       var IFRAME_SAMPLE_RESULT_URL = "{{url('company/ability_join_item/sample_result/')}}/";//上报数据页面地址前缀 + id
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/company/QualityControl/AbilityJoinItem.js?20') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/company/QualityControl/AbilityJoinItem.js?21') }}"  type="text/javascript"></script>
 </body>
 </html>

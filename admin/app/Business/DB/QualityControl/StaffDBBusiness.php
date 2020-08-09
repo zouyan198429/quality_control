@@ -626,6 +626,13 @@ class StaffDBBusiness extends BasePublicDBBusiness
         $companyPeoplesNumArr = Staff::$companyPeoplesNumArr;// Tool::getAttr($selModelObj, 'companyPeoplesNumArr', 1);
         // 企业--会员等级1非会员  2会员  4理事  8常务理事   16理事长
         $companyGradeArr = Staff::$companyGradeArr;// Tool::getAttr($selModelObj, 'companyGradeArr', 1);
+        // 授权人审核状态 1待审核 2 审核通过  4 审核未通过
+        $signStatusArr =  Staff::$signStatusArr;
+        // 角色1法人  2最高管理者  4技术负责人  8授权签字人
+        $roleNumArr =  Staff::$roleNumArr;
+        // 是否食品1食品  2非食品
+        $signIsFoodArr =  Staff::$signIsFoodArr;
+
         if(!in_array($admin_type, array_keys($adminTypeArr))) throws('参数[admin_type]有误！');
 
         $operate_staff_id_history = config('public.operate_staff_id_history', 0);// 0;--写上，不然后面要去取，但现在的系统不用历史表
@@ -787,18 +794,46 @@ class StaffDBBusiness extends BasePublicDBBusiness
                     $email = $info['email'] ?? '';
                     $qq_number = $info['qq_number'] ?? '';
                     $id_number = $info['id_number'] ?? '';
+                    $position_name = $info['position_name'] ?? '';
                     $city_id = $info['city_id'] ?? '';
                     $city_id = array_search($city_id, $cityKV);
                     if($city_id === false) $recordErrText .= '城市有效值[' . implode('、', $cityKV) . ']!<br/>';// $sex_id = 0;
                     $addr = $info['addr'] ?? '';
+                    $sign_range = $info['sign_range'] ?? '';
+                    $sign_is_food = $info['sign_is_food'] ?? '';// 签字是否食品[食品|非食品]
+                    if(!empty($sign_is_food)){
+                        $sign_is_food = array_search($sign_is_food, $signIsFoodArr);
+                        if($sign_is_food === false) $recordErrText .= '签字是否食品有效值[' . implode('、', $signIsFoodArr) . ']!<br/>';// $sex_id = 0;
+                    }else{
+                        $sign_is_food = 0;
+                    }
+                    $role_num = $info['role_num'] ?? '';// 角色[法人|最高管理者|技术负责人|授权签字人]
+                    if(!empty($role_num)){
+                        $role_num = str_replace(['|'], [','], $role_num);
+                        Tool::formatOneArrVals($role_num, [null, ''], ',', 1 | 2 | 4 | 8);
+                        if(!empty(array_diff($role_num, Staff::$roleNumArr)))  $recordErrText .= '角色有效值[' . implode('、', $roleNumArr) . ']!<br/>';
+                        $role_nu_new = 0;
+                        foreach($role_num as $tem_role_num){
+                            $tem_role_num = array_search($tem_role_num, $roleNumArr);
+                            // if($tem_role_num === false)
+                            $role_nu_new |= $tem_role_num;
+                        }
+                        $role_num = $role_nu_new;
+                    }else{
+                        $role_num = 0;
+                        // $sign_is_food = 0;
+                        // $sign_range = '';
+                    }
+
+
                     $admin_username = $info['admin_username'] ?? '';
                     $admin_password = $info['admin_password'] ?? '';
-                    $open_status = $info['open_status'] ?? '';
-                    $open_status = array_search($open_status, $openStatusArr);
-                    if($open_status === false) $recordErrText .= '审核状态有效值[' . implode('、', $openStatusArr) . ']!<br/>';
-                    $account_status = $info['account_status'] ?? '';
-                    $account_status = array_search($account_status, $accountStatusArr);
-                    if($account_status === false) $recordErrText .= '冻结状态有效值[' . implode('、', $accountStatusArr) . ']!<br/>';
+//                    $open_status = $info['open_status'] ?? '';
+//                    $open_status = array_search($open_status, $openStatusArr);
+//                    if($open_status === false) $recordErrText .= '审核状态有效值[' . implode('、', $openStatusArr) . ']!<br/>';
+//                    $account_status = $info['account_status'] ?? '';
+//                    $account_status = array_search($account_status, $accountStatusArr);
+//                    if($account_status === false) $recordErrText .= '冻结状态有效值[' . implode('、', $accountStatusArr) . ']!<br/>';
                     $valiDateParam = [
                         ["var_name" => "real_name" ,"input" => $real_name,"require"=>"true","validator"=>"length","min"=>"1","max"=>"20","message"=>'用户名长度为1~ 20个字符！'],
                         // ["var_name" => "mobile" ,"input" => $mobile,"require"=>"true", "validator"=>"", "message"=>'手机不能为空！'],
@@ -806,9 +841,11 @@ class StaffDBBusiness extends BasePublicDBBusiness
 //                        ["var_name" => "admin_username" ,"input" => $admin_username,"require"=>"true","validator"=>"length","min"=>"6","max"=>"20","message"=>'用户名长度为6~ 20个字符！'],
 //                        ["var_name" => "admin_password" ,"input" => $admin_password,"require"=>"true","validator"=>"length","min"=>"6","max"=>"20","message"=>'登录密码长度为6~ 20个字符！'],
                         ["var_name" => "email" ,"input" => $email,"require"=>"false","validator"=>"email","message"=>'email格式有误！'],
-                        ["var_name" => "qq_number" ,"input" => $qq_number,"require"=>"false","validator"=>"length","min"=>"6","max"=>"20","message"=>'QQ\email\微信长度为6~ 20个字符！'],
+                        ["var_name" => "qq_number" ,"input" => $qq_number,"require"=>"false","validator"=>"length","min"=>"6","max"=>"20","message"=>'QQ\微信长度为6~ 20个字符！'],
                         ["var_name" => "id_number" ,"input" => $id_number,"require"=>"false","validator"=>"length","min"=>"14","max"=>"20","message"=>'身份证号长度为14~ 20个字符！'],
-                        ["var_name" => "addr" ,"input" => $addr,"require"=>"false","validator"=>"length","min"=>"2","max"=>"100","message"=>'身份证号长度为2~ 100个字符！'],
+                        ["var_name" => "position_name" ,"input" => $position_name,"require"=>"false","validator"=>"length","min"=>"1","max"=>"50","message"=>'职位长度为1~ 50个字符！'],
+                        ["var_name" => "addr" ,"input" => $addr,"require"=>"false","validator"=>"length","min"=>"2","max"=>"100","message"=>'地址长度为2~ 100个字符！'],
+                        ["var_name" => "sign_range" ,"input" => $sign_range,"require"=>"false","validator"=>"length","min"=>"1","max"=>"500","message"=>'签字范围长度为2~ 500个字符！'],
                     ];
                     if(!empty($admin_username)) array_push($valiDateParam, ["var_name" => "admin_username" ,"input" => $admin_username,"require"=>"false","validator"=>"length","min"=>"6","max"=>"20","message"=>'用户名长度为6~ 20个字符！']);
                     if(!empty($admin_password)) array_push($valiDateParam, ["var_name" => "admin_password" ,"input" => $admin_password,"require"=>"false","validator"=>"length","min"=>"6","max"=>"20","message"=>'登录密码长度为6~ 20个字符！']);
@@ -843,6 +880,17 @@ class StaffDBBusiness extends BasePublicDBBusiness
                     // if(is_object($infoData))  $infoData = $infoData->toArray();
                     // 记录不存在，是新加，则必须要用帐号和密码
                     $id = $infoData['id'] ?? 0;
+                    $sign_status = 0;// 默认 0
+                    if( ($role_num & 8) == 8)  $sign_status = 1;// 有签字授权默认 1 待审核
+                    if($id > 0 &&  ($role_num & 8) == 8 ){// 是否需要再次审核授权
+                        $sign_status = 1;// 有签字授权默认 1 待审核
+                        $newSignInfo = ['sign_range' => $sign_range, 'sign_is_food' => $sign_is_food];
+                        $oldSignInfo = Tool::getArrFormatFields($infoData, ['sign_range', 'sign_is_food'], false);
+                        if(Tool::isEqualArr($newSignInfo, $oldSignInfo, 1) ){// 相等无变化
+                            $sign_status = $infoData['sign_status'];
+                        }
+                    }
+
                     $temSaveArr = [
                         'id' => $id,
                         'admin_type' => $admin_type,
@@ -853,12 +901,17 @@ class StaffDBBusiness extends BasePublicDBBusiness
                         'email' => $email,
                         'qq_number' => $qq_number,
                         'id_number' => $id_number,
+                        'position_name' => $position_name,
                         'city_id' => $city_id,
                         'addr' => $addr,
+                        'sign_range' => $sign_range,
+                        'sign_is_food' => $sign_is_food,
+                        'sign_status' => $sign_status,
+                        'role_num' => $role_num,
 //                        'admin_username' => $admin_username,
 //                        'admin_password' => $admin_password,
-                        'open_status' => $open_status,
-                        'account_status' => $account_status,
+                        'open_status' => 2,// $open_status,
+                        'account_status' => 1,// $account_status,
                         'isBatchOperate' => 1,// 标识是批量导入
                     ];
                     if(!empty($admin_username)) $temSaveArr['admin_username'] = $admin_username;
@@ -984,6 +1037,62 @@ class StaffDBBusiness extends BasePublicDBBusiness
         return $modifyNum;
     }
 
+
+    /**
+     * 根据id授权人审核通过或不通过单条或多条数据
+     *
+     * @param int  $company_id 企业id
+     * @param int  $admin_type 类型1平台2企业4个人
+     * @param int $organize_id 操作的所属企业id 可以为0：没有所属企业--企业后台，操作用户时用来限制，只能操作自己企业的用户
+     * @param string/array $id id 数组或字符串
+     * @param int $sign_status 操作 状态 2审核通过     4审核不通过
+     * @param int $operate_staff_id 操作人id
+     * @param int $modifAddOprate 修改时是否加操作人，1:加;0:不加[默认]
+     * @return  int 修改的数量   //  mixed array 记录id值，--一维数组
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function signStatusById($company_id, $admin_type = 0, $organize_id = 0, $id = 0, $sign_status = 2, $operate_staff_id = 0, $modifAddOprate = 0){
+        $modifyNum = 0;
+        if(!in_array($sign_status, [2,4])) throws('参数【sign_status】值不是有效值！');
+        // 没有需要处理的
+        if(!Tool::formatOneArrVals($id)) return $modifyNum;
+
+        $updateData = [
+            'sign_status' => $sign_status
+        ];
+        // $ownProperty  自有属性值;
+        // $temNeedStaffIdOrHistoryId 当只有自己会用到时操作员工id和历史id时，用来判断是否需要获取 true:需要获取； false:不需要获取
+        list($ownProperty, $temNeedStaffIdOrHistoryId) = array_values(static::getNeedStaffIdOrHistoryId());
+        $operate_staff_id_history = 0;
+        DB::beginTransaction();
+        try {
+            if($temNeedStaffIdOrHistoryId && $modifAddOprate) static::addOprate($updateData, $operate_staff_id,$operate_staff_id_history, 2);
+            $saveQueryParams = [
+                'where' => [
+                    ['sign_status', 1], // 自由点，让他都可以改 ，就注释掉
+                    ['issuper', '<>' , 1],
+                    ['admin_type', $admin_type],
+                ],
+//                            'select' => [
+//                                'id','title','sort_num','volume'
+//                                ,'operate_staff_id','operate_staff_id_history'
+//                                ,'created_at' ,'updated_at'
+//                            ],
+
+                //   'orderBy' => [ 'id'=>'desc'],//'sort_num'=>'desc',
+            ];
+            // 加入 id
+            Tool::appendParamQuery($saveQueryParams, $id, 'id');
+            Tool::appendParamQuery($saveQueryParams, $organize_id, 'company_id', [0, '0', ''], ',', false);
+            $modifyNum = static::save($updateData, $saveQueryParams);
+        } catch ( \Exception $e) {
+            DB::rollBack();
+//            throws('操作失败；信息[' . $e->getMessage() . ']');
+            throws($e->getMessage());
+        }
+        DB::commit();
+        return $modifyNum;
+    }
 
     /**
      * 根据id审核通过或不通过单条或多条数据

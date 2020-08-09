@@ -143,18 +143,18 @@
                       </dd>
                   </dl>
               </li>
-             <!-- <li data-name="user" class="layui-nav-item">
+              <li data-name="user" class="layui-nav-item">
                   <a href="javascript:;" lay-tips="员工管理" lay-direction="2">
                       <i class="layui-icon layui-icon-component"></i>
                       <cite>员工管理</cite>
                   </a>
                   <dl class="layui-nav-child">
                       <dd>
-                          <a lay-href="javascript:void(50);">员工管理</a>
+                          <a lay-href="{{ url('company/user') }}">员工管理</a>
                       </dd>
                   </dl>
               </li>
-               <li data-name="user" class="layui-nav-item">
+              <!-- <li data-name="user" class="layui-nav-item">
                   <a href="javascript:;" lay-tips="发票管理" lay-direction="2">
                       <i class="layui-icon layui-icon-component"></i>
                       <cite>发票管理</cite>
