@@ -183,6 +183,13 @@ class Staff extends BasePublicModel
         '8' => '授权签字人',
     ];
 
+    // 角色审核状态 1待审核 2 审核通过  4 审核未通过
+    public static $roleStatusArr = [
+        '1' => '待审核',
+        '2' => '审核通过',
+        '4' => '审核未通过',
+    ];
+
     // 授权人审核状态 1待审核 2 审核通过  4 审核未通过
     public static $signStatusArr = [
         '1' => '待审核',
@@ -198,7 +205,7 @@ class Staff extends BasePublicModel
 
     // 表里没有的字段
     protected $appends = ['is_perfect_text', 'admin_type_text', 'issuper_text', 'open_status_text', 'account_status_text', 'sex_text', 'company_is_legal_persion_text'
-        , 'company_type_text', 'company_prop_text', 'company_peoples_num_text', 'company_grade_text', 'role_num_text', 'sign_status_text', 'sign_is_food_text'];
+        , 'company_type_text', 'company_prop_text', 'company_peoples_num_text', 'company_grade_text', 'role_num_text', 'role_status_text', 'sign_status_text', 'sign_is_food_text'];
 
     /**
      * 获取用户的是否完善资料文字
@@ -326,6 +333,16 @@ class Staff extends BasePublicModel
         return implode('、', $return_arr);
 
         // return static::$roleNumArr[$this->role_num] ?? '';
+    }
+
+    /**
+     * 获取角色审核状态文字
+     *
+     * @return string
+     */
+    public function getRoleStatusTextAttribute()
+    {
+        return static::$roleStatusArr[$this->role_status] ?? '';
     }
 
     /**

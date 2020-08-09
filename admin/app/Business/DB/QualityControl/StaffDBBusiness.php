@@ -891,6 +891,13 @@ class StaffDBBusiness extends BasePublicDBBusiness
                         }
                     }
 
+                    $role_status = 0;// 人员角色审核状态 1待审核 2 审核通过  4 审核未通过
+                    if( ($role_num & (1 | 2 | 4)) > 0  ) $role_status = 1;
+
+                    if($id > 0 && $role_status > 0 &&($role_num & (1 | 2 | 4)) == ($infoData['role_num'] & (1 | 2 | 4)) &&  $real_name == $infoData['real_name']) {// 是否需要再次审核授权
+                        $role_status = $infoData['role_status'];
+                    }
+
                     $temSaveArr = [
                         'id' => $id,
                         'admin_type' => $admin_type,
@@ -907,6 +914,7 @@ class StaffDBBusiness extends BasePublicDBBusiness
                         'sign_range' => $sign_range,
                         'sign_is_food' => $sign_is_food,
                         'sign_status' => $sign_status,
+                        'role_status' => $role_status,
                         'role_num' => $role_num,
 //                        'admin_username' => $admin_username,
 //                        'admin_password' => $admin_password,
@@ -1070,6 +1078,64 @@ class StaffDBBusiness extends BasePublicDBBusiness
             $saveQueryParams = [
                 'where' => [
                     ['sign_status', 1], // 自由点，让他都可以改 ，就注释掉
+                    ['issuper', '<>' , 1],
+                    ['admin_type', $admin_type],
+                ],
+//                            'select' => [
+//                                'id','title','sort_num','volume'
+//                                ,'operate_staff_id','operate_staff_id_history'
+//                                ,'created_at' ,'updated_at'
+//                            ],
+
+                //   'orderBy' => [ 'id'=>'desc'],//'sort_num'=>'desc',
+            ];
+            // 加入 id
+            Tool::appendParamQuery($saveQueryParams, $id, 'id');
+            Tool::appendParamQuery($saveQueryParams, $organize_id, 'company_id', [0, '0', ''], ',', false);
+            $modifyNum = static::save($updateData, $saveQueryParams);
+        } catch ( \Exception $e) {
+            DB::rollBack();
+//            throws('操作失败；信息[' . $e->getMessage() . ']');
+            throws($e->getMessage());
+        }
+        DB::commit();
+        return $modifyNum;
+    }
+
+
+
+    /**
+     * 根据id角色审核通过或不通过单条或多条数据
+     *
+     * @param int  $company_id 企业id
+     * @param int  $admin_type 类型1平台2企业4个人
+     * @param int $organize_id 操作的所属企业id 可以为0：没有所属企业--企业后台，操作用户时用来限制，只能操作自己企业的用户
+     * @param string/array $id id 数组或字符串
+     * @param int $role_status 操作 状态 2审核通过     4审核不通过
+     * @param int $operate_staff_id 操作人id
+     * @param int $modifAddOprate 修改时是否加操作人，1:加;0:不加[默认]
+     * @return  int 修改的数量   //  mixed array 记录id值，--一维数组
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function roleStatusById($company_id, $admin_type = 0, $organize_id = 0, $id = 0, $role_status = 2, $operate_staff_id = 0, $modifAddOprate = 0){
+        $modifyNum = 0;
+        if(!in_array($role_status, [2,4])) throws('参数【role_status】值不是有效值！');
+        // 没有需要处理的
+        if(!Tool::formatOneArrVals($id)) return $modifyNum;
+
+        $updateData = [
+            'role_status' => $role_status
+        ];
+        // $ownProperty  自有属性值;
+        // $temNeedStaffIdOrHistoryId 当只有自己会用到时操作员工id和历史id时，用来判断是否需要获取 true:需要获取； false:不需要获取
+        list($ownProperty, $temNeedStaffIdOrHistoryId) = array_values(static::getNeedStaffIdOrHistoryId());
+        $operate_staff_id_history = 0;
+        DB::beginTransaction();
+        try {
+            if($temNeedStaffIdOrHistoryId && $modifAddOprate) static::addOprate($updateData, $operate_staff_id,$operate_staff_id_history, 2);
+            $saveQueryParams = [
+                'where' => [
+                    ['role_status', 1], // 自由点，让他都可以改 ，就注释掉
                     ['issuper', '<>' , 1],
                     ['admin_type', $admin_type],
                 ],

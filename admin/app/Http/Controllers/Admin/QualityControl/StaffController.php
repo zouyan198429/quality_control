@@ -115,6 +115,13 @@ class StaffController extends BasicController
             $reDataArr['signStatus'] =  Staff::$signStatusArr;
             $reDataArr['defaultSignStatus'] = $sign_status;// -1;// 列表页默认状态
 
+            // 角色审核状态 1待审核 2 审核通过  4 审核未通过
+            $role_status = CommonRequest::get($request, 'role_status');
+            if(strlen($role_status) <= 0 ) $role_status = -1;
+            $reDataArr['roleStatus'] =  Staff::$roleStatusArr;
+            $reDataArr['defaultRoleStatus'] = $role_status;// -1;// 列表页默认状态
+
+
             // 角色1法人  2最高管理者  4技术负责人  8授权签字人
             $role_num = CommonRequest::get($request, 'role_num');
             if(strlen($role_num) <= 0 ) $role_num = -1;
@@ -346,6 +353,10 @@ class StaffController extends BasicController
                 // 角色1法人  2最高管理者  4技术负责人  8授权签字人
                 $reDataArr['roleNum'] =  Staff::$roleNumArr;
                 $reDataArr['defaultRoleNum'] = $info['role_num'] ?? -1;// 列表页默认状态
+
+                // 角色审核状态 1待审核 2 审核通过  4 审核未通过
+                $reDataArr['roleStatus'] =  Staff::$roleStatusArr;
+                $reDataArr['defaultRoleStatus'] = $info['role_status'] ?? -1;// 列表页默认状态
 
                 // 是否食品1食品  2非食品
                 $reDataArr['signIsFood'] =  Staff::$signIsFoodArr;
@@ -805,6 +816,29 @@ class StaffController extends BasicController
         // 个人后台--不可进行操作
         if($this->user_type == 2 && static::$ADMIN_TYPE == 4) $organize_id = $this->own_organize_id;
         $modifyNum = CTAPIStaffBusiness::signAjax($request, $this, static::$ADMIN_TYPE, $organize_id, $id, $sign_status);
+        return ajaxDataArr(1, ['modify_num' => $modifyNum], '');
+    }
+
+    /**
+     * 子帐号管理-角色审核操作(通过/不通过)
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_role(Request $request)
+    {
+        $this->InitParams($request);
+        $id = CommonRequest::get($request, 'id');// 单个id 或 逗号分隔的多个，或 多个的一维数组
+        if(is_array($id)) $id = implode(',', $id);
+        $role_status = CommonRequest::getInt($request, 'role_status');// 操作类型 2审核通过     4审核不通过
+
+        $organize_id = $this->organize_id;
+        // 大后台--可以操作所有的员工；操作企业【无员工】
+        // 企业后台 -- 操作员工，只能操作自己的员工；无操作企业
+        // 个人后台--不可进行操作
+        if($this->user_type == 2 && static::$ADMIN_TYPE == 4) $organize_id = $this->own_organize_id;
+        $modifyNum = CTAPIStaffBusiness::roleAjax($request, $this, static::$ADMIN_TYPE, $organize_id, $id, $role_status);
         return ajaxDataArr(1, ['modify_num' => $modifyNum], '');
     }
 

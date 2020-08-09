@@ -461,7 +461,14 @@ class UserController extends BasicController
             $last_role_num |= $tem_role_num;
         }
 
-
+        $role_status = 1;// 人员角色审核状态 1待审核 2 审核通过  4 审核未通过
+        if( ($last_role_num & (1 | 2 | 4)) > 0  ){// 包含有 1 或 2 或 4
+            if($id <= 0){
+                $role_status = 1;
+            }
+        }else{
+            $role_status = 0;
+        }
 
         $userInfo = [];
         if($id > 0){
@@ -479,6 +486,11 @@ class UserController extends BasicController
                 if(Tool::isEqualArr($newSignInfo, $oldSignInfo, 1) ){// 相等无变化
                     $sign_status = $userInfo['sign_status'];
                 }
+            }
+
+            // 判断角色是否有改动--姓名也没有变
+            if($role_status > 0 && ($last_role_num & (1 | 2 | 4)) == ($userInfo['role_num'] & (1 | 2 | 4)) && $real_name == $userInfo['real_name']){//  无改动
+                $role_status = $userInfo['role_status'];
             }
         }
         $saveData = [
@@ -498,6 +510,7 @@ class UserController extends BasicController
             'sign_range' => $sign_range,
             'sign_is_food' => $sign_is_food,
             'sign_status' => $sign_status,
+            'role_status' => $role_status,
         ];
         if(!empty($admin_username)) $saveData['admin_username'] = $admin_username;
         if($admin_password != '' || $sure_password != ''){

@@ -260,6 +260,7 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
     document.write("            <\/td>");
     document.write("            <td><%=item.is_perfect_text%><\/td>");
     document.write("            <td><%=item.open_status_text%><\/td>");
+    document.write("            <td><%=item.role_status_text%><\/td>");
     document.write("            <td><%=item.account_status_text%><\/td>");
     // document.write("            <td><%=item.lastlogintime%><\/td>");<%=item.lastlogintime%><hr/>
     document.write("            <td><%=item.created_at%><\/td>");

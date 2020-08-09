@@ -80,6 +80,37 @@ var otheraction = {
         });
         return false;
     },
+    role : function(id, open_status){
+        var operateText = '人员角色审核通过';
+        if(open_status === 4){
+            operateText = '人员角色审核不通过';
+        }
+        var index_query = layer.confirm('确定' + operateText + '当前记录？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            other_operate_ajax('role', id, operateText, {'role_status': open_status});
+            layer.close(index_query);
+        }, function(){
+        });
+        return false;
+    },
+    roleSelected: function(obj, open_status){// 开启选中的码
+        var recordObj = $(obj);
+        var operateText = '人员角色审核通过';
+        if(open_status === 4){
+            operateText = '人员角色审核不通过';
+        }
+        var index_query = layer.confirm('确定' + operateText + '当前记录？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+            //ajax开启数据
+            other_operate_ajax('batch_role', ids, operateText, {'role_status': open_status});
+            layer.close(index_query);
+        }, function(){
+        });
+        return false;
+    },
     frozen : function(id, account_status){
         var operateText = '解冻';
         if(account_status === 2){
@@ -189,6 +220,22 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
             objAppendProps(data, {'id':id}, true);
             reset_total = false;
             ajax_url = SIGN_OPERATE_URL;// "/pms/Supplier/ajax_del?operate_type=2";
+            break;
+        case 'role'://人员角色审核通过/不通过
+            // operate_txt = "开启";
+            // data = {'id':id, 'activity_id': CURRENT_ACTIVITY_ID};
+            // 合并对象
+            objAppendProps(data, {'id':id}, true);
+            ajax_url = ROLE_OPERATE_URL;// /pms/Supplier/ajax_del?operate_type=1
+            reset_total = false;
+            break;
+        case 'batch_role'://批量人员角色开启
+            // operate_txt = "批量开启";
+            // data = {'id':id, 'activity_id': CURRENT_ACTIVITY_ID};
+            // 合并对象
+            objAppendProps(data, {'id':id}, true);
+            reset_total = false;
+            ajax_url = ROLE_OPERATE_URL;// "/pms/Supplier/ajax_del?operate_type=2";
             break;
         case 'frozen'://冻结/解冻
                     // operate_txt = "开启";
@@ -304,9 +351,9 @@ function addCompany(company_id, company_name){
     document.write("            <%=item.sign_range%>(<%=item.sign_is_food_text%>)");
     document.write("            <hr\/><%=item.sign_status_text%>");
     document.write("            <\/td>");
-    document.write("            <td><%=item.is_perfect_text%><\/td>");
-    document.write("            <td><%=item.open_status_text%><\/td>");
-    document.write("            <td><%=item.account_status_text%><\/td>");
+    document.write("            <td><%=item.is_perfect_text%><hr/><%=item.account_status_text%><\/td>");
+    document.write("            <td><%=item.open_status_text%><hr/><%=item.role_status_text%><\/td>");
+    // document.write("            <td><%=item.account_status_text%><\/td>");
     // document.write("            <td><%=item.lastlogintime%><\/td>");
     document.write("            <td><%=item.lastlogintime%><hr/><%=item.created_at%><\/td>");
     // document.write("            <td><%=item.updated_at%><\/td>");
@@ -331,6 +378,14 @@ function addCompany(company_id, company_name){
     document.write("                <\/a>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.sign(<%=item.id%>, 4)\">");
     document.write("                    <i class=\"ace-icon bigger-60\">授权人审核不通过<\/i>");
+    document.write("                <\/a>");
+    document.write("                <%}%>");
+    document.write("                <%if(can_modify && item.role_status == 1){%>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.role(<%=item.id%>, 2)\">");
+    document.write("                    <i class=\"ace-icon bigger-60\">人员角色审核通过<\/i>");
+    document.write("                <\/a>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.role(<%=item.id%>, 4)\">");
+    document.write("                    <i class=\"ace-icon bigger-60\">人员角色审核不通过<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
     document.write("                <%if(can_modify &&  item.account_status == 1){%>");

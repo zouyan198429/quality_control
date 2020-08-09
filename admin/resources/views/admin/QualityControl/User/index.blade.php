@@ -109,13 +109,19 @@
                   <option value="{{ $k }}"  @if(isset($defaultRoleNum) && $defaultRoleNum == $k) selected @endif >{{ $txt }}</option>
               @endforeach
           </select>
-          <select class="wmini" name="sign_status" style="width: 80px;">
+          <select class="wmini" name="role_status" style="width: 80px;display: none;">
+              <option value="">角色审核状态</option>
+              @foreach ($roleStatus as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultRoleStatus) && $defaultRoleStatus == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
+          <select class="wmini" name="sign_status" style="width: 80px;display: none;">
               <option value="">授权人审核状态</option>
               @foreach ($signStatus as $k=>$txt)
                   <option value="{{ $k }}"  @if(isset($defaultSignStatus) && $defaultSignStatus == $k) selected @endif >{{ $txt }}</option>
               @endforeach
           </select>
-          <select class="wmini" name="sign_is_food" style="width: 80px;">
+          <select class="wmini" name="sign_is_food" style="width: 80px;display: none;">
               <option value="">是否食品</option>
               @foreach ($signIsFood as $k=>$txt)
                   <option value="{{ $k }}"  @if(isset($defaultSignIsFood) && $defaultSignIsFood == $k) selected @endif >{{ $txt }}</option>
@@ -146,6 +152,8 @@
 {{--    <div style="display:none;" ><input type="file" class="import_file img_input"></div>{ {--导入file对象--}}
       <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.openSelected(this, 2)" >审核通过[勾选]</button>
       <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.openSelected(this, 4)" >审核不通过[勾选]</button>
+      <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.roleSelected(this, 2)" >人员角色审核通过[勾选]</button>
+      <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.roleSelected(this, 4)" >人员角色审核不通过[勾选]</button>
       <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.signSelected(this, 2)" >授权人审核通过[勾选]</button>
       <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.signSelected(this, 4)" >授权人审核不通过[勾选]</button>
     <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.frozenSelected(this, 2)" >冻结[勾选]</button>
@@ -170,7 +178,7 @@
         <col  width="75">
         <col width="75" >
 
-        <col width="75">
+{{--        <col width="75">--}}
         <col width="160">
 {{--        <col width="160">--}}
         <col width="250">
@@ -195,9 +203,9 @@
         <th>职位</th>
         <th>角色</th>
         <th>签字范围<hr/>签字审核状态</th>
-        <th>完善资料</th>
-        <th>审核</th>
-        <th>状态</th>
+        <th>完善资料<hr/>冻结状态</th>
+        <th>信息审核<hr/>角色状态</th>
+{{--        <th>冻结状态</th>--}}
 {{--        <th>上次登录</th>--}}
       <th>上次登录<hr/>创建时间</th>
       <th>操作</th>
@@ -241,6 +249,7 @@
       var IMPORT_EXCEL_URL = "{{ url('api/admin/user/import') }}";//导入EXCEL地址
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
 
+      var ROLE_OPERATE_URL = "{{ url('api/admin/user/ajax_role') }}";//角色审核操作(通过/不通过)
       var SIGN_OPERATE_URL = "{{ url('api/admin/user/ajax_sign') }}";//授权人审核操作(通过/不通过)
       var OPEN_OPERATE_URL = "{{ url('api/admin/user/ajax_open') }}";//审核操作(通过/不通过)
       var ACCOUNT_STATUS_URL = "{{ url('api/admin/user/ajax_frozen') }}";//操作(冻结/解冻)
@@ -250,6 +259,6 @@
       var IFRAME_IMPORT_URL = "{{url('admin/user/import_bath')}}/";// 导入
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/User.js?59') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/User.js?61') }}"  type="text/javascript"></script>
 </body>
 </html>

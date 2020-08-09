@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/style/admin.css')}}" media="all">
 </head>
 <body>
- 
+
 <div class="mm">
   <div class="mmhead" id="mywork">
 
@@ -24,15 +24,15 @@
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
 
- 
-          
+
+
           <select class="wmini" name="role_num" style="width: 80px;">
               <option value="">角色</option>
               @foreach ($roleNum as $k=>$txt)
                   <option value="{{ $k }}"  @if(isset($defaultRoleNum) && $defaultRoleNum == $k) selected @endif >{{ $txt }}</option>
               @endforeach
           </select>
-           
+
         <select style="width:90px; height:28px;" name="field">
             <option value="admin_username">用户名</option>
             <option value="real_name">真实姓名</option>
@@ -49,9 +49,9 @@
     </form>
   </div>
   <div class="table-header">
-    <button class="btn btn-danger  btn-xs batch_del"  onclick="action.batchDel(this)">批量删除</button> 
+    <button class="btn btn-danger  btn-xs batch_del"  onclick="action.batchDel(this)">批量删除</button>
     <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcelTemplate(this)">导入模版[EXCEL]</button>
-    <button class="btn btn-success  btn-xs import_excel"  onclick="otheraction.iframeImport(0)">导入</button> 
+    <button class="btn btn-success  btn-xs import_excel"  onclick="otheraction.iframeImport(0)">导入</button>
   </div>
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
@@ -59,11 +59,12 @@
         <col width="90">
         <col width="60">
         <col width="50">
-        <col width="105"> 
-        <col > 
+        <col width="105">
+        <col >
         <col>
         <col>
         <col  width="75">
+        <col width="75" >
         <col width="75" >
 
         <col width="75">
@@ -81,13 +82,14 @@
         <th>姓名</th>
         <th>性别</th>
         <th>城市</th>
-        <th>手机号</th> 
+        <th>手机号</th>
         <th>职位</th>
         <th>角色</th>
         <th>签字范围<hr/>签字审核状态</th>
         <th>完善资料</th>
-        <th>审核</th>
-        <th>状态</th> 
+        <th>信息审核</th>
+        <th>角色状态</th>
+        <th>冻结状态</th>
       <th>创建时间</th>
       <th>操作</th>
     </tr>
@@ -136,6 +138,6 @@
        var IFRAME_IMPORT_URL = "{{url('company/user/import_bath')}}/";// 导入
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/company/QualityControl/User.js?630') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/company/QualityControl/User.js?632') }}"  type="text/javascript"></script>
 </body>
 </html>

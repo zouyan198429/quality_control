@@ -435,6 +435,9 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
         $role_num = CommonRequest::getInt($request, 'role_num');
         if(is_numeric($role_num) && $role_num > 0 )  array_push($queryParams['where'], ['role_num', '&', $role_num . '=' . $role_num]);
 
+        $role_status = CommonRequest::getInt($request, 'role_status');
+        if(is_numeric($role_status) && $role_status > 0 )  array_push($queryParams['where'], ['role_status', '=', $role_status]);
+
         $sign_is_food = CommonRequest::getInt($request, 'sign_is_food');
         if(is_numeric($sign_is_food) && $sign_is_food > 0 )  array_push($queryParams['where'], ['sign_is_food', '=', $sign_is_food]);
 
@@ -1301,6 +1304,40 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
             'modifAddOprate' => 0,
         ];
         $modifyNum = static::exeDBBusinessMethodCT($request, $controller, '',  'signStatusById', $apiParams, $company_id, $notLog);
+        return $modifyNum;
+        // return static::delAjaxBase($request, $controller, '', $notLog);
+
+    }
+
+
+    /**
+     * 角色 开启 批量 或 单条数据
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param int $admin_type 类型1平台2企业4个人
+     * @param int $organize_id 操作的所属企业id 可以为0：没有所属企业--企业后台，操作用户时用来限制，只能操作自己企业的用户
+     * @param string $id 记录id，多个用逗号分隔
+     * @param int $role_status 操作 状态 2审核通过     4审核不通过
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  int 修改的数量   array 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function roleAjax(Request $request, Controller $controller, $admin_type = 1, $organize_id = 0, $id = 0, $role_status = 2, $notLog = 0)
+    {
+        $company_id = $controller->company_id;
+        $user_id = $controller->user_id;
+        // 调用新加或修改接口
+        $apiParams = [
+            'company_id' => $company_id,
+            'admin_type' => $admin_type,
+            'organize_id' => $organize_id,
+            'id' => $id,
+            'role_status' => $role_status,
+            'operate_staff_id' => $user_id,
+            'modifAddOprate' => 0,
+        ];
+        $modifyNum = static::exeDBBusinessMethodCT($request, $controller, '',  'roleStatusById', $apiParams, $company_id, $notLog);
         return $modifyNum;
         // return static::delAjaxBase($request, $controller, '', $notLog);
 

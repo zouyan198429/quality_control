@@ -132,6 +132,9 @@
                       <dd>
                           <a lay-href="{{ url('admin/user') }}?role_num=8&sign_status=1">授权签字人审核</a>
                       </dd>
+                      <dd>
+                          <a lay-href="{{ url('admin/user') }}?role_status=1">人员角色审核</a>
+                      </dd>
 {{--                      <dd>--}}
 {{--                          <a lay-href="javascript:void(01);">证书审核</a>--}}
 {{--                      </dd>--}}

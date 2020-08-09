@@ -131,6 +131,7 @@ $api->version('v1', function ($api) {
         $api->any('admin/user/import', 'Admin\QualityControl\UserController@import');// 导入excel
         $api->post('admin/user/ajax_get_ids', 'Admin\QualityControl\UserController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
+        $api->any('admin/user/ajax_role', 'Admin\QualityControl\UserController@ajax_role');// 角色审核操作(通过/不通过)
         $api->any('admin/user/ajax_sign', 'Admin\QualityControl\UserController@ajax_sign');// 授权人审核操作(通过/不通过)
         $api->any('admin/user/ajax_open', 'Admin\QualityControl\UserController@ajax_open');// 审核操作(通过/不通过)
         $api->post('admin/user/ajax_frozen', 'Admin\QualityControl\UserController@ajax_frozen');// 操作(冻结/解冻)

@@ -49,6 +49,7 @@ class UserController extends StaffController
         Tool::formatOneArrVals($role_nums, [null, ''], ',', 1 | 2 | 4 | 8);
         if(!is_array($role_nums)) $role_nums = [];
 
+
         $sign_status = 1;// 授权人审核状态 1待审核 2 审核通过  4 审核未通过
 
         $sign_range = CommonRequest::get($request, 'sign_range');
@@ -60,12 +61,23 @@ class UserController extends StaffController
         }else{// 包含授权签 字人
             if($sign_is_food != 1) $sign_is_food = 2;
         }
+
+
+
         // 生成最终的角色值
         $last_role_num = 0;
         foreach($role_nums as $tem_role_num){
             $last_role_num |= $tem_role_num;
         }
 
+        $role_status = 1;// 人员角色审核状态 1待审核 2 审核通过  4 审核未通过
+        if( ($last_role_num & (1 | 2 | 4)) > 0  ){// 包含有 1 或 2 或 4
+            if($id <= 0){
+                $role_status = 1;
+            }
+        }else{
+            $role_status = 0;
+        }
 
 
         $userInfo = [];
@@ -85,6 +97,12 @@ class UserController extends StaffController
                     $sign_status = $userInfo['sign_status'];
                 }
             }
+
+            // 判断角色是否有改动--姓名也没有变
+            if($role_status > 0 && ($last_role_num & (1 | 2 | 4)) == ($userInfo['role_num'] & (1 | 2 | 4)) && $real_name == $userInfo['real_name']){//  无改动
+                $role_status = $userInfo['role_status'];
+            }
+
         }
         $saveData = [
             'admin_type' => static::$ADMIN_TYPE,
@@ -103,6 +121,7 @@ class UserController extends StaffController
             'sign_range' => $sign_range,
             'sign_is_food' => $sign_is_food,
             'sign_status' => $sign_status,
+            'role_status' => $role_status,
         ];
         if(!empty($admin_username)) $saveData['admin_username'] = $admin_username;
         if($admin_password != '' || $sure_password != ''){
