@@ -20,14 +20,15 @@ class IndexController extends BasicController
     public $controller_id =0;// 功能小模块[控制器]id - controller_id  历史表 、正在进行表 与原表相同
 
     public function test(Request $request){
-        $extParams['sqlParams']['whereIn']['id'] = 123;
-        pr($extParams);
-            $this->InitParams($request);
-        $reDataArr = $this->reDataArr;
-        //pr($this->getUserInfo());
-        //die;
-        pr($this->user_id);
-        echo '1111';
+//        $extParams['sqlParams']['whereIn']['id'] = 123;
+//        pr($extParams);
+//            $this->InitParams($request);
+//        $reDataArr = $this->reDataArr;
+//        //pr($this->getUserInfo());
+//        //die;
+//        pr($this->user_id);
+//        echo '1111';
+        return view('company.QualityControl.test', []);
     }
 
     /**
@@ -548,4 +549,22 @@ class IndexController extends BasicController
 //        if(is_string($res)) echo $res;
 //    }
 
+    /**
+     * 下载文件
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function down_file(Request $request)
+    {
+//        $this->InitParams($request);
+        // $this->source = 2;
+//        $reDataArr = $this->reDataArr;
+        // 下载二维码文件
+        $publicPath = Tool::getPath('public');
+        $fileName = CommonRequest::get($request, 'resource_url');// '/CLodopPrint_Setup_for_Win32NT.exe';
+        $res = DownFile::downFilePath(2, $publicPath . $fileName);
+        if(is_string($res)) echo $res;
+    }
 }

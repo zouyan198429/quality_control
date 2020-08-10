@@ -113,6 +113,11 @@ function ajax_form(){
         return false;
     }
 
+    var position_name = $('input[name=position_name]').val();
+    if(!judge_validate(4,'职位',position_name,false,'length',1,40)){
+        return false;
+    }
+
     var city_id = $('select[name=city_id]').val();
     var judge_seled = judge_validate(1,'城市',city_id,true,'digit','','');
     if(judge_seled != ''){

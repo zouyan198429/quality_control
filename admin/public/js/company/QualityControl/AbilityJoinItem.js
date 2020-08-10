@@ -57,11 +57,11 @@ var otheraction = {
    // document.write("                  <span class=\"lbl\"><\/span>");
    // document.write("                <\/label>");
    // document.write("            <\/td>");
-    document.write("            <td><%=item.id%><\/td>");
+   //  document.write("            <td><%=item.id%><\/td>");
     document.write("            <td><%=item.ability_name%><\/td>");
    document.write("            <td><%=item.ability_info.created_at%><\/td>");
     document.write("            <td><%=item.join_time%><\/td>");
-    document.write("            <td><%=item.ability_info.status_text%><\/td>");
+    // document.write("            <td><%=item.ability_info.status_text%><\/td>");
     document.write("            <td><%=item.is_sample_text%><\/td>");
     document.write("            <td><%=item.join_item_reslut_info.submit_status_text%><\/td>");
     document.write("            <td><%=item.result_status_text%><\/td>");

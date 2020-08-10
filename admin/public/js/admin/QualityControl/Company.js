@@ -103,6 +103,7 @@ var otheraction = {
         console.log(data);
         var url_params = get_url_param(data);// parent.get_url_param(data);
         var weburl = STAFF_SHOW_URL  + id ;// + '?company_id=' + id ;// + url_params;// + id + '?' + url_params;
+        // var weburl = STAFF_SHOW_URL + '?company_id=' + id
         console.log(weburl);
         // go(SHOW_URL + id);
         // location.href='/pms/Supplier/show?supplier_id='+id;

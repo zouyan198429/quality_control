@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/css/layui.css')}}" media="all">
     @include('web.QualityControl.layout_public.pagehead')
     <!-- zui css -->
-    <link rel="stylesheet" href="{{asset('dist/css/zui.min.css') }}">
+    <link rel="stylesheet" href="{{asset('dist/css/zui.min.css') }}">     
 </head>
 <body style=" background:#f8f8f8; ">
     @include('web.QualityControl.layout_public.header')
@@ -110,7 +110,7 @@
 
                         <div class="alert alert-warning alert-dismissable">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                            <p>一次最多上传1张图片。</p>
+                            <p>一次最多上传1张图片，jpg或png格式，小于4M。</p>
                         </div>
                         <div class="row  baguetteBoxOne gallery ">
                             <div class="col-xs-12">
@@ -158,7 +158,11 @@
                 </div>
                 <div class="form-item">
                     <label for="text" class="form-label">资质认定证书编号 <span class="red">*</span></label>
-                    <div class="form-input"><input type="text" name="company_certificate_no" class="form-control" autocomplete="off" value="{{ $info['company_certificate_no'] ?? '' }}"></div>
+                    <div class="form-input"><input type="number" name="company_certificate_no" class="form-control" autocomplete="off" value="{{ $info['company_certificate_no'] ?? '' }}">
+
+                        <p class="gray">是12位数字！</p>
+
+                    </div>
                 </div>
                 <div class="form-item">
                     <label for="text" class="form-label">联系人<span class="red">*</span></label>

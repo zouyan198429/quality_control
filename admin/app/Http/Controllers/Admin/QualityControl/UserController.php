@@ -33,55 +33,114 @@ class UserController extends StaffController
         $pageNum = ($id > 0) ? 256 : 32;
         return $this->exeDoPublicFun($request, $pageNum, 4,'', true
             , '', [], function (&$reDataArr) use ($request){
-                $id = CommonRequest::getInt($request, 'id');
-                $company_id = CommonRequest::getInt($request, 'company_id');
-                $real_name = CommonRequest::get($request, 'real_name');
-                $sex = CommonRequest::getInt($request, 'sex');
-                $email = CommonRequest::get($request, 'email');
-                $mobile = CommonRequest::get($request, 'mobile');
-                $qq_number = CommonRequest::get($request, 'qq_number');
-                $id_number = CommonRequest::get($request, 'id_number');
-                $city_id = CommonRequest::getInt($request, 'city_id');
-                $addr = CommonRequest::get($request, 'addr');
-                $is_perfect = CommonRequest::getInt($request, 'is_perfect');
-                // 可能会用的参数
-                $admin_username = CommonRequest::get($request, 'admin_username');
-                $admin_password = CommonRequest::get($request, 'admin_password');
-                $sure_password = CommonRequest::get($request, 'sure_password');
-                $userInfo = [];
-                if($id > 0){
-                    $userInfo = $this->judgePower($request, $id);
-                    // 判断是否有操作权限
-                    // 根据具体功能 ，加上或去掉要判断的下标
-                    $powerFields = [];// ['organize_id' => 'company_id', 'personal_id' => 'id'];
-                    if(!$this->batchJudgeRecordOperateAuth($userInfo, $powerFields, 0, 0, 0, true)){
-                        return ajaxDataArr(0, null, '您没有操作权限！');
+           $id = CommonRequest::getInt($request, 'id');
+            $company_id = CommonRequest::getInt($request, 'company_id');
+            $real_name = CommonRequest::get($request, 'real_name');
+            $sex = CommonRequest::getInt($request, 'sex');
+            $email = CommonRequest::get($request, 'email');
+            $mobile = CommonRequest::get($request, 'mobile');
+            $qq_number = CommonRequest::get($request, 'qq_number');
+            $id_number = CommonRequest::get($request, 'id_number');
+            $position_name = CommonRequest::get($request, 'position_name');
+            $city_id = CommonRequest::getInt($request, 'city_id');
+            $addr = CommonRequest::get($request, 'addr');
+            $is_perfect = CommonRequest::getInt($request, 'is_perfect');
+            // 可能会用的参数
+            $admin_username = CommonRequest::get($request, 'admin_username');
+            $admin_password = CommonRequest::get($request, 'admin_password');
+            $sure_password = CommonRequest::get($request, 'sure_password');
+
+            // 角色
+            $role_nums = CommonRequest::get($request, 'role_nums');
+            // 如果是字符，则转为数组
+            Tool::formatOneArrVals($role_nums, [null, ''], ',', 1 | 2 | 4 | 8);
+            if(!is_array($role_nums)) $role_nums = [];
+
+
+            $sign_status = 1;// 授权人审核状态 1待审核 2 审核通过  4 审核未通过
+
+            $sign_range = CommonRequest::get($request, 'sign_range');
+            $sign_is_food = CommonRequest::getInt($request, 'sign_is_food');
+            if(!in_array('8', $role_nums)){// 不包含授权签 字人
+                $sign_range = '';
+                $sign_is_food = 0;
+                $sign_status = 0;
+            }else{// 包含授权签 字人
+                if($sign_is_food != 1) $sign_is_food = 2;
+            }
+
+
+
+            // 生成最终的角色值
+            $last_role_num = 0;
+            foreach($role_nums as $tem_role_num){
+                $last_role_num |= $tem_role_num;
+            }
+
+            $role_status = 1;// 人员角色审核状态 1待审核 2 审核通过  4 审核未通过
+            if( ($last_role_num & (1 | 2 | 4)) > 0  ){// 包含有 1 或 2 或 4
+                if($id <= 0){
+                    $role_status = 1;
+                }
+            }else{
+                $role_status = 0;
+            }
+
+
+            $userInfo = [];
+            if($id > 0){
+                $userInfo = $this->judgePower($request, $id);
+                // 判断是否有操作权限
+                // 根据具体功能 ，加上或去掉要判断的下标
+                $powerFields = [];// ['organize_id' => 'company_id', 'personal_id' => 'id'];
+                if(!$this->batchJudgeRecordOperateAuth($userInfo, $powerFields, 0, 0, 0, true)){
+                    return ajaxDataArr(0, null, '您没有操作权限！');
+                }
+                // 判断授权范围是否有改动
+                if($sign_status > 0){
+                    $newSignInfo = ['sign_range' => $sign_range, 'sign_is_food' => $sign_is_food];
+                    $oldSignInfo = Tool::getArrFormatFields($userInfo, ['sign_range', 'sign_is_food'], false);
+                    if(Tool::isEqualArr($newSignInfo, $oldSignInfo, 1) ){// 相等无变化
+                        $sign_status = $userInfo['sign_status'];
                     }
                 }
-                $saveData = [
-                    'admin_type' => static::$ADMIN_TYPE,
-                    'is_perfect' => $is_perfect,
-                    'company_id' => $company_id,
-                    'real_name' => $real_name,
-                    'sex' => $sex,
-                    'mobile' => $mobile,
-                    'email' => $email,
-                    'qq_number' => $qq_number,
-                    'id_number' => $id_number,
-                    'city_id' => $city_id,
-                    'addr' => $addr,
-                ];
-                if(!empty($admin_username)) $saveData['admin_username'] = $admin_username;
-                if($admin_password != '' || $sure_password != ''){
-                    if ($admin_password != $sure_password){
-                        return ajaxDataArr(0, null, '密码和确定密码不一致！');
-                    }
-                    $saveData['admin_password'] = $admin_password;
+
+                // 判断角色是否有改动--姓名也没有变
+                if($role_status > 0 && ($last_role_num & (1 | 2 | 4)) == ($userInfo['role_num'] & (1 | 2 | 4)) && $real_name == $userInfo['real_name']){//  无改动
+                    $role_status = $userInfo['role_status'];
                 }
-                // 超级帐户 不可 冻结
-//        if(isset($userInfo['issuper']) && $userInfo['issuper'] != 1){
-//            $saveData['account_status'] = $account_status;
-//        }
+
+            }
+            $saveData = [
+                'admin_type' => static::$ADMIN_TYPE,
+                'is_perfect' => $is_perfect,
+                'company_id' => $company_id,
+                'real_name' => $real_name,
+                'sex' => $sex,
+                'mobile' => $mobile,
+                'email' => $email,
+                'qq_number' => $qq_number,
+                'id_number' => $id_number,
+                'position_name' => $position_name,
+                'city_id' => $city_id,
+                'addr' => $addr,
+                'role_num' => $last_role_num,
+                'sign_range' => $sign_range,
+                'sign_is_food' => $sign_is_food,
+                'sign_status' => $sign_status,
+                'role_status' => $role_status,
+            ];
+            if(!empty($admin_username)) $saveData['admin_username'] = $admin_username;
+            if($admin_password != '' || $sure_password != ''){
+                if ($admin_password != $sure_password){
+                    return ajaxDataArr(0, null, '密码和确定密码不一致！');
+                }
+                $saveData['admin_password'] = $admin_password;
+            }
+            // 超级帐户 不可 冻结
+    //        if(isset($userInfo['issuper']) && $userInfo['issuper'] != 1){
+    //            $saveData['account_status'] = $account_status;
+    //        }
 
                 if($id <= 0) {// 新加;要加入的特别字段
                     $addNewData = [

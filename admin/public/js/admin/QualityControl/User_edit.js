@@ -41,10 +41,46 @@ $(function(){
         // }, function(){
         //});
         return false;
-    })
+    });
 
+    $(document).on("change","input[name='role_nums[]']",function(){
+        var obj = $(this);
+        judge_sign();
+
+    });
+    judge_sign();// 初始化
 });
 
+function judge_sign(){
+
+    var seled_sign = getSeledSign();
+    if(!seled_sign){// 不在--没有选中
+       // $('input[name=sign_range]').val('');
+       //  $('input[name=sign_is_food]').prop('checked', false);
+        $('#tr_sign').hide();
+    }else{// 选中
+        // $('input[name=sign_is_food]').prop('checked', false);
+        $('#tr_sign').show();
+    }
+
+}
+// 获得角色是否有选中授权签字人
+// 返回 true: 有选中  false:没有选中
+function getSeledSign(){
+
+    var seled_sign = false;
+    // 获得选中的角色
+    var selected_role_num = get_list_checked('seledRoleNumIds',2,1);
+    console.log('selected_role_num=', selected_role_num);
+    // 判断 8 授权签字人是否被选中
+    if(selected_role_num != ''){
+        if(selected_role_num.split(",").indexOf('8') >= 0){
+            seled_sign = true;
+        }
+    }
+    console.log('seled_sign=', seled_sign);
+    return seled_sign;
+}
 
 //业务逻辑部分
 var otheraction = {
@@ -114,6 +150,11 @@ function ajax_form(){
         return false;
     }
 
+    var position_name = $('input[name=position_name]').val();
+    if(!judge_validate(4,'职位',position_name,false,'length',1,40)){
+        return false;
+    }
+
     var city_id = $('select[name=city_id]').val();
     var judge_seled = judge_validate(1,'城市',city_id,true,'digit','','');
     if(judge_seled != ''){
@@ -150,6 +191,22 @@ function ajax_form(){
     //         return false;
     //     }
     // }
+
+    // 判断有没有选中授权签字人
+    var seled_sign = getSeledSign();
+    if(!seled_sign){// 不在--没有选中
+         $('input[name=sign_range]').val('');
+         $('input[name=sign_is_food]').prop('checked', false);
+        // $('#tr_sign').hide();
+    }else{// 选中
+        // $('input[name=sign_is_food]').prop('checked', false);
+        // $('#tr_sign').show();
+
+        var sign_range = $('input[name=sign_range]').val();
+        if(!judge_validate(4,'签字范围',sign_range,true,'length',1,500)){
+            return false;
+        }
+    }
 
     var is_perfect = $('input[name=is_perfect]:checked').val() || '';
     var judge_seled = judge_validate(1,'是否完善资料',is_perfect,true,'custom',/^[12]$/,"");

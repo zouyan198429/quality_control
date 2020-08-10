@@ -106,8 +106,10 @@ class StaffController extends BasicController
             $reDataArr['defaultIssuper'] = -1;// 列表页默认状态
 
             // 审核状态1待审核2审核通过4审核不通过
+            $open_status = CommonRequest::get($request, 'open_status');
+            if(strlen($open_status) <= 0 ) $open_status = -1;
             $reDataArr['openStatus'] =  Staff::$openStatusArr;
-            $reDataArr['defaultOpenStatus'] = -1;// 列表页默认状态
+            $reDataArr['defaultOpenStatus'] = $open_status;// -1;// 列表页默认状态
 
             // 状态 1正常 2冻结
             $reDataArr['accountStatus'] =  Staff::$accountStatusArr;
@@ -132,6 +134,18 @@ class StaffController extends BasicController
             // 企业--单位人数1、1-20、2、20-100、3、100-500、4、500以上
             $reDataArr['companyPeoples'] =  Staff::$companyPeoplesNumArr;
             $reDataArr['defaultCompanyPeoples'] = -1;// 列表页默认状态
+
+            // 授权人审核状态 1待审核 2 审核通过  4 审核未通过
+            $reDataArr['signStatus'] =  Staff::$signStatusArr;
+            $reDataArr['defaultSignStatus'] = -1;// 列表页默认状态
+
+            // 角色1法人  2最高管理者  4技术负责人  8授权签字人
+            $reDataArr['roleNum'] =  Staff::$roleNumArr;
+            $reDataArr['defaultRoleNum'] = -1;// 列表页默认状态
+
+            // 是否食品1食品  2非食品
+            $reDataArr['signIsFood'] =  Staff::$signIsFoodArr;
+            $reDataArr['defaultSignIsFood'] = -1;// 列表页默认状态
 
             // 企业--会员等级1非会员  2会员  4理事  8常务理事   16理事长
             $reDataArr['companyGrade'] =  Staff::$companyGradeArr;
@@ -787,6 +801,52 @@ class StaffController extends BasicController
     }
 
     /**
+     * 子帐号管理-授权人审核操作(通过/不通过)
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_sign(Request $request)
+    {
+        $this->InitParams($request);
+        $id = CommonRequest::get($request, 'id');// 单个id 或 逗号分隔的多个，或 多个的一维数组
+        if(is_array($id)) $id = implode(',', $id);
+        $sign_status = CommonRequest::getInt($request, 'sign_status');// 操作类型 2审核通过     4审核不通过
+
+        $organize_id = $this->organize_id;
+        // 大后台--可以操作所有的员工；操作企业【无员工】
+        // 企业后台 -- 操作员工，只能操作自己的员工；无操作企业
+        // 个人后台--不可进行操作
+        if($this->user_type == 2 && static::$ADMIN_TYPE == 4) $organize_id = $this->own_organize_id;
+        $modifyNum = CTAPIStaffBusiness::signAjax($request, $this, static::$ADMIN_TYPE, $organize_id, $id, $sign_status);
+        return ajaxDataArr(1, ['modify_num' => $modifyNum], '');
+    }
+
+    /**
+     * 子帐号管理-角色审核操作(通过/不通过)
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_role(Request $request)
+    {
+        $this->InitParams($request);
+        $id = CommonRequest::get($request, 'id');// 单个id 或 逗号分隔的多个，或 多个的一维数组
+        if(is_array($id)) $id = implode(',', $id);
+        $role_status = CommonRequest::getInt($request, 'role_status');// 操作类型 2审核通过     4审核不通过
+
+        $organize_id = $this->organize_id;
+        // 大后台--可以操作所有的员工；操作企业【无员工】
+        // 企业后台 -- 操作员工，只能操作自己的员工；无操作企业
+        // 个人后台--不可进行操作
+        if($this->user_type == 2 && static::$ADMIN_TYPE == 4) $organize_id = $this->own_organize_id;
+        $modifyNum = CTAPIStaffBusiness::roleAjax($request, $this, static::$ADMIN_TYPE, $organize_id, $id, $role_status);
+        return ajaxDataArr(1, ['modify_num' => $modifyNum], '');
+    }
+
+    /**
      * 子帐号管理-(冻结/解冻)
      *
      * @param Request $request
@@ -861,8 +921,10 @@ class StaffController extends BasicController
         $reDataArr['defaultIssuper'] = -1;// 列表页默认状态
 
         // 审核状态1待审核2审核通过4审核不通过
+        $open_status = CommonRequest::get($request, 'open_status');
+        if(strlen($open_status) <= 0 ) $open_status = -1;
         $reDataArr['openStatus'] =  Staff::$openStatusArr;
-        $reDataArr['defaultOpenStatus'] = -1;// 列表页默认状态
+        $reDataArr['defaultOpenStatus'] = $open_status;// -1;// 列表页默认状态
 
         // 状态 1正常 2冻结
         $reDataArr['accountStatus'] =  Staff::$accountStatusArr;
@@ -887,6 +949,29 @@ class StaffController extends BasicController
         // 企业--单位人数1、1-20、2、20-100、3、100-500、4、500以上
         $reDataArr['companyPeoples'] =  Staff::$companyPeoplesNumArr;
         $reDataArr['defaultCompanyPeoples'] = -1;// 列表页默认状态
+
+        // 授权人审核状态 1待审核 2 审核通过  4 审核未通过
+        $sign_status = CommonRequest::get($request, 'sign_status');
+        if(strlen($sign_status) <= 0 ) $sign_status = -1;
+        $reDataArr['signStatus'] =  Staff::$signStatusArr;
+        $reDataArr['defaultSignStatus'] = $sign_status;// -1;// 列表页默认状态
+
+        // 角色审核状态 1待审核 2 审核通过  4 审核未通过
+        $role_status = CommonRequest::get($request, 'role_status');
+        if(strlen($role_status) <= 0 ) $role_status = -1;
+        $reDataArr['roleStatus'] =  Staff::$roleStatusArr;
+        $reDataArr['defaultRoleStatus'] = $role_status;// -1;// 列表页默认状态
+
+
+        // 角色1法人  2最高管理者  4技术负责人  8授权签字人
+        $role_num = CommonRequest::get($request, 'role_num');
+        if(strlen($role_num) <= 0 ) $role_num = -1;
+        $reDataArr['roleNum'] =  Staff::$roleNumArr;
+        $reDataArr['defaultRoleNum'] = $role_num;// -1;// 列表页默认状态
+
+        // 是否食品1食品  2非食品
+        $reDataArr['signIsFood'] =  Staff::$signIsFoodArr;
+        $reDataArr['defaultSignIsFood'] = -1;// 列表页默认状态
 
         // 企业--会员等级1非会员  2会员  4理事  8常务理事   16理事长
         $reDataArr['companyGrade'] =  Staff::$companyGradeArr;
@@ -935,85 +1020,105 @@ class StaffController extends BasicController
 //        // 拥有者类型1平台2企业4个人
 //        $reDataArr['adminType'] =  AbilityJoin::$adminTypeArr;
 //        $reDataArr['defaultAdminType'] = -1;// 列表页默认状态
-        $info = [
-            'id'=>$id,
-            //   'department_id' => 0,
-        ];
-        $operate = "添加";
-        if ($id > 0) { // 获得详情数据
-            $operate = "修改";
-            $handleKeyArr = [];
-            $handleKeyConfigArr = [];
-            if(static::$ADMIN_TYPE == 2){
-                array_push($handleKeyArr, 'siteResources');// array_merge($handleKeyArr, ['industry', 'siteResources']); ;//
-                array_push($handleKeyConfigArr, 'certificate_info');
-            }
-            if(static::$ADMIN_TYPE == 4){
-                array_push($handleKeyArr, 'company');
-                array_push($handleKeyConfigArr, 'company_info');
-            }
-            $extParams = [
-                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-                'relationFormatConfigs'=> CTAPIStaffBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
-
+            $info = [
+                'id'=>$id,
+                //   'department_id' => 0,
+                'role_num' => 0,
             ];
-            $info = CTAPIStaffBusiness::getInfoData($request, $this, $id, [], '', $extParams);
-            $this->judgeUserPower($request, $info);
-            // 判断是否有操作权限
-            // 根据具体功能 ，加上或去掉要判断的下标
-            $powerFields = [];// ['organize_id' => 'company_id', 'personal_id' => 'id'];
-            if(!$this->batchJudgeRecordOperateAuth($info, $powerFields, 0, 0, 0, true)){
-                throws('您没有操作权限！');
+            $operate = "添加";
+            if ($id > 0) { // 获得详情数据
+                $operate = "修改";
+                $handleKeyArr = [];
+                $handleKeyConfigArr = [];
+                if(static::$ADMIN_TYPE == 2){
+                    array_push($handleKeyArr, 'siteResources');// array_merge($handleKeyArr, ['industry', 'siteResources']); ;//
+                    array_push($handleKeyConfigArr, 'certificate_info');
+                }
+                if(static::$ADMIN_TYPE == 4){
+                    array_push($handleKeyArr, 'company');
+                    array_push($handleKeyConfigArr, 'company_info');
+                }
+                $extParams = [
+                    // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                     'relationFormatConfigs'=> CTAPIStaffBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
+
+                ];
+                $info = CTAPIStaffBusiness::getInfoData($request, $this, $id, [], '', $extParams);
+                $this->judgeUserPower($request, $info);
+                // 判断是否有操作权限
+                // 根据具体功能 ，加上或去掉要判断的下标
+                $powerFields = [];// ['organize_id' => 'company_id', 'personal_id' => 'id'];
+                if(!$this->batchJudgeRecordOperateAuth($info, $powerFields, 0, 0, 0, true)){
+                    throws('您没有操作权限！');
+                }
+            }else{
+                $company_id = CommonRequest::getInt($request, 'company_id');
+                if(is_numeric($company_id) && $company_id > 0){
+                    // 获得企业信息
+                    $companyInfo = CTAPIStaffBusiness::getInfoData($request, $this, $company_id);
+                    if(empty($companyInfo)) throws('企业信息不存在！');
+                    $info['company_id'] = $company_id;
+                    $info['user_company_name'] = $companyInfo['company_name'] ?? '';
+                }
             }
-        }else{
-            $company_id = CommonRequest::getInt($request, 'company_id');
-            if(is_numeric($company_id) && $company_id > 0){
-                // 获得企业信息
-                $companyInfo = CTAPIStaffBusiness::getInfoData($request, $this, $company_id);
-                if(empty($companyInfo)) throws('企业信息不存在！');
-                $info['company_id'] = $company_id;
-                $info['user_company_name'] = $companyInfo['company_name'] ?? '';
+
+            // $reDataArr = array_merge($reDataArr, $resultDatas);
+            $reDataArr['info'] = $info;
+            $reDataArr['operate'] = $operate;
+            // 获得城市KV值--企业和用户有城市
+            if(in_array(static::$ADMIN_TYPE , [2, 4])) {
+                // 获得城市KV值
+                $reDataArr['citys_kv'] = CTAPICitysBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'city_name']);
+                $reDataArr['defaultCity'] = $info['city_id'] ?? -1;// 默认
+
+                // 是否完善资料1待完善2已完善
+                $reDataArr['isPerfect'] =  Staff::$isPerfectArr;
+                $reDataArr['defaultIsPerfect'] = $info['is_perfect'] ?? -1;// 列表页默认状态
             }
-        }
 
-        // $reDataArr = array_merge($reDataArr, $resultDatas);
-        $reDataArr['info'] = $info;
-        $reDataArr['operate'] = $operate;
-        // 获得城市KV值--企业和用户有城市
-        if(in_array(static::$ADMIN_TYPE , [2, 4])) {
-            // 获得城市KV值
-            $reDataArr['citys_kv'] = CTAPICitysBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'city_name']);
-            $reDataArr['defaultCity'] = $info['city_id'] ?? -1;// 默认
+            // 只有企业有
+            if(static::$ADMIN_TYPE == 2) {
 
-            // 是否完善资料1待完善2已完善
-            $reDataArr['isPerfect'] =  Staff::$isPerfectArr;
-            $reDataArr['defaultIsPerfect'] = $info['is_perfect'] ?? -1;// 列表页默认状态
-        }
+                // 所属行业
+                $reDataArr['industry_kv'] = CTAPIIndustryBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'industry_name']);
+                $reDataArr['defaultIndustry'] = $info['company_industry_id'] ?? -1;// 默认
 
-        // 只有企业有
-        if(static::$ADMIN_TYPE == 2) {
+                // 企业--企业性质1企业法人 、2企业非法人、3事业法人、4事业非法人、5社团法人、6社团非法人、7机关法人、8机关非法人、9其它机构、10民办非企业单位、11个体 、12工会法人
+                $reDataArr['companyProp'] = Staff::$companyPropArr;
+                $reDataArr['defaultCompanyProp'] = $info['company_prop'] ?? -1;// 列表页默认状态
 
-            // 所属行业
-            $reDataArr['industry_kv'] = CTAPIIndustryBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'industry_name']);
-            $reDataArr['defaultIndustry'] = $info['company_industry_id'] ?? -1;// 默认
+                // 企业--单位人数1、1-20、2、20-100、3、100-500、4、500以上
+                $reDataArr['companyPeoples'] = Staff::$companyPeoplesNumArr;
+                $reDataArr['defaultCompanyPeoples'] = $info['company_peoples_num'] ?? -1;// 列表页默认状态
 
-            // 企业--企业性质1企业法人 、2企业非法人、3事业法人、4事业非法人、5社团法人、6社团非法人、7机关法人、8机关非法人、9其它机构、10民办非企业单位、11个体 、12工会法人
-            $reDataArr['companyProp'] = Staff::$companyPropArr;
-            $reDataArr['defaultCompanyProp'] = $info['company_prop'] ?? -1;// 列表页默认状态
+                // 企业--会员等级1非会员  2会员  4理事  8常务理事   16理事长
+                $reDataArr['companyGrade'] =  Staff::$companyGradeArr;
+                $company_grade = ($id > 0) ? $info['company_grade'] : CommonRequest::get($request, 'company_grade');
+                if(strlen($company_grade) <= 0 ) $company_grade = -1;
+                $reDataArr['defaultCompanyGrade'] = $company_grade;// $info['company_grade'] ?? -1;// 列表页默认状态
+            }
+            // 只有用户有
+            if(static::$ADMIN_TYPE == 4) {
+                // 授权人审核状态 1待审核 2 审核通过  4 审核未通过
+                $reDataArr['signStatus'] =  Staff::$signStatusArr;
+                $reDataArr['defaultSignStatus'] = $info['sign_status'] ?? -1;// 列表页默认状态
 
-            // 企业--单位人数1、1-20、2、20-100、3、100-500、4、500以上
-            $reDataArr['companyPeoples'] = Staff::$companyPeoplesNumArr;
-            $reDataArr['defaultCompanyPeoples'] = $info['company_peoples_num'] ?? -1;// 列表页默认状态
+                // 角色1法人  2最高管理者  4技术负责人  8授权签字人
+                $reDataArr['roleNum'] =  Staff::$roleNumArr;
+                $reDataArr['defaultRoleNum'] = $info['role_num'] ?? -1;// 列表页默认状态
 
-            // 企业--会员等级1非会员  2会员  4理事  8常务理事   16理事长
-            $reDataArr['companyGrade'] =  Staff::$companyGradeArr;
-            $company_grade = ($id > 0) ? $info['company_grade'] : CommonRequest::get($request, 'company_grade');
-            if(strlen($company_grade) <= 0 ) $company_grade = -1;
-            $reDataArr['defaultCompanyGrade'] = $company_grade;// $info['company_grade'] ?? -1;// 列表页默认状态
-        }
-        $company_hidden = CommonRequest::getInt($request, 'company_hidden');
-        $reDataArr['company_hidden'] = $company_hidden;// =1 : 隐藏企业选择
+                // 角色审核状态 1待审核 2 审核通过  4 审核未通过
+                $reDataArr['roleStatus'] =  Staff::$roleStatusArr;
+                $reDataArr['defaultRoleStatus'] = $info['role_status'] ?? -1;// 列表页默认状态
 
+                // 是否食品1食品  2非食品
+                $reDataArr['signIsFood'] =  Staff::$signIsFoodArr;
+                $reDataArr['defaultSignIsFood'] = $info['sign_is_food'] ?? -1;// 列表页默认状态
+
+            }
+
+            $company_hidden = CommonRequest::getInt($request, 'company_hidden');
+            $reDataArr['company_hidden'] = $company_hidden;// =1 : 隐藏企业选择
     }
     // **************公用方法********************结束*********************************
 

@@ -72,7 +72,7 @@
                 </td>
             </tr>
             <tr>
-                <th>QQ\email\微信<span class="must"></span></th>
+                <th>QQ\微信<span class="must"></span></th>
                 <td>
                     <input type="text" class="inp wnormal"  name="qq_number" value="{{ $info['qq_number'] ?? '' }}" placeholder="请输入QQ\email\微信" />
                 </td>
@@ -81,6 +81,12 @@
                 <th>身份证号<span class="must"></span></th>
                 <td>
                     <input type="text" class="inp wnormal"  name="id_number" value="{{ $info['id_number'] ?? '' }}" placeholder="请输入身份证号"  />
+                </td>
+            </tr>
+            <tr>
+                <th>职位<span class="must"></span></th>
+                <td>
+                    <input type="text" class="inp wnormal"  name="position_name" value="{{ $info['position_name'] ?? '' }}" placeholder="请输入职位"  />
                 </td>
             </tr>
             <tr>
@@ -98,6 +104,21 @@
                 <th>通讯地址<span class="must"></span></th>
                 <td>
                     <input type="text" class="inp wnormal"  name="addr" value="{{ $info['addr'] ?? '' }}" placeholder="请输入地址"  />
+                </td>
+            </tr>
+            <tr>
+                <th>角色<span class="must"></span></th>
+                <td  class="seledRoleNumIds">
+                    @foreach ($roleNum as $k=>$txt)
+                        <label><input type="checkbox"  name="role_nums[]"  value="{{ $k }}"  @if(isset($defaultRoleNum) && (($defaultRoleNum & $k) == $k)) checked="checked"  @endif />{{ $txt }} </label>
+                    @endforeach
+                </td>
+            </tr>
+            <tr id="tr_sign">
+                <th>签字范围<span class="must">*</span></th>
+                <td>
+                    <input type="text" class="inp wnormal"  name="sign_range" value="{{ $info['sign_range'] ?? '' }}" placeholder="请输入签字范围"  />
+                    <label><input type="checkbox"  name="sign_is_food"  value="1"  @if(isset($info['sign_is_food']) && ($info['sign_is_food'] == 1)) checked="checked"  @endif /> 食品 </label>
                 </td>
             </tr>
 {{--            <tr>--}}

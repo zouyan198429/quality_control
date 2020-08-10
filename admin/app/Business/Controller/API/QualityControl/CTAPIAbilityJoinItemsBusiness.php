@@ -478,7 +478,7 @@ class CTAPIAbilityJoinItemsBusiness extends BasicPublicCTAPIBusiness
             $is_joined_text = '未报名';
             if(!empty($temDataList)){
                 $is_joined = 1;
-                $is_joined_text = '已报名';
+                $is_joined_text = '报名成功';
             }
             $info['is_joined'] = $is_joined;
             $info['is_joined_text'] = $is_joined_text;

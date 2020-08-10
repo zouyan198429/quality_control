@@ -13,11 +13,11 @@
   <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/style/admin.css')}}" media="all">
 </head>
 <body>
- 
+
 <div class="mm">
   <div class="mmhead" id="mywork">
 
-    @include('common.pageParams') 
+    @include('common.pageParams')
       @if(isset($company_grade) && $company_grade == 1)
         <div class="tabbox" >
           <a href="javascript:void(0);" class="on" onclick="action.iframeModify(0)">添加单位</a>
@@ -134,7 +134,7 @@
   <div class="table-header">
     <button class="btn btn-danger  btn-xs batch_del"  onclick="action.batchDel(this)">批量删除</button>
     <button class="btn btn-success  btn-xs export_excel"  onclick="action.batchExportExcel(this)" >导出[按条件]</button>
-    <button class="btn btn-success  btn-xs export_excel"  onclick="action.exportExcel(this)" >导出[勾选]</button> 
+    <button class="btn btn-success  btn-xs export_excel"  onclick="action.exportExcel(this)" >导出[勾选]</button>
       <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.openSelected(this, 2)" >审核通过[勾选]</button>
       <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.openSelected(this, 4)" >审核不通过[勾选]</button>
     <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.frozenSelected(this, 2)" >冻结[勾选]</button>
@@ -155,7 +155,7 @@
         <col width="120">
         <col width="50">
         <col width="160">
-        <col width="200"> 
+        <col width="200">
     </colgroup>
     <thead>
     <tr>
@@ -176,7 +176,7 @@
         <th>完善资料</th>
         <th>审核</th>
         <th>状态</th>
-        <th>注册时间</th> 
+        <th>注册时间</th>
       <th>操作</th>
     </tr>
     </thead>
@@ -222,10 +222,10 @@
       var ACCOUNT_STATUS_URL = "{{ url('api/admin/company/ajax_frozen') }}";//操作(冻结/解冻)
 
 
-      var SCHEDULE_SHOW_URL = "{{ url('admin/company_schedule/show')}}/";//查看企业能力附表 + 企业id
-      var STAFF_SHOW_URL = "{{ url('admin/user/show')}}/";//查看企业能力附表 + 企业id
+      var SCHEDULE_SHOW_URL = "{{ url('admin/company_new_schedule/show')}}/";//查看企业能力附表 + 企业id
+      var STAFF_SHOW_URL = "{{ url('admin/user/show')}}/";//查看企业能力附表 + 企业id "{{ url('admin/user')}}"; //
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/Company.js') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/Company.js') }}?2"  type="text/javascript"></script>
 </body>
 </html>

@@ -174,7 +174,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <th>证书编号<span class="must">*</span></th>
+                            <th>资质认定证书编号<span class="must">*</span></th>
                             <td>
                                 <input type="text" class="inp wnormal"  name="company_certificate_no" value="{{ $info['company_certificate_no'] ?? '' }}" placeholder="请输入证书编号"/>
                             </td>

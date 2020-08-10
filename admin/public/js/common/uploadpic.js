@@ -163,6 +163,7 @@ function initUploader(upload_id, autoUpload, submit_url, file_data_name, multipa
     console.log('resize:', resize);
     // 九张图片上传
     $('#' + upload_id).uploader({
+        lang: 'zh_cn',// 界面语言 默认情况下设置为空值，会从浏览器 <html lang=""> 属性上获取语言设置，但有也可以手动指定为以下选项：'zh_cn'：简体中文；'zh_tw'：繁体中文；
         autoUpload: autoUpload,            // 当选择文件后立即自动进行上传操作
         url: submit_url,  // 文件上传提交地址 'your/file/upload/url'
         file_data_name:file_data_name,//   文件域在表单中的名称  默认 'file'

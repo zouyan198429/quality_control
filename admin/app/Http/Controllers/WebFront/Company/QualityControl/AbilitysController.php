@@ -4,6 +4,7 @@ namespace App\Http\Controllers\WebFront\Company\QualityControl;
 
 use App\Business\Controller\API\QualityControl\CTAPIAbilityJoinBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIAbilitysBusiness;
+use App\Business\Controller\API\QualityControl\CTAPICompanyScheduleBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIStaffExtendBusiness;
 use App\Http\Controllers\WorksController;
 use App\Services\Request\CommonRequest;
@@ -654,11 +655,39 @@ class AbilitysController extends BasicController
         $this->InitParams($request);
         $company_id = $this->user_id;
         $userInfo = $this->user_info;
-        // 获得企业扩展
-        $resultDatas = CTAPIStaffExtendBusiness::getFVFormatList( $request,  $this, 4, 1,  ['staff_id' => $company_id, 'admin_type' => $userInfo['admin_type']], false,[], []);
+        // 获得企业扩展  'sqlParams' => ['count' => 0]
+        $resultDatas = CTAPIStaffExtendBusiness::getFVFormatList( $request,  $this, 1, 1
+            ,  ['staff_id' => $company_id, 'admin_type' => $userInfo['admin_type']], false,[], []);
         return ajaxDataArr(1, $resultDatas, '');
     }
 
+    /**
+     * ajax保存数据--报名前，获得能力附表数量【】
+     *  必须要有pdf ,再必须要有excel
+     * @param int $id
+     * @return Response
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_schedule_num(Request $request)
+    {
+        $this->InitParams($request);
+        $company_id = $this->user_id;
+        $userInfo = $this->user_info;
+        // 获得企业扩展-pdf的数量
+        $resultDatas = CTAPICompanyScheduleBusiness::getFVFormatList( $request,  $this, 8, 1
+            ,  ['company_id' => $company_id], false,[], ['sqlParams' => ['where' => [['type_id' , '>', 0]]]]);
+        if($resultDatas > 0){
+            // 获得企业扩展-excel的数量
+            $resultExcelDatas = CTAPICompanyScheduleBusiness::getFVFormatList( $request,  $this, 8, 1
+                ,  ['company_id' => $company_id], false,[], ['sqlParams' => ['where' => [['type_id' , '=', 0]]]]);
+            if(!is_numeric($resultExcelDatas) || $resultExcelDatas <= 0){
+                $resultDatas = 0;// 如果没有excel，上传数量也归0
+            }else{
+                $resultDatas += $resultExcelDatas;
+            }
+        }
+        return ajaxDataArr(1, ['schedule_num' => $resultDatas], '');
+    }
     /**
      * @OA\Get(
      *     path="/api/company/abilitys/ajax_alist",

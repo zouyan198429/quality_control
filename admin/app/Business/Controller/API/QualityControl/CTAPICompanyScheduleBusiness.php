@@ -86,7 +86,13 @@ class CTAPICompanyScheduleBusiness extends BasicPublicCTAPIBusiness
             'resource_list' => CTAPIResourceBusiness::getTableRelationConfigInfo($request, $controller
                 , ['resource_id' => 'id']
                 , 2, 0
-                ,'','', [], [], '', ['extendConfig' => ['listHandleKeyArr' => ['format_resource'], 'infoHandleKeyArr' => ['resource_list']]]),
+                ,'','', [], [], ''
+                , ['extendConfig' => ['listHandleKeyArr' => ['format_resource'], 'infoHandleKeyArr' => ['resource_list']]]),
+            'resource_pdf_list' => CTAPIResourceBusiness::getTableRelationConfigInfo($request, $controller
+                , ['resource_id_pdf' => 'id']
+                , 2, 0
+                ,'','', [], [], ''
+                , ['extendConfig' => ['listHandleKeyArr' => ['format_resource']]]),
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }
