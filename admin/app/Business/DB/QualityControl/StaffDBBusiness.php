@@ -1036,7 +1036,7 @@ class StaffDBBusiness extends BasePublicDBBusiness
 ////            throws('操作失败；信息[' . $e->getMessage() . ']');
 //            throws($e->getMessage());
 //        }
-        return CommonDB::doTransactionFun(function() use(&$company_id, &$admin_type, &$organize_id, &$id, &$open_status, &$operate_staff_id, &$modifAddOprate
+        CommonDB::doTransactionFun(function() use(&$company_id, &$admin_type, &$organize_id, &$id, &$open_status, &$operate_staff_id, &$modifAddOprate
             , &$modifyNum, &$updateData, &$ownProperty, &$temNeedStaffIdOrHistoryId, &$operate_staff_id_history){
             if($temNeedStaffIdOrHistoryId && $modifAddOprate) static::addOprate($updateData, $operate_staff_id,$operate_staff_id_history, 2);
 //            $saveQueryParams = [
@@ -1059,8 +1059,8 @@ class StaffDBBusiness extends BasePublicDBBusiness
             Tool::appendParamQuery($saveQueryParams, $organize_id, 'company_id', [0, '0', ''], ',', false);
             $modifyNum = static::save($updateData, $saveQueryParams);
             DB::commit();
-            return $modifyNum;
         });
+        return $modifyNum;
     }
 
 
@@ -1090,33 +1090,38 @@ class StaffDBBusiness extends BasePublicDBBusiness
         // $temNeedStaffIdOrHistoryId 当只有自己会用到时操作员工id和历史id时，用来判断是否需要获取 true:需要获取； false:不需要获取
         list($ownProperty, $temNeedStaffIdOrHistoryId) = array_values(static::getNeedStaffIdOrHistoryId());
         $operate_staff_id_history = 0;
-        DB::beginTransaction();
-        try {
+//        DB::beginTransaction();
+//        try {
+//            DB::commit();
+//        } catch ( \Exception $e) {
+//            DB::rollBack();
+////            throws('操作失败；信息[' . $e->getMessage() . ']');
+//            throws($e->getMessage());
+//        }
+        CommonDB::doTransactionFun(function() use(&$company_id, &$admin_type, &$organize_id, &$id, &$sign_status, &$operate_staff_id, &$modifAddOprate
+                    , &$modifyNum, &$updateData, &$ownProperty, &$temNeedStaffIdOrHistoryId, &$operate_staff_id_history){
             if($temNeedStaffIdOrHistoryId && $modifAddOprate) static::addOprate($updateData, $operate_staff_id,$operate_staff_id_history, 2);
-            $saveQueryParams = [
-                'where' => [
-                    ['sign_status', 1], // 自由点，让他都可以改 ，就注释掉
-                    ['issuper', '<>' , 1],
-                    ['admin_type', $admin_type],
-                ],
-//                            'select' => [
-//                                'id','title','sort_num','volume'
-//                                ,'operate_staff_id','operate_staff_id_history'
-//                                ,'created_at' ,'updated_at'
-//                            ],
+//            $saveQueryParams = [
+//                'where' => [
+//                    ['sign_status', 1], // 自由点，让他都可以改 ，就注释掉
+//                    ['issuper', '<>' , 1],
+//                    ['admin_type', $admin_type],
+//                ],
+////                            'select' => [
+////                                'id','title','sort_num','volume'
+////                                ,'operate_staff_id','operate_staff_id_history'
+////                                ,'created_at' ,'updated_at'
+////                            ],
+//
+//                //   'orderBy' => [ 'id'=>'desc'],//'sort_num'=>'desc',
+//            ];
 
-                //   'orderBy' => [ 'id'=>'desc'],//'sort_num'=>'desc',
-            ];
+            $saveQueryParams = Tool::getParamQuery(['admin_type' => $admin_type, 'sign_status' => 1],['sqlParams' =>['where' => [['issuper', '<>', 1]]]], []);
             // 加入 id
             Tool::appendParamQuery($saveQueryParams, $id, 'id');
             Tool::appendParamQuery($saveQueryParams, $organize_id, 'company_id', [0, '0', ''], ',', false);
             $modifyNum = static::save($updateData, $saveQueryParams);
-        } catch ( \Exception $e) {
-            DB::rollBack();
-//            throws('操作失败；信息[' . $e->getMessage() . ']');
-            throws($e->getMessage());
-        }
-        DB::commit();
+        });
         return $modifyNum;
     }
 
@@ -1148,33 +1153,38 @@ class StaffDBBusiness extends BasePublicDBBusiness
         // $temNeedStaffIdOrHistoryId 当只有自己会用到时操作员工id和历史id时，用来判断是否需要获取 true:需要获取； false:不需要获取
         list($ownProperty, $temNeedStaffIdOrHistoryId) = array_values(static::getNeedStaffIdOrHistoryId());
         $operate_staff_id_history = 0;
-        DB::beginTransaction();
-        try {
+//        DB::beginTransaction();
+//        try {
+//            DB::commit();
+//        } catch ( \Exception $e) {
+//            DB::rollBack();
+////            throws('操作失败；信息[' . $e->getMessage() . ']');
+//            throws($e->getMessage());
+//        }
+        CommonDB::doTransactionFun(function() use(&$company_id, &$admin_type, &$organize_id, &$id, &$role_status, &$operate_staff_id, &$modifAddOprate
+                , &$modifyNum, &$updateData, &$ownProperty, &$temNeedStaffIdOrHistoryId, &$operate_staff_id_history){
             if($temNeedStaffIdOrHistoryId && $modifAddOprate) static::addOprate($updateData, $operate_staff_id,$operate_staff_id_history, 2);
-            $saveQueryParams = [
-                'where' => [
-                    ['role_status', 1], // 自由点，让他都可以改 ，就注释掉
-                    ['issuper', '<>' , 1],
-                    ['admin_type', $admin_type],
-                ],
-//                            'select' => [
-//                                'id','title','sort_num','volume'
-//                                ,'operate_staff_id','operate_staff_id_history'
-//                                ,'created_at' ,'updated_at'
-//                            ],
-
-                //   'orderBy' => [ 'id'=>'desc'],//'sort_num'=>'desc',
-            ];
+//            $saveQueryParams = [
+//                'where' => [
+//                    ['role_status', 1], // 自由点，让他都可以改 ，就注释掉
+//                    ['issuper', '<>' , 1],
+//                    ['admin_type', $admin_type],
+//                ],
+////                            'select' => [
+////                                'id','title','sort_num','volume'
+////                                ,'operate_staff_id','operate_staff_id_history'
+////                                ,'created_at' ,'updated_at'
+////                            ],
+//
+//                //   'orderBy' => [ 'id'=>'desc'],//'sort_num'=>'desc',
+//            ];
+            $saveQueryParams = Tool::getParamQuery(['admin_type' => $admin_type, 'role_status' => 1],['sqlParams' =>['where' => [['issuper', '<>', 1]]]], []);
             // 加入 id
             Tool::appendParamQuery($saveQueryParams, $id, 'id');
             Tool::appendParamQuery($saveQueryParams, $organize_id, 'company_id', [0, '0', ''], ',', false);
             $modifyNum = static::save($updateData, $saveQueryParams);
-        } catch ( \Exception $e) {
-            DB::rollBack();
-//            throws('操作失败；信息[' . $e->getMessage() . ']');
-            throws($e->getMessage());
-        }
-        DB::commit();
+
+        });
         return $modifyNum;
     }
 
@@ -1211,7 +1221,7 @@ class StaffDBBusiness extends BasePublicDBBusiness
 ////            throws('操作失败；信息[' . $e->getMessage() . ']');
 //            throws($e->getMessage());
 //        }
-        return CommonDB::doTransactionFun(function() use(&$company_id, &$admin_type, &$organize_id, &$id, &$account_status, &$operate_staff_id, &$modifAddOprate
+        CommonDB::doTransactionFun(function() use(&$company_id, &$admin_type, &$organize_id, &$id, &$account_status, &$operate_staff_id, &$modifAddOprate
             , &$modifyNum, &$updateData, &$ownProperty, &$temNeedStaffIdOrHistoryId, &$operate_staff_id_history){
             if($temNeedStaffIdOrHistoryId && $modifAddOprate) static::addOprate($updateData, $operate_staff_id,$operate_staff_id_history, 2);
 //            $saveQueryParams = [
@@ -1239,8 +1249,7 @@ class StaffDBBusiness extends BasePublicDBBusiness
             // pr($saveQueryParams);
             $modifyNum = static::save($updateData, $saveQueryParams);
 //            DB::commit();
-            return $modifyNum;
         });
-
+        return $modifyNum;
     }
 }

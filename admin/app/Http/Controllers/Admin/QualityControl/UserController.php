@@ -33,7 +33,7 @@ class UserController extends StaffController
         $pageNum = ($id > 0) ? 256 : 32;
         return $this->exeDoPublicFun($request, $pageNum, 4,'', true
             , '', [], function (&$reDataArr) use ($request){
-           $id = CommonRequest::getInt($request, 'id');
+            $id = CommonRequest::getInt($request, 'id');
             $company_id = CommonRequest::getInt($request, 'company_id');
             $real_name = CommonRequest::get($request, 'real_name');
             $sex = CommonRequest::getInt($request, 'sex');

@@ -170,14 +170,13 @@ class CompanyScheduleDBBusiness extends BasePublicDBBusiness
         // $companyInfo = [];
         if(!isset($saveData['company_id']) || !is_numeric($saveData['company_id']) || $saveData['company_id'] <= 0) throws('请选择所属企业！');
         // if(isset($saveData['company_id'])){
-        $company_id = $saveData['company_id'];
-        $companyInfo = StaffDBBusiness::getInfo($company_id);
+        $p_company_id = $saveData['company_id'];
+        $companyInfo = StaffDBBusiness::getInfo($p_company_id);
         if(empty($companyInfo))  throws('所属企业不存在！');
         //}
 
         // 是否有图片资源
         $hasResource = false;
-
         $resourceIds = [];
         if(Tool::getInfoUboundVal($saveData, 'resourceIds', $hasResource, $resourceIds, 1)){
             // $saveData['resource_id'] = $resourceIds[0] ?? 0;// 第一个图片资源的id
@@ -189,9 +188,17 @@ class CompanyScheduleDBBusiness extends BasePublicDBBusiness
         // 保存前的处理
         static::replaceByIdAPIPre($saveData, $company_id, $id, $operate_staff_id, $operate_staff_id_history, $modifAddOprate);
         $modelObj = null;
-        DB::beginTransaction();
-        try {
-            $isModify = false;
+//        DB::beginTransaction();
+//        try {
+//            DB::commit();
+//        } catch ( \Exception $e) {
+//            DB::rollBack();
+//            throws($e->getMessage());
+//            // throws($e->getMessage());
+//        }
+        $isModify = false;
+        CommonDB::doTransactionFun(function() use(&$saveData, &$company_id, &$id, &$operate_staff_id, &$modifAddOprate, &$operate_staff_id_history
+                   , &$p_company_id, &$companyInfo, &$hasResource, &$resourceIds, &$modelObj, &$isModify){
 
             // $ownProperty  自有属性值;
             // $temNeedStaffIdOrHistoryId 当只有自己会用到时操作员工id和历史id时，用来判断是否需要获取 true:需要获取； false:不需要获取
@@ -238,26 +245,22 @@ class CompanyScheduleDBBusiness extends BasePublicDBBusiness
             }
             // 如果是加，则增加企业能力附表数量
             if(!$isModify){
-                if($company_id > 0){
-                    $queryParams = [
-                        'where' => [
-                            ['admin_type', $companyInfo['admin_type']],
-                            ['staff_id', $company_id],
-                        ],
-                        // 'select' => ['id', 'amount', 'status', 'my_order_no' ]
-                    ];
+                if($p_company_id > 0){
+//                    $queryParams = [
+//                        'where' => [
+//                            ['admin_type', $companyInfo['admin_type']],
+//                            ['staff_id', $p_company_id],
+//                        ],
+//                        // 'select' => ['id', 'amount', 'status', 'my_order_no' ]
+//                    ];
+                    $queryParams = Tool::getParamQuery(['admin_type' => $companyInfo['admin_type'], 'staff_id' => $p_company_id],[], []);
                     StaffExtendDBBusiness::saveDecIncByQuery('schedule_num', 1,  'inc', $queryParams, []);
                 }
             }
             if($isModify && ($ownProperty & 1) == 1){// 1：有历史表 ***_history;
                 static::compareHistory($id, 1);
             }
-        } catch ( \Exception $e) {
-            DB::rollBack();
-            throws($e->getMessage());
-            // throws($e->getMessage());
-        }
-        DB::commit();
+        });
         // 保存成功后的处理
         static::replaceByIdAPISucess($isModify, $modelObj, $saveData, $company_id, $id, $operate_staff_id, $operate_staff_id_history, $modifAddOprate);
         return $id;

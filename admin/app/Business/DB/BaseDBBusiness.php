@@ -1612,20 +1612,21 @@ class BaseDBBusiness extends BaseBusiness
 //            throws($e->getMessage());
 //            // throws($e->getMessage());
 //        }
-        return CommonDB::doTransactionFun(function() use(&$saveData, &$company_id, &$id, &$operate_staff_id, &$modifAddOprate){
-//        if(isset($saveData['real_name']) && empty($saveData['real_name'])  ){
+        //        if(isset($saveData['real_name']) && empty($saveData['real_name'])  ){
 //            throws('联系人不能为空！');
 //        }
 //
 //        if(isset($saveData['mobile']) && empty($saveData['mobile'])  ){
 //            throws('手机不能为空！');
 //        }
-            $operate_staff_id_history = config('public.operate_staff_id_history', 0);// 0;--写上，不然后面要去取，但现在的系统不用历史表
-            // 保存前的处理
-            static::replaceByIdAPIPre($saveData, $company_id, $id, $operate_staff_id, $operate_staff_id_history, $modifAddOprate);
-            $modelObj = null;
-            //*********************************************************
-            $isModify = false;
+        $operate_staff_id_history = config('public.operate_staff_id_history', 0);// 0;--写上，不然后面要去取，但现在的系统不用历史表
+        // 保存前的处理
+        static::replaceByIdAPIPre($saveData, $company_id, $id, $operate_staff_id, $operate_staff_id_history, $modifAddOprate);
+        $modelObj = null;
+        //*********************************************************
+        $isModify = false;
+        CommonDB::doTransactionFun(function() use(&$saveData, &$company_id, &$id, &$operate_staff_id, &$modifAddOprate, &$operate_staff_id_history, &$modelObj, &$isModify ){
+
 
             // $ownProperty  自有属性值;
             // $temNeedStaffIdOrHistoryId 当只有自己会用到时操作员工id和历史id时，用来判断是否需要获取 true:需要获取； false:不需要获取
@@ -1663,11 +1664,11 @@ class BaseDBBusiness extends BaseBusiness
             if($isModify && ($ownProperty & 1) == 1){// 1：有历史表 ***_history;
                 static::compareHistory($id, 1);
             }
-            // ************************************************
-            // 保存成功后的处理
-            static::replaceByIdAPISucess($isModify, $modelObj, $saveData, $company_id, $id, $operate_staff_id, $operate_staff_id_history, $modifAddOprate);
-            return $id;
         });
+        // ************************************************
+        // 保存成功后的处理
+        static::replaceByIdAPISucess($isModify, $modelObj, $saveData, $company_id, $id, $operate_staff_id, $operate_staff_id_history, $modifAddOprate);
+        return $id;
     }
 
     /**
