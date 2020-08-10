@@ -1295,6 +1295,17 @@ class Tool
     }
 
     /**
+     * 一维/二维数组中每个一维数组追加指定的一维数组值
+     *
+     * @param array $dataList 源数据 一维/二维数组
+     * @param array $appendArr 需要追加的一维数据 一维字段数组   ['is_multi 字段一', 'is_must 字段二']----会自动转换为 ['is_multi 字段一'=>'is_multi 字段一', 'is_must 字段二'=>'is_must 字段二'] 并拼接到数组中
+     * @return array
+     */
+    public static function arrAppendKeyVals(&$dataList, $fieldArr){
+        return static::arrAppendKeys($dataList, static::arrEqualKeyVal($fieldArr));
+    }
+
+    /**
      * 一维数组清除空值
      *
      * @param array $array
@@ -3951,6 +3962,75 @@ class Tool
     }
 
     /**
+     * 根据参数的名称，加入查询条件中。
+     *
+     * @param array $fieldValParams
+     *  $fieldValParams = [
+     *      'ability_join_id' => [// 格式一
+     *          'vals' => "字段值[可以是字符'多个逗号分隔'或一维数组] ",// -- 此种格式，必须指定此下标【值下标】
+     *          'excludeVals' => "过滤掉的值 默认['']", 如果 要过滤 0 的情况 可指定为 [0, '0', ''] 或 后面单独使用 Tool::appendParamQuery 方法
+     *          'valsSeparator' => ',' 如果是多值字符串，多个值的分隔符;默认逗号 ,
+     *          'hasInIsMerge=>  false 如果In条件有值时  true:合并；false:用新值--覆盖 --默认
+     *
+     *      ],// 格式二
+     *      'id' =>  "字段值[可以是字符'多个逗号分隔'或一维数组]"
+     *   ];
+     * @param array  $extendParams 其它扩展参数
+     *  $extendParams = [
+     *      'sqlParams' => [// 其它sql条件[拼接/覆盖式],下面是常用的，其它的也可以---查询用
+     *          // '如果有值，则替换where' --拼接
+     *          'where' => [// -- 可填 如 默认条件 'type_id' => 5  'admin_type' => $user_info['admin_type'],'staff_id' =>  $user_info['id']
+     *          ['type_id', 5],
+     *          ],
+     *          'select' => '如果有值，则替换select',// --覆盖
+     *          'orderBy' => '如果有值，则替换orderBy',//--覆盖
+     *          'whereIn' => '如果有值，则替换whereIn',// --拼接
+     *          'whereNotIn' => '如果有值，则替换whereNotIn',//  --拼接
+     *          'whereBetween' => '如果有值，则替换whereBetween',//  --拼接
+     *          'whereNotBetween' => '如果有值，则替换whereNotBetween',//  --拼接
+     *      ],
+     *  ];
+     * @param array $queryParams 已有的查询条件数组
+     * @param boolean $isEmpeyVals 查询字段值[$fieldValParams 参数格式化处理后]是否都为空; true:都为空，false:有值
+     * @return  array 生成的查询数组 $queryParams
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function getParamQuery($fieldValParams = [], $extendParams = [], $queryParams = [], &$isEmpeyVals = true){
+        // 对数据进行拼接处理
+        if(isset($extendParams['sqlParams'])){
+            $sqlParams = $extendParams['sqlParams'] ?? [];
+            foreach($sqlParams as $tKey => $tVals){
+                if(isset($queryParams[$tKey]) && in_array($tKey, ['where',  'whereIn', 'whereNotIn', 'whereBetween', 'whereNotBetween'])){// 'select', 'orderBy',
+                    $queryParams[$tKey] = array_merge($queryParams[$tKey], $tVals);
+                }else{
+                    $queryParams[$tKey] = $tVals;
+                }
+
+            }
+            unset($extendParams['sqlParams']);
+        }
+
+        // $isEmpeyVals = true;//  查询字段值是否都为空; true:都为空，false:有值
+        foreach($fieldValParams as $field => $valConfig){
+            $excludeVals = [''];// [0, '0', ''];
+            $fieldVals = [];// 值
+            // 是数组
+            if(is_array($valConfig) && isset($valConfig['vals'])){
+                if(isset($valConfig['excludeVals']) && is_array($valConfig['excludeVals'])) $excludeVals = $valConfig['excludeVals'];
+                $fieldVals = $valConfig['vals'] ;
+            }else{
+                $fieldVals = $valConfig;
+            }
+            $valsSeparator = $valConfig['vals'] ?? ',';
+            $hasInIsMerge = $valConfig['hasInIsMerge'] ?? false;
+            if(!empty($excludeVals))  static::formatOneArrVals($fieldVals, $excludeVals);
+            if( ( (is_string($fieldVals) || is_numeric($fieldVals)) && strlen($fieldVals) > 0) || (is_array($fieldVals) && !empty($fieldVals)) ) $isEmpeyVals = false;
+            static::appendParamQuery($queryParams, $fieldVals, $field, $excludeVals, $valsSeparator, $hasInIsMerge);
+        }
+        return $queryParams;
+    }
+
+    /**
      * 根据参数的名称，获得参数传入值，并加入查询条件中。
      *
      * @param array $queryParams 已有的查询条件数组
@@ -4211,7 +4291,7 @@ class Tool
      *  'one_field' => ['key' => 'id', 'return_type' => "返回类型1原数据['字段值'][一维返回一维数组，二维返回一维数组];2按分隔符分隔的字符", 'ubound_name' => '下标名称', 'split' => '、'],
      *  一/二维数组 -- 只针对关系是 1:1的 即 关系数据是一维数组的情况--目的是平移指定字段到上一层
      *  如果新下标和原下标相同，则可以用这个方法去转  Tool::arrEqualKeyVal(['shop_id', 'shop_name', 'linkman', 'mobile']), true )
-     *  'fields_merge' => ['merge_fields' => -维[ '新下标名' => '原下标名' ]]
+     *  'fields_merge' => [ '新下标名' => '原下标名' ] 一维 或 [[ '新下标名' => '原下标名' ], ...] 二维数组
      *  // 一/二维数组 获得指定的多个字段值
      * 'many_fields' =>[ 'ubound_name' => '', 'fields_arr'=> [ '新下标名' => '原下标名' ],'reset_ubound' => 2;// 是否重新排序下标 1：重新０.．． ,'ubound_keys' => ['说明：看上面old_data的同字段说明'], 'ubound_type' =>1],ubound_type说明：看上面old_data的同字段说明
      * @param array $returnFields  新加入的字段['字段名1' => '字段名1' ]
@@ -4293,10 +4373,11 @@ class Tool
                 case 'fields_merge':// 一/二维数组 -- 只针对关系是 1:1的
                     $isMulti = static::isMultiArr($temDataList, false);
                     if(!$isMulti && !empty($temDataList)){
+
                         static::isMultiArr($t_config, true);// 如果是一维数组，转为二维数组
                         foreach($t_config as $tem_one_info){
                             $operateDataList = $temDataList;// 要操作的数据
-                            $tem_merge_fields = $tem_one_info['merge_fields'] ?? [];// -维[ '新下标名' => '原下标名' ]
+                            $tem_merge_fields = $tem_one_info;// $tem_one_info['merge_fields'] ?? [];// -维[ '新下标名' => '原下标名' ]
                             if(!empty($tem_merge_fields)){
                                 $info = array_merge($info, static::formatTwoArrKeys($operateDataList, $tem_merge_fields, false));
                                 $isFormated = true;
@@ -4313,7 +4394,7 @@ class Tool
                         $tem_fields_arr = $tem_one_info['fields_arr'] ?? [];//   -维[ '新下标名' => '原下标名' ]
                         $tem_reset_ubound = $tem_one_info['reset_ubound'] ?? 2;// 是否重新排序下标 1：重新０.．．
                         $uboundKeys = $tem_one_info['ubound_keys'] ?? [];// 如果是二维数组，下标要改为指定的字段值，下标[多个值_分隔]  ---这个是字段的一维数组
-                        $ubound_type = $tem_one_info['ubound_type'] ?? 1;// 数组字段为下标时，按字段值以应的下标的 数组是一维还是二维 1一维数组【默认】2二维数组
+                        $ubound_type = $tem_one_info['ubound_type'] ?? 1;// 数组字段为下标时，按字段值以应的下标的 数组是一维还是二维 1一维数组1:1【默认】2二维数组1:n
 
                         if($tem_ubound_old != ''){
                             $operateDataList = $temDataList;// 要操作的数据

@@ -17,12 +17,114 @@ class CommonDB
     // 主键值字符串  主键字段1的值1 小分隔符 主键字段1的值2 ... 大分隔符  主键字段2的值1 小分隔符 主键字段2的值2 ...
     public static $bigSplit = '@@!';// $bigSplit 主键值大分隔符
     public static $smallSplit = ',';// 主键值小分隔符
+    public static $transactionNum = 0;// 正在进行的事务的数量：进入事务自+1,完成一个事务自-1
+    public static $transactionHasErr = false;// 事务是否有错，true:有错 ；false:无错
+    public static $changeDBTables = [];// 事务中操作过的数据表及单条记录
+// 格式 二维的
+//        [
+//            'tableObj' => Tool::copyObject($modelObj),
+//            'params' => [$operateType, $recordData, 1]
+//        ]
+
     //写一些通用方法
     /*
     public static function test(){
         echo 'aaa';die;
     }
     */
+
+    /**
+     * 所有的事务处理方法
+     *
+     * @param mixed $doFun 事务需要执行的匿名函数--无参数
+     * @param mixed $default_result 默认返回值
+     * @param mixed $rollBackFun 事务失败需要执行的匿名函数--无参数
+     * @param mixed $finallyFun 事务无论成功失败都需要执行的匿名函数--无参数
+     * @return mixed 可以返回匿名函数返回的值
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function doTransactionFun($doFun, $default_result = '', $rollBackFun = '', $finallyFun = ''){
+        $return_result = $default_result;
+        DB::beginTransaction();
+        try {
+          if(static::$transactionNum == 0){
+              static::$transactionHasErr = false;
+              static::$changeDBTables = [];
+          }
+          static::$transactionNum++;
+            // 对缓存中的数据处理下---判断缓存是否失效
+            if(is_callable($doFun)){
+                $return_result = $doFun();
+            }
+            DB::commit();
+        } catch ( \Exception $e) {
+            static::$transactionHasErr = true;
+            DB::rollBack();
+            $errStr = $e->getMessage();
+            $errCode = $e->getCode();
+            if(is_callable($rollBackFun)){
+                $rollBackFun();
+            }
+            throws($errStr, $errCode);
+            // throws($e->getMessage());
+        } finally {
+            static::$transactionNum--;
+            // 事务有错且已经到最外层事务---重新更新刚才处理过的数据缓存
+            if(static::$transactionNum < 0){
+                static::$transactionNum = 0;
+                // static::$changeDBTables = [];
+            }
+            if(static::$transactionHasErr && static::$transactionNum == 0){
+                // 重新更新缓存时间
+                // echo '执行重新更新缓存时间：' . json_encode(static::$changeDBTables);
+//                foreach(static::$changeDBTables as $k => $v){
+//                    $tableObj = $v['tableObj'];
+//                    $params = $v['params'];
+//                    if(is_object($tableObj)){
+//                        $tableObj->operateDbUpdateTimeCache(...$params);
+//                    }
+//                }
+//                static::$changeDBTables = [];// 操作完--置空
+                  $while_no = 1;
+                  // 一次失败，则会重试2次
+                  while(!empty(static::$changeDBTables) && $while_no <=3){
+                      static::rollBackUpdateTimeCache();
+                      $while_no++;
+                  }
+                  // 还有没执行的，则打个错误日志并发个错误邮件
+                  if(!empty(static::$changeDBTables)){
+                      Log::error('事务失败[回滚]重新更新记录缓存时间失败日志',static::$changeDBTables);
+                  }
+                  static::$changeDBTables = [];// 操作完--置空
+            }
+            if(is_callable($finallyFun)){
+                $finallyFun();
+            }
+        }
+        return $return_result;
+    }
+
+    // 事务回退时，重新更新操作过的记录的缓存时间
+    public static function rollBackUpdateTimeCache(){
+        // 重新更新缓存时间
+        // echo '执行重新更新缓存时间：' . json_encode(static::$changeDBTables);
+        foreach(static::$changeDBTables as $k => $v){
+            try {
+                $tableObj = $v['tableObj'];
+                $params = $v['params'];
+                if(is_object($tableObj)){
+                    $tableObj->operateDbUpdateTimeCache(...$params);
+                }
+                unset(static::$changeDBTables[$k]);
+            } catch ( \Exception $e) {// 错误捕获，但是不处理--为了重试2次
+                // throws($e->getMessage(), $e->getCode());
+                // throws($e->getMessage());
+            }
+        }
+        // static::$changeDBTables = [];// 操作完--置空
+    }
+
+
 
     // 根据数据模型名称，反回对象
     public static function getObjByModelName($modelName, &$modelObj = null){
@@ -797,6 +899,7 @@ class CommonDB
             $primaryKey = static::getPrimaryKey($modelObj);//  缓存键的主键字段-- 一维数组,也可能是空
             if(!empty($primaryKey)){
                 $paramsPrimaryVals = static::getPrimaryFVArr($modelObj, $id, static::$bigSplit, static::$smallSplit, $primaryKey);// [$primaryKey => $id];
+
                 $requestData = static::getInfoByCache($modelObj, $paramsPrimaryVals, $selectParams, $relations, $isOpenCache);
                 return $requestData;
             }
@@ -909,24 +1012,34 @@ class CommonDB
     public static function sync(&$modelObj, $id, $synces){
         $requestData = $modelObj->find($id);
         // 同步修改关系 TODO ；以后改为事务
-        DB::beginTransaction();
         $successRels = [
             'success' => [],
             'fail' => [],
         ];
-        foreach($synces as $rel => $relIds){
-            try {
-                $requestData->{$rel}()->sync($relIds);
-                array_push($successRels['success'],$relIds);
-            } catch ( \Exception $e) {
-                DB::rollBack();
-                array_push($successRels['fail'],[ 'ids'=> $relIds,'msg'=>$e->getMessage() ]);
-                throws('同步关系[' . $rel . ']失败；信息[' . $e->getMessage() . ']');
-                // throws($e->getMessage());
+//        DB::beginTransaction();
+//        try {
+//          DB::commit();
+//        } catch ( \Exception $e) {
+//            DB::rollBack();
+//            $errStr = $e->getMessage();
+//            $errCode = $e->getCode();
+//            throws($errStr, $errCode);
+//            // throws($e->getMessage());
+//        }
+        static::doTransactionFun(function() use(&$synces, &$requestData, &$successRels){
+            foreach($synces as $rel => $relIds){
+                try {
+                    $requestData->{$rel}()->sync($relIds);
+                    array_push($successRels['success'],$relIds);
+                } catch ( \Exception $e) {
+                    // DB::rollBack();
+                    array_push($successRels['fail'],[ 'ids'=> $relIds,'msg'=>$e->getMessage() ]);
+                    throws('同步关系[' . $rel . ']失败；信息[' . $e->getMessage() . ']');
+                    // throws($e->getMessage());
 
+                }
             }
-        }
-        DB::commit();
+        });
         return $successRels;
     }
 
@@ -935,28 +1048,39 @@ class CommonDB
     public static function detach(&$modelObj, $id, $detaches){
         $requestData = $modelObj->find($id);
         // 同步修改关系 TODO ；以后改为事务
-        DB::beginTransaction();
         $successRels = [
             'success' => [],
             'fail' => [],
         ];
-        foreach($detaches as $rel => $relIds){
-            try {
-                if(empty($relIds)){
-                    $requestData->{$rel}()->detach();
-                }else{
-                    $requestData->{$rel}()->detach($relIds);
-                }
-                array_push($successRels['success'],$rel);
-            } catch ( \Exception $e) {
-                DB::rollBack();
-                array_push($successRels['fail'],[$rel =>$e->getMessage() ]);
-                throws('移除关系[' . $rel . ']失败；信息[' . $e->getMessage() . ']');
-                // throws($e->getMessage());
+//        DB::beginTransaction();
+//        try {
+//          DB::commit();
+//        } catch ( \Exception $e) {
+//            DB::rollBack();
+//            $errStr = $e->getMessage();
+//            $errCode = $e->getCode();
+//            throws($errStr, $errCode);
+//            // throws($e->getMessage());
+//        }
+        static::doTransactionFun(function() use(&$detaches, &$requestData, &$successRels){
+            foreach($detaches as $rel => $relIds){
+                try {
+                    if(empty($relIds)){
+                        $requestData->{$rel}()->detach();
+                    }else{
+                        $requestData->{$rel}()->detach($relIds);
+                    }
+                    array_push($successRels['success'],$rel);
+                } catch ( \Exception $e) {
+                    // DB::rollBack();
+                    array_push($successRels['fail'],[$rel =>$e->getMessage() ]);
+                    throws('移除关系[' . $rel . ']失败；信息[' . $e->getMessage() . ']');
+                    // throws($e->getMessage());
 
+                }
             }
-        }
-        DB::commit();
+            // DB::commit();
+        });
         return $successRels;
     }
 
@@ -1006,32 +1130,45 @@ class CommonDB
         }
 
         $isMulti = Tool::isMultiArr($dataParams, true);
-        DB::beginTransaction();
-        $errMsg = '';
-        try {
-            foreach($dataParams as $dataInfo){
-                $modelObjInfo = Tool::copyObject($modelObj);
-                $resultCreateObj = static::create($modelObjInfo, $dataInfo, false);
-                if(!$resultCreateObj){
-                    $requestData = false;
-                    break;
-                }else{
-                    $dataArr[] = $resultCreateObj;
-                    $requestData = true;
+//        DB::beginTransaction();
+//        try {
+//
+//        } catch ( \Exception $e) {
+//            DB::rollBack();
+//            $errStr = $e->getMessage();
+//            $errCode = $e->getCode();
+//            throws($errStr, $errCode);
+//            // throws($e->getMessage());
+//        }
+//        DB::commit();
+        static::doTransactionFun(function() use(&$dataParams, &$modelObj, &$requestData, &$dataArr){
+            $errMsg = '';
+            try {
+                foreach($dataParams as $dataInfo){
+                    $modelObjInfo = Tool::copyObject($modelObj);
+                    $resultCreateObj = static::create($modelObjInfo, $dataInfo, false);
+                    if(!$resultCreateObj){
+                        $requestData = false;
+                        break;
+                    }else{
+                        $dataArr[] = $resultCreateObj;
+                        $requestData = true;
+                    }
                 }
+            } catch ( \Exception $e) {
+                $requestData = false;
+                $errMsg = $e->getMessage();
+                // throws('保存失败；信息[' . $e->getMessage() . ']');
+                // throws($e->getMessage());
+            }finally{
+                if(!$requestData){
+                    // DB::rollBack();
+                    throws('保存失败；信息[' . $errMsg . ']');
+                }
+                // if($requestData) DB::commit();
             }
-        } catch ( \Exception $e) {
-            $requestData = false;
-            $errMsg = $e->getMessage();
-            // throws('保存失败；信息[' . $e->getMessage() . ']');
-            // throws($e->getMessage());
-        }finally{
-            if(!$requestData){
-                DB::rollBack();
-                throws('保存失败；信息[' . $errMsg . ']');
-            }
-            if($requestData) DB::commit();
-        }
+        });
+
 
         if(!$isMulti) $dataArr = $dataArr[0] ?? [];
 
@@ -1058,25 +1195,36 @@ class CommonDB
         if($cachePower > 0){
             $requestData = static::eachAddData($modelObj, $dataParams, 1);
         }else{
-            DB::beginTransaction();
-            $errMsg = '';
-            try {
-                $requestData = $modelObj->insert($dataParams);//一维或二维数组;只返回true:成功;false：失败
-                // $requestData =$modelObj->insertGetId($dataParams,'id');//只能是一维数组，返回id值
-            } catch ( \Exception $e) {
-                $requestData = false;
-                $errMsg = $e->getMessage();
-                // DB::rollBack();
-                // throws('保存失败；信息[' . $e->getMessage() . ']');
-                // throws($e->getMessage());
+//            DB::beginTransaction();
+//            try {
+//              DB::commit();
+//            } catch ( \Exception $e) {
+//                DB::rollBack();
+//                $errStr = $e->getMessage();
+//                $errCode = $e->getCode();
+//                throws($errStr, $errCode);
+//                // throws($e->getMessage());
+//            }
+            static::doTransactionFun(function() use(&$modelObj, &$dataParams, &$requestData){
+                $errMsg = '';
+                try {
+                    $requestData = $modelObj->insert($dataParams);//一维或二维数组;只返回true:成功;false：失败
+                    // $requestData =$modelObj->insertGetId($dataParams,'id');//只能是一维数组，返回id值
+                } catch ( \Exception $e) {
+                    $requestData = false;
+                    $errMsg = $e->getMessage();
+                    // DB::rollBack();
+                    // throws('保存失败；信息[' . $e->getMessage() . ']');
+                    // throws($e->getMessage());
 
-            }finally{
-                if(!$requestData){
-                    DB::rollBack();
-                    throws('保存失败；信息[' . $errMsg . ']');
+                }finally{
+                    if(!$requestData){
+                        // DB::rollBack();
+                        throws('保存失败；信息[' . $errMsg . ']');
+                    }
+                    // if($requestData) DB::commit();
                 }
-                if($requestData) DB::commit();
-            }
+            });
         }
         return $requestData;
     }
@@ -1109,54 +1257,67 @@ class CommonDB
         $isMulti = Tool::isMultiArr($dataParams, true);
 
         $newIds = [];
-        DB::beginTransaction();
-        // 保存记录
-        $errMsg = '';
-        try {
-            foreach($dataParams as $info){
-                $newId = 0;
-                // 开通缓存，则更新缓存时间信息
-                if($cachePower > 0){
-                    $modelObjInfo = Tool::copyObject($modelObj);
-                    $resultCreateObj = static::create($modelObjInfo, $info, false);
-                    if(!$resultCreateObj){
-                        // $errMsg = '';
-                        $requestData = false;
-                        break;
-                    }else{
-                        $newId = $resultCreateObj->{$primaryKey};
-                        $dataArr[] = $resultCreateObj;
+//        DB::beginTransaction();
+//
+//        try {
+//          DB::commit();
+//        } catch ( \Exception $e) {
+//            DB::rollBack();
+//            $errStr = $e->getMessage();
+//            $errCode = $e->getCode();
+//            throws($errStr, $errCode);
+//            // throws($e->getMessage());
+//        }
+
+        static::doTransactionFun(function() use(&$dataParams, &$cachePower, &$modelObj, &$modelObjCopy, &$primaryKey, &$isMulti, &$newIds, &$requestData, &$dataArr){
+
+            // 保存记录
+            $errMsg = '';
+            try {
+                foreach($dataParams as $info){
+                    $newId = 0;
+                    // 开通缓存，则更新缓存时间信息
+                    if($cachePower > 0){
+                        $modelObjInfo = Tool::copyObject($modelObj);
+                        $resultCreateObj = static::create($modelObjInfo, $info, false);
+                        if(!$resultCreateObj){
+                            // $errMsg = '';
+                            $requestData = false;
+                            break;
+                        }else{
+                            $newId = $resultCreateObj->{$primaryKey};
+                            $dataArr[] = $resultCreateObj;
+                            $requestData = true;
+                        }
+                    }else {
+                        $newId = $modelObj->insertGetId($info, $primaryKey);//只能是一维数组，返回id值
                         $requestData = true;
                     }
-                }else {
-                    $newId = $modelObj->insertGetId($info, $primaryKey);//只能是一维数组，返回id值
-                    $requestData = true;
+                    // array_push($newIds,$newId);
+                    $newIds[] = $newId;
                 }
-                // array_push($newIds,$newId);
-                $newIds[] = $newId;
+            } catch ( \Exception $e) {
+                $requestData = false;
+                $errMsg = $e->getMessage();
+                // DB::rollBack();
+                // throws('保存失败；信息[' . $e->getMessage() . ']');
+                // throws($e->getMessage());
+
+            }finally{
+                if(!$requestData){
+//                    DB::rollBack();
+                    throws('保存失败；信息[' . $errMsg . ']');
+                }
+//                if($requestData) DB::commit();
             }
-        } catch ( \Exception $e) {
-            $requestData = false;
-            $errMsg = $e->getMessage();
-            // DB::rollBack();
-            // throws('保存失败；信息[' . $e->getMessage() . ']');
-            // throws($e->getMessage());
 
-        }finally{
-            if(!$requestData){
-                DB::rollBack();
-                throws('保存失败；信息[' . $errMsg . ']');
+            // 开通缓存，则更新缓存时间信息
+            if($cachePower > 0){
+                if(!$isMulti) $dataArr = $dataArr[0] ?? [];
+                // $modelObjCopy = Tool::copyObject($modelObj);
+                static::updateTimeByData($modelObjCopy, $dataArr, 1, false, []);
             }
-            if($requestData) DB::commit();
-        }
-
-        // 开通缓存，则更新缓存时间信息
-        if($cachePower > 0){
-            if(!$isMulti) $dataArr = $dataArr[0] ?? [];
-            // $modelObjCopy = Tool::copyObject($modelObj);
-            static::updateTimeByData($modelObjCopy, $dataArr, 1, false, []);
-        }
-
+        });
         return $newIds;
     }
 
@@ -1250,53 +1411,63 @@ class CommonDB
             'success' => [],
             'fail' => [],
         ];
-        DB::beginTransaction();
-        foreach($dataParams as $info){
-            // 保存记录
-            $id = $info[$primaryKey] ?? '';
-            try {
-                $temObj = $className::find($id);
-                if(empty($temObj) || !is_object($temObj)) throws('记录[' . $id . ']不存在！');
-                // 如果数据没有变化，则不用执行修改操作
-                $dataInfo = (is_object($temObj) )  ? $temObj->toArray() : $temObj;
+//        DB::beginTransaction();
+//        try {
+//          DB::commit();
+//        } catch ( \Exception $e) {
+//            DB::rollBack();
+//            $errStr = $e->getMessage();
+//            $errCode = $e->getCode();
+//            throws($errStr, $errCode);
+//            // throws($e->getMessage());
+//        }
+        static::doTransactionFun(function() use(&$dataParams, &$primaryKey, &$className, &$successRels, &$cachePower, &$modelObj, &$modelObjCopy){
 
-                unset($info[$primaryKey]);
-                if(empty($info))  continue;
+            foreach($dataParams as $info){
+                // 保存记录
+                $id = $info[$primaryKey] ?? '';
+                try {
+                    $temObj = $className::find($id);
+                    if(empty($temObj) || !is_object($temObj)) throws('记录[' . $id . ']不存在！');
+                    // 如果数据没有变化，则不用执行修改操作
+                    $dataInfo = (is_object($temObj) )  ? $temObj->toArray() : $temObj;
 
-                // 获得真正需要更新的数据
-                // $diffUpdateData = array_diff_assoc($info, $dataInfo);
-                $info = array_diff_assoc($info, $dataInfo);
-                // 没有需要更新的数据，直接返回成功
-                // if(empty($diffUpdateData)) return true;
-                if(empty($info)) continue;
+                    unset($info[$primaryKey]);
+                    if(empty($info))  continue;
 
-                // 更新数据前，如果有更新缓存字段，则需要先更新缓存时间
-                if($cachePower > 0) {
-                    $dataCacheArr = is_object($temObj) ? $temObj->toArray() : $temObj;
-                    static::updateTimeByData($modelObjCopy, $dataCacheArr, 2, true, $info);
+                    // 获得真正需要更新的数据
+                    // $diffUpdateData = array_diff_assoc($info, $dataInfo);
+                    $info = array_diff_assoc($info, $dataInfo);
+                    // 没有需要更新的数据，直接返回成功
+                    // if(empty($diffUpdateData)) return true;
+                    if(empty($info)) continue;
+
+                    // 更新数据前，如果有更新缓存字段，则需要先更新缓存时间
+                    if($cachePower > 0) {
+                        $dataCacheArr = is_object($temObj) ? $temObj->toArray() : $temObj;
+                        static::updateTimeByData($modelObjCopy, $dataCacheArr, 2, true, $info);
+                    }
+
+                    foreach($info as $field => $val){
+                        $temObj->{$field} = $val;
+                    }
+                    $res = $temObj->save();
+                    array_push($successRels['success'],[$id => $res]);
+
+                    // 开通缓存，则更新缓存时间信息
+                    if($cachePower > 0){
+                        $dataCacheArr = is_object($temObj) ? $temObj->toArray() : $temObj;
+                        // $modelObjCopy = Tool::copyObject($modelObj);
+                        static::updateTimeByData($modelObjCopy, $dataCacheArr, 2, false, []);
+                    }
+
+                } catch ( \Exception $e) {
+                    array_push($successRels['fail'],[ 'id'=> $id,'msg'=>$e->getMessage() ]);
+                    throws('修改[' . $id . ']失败；信息[' . $e->getMessage() . ']');
+                    // throws($e->getMessage());
                 }
-
-                foreach($info as $field => $val){
-                    $temObj->{$field} = $val;
-                }
-                $res = $temObj->save();
-                array_push($successRels['success'],[$id => $res]);
-
-                // 开通缓存，则更新缓存时间信息
-                if($cachePower > 0){
-                    $dataCacheArr = is_object($temObj) ? $temObj->toArray() : $temObj;
-                    // $modelObjCopy = Tool::copyObject($modelObj);
-                    static::updateTimeByData($modelObjCopy, $dataCacheArr, 2, false, []);
-                }
-
-            } catch ( \Exception $e) {
-                DB::rollBack();
-                array_push($successRels['fail'],[ 'id'=> $id,'msg'=>$e->getMessage() ]);
-                throws('修改[' . $id . ']失败；信息[' . $e->getMessage() . ']');
-                // throws($e->getMessage());
             }
-        }
-        DB::commit();
+        });
         return $successRels;
     }
 
@@ -1381,95 +1552,105 @@ class CommonDB
 
         $successRels = [];
 
-        DB::beginTransaction();
+//        DB::beginTransaction();
+//
+//
+//        try {
+//          DB::commit();
+//        } catch ( \Exception $e) {
+//            DB::rollBack();
+//            $errStr = $e->getMessage();
+//            $errCode = $e->getCode();
+//            throws($errStr, $errCode);
+//            // throws($e->getMessage());
+//        }
+
+        static::doTransactionFun(function() use(&$dataParams, &$successRels){
+
+            foreach($dataParams as $info){
+                try {
+                    $primaryVal = $info['primaryVal'] ?? '';
+                    if(empty($primaryVal)){
+                        throws('参数[primaryVal]不能为空！');
+                    }
+                    // 获得对象
+                    $modelName = $info['Model_name'] ?? '';
+                    Tool::judgeEmptyParams('Model_name', $modelName);
+
+                    $className = "App\\Models\\" .$modelName;
+                    if (! class_exists($className )) {
+                        throws('参数[Model_name]不正确！');
+                    }
+
+                    // 更新缓存需要用到
+                    $modelObj = new $className();
+
+                    // 增减类型 inc 增 ;dec 减[默认]
+                    $incDecType = $info['incDecType'] ?? 'dec';
+
+                    // 增减字段
+                    $incDecField = $info['incDecField'] ?? '';
+                    Tool::judgeEmptyParams('incDecField', $incDecField);
+                    // 增减值
+                    $incDecVal = $info['incDecVal'] ?? '';
+                    if(!is_numeric($incDecVal)){
+                        throws('参数[incDecVal]必须是数字!');
+                    }
+                    // 修改的其它字段 -没有，则传空数组json
+                    $modifFields = $info['modifFields'] ?? [];
+                    // jsonStrToArr($modifFields , 1, '参数[modifFields]格式有误!');
 
 
-        foreach($dataParams as $info){
-            try {
-                $primaryVal = $info['primaryVal'] ?? '';
-                if(empty($primaryVal)){
-                    throws('参数[primaryVal]不能为空！');
+                    // 保存记录
+                    $operate = 'decrement'; // 减
+                    if($incDecType == 'inc'){
+                        $operate = 'increment';// 增
+                    }
+
+                    // 获得是否开通缓存
+                    $cachePower = static::getCachePowerNum($modelObj);
+                    $modelObjCopy = null;
+                    if($cachePower > 0){
+                        $modelObjCopy = Tool::copyObject($modelObj);
+                    }
+                    $temDataParams = (is_array($modifFields) && (!empty($modifFields))) ? $modifFields : [];
+                    $temDataParams[$incDecField] = null;
+
+
+                    $temObj = $className::find($primaryVal);
+
+                    // 更新数据前，如果有更新缓存字段，则需要先更新缓存时间
+                    if($cachePower > 0) {
+                        $dataCacheArr = is_object($temObj) ? $temObj->toArray() : $temObj;
+                        static::updateTimeByData($modelObjCopy, $dataCacheArr, 2, true, $temDataParams);
+                    }
+
+                    if(is_array($modifFields) && (!empty($modifFields))){
+                        $res = $temObj->{$operate}($incDecField, $incDecVal,$modifFields);
+                    }else{
+                        // 返回操作成功的数量 如：1
+                        $res = $temObj->{$operate}($incDecField, $incDecVal);
+                    }
+                    array_push($successRels,$res);
+
+                    // 开通缓存，则更新缓存时间信息
+                    if($cachePower > 0){
+                        $dataCacheArr = is_object($temObj) ? $temObj->toArray() : $temObj;
+                        // $modelObjCopy = Tool::copyObject($modelObj);
+                        static::updateTimeByData($modelObjCopy, $dataCacheArr, 2, false, []);
+                    }
+
+                    // 清空对象
+                    $temObj = null;
+                    $modelObj = null;
+                    $modelObjCopy = null;
+
+                } catch ( \Exception $e) {
+                    throws('保存[' . $primaryVal . ']失败；信息[' . $e->getMessage() . ']', $e->getCode());
+                    // throws($e->getMessage());
                 }
-                // 获得对象
-                $modelName = $info['Model_name'] ?? '';
-                Tool::judgeEmptyParams('Model_name', $modelName);
-
-                $className = "App\\Models\\" .$modelName;
-                if (! class_exists($className )) {
-                    throws('参数[Model_name]不正确！');
-                }
-
-                // 更新缓存需要用到
-                $modelObj = new $className();
-
-                // 增减类型 inc 增 ;dec 减[默认]
-                $incDecType = $info['incDecType'] ?? 'dec';
-
-                // 增减字段
-                $incDecField = $info['incDecField'] ?? '';
-                Tool::judgeEmptyParams('incDecField', $incDecField);
-                // 增减值
-                $incDecVal = $info['incDecVal'] ?? '';
-                if(!is_numeric($incDecVal)){
-                    throws('参数[incDecVal]必须是数字!');
-                }
-                // 修改的其它字段 -没有，则传空数组json
-                $modifFields = $info['modifFields'] ?? [];
-                // jsonStrToArr($modifFields , 1, '参数[modifFields]格式有误!');
-
-
-                // 保存记录
-                $operate = 'decrement'; // 减
-                if($incDecType == 'inc'){
-                    $operate = 'increment';// 增
-                }
-
-                // 获得是否开通缓存
-                $cachePower = static::getCachePowerNum($modelObj);
-                $modelObjCopy = null;
-                if($cachePower > 0){
-                    $modelObjCopy = Tool::copyObject($modelObj);
-                }
-                $temDataParams = (is_array($modifFields) && (!empty($modifFields))) ? $modifFields : [];
-                $temDataParams[$incDecField] = null;
-
-
-                $temObj = $className::find($primaryVal);
-
-                // 更新数据前，如果有更新缓存字段，则需要先更新缓存时间
-                if($cachePower > 0) {
-                    $dataCacheArr = is_object($temObj) ? $temObj->toArray() : $temObj;
-                    static::updateTimeByData($modelObjCopy, $dataCacheArr, 2, true, $temDataParams);
-                }
-
-                if(is_array($modifFields) && (!empty($modifFields))){
-                    $res = $temObj->{$operate}($incDecField, $incDecVal,$modifFields);
-                }else{
-                    // 返回操作成功的数量 如：1
-                    $res = $temObj->{$operate}($incDecField, $incDecVal);
-                }
-                array_push($successRels,$res);
-
-                // 开通缓存，则更新缓存时间信息
-                if($cachePower > 0){
-                    $dataCacheArr = is_object($temObj) ? $temObj->toArray() : $temObj;
-                    // $modelObjCopy = Tool::copyObject($modelObj);
-                    static::updateTimeByData($modelObjCopy, $dataCacheArr, 2, false, []);
-                }
-
-                // 清空对象
-                $temObj = null;
-                $modelObj = null;
-                $modelObjCopy = null;
-
-            } catch ( \Exception $e) {
-                DB::rollBack();
-                throws('保存[' . $primaryVal . ']失败；信息[' . $e->getMessage() . ']');
-                // throws($e->getMessage());
             }
-        }
-
-        DB::commit();
+        });
         return $successRels;
     }
 
@@ -2556,6 +2737,12 @@ class CommonDB
 //        $hasModifyCache = true;// 是否更新缓存 true:更新缓存 ；false:不更新缓存
 //        if($judgeFieldsInCacheFields && !static::hasModifyCacheField($modelObj, $judgeDataParams)) $hasModifyCache = false;
 //        if(!$hasModifyCache) return true;
+
+        // 记录已经要更新缓存的对象及数据--方便事务失败回滚时，重新缓存
+        array_push(static::$changeDBTables,[
+            'tableObj' => Tool::copyObject($modelObj),
+            'params' => [$operateType, $recordData, 1]
+        ]);
 
         return $modelObj->operateDbUpdateTimeCache($operateType, $recordData, 1);
     }

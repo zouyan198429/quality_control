@@ -315,6 +315,7 @@ class BaseDBBusiness extends BaseBusiness
      *  $extendParams = [
      *      'del' => [// 删除用
      *          'del_type' => 1,// 删除方式  1：批量删除 static::deleteByIds($dbIds) [默认] 2: 多次单个删除：static::delById($company_id, $tem_id, $operate_staff_id, $modifAddOprate, $extendParams);
+     *                          4: 不做删除操作【也就是只是添加或修改】
      *          'extend_params' => [],// 删除的扩展参数 一维数组  del_type = 2时：用 -- 具体可有的参数：请看 delById 方法的扩展参数
      *      ],
      *      'sqlParams' => [// 其它sql条件[拼接/覆盖式],下面是常用的，其它的也可以---查询用
@@ -336,48 +337,59 @@ class BaseDBBusiness extends BaseBusiness
     public static function updateByDataList($fieldRelations = [], $newFieldVals = [], $newDataList = [], $isModify = 1
         , $operate_staff_id = 0, $operate_staff_id_history = 0
         , $id_field = 'id', $company_id = 0, $modifAddOprate = 0, $extendParams = []){
-        $lastIds = [];// 最终的id 值数组
-        if(empty($fieldRelations)) return $lastIds;
-        Tool::isMultiArr($newDataList, true);
 
-        $dataList = [];
-        $dbIds = [];
-        if($isModify){// 是修改
-            // 获得所有的方法标准
-            $queryParams = [
-                'where' => [
+//        DB::beginTransaction();
+//        try {
+//            DB::commit();
+//        } catch ( \Exception $e) {
+//            DB::rollBack();
+//            throws($e->getMessage());
+//            // throws($e->getMessage());
+//        }
+        return CommonDB::doTransactionFun(function() use(&$fieldRelations, &$newFieldVals, &$newDataList, &$isModify
+            , &$operate_staff_id, &$operate_staff_id_history
+            , &$id_field, &$company_id, &$modifAddOprate, &$extendParams){
+
+            $lastIds = [];// 最终的id 值数组
+            if(empty($fieldRelations)) return $lastIds;
+            Tool::isMultiArr($newDataList, true);
+
+            $dataList = [];
+            $dbIds = [];
+            if($isModify){// 是修改
+                // 获得所有的方法标准
+                $queryParams = [
+                    'where' => [
 //                ['company_id', $organize_id],
-                    //    ['ability_join_item_id', $id],
+                        //    ['ability_join_item_id', $id],
 //                ['teacher_status',1],
-                ],
-                // 'select' => ['id', 'amount', 'status', 'my_order_no' ]
-            ];
+                    ],
+                    // 'select' => ['id', 'amount', 'status', 'my_order_no' ]
+                ];
 
-            // 对数据进行拼接处理
-            if(isset($extendParams['sqlParams'])){
-                $sqlParams = $extendParams['sqlParams'] ?? [];
-                foreach($sqlParams as $tKey => $tVals){
-                    if(isset($queryParams[$tKey]) && in_array($tKey, ['where',  'whereIn', 'whereNotIn', 'whereBetween', 'whereNotBetween'])){// 'select', 'orderBy',
-                        $queryParams[$tKey] = array_merge($queryParams[$tKey], $tVals);
-                    }else{
-                        $queryParams[$tKey] = $tVals;
+                // 对数据进行拼接处理
+                if(isset($extendParams['sqlParams'])){
+                    $sqlParams = $extendParams['sqlParams'] ?? [];
+                    foreach($sqlParams as $tKey => $tVals){
+                        if(isset($queryParams[$tKey]) && in_array($tKey, ['where',  'whereIn', 'whereNotIn', 'whereBetween', 'whereNotBetween'])){// 'select', 'orderBy',
+                            $queryParams[$tKey] = array_merge($queryParams[$tKey], $tVals);
+                        }else{
+                            $queryParams[$tKey] = $tVals;
+                        }
+
                     }
-
+                    unset($extendParams['sqlParams']);
                 }
-                unset($extendParams['sqlParams']);
+                foreach($fieldRelations as $field => $field_vals){
+                    Tool::appendParamQuery($queryParams, $field_vals, $field, ['']);
+                    // 加入到新加入中
+                    if(!is_array($field_vals) && !isset($newFieldVals[$field])) $newFieldVals[$field] = $field_vals;
+                }
+                $dataListObj = static::getAllList($queryParams, []);
+                $dataList = $dataListObj->toArray();
+                if(!empty($dataList)) $dbIds = array_values(array_unique(array_column($dataList, $id_field)));
             }
-            foreach($fieldRelations as $field => $field_vals){
-                Tool::appendParamQuery($queryParams, $field_vals, $field, ['']);
-                // 加入到新加入中
-                if(!is_array($field_vals) && !isset($newFieldVals[$field])) $newFieldVals[$field] = $field_vals;
-            }
-            $dataListObj = static::getAllList($queryParams, []);
-            $dataList = $dataListObj->toArray();
-            if(!empty($dataList)) $dbIds = array_values(array_unique(array_column($dataList, $id_field)));
-        }
-
-        DB::beginTransaction();
-        try {
+            //***************************************************************
             if(!empty($newDataList)){
 //                $appendArr = [
 //                    'operate_staff_id' => $operate_staff_id,
@@ -424,24 +436,22 @@ class BaseDBBusiness extends BaseBusiness
                 $del_type = $extendParams['del']['del_type'] ?? 1;
                 $del_extend_params = $extendParams['del']['extend_params'] ?? [];
                 // 删除记录
-                if($del_type == 2){
+                if($del_type == 2) {
 //                    foreach($dbIds as $tem_id){
 //                        static::delById($company_id, $tem_id, $operate_staff_id, $modifAddOprate, $del_extend_params);
 //                    }
                     // 已经是可以批量删除了
                     static::delById($company_id, $dbIds, $operate_staff_id, $modifAddOprate, $del_extend_params);
+                }else if($del_type == 4){// 4: 不做删除操作【也就是只是添加或修改】
+
                 }else{
                     $modelObj = null;
                     static::deleteByIds($dbIds, $modelObj, $id_field);
                 }
             }
-        } catch ( \Exception $e) {
-            DB::rollBack();
-            throws($e->getMessage());
-            // throws($e->getMessage());
-        }
-        DB::commit();
-        return $lastIds;
+            //***********************************************
+            return $lastIds;
+        });
     }
 
     /**
@@ -499,19 +509,21 @@ class BaseDBBusiness extends BaseBusiness
 ////        $info = static::getInfo($id);
 ////        if(empty($info)) throws('记录不存在');
 //        // if($info['status'] != 1) throws('当前记录非【待开始】状态，不可删除！');
-//        DB::beginTransaction();
-//        try {
+////        DB::beginTransaction();
+////        try {
+////            // 删除主记录
+////            static::deleteByIds($id);
+////            // 其它操作
+////            DB::commit();
+////        } catch ( \Exception $e) {
+////            DB::rollBack();
+////            throws($e->getMessage());
+////            // throws($e->getMessage());
+////        }
+//        CommonDB::doTransactionFun(function() use(&$id){
 //            // 删除主记录
 //            static::deleteByIds($id);
-//            // 其它操作
-//
-//
-//        } catch ( \Exception $e) {
-//            DB::rollBack();
-//            throws($e->getMessage());
-//            // throws($e->getMessage());
-//        }
-//        DB::commit();
+//        });
 //        return $id;
 //    }
 
@@ -588,8 +600,15 @@ class BaseDBBusiness extends BaseBusiness
 //        // 用户删除要用到的
 //        $abilityIds = array_values(array_unique(array_column($dataListArr,'ability_id')));
 
-        DB::beginTransaction();
-        try {
+//        DB::beginTransaction();
+//        try {
+//            DB::commit();
+//        } catch ( \Exception $e) {
+//            DB::rollBack();
+//            throws($e->getMessage());
+//            // throws($e->getMessage());
+//        }
+        CommonDB::doTransactionFun(function() use(&$queryParams){
 
             // 删除主记录
             static::del($queryParams);
@@ -606,14 +625,136 @@ class BaseDBBusiness extends BaseBusiness
 //                    AbilitysDBBusiness::saveDecIncByQuery('join_num', 1,  'dec', $queryParams, []);
 //                }
 //            }
-
-        } catch ( \Exception $e) {
-            DB::rollBack();
-            throws($e->getMessage());
-            // throws($e->getMessage());
-        }
-        DB::commit();
+        });
         return $id;
+    }
+
+    /**
+     * 根据字段=》值数组；获得数据[格式化后的数据]
+     *
+     * @param int $operate_type 操作为型  1 所有[默认] all 二维【数组】 2 ：指定返回数量 limit_num 1：一维【对象】 ，>1 二维【数组】 4：只返回一条 one_num 一维【对象】
+     * @param int $page_size 2时返回的数量
+     * @param array $fieldValParams
+     *  $fieldValParams = [
+     *      'ability_join_id' => [// 格式一
+     *          'vals' => "字段值[可以是字符'多个逗号分隔'或一维数组] ",// -- 此种格式，必须指定此下标【值下标】
+     *          'excludeVals' => "过滤掉的值 默认[0, '0', '']",
+     *          'valsSeparator' => ',' 如果是多值字符串，多个值的分隔符;默认逗号 ,
+     *          'hasInIsMerge=>  false 如果In条件有值时  true:合并；false:用新值--覆盖 --默认
+     *      ],// 格式二
+     *      'id' =>  "字段值[可以是字符'多个逗号分隔'或一维数组]"
+     *   ];
+     * @param boolean $fieldEmptyQuery 如果参数字段值都为空时，是否还查询数据 true:查询 ；false:不查
+     * @param mixed $relations 关系
+     * @param array $extParams 其它扩展参数，
+     *    $extParams = [
+     *       // 'useQueryParams' => '是否用来拼接查询条件，true:用[默认];false：不用'
+     *        'sqlParams' => [// 其它sql条件[拼接/覆盖式],下面是常用的，其它的也可以
+     *            // '如果有值，则替换where' --拼接
+     *           'where' => [// -- 可填 如 默认条件 'type_id' => 5  'admin_type' => $user_info['admin_type'],'staff_id' =>  $user_info['id']
+     *               ['type_id', 5],
+     *           ],
+     *           'select' => '如果有值，则替换select'--覆盖
+     *           'orderBy' => '如果有值，则替换orderBy'--覆盖
+     *           'whereIn' => '如果有值，则替换whereIn' --拼接
+     *           'whereNotIn' => '如果有值，则替换whereNotIn' --拼接
+     *           'whereBetween' => '如果有值，则替换whereBetween' --拼接
+     *           'whereNotBetween' => '如果有值，则替换whereNotBetween' --拼接
+     *       ],
+     *       'handleKeyArr'=> [],// 一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。--名称关键字，尽可能与关系名一样
+     *       'relationFormatConfigs'=> [],// 相关表数组格式化配置 具体格式请看  formatRelationList方法的参数
+     *       'listHandleKeyArr'=> [],// 一维数组，对列表二维数数据【批量】需要处理的标记--与 handleKeyArr 功能相同， 重写 handleRelationDataFormat 方法实现
+     *       'infoHandleKeyArr'=> [],// 一维数组，对详情一维数数据【单个】需要处理的标记 -- 重写 infoRelationFormatExtend 方法  temDataList[表间关系才用上的，这里不用] 可传空值
+     *       'formatDataUbound' => [// 格式化数据[取指下下标、排除指定下标、修改下标名称]具体参数使用说明，请参阅 Tool::formatArrUbound 方法  --为空数组代表不格式化
+     *           'needNotIn' => true, // keys在数组中不存在的，false:不要，true：空值 -- 用true的时候多
+     *           'includeUboundArr' => [],// 要获取的下标数组 [优先]--一维数组，可为空[ '新下标名' => '原下标名' ]  Tool::arrEqualKeyVal(['shop_id', 'shop_name', 'linkman', 'mobile'])
+     *           'exceptUboundArr' => [], // 要排除的下标数组 --一维数组，可为空[ '原下标名' ,....]
+     *       ]
+     *   ];
+     * @return  null 列表数据 一维或二维数组
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function getFVFormatList($operate_type = 1, $page_size = 1, $fieldValParams = [], $fieldEmptyQuery = false, $relations = '', $extParams = [])
+    {
+        $dataArr = [];
+        $isEmpeyVals = true;//  查询字段值是否都为空; true:都为空，false:有值
+        // 获得信息
+        $queryParams = [
+            'where' => [
+                // ['type_id', 5],
+                //                //['mobile', $keyword],
+            ],
+            //            'select' => [
+            //                'id','company_id','position_name','sort_num'
+            //                //,'operate_staff_id','operate_staff_id_history'
+            //                ,'created_at'
+            //            ],
+            // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
+        ];
+        foreach($fieldValParams as $field => $valConfig){
+            $excludeVals = [0, '0', ''];
+            $fieldVals = [];
+            // 是数组
+            if(is_array($valConfig) && isset($valConfig['vals'])){
+                if(isset($valConfig['excludeVals']) && is_array($valConfig['excludeVals'])){
+                    $excludeVals = $valConfig['excludeVals'];
+                }
+                $fieldVals = $valConfig['vals'] ;
+            }else{
+                $fieldVals = $valConfig;
+            }
+            $valsSeparator = $valConfig['vals'] ?? ',';
+            $hasInIsMerge = $valConfig['hasInIsMerge'] ?? false;
+            if(!empty($excludeVals))  Tool::formatOneArrVals($fieldVals, $excludeVals);
+            if( ( (is_string($fieldVals) || is_numeric($fieldVals)) && strlen($fieldVals) > 0) || (is_array($fieldVals) && !empty($fieldVals)) ) $isEmpeyVals = false;
+            Tool::appendParamQuery($queryParams, $fieldVals, $field, $excludeVals, $valsSeparator, $hasInIsMerge);
+        }
+        if(!isset($extParams['useQueryParams'])) $extParams['useQueryParams'] = false;
+//        $extParams = [
+//            'handleKeyArr' => ['ability', 'joinItemsStandards', 'projectStandards'],//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+//        ];
+        // 对数据进行拼接处理
+        if(isset($extParams['sqlParams'])){
+            $sqlParams = $extParams['sqlParams'] ?? [];
+            foreach($sqlParams as $tKey => $tVals){
+                if(isset($queryParams[$tKey]) && in_array($tKey, ['where',  'whereIn', 'whereNotIn', 'whereBetween', 'whereNotBetween'])){// 'select', 'orderBy',
+                    $queryParams[$tKey] = array_merge($queryParams[$tKey], $tVals);
+                }else{
+                    $queryParams[$tKey] = $tVals;
+                }
+
+            }
+            unset($extParams['sqlParams']);
+        }
+
+
+        // 查询字段有值  或  查询字段无值  但是  指定 强制查询时
+        if(!$isEmpeyVals || ($isEmpeyVals && $fieldEmptyQuery)){
+            switch ($operate_type)
+            {
+                case 1:
+                    // $dataArr = static::getList(1, $queryParams, $relations, $extParams, $notLog)['result']['data_list'] ?? [];
+                    $dataArr = static::getAllList($queryParams, $relations)->toArray();
+                    break;
+                case 2:
+                    $company_id = 0;// $controller->company_id;
+                    // $dataArr = static::getLimitDataQuery($company_id, $page_size, $queryParams, $relations, $extParams, $notLog);
+                    $dataArr = static::getDataLimit(1, $page_size, 1, $queryParams , $relations)['dataList'] ?? [];
+                    // 对象转数组
+                    if($page_size > 1) $dataArr = (is_object($dataArr)) ? $dataArr->toArray() :  $dataArr;// 二维数组
+                    if($page_size == 1) $dataArr = $dataArr[0] ?? [];// 一维对象
+                    break;
+                case 4:
+                    $company_id = 0;// $controller->company_id;
+                    // $dataArr = static::getInfoDataByQuery($company_id, $queryParams, $relations, $extParams, $notLog);
+                    $dataArr = static::getInfoByQuery(1, $queryParams, $relations);// 一维对象
+                    break;
+                default:
+//                    $str = md5($str);
+                    break;
+            }
+        }
+        return $dataArr;
     }
 
     /**
@@ -1463,6 +1604,15 @@ class BaseDBBusiness extends BaseBusiness
      */
     public static function replaceById($saveData, $company_id, &$id, $operate_staff_id = 0, $modifAddOprate = 0){
 
+//        DB::beginTransaction();
+//        try {
+//            DB::commit();
+//        } catch ( \Exception $e) {
+//            DB::rollBack();
+//            throws($e->getMessage());
+//            // throws($e->getMessage());
+//        }
+        return CommonDB::doTransactionFun(function() use(&$saveData, &$company_id, &$id, &$operate_staff_id, &$modifAddOprate){
 //        if(isset($saveData['real_name']) && empty($saveData['real_name'])  ){
 //            throws('联系人不能为空！');
 //        }
@@ -1470,12 +1620,11 @@ class BaseDBBusiness extends BaseBusiness
 //        if(isset($saveData['mobile']) && empty($saveData['mobile'])  ){
 //            throws('手机不能为空！');
 //        }
-        $operate_staff_id_history = config('public.operate_staff_id_history', 0);// 0;--写上，不然后面要去取，但现在的系统不用历史表
-        // 保存前的处理
-        static::replaceByIdAPIPre($saveData, $company_id, $id, $operate_staff_id, $operate_staff_id_history, $modifAddOprate);
-        $modelObj = null;
-        DB::beginTransaction();
-        try {
+            $operate_staff_id_history = config('public.operate_staff_id_history', 0);// 0;--写上，不然后面要去取，但现在的系统不用历史表
+            // 保存前的处理
+            static::replaceByIdAPIPre($saveData, $company_id, $id, $operate_staff_id, $operate_staff_id_history, $modifAddOprate);
+            $modelObj = null;
+            //*********************************************************
             $isModify = false;
 
             // $ownProperty  自有属性值;
@@ -1514,15 +1663,11 @@ class BaseDBBusiness extends BaseBusiness
             if($isModify && ($ownProperty & 1) == 1){// 1：有历史表 ***_history;
                 static::compareHistory($id, 1);
             }
-        } catch ( \Exception $e) {
-            DB::rollBack();
-            throws($e->getMessage());
-            // throws($e->getMessage());
-        }
-        DB::commit();
-        // 保存成功后的处理
-        static::replaceByIdAPISucess($isModify, $modelObj, $saveData, $company_id, $id, $operate_staff_id, $operate_staff_id_history, $modifAddOprate);
-        return $id;
+            // ************************************************
+            // 保存成功后的处理
+            static::replaceByIdAPISucess($isModify, $modelObj, $saveData, $company_id, $id, $operate_staff_id, $operate_staff_id_history, $modifAddOprate);
+            return $id;
+        });
     }
 
     /**

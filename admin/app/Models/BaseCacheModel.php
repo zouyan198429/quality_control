@@ -985,6 +985,7 @@ class BaseCacheModel extends BaseModel
      * @author zouyan(305463219@qq.com)
      */
     public function isValidTime($cacheType = 2, $operateType = 16, $cacheTime = '', $msecint = 0, &$cacheData = [], $queryParams = []){// , $cacheBlockArr = []
+
         // 缓存没有时间信息，则作废
         if(empty($cacheTime)) return false;
         $dateTime = date('Y-m-d H:i:s');
@@ -1001,8 +1002,12 @@ class BaseCacheModel extends BaseModel
         // if($cacheTimeFormat === false) return false;
         // 两个时间都不能为空，且都不能大于当前时间
         $reslut = Tool::judgeBeginEndDate($tableUpdateTime, $cacheTime,  1 + 2 + 4 + 32 , 2, $dateTime, '时间');
+
         // 出错 有效日期失效
         if($reslut !== true) return false;
+
+        // 如果时间相等，则判断微秒的情况[缓存记录的微秒 <= 参考点微秒，则过期]
+        if($tableUpdateTime == $cacheTime && $msecint <= $cacheMsecint) return false;
 
         // 时间及微秒都相等，才是真的相等
         $judge_type = 256;
@@ -1010,8 +1015,10 @@ class BaseCacheModel extends BaseModel
 
         // 表缓存时间不能 >= 数据缓存时间 （ <）---表的缓存时间如果小于缓存数据的时间，说明：表一直未更新过，所以肯定有效--直接返回。
         $reslut = Tool::judgeBeginEndDate($tableUpdateTime, $cacheTime, $judge_type, 2, $dateTime, '时间');
+
         // 缓存时间大于表更新时间，则缓存肯定有效
         if($reslut === true) return true;
+
         // 下面的都是 表的缓存时间 >= 缓存数据的时间 的情况
 
         $dataArr = is_object($cacheData) ? $cacheData->toArray() : $cacheData;
@@ -1077,15 +1084,22 @@ class BaseCacheModel extends BaseModel
                 if($cachePrimaryTime === false || !is_string($cachePrimaryTime) || strlen($cachePrimaryTime) <= 0) return false;
 
                 list($cachePrimaryTime, $cacheMsecint) = array_values(Tool::getTimeMsec($cachePrimaryTime));
+
                 // 时间及微秒都相等，才是真的相等
                 $judge_type = 1 + 2 + 4 + 32 + 256;
                 if($cachePrimaryTime == $cacheTime && $msecint == $cacheMsecint) $judge_type = $judge_type | 512;
 
+
                 // 对时间进行判断
                 // 两个时间都不能为空，且都不能大于当前时间 且 单条块缓存时间，不能>= 块数据缓存时间
                 $temResult = Tool::judgeBeginEndDate($cachePrimaryTime, $cacheTime, $judge_type, 2, $dateTime, '时间');
+
                 // 出错 有效日期失效
                 if($temResult !== true) return false;
+
+                // 如果时间相等，则判断微秒的情况[缓存记录的微秒 <= 参考点微秒，则过期]
+                 if($cachePrimaryTime == $cacheTime && $msecint <= $cacheMsecint) return false;
+
                 $hasPrimaryRight = true;
             }
         }
@@ -1139,6 +1153,9 @@ class BaseCacheModel extends BaseModel
                     $temResult = Tool::judgeBeginEndDate($temCacheBlockTime, $cacheTime, $judge_type, 2, $dateTime, '时间');
                     // 出错 有效日期失效
                     if($temResult !== true) return false;
+
+                    // 如果时间相等，则判断微秒的情况[缓存记录的微秒 <= 参考点微秒，则过期]
+                    if($temCacheBlockTime == $cacheTime && $msecint <= $cacheMsecint) return false;
                 }
             }
         }
@@ -1187,6 +1204,8 @@ class BaseCacheModel extends BaseModel
 //                    $temResult = Tool::judgeBeginEndDate($temCacheBlockTime, $cacheTime, $judge_type, 2, $dateTime, '时间');
 //                    // 出错 有效日期失效
 //                    if($temResult !== true) return false;
+//                    // 如果时间相等，则判断微秒的情况[缓存记录的微秒 <= 参考点微秒，则过期]
+//                    if($temCacheBlockTime == $cacheTime && $msecint <= $cacheMsecint) return false;
 //                }
 //            }
 //        }
@@ -1235,6 +1254,13 @@ class BaseCacheModel extends BaseModel
                 $result = false;
                 break;
             }
+
+            // 如果时间相等，则判断微秒的情况[缓存记录的微秒 <= 参考点微秒，则过期]
+            if($cachePrimaryTime == $cacheTime && $msecint <= $cacheMsecint){
+                $result = false;
+                break;
+            }
+
         }
         if(!$isMulti) $dataArr = $dataArr[0] ?? [];
         return $result;

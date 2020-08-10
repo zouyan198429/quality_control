@@ -3,6 +3,7 @@
 namespace App\Business\DB\QualityControl;
 
 use App\Models\QualityControl\Staff;
+use App\Services\DB\CommonDB;
 use App\Services\Map\Map;
 use App\Services\Tool;
 use Carbon\Carbon;
@@ -51,63 +52,69 @@ class StaffDBBusiness extends BasePublicDBBusiness
      */
     public static function replaceById($saveData, $company_id, &$id, $operate_staff_id = 0, $modifAddOprate = 0){
 
-        if(isset($saveData['real_name']) && empty($saveData['real_name'])  ){
-            throws('真实姓名不能为空！');
-        }
+//        DB::beginTransaction();
+//        try {
+//            DB::commit();
+//        } catch ( \Exception $e) {
+//            DB::rollBack();
+//            throws($e->getMessage());
+//            // throws($e->getMessage());
+//        }
+        return CommonDB::doTransactionFun(function() use(&$saveData, &$company_id, &$id, &$operate_staff_id, &$modifAddOprate){
+
+            if(isset($saveData['real_name']) && empty($saveData['real_name'])  ){
+                throws('真实姓名不能为空！');
+            }
 
 //        if(isset($saveData['mobile']) && empty($saveData['mobile'])  ){
 //            throws('手机不能为空！');
 //        }
 
-        if(isset($saveData['admin_username']) && empty($saveData['admin_username'])  ){
-            throws('用户名不能为空!！');
-        }
-
-        // 修改时 需要强制更新员工数量
-        $forceCompanyNum =  false;
-        $companyNumIds = [];// 需要更新的企业id数组
-        if(isset($saveData['force_company_num'])){
-            $forceCompanyNum =  true;
-            if(isset($saveData['company_id']) && is_numeric($saveData['company_id']) && $saveData['company_id'] > 0 ){
-                array_push($companyNumIds, $saveData['company_id']);
+            if(isset($saveData['admin_username']) && empty($saveData['admin_username'])  ){
+                throws('用户名不能为空!！');
             }
-            unset($saveData['force_company_num']);
-        }
 
-        // 是否批量操作标识 true:批量操作； false:单个操作 ---因为如果批量操作，有些操作就不能每个操作都执行，也要批量操作---为了运行效率
-        // 有此下标就代表批量操作
-        $isBatchOperate = false;
-        if(isset($saveData['isBatchOperate'])){
-            $isBatchOperate = true;
-            unset($saveData['isBatchOperate']);
-        }
+            // 修改时 需要强制更新员工数量
+            $forceCompanyNum =  false;
+            $force_company_num = '';
+            $companyNumIds = [];// 需要更新的企业id数组
+            if(Tool::getInfoUboundVal($saveData, 'force_company_num', $forceCompanyNum, $force_company_num, 1)){
+                if(isset($saveData['company_id']) && is_numeric($saveData['company_id']) && $saveData['company_id'] > 0 ){
+                    array_push($companyNumIds, $saveData['company_id']);
+                }
+            }
 
-        $staffExtendData = [];// 人员扩展信息--企业和个人会有一条记录
-        $companyBillingConfigData = [];// 企业开票配置信息---企业和个人会有一条记录
-        if(isset($saveData['staff_extend']) ){
-            $staffExtendData = $saveData['staff_extend'];
-            if(!is_array($staffExtendData)) $staffExtendData = [];
-            unset($saveData['staff_extend']);
-        }
-        if(isset($saveData['company_billing_config']) ){
-            $companyBillingConfigData = $saveData['company_billing_config'];
-            if(!is_array($companyBillingConfigData)) $companyBillingConfigData = [];
-            unset($saveData['company_billing_config']);
-        }
+            // 是否批量操作标识 true:批量操作； false:单个操作 ---因为如果批量操作，有些操作就不能每个操作都执行，也要批量操作---为了运行效率
+            // 有此下标就代表批量操作
+            $isBatchOperate = false;
+            $isBatchOperateVal = '';
+            Tool::getInfoUboundVal($saveData, 'isBatchOperate', $isBatchOperate, $isBatchOperateVal, 1);
 
+            $hasStaffExtendData = false;
+            $staffExtendData = [];// 人员扩展信息--企业和个人会有一条记录
+            if(Tool::getInfoUboundVal($saveData, 'staff_extend', $hasStaffExtendData, $staffExtendData, 1)){
+                if(!is_array($staffExtendData)) $staffExtendData = [];
+            }
 
-        $operateType = $saveData['operate_type'] ?? 0;// 操作类型 1 提交申请修改信息-不用 ;2 审核通过 3 审核不通过 4 冻结 5 解冻 6 上班-不用 7 下班-不用 8 修改-不用：如更新接单人员经纬度[频繁]
-        if(isset($saveData['operate_type'])) unset($saveData['operate_type']);
+            $hasCompanyBillingConfigData = false;
+            $companyBillingConfigData = [];// 企业开票配置信息---企业和个人会有一条记录
+            if(Tool::getInfoUboundVal($saveData, 'company_billing_config', $hasCompanyBillingConfigData, $companyBillingConfigData, 1)){
+                if(!is_array($companyBillingConfigData)) $companyBillingConfigData = [];
+            }
 
-        // 如果有经纬度信息
-        /**
-         *
-        if(isset($saveData['latitude'])){
+            $hasOperateType = false;
+            $operateType = 0;// 操作类型 1 提交申请修改信息-不用 ;2 审核通过 3 审核不通过 4 冻结 5 解冻 6 上班-不用 7 下班-不用 8 修改-不用：如更新接单人员经纬度[频繁]
+            Tool::getInfoUboundVal($saveData, 'operate_type', $hasOperateType, $operateType, 1);
+
+            // 如果有经纬度信息
+            /**
+             *
+            if(isset($saveData['latitude'])){
             $latitude = $saveData['latitude'] ?? ''; // 纬度
             $longitude = $saveData['longitude'] ?? ''; // 经度
-//            if($latitude == '' || $longitude == '' || ($latitude == '0' && $longitude == '0') ){
-//                throws('经纬度不能为空！');
-//            }
+            //            if($latitude == '' || $longitude == '' || ($latitude == '0' && $longitude == '0') ){
+            //                throws('经纬度不能为空！');
+            //            }
             $hashs = Map::getGeoHashs($latitude, $longitude);
             $saveData['geohash'] = $hashs[0] ?? '';
             $saveData['geohash3'] = $hashs[3] ?? '';
@@ -117,43 +124,41 @@ class StaffDBBusiness extends BasePublicDBBusiness
             if(!is_numeric($longitude)) $longitude = 0;
             $saveData['lat'] = $latitude;
             $saveData['lng'] = $longitude;
-        }
-         *
-         */
+            }
+             *
+             */
 
-        // 查询手机号是否已经有企业使用--账号表里查
-        // if( isset($saveData['mobile']) && (!empty($saveData['mobile'])) && static::judgeFieldExist($company_id, $id ,"mobile", $saveData['mobile'], [], 1)){
-        //     throws('手机号已存在！');
-        // }
-        // 用户名--唯一
-        if( isset($saveData['admin_username']) && static::judgeFieldExist($company_id, $id ,"admin_username", $saveData['admin_username'], [],1)){
-            throws('用户名已存在！');
-        }
-        // 相同的用户类型，手机号唯一
-        if( isset($saveData['mobile'])){
-            // 修改手机号时---必须要有 admin_type  拥有者类型1平台2老师4学生
-            $admin_type = $saveData['admin_type'] ?? '';
-            if(!is_numeric($admin_type) || !in_array($admin_type, [1,2,4])) throws('用户类型参数有误！');
-        }
+            // 查询手机号是否已经有企业使用--账号表里查
+            // if( isset($saveData['mobile']) && (!empty($saveData['mobile'])) && static::judgeFieldExist($company_id, $id ,"mobile", $saveData['mobile'], [], 1)){
+            //     throws('手机号已存在！');
+            // }
+            // 用户名--唯一
+            if( isset($saveData['admin_username']) && static::judgeFieldExist($company_id, $id ,"admin_username", $saveData['admin_username'], [],1)){
+                throws('用户名已存在！');
+            }
+            // 相同的用户类型，手机号唯一
+            if( isset($saveData['mobile'])){
+                // 修改手机号时---必须要有 admin_type  拥有者类型1平台2老师4学生
+                $admin_type = $saveData['admin_type'] ?? '';
+                if(!is_numeric($admin_type) || !in_array($admin_type, [1,2,4])) throws('用户类型参数有误！');
+            }
 
-        if( isset($saveData['mobile']) && static::judgeFieldExist($company_id, $id ,"mobile", $saveData['mobile'], [['admin_type', $saveData['admin_type']]],1)){
-            throws('手机号已存在！');
-        }
+            if( isset($saveData['mobile']) && static::judgeFieldExist($company_id, $id ,"mobile", $saveData['mobile'], [['admin_type', $saveData['admin_type']]],1)){
+                throws('手机号已存在！');
+            }
 
-        // 是否有图片资源
-        $hasResource = false;
+            // 是否有图片资源
+            $hasResource = false;
 
-        $resourceIds = [];
-        if(Tool::getInfoUboundVal($saveData, 'resourceIds', $hasResource, $resourceIds, 1)){
-            // $saveData['resource_id'] = $resourceIds[0] ?? 0;// 第一个图片资源的id
-        }
-        $resource_ids = $saveData['resource_ids'] ?? '';// 图片资源id串(逗号分隔-未尾逗号结束)
-        if(isset($saveData['resource_ids']))  unset($saveData['resource_ids']);
-        if(isset($saveData['resource_id']))  unset($saveData['resource_id']);
+            $resourceIds = [];
+            if(Tool::getInfoUboundVal($saveData, 'resourceIds', $hasResource, $resourceIds, 1)){
+                // $saveData['resource_id'] = $resourceIds[0] ?? 0;// 第一个图片资源的id
+            }
+            $resource_ids = $saveData['resource_ids'] ?? '';// 图片资源id串(逗号分隔-未尾逗号结束)
+            if(isset($saveData['resource_ids']))  unset($saveData['resource_ids']);
+            if(isset($saveData['resource_id']))  unset($saveData['resource_id']);
 
 
-        DB::beginTransaction();
-        try {
 
 //            // 省id历史
 //            if( isset($saveData['province_id']) && $saveData['province_id'] > 0 ){
@@ -229,19 +234,20 @@ class StaffDBBusiness extends BasePublicDBBusiness
 //            }
             if($hasResource){
                 // 查询当前企业的营业执照记录id
-                $queryCompanyCertificateParams = [
-                    'where' => [
-                        'company_id' => $id,
-                        'type_id' => 5,
-                        //['admin_type',self::$admin_type],
-                    ],
-                    //            'select' => [
-                    //                'id','company_id','type_name','sort_num'
-                    //                //,'operate_staff_id','operate_staff_history_id'
-                    //                ,'created_at'
-                    //            ],
-                    // 'orderBy' => ['id'=>'desc'],
-                ];
+//                $queryCompanyCertificateParams = [
+//                    'where' => [
+//                        'company_id' => $id,
+//                        'type_id' => 5,
+//                        //['admin_type',self::$admin_type],
+//                    ],
+//                    //            'select' => [
+//                    //                'id','company_id','type_name','sort_num'
+//                    //                //,'operate_staff_id','operate_staff_history_id'
+//                    //                ,'created_at'
+//                    //            ],
+//                    // 'orderBy' => ['id'=>'desc'],
+//                ];
+                $queryCompanyCertificateParams = Tool::getParamQuery(['company_id' => $id, 'type_id' => 5], [], []);
                 $infoCompanyCertificateData = CompanyCertificateDBBusiness::getInfoByQuery(1, $queryCompanyCertificateParams, []);
                 // if(is_object($infoData))  $infoData = $infoData->toArray();
                 // 记录不存在，是新加，则必须要用帐号和密码
@@ -353,13 +359,8 @@ class StaffDBBusiness extends BasePublicDBBusiness
             if($isModify){
 
             }
-        } catch ( \Exception $e) {
-            DB::rollBack();
-            throws($e->getMessage());
-            // throws($e->getMessage());
-        }
-        DB::commit();
-        return $resultDatas;
+            return $resultDatas;
+        });
     }
 
     /**
@@ -434,8 +435,16 @@ class StaffDBBusiness extends BasePublicDBBusiness
         // 没有需要处理的
         if(!Tool::formatOneArrVals($company_ids)) return true;
         // 更新企业的员工人数
-        DB::beginTransaction();
-        try {
+//        DB::beginTransaction();
+//        try {
+//            DB::commit();
+//        } catch ( \Exception $e) {
+//            DB::rollBack();
+//            throws($e->getMessage());
+//            // throws($e->getMessage());
+//        }
+        CommonDB::doTransactionFun(function() use(&$company_ids, &$count_type){
+
             foreach($company_ids as $company_id){
                 $staffCount = static::getStaffCount($company_id, $count_type);
                 $updateFields = [
@@ -448,12 +457,7 @@ class StaffDBBusiness extends BasePublicDBBusiness
                 $mainObj = null;
                 StaffExtendDBBusiness::updateOrCreate($mainObj, $searchConditon, $updateFields );
             }
-        } catch ( \Exception $e) {
-            DB::rollBack();
-            throws($e->getMessage());
-            // throws($e->getMessage());
-        }
-        DB::commit();
+        });
         return true;
     }
 
@@ -467,19 +471,23 @@ class StaffDBBusiness extends BasePublicDBBusiness
      */
     public static function getStaffCount($company_id = 0, $count_type = 1){
         // 更新班级老师人数
-        $queryParams = [
-            'where' => [
-                ['company_id', $company_id],
-                ['admin_type', 4],
-//                ['open_status', 2],
-//                ['account_status',1],
-            ],
-            'count' => 0,
-            // 'select' => ['id', 'amount', 'status', 'my_order_no' ]
-        ];
+//        $queryParams = [
+//            'where' => [
+//                ['company_id', $company_id],
+//                ['admin_type', 4],
+////                ['open_status', 2],
+////                ['account_status',1],
+//            ],
+//            'count' => 0,
+//            // 'select' => ['id', 'amount', 'status', 'my_order_no' ]
+//        ];
+        $queryParams = Tool::getParamQuery(['company_id' => $company_id, 'admin_type' => 4], [], []);
+        $queryParams['count'] = 0;
         if(($count_type & 2) == 2){
-            if(!isset($queryParams['where'])) $queryParams['where'] = [];
-             array_push($queryParams['where'], ['account_status', 1]) ;
+            $account_status = 1;
+            Tool::appendParamQuery($queryParams, $account_status, 'account_status', [0, '0', ''], ',', false);
+//            if(!isset($queryParams['where'])) $queryParams['where'] = [];
+//             array_push($queryParams['where'], ['account_status', 1]) ;
         }
         $staffCount = static::getAllList($queryParams, []);
         return $staffCount;
@@ -520,17 +528,17 @@ class StaffDBBusiness extends BasePublicDBBusiness
          // 获得需要删除的数据
         if($admin_type == 2 || $admin_type == 4){
 
-            $queryParams = [
-                'where' => [
-//                ['company_id', $organize_id],
-                ['admin_type', $admin_type],
-//                ['teacher_status',1],
-                ],
-                // 'select' => ['id', 'amount', 'status', 'my_order_no' ]
-            ];
+//            $queryParams = [
+//                'where' => [
+////                ['company_id', $organize_id],
+//                ['admin_type', $admin_type],
+////                ['teacher_status',1],
+//                ],
+//                // 'select' => ['id', 'amount', 'status', 'my_order_no' ]
+//            ];
+            $queryParams = Tool::getParamQuery(['admin_type' => $admin_type], [], []);
             Tool::appendParamQuery($queryParams, $id, 'id', [0, '0', ''], ',', false);
             Tool::appendParamQuery($queryParams, $organize_id, 'company_id', [0, '0', ''], ',', false);
-
             $dataListObj = static::getAllList($queryParams, []);
             // $dataListObj = static::getListByIds($id);
 
@@ -556,16 +564,25 @@ class StaffDBBusiness extends BasePublicDBBusiness
             }
         }
 
-        DB::beginTransaction();
-        try {
+//        DB::beginTransaction();
+//        try {
+//            DB::commit();
+//        } catch ( \Exception $e) {
+//            DB::rollBack();
+//            throws($e->getMessage());
+//            // throws($e->getMessage());
+//        }
+        CommonDB::doTransactionFun(function() use(&$admin_type, &$id, &$organize_id, &$organizeIds){
+
 
             // 删除主记录
-            $delQueryParams = [
-                'where' => [
-                    ['admin_type', $admin_type],
-                    ['issuper','<>', 1],
-                ],
-            ];
+//            $delQueryParams = [
+//                'where' => [
+//                    ['admin_type', $admin_type],
+//                    ['issuper','<>', 1],
+//                ],
+//            ];
+            $delQueryParams = Tool::getParamQuery(['admin_type' => $admin_type], ['sqlParams' =>['where' => [['issuper', '<>', 1]]]], []);
             Tool::appendParamQuery($delQueryParams, $id, 'id', [0, '0', ''], ',', false);
             Tool::appendParamQuery($delQueryParams, $organize_id, 'company_id', [0, '0', ''], ',', false);
             static::del($delQueryParams);
@@ -577,12 +594,7 @@ class StaffDBBusiness extends BasePublicDBBusiness
                     static::updateStaffNum($organizeId);;
                 }
             }
-        } catch ( \Exception $e) {
-            DB::rollBack();
-            throws($e->getMessage());
-            // throws($e->getMessage());
-        }
-        DB::commit();
+        });
         return $id;
     }
 
@@ -699,22 +711,23 @@ class StaffDBBusiness extends BasePublicDBBusiness
                     }
                     // 没有错；判断记录是否已经存在
                     // 查
-                    $queryParams = [
-                        'where' => [
-                            // ['id', '&' , '4=4'],
-                            ['admin_type', '=' ,$admin_type],
-                            // ['class_id', '=' ,$class_id],
-                           // ['student_number', $student_number],
-                            ['mobile', $mobile],
-                            //['admin_type',self::$admin_type],
-                        ],
-                        //            'select' => [
-                        //                'id','company_id','type_name','sort_num'
-                        //                //,'operate_staff_id','operate_staff_history_id'
-                        //                ,'created_at'
-                        //            ],
-                        // 'orderBy' => ['id'=>'desc'],
-                    ];
+//                    $queryParams = [
+//                        'where' => [
+//                            // ['id', '&' , '4=4'],
+//                            ['admin_type', '=' ,$admin_type],
+//                            // ['class_id', '=' ,$class_id],
+//                           // ['student_number', $student_number],
+//                            ['mobile', $mobile],
+//                            //['admin_type',self::$admin_type],
+//                        ],
+//                        //            'select' => [
+//                        //                'id','company_id','type_name','sort_num'
+//                        //                //,'operate_staff_id','operate_staff_history_id'
+//                        //                ,'created_at'
+//                        //            ],
+//                        // 'orderBy' => ['id'=>'desc'],
+//                    ];
+                    $queryParams = Tool::getParamQuery(['admin_type' => $admin_type, 'mobile' => $mobile], [], []);
                     $tem_organize_id = $organize_id;
                     Tool::appendParamQuery($queryParams, $tem_organize_id, 'company_id', [0, '0', ''], ',', false);
                     $infoData = static::getInfoByQuery(1, $queryParams, []);
@@ -821,22 +834,23 @@ class StaffDBBusiness extends BasePublicDBBusiness
                     }
                     // 没有错；判断记录是否已经存在
                     // 查
-                    $queryParams = [
-                        'where' => [
-                            // ['id', '&' , '4=4'],
-                            ['admin_type', '=' ,$admin_type],
-                            // ['class_id', '=' ,$class_id],
-                            // ['student_number', $student_number],
-                            ['mobile', $mobile],
-                            //['admin_type',self::$admin_type],
-                        ],
-                        //            'select' => [
-                        //                'id','company_id','type_name','sort_num'
-                        //                //,'operate_staff_id','operate_staff_history_id'
-                        //                ,'created_at'
-                        //            ],
-                        // 'orderBy' => ['id'=>'desc'],
-                    ];
+//                    $queryParams = [
+//                        'where' => [
+//                            // ['id', '&' , '4=4'],
+//                            ['admin_type', '=' ,$admin_type],
+//                            // ['class_id', '=' ,$class_id],
+//                            // ['student_number', $student_number],
+//                            ['mobile', $mobile],
+//                            //['admin_type',self::$admin_type],
+//                        ],
+//                        //            'select' => [
+//                        //                'id','company_id','type_name','sort_num'
+//                        //                //,'operate_staff_id','operate_staff_history_id'
+//                        //                ,'created_at'
+//                        //            ],
+//                        // 'orderBy' => ['id'=>'desc'],
+//                    ];
+                    $queryParams = Tool::getParamQuery(['admin_type' => $admin_type, 'mobile' => $mobile], [], []);
                     $tem_organize_id = $organize_id;
                     Tool::appendParamQuery($queryParams, $tem_organize_id, 'company_id', [0, '0', ''], ',', false);
                     $infoData = static::getInfoByQuery(1, $queryParams, []);
@@ -954,34 +968,38 @@ class StaffDBBusiness extends BasePublicDBBusiness
         // $temNeedStaffIdOrHistoryId 当只有自己会用到时操作员工id和历史id时，用来判断是否需要获取 true:需要获取； false:不需要获取
         list($ownProperty, $temNeedStaffIdOrHistoryId) = array_values(static::getNeedStaffIdOrHistoryId());
         $operate_staff_id_history = 0;
-        DB::beginTransaction();
-        try {
+//        DB::beginTransaction();
+//        try {
+//        } catch ( \Exception $e) {
+//            DB::rollBack();
+////            throws('操作失败；信息[' . $e->getMessage() . ']');
+//            throws($e->getMessage());
+//        }
+        return CommonDB::doTransactionFun(function() use(&$company_id, &$admin_type, &$organize_id, &$id, &$open_status, &$operate_staff_id, &$modifAddOprate
+            , &$modifyNum, &$updateData, &$ownProperty, &$temNeedStaffIdOrHistoryId, &$operate_staff_id_history){
             if($temNeedStaffIdOrHistoryId && $modifAddOprate) static::addOprate($updateData, $operate_staff_id,$operate_staff_id_history, 2);
-            $saveQueryParams = [
-                'where' => [
-                    ['open_status', 1], // 自由点，让他都可以改 ，就注释掉
-                    ['issuper', '<>' , 1],
-                    ['admin_type', $admin_type],
-                ],
-//                            'select' => [
-//                                'id','title','sort_num','volume'
-//                                ,'operate_staff_id','operate_staff_id_history'
-//                                ,'created_at' ,'updated_at'
-//                            ],
-
-                //   'orderBy' => [ 'id'=>'desc'],//'sort_num'=>'desc',
-            ];
+//            $saveQueryParams = [
+//                'where' => [
+//                    ['open_status', 1], // 自由点，让他都可以改 ，就注释掉
+//                    ['issuper', '<>' , 1],
+//                    ['admin_type', $admin_type],
+//                ],
+////                            'select' => [
+////                                'id','title','sort_num','volume'
+////                                ,'operate_staff_id','operate_staff_id_history'
+////                                ,'created_at' ,'updated_at'
+////                            ],
+//
+//                //   'orderBy' => [ 'id'=>'desc'],//'sort_num'=>'desc',
+//            ];
+            $saveQueryParams = Tool::getParamQuery(['open_status' => 1, 'admin_type' => $admin_type],['sqlParams' =>['where' => [['issuper', '<>', 1]]]], []);
             // 加入 id
             Tool::appendParamQuery($saveQueryParams, $id, 'id');
             Tool::appendParamQuery($saveQueryParams, $organize_id, 'company_id', [0, '0', ''], ',', false);
             $modifyNum = static::save($updateData, $saveQueryParams);
-        } catch ( \Exception $e) {
-            DB::rollBack();
-//            throws('操作失败；信息[' . $e->getMessage() . ']');
-            throws($e->getMessage());
-        }
-        DB::commit();
-        return $modifyNum;
+            DB::commit();
+            return $modifyNum;
+        });
     }
 
 
@@ -1011,23 +1029,31 @@ class StaffDBBusiness extends BasePublicDBBusiness
         // $temNeedStaffIdOrHistoryId 当只有自己会用到时操作员工id和历史id时，用来判断是否需要获取 true:需要获取； false:不需要获取
         list($ownProperty, $temNeedStaffIdOrHistoryId) = array_values(static::getNeedStaffIdOrHistoryId());
         $operate_staff_id_history = 0;
-        DB::beginTransaction();
-        try {
+//        DB::beginTransaction();
+//        try {
+//        } catch ( \Exception $e) {
+//            DB::rollBack();
+////            throws('操作失败；信息[' . $e->getMessage() . ']');
+//            throws($e->getMessage());
+//        }
+        return CommonDB::doTransactionFun(function() use(&$company_id, &$admin_type, &$organize_id, &$id, &$account_status, &$operate_staff_id, &$modifAddOprate
+            , &$modifyNum, &$updateData, &$ownProperty, &$temNeedStaffIdOrHistoryId, &$operate_staff_id_history){
             if($temNeedStaffIdOrHistoryId && $modifAddOprate) static::addOprate($updateData, $operate_staff_id,$operate_staff_id_history, 2);
-            $saveQueryParams = [
-                'where' => [
-                   //  ['account_status', 1],
-                    ['admin_type', $admin_type],
-                    ['issuper', '<>', 1],
-                ],
-//                            'select' => [
-//                                'id','title','sort_num','volume'
-//                                ,'operate_staff_id','operate_staff_id_history'
-//                                ,'created_at' ,'updated_at'
-//                            ],
-
-                //   'orderBy' => [ 'id'=>'desc'],//'sort_num'=>'desc',
-            ];
+//            $saveQueryParams = [
+//                'where' => [
+//                   //  ['account_status', 1],
+//                    ['admin_type', $admin_type],
+//                    ['issuper', '<>', 1],
+//                ],
+////                            'select' => [
+////                                'id','title','sort_num','volume'
+////                                ,'operate_staff_id','operate_staff_id_history'
+////                                ,'created_at' ,'updated_at'
+////                            ],
+//
+//                //   'orderBy' => [ 'id'=>'desc'],//'sort_num'=>'desc',
+//            ];
+            $saveQueryParams = Tool::getParamQuery(['admin_type' => $admin_type],['sqlParams' =>['where' => [['issuper', '<>', 1]]]], []);
             $oldAccountStatus = 1;// -- 可以冻结状态
             // 解冻操作
             if($account_status == 1) $oldAccountStatus = 2; // --可以解冻状态
@@ -1037,12 +1063,9 @@ class StaffDBBusiness extends BasePublicDBBusiness
             Tool::appendParamQuery($saveQueryParams, $organize_id, 'company_id', [0, '0', ''], ',', false);
             // pr($saveQueryParams);
             $modifyNum = static::save($updateData, $saveQueryParams);
-        } catch ( \Exception $e) {
-            DB::rollBack();
-//            throws('操作失败；信息[' . $e->getMessage() . ']');
-            throws($e->getMessage());
-        }
-        DB::commit();
-        return $modifyNum;
+//            DB::commit();
+            return $modifyNum;
+        });
+
     }
 }

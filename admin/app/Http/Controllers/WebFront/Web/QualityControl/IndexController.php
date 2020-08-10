@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Cache;
 
 class IndexController extends BasicController
 {
+    public $controller_id =0;// 功能小模块[控制器]id - controller_id  历史表 、正在进行表 与原表相同
+
     public function test(Request $request){
         $extParams['sqlParams']['whereIn']['id'] = 123;
         pr($extParams);
@@ -35,16 +37,20 @@ class IndexController extends BasicController
      */
     public function index(Request $request)
     {
-        $reDataArr = [];// 可以传给视图的全局变量数组
-        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request){
-            // 正常流程的代码
+//        $reDataArr = [];// 可以传给视图的全局变量数组
+//        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request){
+//            // 正常流程的代码
+//
+//            $this->InitParams($request);
+//            // $reDataArr = $this->reDataArr;
+//            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+//
+//            return view('web.QualityControl.index', $reDataArr);
+//        }, $this->errMethod, $reDataArr, $this->errorView);
+        return $this->exeDoPublicFun($request, 1, 1, 'web.QualityControl.index', true
+            , 'doListPage', [], function (&$reDataArr) use ($request){
 
-            $this->InitParams($request);
-            // $reDataArr = $this->reDataArr;
-            $reDataArr = array_merge($reDataArr, $this->reDataArr);
-
-            return view('web.QualityControl.index', $reDataArr);
-        }, $this->errMethod, $reDataArr, $this->errorView);
+        });
     }
 
     /**
@@ -147,6 +153,10 @@ class IndexController extends BasicController
             return view('web.QualityControl.admin.info', $reDataArr);
 
         }, $this->errMethod, $reDataArr, $this->errorView);
+//        return $this->exeDoPublicFun($request, 17179869184, 1,'web.QualityControl.admin.info', true
+//            , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
+//
+//            });
     }
 
     /**

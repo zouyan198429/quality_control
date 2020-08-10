@@ -110,7 +110,7 @@ class CTAPICompanyCertificateBusiness extends BasicPublicCTAPIBusiness
 //        }
 
         if(($return_num & 4) == 4){// 给上一级返回名称 company_name 下标
-            $fields_merge = ['merge_fields' => Tool::arrEqualKeyVal(['resource_list'],true)];// 获得名称
+            $fields_merge = Tool::arrEqualKeyVal(['resource_list'],true);// 获得名称
             if(!isset($return_data['fields_merge'])) $return_data['fields_merge'] = [];
             array_push($return_data['fields_merge'], $fields_merge);
         }

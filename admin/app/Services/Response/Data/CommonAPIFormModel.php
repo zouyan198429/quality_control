@@ -202,7 +202,6 @@ class CommonAPIFormModel
     public static function getInfoByID($id, $selectParams, $relations, $modelName = '', &$modelObj = null){
         // 获得对象
         static::getBusinessDBObjByModelName($modelName, $modelObj );
-
         if(static::$dataFromType == 1){// 直接通过数据模型获得数据
             $requestData = CommonDB::getInfoById($modelObj, $id, $selectParams, $relations);
         }else{// 调用中间层的方法来获得数据

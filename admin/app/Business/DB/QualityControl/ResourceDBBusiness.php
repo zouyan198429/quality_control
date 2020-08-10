@@ -2,6 +2,7 @@
 // 资源
 namespace App\Business\DB\QualityControl;
 
+use App\Services\DB\CommonDB;
 use Illuminate\Support\Facades\DB;
 /**
  *
@@ -52,18 +53,27 @@ class ResourceDBBusiness extends BasePublicDBBusiness
      */
     public static function replaceById($saveData, $company_id, &$id, $operate_staff_id = 0, $modifAddOprate = 0){
 
+
+//        DB::beginTransaction();
+//        try {
+//            DB::commit();
+//        } catch ( \Exception $e) {
+//            DB::rollBack();
+////            throws('操作失败；信息[' . $e->getMessage() . ']');
+//             throws($e->getMessage());
+//        }
+        return CommonDB::doTransactionFun(function() use(&$saveData, &$company_id, &$id, &$operate_staff_id, &$modifAddOprate){
+
 //        if(isset($saveData['resource_name']) && empty($saveData['resource_name'])  ){
 //            throws('资源名称不能为空！');
 //        }
 
-        // 根据类型自定义id,获得类型自定义历史id
-        $type_self_id = $saveData['type_self_id'] ?? 0;
-        if(is_numeric($type_self_id) && $type_self_id > 0 ){
-            $saveData['type_self_id_history'] = ResourceTypeSelfDBBusiness::getIdHistory($type_self_id);
-        }
+            // 根据类型自定义id,获得类型自定义历史id
+            $type_self_id = $saveData['type_self_id'] ?? 0;
+            if(is_numeric($type_self_id) && $type_self_id > 0 ){
+                $saveData['type_self_id_history'] = ResourceTypeSelfDBBusiness::getIdHistory($type_self_id);
+            }
 
-        DB::beginTransaction();
-        try {
             $isModify = false;
             $operate_staff_id_history = config('public.operate_staff_id_history', 0);// 0;--写上，不然后面要去取，但现在的系统不用历史表
 
@@ -102,12 +112,7 @@ class ResourceDBBusiness extends BasePublicDBBusiness
             if($isModify && ($ownProperty & 1) == 1){// 1：有历史表 ***_history;
                 static::compareHistory($id, 1);
             }
-        } catch ( \Exception $e) {
-            DB::rollBack();
-//            throws('操作失败；信息[' . $e->getMessage() . ']');
-             throws($e->getMessage());
-        }
-        DB::commit();
-        return $id;
+            return $id;
+        });
     }
 }

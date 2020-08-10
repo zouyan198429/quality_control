@@ -2,6 +2,7 @@
 // 能力验证单次结果
 namespace App\Business\DB\QualityControl;
 
+use App\Services\DB\CommonDB;
 use App\Services\Tool;
 use Illuminate\Support\Facades\DB;
 
@@ -27,51 +28,59 @@ class AbilityJoinItemsResultsDBBusiness extends BasePublicDBBusiness
      */
     public static function replaceById($saveData, $company_id, &$id, $operate_staff_id = 0, $modifAddOprate = 0){
 
-        //        if(isset($saveData['real_name']) && empty($saveData['real_name'])  ){
-        //            throws('联系人不能为空！');
-        //        }
-        //
-        //        if(isset($saveData['mobile']) && empty($saveData['mobile'])  ){
-        //            throws('手机不能为空！');
-        //        }
+//        DB::beginTransaction();
+//        try {
+//            DB::commit();
+//        } catch ( \Exception $e) {
+//            DB::rollBack();
+//            throws($e->getMessage());
+//            // throws($e->getMessage());
+//        }
+        return CommonDB::doTransactionFun(function() use(&$saveData, &$company_id, &$id, &$operate_staff_id, &$modifAddOprate){
+            //        if(isset($saveData['real_name']) && empty($saveData['real_name'])  ){
+            //            throws('联系人不能为空！');
+            //        }
+            //
+            //        if(isset($saveData['mobile']) && empty($saveData['mobile'])  ){
+            //            throws('手机不能为空！');
+            //        }
 
-        // 能力验证检测所用仪器
-        $results_instrument = [];
-        $has_results_instrument = false;// 是否有 false:没有 ； true:有
-        Tool::getInfoUboundVal($saveData, 'results_instrument', $has_results_instrument, $results_instrument, 1);
+            // 能力验证检测所用仪器
+            $results_instrument = [];
+            $has_results_instrument = false;// 是否有 false:没有 ； true:有
+            Tool::getInfoUboundVal($saveData, 'results_instrument', $has_results_instrument, $results_instrument, 1);
 
-        // 能力验证检测标准物质
-        $results_standard = [];
-        $has_results_standard = false;// 是否有 false:没有 ； true:有
-        Tool::getInfoUboundVal($saveData, 'results_standard', $has_results_standard, $results_standard, 1);
+            // 能力验证检测标准物质
+            $results_standard = [];
+            $has_results_standard = false;// 是否有 false:没有 ； true:有
+            Tool::getInfoUboundVal($saveData, 'results_standard', $has_results_standard, $results_standard, 1);
 
-        // 检测方法依据
-        $results_method = [];
-        $has_results_method = false;// 是否有 false:没有 ； true:有
-        Tool::getInfoUboundVal($saveData, 'results_method', $has_results_method, $results_method, 1);
+            // 检测方法依据
+            $results_method = [];
+            $has_results_method = false;// 是否有 false:没有 ； true:有
+            Tool::getInfoUboundVal($saveData, 'results_method', $has_results_method, $results_method, 1);
 
-        // 能力验证取样登记表
-        $items_samples = [];
-        $has_items_samples = false;// 是否有 false:没有 ； true:有
-        Tool::getInfoUboundVal($saveData, 'items_samples', $has_items_samples, $items_samples, 1);
+            // 能力验证取样登记表
+            $items_samples = [];
+            $has_items_samples = false;// 是否有 false:没有 ； true:有
+            Tool::getInfoUboundVal($saveData, 'items_samples', $has_items_samples, $items_samples, 1);
 
-        // 是否有图片资源
-        $hasResource = false;
-        $resourceIds = [];
-        if(Tool::getInfoUboundVal($saveData, 'resourceIds', $hasResource, $resourceIds, 1)){
-            // $saveData['resource_id'] = $resourceIds[0] ?? 0;// 第一个图片资源的id
-        }
-        $resource_ids = $saveData['resource_ids'] ?? '';// 图片资源id串(逗号分隔-未尾逗号结束)
-        // if(isset($saveData['resource_ids']))  unset($saveData['resource_ids']);
-        // if(isset($saveData['resource_id']))  unset($saveData['resource_id']);
+            // 是否有图片资源
+            $hasResource = false;
+            $resourceIds = [];
+            if(Tool::getInfoUboundVal($saveData, 'resourceIds', $hasResource, $resourceIds, 1)){
+                // $saveData['resource_id'] = $resourceIds[0] ?? 0;// 第一个图片资源的id
+            }
+            $resource_ids = $saveData['resource_ids'] ?? '';// 图片资源id串(逗号分隔-未尾逗号结束)
+            // if(isset($saveData['resource_ids']))  unset($saveData['resource_ids']);
+            // if(isset($saveData['resource_id']))  unset($saveData['resource_id']);
 
 
-        $operate_staff_id_history = config('public.operate_staff_id_history', 0);// 0;--写上，不然后面要去取，但现在的系统不用历史表
-        // 保存前的处理
-        static::replaceByIdAPIPre($saveData, $company_id, $id, $operate_staff_id, $operate_staff_id_history, $modifAddOprate);
-        $modelObj = null;
-        DB::beginTransaction();
-        try {
+            $operate_staff_id_history = config('public.operate_staff_id_history', 0);// 0;--写上，不然后面要去取，但现在的系统不用历史表
+            // 保存前的处理
+            static::replaceByIdAPIPre($saveData, $company_id, $id, $operate_staff_id, $operate_staff_id_history, $modifAddOprate);
+            $modelObj = null;
+            // ******************************************************************
             $isModify = false;
 
             // $ownProperty  自有属性值;
@@ -149,16 +158,11 @@ class AbilityJoinItemsResultsDBBusiness extends BasePublicDBBusiness
                     ResourceDBBusiness::saveByIds($resourceArr, $resourceIds);
                 }
             }
-
-        } catch ( \Exception $e) {
-            DB::rollBack();
-            throws($e->getMessage());
-            // throws($e->getMessage());
-        }
-        DB::commit();
-        // 保存成功后的处理
-        static::replaceByIdAPISucess($isModify, $modelObj, $saveData, $company_id, $id, $operate_staff_id, $operate_staff_id_history, $modifAddOprate);
-        return $id;
+            // *********************************************************
+            // 保存成功后的处理
+            static::replaceByIdAPISucess($isModify, $modelObj, $saveData, $company_id, $id, $operate_staff_id, $operate_staff_id_history, $modifAddOprate);
+            return $id;
+        });
     }
 
 }

@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Cache;
 
 class HomeController extends BasicRegController
 {
+    public $controller_id =0;// 功能小模块[控制器]id - controller_id  历史表 、正在进行表 与原表相同
+
     public function test(Request $request){
         $extParams['sqlParams']['whereIn']['id'] = 123;
         pr($extParams);
@@ -298,26 +300,48 @@ class HomeController extends BasicRegController
      * @author zouyan(305463219@qq.com)
      */
     public function company_ajax_alist(Request $request){
-        $this->InitParams($request);
-        // $this->company_id = 1;
-        $mergeParams = [
-            'admin_type' => 2,// 类型1平台2企业4个人
-        ];
-        CTAPIStaffBusiness::mergeRequest($request, $this, $mergeParams);
+//        $this->InitParams($request);
+//        // $this->company_id = 1;
+//        $mergeParams = [
+//            'admin_type' => 2,// 类型1平台2企业4个人
+//        ];
+//        CTAPIStaffBusiness::mergeRequest($request, $this, $mergeParams);
+//
+//        $relations = [];//  ['siteResources']
+//        $handleKeyArr = [];
+//        $handleKeyConfigArr = [];
+//        array_push($handleKeyArr, 'industry');// array_merge($handleKeyArr, ['industry', 'siteResources']); ;//
+//        array_push($handleKeyConfigArr, 'industry_info');
+//        $handleKeyArr = array_merge($handleKeyArr, ['extend', 'city']);
+//        $handleKeyConfigArr = array_merge($handleKeyConfigArr, ['extend_info', 'city_info']);
+//        $extParams = [
+//            // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+//            'relationFormatConfigs'=> CTAPIStaffBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
+//        ];
+//
+//        return  CTAPIStaffBusiness::getList($request, $this, 2 + 4, [], $relations, $extParams);
+        return $this->exeDoPublicFun($request, 4, 4,'', true, '', [], function (&$reDataArr) use ($request){
 
-        $relations = [];//  ['siteResources']
-        $handleKeyArr = [];
-        $handleKeyConfigArr = [];
-        array_push($handleKeyArr, 'industry');// array_merge($handleKeyArr, ['industry', 'siteResources']); ;//
-        array_push($handleKeyConfigArr, 'industry_info');
-        $handleKeyArr = array_merge($handleKeyArr, ['extend', 'city']);
-        $handleKeyConfigArr = array_merge($handleKeyConfigArr, ['extend_info', 'city_info']);
-        $extParams = [
-            // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-            'relationFormatConfigs'=> CTAPIStaffBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
-        ];
+            // $this->company_id = 1;
+            $mergeParams = [
+                'admin_type' => 2,// 类型1平台2企业4个人
+            ];
+            CTAPIStaffBusiness::mergeRequest($request, $this, $mergeParams);
 
-        return  CTAPIStaffBusiness::getList($request, $this, 2 + 4, [], $relations, $extParams);
+            $relations = [];//  ['siteResources']
+            $handleKeyArr = [];
+            $handleKeyConfigArr = [];
+            array_push($handleKeyArr, 'industry');// array_merge($handleKeyArr, ['industry', 'siteResources']); ;//
+            array_push($handleKeyConfigArr, 'industry_info');
+            $handleKeyArr = array_merge($handleKeyArr, ['extend', 'city']);
+            $handleKeyConfigArr = array_merge($handleKeyConfigArr, ['extend_info', 'city_info']);
+            $extParams = [
+                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                'relationFormatConfigs'=> CTAPIStaffBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
+            ];
+
+            return  CTAPIStaffBusiness::getList($request, $this, 2 + 4, [], $relations, $extParams);
+        });
     }
 
     /**

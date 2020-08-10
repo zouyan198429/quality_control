@@ -2,6 +2,7 @@
 // 能力验证
 namespace App\Business\DB\QualityControl;
 
+use App\Services\DB\CommonDB;
 use App\Services\Tool;
 use Illuminate\Support\Facades\DB;
 
@@ -28,6 +29,17 @@ class AbilitysDBBusiness extends BasePublicDBBusiness
      */
     public static function replaceById($saveData, $company_id, &$id, $operate_staff_id = 0, $modifAddOprate = 0){
 
+//        DB::beginTransaction();
+//        try {
+//            DB::commit();
+//        } catch ( \Exception $e) {
+//            DB::rollBack();
+//            throws($e->getMessage());
+//            // throws($e->getMessage());
+//        }
+
+        return CommonDB::doTransactionFun(function() use(&$saveData, &$company_id, &$id, &$operate_staff_id, &$modifAddOprate){
+
 //        if(isset($saveData['real_name']) && empty($saveData['real_name'])  ){
 //            throws('联系人不能为空！');
 //        }
@@ -36,30 +48,29 @@ class AbilitysDBBusiness extends BasePublicDBBusiness
 //            throws('手机不能为空！');
 //        }
 
-        // 方法标准
-        $project_standards = [];
-        $has_project_standard = false;// 是否有方法修改 false:没有 ； true:有
-        if(isset($saveData['project_standards'])){
-            $project_standards = $saveData['project_standards'];
-            unset($saveData['project_standards']);
-            $has_project_standard = true;
-        }
+            // 方法标准
+            $project_standards = [];
+            $has_project_standard = false;// 是否有方法修改 false:没有 ； true:有
+            if(isset($saveData['project_standards'])){
+                $project_standards = $saveData['project_standards'];
+                unset($saveData['project_standards']);
+                $has_project_standard = true;
+            }
 
-        // 验证数据项
-        $submit_items = [];
-        $has_submit_item = false;// 是否有验证数据项修改 false:没有 ； true:有
-        if(isset($saveData['submit_items'])){
-            $submit_items = $saveData['submit_items'];
-            unset($saveData['submit_items']);
-            $has_submit_item = true;
-        }
+            // 验证数据项
+            $submit_items = [];
+            $has_submit_item = false;// 是否有验证数据项修改 false:没有 ； true:有
+            if(isset($saveData['submit_items'])){
+                $submit_items = $saveData['submit_items'];
+                unset($saveData['submit_items']);
+                $has_submit_item = true;
+            }
 
-        $operate_staff_id_history = config('public.operate_staff_id_history', 0);// 0;--写上，不然后面要去取，但现在的系统不用历史表
-        // 保存前的处理
-        static::replaceByIdAPIPre($saveData, $company_id, $id, $operate_staff_id, $operate_staff_id_history, $modifAddOprate);
-        $modelObj = null;
-        DB::beginTransaction();
-        try {
+            $operate_staff_id_history = config('public.operate_staff_id_history', 0);// 0;--写上，不然后面要去取，但现在的系统不用历史表
+            // 保存前的处理
+            static::replaceByIdAPIPre($saveData, $company_id, $id, $operate_staff_id, $operate_staff_id_history, $modifAddOprate);
+            $modelObj = null;
+            //************************************************************************************
             $isModify = false;
 
             // $ownProperty  自有属性值;
@@ -243,15 +254,10 @@ class AbilitysDBBusiness extends BasePublicDBBusiness
 //                }
 //            }
 
-        } catch ( \Exception $e) {
-            DB::rollBack();
-            throws($e->getMessage());
-            // throws($e->getMessage());
-        }
-        DB::commit();
-        // 保存成功后的处理
-        static::replaceByIdAPISucess($isModify, $modelObj, $saveData, $company_id, $id, $operate_staff_id, $operate_staff_id_history, $modifAddOprate);
-        return $id;
+            // 保存成功后的处理
+            static::replaceByIdAPISucess($isModify, $modelObj, $saveData, $company_id, $id, $operate_staff_id, $operate_staff_id_history, $modifAddOprate);
+            return $id;
+        });
     }
 
     /**
@@ -273,28 +279,30 @@ class AbilitysDBBusiness extends BasePublicDBBusiness
         $info = static::getInfo($id);
         if(empty($info)) throws('记录不存在');
         if($info['status'] != 1) throws('当前记录非【待开始】状态，不可删除！');
-        DB::beginTransaction();
-        try {
+//        DB::beginTransaction();
+//        try {
+//            DB::commit();
+//        } catch ( \Exception $e) {
+//            DB::rollBack();
+//            throws($e->getMessage());
+//            // throws($e->getMessage());
+//        }
+        CommonDB::doTransactionFun(function() use(&$id){
+
             // 删除主记录
             static::deleteByIds($id);
             // 删除 项目标准
-            $delQueryParams = [
-                'where' => [
-                    ['ability_id', $id],
-                ],
-            ];
+//            $delQueryParams = [
+//                'where' => [
+//                    ['ability_id', $id],
+//                ],
+//            ];
             // Tool::appendParamQuery($delQueryParams, $id, 'id', [0, '0', ''], ',', false);
+            $delQueryParams = Tool::getParamQuery(['ability_id' => $id], [], []);
             ProjectStandardsDBBusiness::del($delQueryParams);
             // 删除  验证数据项
             ProjectSubmitItemsDBBusiness::del($delQueryParams);
-
-
-        } catch ( \Exception $e) {
-            DB::rollBack();
-            throws($e->getMessage());
-            // throws($e->getMessage());
-        }
-        DB::commit();
+        });
         return $id;
     }
 
@@ -307,13 +315,14 @@ class AbilitysDBBusiness extends BasePublicDBBusiness
     {
         $dateTime =  date('Y-m-d H:i:s');
         // 读取所有未开始的
-        $queryParams = [
-            'where' => [
-                ['status', 1],
-                ['join_begin_date', '<=', $dateTime],
-            ],
-             'select' => ['id' ]
-        ];
+//        $queryParams = [
+//            'where' => [
+//                ['status', 1],
+//                ['join_begin_date', '<=', $dateTime],
+//            ],
+//             'select' => ['id' ]
+//        ];
+        $queryParams = Tool::getParamQuery(['status' => 1], ['sqlParams' =>['select' =>['id' ], 'where' => [['join_begin_date', '<=', $dateTime]]]], []);
         $dataList = static::getAllList($queryParams, [])->toArray();
 
         if(!empty($dataList)){
@@ -321,12 +330,13 @@ class AbilitysDBBusiness extends BasePublicDBBusiness
             $saveDate = [
                 'status' => 2,
             ];
-            $saveQueryParams = [
-                'where' => [
-                    ['status', 1],
-                    // ['status_business', '!=', 1],
-                ],
-            ];
+//            $saveQueryParams = [
+//                'where' => [
+//                    ['status', 1],
+//                    // ['status_business', '!=', 1],
+//                ],
+//            ];
+            $saveQueryParams = Tool::getParamQuery(['status' => 1], [], []);
             Tool::appendParamQuery($saveQueryParams, $ids, 'id', [0, '0', ''], ',', false);
             static::save($saveDate, $saveQueryParams);
         }
@@ -341,14 +351,15 @@ class AbilitysDBBusiness extends BasePublicDBBusiness
     {
         $dateTime =  date('Y-m-d H:i:s');
         // 读取所有未开始的
-        $queryParams = [
-            'where' => [
-                // ['status', 2],
-                ['join_end_date', '<=', $dateTime],
-            ],
-            'whereIn' => [ 'status' => [1,2]],
-            'select' => ['id' ]
-        ];
+//        $queryParams = [
+//            'where' => [
+//                // ['status', 2],
+//                ['join_end_date', '<=', $dateTime],
+//            ],
+//            'whereIn' => [ 'status' => [1,2]],
+//            'select' => ['id' ]
+//        ];
+        $queryParams = Tool::getParamQuery(['status' => [1,2]], ['sqlParams' =>['select' =>['id' ], 'where' => [['join_end_date', '<=', $dateTime]]]], []);
         $dataList = static::getAllList($queryParams, [])->toArray();
 
         if(!empty($dataList)){
@@ -356,14 +367,15 @@ class AbilitysDBBusiness extends BasePublicDBBusiness
             $saveDate = [
                 'status' => 4,
             ];
-            $saveQueryParams = [
-                'where' => [
-                    // ['status', 2],
-                    // ['status_business', '!=', 1],
-                ],
-                'whereIn' => [ 'status' => [1,2]],
-            ];
-            Tool::appendParamQuery($saveQueryParams, $ids, 'id', [0, '0', ''], ',', false);
+//            $saveQueryParams = [
+//                'where' => [
+//                    // ['status', 2],
+//                    // ['status_business', '!=', 1],
+//                ],
+//                'whereIn' => [ 'status' => [1,2]],
+//            ];
+//            Tool::appendParamQuery($saveQueryParams, $ids, 'id', [0, '0', ''], ',', false);
+            $saveQueryParams = Tool::getParamQuery(['status' => [1,2], 'id' => $ids], [], []);
             static::save($saveDate, $saveQueryParams);
         }
     }

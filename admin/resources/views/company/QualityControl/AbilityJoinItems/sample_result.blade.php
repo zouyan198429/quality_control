@@ -132,7 +132,7 @@
 
                         <div class="alert alert-warning alert-dismissable">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                            <p>一次最多上传20张图片。</p>
+                            <p>一次最多上传30张图片。</p>
                         </div>
                         <div class="row  baguetteBoxOne gallery ">
                             <div class="col-xs-6">
@@ -177,7 +177,7 @@
     var FILE_UPLOAD_URL = "{{ url('api/company/upload') }}";// 文件上传提交地址 'your/file/upload/url'
     var PIC_DEL_URL = "{{ url('api/company/upload/ajax_del') }}";// 删除图片url
     var MULTIPART_PARAMS = {pro_unit_id:'0'};// 附加参数	函数或对象，默认 {}
-    var LIMIT_FILES_COUNT = 20;//   限制文件上传数目	false（默认）或数字
+    var LIMIT_FILES_COUNT = 30;//   限制文件上传数目	false（默认）或数字
     var MULTI_SELECTION = true//  是否可用一次选取多个文件	默认 true false
     var FLASH_SWF_URL = "{{asset('dist/lib/uploader/Moxie.swf') }}";// flash 上传组件地址  默认为 lib/uploader/Moxie.swf
     var SILVERLIGHT_XAP_URL = "{{asset('dist/lib/uploader/Moxie.xap') }}";// silverlight_xap_url silverlight 上传组件地址  默认为 lib/uploader/Moxie.xap  请确保在文件上传页面能够通过此地址访问到此文件。

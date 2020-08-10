@@ -118,14 +118,26 @@ class UploadController extends WorksController
      */
     public function ajax_del(Request $request)
     {
-        $this->InitParams($request);
-        $id = CommonRequest::getInt($request, 'id');
-        Tool::judgeInitParams('id', $id);
-        $company_id = $this->company_id;
-        $resultDatas = APIRunBuyRequest::ResourceDelById($id, $company_id);
+//        $this->InitParams($request);
+//        $id = CommonRequest::getInt($request, 'id');
+//        Tool::judgeInitParams('id', $id);
+//        $company_id = $this->company_id;
+//        $resultDatas = APIRunBuyRequest::ResourceDelById($id, $company_id);
+//
+//        return ajaxDataArr(1, $resultDatas, '');
 
-        return ajaxDataArr(1, $resultDatas, '');
+        $tem_id = CommonRequest::get($request, 'id');
+        Tool::formatOneArrVals($tem_id, [null, ''], ',', 1 | 2 | 4 | 8);
+        $pageNum = (is_array($tem_id) && count($tem_id) > 1 ) ? 1024 : 512;
+        return $this->exeDoPublicFun($request, $pageNum, 4,'', true, '', [], function (&$reDataArr) use ($request){
 
+            $id = CommonRequest::getInt($request, 'id');
+            Tool::judgeInitParams('id', $id);
+            $company_id = $this->company_id;
+            $resultDatas = APIRunBuyRequest::ResourceDelById($id, $company_id);
+
+            return ajaxDataArr(1, $resultDatas, '');
+        });
     }
 
     /**

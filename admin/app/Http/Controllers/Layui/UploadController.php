@@ -6,6 +6,7 @@ use App\Business\Resource;
 use App\Http\Controllers\WorksController;
 use App\Services\DB\CommonDB;
 use App\Services\Request\API\Sites\APIRunBuyRequest;
+use App\Services\Request\CommonRequest;
 use App\Services\Tool;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -40,8 +41,15 @@ class UploadController extends WorksController
      */
     public function ajax_del(Request $request)
     {
-        $this->InitParams($request);
-        return Resource::delAjax($request, $this);
+//        $this->InitParams($request);
+//        return Resource::delAjax($request, $this);
+
+        $tem_id = CommonRequest::get($request, 'id');
+        Tool::formatOneArrVals($tem_id, [null, ''], ',', 1 | 2 | 4 | 8);
+        $pageNum = (is_array($tem_id) && count($tem_id) > 1 ) ? 1024 : 512;
+        return $this->exeDoPublicFun($request, $pageNum, 4,'', true, '', [], function (&$reDataArr) use ($request){
+            return Resource::delAjax($request, $this);
+        });
     }
 
     /**

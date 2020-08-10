@@ -2,6 +2,7 @@
 // 能力验证报名主表
 namespace App\Business\DB\QualityControl;
 
+use App\Services\DB\CommonDB;
 use App\Services\Tool;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -28,6 +29,15 @@ class AbilityJoinDBBusiness extends BasePublicDBBusiness
      */
     public static function replaceById($saveData, $company_id, &$id, $operate_staff_id = 0, $modifAddOprate = 0){
 
+//        DB::beginTransaction();
+//        try {
+//            DB::commit();
+//        } catch ( \Exception $e) {
+//            DB::rollBack();
+//            throws($e->getMessage());
+//            // throws($e->getMessage());
+//        }
+        return CommonDB::doTransactionFun(function() use(&$saveData, &$company_id, &$id, &$operate_staff_id, &$modifAddOprate){
 //        if(isset($saveData['real_name']) && empty($saveData['real_name'])  ){
 //            throws('联系人不能为空！');
 //        }
@@ -35,24 +45,26 @@ class AbilityJoinDBBusiness extends BasePublicDBBusiness
 //        if(isset($saveData['mobile']) && empty($saveData['mobile'])  ){
 //            throws('手机不能为空！');
 //        }
-        $operate_staff_id_history = config('public.operate_staff_id_history', 0);// 0;--写上，不然后面要去取，但现在的系统不用历史表
-        // 保存前的处理
-        static::replaceByIdAPIPre($saveData, $company_id, $id, $operate_staff_id, $operate_staff_id_history, $modifAddOprate);
+            $operate_staff_id_history = config('public.operate_staff_id_history', 0);// 0;--写上，不然后面要去取，但现在的系统不用历史表
+            // 保存前的处理
+            static::replaceByIdAPIPre($saveData, $company_id, $id, $operate_staff_id, $operate_staff_id_history, $modifAddOprate);
 
-        // 能力验证报名项
-        $ability_join_items = [];
-        $has_join_item = false;// 是否有能力验证报名项修改 false:没有 ； true:有
-        if(isset($saveData['ability_join_items'])){
-            $ability_join_items = $saveData['ability_join_items'];
-            unset($saveData['ability_join_items']);
-            $has_join_item = true;
-        }
+            // 能力验证报名项
+            $logContent = '';
+            if(isset($saveData['ability_join_items'])){
+                $logContent = '能力验证' . (($id > 0) ? '新报名' : '追加报名') . ';';
+                $logContent .= '数据：' . json_encode($saveData);
+            }
+            $ability_join_items = [];
+            $has_join_item = false;// 是否有能力验证报名项修改 false:没有 ； true:有
+            if(Tool::getInfoUboundVal($saveData, 'ability_join_items', $has_join_item, $ability_join_items, 1)){
 
-        $currentNow = Carbon::now()->toDateTimeString();
+            }
 
-        $modelObj = null;
-        DB::beginTransaction();
-        try {
+            $currentNow = Carbon::now()->toDateTimeString();
+
+            $modelObj = null;
+            //************************************************************
             $isModify = false;
 
             $ability_code = $saveData['ability_code'] ?? '';
@@ -77,7 +89,7 @@ class AbilityJoinDBBusiness extends BasePublicDBBusiness
             }else {// 新加;要加入的特别字段
                 $addNewData = [
                     // 'company_id' => $company_id,
-                     'ability_code' => $ability_code,// 单号 生成  2020NLYZ0001
+                    'ability_code' => $ability_code,// 单号 生成  2020NLYZ0001
                     'join_year' => Carbon::now()->year,
                     'join_time' => $currentNow,
                     'status' => 1,
@@ -105,7 +117,7 @@ class AbilityJoinDBBusiness extends BasePublicDBBusiness
                 static::compareHistory($id, 1);
             }
 
-            // 如果有能力验证报名项 修改
+            // 如果有能力验证报名项 修改/添加---不做删除操作
             if($has_join_item){
                 $sample_result_ids = AbilityJoinItemsDBBusiness::updateByDataList(['ability_join_id' => $id]
                     , [
@@ -115,11 +127,15 @@ class AbilityJoinDBBusiness extends BasePublicDBBusiness
                     ]
                     , $ability_join_items, $isModify, $operate_staff_id, $operate_staff_id_history
                     , 'id', $company_id, $modifAddOprate, [
-                           'del' => [// 删除用
-                               'del_type' => 2,// 删除方式  1：批量删除 static::deleteByIds($dbIds) [默认] 2: 多次单个删除：static::delById($company_id, $tem_id, $operate_staff_id, $modifAddOprate, $extendParams);
-                               'extend_params' => [],// 删除的扩展参数 一维数组  del_type = 2时：用
-                           ],
+                        'del' => [// 删除用
+                            'del_type' => 4,// 2,// 删除方式  1：批量删除 static::deleteByIds($dbIds) [默认] 2: 多次单个删除：static::delById($company_id, $tem_id, $operate_staff_id, $modifAddOprate, $extendParams);
+                            'extend_params' => [],// 删除的扩展参数 一维数组  del_type = 2时：用
+                        ],
                     ]);
+                // 记录报名日志
+                // 获得操作人员信息
+                $operateInfo = StaffDBBusiness::getInfo($operate_staff_id);
+                AbilityJoinLogsDBBusiness::saveAbilityJoinLog($operateInfo['admin_type'], $operate_staff_id, $id, 0, $logContent, $operate_staff_id, $operate_staff_id_history);
             }
 //            if($has_join_item){
 //                $joinItemsListArr = [];
@@ -175,15 +191,11 @@ class AbilityJoinDBBusiness extends BasePublicDBBusiness
 //                    AbilityJoinItemsDBBusiness::delById($company_id, $joinItemsIds, $operate_staff_id, $modifAddOprate, []);
 //                }
 //            }
-        } catch ( \Exception $e) {
-            DB::rollBack();
-            throws($e->getMessage());
-            // throws($e->getMessage());
-        }
-        DB::commit();
-        // 保存成功后的处理
-        static::replaceByIdAPISucess($isModify, $modelObj, $saveData, $company_id, $id, $operate_staff_id, $operate_staff_id_history, $modifAddOprate);
-        return $id;
+            // ***********************************************************
+            // 保存成功后的处理
+            static::replaceByIdAPISucess($isModify, $modelObj, $saveData, $company_id, $id, $operate_staff_id, $operate_staff_id_history, $modifAddOprate);
+            return $id;
+        });
     }
 
     /**
@@ -199,6 +211,16 @@ class AbilityJoinDBBusiness extends BasePublicDBBusiness
      */
     public static function sample_save($saveData, $company_id, &$id, $operate_staff_id = 0, $modifAddOprate = 0){
 
+//        DB::beginTransaction();
+//        try {
+//            DB::commit();
+//        } catch ( \Exception $e) {
+//            DB::rollBack();
+//            throws($e->getMessage());
+//            // throws($e->getMessage());
+//        }
+        return CommonDB::doTransactionFun(function() use(&$saveData, &$company_id, &$id, &$operate_staff_id, &$modifAddOprate){
+
 //        if(isset($saveData['real_name']) && empty($saveData['real_name'])  ){
 //            throws('联系人不能为空！');
 //        }
@@ -206,23 +228,22 @@ class AbilityJoinDBBusiness extends BasePublicDBBusiness
 //        if(isset($saveData['mobile']) && empty($saveData['mobile'])  ){
 //            throws('手机不能为空！');
 //        }
-        $operate_staff_id_history = config('public.operate_staff_id_history', 0);// 0;--写上，不然后面要去取，但现在的系统不用历史表
-        // 保存前的处理
-        static::replaceByIdAPIPre($saveData, $company_id, $id, $operate_staff_id, $operate_staff_id_history, $modifAddOprate);
+            $operate_staff_id_history = config('public.operate_staff_id_history', 0);// 0;--写上，不然后面要去取，但现在的系统不用历史表
+            // 保存前的处理
+            static::replaceByIdAPIPre($saveData, $company_id, $id, $operate_staff_id, $operate_staff_id_history, $modifAddOprate);
 
-        // 样品编号
-        $sample_num_data = [];
-        $has_sample_num = false;// 样品编号 false:没有 ； true:有
-        Tool::getInfoUboundVal($saveData, 'sample_num_data', $has_sample_num, $sample_num_data, 1);
+            // 样品编号
+            $sample_num_data = [];
+            $has_sample_num = false;// 样品编号 false:没有 ； true:有
+            Tool::getInfoUboundVal($saveData, 'sample_num_data', $has_sample_num, $sample_num_data, 1);
 
 
-        if(empty($sample_num_data)) return $id;
+            if(empty($sample_num_data)) return $id;
 
-        $currentNow = Carbon::now()->toDateTimeString();
+            $currentNow = Carbon::now()->toDateTimeString();
 
-        $modelObj = null;
-        DB::beginTransaction();
-        try {
+            $modelObj = null;
+            // ******************************************************
             $isModify = false;
 
             // $ownProperty  自有属性值;
@@ -277,6 +298,8 @@ class AbilityJoinDBBusiness extends BasePublicDBBusiness
                 'operate_staff_id' => $operate_staff_id,
                 'operate_staff_id_history' => $operate_staff_id_history,
             ];
+            // 获得操作人员信息
+            $operateInfo = StaffDBBusiness::getInfo($operate_staff_id);
             foreach($sample_num_data as $join_item_id => $sample_list){
                 if(empty($sample_list)) continue;
                 $join_item_info =  AbilityJoinItemsDBBusiness::getInfo($join_item_id);
@@ -305,7 +328,7 @@ class AbilityJoinDBBusiness extends BasePublicDBBusiness
                 // 能力验证单次结果
                 $updateFields = array_merge([
                     // 'submit_status' => 1
-                     'sample_time' => $currentNow
+                    'sample_time' => $currentNow
                 ], $appendArr);
                 $searchConditon = [
                     'ability_join_item_id' => $join_item_id,
@@ -315,15 +338,28 @@ class AbilityJoinDBBusiness extends BasePublicDBBusiness
                 AbilityJoinItemsResultsDBBusiness::updateOrCreate($resultObj, $searchConditon, $updateFields );
                 $result_id = $resultObj->id;
 
+
+                // 数据加入结果id
+                Tool::arrAppendKeys($sample_list, [
+                    'ability_join_item_id' => $join_item_id,
+                    'retry_no' => $retry_no,
+                    'result_id' => $result_id,
+                    'sample_time' => $currentNow
+                ]);
+
+                // 记录报名日志
+                $logContent = '取样操作：' . json_encode($sample_list);
+                AbilityJoinLogsDBBusiness::saveAbilityJoinLog($operateInfo['admin_type'], $operate_staff_id, $id, $join_item_id, $logContent, $operate_staff_id, $operate_staff_id_history);
                 // 获得已有的样品编号
-                $queryParams = [
-                    'where' => [
-                        ['ability_join_item_id', $join_item_id],
-                        ['retry_no', $retry_no],
-                        ['result_id',$result_id],
-                    ],
-                    // 'select' => ['id', 'amount', 'status', 'my_order_no' ]
-                ];
+//                $queryParams = [
+//                    'where' => [
+//                        ['ability_join_item_id', $join_item_id],
+//                        ['retry_no', $retry_no],
+//                        ['result_id',$result_id],
+//                    ],
+//                    // 'select' => ['id', 'amount', 'status', 'my_order_no' ]
+//                ];
+                $queryParams = Tool::getParamQuery(['ability_join_item_id' => $join_item_id, 'retry_no' => $retry_no, 'result_id' => $result_id], [], []);
                 $joinSampleDataListObj = AbilityJoinItemsSamplesDBBusiness::getAllList($queryParams, []);
                 $joinSampleListArr = $joinSampleDataListObj->toArray();
                 $joinSampleIds = [];
@@ -331,13 +367,14 @@ class AbilityJoinDBBusiness extends BasePublicDBBusiness
 
                 foreach($sample_list as $sample_info){
                     $updateFields = array_merge($sample_info,[
-                         'sample_time' => $currentNow
+                        'sample_time' => $currentNow
                     ], $appendArr);
                     $searchConditon = [
                         'ability_join_item_id' => $join_item_id,
                         'retry_no' => $retry_no,
                         'result_id' => $result_id,
-                        'sample_one' => $sample_info['sample_one'],
+                        'serial_number' => $sample_info['serial_number'],
+                        // 'sample_one' => $sample_info['sample_one'],
                     ];
                     $sampleObj = null;
                     AbilityJoinItemsSamplesDBBusiness::updateOrCreate($sampleObj, $searchConditon, $updateFields );
@@ -355,14 +392,10 @@ class AbilityJoinDBBusiness extends BasePublicDBBusiness
                 }
 
             }
-        } catch ( \Exception $e) {
-            DB::rollBack();
-            throws($e->getMessage());
-            // throws($e->getMessage());
-        }
-        DB::commit();
-        // 保存成功后的处理
-        static::replaceByIdAPISucess($isModify, $modelObj, $saveData, $company_id, $id, $operate_staff_id, $operate_staff_id_history, $modifAddOprate);
-        return $id;
+            // ************************************************************
+            // 保存成功后的处理
+            static::replaceByIdAPISucess($isModify, $modelObj, $saveData, $company_id, $id, $operate_staff_id, $operate_staff_id_history, $modifAddOprate);
+            return $id;
+        });
     }
 }

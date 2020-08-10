@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\WebFront\User\QualityControl;
 
 use App\Business\Controller\API\QualityControl\CTAPIResourceBusiness;
+use App\Services\Request\CommonRequest;
+use App\Services\Tool;
 use Illuminate\Http\Request;
 use App\Http\Controllers\WorksController;
 
 class UploadController extends BasicController
 {
+    public $controller_id =0;// 功能小模块[控制器]id - controller_id  历史表 、正在进行表 与原表相同
+
     public $model_name = 'Resource';
     // 大后台 admin/年/月/日/文件
     // 企业 company/[生产单元/]年/月/日/文件
@@ -35,8 +39,15 @@ class UploadController extends BasicController
      */
     public function ajax_del(Request $request)
     {
-        $this->InitParams($request);
-        return CTAPIResourceBusiness::delAjax($request, $this);
+//        $this->InitParams($request);
+//        return CTAPIResourceBusiness::delAjax($request, $this);
+
+        $tem_id = CommonRequest::get($request, 'id');
+        Tool::formatOneArrVals($tem_id, [null, ''], ',', 1 | 2 | 4 | 8);
+        $pageNum = (is_array($tem_id) && count($tem_id) > 1 ) ? 1024 : 512;
+        return $this->exeDoPublicFun($request, $pageNum, 4,'', true, '', [], function (&$reDataArr) use ($request){
+            return CTAPIResourceBusiness::delAjax($request, $this);
+        });
     }
 
     /**

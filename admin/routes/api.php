@@ -149,6 +149,7 @@ $api->version('v1', function ($api) {
         $api->any('admin/citys/ajax_alist', 'Admin\QualityControl\CitysController@ajax_alist');//ajax获得列表数据
         $api->post('admin/citys/ajax_del', 'Admin\QualityControl\CitysController@ajax_del');// 删除
         $api->post('admin/citys/ajax_save', 'Admin\QualityControl\CitysController@ajax_save');// 新加/修改
+        $api->any('admin/citys/ajax_info', 'Admin\QualityControl\CitysController@ajax_info');// 详情
         $api->post('admin/citys/ajax_get_child', 'Admin\QualityControl\CitysController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/citys/ajax_get_areachild', 'Admin\QualityControl\CitysController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/citys/ajax_import_staff','Admin\QualityControl\CitysController@ajax_import'); // 导入员工
@@ -247,7 +248,8 @@ $api->version('v1', function ($api) {
 
         // 能力验证
         $api->any('company/abilitys/ajax_alist', 'WebFront\Company\QualityControl\AbilitysController@ajax_alist');//ajax获得列表数据
-        $api->post('company/abilitys/ajax_join_save', 'WebFront\Company\QualityControl\AbilitysController@ajax_join_save');// 报名
+//        $api->post('company/abilitys/ajax_join_save', 'WebFront\Company\QualityControl\AbilitysController@ajax_join_save');// 报名
+        $api->any('company/abilitys/ajax_new_join_save', 'WebFront\Company\QualityControl\AbilitysController@ajax_new_join_save');// 报名--新版
         $api->any('company/abilitys/ajax_company_extend', 'WebFront\Company\QualityControl\AbilitysController@ajax_company_extend');// 获得企业扩展信息
 //        $api->post('company/abilitys/ajax_del', 'WebFront\Company\QualityControl\AbilitysController@ajax_del');// 删除
 //        $api->post('company/abilitys/ajax_save', 'WebFront\Company\QualityControl\AbilitysController@ajax_save');// 新加/修改

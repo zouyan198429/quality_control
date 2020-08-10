@@ -14,7 +14,7 @@
 <body>
 
 <div class="layui-fluid">
-    <div class="layui-card"> 
+    <div class="layui-card">
 
         <div class="layui-row layui-card-body">
 
@@ -43,7 +43,7 @@
                         <textarea name="project_standard_name_{{ $info['id'] ?? '' }}" id="" cols="50" rows="4"></textarea>
                     </div>
                 </div>
-                    @if ($data_num > ($k + 1) )<hr>@endif
+{{--                    @if ($data_num > ($k + 1) )<hr>@endif--}}
                 @endforeach
 
                 <fieldset class="layui-elem-field layui-field-title">
@@ -86,7 +86,7 @@
 {{--<script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.js')}}"></script>--}}
 @include('public.dynamic_list_foot')
 <script type="text/javascript">
-    var SAVE_URL = "{{ url('api/company/abilitys/ajax_join_save') }}";// ajax保存记录地址
+    var SAVE_URL = "{{ url('api/company/abilitys/ajax_new_join_save') }}";// ajax保存记录地址
     var LIST_URL = "{{url('company/abilitys')}}";//保存成功后跳转到的地址
 
 </script>

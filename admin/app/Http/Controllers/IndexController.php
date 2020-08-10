@@ -709,6 +709,10 @@ class IndexController extends WorksController
 //        $resData = HttpRequest::HttpRequestApi($url, $requestData, [], 'POST');
 //        $resData['userInfo'] = $this->user_info;
 //        return view('index',$resData);
+//        return $this->exeDoPublicFun($request, 1, 1, 'admin.QualityControl.RrrDddd.index', true
+//            , 'doListPage', [], function (&$reDataArr) use ($request){
+//
+//            });
 //    }
 
     /**

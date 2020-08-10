@@ -83,17 +83,18 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
             // 改为只要是手机验证码登录，都会去改验证码状态为已使用
             if( ($checkType & 2) == 2 && $mobile_vercode){
                 // 修改验证码为已使用
-                $smsQueryParams = [
-                    'where' => [
-                        // ['id', '&' , '16=16'],
-                        ['country_code', $countryCode],
-                        ['mobile', '=', $mobile],
-                        ['sms_code', '=', $mobile_vercode],
-                        ['sms_type', 1],
-                        //['admin_type',self::$admin_type],
-                    ],
-                    'whereIn' => [ 'sms_status' => [1,2,8]]
-                ];
+//                $smsQueryParams = [
+//                    'where' => [
+//                        // ['id', '&' , '16=16'],
+//                        ['country_code', $countryCode],
+//                        ['mobile', '=', $mobile],
+//                        ['sms_code', '=', $mobile_vercode],
+//                        ['sms_type', 1],
+//                        //['admin_type',self::$admin_type],
+//                    ],
+//                    'whereIn' => [ 'sms_status' => [1,2,8]]
+//                ];
+                $smsQueryParams = Tool::getParamQuery(['country_code' => $countryCode, 'mobile' => $mobile, 'sms_code' => $mobile_vercode, 'sms_type' => 1,  'sms_status' => [1,2,8]], [], []);
                 $smsUpdateData = [
                     'sms_status' => 4,
                     'staff_id' => $user_id
@@ -128,30 +129,30 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
 //        }
         // 数据验证 TODO
         // $company_id = config('public.company_id');
-        $queryParams = [
-            'where' => [
-                // ['company_id',$company_id],
-//                ['admin_username',$admin_username],
-//                ['admin_password',md5($admin_password)],
-            ],
-//            'whereIn' => [
-//                'admin_type' => array_keys(self::$adminType),
+//        $queryParams = [
+//            'where' => [
+//                // ['company_id',$company_id],
+////                ['admin_username',$admin_username],
+////                ['admin_password',md5($admin_password)],
 //            ],
-            // 'select' => ['id','company_id','admin_username','real_name','admin_type'],
-            // 'limit' => 1
-        ];
+////            'whereIn' => [
+////                'admin_type' => array_keys(self::$adminType),
+////            ],
+//            // 'select' => ['id','company_id','admin_username','real_name','admin_type'],
+//            // 'limit' => 1
+//        ];
         $pageParams = [
             'page' =>1,
             'pagesize' => 1,
             'total' => 1,
         ];
 
-//        if($admin_type >= 64){
-            // array_push($queryParams['where'], ['admin_type', '&' , '64=64']);
-//        }else{
-            array_push($queryParams['where'], ['admin_type', $admin_type]);
-//        }
-
+////        if($admin_type >= 64){
+//            // array_push($queryParams['where'], ['admin_type', '&' , '64=64']);
+////        }else{
+//            array_push($queryParams['where'], ['admin_type', $admin_type]);
+////        }
+        $queryParams = Tool::getParamQuery(['admin_type' => $admin_type], [], []);
         $relations = [];// ['city', 'cityPartner', 'seller', 'shop'];
         $userInfo = [];
         $mobile = '';
@@ -363,13 +364,14 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
 //        static::judgePower($request, $controller, $id, $judgeData, '', $company_id, $relations);
         // 如果有旧密码，则验证旧密码是否正确
         if(!empty($old_password)){
-            $queryParams = [
-                'where' => [
-                    ['id',$id],
-                    ['admin_password',md5($old_password)],
-                ],
-                // 'limit' => 1
-            ];
+//            $queryParams = [
+//                'where' => [
+//                    ['id',$id],
+//                    ['admin_password',md5($old_password)],
+//                ],
+//                // 'limit' => 1
+//            ];
+            $queryParams = Tool::getParamQuery(['id' => $id, 'admin_password' => md5($old_password)], [], []);
             $relations = '';
             $infoData = static::getInfoQuery($request, $controller, '', $company_id, 1, $queryParams, $relations);
             if(empty($infoData)){
@@ -943,18 +945,19 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
         if( ($user_type & 4) == 4) array_push($admin_type, 4);
         if(empty($admin_type)) return true;
 
-        $queryParams = [
-            'where' => [
-                ['mobile',$mobile],
-//                ['admin_username',$admin_username],
-//                ['admin_password',md5($admin_password)],
-            ],
-//            'whereIn' => [
-//                'admin_type' => array_keys(self::$adminType),
+//        $queryParams = [
+//            'where' => [
+//                ['mobile',$mobile],
+////                ['admin_username',$admin_username],
+////                ['admin_password',md5($admin_password)],
 //            ],
-            // 'select' => ['id','company_id','admin_username','real_name','admin_type'],
-            // 'limit' => 1
-        ];
+////            'whereIn' => [
+////                'admin_type' => array_keys(self::$adminType),
+////            ],
+//            // 'select' => ['id','company_id','admin_username','real_name','admin_type'],
+//            // 'limit' => 1
+//        ];
+        $queryParams = Tool::getParamQuery(['mobile' => $mobile], [], []);
         Tool::appendParamQuery($queryParams, $admin_type, 'admin_type', [0, '0', ''], ',', false);
         $userInfo = static::getInfoQuery($request, $controller, '', 0, 1, $queryParams, [], 1);
         if(empty($userInfo)) throws('手机号不是有效的用户，请先注册再使用！');
@@ -1004,18 +1007,19 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
         if( ($user_type & 4) == 4) array_push($admin_type, 4);
         if(empty($admin_type)) return true;
 
-        $queryParams = [
-            'where' => [
-                ['mobile',$mobile],
-//                ['admin_username',$admin_username],
-//                ['admin_password',md5($admin_password)],
-            ],
-//            'whereIn' => [
-//                'admin_type' => array_keys(self::$adminType),
+//        $queryParams = [
+//            'where' => [
+//                ['mobile',$mobile],
+////                ['admin_username',$admin_username],
+////                ['admin_password',md5($admin_password)],
 //            ],
-            // 'select' => ['id','company_id','admin_username','real_name','admin_type'],
-            // 'limit' => 1
-        ];
+////            'whereIn' => [
+////                'admin_type' => array_keys(self::$adminType),
+////            ],
+//            // 'select' => ['id','company_id','admin_username','real_name','admin_type'],
+//            // 'limit' => 1
+//        ];
+        $queryParams = Tool::getParamQuery(['mobile' => $mobile], [], []);
         Tool::appendParamQuery($queryParams, $admin_type, 'admin_type', [0, '0', ''], ',', false);
         $userInfo = static::getInfoQuery($request, $controller, '', 0, 1, $queryParams, [], 1);
         // 已经注册
@@ -1320,17 +1324,18 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
         // 根据Id删除数据
         // return CTAPIStaffBusiness::delAjax($request, $controller);
         // 根据条件删除数据
-        $queryParams = [
-            'where' => [
-                // ['company_id', $company_id],
-                ['admin_type', $admin_type],
-                ['issuper', '<>', 1],
-            ],
-//            'select' => [
-//                'id','company_id','real_name'
+//        $queryParams = [
+//            'where' => [
+//                // ['company_id', $company_id],
+//                ['admin_type', $admin_type],
+//                ['issuper', '<>', 1],
 //            ],
-            // 'orderBy' => ['sort_num'=>'desc','id'=>'desc'],
-        ];
+////            'select' => [
+////                'id','company_id','real_name'
+////            ],
+//            // 'orderBy' => ['sort_num'=>'desc','id'=>'desc'],
+//        ];
+        $queryParams = Tool::getParamQuery(['admin_type' => $admin_type],  ['sqlParams' =>['where' => [['issuper', '<>', 1]]]], []);
         // 加入 id
         Tool::appendParamQuery($queryParams, $id, 'id');
         // 删除的是个人， 是企业后台--操作的-- 企业只能删除自己的员工

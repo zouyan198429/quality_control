@@ -250,6 +250,12 @@ class CommonController extends CompController
         }else{
             return okArray(CommonAPIFromDBBusiness::requestCreate($request));
         }
+
+//        $pageNum = ($id > 0) ? 64 : 16;
+//        return $this->exeDoPublicFun($request, $pageNum, 1,'admin.QualityControl.RrrDddd.add', true
+//            , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
+//
+//        });
     }
 
     /**

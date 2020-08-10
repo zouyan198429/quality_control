@@ -12,6 +12,8 @@ use OpenApi\Annotations as OA;
 
 class CaptchaController extends BasicController
 {
+    public $controller_id =0;// 功能小模块[控制器]id - controller_id  历史表 、正在进行表 与原表相同
+
 
     /**
      * @OA\Get(

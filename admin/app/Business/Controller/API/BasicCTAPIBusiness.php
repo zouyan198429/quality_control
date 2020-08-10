@@ -136,6 +136,8 @@ class BasicCTAPIBusiness extends APIOperate
      *      'ability_join_id' => [// 格式一
      *          'vals' => "字段值[可以是字符'多个逗号分隔'或一维数组] ",// -- 此种格式，必须指定此下标【值下标】
      *          'excludeVals' => "过滤掉的值 默认[0, '0', '']",
+     *          'valsSeparator' => ',' 如果是多值字符串，多个值的分隔符;默认逗号 ,
+     *          'hasInIsMerge=>  false 如果In条件有值时  true:合并；false:用新值--覆盖 --默认
      *      ],// 格式二
      *      'id' =>  "字段值[可以是字符'多个逗号分隔'或一维数组]"
      *   ];
@@ -199,9 +201,11 @@ class BasicCTAPIBusiness extends APIOperate
             }else{
                 $fieldVals = $valConfig;
             }
+            $valsSeparator = $valConfig['vals'] ?? ',';
+            $hasInIsMerge = $valConfig['hasInIsMerge'] ?? false;
             if(!empty($excludeVals))  Tool::formatOneArrVals($fieldVals, $excludeVals);
             if( ( (is_string($fieldVals) || is_numeric($fieldVals)) && strlen($fieldVals) > 0) || (is_array($fieldVals) && !empty($fieldVals)) ) $isEmpeyVals = false;
-            Tool::appendParamQuery($queryParams, $fieldVals, $field, $excludeVals, ',', false);
+            Tool::appendParamQuery($queryParams, $fieldVals, $field, $excludeVals, $valsSeparator, $hasInIsMerge);
         }
         if(!isset($extParams['useQueryParams'])) $extParams['useQueryParams'] = false;
 //        $extParams = [
@@ -1693,7 +1697,7 @@ class BasicCTAPIBusiness extends APIOperate
                     'one_field' => ['key' => 'id', 'return_type' => "返回类型1原数据['字段值'][一维返回一维数组，二维返回一维数组];2按分隔符分隔的字符", 'ubound_name' => '下标名称', 'split' => '、'],
                     一/二维数组 -- 只针对关系是 1:1的 即 关系数据是一维数组的情况--目的是平移指定字段到上一层
                   如果新下标和原下标相同，则可以用这个方法去转  Tool::arrEqualKeyVal(['shop_id', 'shop_name', 'linkman', 'mobile']), true )
-                    'fields_merge' => ['merge_fields' => -维[ '新下标名' => '原下标名' ]]
+                    'fields_merge' => [ '新下标名' => '原下标名' ] 一维 或 [[ '新下标名' => '原下标名' ], ...] 二维数组
                     // 一/二维数组 获得指定的多个字段值
                    'many_fields' =>[ 'ubound_name' => '', 'fields_arr'=> [ '新下标名' => '原下标名' ],'reset_ubound' => 2;// 是否重新排序下标 1：重新０.．． ,'ubound_keys' => ['说明：看上面old_data的同字段说明'], 'ubound_type' =>1],ubound_type说明：看上面old_data的同字段说明
                   ],
@@ -1774,7 +1778,24 @@ class BasicCTAPIBusiness extends APIOperate
                     $temNextAddFields = static::formatRelationList($request, $controller, $toDataList, $relationChildConfig);
                     if(!empty($temNextAddFields)){// 下一级增加了的字段
                         $tem_fields_arr = $relationInfo['return_data']['old_data']['fields_arr'] ?? [];
-                        if(!empty($tem_fields_arr)) $relationConfig[$k]['return_data']['old_data']['fields_arr']= array_merge($tem_fields_arr, Tool::arrEqualKeyVal($temNextAddFields));// $temNextAddFields );
+                        $tem_append_fields = Tool::arrEqualKeyVal($temNextAddFields);
+                        if(!empty($tem_fields_arr)) $relationConfig[$k]['return_data']['old_data']['fields_arr']= array_merge($tem_fields_arr, $tem_append_fields);// $temNextAddFields );
+                        // fields_merge
+                        $tem_fields_merge = $relationInfo['return_data']['fields_merge'] ?? [];
+                        if(!empty($tem_fields_merge)){
+                            $relationInfo['return_data']['fields_merge'] = Tool::arrAppendKeys($tem_fields_merge, $tem_append_fields);
+                        }
+                        // many_fields
+                        $tem_many_fields = $relationInfo['return_data']['many_fields'] ?? [];
+                        if(!empty($tem_many_fields)){
+                            // 不是二维数组，则转为二维数组
+                            Tool::isMultiArr($tem_many_fields, true);
+                            foreach($tem_many_fields as $tem_mf_key => $tem_mf_info){
+                                $tem_fields_arr = $tem_mf_info['fields_arr'] ?? [];//   -维[ '新下标名' => '原下标名' ]
+                                if(!empty($tem_fields_arr)) $tem_many_fields[$tem_mf_key]['fields_arr'] = Tool::arrAppendKeys($tem_fields_arr, $tem_append_fields);
+                            }
+                            $relationInfo['return_data']['many_fields'] = $tem_many_fields;
+                        }
                     }
                 }
                 // toObjFormatListMethod 【一般不用这个--存在重复处理】 定义静态方法名，可以提前对数据进行格式化处理--特别处理
@@ -1869,7 +1890,7 @@ class BasicCTAPIBusiness extends APIOperate
                     'one_field' => ['key' => 'id', 'return_type' => "返回类型1原数据['字段值'][一维返回一维数组，二维返回一维数组];2按分隔符分隔的字符", 'ubound_name' => '下标名称', 'split' => '、'],
                     一/二维数组 -- 只针对关系是 1:1的 即 关系数据是一维数组的情况--目的是平移指定字段到上一层
                     如果新下标和原下标相同，则可以用这个方法去转  Tool::arrEqualKeyVal(['shop_id', 'shop_name', 'linkman', 'mobile']), true )
-                    'fields_merge' => ['merge_fields' => -维[ '新下标名' => '原下标名' ]]
+                     'fields_merge' => [ '新下标名' => '原下标名' ] 一维 或 [[ '新下标名' => '原下标名' ], ...] 二维数组
                     // 一/二维数组 获得指定的多个字段值
                    'many_fields' =>[ 'ubound_name' => '', 'fields_arr'=> [ '新下标名' => '原下标名' ],'reset_ubound' => 2;// 是否重新排序下标 1：重新０.．．  ,'ubound_keys' => ['说明：看上面old_data的同字段说明'], 'ubound_type' =>1],ubound_type说明：看上面old_data的同字段说明
                 ],

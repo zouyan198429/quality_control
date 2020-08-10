@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\ModelsVerify\QualityControl\industry;
 use App\Services\Request\API\Sites\APIRunBuyRequest;
+use App\Services\Request\CommonRequest;
 use App\Services\Tool;
 use Dingo\Api\Routing\Helpers;
 use Illuminate\Http\Request;
@@ -55,6 +56,23 @@ class BaseController extends Controller
     public $shop_id = 0;
     public $errMethod = 'errorViewDo';// 根据错误码执行自己独特的操作方法 参数 $request, $reDataArr, $errCode, $errStr
     public $errorView = 'error';//  错误显示的视图
+
+    // 权限相关的
+    public $menu_id = 0;// 项目菜单id-menu_id[前端传入]
+    public $frm_fun_id = 0;// 来源功能id-- frm_fun_id [前端传入]
+    public $controller_id = 0;// 功能小模块[控制器]id - controller_id  历史表 、正在进行表 与原表相同
+    public $fun_id = 0;// 功能id fun_id
+    // 基本的【固定的】
+    // 1->1 首页；2->2 列表页；3->4 ajax列表；4->8 搜索按钮；5->16 添加页；6->32 添加提交按钮；7->64 编辑页；8->128 ajax详情； 注：详情页请看 35-> 17179869184
+    // 9->256 编辑提交按钮；10->512 删除功能；11->1024 批量删除功能；12->2048 弹窗选择页面；
+    // 13->4096 导出【按条件】；14->8192 导出【勾选】 ；15->16384 导入模版  ； 16->32768 导入；
+    // 17->65536 冻结； 18->131072 批量冻结 ；19->262144 解冻 ；20->524288 批量解冻；
+    // 21->1048576 审核通过 ；22->2097152 批量审核通过；  23->4194304 审核不通过 ； 24->8388608 批量审核不通过；
+    // 25->16777216 上传图片；  26->33554432 上传excel； 27->67108864 上传word ；28->134217728 上传ppt ；29->268435456 上传pdf ；
+    // 30-> 536870912 上传音频 ；31-> 1073741824 上传视频  ；32-> 2147483648 上传压缩文件；33-> 4294967296 获得所有的ids；
+    // 34-> 8589934592 获得下一级的kv值
+    // 35-> 17179869184 详情页
+    // 其它的，自定义的
 
     public function InitParams(Request $request)
     {
@@ -263,4 +281,222 @@ class BaseController extends Controller
     public function getNotLoginErrCode(){
         return in_array($this->source, [2,3]) ?  $this->source : 999;//
     }
+
+    // **************公用方法*****************************************************
+
+    /**
+     * --- 用这个调用
+     * 公用页 --- 各自定义 $extendParams['doFun'] 参数指写的方法 【优先】 或 执行闭包函数 $exeFun
+     *  因为 添加页  、 详情页 、 添加对外数据接口  ， 其实数据都是一样的，或其它相同的页，--为了不多份代码，只有一份，方便管理，才有了此方法
+     *  列表或其它页也有这样的问题。
+     *
+     * @param Request $request
+     * @param int $pageNum // 页面序号 同 属性 $fun_id【查看它指定的】 (其它根据具体的业务单独指定)
+     * @param int $returnType // 返回类型 1 视图[默认] 2 ajax请求的json数据[同视图数据，只是不显示在视图，是ajax返回]
+     *                          4 ajax 直接返回 $exeFun 或 $extendParams['doFun'] 方法的执行结果 8 视图 直接返回 $exeFun 或 $extendParams['doFun'] 方法的执行结果
+     * @param string $view // 显示的视图名  默认index  admin.QualityControl.Citys.index
+     * @param boolean $hasJudgePower // 是否需要判断登录权限 true:判断[默认]  false:不判断
+     * @param string $doFun // 具体的业务方法，动态或 静态方法 默认'' 可有返回值 参数  $request,  &$reDataArr, $extendParams ；-- 为空值 "":则使用 $exeFun 方法
+     *                               doListPage： 列表页； doInfoPage：详情页
+     * @param array $params // 需要传入 doFun 的数据 数组[一维或多维]
+     * @param mixed $exeFun 如果传入的是一个函数 ，则执行此函数 可有返回值 参数： &$reDataArr，否则执行  $extendParams['doFun'] 指定的方法
+     * @return mixed 无返回值
+     * @author zouyan(305463219@qq.com)
+     */
+    public function exeDoPublicFun(Request $request, $pageNum = 1, $returnType = 1, $view = '', $hasJudgePower = true, $doFun = 'doListPage', $params = [], $exeFun = ''){
+        return $this->exePublicFun($request, ['pageNum' => $pageNum,'returnType' => $returnType, 'view' => $view
+            , 'hasJudgePower' => $hasJudgePower, 'doFun' => $doFun, 'params' => $params], $exeFun);
+    }
+
+    /**
+     * 公用页 --- 各自定义 $extendParams['doFun'] 参数指写的方法 【优先】 或 执行闭包函数 $exeFun
+     *  因为 添加页  、 详情页 、 添加对外数据接口  ， 其实数据都是一样的，或其它相同的页，--为了不多份代码，只有一份，方便管理，才有了此方法
+     *  列表或其它页也有这样的问题。
+     *
+     *  这个是直接调用参考
+     *         return $this->exePublicFun($request, ['pageNum' => 1,'returnType' => 1, 'view' => 'admin.QualityControl.Citys.index'
+     *      , 'hasJudgePower' => true, 'doFun' => 'doListPage', 'params' => []], function (&$reDataArr) use ($request){
+     *
+     *       });
+     * 这个是间接调用参考----主要用这个来调用
+     *   return $this->exeDoPublicFun($request, 1, 1, 'admin.QualityControl.Citys.index', true
+     *   , '', [], function (&$reDataArr) use ($request){
+     *
+     *   });
+     * @param Request $request
+     * @param array $extendParams // 扩展参数
+     *      'pageNum' => 1,// 页面序号  同 属性 $fun_id【查看它指定的】 (其它根据具体的业务单独指定)
+     *      $extendParams = [
+     *          'returnType' => 1,// 返回类型 1 视图[默认] 2 ajax请求的json数据[同视图数据，只是不显示在视图，是ajax返回]
+     *                          4 ajax 直接返回 $exeFun 或 $extendParams['doFun'] 方法的执行结果 8 视图 直接返回 $exeFun 或 $extendParams['doFun'] 方法的执行结果
+     *          'view' => 'index', // 显示的视图名 默认index
+     *          'hasJudgePower' => true,// 是否需要判断登录权限 true:判断[默认]  false:不判断
+     *          'doFun' => 'doListPage',// 具体的业务方法，动态或 静态方法 默认'' 可有返回值 参数  $request,  &$reDataArr, $extendParams ；
+     *                               doListPage： 列表页； doInfoPage：详情页
+     *          'params' => [],// 需要传入 doFun 的数据 数组[一维或多维]
+     *  ];
+     * @param mixed $exeFun 如果传入的是一个函数 ，则执行此函数 可有返回值 参数： &$reDataArr，否则执行  $extendParams['doFun'] 指定的方法
+     * @return mixed 返回视图或 ajax的json数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public function exePublicFun(Request $request,  $extendParams = [], $exeFun = ''){
+        $returnType = $extendParams['returnType'] ?? 1;
+        $reDataArr = [];// 可以传给视图的全局变量数组
+        if(in_array($returnType, [1,8])){// 视图--出错会把错误信息输出到错误视图
+            return Tool::doViewPages($this, $request, function (&$reDataArr) use($request, &$extendParams, $exeFun){
+                return $this->exePublicFunBody($request,  $extendParams, $exeFun, $reDataArr);
+            }, $this->errMethod, $reDataArr, $this->errorView);
+        }else{// ajax --- 出错也会是ajax格式
+            return $this->exePublicFunBody($request,  $extendParams, $exeFun, $reDataArr);
+        }
+    }
+
+    /**
+     * 公用页 --- 各自定义 $extendParams['doFun'] 参数指写的方法 【优先】 或 执行闭包函数 $exeFun
+     *  因为 添加页  、 详情页 、 添加对外数据接口  ， 其实数据都是一样的，或其它相同的页，--为了不多份代码，只有一份，方便管理，才有了此方法
+     *  列表或其它页也有这样的问题。
+     *
+     *  这个是直接调用参考
+     *         return $this->exePublicFun($request, ['pageNum' => 1,'returnType' => 1, 'view' => 'admin.QualityControl.Citys.index'
+     *      , 'hasJudgePower' => true, 'doFun' => 'doListPage', 'params' => []], function (&$reDataArr) use ($request){
+     *
+     *       });
+     * 这个是间接调用参考----主要用这个来调用
+     *   return $this->exeDoPublicFun($request, 1, 1, 'admin.QualityControl.Citys.index', true
+     *   , '', [], function (&$reDataArr) use ($request){
+     *
+     *   });
+     * @param Request $request
+     * @param array $extendParams // 扩展参数
+     *      'pageNum' => 1,// 页面序号 同 属性 $fun_id【查看它指定的】 (其它根据具体的业务单独指定)
+     *   $extendParams = [
+     *      'returnType' => 1,// 返回类型 1 视图[默认] 2 ajax请求的json数据[同视图数据，只是不显示在视图，是ajax返回]
+     *                          4 ajax 直接返回 $exeFun 或 $extendParams['doFun'] 方法的执行结果 8 视图 直接返回 $exeFun 或 $extendParams['doFun'] 方法的执行结果
+     *      'view' => 'index', // 显示的视图名 默认index
+     *      'hasJudgePower' => true,// 是否需要判断登录权限 true:判断[默认]  false:不判断
+     *      'doFun' => 'doListPage',// 具体的业务方法，动态或 静态方法 默认'' 可有返回值 参数  $request,  &$reDataArr, $extendParams ；
+     *                               doListPage： 列表页； doInfoPage：详情页
+     *      'params' => [],// 需要传入 doFun 的数据 数组[一维或多维]
+     *  ];
+     * @param mixed $exeFun 如果传入的是一个函数 ，则执行此函数 可有返回值 参数： &$reDataArr，否则执行  $extendParams['doFun'] 指定的方法
+     * @return mixed 返回视图或 ajax的json数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public function exePublicFunBody(Request $request,  $extendParams = [], $exeFun = '', $reDataArr = []){
+        $pageNum = $extendParams['pageNum'] ?? 1;
+        $this->fun_id = $pageNum;
+        $returnType = $extendParams['returnType'] ?? 1;
+        $view = $extendParams['view'] ?? 'index';
+        $hasJudgePower = $extendParams['hasJudgePower'] ?? true;
+        $doFun = $extendParams['doFun'] ?? '';
+        $params = $extendParams['params'] ?? [];
+        // 正常流程的代码
+
+        if($hasJudgePower) $this->InitParams($request);
+        // $reDataArr = $this->reDataArr;
+        $reDataArr = array_merge($reDataArr, $this->reDataArr);
+        // 对权限进行判断
+        // 参数 项目菜单id-menu_id[前端传入]、来源功能id-- frm_fun_id [前端传入]、功能小模块[控制器]id - controller_id、 功能id fun_id、  用户id --user_id
+        $this->menu_id = CommonRequest::getInt($request, 'menu_id');// 项目菜单id-menu_id[前端传入]
+        $this->frm_fun_id = CommonRequest::getInt($request, 'frm_fun_id');// 来源功能id-- frm_fun_id [前端传入]
+        // 获和权限
+        $ower_funs = [];// 也有的页面功能权限数组--后台再处理
+        $reDataArr['power'] = [// 将权限传给前端页面
+            'menu_id' => $this->menu_id,
+            'frm_fun_id' => $this->frm_fun_id,
+            'controller_id' => $this->controller_id,
+            'fun_id' => $this->fun_id,
+            'ower_funs' => $ower_funs,
+        ];
+
+        // 其它业务逻辑....
+        // 执行方法也可以返回Ajax
+        $result = '';
+        if($doFun == '' && is_callable($exeFun)){
+            $result = $exeFun($reDataArr);
+        }else if($doFun != ''){
+            $result = $this->{$doFun}($request, $reDataArr, $extendParams);
+        }
+        if($returnType == 4) return $result;// 4 直接返回 $exeFun 或 $extendParams['doFun'] 方法的执行结果
+        if($returnType == 2)  return ajaxDataArr(1, $reDataArr, '') ;// 2 ajax请求的json数据
+        return view($view, $reDataArr);//  1 视图[默认]
+
+    }
+
+    // **************公用重写方法********************开始*********************************
+    /**
+     * 公用列表页 --- 可以重写此方法--需要时重写
+     *  主要把要传递到视图或接口的数据 ---放到 $reDataArr 数组中
+     * @param Request $request
+     * @param array $reDataArr // 需要返回的参数
+     * @param array $extendParams // 扩展参数
+     *   $extendParams = [
+     *      'pageNum' => 1,// 页面序号  同 属性 $fun_id【查看它指定的】 (其它根据具体的业务单独指定)
+     *      'returnType' => 1,// 返回类型 1 视图[默认] 2 ajax请求的json数据[同视图数据，只是不显示在视图，是ajax返回]
+     *                          4 ajax 直接返回 $exeFun 或 $extendParams['doFun'] 方法的执行结果 8 视图 直接返回 $exeFun 或 $extendParams['doFun'] 方法的执行结果
+     *      'view' => 'index', // 显示的视图名 默认index
+     *      'hasJudgePower' => true,// 是否需要判断登录权限 true:判断[默认]  false:不判断
+     *      'doFun' => 'doListPage',// 具体的业务方法，动态或 静态方法 默认'' 可有返回值 参数  $request,  &$reDataArr, $extendParams ；
+     *                               doListPage： 列表页； doInfoPage：详情页
+     *      'params' => [],// 需要传入 doFun 的数据 数组[一维或多维]
+     *  ];
+     * @return mixed 无返回值
+     * @author zouyan(305463219@qq.com)
+     */
+    public function doListPage(Request $request, &$reDataArr, $extendParams = []){
+        // $pageNum = $extendParams['pageNum'] ?? 1;// 1->1 首页；2->2 列表页； 12->2048 弹窗选择页面；
+        // $user_info = $this->user_info;
+        // $id = $extendParams['params']['id'];
+
+//        // 拥有者类型1平台2企业4个人
+//        $reDataArr['adminType'] =  AbilityJoin::$adminTypeArr;
+//        $reDataArr['defaultAdminType'] = -1;// 列表页默认状态
+
+    }
+
+    /**
+     * 公用详情页 --- 可以重写此方法-需要时重写
+     *  主要把要传递到视图或接口的数据 ---放到 $reDataArr 数组中
+     * @param Request $request
+     * @param array $reDataArr // 需要返回的参数
+     * @param array $extendParams // 扩展参数
+     *   $extendParams = [
+     *      'pageNum' => 1,// 页面序号  同 属性 $fun_id【查看它指定的】 (其它根据具体的业务单独指定)
+     *      'returnType' => 1,// 返回类型 1 视图[默认] 2 ajax请求的json数据[同视图数据，只是不显示在视图，是ajax返回]
+     *                          4 ajax 直接返回 $exeFun 或 $extendParams['doFun'] 方法的执行结果 8 视图 直接返回 $exeFun 或 $extendParams['doFun'] 方法的执行结果
+     *      'view' => 'index', // 显示的视图名 默认index
+     *      'hasJudgePower' => true,// 是否需要判断登录权限 true:判断[默认]  false:不判断
+     *      'doFun' => 'doListPage',// 具体的业务方法，动态或 静态方法 默认'' 可有返回值 参数  $request,  &$reDataArr, $extendParams ；
+     *                               doListPage： 列表页； doInfoPage：详情页
+     *      'params' => [],// 需要传入 doFun 的数据 数组[一维或多维]
+     *  ];
+     * @return mixed 无返回值
+     * @author zouyan(305463219@qq.com)
+     */
+    public function doInfoPage(Request $request, &$reDataArr, $extendParams = []){
+        // $pageNum = $extendParams['pageNum'] ?? 1;// 5->16 添加页； 7->64 编辑页；8->128 ajax详情； 35-> 17179869184 详情页
+//         $user_info = $this->user_info;
+//        $id = $extendParams['params']['id'] ?? 0;
+//
+////        // 拥有者类型1平台2企业4个人
+////        $reDataArr['adminType'] =  AbilityJoin::$adminTypeArr;
+////        $reDataArr['defaultAdminType'] = -1;// 列表页默认状态
+//        $info = [
+//            'id'=>$id,
+//            //   'department_id' => 0,
+//        ];
+//        $operate = "添加";
+//
+//        if ($id > 0) { // 获得详情数据
+//            $operate = "修改";
+//            $info = CTAPIRrrDdddBusiness::getInfoData($request, $this, $id, [], '', []);
+//        }
+//        // $reDataArr = array_merge($reDataArr, $resultDatas);
+//        $reDataArr['info'] = $info;
+//        $reDataArr['operate'] = $operate;
+
+    }
+    // **************公用重写方法********************结束*********************************
+    // **************公用方法*****************************************************
+
 }
