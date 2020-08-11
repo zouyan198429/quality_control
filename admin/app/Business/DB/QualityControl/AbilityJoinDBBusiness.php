@@ -128,10 +128,11 @@ class AbilityJoinDBBusiness extends BasePublicDBBusiness
                     , $ability_join_items, $isModify, $operate_staff_id, $operate_staff_id_history
                     , 'id', $company_id, $modifAddOprate, [
                         'del' => [// 删除用
-                            'del_type' => 4,// 2,// 删除方式  1：批量删除 static::deleteByIds($dbIds) [默认] 2: 多次单个删除：static::delById($company_id, $tem_id, $operate_staff_id, $modifAddOprate, $extendParams);
+                            'del_type' => 2,// 4,// 2,// 删除方式  1：批量删除 static::deleteByIds($dbIds) [默认] 2: 多次单个删除：static::delById($company_id, $tem_id, $operate_staff_id, $modifAddOprate, $extendParams);
                             'extend_params' => [],// 删除的扩展参数 一维数组  del_type = 2时：用
                         ],
                     ]);
+
                 // 记录报名日志
                 // 获得操作人员信息
                 $operateInfo = StaffDBBusiness::getInfo($operate_staff_id);

@@ -45,6 +45,7 @@ var otheraction = {
     document.write("        <%for(var i = 0; i<data_list.length;i++){");
     document.write("        var item = data_list[i];");
     document.write("        var can_modify = false;");
+    document.write("        var join_standards_tag = item.join_standards_tag;");
    document.write("        if( item.status == 1 ){");
     document.write("        can_modify = true;");
     document.write("        }");
@@ -59,6 +60,18 @@ var otheraction = {
    // document.write("            <\/td>");
    //  document.write("            <td><%=item.id%><\/td>");
     document.write("            <td><%=item.ability_name%><\/td>");
+    document.write("            <td>");
+    document.write("            <%for(var j = 0; j<join_standards_tag.length;j++){");
+    document.write("                var jitem = join_standards_tag[j];");
+    document.write("                 %>");
+    document.write("                    <%=jitem.tag_name%>；");
+    document.write("                <%if( j + 1 < join_standards_tag.length ){%>");
+    document.write("                     <hr/>");
+    document.write("                <%}%>");
+    document.write("            <%}%>");
+    document.write("            <\/td>");
+    document.write("            <td><%=item.contacts%><\/td>");
+    document.write("            <td><%=item.mobile%><hr/><%=item.tel%><\/td>");
    document.write("            <td><%=item.ability_info.created_at%><\/td>");
     document.write("            <td><%=item.join_time%><\/td>");
     // document.write("            <td><%=item.ability_info.status_text%><\/td>");

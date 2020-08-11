@@ -266,6 +266,21 @@ Route::get('admin/abilitys/info/{id}', 'Admin\QualityControl\AbilitysController@
 Route::get('admin/abilitys/export', 'Admin\QualityControl\AbilitysController@export');// 导出
 Route::get('admin/abilitys/import_template', 'Admin\QualityControl\AbilitysController@import_template');// 导入模版
 
+//****************************************************************************
+// 能力验证管理
+Route::get('admin/abilitys_admin/{ability_id}', 'Admin\QualityControl\Abilitys\IndexController@index');// 首页
+Route::get('admin/abilitys_admin/{ability_id}/basic', 'Admin\QualityControl\Abilitys\IndexController@basic');// 基础信息
+
+// 能力验证--报名管理--参加单位
+Route::get('admin/abilitys_admin/{ability_id}/ability_join_items', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@index');// 列表
+//Route::get('admin/abilitys_admin/{ability_id}/ability_join_items/add/{id}', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@add');// 添加
+// Route::get('admin/abilitys_admin/{ability_id}/ability_join_items/info/{id}', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@info');// 查看-详情
+// Route::get('admin/abilitys_admin/{ability_id}/ability_join_items/select', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@select');// 选择-弹窗
+//Route::get('admin/abilitys_admin/{ability_id}/ability_join_items/export', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@export');// 导出
+//Route::get('admin/abilitys_admin/{ability_id}/ability_join_items/import_template', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@import_template');// 导入模版
+
+
+//****************************************************************************
 // 能力验证--报名管理
 Route::get('admin/ability_join', 'Admin\QualityControl\AbilityJoinController@index');// 列表
 //Route::get('admin/ability_join/add/{id}', 'Admin\QualityControl\AbilityJoinController@add');// 添加

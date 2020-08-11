@@ -358,6 +358,7 @@ class CTAPIAbilityJoinItemsBusiness extends BasicPublicCTAPIBusiness
                 , ['ability_id' => 'ability_id']
                 , 2, 1
                 ,'','', [], [], '', []),
+
             // 下一级关系 能力验证单次结果  1:1 -- 获得当前正在操作的要上传数据的结果 -- 上传数据用
             'join_item_reslut_info_updata' => CTAPIAbilityJoinItemsResultsBusiness::getTableRelationConfigInfo($request, $controller
                 , ['id' => 'ability_join_item_id', 'retry_no' => 'retry_no']
@@ -416,6 +417,20 @@ class CTAPIAbilityJoinItemsBusiness extends BasicPublicCTAPIBusiness
 
                         ], [], '', []),
                 ], [], '', []),
+            // 下一级关系的  能力验证报名项-项目标准 1:n
+            'join_item_standards' => CTAPIAbilityJoinItemsStandardsBusiness::getTableRelationConfigInfo($request, $controller
+                , ['id' => 'ability_join_item_id']
+                , 2
+                ,  2 | 8
+                ,'',''
+                ,[
+                    // 获得报名项选的方法对应的名称 1:1
+                    'project_standard_info' => CTAPIProjectStandardsBusiness::getTableRelationConfigInfo($request, $controller
+                        , ['project_standard_id' => 'id']
+                        , 1, 2
+                        ,'',''
+                        ,[], [], '', []),
+                ], [], '', ['extendConfig' => ['listHandleKeyArr' => ['mergeZeroName']]]),
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }

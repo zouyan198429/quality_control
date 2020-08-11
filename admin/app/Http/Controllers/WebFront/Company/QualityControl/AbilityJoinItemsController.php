@@ -527,7 +527,7 @@ class AbilityJoinItemsController extends BasicController
             // $handleKeyArr = [];// 'company'
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-                'relationFormatConfigs'=> CTAPIAbilityJoinItemsBusiness::getRelationConfigs($request, $this, ['ability_info', 'join_item_reslut_info'], []),
+                'relationFormatConfigs'=> CTAPIAbilityJoinItemsBusiness::getRelationConfigs($request, $this, ['ability_info', 'join_item_reslut_info', 'join_item_standards'], []),
             ];
 
             $result = CTAPIAbilityJoinItemsBusiness::getList($request, $this, 2 + 4, [], $relations, $extParams);

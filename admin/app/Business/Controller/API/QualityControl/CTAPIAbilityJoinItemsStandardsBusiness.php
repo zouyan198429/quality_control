@@ -115,6 +115,12 @@ class CTAPIAbilityJoinItemsStandardsBusiness extends BasicPublicCTAPIBusiness
             if(!isset($return_data['many_fields'])) $return_data['many_fields'] = [];
             array_push($return_data['many_fields'], $many_fields);
         }
+
+        if(($return_num & 8) == 8){// 给上一级返回 id 、 tag_name 的二维数组 . 如： project_standards = [[ 'id' => 26,  'tag_name' => '方法2'], ... ]
+            $many_fields = [ 'ubound_name' => 'join_standards_tag', 'fields_arr'=> ['id' => 'id', 'tag_name' => 'project_standard_name'],'reset_ubound' => 2];
+            if(!isset($return_data['many_fields'])) $return_data['many_fields'] = [];
+            array_push($return_data['many_fields'], $many_fields);
+        }
         return $return_data;
     }
     // ****表关系***需要重写的方法**********结束***********************************

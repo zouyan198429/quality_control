@@ -524,6 +524,12 @@ class AbilitysController extends BasicController
         $mobile = CommonRequest::get($request, 'mobile');
         $tel = CommonRequest::get($request, 'tel');
 
+        $contactInfo = [
+            'contacts' => $contacts,
+            'mobile' => $mobile,
+            'tel' => $tel,
+        ];
+
         // 对记录进行判断，是否可以报名
         // 根据条件获得项目列表数据
         $mergeParams = [
@@ -569,8 +575,10 @@ class AbilitysController extends BasicController
             if(!in_array($joinedInfo['status'], [16, 32])){
                 $ability_join_id = $joinedInfo['id'];// 报名主表id
                 $tem_ability_join_items = $joinedInfo['ability_join_items'] ?? [];// 报名项目及选择的方法--已报名的
-                // $ability_join_items = $tem_ability_join_items;// 报名项目及选择的方法--已报名的
-                $items_num = count($tem_ability_join_items);
+                $ability_join_items = $tem_ability_join_items;// 报名项目及选择的方法--已报名的
+                // $items_num = count($tem_ability_join_items);
+                // 加入最新的联系人信息
+                Tool::arrAppendKeys($ability_join_items, $contactInfo);
             }
         }
 
@@ -597,6 +605,9 @@ class AbilitysController extends BasicController
                 'admin_type' => $user_info['admin_type'],
                 'staff_id' => $user_info['id'],
                 // 'ability_code' => $ability_code,
+                'contacts' => $contacts,
+                'mobile' => $mobile,
+                'tel' => $tel,
                 'ability_id' => $tem_id,
                 'join_time' => $currentNow,
                 'status' => 1,
@@ -617,7 +628,7 @@ class AbilitysController extends BasicController
             'contacts' => $contacts,
             'mobile' => $mobile,
             'tel' => $tel,
-            'items_num' => $items_num + count($ability_join_items),//  count($ability_join_items),//
+            'items_num' => count($ability_join_items),//  $items_num + count($ability_join_items),//
             'ability_join_items' => $ability_join_items
         ];
         if(!empty($ability_code)) $saveData['ability_code'] = $ability_code;
