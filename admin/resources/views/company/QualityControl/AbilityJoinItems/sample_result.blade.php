@@ -25,11 +25,11 @@
 <body>
 
 <div class="layui-fluid">
-    <div class="layui-card"> 
+    <div class="layui-card">
 
         <div class="layui-row layui-card-body">
 
-            <form class="layui-form" method="post"  id="addForm">
+            <form  method="post"  id="addForm">
                 <input type="hidden" name="id" value="{{ $info['id'] ?? 0 }}"/>
 
                 <fieldset class="layui-elem-field layui-field-title">
@@ -39,7 +39,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">样品编号： </label>
                     <div class="layui-input-block sample_list" data-sample_one="{{ $sample_info['sample_one'] ?? '' }}">
-                       编号 {{ $sample_info['sample_one'] ?? '' }} 
+                       编号 {{ $sample_info['sample_one'] ?? '' }}
                     {{-- 样品id _需要收集项目的数据项目的数据类型id --}}
                         <?php $sample_result_list = $sample_info['sample_result_list'] ?>
                         @foreach ($info['project_submit_items_list'] as $t_k => $submit_info)
@@ -137,7 +137,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">图片上传</label>
                     <div class="layui-input-block">
- 
+
                         <div class="alert alert-warning alert-dismissable">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                             <p>一次最多上传30张图片。</p>
@@ -208,7 +208,7 @@
 {{--<script src="{{asset('js/baguetteBox.js/highlight.min.js')}}" async></script>--}}
 <!-- zui js -->
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
-<script src="{{ asset('/js/company/QualityControl/AbilityJoinItems_sample_result.js') }}"  type="text/javascript"></script>
+<script src="{{ asset('/js/company/QualityControl/AbilityJoinItems_sample_result.js') }}?11"  type="text/javascript"></script>
 @component('component.upfileincludejs')
 @endcomponent
 </body>

@@ -741,6 +741,9 @@ function judge_validate(err_type,tishi_name,value,is_must,reg_msg,min_length,max
 }
 //判断是否为空 true:空;false:非空
 function judge_empty(value){
+    if(value === undefined){
+        return true;
+    }
    var tem_value = trim(value);
    return judge_length(tem_value,0,0);
 }

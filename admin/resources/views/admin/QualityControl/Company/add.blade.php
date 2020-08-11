@@ -143,8 +143,8 @@
 
                     <select class="wnormal" name="company_peoples_num" style="width: 100px;">
                         <option value="">请选择单位人数</option>
-                        @foreach ($companyProp as $k=>$txt)
-                            <option value="{{ $k }}"  @if(isset($defaultCompanyProp) && $defaultCompanyProp == $k) selected @endif >{{ $txt }}</option>
+                        @foreach ($companyPeoples as $k=>$txt)
+                            <option value="{{ $k }}"  @if(isset($defaultCompanyPeoples) && $defaultCompanyPeoples == $k) selected @endif >{{ $txt }}</option>
                         @endforeach
                     </select>
                 </td>
@@ -179,7 +179,7 @@
                 </td>
             </tr>
             <tr>
-                <th>固定电话<span class="must">*</span></th>
+                <th>固定电话<span class="must"></span></th>
                 <td>
                     <input type="text" class="inp wnormal"  name="company_contact_tel" value="{{ $info['company_contact_tel'] ?? '' }}" placeholder="请输入联系电话"/>
                 </td>
@@ -263,7 +263,7 @@
 {{--<script src="{{asset('js/baguetteBox.js/highlight.min.js')}}" async></script>--}}
 <!-- zui js -->
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
-<script src="{{ asset('/js/admin/QualityControl/Company_edit.js') }}"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/Company_edit.js') }}?1"  type="text/javascript"></script>
 @component('component.upfileincludejs')
 @endcomponent
 </body>

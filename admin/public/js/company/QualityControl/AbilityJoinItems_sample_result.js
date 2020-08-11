@@ -159,6 +159,7 @@ function ajax_form(){
 
     // 检测所用仪器
     let instrument_num = $('.instrument_list').length;
+    console.log('instrument_num=', instrument_num);
     if(instrument_num <= 0){
         layer_alert('不能没有检测所用仪器！',3,0);
         return false;
@@ -167,20 +168,22 @@ function ajax_form(){
     let i = 1;
     $('.instrument_list').each(function(){
         let infoObj = $(this);
-        // 名称/型号
-        var instrument_model = infoObj.find('input[name="instrument_model[]"]').val();
+        var instrument_model = infoObj.find("input[name='instrument_model[]']").val();
+        console.log('instrument_model=', instrument_model);
         if(!judge_validate(4,'检测所用仪器【名称/型号】',instrument_model,true,'length',1,50)){
             has_err = true;
             return false;
         }
         // 出厂编号
         var factory_number = infoObj.find('input[name="factory_number[]"]').val();
+        console.log('factory_number=', factory_number);
         if(!judge_validate(4,'检测所用仪器【出厂编号】',factory_number,false,'length',1,50)){
             has_err = true;
             return false;
         }
         // 检定日期
         var check_date = infoObj.find('input[name="check_date[]"]').val();
+        console.log('check_date=', check_date);
         if(!judge_validate(4,'检测所用仪器【检定日期】',check_date,false,'length',1,50)){
             has_err = true;
             return false;
@@ -188,6 +191,7 @@ function ajax_form(){
 
         // 有效期
         var valid_date = infoObj.find('input[name="valid_date[]"]').val();
+        console.log('valid_date=', valid_date);
         if(!judge_validate(4,'检测所用仪器【有效期】',valid_date,false,'length',1,50)){
             has_err = true;
             return false;
@@ -202,6 +206,7 @@ function ajax_form(){
 
     // 标准物质
     let standard_num = $('.standard_list').length;
+    console.log('standard_num=', standard_num);
     if(standard_num <= 0){
         layer_alert('不能没有标准物质！',3,0);
         return false;
@@ -210,26 +215,31 @@ function ajax_form(){
     let k = 1;
     $('.standard_list').each(function(){
         let infoObj = $(this);
+        console.log('infoObj=', infoObj);
         // 名称
         var standard_name = infoObj.find('input[name="standard_name[]"]').val();
+        console.log('standard_name=', standard_name);
         if(!judge_validate(4,'标准物质【名称】',standard_name,true,'length',1,50)){
             has_err = true;
             return false;
         }
         // 生产单位
         var produce_unit = infoObj.find('input[name="produce_unit[]"]').val();
+        console.log('produce_unit=', produce_unit);
         if(!judge_validate(4,'标准物质【生产单位】',produce_unit,false,'length',1,50)){
             has_err = true;
             return false;
         }
         // 批号
         var batch_number = infoObj.find('input[name="batch_number[]"]').val();
+        console.log('batch_number=', batch_number);
         if(!judge_validate(4,'标准物质【批号】',batch_number,false,'length',1,50)){
             has_err = true;
             return false;
         }
         // 有效期
         var standard_valid_date = infoObj.find('input[name="standard_valid_date[]"]').val();
+        console.log('standard_valid_date=', standard_valid_date);
         if(!judge_validate(4,'标准物质【有效期】',standard_valid_date,false,'length',1,50)){
             has_err = true;
             return false;
