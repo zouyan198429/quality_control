@@ -58,7 +58,7 @@
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
         <col width="50">
-        <col width="50">
+{{--        <col width="50">--}}
         <col>
         <col>
         <col  width="150">
@@ -76,7 +76,7 @@
           <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>
         </label>
       </th>
-        <th>ID</th>
+{{--        <th>ID</th>--}}
         <th>能力验证代码</th>
         <th>单位</th>
         <th>报名时间</th>
@@ -129,6 +129,6 @@
       var IFRAME_SAMPLE_URL = "{{url('admin/ability_join/get_sample/')}}/";//添加/修改页面地址前缀 + id
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/AbilityJoin.js?0') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/AbilityJoin.js?1') }}"  type="text/javascript"></script>
 </body>
 </html>

@@ -58,7 +58,7 @@ var otheraction = {
    document.write("                  <span class=\"lbl\"><\/span>");
    document.write("                <\/label>");
    document.write("            <\/td>");
-    document.write("            <td><%=item.id%><\/td>");
+    // document.write("            <td><%=item.id%><\/td>");
     document.write("            <td><%=item.ability_code%><\/td>");
    document.write("            <td><%=item.company_name%><\/td>");
     document.write("            <td><%=item.join_time%><\/td>");
