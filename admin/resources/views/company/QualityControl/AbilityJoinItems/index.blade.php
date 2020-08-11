@@ -58,7 +58,7 @@
                     <th>检测项目</th>
                     <th>方法标准(已选)</th>
                     <th>联系人</th>
-                    <th>联系人手机<hr/>联系人电话</th>
+                    <th>联系人手机</th>
                     <th>发布时间</th>
                     <th>报名时间</th>
                     <th>是否取样</th>
@@ -112,6 +112,6 @@
       var IFRAME_SAMPLE_RESULT_URL = "{{url('company/ability_join_item/sample_result/')}}/";//上报数据页面地址前缀 + id
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/company/QualityControl/AbilityJoinItem.js?26') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/company/QualityControl/AbilityJoinItem.js?27') }}"  type="text/javascript"></script>
 </body>
 </html>

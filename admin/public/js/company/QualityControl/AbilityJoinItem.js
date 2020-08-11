@@ -71,7 +71,7 @@ var otheraction = {
     document.write("            <%}%>");
     document.write("            <\/td>");
     document.write("            <td><%=item.contacts%><\/td>");
-    document.write("            <td><%=item.mobile%><hr/><%=item.tel%><\/td>");
+    document.write("            <td><%=item.mobile%><\/td>");
    document.write("            <td><%=item.ability_info.created_at%><\/td>");
     document.write("            <td><%=item.join_time%><\/td>");
     // document.write("            <td><%=item.ability_info.status_text%><\/td>");
