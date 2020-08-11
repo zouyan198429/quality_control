@@ -15,7 +15,45 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
     console.log('ajax_async', typeof(ajax_async));
     reset_list(is_read_page, false, reset_total, do_num);
     // initList();
+    formatList();
 }
+
+// 格式化每一列数据
+function formatList() {
+    console.log('格式化每一列数据！');
+    $('#' + DYNAMIC_TABLE).find('tr').each(function(){
+        let trObj = $(this);
+
+        // 状态
+        let tdObjStatus = trObj.find('.status_text');
+        console.log('tdObjStatus = ', tdObjStatus);
+        if(tdObjStatus.length > 0){
+            let status = tdObjStatus.html();
+            console.log('status = ', status);
+            switch(status){
+                case '待开始':
+                    tdObjStatus.addClass('aaa1');
+                    break;
+                case '报名中':
+                    tdObjStatus.addClass('aaa2');
+                    break;
+                case '进行中':
+                    tdObjStatus.addClass('aaa3');
+                    break;
+                case '已结束':
+                    tdObjStatus.addClass('aaa4');
+                    break;
+                case '已取消':
+                    tdObjStatus.addClass('aaa5');
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    });
+}
+
 (function() {
     document.write("");
     document.write("    <!-- 前端模板部分 -->");
@@ -47,7 +85,7 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
     //document.write("            <td><p><%=item.project_standards_text%><\/p><\/td>");
     document.write("            <td><%=item.submit_items_text%><\/td>");
     document.write("            <td><%=item.duration_minute%>天<\/td>");
-    document.write("            <td><%=item.status_text%><\/td>");
+    document.write("            <td class='status_text'><%=item.status_text%><\/td>");
     document.write("            <td><%=item.is_publish_text%><\/td>");
     document.write("            <td><%=item.publish_time%><\/td>");
     document.write("            <td><%=item.created_at%><\/td>");
