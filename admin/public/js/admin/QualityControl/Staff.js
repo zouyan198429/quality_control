@@ -183,7 +183,7 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
     document.write("                  <span class=\"lbl\"><\/span>");
     document.write("                <\/label>");
     document.write("            <\/td>");
-    document.write("            <td><%=item.id%><\/td>");
+    // document.write("            <td><%=item.id%><\/td>");
     // document.write("            <td><%=item.client_id%><\/td>");
     document.write("            <td><%=item.admin_username%><\/td>");
     document.write("            <td><%=item.real_name%>(<%=item.sex_text%>)<\/td>");

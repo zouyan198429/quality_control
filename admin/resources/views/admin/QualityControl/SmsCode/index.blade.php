@@ -71,25 +71,25 @@
 --}}
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
-        <col width="50">
-        <col width="60">
+{{--        <col width="50">--}}
+{{--        <col width="60">--}}
         <col>
         <col width="140">
         <col width="90">
         <col width="140">
         <col width="120">
         <col>
-        <col width="160"> 
+        <col width="160">
     </colgroup>
     <thead>
     <tr>
-      <th>
-        <label class="pos-rel">
-          <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>
-          <!-- <span class="lbl">全选</span> -->
-        </label>
-      </th>
-        <th>ID</th>
+{{--      <th>--}}
+{{--        <label class="pos-rel">--}}
+{{--          <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>--}}
+{{--          <!-- <span class="lbl">全选</span> -->--}}
+{{--        </label>--}}
+{{--      </th>--}}
+{{--        <th>ID</th>--}}
         <th>所属</th>
         <th>手机号</th>
         <th>验证码</th>
@@ -141,6 +141,6 @@
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/SmsCode.js') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/SmsCode.js') }}?1"  type="text/javascript"></script>
 </body>
 </html>

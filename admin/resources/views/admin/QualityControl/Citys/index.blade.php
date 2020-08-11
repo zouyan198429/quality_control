@@ -51,8 +51,8 @@
 --}}
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
-        <col width="50">
-        <col width="60">
+{{--        <col width="50">--}}
+{{--        <col width="60">--}}
         <col>
         <col width="160">
         <col width="150">
@@ -61,13 +61,13 @@
     </colgroup>
     <thead>
     <tr>
-      <th>
-        <label class="pos-rel">
-          <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>
-          <!-- <span class="lbl">全选</span> -->
-        </label>
-      </th>
-      <th>ID</th>
+{{--      <th>--}}
+{{--        <label class="pos-rel">--}}
+{{--          <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>--}}
+{{--          <!-- <span class="lbl">全选</span> -->--}}
+{{--        </label>--}}
+{{--      </th>--}}
+{{--      <th>ID</th>--}}
       <th>城市名称</th>
       <th>创建时间</th>
       <th>更新时间</th>
@@ -114,6 +114,6 @@
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/Citys.js') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/Citys.js') }}?1"  type="text/javascript"></script>
 </body>
 </html>

@@ -162,7 +162,7 @@
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
         <col width="50">
-        <col width="50">
+{{--        <col width="50">--}}
 
         <col width="60">
         <col width="50">
@@ -190,7 +190,7 @@
             <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>
           </label>
         </th>
-        <th>ID</th>
+{{--        <th>ID</th>--}}
 
         <th>姓名</th>
         <th>性别</th>
@@ -259,6 +259,6 @@
       var IFRAME_IMPORT_URL = "{{url('admin/user/import_bath')}}/";// 导入
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/User.js?61') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/User.js?62') }}"  type="text/javascript"></script>
 </body>
 </html>

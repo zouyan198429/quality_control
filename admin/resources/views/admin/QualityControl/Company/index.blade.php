@@ -143,7 +143,7 @@
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
         <col width="50">
-        <col width="60">
+{{--        <col width="60">--}}
         <col width="60">
         <col>
         <col>
@@ -165,7 +165,7 @@
           <!-- <span class="lbl">全选</span> -->
         </label>
       </th>
-      <th>ID</th>
+{{--      <th>ID</th>--}}
       <th>城市</th>
         <th>单位名称</th>
         <th>行业</th>
@@ -226,6 +226,6 @@
       var STAFF_SHOW_URL = "{{ url('admin/user/show')}}/";//查看企业能力附表 + 企业id "{{ url('admin/user')}}"; //
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/Company.js') }}?2"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/Company.js') }}?4"  type="text/javascript"></script>
 </body>
 </html>

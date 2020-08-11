@@ -133,13 +133,13 @@
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
         <col width="40">
-        <col width="60">
-        <col width="150"> 
-        <col width="150"> 
-        <col width="150"> 
+{{--        <col width="60">--}}
+        <col width="150">
+        <col width="150">
+        <col width="150">
         <col>
-        <col width="150"> 
-        <col width="100"> 
+        <col width="150">
+        <col width="100">
         <col>
         <col>
         <col width="160">
@@ -153,7 +153,7 @@
           <!-- <span class="lbl">全选</span> -->
         </label>
       </th>
-      <th>ID</th>
+{{--      <th>ID</th>--}}
 {{--      <th>所属客户端</th>--}}
         <th>用户名</th>
         <th>姓名</th>
@@ -211,6 +211,6 @@
       var ACCOUNT_STATUS_URL = "{{ url('api/admin/staff/ajax_frozen') }}";//操作(冻结/解冻)
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/Staff.js') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/Staff.js') }}?2"  type="text/javascript"></script>
 </body>
 </html>

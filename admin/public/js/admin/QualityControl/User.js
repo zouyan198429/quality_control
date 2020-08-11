@@ -333,7 +333,7 @@ function addCompany(company_id, company_name){
     document.write("                  <span class=\"lbl\"><\/span>");
     document.write("                <\/label>");
     document.write("            <\/td>");
-    document.write("            <td><%=item.id%><\/td>");
+    // document.write("            <td><%=item.id%><\/td>");
     // document.write("            <td><%=item.client_id%><\/td>");
 
     document.write("            <td><%=item.real_name%><\/td>");

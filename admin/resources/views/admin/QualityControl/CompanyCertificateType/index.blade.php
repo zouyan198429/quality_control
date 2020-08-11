@@ -51,28 +51,28 @@
 --}}
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
-        <col width="50">
-        <col width="60">
+{{--        <col width="50">--}}
+{{--        <col width="60">--}}
         <col>
         <col width="160">
         <col width="160">
         <col width="120">
-        <col width="100">
+{{--        <col width="100">--}}
     </colgroup>
     <thead>
     <tr>
-      <th>
-        <label class="pos-rel">
-          <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>
-          <!-- <span class="lbl">全选</span> -->
-        </label>
-      </th>
-      <th>ID</th>
+{{--      <th>--}}
+{{--        <label class="pos-rel">--}}
+{{--          <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>--}}
+{{--          <!-- <span class="lbl">全选</span> -->--}}
+{{--        </label>--}}
+{{--      </th>--}}
+{{--      <th>ID</th>--}}
       <th>类型名称</th>
       <th>创建时间</th>
       <th>更新时间</th>
       <th>排序[降序]</th>
-      <th>操作</th>
+{{--      <th>操作</th>--}}
     </tr>
     </thead>
     <tbody id="data_list">
@@ -114,6 +114,6 @@
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/CompanyCertificateType.js') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/CompanyCertificateType.js') }}?3"  type="text/javascript"></script>
 </body>
 </html>

@@ -216,7 +216,7 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
     document.write("                  <span class=\"lbl\"><\/span>");
     document.write("                <\/label>");
     document.write("            <\/td>");
-    document.write("            <td><%=item.id%><\/td>");
+    // document.write("            <td><%=item.id%><\/td>");
     document.write("            <td><%=item.city_name%><\/td>");
     document.write("            <td><%=item.company_name%><\/td>");
     document.write("            <td><%=item.industry_name%><\/td>");
