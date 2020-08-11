@@ -111,6 +111,6 @@
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/Abilitys.js?813') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/Abilitys.js?816') }}"  type="text/javascript"></script>
 </body>
 </html>
