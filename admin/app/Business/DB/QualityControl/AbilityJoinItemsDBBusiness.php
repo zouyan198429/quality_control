@@ -297,52 +297,53 @@ class AbilityJoinItemsDBBusiness extends BasePublicDBBusiness
         return $id;
     }
 
-    public static function initReslut(){
-        // 获得所有的报名项目
-        $queryParams = Tool::getParamQuery([], [], []);
-        $dataListObj = static::getAllList($queryParams, []);
-        // $dataListObj = static::getListByIds($id);
-
-        $dataListArr = $dataListObj->toArray();
-        foreach($dataListArr as $k => $v){
-            $ability_join_item_id = $v['id'];
-            $retry_no  = $v['retry_no'];
-            $resultInfo = AbilityJoinItemsResultsDBBusiness::getFVFormatList(4, 1, ['ability_join_item_id' => $ability_join_item_id, 'retry_no' => $retry_no], false, '', []);
-            $result_id = $resultInfo['id'] ?? 0;
-            $result_info = [
-                'ability_join_item_id' => $ability_join_item_id,
-                'retry_no' => $v['retry_no'],
-                'admin_type' => $v['admin_type'],
-                'staff_id' => $v['staff_id'],
-                'ability_join_id' => $v['ability_join_id'],
-                'ability_code' => $v['ability_code'],
-                'contacts' => $v['contacts'],
-                'mobile' => $v['mobile'],
-                'tel' => $v['tel'],
-                'ability_id' => $v['ability_id'],
-                'join_time' => $v['join_time'],
-                'status' => $v['status'],
-                'is_sample' => $v['is_sample'],
-                'sample_time' => $v['sample_time'],
-                'submit_status' => $v['submit_status'],
-                'submit_time' => $v['submit_time'],
-                'judge_status' => $v['judge_status'],
-                'judge_time' => $v['judge_time'],
-                'result_status' => $v['result_status'],
-//                'resource_ids' => $v['aaa'],
-//                'submit_remarks' => $v['aaa'],
-                'operate_staff_id' => $v['operate_staff_id'],
-                'operate_staff_id_history' => $v['operate_staff_id_history'],
-                'created_at' => $v['created_at'],
-                'updated_at' => $v['updated_at'],
-            ];
-            // 新加或修改记录
-           if($result_id > 0){
-               AbilityJoinItemsResultsDBBusiness::saveById($result_info, $result_id);
-           }else{
-               AbilityJoinItemsResultsDBBusiness::create($result_info);
-           }
-        }
-        echo '执行完成';
-    }
+    // 跑数据，把报名项的数据加入到结果表中
+//    public static function initReslut(){
+//        // 获得所有的报名项目
+//        $queryParams = Tool::getParamQuery([], [], []);
+//        $dataListObj = static::getAllList($queryParams, []);
+//        // $dataListObj = static::getListByIds($id);
+//
+//        $dataListArr = $dataListObj->toArray();
+//        foreach($dataListArr as $k => $v){
+//            $ability_join_item_id = $v['id'];
+//            $retry_no  = $v['retry_no'];
+//            $resultInfo = AbilityJoinItemsResultsDBBusiness::getFVFormatList(4, 1, ['ability_join_item_id' => $ability_join_item_id, 'retry_no' => $retry_no], false, '', []);
+//            $result_id = $resultInfo['id'] ?? 0;
+//            $result_info = [
+//                'ability_join_item_id' => $ability_join_item_id,
+//                'retry_no' => $v['retry_no'],
+//                'admin_type' => $v['admin_type'],
+//                'staff_id' => $v['staff_id'],
+//                'ability_join_id' => $v['ability_join_id'],
+//                'ability_code' => $v['ability_code'],
+//                'contacts' => $v['contacts'],
+//                'mobile' => $v['mobile'],
+//                'tel' => $v['tel'],
+//                'ability_id' => $v['ability_id'],
+//                'join_time' => $v['join_time'],
+//                'status' => $v['status'],
+//                'is_sample' => $v['is_sample'],
+//                'sample_time' => $v['sample_time'],
+//                'submit_status' => $v['submit_status'],
+//                'submit_time' => $v['submit_time'],
+//                'judge_status' => $v['judge_status'],
+//                'judge_time' => $v['judge_time'],
+//                'result_status' => $v['result_status'],
+////                'resource_ids' => $v['aaa'],
+////                'submit_remarks' => $v['aaa'],
+//                'operate_staff_id' => $v['operate_staff_id'],
+//                'operate_staff_id_history' => $v['operate_staff_id_history'],
+//                'created_at' => $v['created_at'],
+//                'updated_at' => $v['updated_at'],
+//            ];
+//            // 新加或修改记录
+//           if($result_id > 0){
+//               AbilityJoinItemsResultsDBBusiness::saveById($result_info, $result_id);
+//           }else{
+//               AbilityJoinItemsResultsDBBusiness::create($result_info);
+//           }
+//        }
+//        echo '执行完成';
+//    }
 }
