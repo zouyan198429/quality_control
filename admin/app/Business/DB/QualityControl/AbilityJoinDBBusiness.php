@@ -328,7 +328,8 @@ class AbilityJoinDBBusiness extends BasePublicDBBusiness
 
                 // 能力验证单次结果
                 $updateFields = array_merge([
-                    // 'submit_status' => 1
+                    'status' => 2,
+                    'is_sample' => 2,
                     'sample_time' => $currentNow
                 ], $appendArr);
                 $searchConditon = [

@@ -113,6 +113,11 @@ class CTAPIAbilityJoinItemsResultsBusiness extends BasicPublicCTAPIBusiness
             $return_data['old_data'] = ['ubound_operate' => 1, 'ubound_name' => '', 'fields_arr' => [], 'ubound_keys' => ['ability_join_item_id', 'retry_no'], 'ubound_type' =>1];
         }
 
+        if(($return_num & 8) == 8){// 二维 数组  ability_join_items_results => [id => 1, 'project_standard_id' => 2, 'project_standard_name' => '']
+            $many_fields = [ 'ubound_name' => 'ability_join_items_results', 'fields_arr'=> Tool::arrEqualKeyVal(['id', 'ability_join_item_id' , 'retry_no', 'contacts', 'mobile', 'tel', 'ability_id', 'join_time'],true),'reset_ubound' => 0];
+            if(!isset($return_data['many_fields'])) $return_data['many_fields'] = [];
+            array_push($return_data['many_fields'], $many_fields);
+        }
         return $return_data;
     }
     // ****表关系***需要重写的方法**********结束***********************************

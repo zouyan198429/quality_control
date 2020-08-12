@@ -109,8 +109,11 @@
       var IMPORT_EXCEL_TEMPLATE_URL = "{{ url('admin/abilitys/import_template') }}";//导入EXCEL模版地址
       var IMPORT_EXCEL_URL = "{{ url('api/admin/abilitys/import') }}";//导入EXCEL地址
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
+
+
+      var ABILITYS_ADMIN_URL = "{{url('admin/abilitys_admin/')}}/";//项目管理 页面地址前缀 + id
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/Abilitys.js?816') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/Abilitys.js?818') }}"  type="text/javascript"></script>
 </body>
 </html>

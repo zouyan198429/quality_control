@@ -94,7 +94,7 @@
         <div class="layui-side-scroll">
           {{--<div class="layui-logo" lay-href="{{ url('layui/home/console') }}">--}}
           <div class="layui-logo" lay-href="{{ url('/help/index.html') }}">
-            <span>质量认证认可协会-大后台</span>
+            <span>{{ $info['ability_name'] ?? '' }}-管理</span>
           </div>
 
           <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">

@@ -96,6 +96,106 @@ class AbilityJoinItemsController extends BasicController
 //    }
 
     /**
+     * 查看--数据上报
+     *
+     * @param Request $request
+     * @param int $ability_id 报名附表 项目相关表id
+     * @param int $item_id 报名项id
+     * @param int $retry_no 测试的序号
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function sample_result_info(Request $request, $ability_id = 0, $item_id = 0, $retry_no = 0)
+    {
+//        $reDataArr = [];// 可以传给视图的全局变量数组
+//        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request, &$item_id){
+//            // 正常流程的代码
+//
+//            $this->InitParams($request);
+//            // $reDataArr = $this->reDataArr;
+//            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+//            return view('company.QualityControl.AbilityJoinItems.sample_result', $reDataArr);
+//
+//        }, $this->errMethod, $reDataArr, $this->errorView);
+
+        return $this->exeDoPublicFun($request, 0, 8, 'admin.QualityControl.AbilitysAdmin.AbilityJoinItems.sample_result_info', true
+            , '', [], function (&$reDataArr) use ($request, &$ability_id, &$item_id, &$retry_no){
+
+
+                if(!is_numeric($item_id) || $item_id <= 0){
+                    throws('参数[item_id]有误！');
+                }
+                $operate = "数据上报";
+                $reDataArr['operate'] = $operate;
+                $reDataArr['ability_id'] = $ability_id;
+                // $handleKeyArr = ['joinItems'];
+                $extParams = [
+                    // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                    // 'relationFormatConfigs'=> CTAPIAbilityJoinItemsBusiness::getRelationConfigs($request, $this, ['ability_info', 'join_item_reslut_info_updata', 'project_submit_items_list'], []),// , 'join_items'
+                ];
+
+
+                $info = CTAPIAbilityJoinItemsBusiness::getInfoData($request, $this, $item_id, [], '', $extParams);
+                // $reDataArr = array_merge($reDataArr, $resultDatas);
+                if(empty($info)) {
+                    throws('记录不存在！');
+                }
+
+//                $user_info = $this->user_info;
+//                if($info['admin_type'] != $user_info['admin_type'] || $info['staff_id'] != $this->user_id) throws('非法访问，您没有访问此记录的权限！');
+//
+//                if(!in_array($info['status'], [2]) || !in_array($info['is_sample'], [2])) throws('非已取样状态，不可进行此操作');
+                $this->infoItemResult($request, $reDataArr, $info, $retry_no);
+
+            });
+
+    }
+
+    /**
+     * 公用方法
+     * 对单次测试数据进行相关表获取---通过 retry_no  测试序号【冗余】 0正常测 1补测1 2 补测2 .....
+     *
+     * @param Request $request
+     * @param array $reDataArr 可以传参到前端视图的变量数组
+     * @param int $id 报名附表 项目相关表id
+     * @param int $info 当前报名项详情
+     * @param int $retry_no 测试序号【冗余】 0正常测 1补测1 2 补测2 .....
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function infoItemResult(Request $request, &$reDataArr, &$info, $retry_no = 0){
+        if(!is_numeric($retry_no) || $retry_no < 0) $retry_no = 0;
+
+        $relationFormatConfigs = CTAPIAbilityJoinItemsBusiness::getRelationConfigs($request, $this, ['ability_info', 'join_item_reslut_info_updata', 'project_submit_items_list'], []);// , 'join_items'
+        CTAPIAbilityJoinItemsBusiness::formatRelationList( $request, $this, $info, $relationFormatConfigs);
+        // 所用仪器
+        $results_instrument_list = $info['join_item_reslut_info_updata']['results_instrument_list'] ?? [];
+        // -- 没有，则默认加入一条为0的
+        if(empty($results_instrument_list)){
+            if(!isset($info['join_item_reslut_info_updata']['results_instrument_list'])) $info['join_item_reslut_info_updata']['results_instrument_list'] = [];
+            array_push($info['join_item_reslut_info_updata']['results_instrument_list'], ['id'=> 0]);
+        }
+        // 检测标准物质
+        $results_standard_list = $info['join_item_reslut_info_updata']['results_standard_list'] ?? [];
+        // -- 没有，则默认加入一条为0的
+        if(empty($results_standard_list)){
+            if(!isset($info['join_item_reslut_info_updata']['results_standard_list'])) $info['join_item_reslut_info_updata']['results_standard_list'] = [];
+            array_push($info['join_item_reslut_info_updata']['results_standard_list'], ['id'=> 0]);
+        }
+
+        // 检测方法依据
+        $results_method_list = $info['join_item_reslut_info_updata']['results_method_list'] ?? [];
+        // -- 没有，则默认加入一条为0的
+        if(empty($results_method_list)){
+            if(!isset($info['join_item_reslut_info_updata']['results_method_list'])) $info['join_item_reslut_info_updata']['results_method_list'] = [];
+            array_push($info['join_item_reslut_info_updata']['results_method_list'], ['id'=> 0]);
+        }
+
+        // pr($info);
+        $reDataArr['info'] = $info;
+    }
+
+    /**
      * @OA\Get(
      *     path="/api/admin/ability_join_items/ajax_info",
      *     tags={"大后台-能力验证-能力验证报名项"},
@@ -215,11 +315,29 @@ class AbilityJoinItemsController extends BasicController
      * @return mixed
      * @author zouyan(305463219@qq.com)
      */
-    public function ajax_alist(Request $request){
+    public function ajax_alist(Request $request, $ability_id = 0){
 //        $this->InitParams($request);
 //        return  CTAPIAbilityJoinItemsBusiness::getList($request, $this, 2 + 4);
-        return $this->exeDoPublicFun($request, 4, 4,'', true, '', [], function (&$reDataArr) use ($request){
-            return  CTAPIAbilityJoinItemsBusiness::getList($request, $this, 2 + 4);
+
+        return $this->exeDoPublicFun($request, 4, 4,'', true, '', [], function (&$reDataArr) use ($request, &$ability_id){
+
+            $mergeParams = [
+                'ability_id' => $ability_id,
+            ];
+            CTAPIAbilityJoinItemsBusiness::mergeRequest($request, $this, $mergeParams);
+
+            $handleKeyConfigArr = ['company_info', 'ability_info'];
+            $isExport = CommonRequest::getInt($request, 'is_export'); // 是否导出 0非导出 ；1导出数据
+            if ($isExport == 1) $oprateBit = 1;
+            if($isExport == 1){// 如果是导出
+                // array_push($handleKeyConfigArr, 'company_info');
+            }
+
+            $extParams = [
+                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                'relationFormatConfigs'=> CTAPIAbilityJoinItemsBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
+            ];
+            return  CTAPIAbilityJoinItemsBusiness::getList($request, $this, 2 + 4, [], [], $extParams);
         });
     }
 
@@ -416,6 +534,10 @@ class AbilityJoinItemsController extends BasicController
         // 拥有者类型1平台2企业4个人
         $reDataArr['adminType'] =  AbilityJoinItems::$adminTypeArr;
         $reDataArr['defaultAdminType'] = -1;// 列表页默认状态
+
+        // 是否补测 0正常测 1补测1 2 补测2 .....
+        $reDataArr['retryNo'] =  AbilityJoinItems::$retryNoArr;
+        $reDataArr['defaultRetryNo'] = -1;// 列表页默认
 
         // 状态
         $reDataArr['status'] =  AbilityJoinItems::$statusArr;

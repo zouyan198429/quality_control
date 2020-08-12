@@ -52,10 +52,16 @@ class AbilityJoinItemsDBBusiness extends BasePublicDBBusiness
             $has_join_item_standards = false;// 是否有 false:没有 ； true:有
             Tool::getInfoUboundVal($saveData, 'ability_join_items_standards', $has_join_item_standards, $ability_join_items_standards, 1);
 
-            // 能力验证单次结果
+            // 能力验证单次结果--上传数据时使用
             $join_items_result = [];
             $has_items_result = false;// 是否有 false:没有 ； true:有
             Tool::getInfoUboundVal($saveData, 'join_items_result', $has_items_result, $join_items_result, 1);
+
+            // 能力验证单次结果--报名时使用
+            $ability_join_items_results = [];// 一维数组
+            $has_join_items_result = false;// 是否有 false:没有 ； true:有
+            Tool::getInfoUboundVal($saveData, 'ability_join_items_results', $has_join_items_result, $ability_join_items_results, 1);
+
 
             $operate_staff_id_history = config('public.operate_staff_id_history', 0);// 0;--写上，不然后面要去取，但现在的系统不用历史表
             // 保存前的处理
@@ -173,6 +179,26 @@ class AbilityJoinItemsDBBusiness extends BasePublicDBBusiness
                 AbilityJoinLogsDBBusiness::saveAbilityJoinLog($operateInfo['admin_type'], $operate_staff_id, $ability_join_id, $id, $logContent, $operate_staff_id, $operate_staff_id_history);
             }
 
+
+            // 能力验证单次结果修改--报名时使用--一维/二维数据
+            if($has_join_items_result){
+                if($isModify) $resultDatas = static::getInfo($id);
+                $retry_no = $resultDatas['retry_no'] ?? 0;
+                // 只做修改或新加---不进行删除
+                // // , 'retry_no' => $retry_no
+                $ability_items_result_ids = AbilityJoinItemsResultsDBBusiness::updateByDataList(['ability_join_item_id' => $id]
+                    , [
+                        'ability_join_item_id' => $id,
+                        'retry_no' => $retry_no,
+                        'ability_join_id' => $resultDatas['ability_join_id'],
+                        'ability_code' => $resultDatas['ability_code'],
+                        'join_time' => $resultDatas['join_time'],
+                    ]
+                    , $ability_join_items_results, $isModify, $operate_staff_id, $operate_staff_id_history
+                    , 'id', $company_id, $modifAddOprate, ['del' => ['del_type' => 4]]);
+
+            }
+
             // 如果是加，则增加报名数量
             if(!$isModify){
                 $ability_id = $saveData['ability_id'] ?? 0;
@@ -271,4 +297,52 @@ class AbilityJoinItemsDBBusiness extends BasePublicDBBusiness
         return $id;
     }
 
+    public static function initReslut(){
+        // 获得所有的报名项目
+        $queryParams = Tool::getParamQuery([], [], []);
+        $dataListObj = static::getAllList($queryParams, []);
+        // $dataListObj = static::getListByIds($id);
+
+        $dataListArr = $dataListObj->toArray();
+        foreach($dataListArr as $k => $v){
+            $ability_join_item_id = $v['id'];
+            $retry_no  = $v['retry_no'];
+            $resultInfo = AbilityJoinItemsResultsDBBusiness::getFVFormatList(4, 1, ['ability_join_item_id' => $ability_join_item_id, 'retry_no' => $retry_no], false, '', []);
+            $result_id = $resultInfo['id'] ?? 0;
+            $result_info = [
+                'ability_join_item_id' => $ability_join_item_id,
+                'retry_no' => $v['retry_no'],
+                'admin_type' => $v['admin_type'],
+                'staff_id' => $v['staff_id'],
+                'ability_join_id' => $v['ability_join_id'],
+                'ability_code' => $v['ability_code'],
+                'contacts' => $v['contacts'],
+                'mobile' => $v['mobile'],
+                'tel' => $v['tel'],
+                'ability_id' => $v['ability_id'],
+                'join_time' => $v['join_time'],
+                'status' => $v['status'],
+                'is_sample' => $v['is_sample'],
+                'sample_time' => $v['sample_time'],
+                'submit_status' => $v['submit_status'],
+                'submit_time' => $v['submit_time'],
+                'judge_status' => $v['judge_status'],
+                'judge_time' => $v['judge_time'],
+                'result_status' => $v['result_status'],
+//                'resource_ids' => $v['aaa'],
+//                'submit_remarks' => $v['aaa'],
+                'operate_staff_id' => $v['operate_staff_id'],
+                'operate_staff_id_history' => $v['operate_staff_id_history'],
+                'created_at' => $v['created_at'],
+                'updated_at' => $v['updated_at'],
+            ];
+            // 新加或修改记录
+           if($result_id > 0){
+               AbilityJoinItemsResultsDBBusiness::saveById($result_info, $result_id);
+           }else{
+               AbilityJoinItemsResultsDBBusiness::create($result_info);
+           }
+        }
+        echo '执行完成';
+    }
 }

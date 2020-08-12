@@ -298,6 +298,14 @@ class CTAPIAbilityJoinBusiness extends BasicPublicCTAPIBusiness
                         ,'',''
                         ,[
                         ], [], '', []),
+                    // 下一级关系的  能力验证报名项-能力验证单次结果  1:n
+                    'join_item_results' => CTAPIAbilityJoinItemsResultsBusiness::getTableRelationConfigInfo($request, $controller
+                        , ['id' => 'ability_join_item_id']
+                        , 2
+                        , 8
+                        ,'',''
+                        ,[
+                        ], ['where' => [['status', '<>' , 16]]], '', []),
                 ], [], '', []),
             // 报名项目 1:n -- 读取到报名项 --取样页使用
             'join_items_get' => CTAPIAbilityJoinItemsBusiness::getTableRelationConfigInfo($request, $controller

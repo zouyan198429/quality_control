@@ -13,6 +13,12 @@ function goTop(url){
     top.location = url;
 }
 
+// 在浏览器打开页面
+function goOpenUrl(url, target) {
+    let tem_target = target || '_blank';
+    window.open(url, tem_target).location;
+}
+
 /* 格式化金额 */
 function price_format(price){
     if(typeof(PRICE_FORMAT) == 'undefined'){

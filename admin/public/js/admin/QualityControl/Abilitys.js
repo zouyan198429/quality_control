@@ -54,6 +54,15 @@ function formatList() {
     });
 }
 
+//业务逻辑部分
+var otheraction = {
+    admin : function(id){// 项目管理
+        var weburl = ABILITYS_ADMIN_URL + id ;
+        console.log(weburl);
+        goOpenUrl(weburl,'_blank');
+        return false;
+    }
+};
 (function() {
     document.write("");
     document.write("    <!-- 前端模板部分 -->");
@@ -97,6 +106,9 @@ function formatList() {
     document.write("                    <i class=\"ace-icon fa fa-check bigger-60\"> 查看<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
+    // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.admin(<%=item.id%>)\">");
+    // document.write("                    <i class=\"ace-icon fa fa-pencil bigger-60\"> 管理<\/i>");
+    // document.write("                <\/a>");
     document.write("                <%if( can_modify){%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.iframeModify(<%=item.id%>)\">");
     document.write("                    <i class=\"ace-icon fa fa-pencil bigger-60\"> 编辑<\/i>");

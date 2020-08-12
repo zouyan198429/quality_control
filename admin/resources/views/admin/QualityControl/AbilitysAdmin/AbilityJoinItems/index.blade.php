@@ -24,6 +24,13 @@
 {{--    </div>--}}
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
+{{--          <input type="hidden" name="ability_id" value="{{ $ability_id ?? 0 }}" />--}}
+          <select class="wmini" name="retry_no" style="width: 80px;">
+              <option value="">测试次序</option>
+              @foreach ($retryNo as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultRetryNo) && $defaultRetryNo == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
           <select class="wmini" name="status" style="width: 80px;">
               <option value="">状态</option>
               @foreach ($status as $k=>$txt)
@@ -55,16 +62,27 @@
     </form>
   </div>
 
+
+    <div class="table-header">
+      {{--<button class="btn btn-danger  btn-xs batch_del"  onclick="action.batchDel(this)">批量删除</button>--}}
+      <button class="btn btn-success  btn-xs export_excel"  onclick="action.batchExportExcel(this)" >导出[按条件]</button>
+      <button class="btn btn-success  btn-xs export_excel"  onclick="action.exportExcel(this)" >导出[勾选]</button>
+{{--      <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcelTemplate(this)">导入模版[EXCEL]</button>--}}
+{{--      <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcel(this)">导入城市</button>--}}
+{{--      <div style="display:none;" ><input type="file" class="import_file img_input"></div>{ {--导入file对象--} }--}}
+    </div>
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
         <col width="50">
 {{--        <col width="50">--}}
         <col>
         <col>
+        <col width="75">
+        <col width="105">
         <col  width="150">
-        <col width="75">
-        <col width="75">
-        <col width="70">
+        <col width="150">
+        <col width="150">
+        <col width="150">
         <col width="75">
         <col width="75">
         <col width="150">
@@ -79,12 +97,14 @@
 {{--        <th>ID</th>--}}
         <th>能力验证代码</th>
         <th>单位</th>
+        <th>联系人</th>
+        <th>联系人手机<hr/>联系人电话</th>
         <th>报名时间</th>
-        <th>报名项目</th>
-        <th>满意项目</th>
+        <th>是否取样<hr/>取样时间</th>
+        <th>是否提交数据<hr/>提交数据时间</th>
+        <th>是否评定<hr/>评定时间</th>
         <th>状态</th>
-        <th>打印证书</th>
-        <th>领取证书</th>
+        <th>验证结论</th>
         <th>操作</th>
     </tr>
     </thead>
@@ -126,9 +146,12 @@
       var IMPORT_EXCEL_URL = "{{ url('api/admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items/import') }}";//导入EXCEL地址
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
 
-      var IFRAME_SAMPLE_URL = "{{url('admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items/get_sample/')}}/";//添加/修改页面地址前缀 + id
+      // var IFRAME_SAMPLE_URL = "{{url('admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items/get_sample/')}}/";//添加/修改页面地址前缀 + id
+
+      var IFRAME_SAMPLE_RESULT_INFO_URL = "{{url('admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items/sample_result_info/')}}/";//显示页面地址前缀 + id / + retry_no
+
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-{{--  <script src="{{ asset('js/admin/QualityControl/AbilityJoin.js?1') }}"  type="text/javascript"></script>--}}
+  <script src="{{ asset('js/admin/QualityControl/AbilitysAdmin/AbilityJoinItems.js?4') }}"  type="text/javascript"></script>
 </body>
 </html>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\QualityControl;
 
 use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
 // use App\Business\Controller\API\RunBuy\CTAPITablesBusiness;
+use App\Business\DB\QualityControl\AbilityJoinItemsDBBusiness;
 use App\Business\DB\QualityControl\StaffDBBusiness;
 use App\Http\Controllers\WorksController;
 use App\Models\QualityControl\Staff;
@@ -20,6 +21,8 @@ class IndexController extends BasicController
     public $controller_id =0;// 功能小模块[控制器]id - controller_id  历史表 、正在进行表 与原表相同
 
     public function test(Request $request){
+        AbilityJoinItemsDBBusiness::initReslut();
+        die();
         $bbb = '555';
         $aaa = CommonDB::doTransactionFun(function () use(&$bbb){
             $bbb .= '666';

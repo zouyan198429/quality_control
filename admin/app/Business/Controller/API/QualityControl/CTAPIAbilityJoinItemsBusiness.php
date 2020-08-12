@@ -299,8 +299,8 @@ class CTAPIAbilityJoinItemsBusiness extends BasicPublicCTAPIBusiness
 //        if(strlen($status) > 0 && $status != 0)  Tool::appendParamQuery($queryParams, $status, 'status', [0, '0', ''], ',', false);
 
 
-        $retry_no = CommonRequest::getInt($request, 'retry_no');
-        if($retry_no >= 0 )  array_push($queryParams['where'], ['retry_no', '=', $retry_no]);
+        $retry_no = CommonRequest::get($request, 'retry_no');
+        if(is_numeric($retry_no) && $retry_no >= 0 )  array_push($queryParams['where'], ['retry_no', '=', $retry_no]);
 
         $result_status = CommonRequest::getInt($request, 'result_status');
         if($result_status > 0 )  array_push($queryParams['where'], ['result_status', '=', $result_status]);
@@ -337,10 +337,10 @@ class CTAPIAbilityJoinItemsBusiness extends BasicPublicCTAPIBusiness
         $relationFormatConfigs = [
             // 下标 'relationConfig' => []// 下一个关系
             // 获得企业名称
-//            'company_info' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
-//                , ['admin_type' => 'admin_type', 'staff_id' => 'id']
-//                , 1, 2
-//                ,'','', [], ['where' => [['admin_type', 2]]], '', []),
+            'company_info' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
+                , ['admin_type' => 'admin_type', 'staff_id' => 'id']
+                , 1, 2
+                ,'','', [], ['where' => [['admin_type', 2]]], '', []),
             // 获得项目
             'ability_info' => CTAPIAbilitysBusiness::getTableRelationConfigInfo($request, $controller
                 , ['ability_id' => 'id']
@@ -463,7 +463,7 @@ class CTAPIAbilityJoinItemsBusiness extends BasicPublicCTAPIBusiness
         }
 
         if(($return_num & 4) == 4){// 标准id 数组  join_item_standard_ids => [0,25]
-            $many_fields = [ 'ubound_name' => 'ability_join_items', 'fields_arr'=> Tool::arrEqualKeyVal(['id', 'admin_type' , 'staff_id', 'ability_id', 'ability_join_items_standards'],true),'reset_ubound' => 0];
+            $many_fields = [ 'ubound_name' => 'ability_join_items', 'fields_arr'=> Tool::arrEqualKeyVal(['id', 'admin_type' , 'staff_id', 'ability_id', 'ability_join_items_standards', 'ability_join_items_results'],true),'reset_ubound' => 0];
             if(!isset($return_data['many_fields'])) $return_data['many_fields'] = [];
             array_push($return_data['many_fields'], $many_fields);
         }

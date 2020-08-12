@@ -24,7 +24,7 @@ class AbilityJoinItemsResults extends BasePublicModel
 
 //    public static $cacheSimple = 'U';// 表名简写,为空，则使用表名
 
-    public static $cacheVersion = 'V2';// 内容随意改[可0{空默认为0}开始自增]- 如果运行过程中，有直接对表记录进行修改，增加或修改字段名，则修改此值，使表记录的相关缓存过期。
+    public static $cacheVersion = 'V4';// 内容随意改[可0{空默认为0}开始自增]- 如果运行过程中，有直接对表记录进行修改，增加或修改字段名，则修改此值，使表记录的相关缓存过期。
     // $cacheExcludeFields 为空：则缓存所有字段值；排除字段可能是大小很大的字段，不适宜进行缓存
     public static $cacheExcludeFields = [];// 表字段中排除字段; 有值：要小心，如果想获取的字段有在排除字段中的，则不能使用缓存
 
@@ -74,6 +74,24 @@ class AbilityJoinItemsResults extends BasePublicModel
      */
     protected $table = 'ability_join_items_results';
 
+    // 拥有者类型1平台2企业4个人
+    public static $adminTypeArr = [
+        '1' => '平台',
+        '2' => '企业',
+        '4' => '个人',
+    ];
+
+
+    // 状态(状态1已报名  2已取样  4已上传数据
+    //   8已判定【如果有有问题、不满意 --还可以再取样--进入已取样状态】
+    // 16已完成--不可再修改【打印证书后或大后台点《公布结果》】)
+    public static $statusArr = [
+        '1' => '已报名',
+        '2' => '已取样',
+        '4' => '已传数据',
+        '8' => '已判定',
+        '16' => '已完成',
+    ];
 
     // 验证结果1待判定 2满意、4有问题、8不满意   16满意【补测满意】
     public static $resultStatusArr = [
@@ -84,14 +102,47 @@ class AbilityJoinItemsResults extends BasePublicModel
         '16' => '满意【补】',
     ];
 
+    // 是否取样1待取样--未取 2已取样--已取
+    public static $isSampleArr = [
+        '1' => '待取样',
+        '2' => '已取样',
+    ];
+
     // 是否上传数据1待传 --未传  2 已传
     public static $submitStatusArr = [
         '1' => '未传',
         '2' => '已传',
     ];
 
+    // 是否评定1待评  2 已评
+    public static $judgeStatusArr = [
+        '1' => '待评',
+        '2' => '已评',
+    ];
+
     // 表里没有的字段
-    protected $appends = ['result_status_text', 'submit_status_text'];
+    protected $appends = ['admin_type_text', 'status_text', 'result_status_text', 'is_sample_text', 'submit_status_text', 'judge_status_text'];
+
+
+    /**
+     * 获取用户的类型文字
+     *
+     * @return string
+     */
+    public function getAdminTypeTextAttribute()
+    {
+        return static::$adminTypeArr[$this->admin_type] ?? '';
+    }
+
+    /**
+     * 获取拥有者类型文字
+     *
+     * @return string
+     */
+    public function getStatusTextAttribute()
+    {
+        return static::$statusArr[$this->status] ?? '';
+    }
 
 
     /**
@@ -105,12 +156,32 @@ class AbilityJoinItemsResults extends BasePublicModel
     }
 
     /**
-     * 获取验证结果文字
+     * 获取是否取样文字
+     *
+     * @return string
+     */
+    public function getIsSampleTextAttribute()
+    {
+        return static::$isSampleArr[$this->is_sample] ?? '';
+    }
+
+    /**
+     * 获取提交数据文字
      *
      * @return string
      */
     public function getSubmitStatusTextAttribute()
     {
         return static::$submitStatusArr[$this->submit_status] ?? '';
+    }
+
+    /**
+     * 获取评定结果文字
+     *
+     * @return string
+     */
+    public function getJudgeStatusTextAttribute()
+    {
+        return static::$judgeStatusArr[$this->judge_status] ?? '';
     }
 }

@@ -279,6 +279,8 @@ Route::get('admin/abilitys_admin/{ability_id}/ability_join_items', 'Admin\Qualit
 //Route::get('admin/abilitys_admin/{ability_id}/ability_join_items/export', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@export');// 导出
 //Route::get('admin/abilitys_admin/{ability_id}/ability_join_items/import_template', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@import_template');// 导入模版
 
+Route::get('admin/abilitys_admin/{ability_id}/ability_join_items/sample_result_info/{item_id}/{retry_no}', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@sample_result_info');// 查看上传的数据
+
 
 //****************************************************************************
 // 能力验证--报名管理
@@ -363,6 +365,7 @@ Route::get('company/ability_join_item', 'WebFront\Company\QualityControl\Ability
 //Route::get('company/ability_join_item/import_template', 'WebFront\Company\QualityControl\AbilityJoinItemsController@import_template');// 导入模版
 
 Route::get('company/ability_join_item/sample_result/{id}', 'WebFront\Company\QualityControl\AbilityJoinItemsController@sample_result');// 数据上报
+Route::get('company/ability_join_item/sample_result_info/{id}/{retry_no}', 'WebFront\Company\QualityControl\AbilityJoinItemsController@sample_result_info');// 获得指定测试序号的 单次测试数据
 
 // 企业能力附表
 Route::get('company/company_schedule', 'WebFront\Company\QualityControl\CompanyScheduleController@index');// 列表

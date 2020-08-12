@@ -110,7 +110,7 @@ class CTAPIAbilityJoinItemsStandardsBusiness extends BasicPublicCTAPIBusiness
             array_push($return_data['one_field'], $one_field);
         }
 
-        if(($return_num & 4) == 4){// 标准id 数组  join_item_standard_ids => [0,25]
+        if(($return_num & 4) == 4){// 二维 数组  ability_join_items_standards => [id => 1, 'project_standard_id' => 2, 'project_standard_name' => '']
             $many_fields = [ 'ubound_name' => 'ability_join_items_standards', 'fields_arr'=> Tool::arrEqualKeyVal(['id', 'project_standard_id' , 'project_standard_name'],true),'reset_ubound' => 0];
             if(!isset($return_data['many_fields'])) $return_data['many_fields'] = [];
             array_push($return_data['many_fields'], $many_fields);

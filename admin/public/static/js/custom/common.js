@@ -23,6 +23,12 @@ function goTop(url){
     top.location = url;
 }
 
+// 在浏览器打开页面
+function goOpenUrl(url, target) {
+    let tem_target = target || '_blank';
+    window.open(url, tem_target).location;
+}
+
 // 调用 index 模块的相关方法-- 在 iframe 页面内部打开新标签
 // href iframe打开的url
 // text 标签栏标题

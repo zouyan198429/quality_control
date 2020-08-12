@@ -567,6 +567,7 @@ class AbilitysController extends BasicController
         ];
         $joinedInfo = CTAPIAbilityJoinBusiness::getFVFormatList( $request,  $this, 4, 1
             , ['join_year' => Carbon::now()->year, 'staff_id' => $this->user_id, 'admin_type' => $info['admin_type'] ], false, [], $extParams);
+
         // 已经有报名-- 一个企业当前有报名，用当前的号
         $ability_code = '';
         if(!empty($joinedInfo)){
@@ -577,6 +578,11 @@ class AbilitysController extends BasicController
                 $tem_ability_join_items = $joinedInfo['ability_join_items'] ?? [];// 报名项目及选择的方法--已报名的
                 $ability_join_items = $tem_ability_join_items;// 报名项目及选择的方法--已报名的
                 // $items_num = count($tem_ability_join_items);
+                foreach($ability_join_items as $k => $v){
+                    if(!isset($v['ability_join_items_results']) || empty($v['ability_join_items_results'])) continue;
+                    Tool::arrAppendKeys($ability_join_items[$k]['ability_join_items_results'], $contactInfo);
+
+                }
                 // 加入最新的联系人信息
                 Tool::arrAppendKeys($ability_join_items, $contactInfo);
             }
@@ -614,9 +620,28 @@ class AbilitysController extends BasicController
                 'retry_no' => 0,
                 'is_sample' => 1,
                 'ability_join_items_standards' => $ability_join_items_standards,
+                'ability_join_items_results' => [
+                    'admin_type' => $user_info['admin_type'],
+                    'staff_id' => $user_info['id'],
+                    // 'ability_code' => $ability_code,
+                    'contacts' => $contacts,
+                    'mobile' => $mobile,
+                    'tel' => $tel,
+                    'ability_id' => $tem_id,
+                    'join_time' => $currentNow,
+                    'status' => 1,
+                    'retry_no' => 0,
+                    'is_sample' => 1,
+                ]
             ];
-            if(!empty($ability_code)) $temItemInfo['ability_code'] = $ability_code;
-            if($ability_join_id > 0)  $temItemInfo['ability_join_id'] = $ability_join_id;
+            if(!empty($ability_code)){
+                $temItemInfo['ability_code'] = $ability_code;
+                $temItemInfo['ability_join_items_results']['ability_code'] = $ability_code;
+            }
+            if($ability_join_id > 0){
+                $temItemInfo['ability_join_id'] = $ability_join_id;
+                $temItemInfo['ability_join_items_results']['ability_join_id'] = $ability_join_id;
+            }
 
             array_push($ability_join_items, $temItemInfo);
         }
