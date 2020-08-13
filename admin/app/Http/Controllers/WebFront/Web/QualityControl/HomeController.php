@@ -520,6 +520,7 @@ class HomeController extends BasicRegController
         $saveData = [
             'admin_type' => $this->user_info['admin_type'],
             'is_perfect' => 2,
+            'open_status' =>2,// 改为默认审核通过
             'company_name' => $company_name,
             'company_credit_code' => $company_credit_code,
             'company_is_legal_persion' => $company_is_legal_persion,
