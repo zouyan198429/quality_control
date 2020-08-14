@@ -35,8 +35,9 @@
             <tr>
                 <th>所属企业<span class="must">*</span></th>
                 <td>
-                    <input type="hidden" name="company_id"  value="{{ $info['company_id'] ?? '' }}" />
-                    <span class="company_name">{{ $info['user_company_name'] ?? '' }}</span>
+                    <input type="hidden" class="select_id"  name="company_id"  value="{{ $info['company_id'] ?? '' }}" />
+                    <span class="select_name company_name">{{ $info['user_company_name'] ?? '' }}</span>
+                    <i class="close select_close company_id_close"  onclick="clearSelect(this)" style="display: none;">×</i>
                     <button  type="button"  class="btn btn-danger  btn-xs ace-icon fa fa-plus-circle bigger-60"  onclick="otheraction.selectCompany(this)">选择所属企业</button>
                 </td>
             </tr>
@@ -95,6 +96,6 @@
     var UPLOAD_WORD_URL = "{{ url('api/admin/company_new_schedule/up_word') }}";//上传word地址
     var UPLOAD_PDF_URL = "{{ url('api/admin/company_new_schedule/up_pdf') }}";//上传pdf地址
 </script>
-<script src="{{ asset('/js/admin/QualityControl/CompanyNewSchedule_edit.js') }}?5"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/CompanyNewSchedule_edit.js') }}?6"  type="text/javascript"></script>
 </body>
 </html>

@@ -33,6 +33,7 @@ $(function(){
 
     $('.search_frm').trigger("click");// 触发搜索事件
     // reset_list_self(false, false, true, 2);
+    popSelectInit();// 初始化选择弹窗
 });
 
 //重载列表
@@ -222,6 +223,44 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
     });
 }
 
+// 初始化，来决定*是显示还是隐藏
+function popSelectInit(){
+
+    $('.select_close').each(function(){
+        let closeObj = $(this);
+        let idObj = closeObj.siblings(".select_id");
+        if(idObj.length > 0 && idObj.val() != '' && idObj.val() != '0'  ){
+            closeObj.show();
+        }else{
+            closeObj.hide();
+        }
+    });
+}
+
+// 清空
+function clearSelect(Obj){
+    let closeObj = $(Obj);
+    console.log('closeObj=' , closeObj);
+
+    var index_query = layer.confirm('确定移除？', {
+        btn: ['确定','取消'] //按钮
+    }, function(){
+        // 清空id
+        let idObj = closeObj.siblings(".select_id");
+        if(idObj.length > 0 ){
+            idObj.val('');
+        }
+        // 清空名称文字
+        let nameObj = closeObj.siblings(".select_name");
+        if(nameObj.length > 0 ){
+            nameObj.html('');
+        }
+        closeObj.hide();
+        layer.close(index_query);
+    }, function(){
+    });
+}
+
 // 获得选中的企业id 数组
 function getSelectedCompanyIds(){
     var company_ids = [];
@@ -238,6 +277,7 @@ function removeCompany(company_id){
     if(company_id == seled_company_id){
         $('input[name=company_id]').val('');
         $('.company_name').html('');
+        $('.company_id_close').hide();
     }
 }
 
@@ -246,6 +286,7 @@ function removeCompany(company_id){
 function addCompany(company_id, company_name){
     $('input[name=company_id]').val(company_id);
     $('.company_name').html(company_name);
+    $('.company_id_close').show();
 }
 
 (function() {
@@ -266,7 +307,7 @@ function addCompany(company_id, company_name){
     document.write("            <td>");
     document.write("                <label class=\"pos-rel\">");
     document.write("                    <input  onclick=\"action.seledSingle(this)\" type=\"checkbox\" class=\"ace check_item\" <%if( false &&  !can_modify){%> disabled <%}%>  value=\"<%=item.id%>\"\/>");
-    document.write("                  <p class=\"lbl\"><%=item.id%><\/p>");
+    // document.write("                  <p class=\"lbl\"><%=item.id%><\/p>");
     document.write("                <\/label>");
     document.write("            <\/td>");
     // document.write("            <td><%=item.id%><\/td>");

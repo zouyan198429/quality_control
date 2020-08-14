@@ -61,6 +61,32 @@ var otheraction = {
         console.log(weburl);
         goOpenUrl(weburl,'_blank');
         return false;
+    },
+    export_join: function(id){// 导出报名企业
+        var index_query = layer.confirm('确定导出当前记录报名企业信息？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            // var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+            // console.log('ids',ids);
+            // if( ids==''){
+            //     err_alert('请选择需要操作的数据');
+            //     return false;
+            // }
+            // //获得表单各name的值
+            // var data = get_frm_values(SURE_FRM_IDS);// {}
+            // data['is_export'] = 1;
+            // data['ids'] = ids;
+            // console.log(EXPORT_EXCEL_URL);
+            // console.log(data);
+            // var url_params = get_url_param(data);
+            // var url = EXPORT_EXCEL_URL + '?' + url_params;
+            var url = EXPORT_JOIN_EXCEL_URL + id ;
+            console.log(url);
+            go(url);
+            layer.close(index_query);
+        }, function(){
+        });
+        return false;
     }
 };
 (function() {
@@ -106,9 +132,12 @@ var otheraction = {
     document.write("                    <i class=\"ace-icon fa fa-check bigger-60\"> 查看<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
-    // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.admin(<%=item.id%>)\">");
-    // document.write("                    <i class=\"ace-icon fa fa-pencil bigger-60\"> 管理<\/i>");
-    // document.write("                <\/a>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.export_join(<%=item.id%>)\">");
+    document.write("                    <i class=\"ace-icon fa fa-cloud-download bigger-60\"> 导出报名企业<\/i>");
+    document.write("                <\/a>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.admin(<%=item.id%>)\">");
+    document.write("                    <i class=\"ace-icon fa fa-pencil bigger-60\"> 管理<\/i>");
+    document.write("                <\/a>");
     document.write("                <%if( can_modify){%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.iframeModify(<%=item.id%>)\">");
     document.write("                    <i class=\"ace-icon fa fa-pencil bigger-60\"> 编辑<\/i>");

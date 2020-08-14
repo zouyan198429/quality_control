@@ -79,10 +79,58 @@ class CTAPIAbilityJoinItemsResultsBusiness extends BasicPublicCTAPIBusiness
         $relationFormatConfigs = [
             // 下标 'relationConfig' => []// 下一个关系
             // 获得企业名称
-//            'company_info' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
-//                , ['admin_type' => 'admin_type', 'staff_id' => 'id']
-//                , 1, 2
-//                ,'','', [], ['where' => [['admin_type', 2]]], '', []),
+            'company_info' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
+                , ['admin_type' => 'admin_type', 'staff_id' => 'id']
+                , 1, 2
+                ,'','', [], ['where' => [['admin_type', 2]]], '', []),
+            // 获得项目
+            'ability_info' => CTAPIAbilitysBusiness::getTableRelationConfigInfo($request, $controller
+                , ['ability_id' => 'id']
+                , 1, 1 | 2
+                ,'','', [], [], '', []),
+            // 需要验证数据项 1:n
+            'project_submit_items_list' => CTAPIProjectSubmitItemsBusiness::getTableRelationConfigInfo($request, $controller
+                , ['ability_id' => 'ability_id']
+                , 2, 8
+                ,'','', [], [], '', []),
+            // 所用仪器 1：n
+            'results_instrument_list' => CTAPIAbilityJoinItemsResultsInstrumentBusiness::getTableRelationConfigInfo($request, $controller
+                , ['ability_join_item_id' => 'ability_join_item_id', 'retry_no' => 'retry_no', 'id' => 'result_id']
+                , 2, 1
+                ,'','', [], [], '', []),
+            // 检测标准物质 1：n
+            'results_standard_list' => CTAPIAbilityJoinItemsResultsStandardBusiness::getTableRelationConfigInfo($request, $controller
+                , ['ability_join_item_id' => 'ability_join_item_id', 'retry_no' => 'retry_no', 'id' => 'result_id']
+                , 2, 1
+                ,'','', [], [], '', []),
+            // 检测方法依据 1：n
+            'results_method_list' => CTAPIAbilityJoinItemsResultsMethodBusiness::getTableRelationConfigInfo($request, $controller
+                , ['ability_join_item_id' => 'ability_join_item_id', 'retry_no' => 'retry_no', 'id' => 'result_id']
+                , 2, 1
+                ,'','', [], [], '', []),
+            // 登记样品 1：n
+            'items_samples_list' => CTAPIAbilityJoinItemsSamplesBusiness::getTableRelationConfigInfo($request, $controller
+                , ['ability_join_item_id' => 'ability_join_item_id', 'retry_no' => 'retry_no', 'id' => 'result_id']
+                , 2, 1
+                ,'','', [
+                    // 提交的登记样品结果 1：n
+                    'sample_result_list' => CTAPIAbilityJoinItemsSampleResultBusiness::getTableRelationConfigInfo($request, $controller
+                        , ['ability_join_item_id' => 'ability_join_item_id', 'retry_no' => 'retry_no', 'result_id' => 'result_id', 'id' => 'sample_id']
+                        , 2, 4
+                        ,'','', [
+                            // 样品结果对应的检验证数据名称 1：1
+                            'project_submit_items' => CTAPIProjectSubmitItemsBusiness::getTableRelationConfigInfo($request, $controller
+                                , ['submit_item_id' => 'id']
+                                , 1, 4
+                                ,'','', [], [], '', []),
+                        ], [], '', []),
+                ], [], '', []),
+            // 企业上传的图片资料信息
+            'resource_list' => CTAPIResourceBusiness::getTableRelationConfigInfo($request, $controller
+                , ['id' => 'column_id']
+                , 2, 0
+                ,'','', [], ['where' => [['column_type', 4]]], ''
+                , ['extendConfig' => ['listHandleKeyArr' => ['format_resource'], 'infoHandleKeyArr' => ['resource_list']]]),
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }
@@ -121,5 +169,148 @@ class CTAPIAbilityJoinItemsResultsBusiness extends BasicPublicCTAPIBusiness
         return $return_data;
     }
     // ****表关系***需要重写的方法**********结束***********************************
+
+
+    /**
+     * 获得列表数据时，查询条件的参数拼接--有特殊的需要自己重写此方法--每个字类都有此方法
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $queryParams 已有的查询条件数组
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  null 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function joinListParams(Request $request, Controller $controller, &$queryParams, $notLog = 0){
+        // 自己的参数查询拼接在这里-- 注意：多个id 的查询默认就已经有了，参数是 ids  多个用逗号分隔
+
+        $ability_join_item_id = CommonRequest::getInt($request, 'ability_join_item_id');
+        if($ability_join_item_id > 0 )  array_push($queryParams['where'], ['ability_join_item_id', '=', $ability_join_item_id]);
+
+        $admin_type = CommonRequest::getInt($request, 'admin_type');
+        if($admin_type > 0 )  array_push($queryParams['where'], ['admin_type', '=', $admin_type]);
+
+        $company_id = CommonRequest::getInt($request, 'company_id');
+        if($company_id > 0 )  array_push($queryParams['where'], ['staff_id', '=', $company_id]);
+
+        $staff_id = CommonRequest::getInt($request, 'staff_id');
+        if($staff_id > 0 )  array_push($queryParams['where'], ['staff_id', '=', $staff_id]);
+
+        $ability_join_id = CommonRequest::getInt($request, 'ability_join_id');
+        if($ability_join_id > 0 )  array_push($queryParams['where'], ['ability_join_id', '=', $ability_join_id]);
+
+        $ability_id = CommonRequest::getInt($request, 'ability_id');
+        if($ability_id > 0 )  array_push($queryParams['where'], ['ability_id', '=', $ability_id]);
+
+        $status = CommonRequest::getInt($request, 'status');
+        if($status > 0 )  array_push($queryParams['where'], ['status', '=', $status]);
+
+//        $status = CommonRequest::get($request, 'status');
+//        if(strlen($status) > 0 && $status != 0)  Tool::appendParamQuery($queryParams, $status, 'status', [0, '0', ''], ',', false);
+
+
+        $retry_no = CommonRequest::get($request, 'retry_no');
+        if(is_numeric($retry_no) && $retry_no >= 0 )  array_push($queryParams['where'], ['retry_no', '=', $retry_no]);
+
+        $result_status = CommonRequest::getInt($request, 'result_status');
+        if($result_status > 0 )  array_push($queryParams['where'], ['result_status', '=', $result_status]);
+
+        $is_sample = CommonRequest::getInt($request, 'is_sample');
+        if($is_sample > 0 )  array_push($queryParams['where'], ['is_sample', '=', $is_sample]);
+
+        $submit_status = CommonRequest::getInt($request, 'submit_status');
+        if($submit_status > 0 )  array_push($queryParams['where'], ['submit_status', '=', $submit_status]);
+
+        $judge_status = CommonRequest::getInt($request, 'judge_status');
+        if($judge_status > 0 )  array_push($queryParams['where'], ['judge_status', '=', $judge_status]);
+
+//        $ids = CommonRequest::get($request, 'ids');
+//        if(strlen($ids) > 0 && $ids != 0)  Tool::appendParamQuery($queryParams, $ids, 'id', [0, '0', ''], ',', false);
+
+        // 方法最下面
+        // 注意重写方法中，如果不是特殊的like，同样需要调起此默认like方法--特殊的写自己特殊的方法
+        static::joinListParamsLike($request, $controller, $queryParams, $notLog);
+    }
+
+    /**
+     * 获得列表数据时，对查询结果进行导出操作--有特殊的需要自己重写此方法
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $queryParams 已有的查询条件数组
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  null 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function exportListData(Request $request, Controller $controller, &$data_list, $notLog = 0){
+        $headArr = ['ability_id'=>'检测项目ID', 'ability_name'=>'检测项目', 'retry_no_text'=>'测试次序', 'ability_code'=>'能力验证代码'];
+        // 拼接样品检验结果下标
+        $ability_name = '';
+        $exportDataList = [];
+        foreach($data_list as $k => $v){
+            if($ability_name == '' ) $ability_name = ($v['ability_name'] ?? '') . ($v['retry_no_text'] ?? '');
+            // 领取的样品列表[默认三个样品列]  样品编号   样品[数据项1]结果 样品[数据项2]结果
+            $items_samples_list = $v['items_samples_list'] ?? [];
+            if(!is_array($items_samples_list) || empty($items_samples_list))  $items_samples_list = [['id' => 0, 'sample_one' => '未领样品']];
+            if(isset($v['items_samples_list'])) unset($v['items_samples_list']);
+            // 需要结果的数据项
+            $submit_items = $v['submit_items'] ?? [];// 格式 [[ 'id' => 26,  'tag_name' => '方法2'], ... ]
+            if(isset($v['submit_items'])) unset($v['submit_items']);
+            foreach($items_samples_list as $tem_sample_info){
+                $exportInfo = $v;
+                $sample_id = $tem_sample_info['id'];
+                $sample_one = $tem_sample_info['sample_one'];
+                $exportInfo['sample_one'] = $sample_one;
+                $headArr['sample_one'] = '样品编号';
+                foreach($submit_items as $submit_k => $submit_info){
+                    $tag_id = $submit_info['id'];
+                    $tag_name = $submit_info['tag_name'];
+                    $result_info = $tem_sample_info['sample_result_list'][$sample_id . '_' . $tag_id] ?? [];
+
+                    $headArr['sample_one_' . $submit_k] = '验证数据项【' . $tag_name .'】';
+                    $exportInfo['sample_one_' . $submit_k] = $result_info['sample_result'] ?? ''; // 结果
+
+                }
+                array_push($exportDataList, $exportInfo);
+            }
+        }
+        $headArr['result_status_text'] = '验证结果';
+        ImportExport::export('',$ability_name . '检测数据' . date('YmdHis'),$exportDataList,1, $headArr, 0, ['sheet_title' => $ability_name . '检测数据']);
+    }
+
+
+    /**
+     * 根据id判断记录结果
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array  $saveData [ 'result_status' =>  2满意、4有问题、8不满意   16满意【补测满意】 ]
+     * @param int $id id
+     * @param boolean $modifAddOprate 修改时是否加操作人，true:加;false:不加[默认]
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  int 记录id
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function judgeResultById(Request $request, Controller $controller, $saveData, &$id, $modifAddOprate = false, $notLog = 0){
+        // $tableLangConfig = static::getLangModelsDBConfig('',  1);
+        $company_id = $controller->company_id;
+        $user_id = $controller->user_id;
+//        if(isset($saveData['goods_name']) && empty($saveData['goods_name'])  ){
+//            throws('商品名称不能为空！');
+//        }
+
+        // 调用新加或修改接口
+        $apiParams = [
+            'saveData' => $saveData,
+            'company_id' => $company_id,
+            'id' => $id,
+            'operate_staff_id' => $user_id,
+            'modifAddOprate' => ($modifAddOprate == true) ? 1 : 0 ,// 0,
+        ];
+        $methodName = 'judgeResultById';
+        static::exeDBBusinessMethodCT($request, $controller, '',  $methodName, $apiParams, $company_id, $notLog);
+
+        return $id;
+    }
 
 }

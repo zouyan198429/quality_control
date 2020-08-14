@@ -93,7 +93,7 @@
       <div class="layui-side layui-side-menu">
         <div class="layui-side-scroll">
           {{--<div class="layui-logo" lay-href="{{ url('layui/home/console') }}">--}}
-          <div class="layui-logo" lay-href="{{ url('/help/index.html') }}">
+          <div class="layui-logo" lay-href="javascript:void(0);">
             <span>{{ $info['ability_name'] ?? '' }}-管理</span>
           </div>
 
@@ -118,31 +118,31 @@
             {{--</li>--}}
 
               <li data-name="user" class="layui-nav-item">
-                  <a  lay-href="{{ url('admin/company') }}?company_grade=1" lay-tips="概况" lay-direction="2">
+                  <a  lay-href="{{ url('admin/abilitys_admin/' . ($ability_id ?? 0)  . '/basic') }}" lay-tips="概况" lay-direction="2">
                       <i class="layui-icon layui-icon-component"></i>
                       <cite>概况</cite>
                   </a>
               </li>
               <li data-name="user" class="layui-nav-item">
-                  <a  lay-href="{{ url('admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items') }}" lay-tips="参加单位" lay-direction="2">
+                  <a  lay-href="{{ url('admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items_results') }}?retry_no=0&operate_num=1" lay-tips="参加单位" lay-direction="2">
                       <i class="layui-icon layui-icon-component"></i>
                       <cite>参加单位</cite>
                   </a>
               </li>
               <li data-name="user" class="layui-nav-item">
-                  <a  lay-href="#" lay-tips="上传数据" lay-direction="2">
+                  <a  lay-href="{{ url('admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items_results') }}?retry_no=0&submit_status=2&operate_num=2" lay-tips="上传数据" lay-direction="2">
                       <i class="layui-icon layui-icon-component"></i>
                       <cite>上传数据</cite>
                   </a>
               </li>
               <li data-name="user" class="layui-nav-item">
-                  <a  lay-href="#" lay-tips="未合格单位" lay-direction="2">
+                  <a  lay-href="{{ url('admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items_results') }}?retry_no=1&operate_num=3" lay-tips="未合格单位" lay-direction="2">
                       <i class="layui-icon layui-icon-component"></i>
                       <cite>未合格单位</cite>
                   </a>
               </li>
               <li data-name="user" class="layui-nav-item">
-                  <a  lay-href="#" lay-tips="补测数据" lay-direction="2">
+                  <a  lay-href="{{ url('admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items_results') }}?retry_no=1&submit_status=2&operate_num=4" lay-tips="补测数据" lay-direction="2">
                       <i class="layui-icon layui-icon-component"></i>
                       <cite>补测数据</cite>
                   </a>

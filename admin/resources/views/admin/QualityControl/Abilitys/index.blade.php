@@ -112,8 +112,9 @@
 
 
       var ABILITYS_ADMIN_URL = "{{url('admin/abilitys_admin/')}}/";//项目管理 页面地址前缀 + id
+      var EXPORT_JOIN_EXCEL_URL = "{{ url('admin/abilitys/export_join/') }}/";//导出报名企业EXCEL地址+ id
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/Abilitys.js?818') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/Abilitys.js?821') }}"  type="text/javascript"></script>
 </body>
 </html>

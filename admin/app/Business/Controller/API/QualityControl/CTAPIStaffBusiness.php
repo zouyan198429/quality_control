@@ -804,7 +804,11 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
             if(!isset($return_data['one_field'])) $return_data['one_field'] = [];
             array_push($return_data['one_field'], $one_field);
         }
-
+        if(($return_num & 32) == 32){// 给上一级返回名称 company_name  city_name addr下标
+            $fields_merge = Tool::arrEqualKeyVal(['company_name', 'city_name', 'addr'],true);// 获得名称
+            if(!isset($return_data['fields_merge'])) $return_data['fields_merge'] = [];
+            array_push($return_data['fields_merge'], $fields_merge);
+        }
         return $return_data;
     }
 

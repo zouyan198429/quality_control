@@ -379,4 +379,43 @@ class AbilitysDBBusiness extends BasePublicDBBusiness
             static::save($saveDate, $saveQueryParams);
         }
     }
+
+    /**
+     * 根据id--指定数量 自增或自减
+     * @param int  $ability_id  项目id
+     * @param string $field_name 字段名 join_num 报名企业(数量)； first_submit_num 初测提交数据数；repair_submit_num 补测提交数据数；
+     *                             first_success_num 初测满意数 ；repair_success_num  补测满意数；first_fail_num 初测不满意数；repair_fail_num 补测不满意数
+     * @param string incDecVal 增减值
+     * @param string incDecType 增减类型 inc 增[默认] ;dec 减
+     * @return  null
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function fieldValIncDec($ability_id, $field_name, $incDecVal = 1, $incDecType = 'inc'){
+        $queryParams = Tool::getParamQuery(['id' => $ability_id], [], []);
+        static::saveDecIncByQuery($field_name, $incDecVal,  $incDecType, $queryParams, []);
+    }
+
+    /**
+     * 根据id--判断是否已经判定
+     * @param int  $ability_id  项目id
+     * @param int $retry_no 测试序号 0正常测 1补测1 2 补测2 .....
+     * @return  boolean 是否已经完成  true:都判定了， false :有未判定的
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function judgeIsJudged($ability_id, $retry_no = 0){
+        $count = AbilityJoinItemsResultsDBBusiness::getCountNum([1,2,4], $retry_no, $ability_id, 0, 0);
+        return ($count > 0) ? false :true;
+    }
+
+    /**
+     * 根据id--判断是否已经完成
+     * @param int  $ability_id  项目id
+     * @param int $retry_no 测试序号 0正常测 1补测1 2 补测2 .....
+     * @return  boolean 是否已经完成  true:都完成了， false :有未完成的
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function judgeIsFinished($ability_id, $retry_no = 0){
+        $count = AbilityJoinItemsResultsDBBusiness::getCountNum([1,2,4,8], $retry_no, $ability_id, 0, 0);
+        return ($count > 0) ? false :true;
+    }
 }

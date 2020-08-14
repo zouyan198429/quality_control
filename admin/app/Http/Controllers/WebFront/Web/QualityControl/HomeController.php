@@ -367,10 +367,12 @@ class HomeController extends BasicRegController
 //            throws('您还没有注册！', $this->getNotLoginErrCode());
                 return redirect('web/login');
             }
-            $handleKeyArr = [];
-            if($user_type == 4) array_push($handleKeyArr, 'company');// array_merge($handleKeyArr, ['industry', 'siteResources']); ;//
+//            $handleKeyArr = [];
+//            if($user_type == 4) array_push($handleKeyArr, 'company');// array_merge($handleKeyArr, ['industry', 'siteResources']); ;//
+//            if(!empty($handleKeyArr)) CTAPIStaffBusiness::handleData($request, $this, $info, $handleKeyArr);
 
-            if(!empty($handleKeyArr)) CTAPIStaffBusiness::handleData($request, $this, $info, $handleKeyArr);
+            $relationFormatConfigs = CTAPIStaffBusiness::getRelationConfigs($request, $this, ['company_info'], []);// , 'join_items'
+            CTAPIStaffBusiness::formatRelationList( $request, $this, $info, $relationFormatConfigs);
             $reDataArr['info'] = $info;
             // 获得城市KV值
             $reDataArr['citys_kv'] = CTAPICitysBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'city_name']);

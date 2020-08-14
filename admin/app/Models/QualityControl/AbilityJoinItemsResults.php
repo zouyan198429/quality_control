@@ -90,7 +90,7 @@ class AbilityJoinItemsResults extends BasePublicModel
         '2' => '已取样',
         '4' => '已传数据',
         '8' => '已判定',
-        '16' => '已完成',
+       // '16' => '已完成',
     ];
 
     // 验证结果1待判定 2满意、4有问题、8不满意   16满意【补测满意】
@@ -108,6 +108,14 @@ class AbilityJoinItemsResults extends BasePublicModel
         '2' => '已取样',
     ];
 
+    // 是否补测 0正常测 1补测1 2 补测2 .....
+    public static $retryNoArr = [
+        '0' => '初测',
+        '1' => '补测',
+//        '2' => '补测2',
+//        '3' => '补测3',
+    ];
+
     // 是否上传数据1待传 --未传  2 已传
     public static $submitStatusArr = [
         '1' => '未传',
@@ -121,7 +129,7 @@ class AbilityJoinItemsResults extends BasePublicModel
     ];
 
     // 表里没有的字段
-    protected $appends = ['admin_type_text', 'status_text', 'result_status_text', 'is_sample_text', 'submit_status_text', 'judge_status_text'];
+    protected $appends = ['admin_type_text', 'status_text', 'result_status_text', 'is_sample_text', 'retry_no_text', 'submit_status_text', 'judge_status_text'];
 
 
     /**
@@ -163,6 +171,16 @@ class AbilityJoinItemsResults extends BasePublicModel
     public function getIsSampleTextAttribute()
     {
         return static::$isSampleArr[$this->is_sample] ?? '';
+    }
+
+    /**
+     * 获取是否补测文字
+     *
+     * @return string
+     */
+    public function getRetryNoTextAttribute()
+    {
+        return static::$retryNoArr[$this->retry_no] ?? '';
     }
 
     /**

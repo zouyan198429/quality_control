@@ -217,6 +217,8 @@ $api->version('v1', function ($api) {
 //        $api->post('admin/abilitys_admin/{ability_id}/ability_join_items/import', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@import');// 导入excel
 //        $api->post('admin/abilitys_admin/{ability_id}/ability_join_items/ajax_get_ids', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
+        // 能力验证结果--报名管理--参加单位
+        $api->any('admin/abilitys_admin/{ability_id}/ability_join_items_results/ajax_alist', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@ajax_alist');//ajax获得列表数据
 
         //****************************************************************************
 

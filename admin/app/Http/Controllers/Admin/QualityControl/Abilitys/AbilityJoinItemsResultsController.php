@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Admin\QualityControl;
+namespace App\Http\Controllers\Admin\QualityControl\Abilitys;
 
-use App\Business\Controller\API\QualityControl\CTAPIAbilityJoinItemsBusiness;
-use App\Business\Controller\API\QualityControl\CTAPIAbilitysBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIAbilityJoinItemsResultsBusiness;
 use App\Http\Controllers\WorksController;
+use App\Models\QualityControl\AbilityJoinItemsResults;
 use App\Services\Request\CommonRequest;
 use App\Services\Tool;
 use Illuminate\Http\Request;
 
-class AbilitysController extends BasicController
+class AbilityJoinItemsResultsController extends BasicController
 {
     public $controller_id =0;// 功能小模块[控制器]id - controller_id  历史表 、正在进行表 与原表相同
 
@@ -17,23 +17,24 @@ class AbilitysController extends BasicController
      * 首页
      *
      * @param Request $request
+     * @param int $ability_id
      * @return mixed
      * @author zouyan(305463219@qq.com)
      */
-    public function index(Request $request)
+    public function index(Request $request, $ability_id = 0)
     {
 //        $reDataArr = [];// 可以传给视图的全局变量数组
 //        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request){
 //            // 正常流程的代码
+//
 //            $this->InitParams($request);
 //            // $reDataArr = $this->reDataArr;
-//             $reDataArr = array_merge($reDataArr, $this->reDataArr);
-//
-//            return view('admin.QualityControl.Abilitys.index', $reDataArr);
+//            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+//            return view('admin.QualityControl.AbilitysAdmin.AbilityJoinItemsResults.index', $reDataArr);
 //
 //        }, $this->errMethod, $reDataArr, $this->errorView);
-        return $this->exeDoPublicFun($request, 1, 1, 'admin.QualityControl.Abilitys.index', true
-            , 'doListPage', [], function (&$reDataArr) use ($request){
+        return $this->exeDoPublicFun($request, 1, 1, 'admin.QualityControl.AbilitysAdmin.AbilityJoinItemsResults.index', true
+            , 'doListPage', ['ability_id' => $ability_id], function (&$reDataArr) use ($request){
 
             });
     }
@@ -54,10 +55,10 @@ class AbilitysController extends BasicController
 //            $this->InitParams($request);
 //            // $reDataArr = $this->reDataArr;
 //            $reDataArr = array_merge($reDataArr, $this->reDataArr);
-//            $reDataArr['province_kv'] = CTAPIAbilitysBusiness::getCityByPid($request, $this,  0);
-//            $reDataArr['province_kv'] = CTAPIAbilitysBusiness::getChildListKeyVal($request, $this, 0, 1 + 0, 0);
+//            $reDataArr['province_kv'] = CTAPIAbilityJoinItemsResultsBusiness::getCityByPid($request, $this,  0);
+//            $reDataArr['province_kv'] = CTAPIAbilityJoinItemsResultsBusiness::getChildListKeyVal($request, $this, 0, 1 + 0, 0);
 //            $reDataArr['province_id'] = 0;
-//            return view('admin.QualityControl.Abilitys.select', $reDataArr);
+//            return view('admin.QualityControl.AbilitysAdmin.AbilityJoinItemsResults.select', $reDataArr);
 //
 //        }, $this->errMethod, $reDataArr, $this->errorView);
 //        return $this->exeDoPublicFun($request, 2048, 1, 'admin.QualityControl.RrrDddd.select', true
@@ -67,14 +68,15 @@ class AbilitysController extends BasicController
 //    }
 
     /**
-     * 添加
+     * 添加--判定
      *
      * @param Request $request
+     * @param int $ability_id
      * @param int $id
      * @return mixed
      * @author zouyan(305463219@qq.com)
      */
-    public function add(Request $request,$id = 0)
+    public function add(Request $request, $ability_id = 0,$id = 0)
     {
 //        $reDataArr = [];// 可以传给视图的全局变量数组
 //        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request, &$id){
@@ -83,75 +85,33 @@ class AbilitysController extends BasicController
 //            $this->InitParams($request);
 //            // $reDataArr = $this->reDataArr;
 //            $reDataArr = array_merge($reDataArr, $this->reDataArr);
-//            return view('admin.QualityControl.Abilitys.add', $reDataArr);
+//            return view('admin.QualityControl.AbilitysAdmin.AbilityJoinItemsResults.add', $reDataArr);
 //
 //        }, $this->errMethod, $reDataArr, $this->errorView);
 
         $pageNum = ($id > 0) ? 64 : 16;
-        return $this->exeDoPublicFun($request, $pageNum, 1,'admin.QualityControl.Abilitys.add', true
-            , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
+        return $this->exeDoPublicFun($request, $pageNum, 1,'admin.QualityControl.AbilitysAdmin.AbilityJoinItemsResults.add', true
+            , 'doInfoPage', ['id' => $id, 'ability_id' => $ability_id], function (&$reDataArr) use ($request){
 
         });
     }
 
     /**
-     * 查看
-     *
-     * @param Request $request
-     * @param int $id
-     * @return mixed
-     * @author zouyan(305463219@qq.com)
-     */
-    public function info(Request $request,$id = 0)
-    {
-        $reDataArr = [];// 可以传给视图的全局变量数组
-        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request, &$id){
-            // 正常流程的代码
-
-            $this->InitParams($request);
-            // $reDataArr = $this->reDataArr;
-            $reDataArr = array_merge($reDataArr, $this->reDataArr);
-            if(!is_numeric($id) || $id <= 0){
-                throws('参数[id]有误！');
-            }
-            $operate = "详情";
-            // $handleKeyArr = ['projectStandards', 'projectSubmitItems'];
-            $extParams = [
-                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-                'relationFormatConfigs'=> CTAPIAbilitysBusiness::getRelationConfigs($request, $this, ['project_standards_list', 'project_submit_items_list'], []),
-            ];
-            $info = CTAPIAbilitysBusiness::getInfoData($request, $this, $id, [], '', $extParams);
-            // $reDataArr = array_merge($reDataArr, $resultDatas);
-            if(empty($info)) {
-                throws('记录不存在！');
-            }
-            $reDataArr['info'] = $info;
-            $reDataArr['operate'] = $operate;
-            return view('admin.QualityControl.Abilitys.info', $reDataArr);
-
-        }, $this->errMethod, $reDataArr, $this->errorView);
-//        return $this->exeDoPublicFun($request, 17179869184, 1,'web.QualityControl.admin.info', true
-//            , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
-//
-//            });
-    }
-
-    /**
      * @OA\Get(
-     *     path="/api/admin/abilitys/ajax_info",
-     *     tags={"大后台-能力验证-能力验证"},
-     *     summary="能力验证--详情",
+     *     path="/api/admin/ability_join_items/ajax_info",
+     *     tags={"大后台-能力验证-能力验证报名项"},
+     *     summary="能力验证报名项--详情",
      *     description="根据单个id,查询详情记录......",
-     *     operationId="adminQualityControlAbilitysAjax_info",
+     *     operationId="adminQualityControlAbilityJoinItemsAjax_info",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_abilitys_id_required"),
-     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_info_abilitys"),
+     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_ability_join_items_id_required"),
+     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_info_ability_join_items"),
      *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
      *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
-     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_abilitys"}
+     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_ability_join_items"}
      */
     /**
      * ajax获得详情数据
@@ -160,142 +120,110 @@ class AbilitysController extends BasicController
      * @return mixed
      * @author zouyan(305463219@qq.com)
      */
-    public function ajax_info(Request $request){
-        $this->InitParams($request);
-        $id = CommonRequest::getInt($request, 'id');
-        if(!is_numeric($id) || $id <=0) return ajaxDataArr(0, null, '参数[id]有误！');
-        $info = CTAPIAbilitysBusiness::getInfoData($request, $this, $id, [], '', []);
-        $resultDatas = ['info' => $info];
-        return ajaxDataArr(1, $resultDatas, '');
-
+//    public function ajax_info(Request $request){
+//        $this->InitParams($request);
 //        $id = CommonRequest::getInt($request, 'id');
 //        if(!is_numeric($id) || $id <=0) return ajaxDataArr(0, null, '参数[id]有误！');
-//        return $this->exeDoPublicFun($request, 128, 2,'', true, 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
+//        $info = CTAPIAbilityJoinItemsResultsBusiness::getInfoData($request, $this, $id, [], '', []);
+//        $resultDatas = ['info' => $info];
+//        return ajaxDataArr(1, $resultDatas, '');
 //
-//        });
-    }
+////        $id = CommonRequest::getInt($request, 'id');
+////        if(!is_numeric($id) || $id <=0) return ajaxDataArr(0, null, '参数[id]有误！');
+////        return $this->exeDoPublicFun($request, 128, 2,'', true, 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
+////
+////        });
+//    }
 
     /**
      * @OA\Post(
-     *     path="/api/admin/abilitys/ajax_save",
-     *     tags={"大后台-能力验证-能力验证"},
-     *     summary="能力验证--新加/修改",
+     *     path="/api/admin/ability_join_items/ajax_save",
+     *     tags={"大后台-能力验证-能力验证报名项"},
+     *     summary="能力验证报名项--新加/修改",
      *     description="根据单个id,新加/修改记录(id>0:修改；id=0:新加)......",
-     *     operationId="adminQualityControlAbilitysAjax_save",
+     *     operationId="adminQualityControlAbilityJoinItemsAjax_save",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_abilitys_id_required"),
+     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_ability_join_items_id_required"),
      *     @OA\Response(response=200,ref="#/components/responses/common_Response_modify"),
      *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
      *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
-     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_abilitys"}
+     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_ability_join_items"}
      */
 
     /**
      * ajax保存数据
      *
      * @param int $id
+     * @param int $ability_id
      * @return Response
      * @author zouyan(305463219@qq.com)
      */
-    public function ajax_save(Request $request)
+    public function ajax_save(Request $request, $ability_id = 0)
     {
 //        $this->InitParams($request);
 
         $id = CommonRequest::getInt($request, 'id');
         $pageNum = ($id > 0) ? 256 : 32;
         return $this->exeDoPublicFun($request, $pageNum, 4,'', true
-            , '', [], function (&$reDataArr) use ($request){
+            , '', [], function (&$reDataArr, &$ability_id) use ($request){
+
+                throws('开发调试中...！');
+                $abilityInfo = $this->getAbilityInfo($ability_id);
                 $id = CommonRequest::getInt($request, 'id');
                 // CommonRequest::judgeEmptyParams($request, 'id', $id);
-                $ability_name = CommonRequest::get($request, 'ability_name');
-                $estimate_add_num = CommonRequest::getInt($request, 'estimate_add_num');
-                $join_begin_date = CommonRequest::get($request, 'join_begin_date');
-                $join_end_date = CommonRequest::get($request, 'join_end_date');
-                $duration_minute = CommonRequest::getInt($request, 'duration_minute');
-                // 判断开始结束日期
-                Tool::judgeBeginEndDate($join_begin_date, $join_end_date, 1 + 2 + 16 + 128 + 256 + 512, 1, date('Y-m-d H:i:s'), '报名时间');
-                if(!is_numeric($duration_minute) || $duration_minute <= 0 ) throws('数据提交时限必须是数值且大于0！');
-
-
-                // 方法标准
-                $project_standard_ids = CommonRequest::get($request, 'project_standard_ids');// 值id数组
-                if(is_string($project_standard_ids) || !is_array($project_standard_ids)) $project_standard_ids = explode(',', $project_standard_ids);
-
-                $project_standard_names = CommonRequest::get($request, 'project_standard_names');// 值数组
-                if(is_string($project_standard_names) || !is_array($project_standard_names)) $project_standard_names = explode(',', $project_standard_names);
-
-                $project_standards = [];// 数组
-                foreach ($project_standard_ids as $k => $temId){
-                    array_push($project_standards,[
-                        'id' => $temId,
-                        'name' => $project_standard_names[$k],
-                    ]);
-                }
-
-                // 验证数据项
-                $submit_item_ids = CommonRequest::get($request, 'submit_item_ids');// 值id数组
-                if(is_string($submit_item_ids) || !is_array($submit_item_ids)) $submit_item_ids = explode(',', $submit_item_ids);
-
-                $submit_item_names = CommonRequest::get($request, 'submit_item_names');// 值数组
-                if(is_string($submit_item_names) || !is_array($submit_item_names)) $submit_item_names = explode(',', $submit_item_names);
-
-                $submit_items = [];// 数组
-                foreach ($submit_item_ids as $k => $temId){
-                    array_push($submit_items,[
-                        'id' => $temId,
-                        'name' => $submit_item_names[$k],
-                    ]);
-                }
+//                $type_name = CommonRequest::get($request, 'type_name');
+//                $sort_num = CommonRequest::getInt($request, 'sort_num');
+                $result_status = CommonRequest::getInt($request, 'result_status');
 
                 $saveData = [
-                    'ability_name' => $ability_name,
-                    'estimate_add_num' => $estimate_add_num,
-                    'duration_minute' => $duration_minute,
-                    'join_begin_date' => $join_begin_date,
-                    'join_end_date' => $join_end_date,
-                    'project_standards' => $project_standards,// 方法标准 - 数组
-                    'submit_items' => $submit_items,// 验证数据项  - 数组
+//                    'type_name' => $type_name,
+//                    'sort_num' => $sort_num,
+                    'result_status' => $result_status,
                 ];
-                // 开始报名前，可以增删改，后面就不可以修改、删除
-                if($id > 0){
-                    $info = CTAPIAbilitysBusiness::getInfoData($request, $this, $id, [], '', []);
-                    if(empty($info)) throws('记录不存在！');
-                    if($info['status'] != 1) throws('当前记录非【待开始】状态，不可修改！');
-                }
 
-//        if($id <= 0) {// 新加;要加入的特别字段
-//            $addNewData = [
-//                // 'account_password' => $account_password,
-//            ];
-//            $saveData = array_merge($saveData, $addNewData);
-//        }
-                $extParams = [
-                    'judgeDataKey' => 'replace',// 数据验证的下标
-                ];
-                $resultDatas = CTAPIAbilitysBusiness::replaceById($request, $this, $saveData, $id, $extParams, true);
+                $info = CTAPIAbilityJoinItemsResultsBusiness::getInfoData($request, $this, $id, [], '', []);
+                if(empty($info)) throws('记录不存在！');
+                $status = $info['status'] ?? 0;// 状态1已报名  2已取样  4已传数据   8已判定 16已完成
+                $result_status = $info['result_status'] ?? 0;// 验证结果1待判定  2满意、4有问题、8不满意   16满意【补测满意】
+
+                if($status != 4 || $result_status != 1) throws('非已传数据状态，不可进行此操作！');
+
+        //        // $reDataArr = array_merge($reDataArr, $resultDatas);
+                $retry_no = $info['retry_no'] ?? 0;
+                // 验证结果1待判定 2满意、4有问题、8不满意   16满意【补测满意】
+                $resultStatus = AbilityJoinItemsResults::$resultStatusArr;
+                if(isset($resultStatus[1])) unset($resultStatus[1]);// 去掉 1待判定
+                if($retry_no == 0){
+                    if(isset($resultStatus[16])) unset($resultStatus[16]);// 去掉  16满意【补测满意】
+                }else{
+                    if(isset($resultStatus[2])) unset($resultStatus[2]);// 去掉 2满意
+                }
+                if(!in_array($result_status, array_keys($resultStatus))) throws('请选择正确的验证结果');
+
+                $resultDatas = CTAPIAbilityJoinItemsResultsBusiness::judgeResultById($request, $this, $saveData, $id, true);
                 return ajaxDataArr(1, $resultDatas, '');
         });
     }
 
     /**
      * @OA\Get(
-     *     path="/api/admin/abilitys/ajax_alist",
-     *     tags={"大后台-能力验证-能力验证"},
-     *     summary="能力验证--列表",
-     *     description="能力验证--列表......",
-     *     operationId="adminQualityControlAbilitysAjax_alist",
+     *     path="/api/admin/ability_join_items/ajax_alist",
+     *     tags={"大后台-能力验证-能力验证报名项"},
+     *     summary="能力验证报名项--列表",
+     *     description="能力验证报名项--列表......",
+     *     operationId="adminQualityControlAbilityJoinItemsAjax_alist",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_abilitys_id_optional"),
-     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_list_abilitys"),
+     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_ability_join_items_id_optional"),
+     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_list_ability_join_items"),
      *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
      *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
-     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_abilitys"}
+     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_ability_join_items"}
      */
     /**
      * ajax获得列表数据
@@ -304,28 +232,24 @@ class AbilitysController extends BasicController
      * @return mixed
      * @author zouyan(305463219@qq.com)
      */
-    public function ajax_alist(Request $request){
+    public function ajax_alist(Request $request, $ability_id = 0){
 //        $this->InitParams($request);
-//
-//        $relations = [];//  ['siteResources']
-//        // $handleKeyArr = ['projectStandards', 'projectSubmitItems'];
-//        $extParams = [
-//            // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-//            'relationFormatConfigs'=> CTAPIAbilitysBusiness::getRelationConfigs($request, $this, ['project_standards_list', 'project_submit_items_list'], []),
-//        ];
-//
-//        return  CTAPIAbilitysBusiness::getList($request, $this, 2 + 4, [], $relations, $extParams);
-        return $this->exeDoPublicFun($request, 4, 4,'', true, '', [], function (&$reDataArr) use ($request){
+//        return  CTAPIAbilityJoinItemsResultsBusiness::getList($request, $this, 2 + 4);
 
+        return $this->exeDoPublicFun($request, 4, 4,'', true, '', [], function (&$reDataArr) use ($request, &$ability_id){
 
-            $relations = [];//  ['siteResources']
-            // $handleKeyArr = ['projectStandards', 'projectSubmitItems'];
+            $mergeParams = [
+                'ability_id' => $ability_id,
+            ];
+            CTAPIAbilityJoinItemsResultsBusiness::mergeRequest($request, $this, $mergeParams);
+
+            $handleKeyConfigArr = ['company_info', 'ability_info'];
+            // ['results_instrument_list','results_standard_list','results_method_list','items_samples_list','resource_list']
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-                'relationFormatConfigs'=> CTAPIAbilitysBusiness::getRelationConfigs($request, $this, ['project_standards_list', 'project_submit_items_list'], []),
+                'relationFormatConfigs'=> CTAPIAbilityJoinItemsResultsBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
             ];
-
-            return  CTAPIAbilitysBusiness::getList($request, $this, 2 + 4, [], $relations, $extParams);
+            return  CTAPIAbilityJoinItemsResultsBusiness::getList($request, $this, 2 + 4, [], [], $extParams);
         });
     }
 
@@ -338,7 +262,7 @@ class AbilitysController extends BasicController
      */
 //    public function ajax_get_ids(Request $request){
 //        $this->InitParams($request);
-//        $result = CTAPIAbilitysBusiness::getList($request, $this, 1 + 0);
+//        $result = CTAPIAbilityJoinItemsResultsBusiness::getList($request, $this, 1 + 0);
 //        $data_list = $result['result']['data_list'] ?? [];
 //        $ids = implode(',', array_column($data_list, 'id'));
 //        return ajaxDataArr(1, $ids, '');
@@ -358,38 +282,24 @@ class AbilitysController extends BasicController
      * @return mixed
      * @author zouyan(305463219@qq.com)
      */
-//    public function export(Request $request){
+    public function export(Request $request, $ability_id = 0){
 //        $this->InitParams($request);
-//        CTAPIAbilitysBusiness::getList($request, $this, 1 + 0);
-//        return $this->exeDoPublicFun($request, 4096, 8,'', true, '', [], function (&$reDataArr) use ($request){
-//            CTAPIRrrDdddBusiness::getList($request, $this, 1 + 0);
-//        });
-//    }
-
-    /**
-     * 导出--报名的企业信息
-     *
-     * @param Request $request
-     * @param int $ability_id 所属能力验证
-     * @return mixed
-     * @author zouyan(305463219@qq.com)
-     */
-    public function export_join(Request $request, $ability_id = 0){
-//        $this->InitParams($request);
-//        CTAPIAbilitysBusiness::getList($request, $this, 1 + 0);
+//        CTAPIAbilityJoinItemsResultsBusiness::getList($request, $this, 1 + 0);
         return $this->exeDoPublicFun($request, 4096, 8,'', true, '', [], function (&$reDataArr) use ($request, &$ability_id){
+
             $mergeParams = [
                 'ability_id' => $ability_id,
-                'is_export' => 1,
             ];
-            CTAPIAbilityJoinItemsBusiness::mergeRequest($request, $this, $mergeParams);
-            $handleKeyConfigArr = ['company_info_all', 'ability_info'];
+            CTAPIAbilityJoinItemsResultsBusiness::mergeRequest($request, $this, $mergeParams);
+
+            $handleKeyConfigArr = ['company_info', 'ability_info'];
+
+            $handleKeyConfigArr = array_merge($handleKeyConfigArr, ['items_samples_list', 'project_submit_items_list']);
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-                'relationFormatConfigs'=> CTAPIAbilityJoinItemsBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
+                'relationFormatConfigs'=> CTAPIAbilityJoinItemsResultsBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
             ];
-            $aa = CTAPIAbilityJoinItemsBusiness::getList($request, $this, 1 + 0, [], [], $extParams);
-            pr($aa);
+            return  CTAPIAbilityJoinItemsResultsBusiness::getList($request, $this, 1 + 0, [], [], $extParams);
         });
     }
 
@@ -402,7 +312,7 @@ class AbilitysController extends BasicController
      */
 //    public function import_template(Request $request){
 //        $this->InitParams($request);
-//        CTAPIAbilitysBusiness::importTemplate($request, $this);
+//        CTAPIAbilityJoinItemsResultsBusiness::importTemplate($request, $this);
 //        return $this->exeDoPublicFun($request, 16384, 8,'', true, '', [], function (&$reDataArr) use ($request){
 //            CTAPIRrrDdddBusiness::importTemplate($request, $this);
 //        });
@@ -411,20 +321,20 @@ class AbilitysController extends BasicController
 
     /**
      * @OA\Post(
-     *     path="/api/admin/abilitys/ajax_del",
-     *     tags={"大后台-能力验证-能力验证"},
-     *     summary="能力验证--删除",
+     *     path="/api/admin/ability_join_items/ajax_del",
+     *     tags={"大后台-能力验证-能力验证报名项"},
+     *     summary="能力验证报名项--删除",
      *     description="根据单个id,删除记录......",
-     *     operationId="adminQualityControlAbilitysAjax_del",
+     *     operationId="adminQualityControlAbilityJoinItemsAjax_del",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_abilitys_id_required"),
+     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_ability_join_items_id_required"),
      *     @OA\Response(response=200,ref="#/components/responses/common_Response_del"),
      *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
      *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
-     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_abilitys"}
+     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_ability_join_items"}
      */
     /**
      * 子帐号管理-删除
@@ -433,26 +343,18 @@ class AbilitysController extends BasicController
      * @return mixed
      * @author zouyan(305463219@qq.com)
      */
-    public function ajax_del(Request $request)
-    {
-//        $this->InitParams($request);
-//         $id = CommonRequest::getInt($request, 'id');
-//        $info = CTAPIAbilitysBusiness::getInfoData($request, $this, $id, [], '', []);
-//        if(empty($info)) throws('记录不存在！');
-//        if($info['status'] != 1) throws('当前记录非【待开始】状态，不可删除！');
-//        return CTAPIAbilitysBusiness::delAjax($request, $this);
-
-        $tem_id = CommonRequest::get($request, 'id');
-        Tool::formatOneArrVals($tem_id, [null, ''], ',', 1 | 2 | 4 | 8);
-        $pageNum = (is_array($tem_id) && count($tem_id) > 1 ) ? 1024 : 512;
-        return $this->exeDoPublicFun($request, $pageNum, 4,'', true, '', [], function (&$reDataArr) use ($request){
-            $id = CommonRequest::getInt($request, 'id');
-            $info = CTAPIAbilitysBusiness::getInfoData($request, $this, $id, [], '', []);
-            if(empty($info)) throws('记录不存在！');
-            if($info['status'] != 1) throws('当前记录非【待开始】状态，不可删除！');
-            return CTAPIAbilitysBusiness::delAjax($request, $this);
-        });
-    }
+//    public function ajax_del(Request $request)
+//    {
+////        $this->InitParams($request);
+////        return CTAPIAbilityJoinItemsResultsBusiness::delAjax($request, $this);
+//
+//        $tem_id = CommonRequest::get($request, 'id');
+//        Tool::formatOneArrVals($tem_id, [null, ''], ',', 1 | 2 | 4 | 8);
+//        $pageNum = (is_array($tem_id) && count($tem_id) > 1 ) ? 1024 : 512;
+//        return $this->exeDoPublicFun($request, $pageNum, 4,'', true, '', [], function (&$reDataArr) use ($request){
+//            return CTAPIAbilityJoinItemsResultsBusiness::delAjax($request, $this);
+//        });
+//    }
 
     /**
      * ajax根据部门id,小组id获得所属部门小组下的员工数组[kv一维数组]
@@ -465,8 +367,8 @@ class AbilitysController extends BasicController
 //        $this->InitParams($request);
 //        $parent_id = CommonRequest::getInt($request, 'parent_id');
 //        // 获得一级城市信息一维数组[$k=>$v]
-//        $childKV = CTAPIAbilitysBusiness::getCityByPid($request, $this, $parent_id);
-//        // $childKV = CTAPIAbilitysBusiness::getChildListKeyVal($request, $this, $parent_id, 1 + 0);
+//        $childKV = CTAPIAbilityJoinItemsResultsBusiness::getCityByPid($request, $this, $parent_id);
+//        // $childKV = CTAPIAbilityJoinItemsResultsBusiness::getChildListKeyVal($request, $this, $parent_id, 1 + 0);
 //
 //        return  ajaxDataArr(1, $childKV, '');;
 //        return $this->exeDoPublicFun($request, 8589934592, 4,'', true, '', [], function (&$reDataArr) use ($request){
@@ -484,7 +386,7 @@ class AbilitysController extends BasicController
 //    public function ajax_import(Request $request){
 //        $this->InitParams($request);
 //        $fileName = 'staffs.xlsx';
-//        $resultDatas = CTAPIAbilitysBusiness::importByFile($request, $this, $fileName);
+//        $resultDatas = CTAPIAbilityJoinItemsResultsBusiness::importByFile($request, $this, $fileName);
 //        return ajaxDataArr(1, $resultDatas, '');
 ///
 //        return $this->exeDoPublicFun($request, 32768, 4,'', true, '', [], function (&$reDataArr) use ($request){
@@ -509,7 +411,7 @@ class AbilitysController extends BasicController
 //        if($result['apistatus'] == 0) return $result;
 //        // 文件上传成功
 //        $fileName = Tool::getPath('public') . '/' . $result['result']['filePath'];
-//        $resultDatas = CTAPIAbilitysBusiness::importByFile($request, $this, $fileName);
+//        $resultDatas = CTAPIAbilityJoinItemsResultsBusiness::importByFile($request, $this, $fileName);
 //        return ajaxDataArr(1, $resultDatas, '');
 //        return $this->exeDoPublicFun($request, 32768, 4,'', true, '', [], function (&$reDataArr) use ($request){
 //            // 上传并保存文件
@@ -517,7 +419,7 @@ class AbilitysController extends BasicController
 //            if($result['apistatus'] == 0) return $result;
 //            // 文件上传成功
 //            $fileName = Tool::getPath('public') . '/' . $result['result']['filePath'];
-//            $resultDatas = CTAPIAbilitysBusiness::importByFile($request, $this, $fileName);
+//            $resultDatas = CTAPIAbilityJoinItemsResultsBusiness::importByFile($request, $this, $fileName);
 //            return ajaxDataArr(1, $resultDatas, '');
 //        });
 //    }
@@ -547,11 +449,46 @@ class AbilitysController extends BasicController
         // $pageNum = $extendParams['pageNum'] ?? 1;// 1->1 首页；2->2 列表页； 12->2048 弹窗选择页面；
         // $user_info = $this->user_info;
         // $id = $extendParams['params']['id'];
+        $ability_id = $extendParams['params']['ability_id'];
+        $reDataArr['ability_id'] = $ability_id;
 
-//        // 拥有者类型1平台2企业4个人
-//        $reDataArr['adminType'] =  AbilityJoin::$adminTypeArr;
-//        $reDataArr['defaultAdminType'] = -1;// 列表页默认状态
+        $abilityInfo = $this->getAbilityInfo($ability_id);
+        $reDataArr['info'] = $abilityInfo;
 
+        // 拥有者类型1平台2企业4个人
+        $reDataArr['adminType'] =  AbilityJoinItemsResults::$adminTypeArr;
+        $reDataArr['defaultAdminType'] = -1;// 列表页默认状态
+
+        // 是否补测 0正常测 1补测1 2 补测2 .....
+        $retry_no = CommonRequest::get($request, 'retry_no');
+        $reDataArr['retryNo'] =  AbilityJoinItemsResults::$retryNoArr;
+        $reDataArr['defaultRetryNo'] = (strlen($retry_no) > 0) ? $retry_no : -1;// 列表页默认
+
+        // 状态
+        $reDataArr['status'] =  AbilityJoinItemsResults::$statusArr;
+        $reDataArr['defaultStatus'] = -1;// 列表页默认
+
+        // 验证结果1待判定 2满意、4有问题、8不满意   16满意【补测满意】
+        $reDataArr['resultStatus'] =  AbilityJoinItemsResults::$resultStatusArr;
+        $reDataArr['defaultResultStatus'] = -1;// 列表页默认
+
+        // 是否取样1待取样--未取 2已取样--已取
+        $reDataArr['isSample'] =  AbilityJoinItemsResults::$isSampleArr;
+        $reDataArr['defaultIsSample'] = -1;// 列表页默认状态
+
+        // 是否上传数据1待传 --未传  2 已传
+        $submit_status = CommonRequest::get($request, 'submit_status');
+        $reDataArr['submitStatus'] =  AbilityJoinItemsResults::$submitStatusArr;
+        $reDataArr['defaultSubmitStatus'] =  (strlen($submit_status) > 0) ? $submit_status : -1;// 列表页默认状态
+
+        // 是否评定1待评  2 已评
+        $judge_status = CommonRequest::get($request, 'judge_status');
+        $reDataArr['judgeStatus'] =  AbilityJoinItemsResults::$judgeStatusArr;
+        $reDataArr['defaultJudgeStatus'] =  (strlen($judge_status) > 0) ? $judge_status : -1;// 列表页默认状态
+
+        // 操作类型 1 参加单位 2 上传数据 3 未合格单位 4 补测数据
+        $operate_num = CommonRequest::get($request, 'operate_num');
+        $reDataArr['operate_num'] = $operate_num;
     }
 
     /**
@@ -577,7 +514,7 @@ class AbilitysController extends BasicController
         // $pageNum = $extendParams['pageNum'] ?? 1;// 5->16 添加页； 7->64 编辑页；8->128 ajax详情； 35-> 17179869184 详情页
         // $user_info = $this->user_info;
         $id = $extendParams['params']['id'] ?? 0;
-
+        $ability_id = $extendParams['params']['ability_id'] ?? 0;
 //        // 拥有者类型1平台2企业4个人
 //        $reDataArr['adminType'] =  AbilityJoin::$adminTypeArr;
 //        $reDataArr['defaultAdminType'] = -1;// 列表页默认状态
@@ -587,18 +524,37 @@ class AbilitysController extends BasicController
         ];
         $operate = "添加";
 
+//
         if ($id > 0) { // 获得详情数据
             $operate = "修改";
-            // $handleKeyArr = ['projectStandards', 'projectSubmitItems'];
+            $handleKeyConfigArr = ['company_info', 'ability_info'];
+
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-                'relationFormatConfigs'=> CTAPIAbilitysBusiness::getRelationConfigs($request, $this, ['project_standards_list', 'project_submit_items_list'], []),
+                'relationFormatConfigs'=> CTAPIAbilityJoinItemsResultsBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
             ];
-            $info = CTAPIAbilitysBusiness::getInfoData($request, $this, $id, [], '', $extParams);
+            $info = CTAPIAbilityJoinItemsResultsBusiness::getInfoData($request, $this, $id, [], '', $extParams);
         }
-        // $reDataArr = array_merge($reDataArr, $resultDatas);
+        $status = $info['status'] ?? 0;// 状态1已报名  2已取样  4已传数据   8已判定 16已完成
+        $result_status = $info['result_status'] ?? 0;// 验证结果1待判定  2满意、4有问题、8不满意   16满意【补测满意】
+
+        if($status != 4 || $result_status != 1) throws('非已传数据状态，不可进行此操作！');
+
+//        // $reDataArr = array_merge($reDataArr, $resultDatas);
         $reDataArr['info'] = $info;
         $reDataArr['operate'] = $operate;
+        $retry_no = $info['retry_no'] ?? 0;
+        // 验证结果1待判定 2满意、4有问题、8不满意   16满意【补测满意】
+        $resultStatus = AbilityJoinItemsResults::$resultStatusArr;
+        if(isset($resultStatus[1])) unset($resultStatus[1]);// 去掉 1待判定
+        if($retry_no == 0){
+            if(isset($resultStatus[16])) unset($resultStatus[16]);// 去掉  16满意【补测满意】
+        }else{
+            if(isset($resultStatus[2])) unset($resultStatus[2]);// 去掉 2满意
+        }
+        // 验证结果1待判定 2满意、4有问题、8不满意   16满意【补测满意】
+        $reDataArr['resultStatus'] = array_reverse($resultStatus, true);
+        $reDataArr['defaultResultStatus'] = $info['result_status'] ?? -1;// 列表页默认
 
     }
     // **************公用方法********************结束*********************************

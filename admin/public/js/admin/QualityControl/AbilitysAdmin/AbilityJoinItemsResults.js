@@ -20,19 +20,19 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
 
 //业务逻辑部分
 var otheraction = {
-    getSample : function(id){// 弹窗取样
+    sampleResultInfo:function(item_id, ability_name, retry_no){// 数据上报 item_id : 报名项目表的id  ability_name:项目名称
         //获得表单各name的值
         var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
-        console.log(IFRAME_SAMPLE_URL);
+        console.log(IFRAME_SAMPLE_RESULT_INFO_URL);
         console.log(data);
         var url_params = get_url_param(data);// parent.get_url_param(data)
-        var weburl = IFRAME_SAMPLE_URL + id + '?' + url_params;
+        var weburl = IFRAME_SAMPLE_RESULT_INFO_URL + item_id + '/' + retry_no + '?' + url_params;
         console.log(weburl);
-        // go(SHOW_URL + id);
-        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // go(SHOW_URL + item_id);
+        // location.href='/pms/Supplier/show?supplier_id='+item_id;
         // var weburl = SHOW_URL + id;
-        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
-        var tishi = "取样";
+        // var weburl = '/pms/Supplier/show?supplier_id='+item_id+"&operate_type=1";
+        var tishi = "数据上报--" + ability_name;
         layeriframe(weburl,tishi,950,600,IFRAME_MODIFY_CLOSE_OPERATE);
         return false;
     },
@@ -49,9 +49,29 @@ var otheraction = {
         console.log('weburl', weburl);
         layeriframe(weburl,tishi,700,450,0);
         return false;
+    },
+    iframeJudge : function(id){// 弹窗--判定
+        //获得表单各name的值
+        var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
+        console.log(IFRAME_MODIFY_URL);
+        console.log(data);
+        var url_params = get_url_param(data);// parent.get_url_param(data)
+        var weburl = IFRAME_MODIFY_URL + id + '?' + url_params;
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = IFRAME_MODIFY_URL_TITLE;//"添加/修改供应商";
+        var operateText = "结果判定";// "添加";
+        // if(id > 0){
+        //     operateText = "修改";
+        // }
+        tishi = operateText + tishi;
+        layeriframe(weburl,tishi,950,600,IFRAME_MODIFY_CLOSE_OPERATE);
+        return false;
     }
 };
-
 
 // 初始化，来决定*是显示还是隐藏
 function popSelectInit(){
@@ -127,48 +147,54 @@ function addCompany(company_id, company_name){
     document.write("");
     document.write("        <%for(var i = 0; i<data_list.length;i++){");
     document.write("        var item = data_list[i];");
-    document.write("        var can_modify = false;");
-   document.write("        if( item.status == 1 ){");
+    //document.write("        var can_modify = false;");
+   // document.write("        if( item.issuper==0 ){");
     document.write("        can_modify = true;");
-    document.write("        }");
+    //document.write("        }");
     document.write("        %>");
     document.write("");
     document.write("        <tr>");
-   // document.write("            <td>");
-   // document.write("                <label class=\"pos-rel\">");
-   // document.write("                    <input  onclick=\"action.seledSingle(this)\" type=\"checkbox\" class=\"ace check_item\" <%if( false &&  !can_modify){%> disabled <%}%>  value=\"<%=item.id%>\"\/>");
-   // document.write("                  <span class=\"lbl\"><\/span>");
-   // document.write("                <\/label>");
-   // document.write("            <\/td>");
+    document.write("            <td>");
+    document.write("                <label class=\"pos-rel\">");
+    document.write("                    <input  onclick=\"action.seledSingle(this)\" type=\"checkbox\" class=\"ace check_item\" <%if( false &&  !can_modify){%> disabled <%}%>  value=\"<%=item.id%>\"\/>");
+    document.write("                  <span class=\"lbl\"><\/span>");
+    document.write("                <\/label>");
+    document.write("            <\/td>");
     // document.write("            <td><%=item.id%><\/td>");
     document.write("            <td><%=item.ability_code%><\/td>");
-   document.write("            <td><%=item.company_name%><\/td>");
+    document.write("            <td><%=item.company_name%><\/td>");
     document.write("            <td><%=item.contacts%><\/td>");
     document.write("            <td><%=item.mobile%><hr/><%=item.tel%><\/td>");
     document.write("            <td><%=item.join_time%><\/td>");
-    document.write("            <td><%=item.items_num%><\/td>");
-    document.write("            <td><%=item.passed_num%><\/td>");
-    document.write("            <td><%=item.status_text%><\/td>");
-    document.write("            <td><%=item.is_print_text%><\/td>");
-    document.write("            <td><%=item.is_grant_text%><\/td>");
+    document.write("            <td><%=item.is_sample_text%><hr/><%=item.sample_time%><\/td>");
+    document.write("            <td><%=item.submit_status_text%><hr/><%=item.submit_time%><\/td>");
+    document.write("            <td><%=item.judge_status_text%><hr/><%=item.judge_time%><\/td>");
+    document.write("            <td><%=item.status_text%>(<%=item.retry_no_text%>)<\/td>");
+    document.write("            <td><%=item.result_status_text%><\/td>");
     // document.write("            <td><%=item.created_at%><\/td>");
     // document.write("            <td><%=item.updated_at%><\/td>");
-    // document.write("            <td><%=item.sort_num%><\/td>");
     document.write("            <td>");
-    document.write("                <%if( true){%>");
-    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"action.show(<%=item.id%>)\">");
-    document.write("                    <i class=\"ace-icon fa fa-check bigger-60\"> 查看<\/i>");
+    document.write("                <%if(item.retry_no == 0 && item.submit_status == 2){%>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"otheraction.sampleResultInfo(<%=item.ability_join_item_id%>,'<%=item.ability_name%>-初测查看', 0)\">");
+    document.write("                    <i class=\"ace-icon fa fa-check bigger-60\"> 查看数据[初测]<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
-    document.write("                <%if( item.status == 1  || item.status == 2 || item.status == 4){%>");
-    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"otheraction.getSample(<%=item.id%>)\">");
-    document.write("                    <i class=\"ace-icon fa fa-check bigger-60\"> 取样<\/i>");
+    document.write("                <%if( item.retry_no == 1 && item.submit_status == 2){%>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"otheraction.sampleResultInfo(<%=item.ability_join_item_id%>,'<%=item.ability_name%>-补测查看', 1)\">");
+    document.write("                    <i class=\"ace-icon fa fa-check bigger-60\"> 查看数据[补测]<\/i>");
+    document.write("                <\/a>");
+    document.write("                <%}%>");
+    // document.write("                <%if( false){%>");
+    // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"action.show(<%=item.id%>)\">");
+    // document.write("                    <i class=\"ace-icon fa fa-check bigger-60\"> 查看<\/i>");
+    // document.write("                <\/a>");
+    // document.write("                <%}%>");
+    document.write("                <%if( item.status == 4 && item.result_status == 1){%>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.iframeJudge(<%=item.id%>)\">");
+    document.write("                    <i class=\"ace-icon fa fa-pencil bigger-60\"> 判定<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
     // document.write("                <%if( can_modify){%>");
-    // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.iframeModify(<%=item.id%>)\">");
-    // document.write("                    <i class=\"ace-icon fa fa-pencil bigger-60\"> 编辑<\/i>");
-    // document.write("                <\/a>");
     // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.del(<%=item.id%>)\">");
     // document.write("                    <i class=\"ace-icon fa fa-trash-o bigger-60\"> 删除<\/i>");
     // document.write("                <\/a>");

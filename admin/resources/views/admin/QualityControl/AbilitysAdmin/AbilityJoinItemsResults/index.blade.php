@@ -24,7 +24,7 @@
 {{--    </div>--}}
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
-{{--          <input type="hidden" name="ability_id" value="{{ $ability_id ?? 0 }}" />--}}
+          <input type="hidden" name="operate_num" value="{{ $operate_num ?? 0 }}" />
 
           <span>
                 <input type="hidden" class="select_id" name="company_id"  value="{{ $info['company_id'] ?? '' }}" />
@@ -33,7 +33,7 @@
                 <button  type="button"  class="btn btn-danger  btn-xs ace-icon fa fa-plus-circle bigger-60"  onclick="otheraction.selectCompany(this)">选择企业</button>
           </span>
 
-          <select class="wmini" name="retry_no" style="width: 80px;">
+          <select class="wmini" name="retry_no" style="width: 80px;display:none;">
               <option value="">测试次序</option>
               @foreach ($retryNo as $k=>$txt)
                   <option value="{{ $k }}"  @if(isset($defaultRetryNo) && $defaultRetryNo == $k) selected @endif >{{ $txt }}</option>
@@ -57,7 +57,18 @@
                   <option value="{{ $k }}"  @if(isset($defaultIsSample) && $defaultIsSample == $k) selected @endif >{{ $txt }}</option>
               @endforeach
           </select>
-
+          <select class="wmini" name="submit_status" style="width: 80px; @if(isset($operate_num) && in_array($operate_num, [2,4])) display: none;  @endif">
+              <option value="">是否上传数据</option>
+              @foreach ($submitStatus as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultSubmitStatus) && $defaultSubmitStatus == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
+          <select class="wmini" name="judge_status" style="width: 80px;">
+              <option value="">是否评定</option>
+              @foreach ($judgeStatus as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultJudgeStatus) && $defaultJudgeStatus == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
         <select style="width:120px; height:28px;" name="field">
           <option value="ability_code">能力验证代码</option>
             <option value="contacts">联系人姓名</option>
@@ -70,7 +81,7 @@
     </form>
   </div>
 
-
+    @if(isset($operate_num) && in_array($operate_num, [2,4]))
     <div class="table-header">
       {{--<button class="btn btn-danger  btn-xs batch_del"  onclick="action.batchDel(this)">批量删除</button>--}}
       <button class="btn btn-success  btn-xs export_excel"  onclick="action.batchExportExcel(this)" >导出[按条件]</button>
@@ -79,6 +90,7 @@
 {{--      <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcel(this)">导入城市</button>--}}
 {{--      <div style="display:none;" ><input type="file" class="import_file img_input"></div>{ {--导入file对象--} }--}}
     </div>
+    @endif
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
         <col width="50">
@@ -136,31 +148,31 @@
       var OPERATE_TYPE = <?php echo isset($operate_type)?$operate_type:0; ?>;
       var AUTO_READ_FIRST = false;//自动读取第一页 true:自动读取 false:指定地方读取
       var LIST_FUNCTION_NAME = "reset_list_self";// 列表刷新函数名称, 需要列表刷新同步时，使用自定义方法reset_list_self；异步时没有必要自定义
-      var AJAX_URL = "{{ url('api/admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items/ajax_alist') }}";//ajax请求的url
-      var ADD_URL = "{{ url('admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items/add/0') }}"; //添加url
+      var AJAX_URL = "{{ url('api/admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items_results/ajax_alist') }}";//ajax请求的url
+      var ADD_URL = "{{ url('admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items_results/add/0') }}"; //添加url
 
-      var IFRAME_MODIFY_URL = "{{url('admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items/add/')}}/";//添加/修改页面地址前缀 + id
+      var IFRAME_MODIFY_URL = "{{url('admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items_results/add/')}}/";//添加/修改页面地址前缀 + id
       var IFRAME_MODIFY_URL_TITLE = "项目" ;// 详情弹窗显示提示  [添加/修改] +  栏目/主题
       var IFRAME_MODIFY_CLOSE_OPERATE = 0 ;// 详情弹窗operate_num关闭时的操作0不做任何操作1刷新当前页面2刷新当前列表页面
 
-      var SHOW_URL = "{{url('admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items/info/')}}/";//显示页面地址前缀 + id
+      var SHOW_URL = "{{url('admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items_results/info/')}}/";//显示页面地址前缀 + id
       var SHOW_URL_TITLE = "详情" ;// 详情弹窗显示提示
       var SHOW_CLOSE_OPERATE = 0 ;// 详情弹窗operate_num关闭时的操作0不做任何操作1刷新当前页面2刷新当前列表页面
-      var EDIT_URL = "{{url('admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items/add/')}}/";//修改页面地址前缀 + id
-      var DEL_URL = "{{ url('api/admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items/ajax_del') }}";//删除页面地址
-      var BATCH_DEL_URL = "{{ url('api/admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items/ajax_del') }}";//批量删除页面地址
-      var EXPORT_EXCEL_URL = "{{ url('admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items/export') }}";//导出EXCEL地址
-      var IMPORT_EXCEL_TEMPLATE_URL = "{{ url('admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items/import_template') }}";//导入EXCEL模版地址
-      var IMPORT_EXCEL_URL = "{{ url('api/admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items/import') }}";//导入EXCEL地址
+      var EDIT_URL = "{{url('admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items_results/add/')}}/";//修改页面地址前缀 + id
+      var DEL_URL = "{{ url('api/admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items_results/ajax_del') }}";//删除页面地址
+      var BATCH_DEL_URL = "{{ url('api/admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items_results/ajax_del') }}";//批量删除页面地址
+      var EXPORT_EXCEL_URL = "{{ url('admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items_results/export') }}";//导出EXCEL地址
+      var IMPORT_EXCEL_TEMPLATE_URL = "{{ url('admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items_results/import_template') }}";//导入EXCEL模版地址
+      var IMPORT_EXCEL_URL = "{{ url('api/admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items_results/import') }}";//导入EXCEL地址
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
 
-      // var IFRAME_SAMPLE_URL = "{{url('admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items/get_sample/')}}/";//添加/修改页面地址前缀 + id
+      // var IFRAME_SAMPLE_URL = "{{url('admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items_results/get_sample/')}}/";//添加/修改页面地址前缀 + id
 
       var IFRAME_SAMPLE_RESULT_INFO_URL = "{{url('admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items/sample_result_info/')}}/";//显示页面地址前缀 + id / + retry_no
 
       var SELECT_COMPANY_URL = "{{url('admin/company/select')}}";// 选择所属企业
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/AbilitysAdmin/AbilityJoinItems.js?11') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/AbilitysAdmin/AbilityJoinItemsResults.js?15') }}"  type="text/javascript"></script>
 </body>
 </html>

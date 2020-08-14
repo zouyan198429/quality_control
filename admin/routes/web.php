@@ -264,6 +264,7 @@ Route::get('admin/abilitys/add/{id}', 'Admin\QualityControl\AbilitysController@a
 Route::get('admin/abilitys/info/{id}', 'Admin\QualityControl\AbilitysController@info');// 查看-详情
 // Route::get('admin/abilitys/select', 'Admin\QualityControl\AbilitysController@select');// 选择-弹窗
 Route::get('admin/abilitys/export', 'Admin\QualityControl\AbilitysController@export');// 导出
+Route::get('admin/abilitys/export_join/{ability_id}', 'Admin\QualityControl\AbilitysController@export_join');// 导出报名的企业信息
 Route::get('admin/abilitys/import_template', 'Admin\QualityControl\AbilitysController@import_template');// 导入模版
 
 //****************************************************************************
@@ -281,6 +282,10 @@ Route::get('admin/abilitys_admin/{ability_id}/ability_join_items', 'Admin\Qualit
 
 Route::get('admin/abilitys_admin/{ability_id}/ability_join_items/sample_result_info/{item_id}/{retry_no}', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@sample_result_info');// 查看上传的数据
 
+// 能力验证结果--报名管理--参加单位
+Route::get('admin/abilitys_admin/{ability_id}/ability_join_items_results', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@index');// 列表
+Route::get('admin/abilitys_admin/{ability_id}/ability_join_items_results/add/{id}', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@add');// 添加--判定
+Route::get('admin/abilitys_admin/{ability_id}/ability_join_items_results/export', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@export');// 导出
 
 //****************************************************************************
 // 能力验证--报名管理

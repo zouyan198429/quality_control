@@ -26,8 +26,9 @@
       <div class="msearch fr">
 
           <span>
-                <input type="hidden" name="company_id"  value="{{ $company_id ?? '' }}" />
-                <span class="company_name">{{ $user_company_name ?? '' }}</span>
+                <input type="hidden" class="select_id"  name="company_id"  value="{{ $company_id ?? '' }}" />
+                <span class="select_name company_name">{{ $user_company_name ?? '' }}</span>
+                <i class="close select_close company_id_close"  onclick="clearSelect(this)" style="display: none;">×</i>
                 <button  type="button"  class="btn btn-danger  btn-xs ace-icon fa fa-plus-circle bigger-60"  onclick="otheraction.selectCompany(this)">选择企业</button>
           </span>
 
@@ -129,6 +130,6 @@
       var DOWN_FILE_URL = "{{ url('admin/down_file') }}";// 下载网页打印机驱动
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/CompanyNewSchedule.js') }}?2"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/CompanyNewSchedule.js') }}?3"  type="text/javascript"></script>
 </body>
 </html>

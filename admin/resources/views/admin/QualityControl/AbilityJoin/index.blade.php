@@ -24,6 +24,14 @@
 {{--    </div>--}}
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
+
+          <span>
+                <input type="hidden" class="select_id" name="company_id"  value="{{ $info['company_id'] ?? '' }}" />
+                <span class="select_name company_name">{{ $info['user_company_name'] ?? '' }}</span>
+                <i class="close select_close company_id_close"  onclick="clearSelect(this)" style="display: none;">×</i>
+                <button  type="button"  class="btn btn-danger  btn-xs ace-icon fa fa-plus-circle bigger-60"  onclick="otheraction.selectCompany(this)">选择企业</button>
+          </span>
+
           <select class="wmini" name="status" style="width: 80px;">
               <option value="">状态</option>
               @foreach ($status as $k=>$txt)
@@ -57,10 +65,12 @@
 
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
-        <col width="50">
+{{--        <col width="50">--}}
 {{--        <col width="50">--}}
         <col>
         <col>
+        <col width="75" >
+        <col width="105">
         <col  width="150">
         <col width="75">
         <col width="75">
@@ -71,14 +81,16 @@
     </colgroup>
     <thead>
     <tr>
-     <th>
-        <label class="pos-rel">
-          <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>
-        </label>
-      </th>
+{{--     <th>--}}
+{{--        <label class="pos-rel">--}}
+{{--          <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>--}}
+{{--        </label>--}}
+{{--      </th>--}}
 {{--        <th>ID</th>--}}
         <th>能力验证代码</th>
         <th>单位</th>
+        <th>联系人</th>
+        <th>联系人手机<hr/>联系人电话</th>
         <th>报名时间</th>
         <th>报名项目</th>
         <th>满意项目</th>
@@ -127,8 +139,10 @@
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
 
       var IFRAME_SAMPLE_URL = "{{url('admin/ability_join/get_sample/')}}/";//添加/修改页面地址前缀 + id
+      var SELECT_COMPANY_URL = "{{url('admin/company/select')}}";// 选择所属企业
+
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/AbilityJoin.js?1') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/AbilityJoin.js') }}?4"  type="text/javascript"></script>
 </body>
 </html>

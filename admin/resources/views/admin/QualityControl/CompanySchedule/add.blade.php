@@ -35,8 +35,9 @@
             <tr>
                 <th>所属企业<span class="must">*</span></th>
                 <td>
-                    <input type="hidden" name="company_id"  value="{{ $info['company_id'] ?? '' }}" />
-                    <span class="company_name">{{ $info['user_company_name'] ?? '' }}</span>
+                    <input type="hidden" class="select_id"  name="company_id"  value="{{ $info['company_id'] ?? '' }}" />
+                    <span class="select_name company_name">{{ $info['user_company_name'] ?? '' }}</span>
+                    <i class="close select_close company_id_close"  onclick="clearSelect(this)" style="display: none;">×</i>
                     <button  type="button"  class="btn btn-danger  btn-xs ace-icon fa fa-plus-circle bigger-60"  onclick="otheraction.selectCompany(this)">选择所属企业</button>
                 </td>
             </tr>
@@ -69,6 +70,6 @@
 
     var IMPORT_EXCEL_URL = "{{ url('api/admin/company_schedule/import') }}";//上传文件地址
 </script>
-<script src="{{ asset('/js/admin/QualityControl/CompanySchedule_edit.js') }}?5"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/CompanySchedule_edit.js') }}?6"  type="text/javascript"></script>
 </body>
 </html>

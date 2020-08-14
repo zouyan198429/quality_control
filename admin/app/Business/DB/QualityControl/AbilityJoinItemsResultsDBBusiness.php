@@ -2,8 +2,10 @@
 // 能力验证单次结果
 namespace App\Business\DB\QualityControl;
 
+use App\Models\QualityControl\AbilityJoinItemsResults;
 use App\Services\DB\CommonDB;
 use App\Services\Tool;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -165,4 +167,205 @@ class AbilityJoinItemsResultsDBBusiness extends BasePublicDBBusiness
         });
     }
 
+    /**
+     * 根据id判断记录结果
+     *
+     * @param array $saveData 要保存或修改的数组 [ 'result_status' =>  2满意、4有问题、8不满意   16满意【补测满意】 ]
+     * @param int  $company_id 企业id
+     * @param int $id id
+     * @param int $operate_staff_id 操作人id
+     * @param int $modifAddOprate 修改时是否加操作人，1:加;0:不加[默认]
+     * @return  int 记录id值，
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function judgeResultById($saveData, $company_id, &$id, $operate_staff_id = 0, $modifAddOprate = 0){
+        // $result_status = $saveData['result_status'] ?? 0;
+//        if(!in_array($result_status, array_keys(AbilityJoinItemsResults::$resultStatusArr))) throws('参数【result_status】值无效！');
+        $info = static::getInfo($id);
+        if(!empty($info)) throws('记录不存在！');
+        $status = $info['status'] ?? 0;// 状态1已报名  2已取样  4已传数据   8已判定 16已完成
+        $result_status = $info['result_status'] ?? 0;// 验证结果1待判定  2满意、4有问题、8不满意   16满意【补测满意】
+
+        if($status != 4 || $result_status != 1) throws('非已传数据状态，不可进行此操作！');
+
+        $retry_no = $info['retry_no'] ?? 0;
+        // 验证结果1待判定 2满意、4有问题、8不满意   16满意【补测满意】
+        $resultStatus = AbilityJoinItemsResults::$resultStatusArr;
+        if(isset($resultStatus[1])) unset($resultStatus[1]);// 去掉 1待判定
+        if($retry_no == 0){
+            if(isset($resultStatus[16])) unset($resultStatus[16]);// 去掉  16满意【补测满意】
+        }else{
+            if(isset($resultStatus[2])) unset($resultStatus[2]);// 去掉 2满意
+        }
+        if(!in_array($result_status, array_keys($resultStatus))) throws('请选择正确的验证结果');
+
+        // 具体操作
+        // 有问题  不满意
+        //     如果是第一次测试：
+        //            项目表 abilitys   初测不满意数 first_fail_num + 1
+        //            主报名表 abilityJoin 状态改为 status 2' => '补测待取样； 初测不满意数 first_fail_num + 1
+        //            报名项表 ability_join_items  status 8 已判定 ； result_status ；judge_status 是否评定  2 已评 judge_time；
+        //                                          改为补测  retry_no =1 并生成新的 补测单次结果
+        //            对当前的这条单次记录 ability_join_items_results    status 8 已判定 ； result_status ；judge_status 是否评定  2 已评 judge_time；
+        // 如果是第二次补测
+        //           项目表 abilitys   补测不满意数 repair_fail_num + 1 ; 判断是否都判定完了【初测 和 补测】 -- 未完，不操作；完了 is_publish   2待公布
+        //           主报名表 abilityJoin  判断是否都判定完了【初测 和 补测】 status 状态改为 未完-- 8 部分评定【还有没有评定的】   或  已完-- 16 已评定【所有报名项都评定了】；
+        //                                              补测不满意数 repair_fail_num + 1
+        //            报名项表 ability_join_items status 状态改为 8 已判定 ； result_status ；是否评定  2 已评 judge_time；
+        //           对当前的这条单次记录 ability_join_items_results  status 8 已判定 ； result_status ；judge_status 是否评定  2 已评 judge_time；
+        // 满意
+        //     如果是第一次测试： 第二次补测  补测满意数 repair_success_num + 1
+        //            项目表 abilitys  初测满意数 first_success_num + 1; 判断是否都判定完了【初测 和 补测】 -- 未完，不操作；完了 is_publish   2待公布
+        //            主报名表 abilityJoin 判断是否都判定完了【初测 和 补测】 status 状态改为 未完-- 8 部分评定【还有没有评定的】   或  已完-- 16 已评定【所有报名项都评定了】；
+        //                                  初测满意数 first_success_num + 1;
+        //            报名项表 ability_join_items status  status 状态改为 8 已判定 ； result_status ；是否评定  2 已评 judge_time；
+        //           对当前的这条单次记录 ability_join_items_results  status 8 已判定 ； result_status ；judge_status 是否评定  2 已评 judge_time；
+
+        CommonDB::doTransactionFun(function() use(&$saveData, &$company_id, &$id, &$operate_staff_id, &$modifAddOprate, &$result_status, &$retry_no, &$info){
+            $ability_id = $info['ability_id'];
+            $ability_join_id = $info['ability_join_id'];
+            $ability_join_item_id = $info['ability_join_item_id'];
+            $admin_type = $info['admin_type'];
+            $staff_id = $info['staff_id'];
+            $currentNow = Carbon::now()->toDateTimeString();
+
+            $abilityInfo = AbilitysDBBusiness::getInfo($ability_id);
+            // 8已结束 16 已取消【作废】)
+            if(in_array($abilityInfo['status'], [8,16]))  throws('项目记录状态有误，不可进行此操作！');
+
+            $joinInfo = AbilityJoinDBBusiness::getInfo($ability_join_id);
+            if($joinInfo['status'] != 4) throws('报名主记录非已取样状态，不可进行此操作！');
+
+            $joinItemInfo = AbilityJoinItemsDBBusiness::getInfo($ability_join_item_id);
+
+            // 4有问题、8不满意
+            if(in_array($result_status, [4, 8])){
+                switch($retry_no){
+                    case 0:// 初测
+                        // 项目表 abilitys   初测不满意数 first_fail_num + 1
+                        AbilitysDBBusiness::fieldValIncDec($ability_id, 'first_fail_num', 1, 'inc');
+                        // 主报名表 abilityJoin 状态改为 status 2' => '补测待取样； 初测不满意数 first_fail_num + 1
+                        AbilityJoinDBBusiness::fieldValIncDec($ability_join_id, 'first_fail_num', 1, 'inc');
+                        AbilityJoinDBBusiness::saveById(['status' => 2], $ability_join_id);
+                        //            报名项表 ability_join_items  status 8 已判定 ； result_status ；judge_status 是否评定  2 已评 judge_time；
+                        //                                          改为补测  retry_no =1 并生成新的 补测单次结果
+                        // 4已传数据 8已判定
+                        if(!in_array($joinItemInfo['status'], [4, 8])) throws('报名项目记录非已传数据或已判定状态，不可进行此操作！');
+                        AbilityJoinItemsDBBusiness::saveById([
+                            'status' => 8,
+                            'result_status' => $result_status,
+                            'judge_status' => 2,
+                            'judge_time' => $currentNow,
+                            'retry_no' => 1,
+                        ], $ability_join_item_id);
+                        // 生成新的补测单结果
+                        $updateFields = [
+                            'ability_join_item_id' => $ability_join_item_id,
+                            'retry_no' => 1,
+                            'admin_type' => $joinItemInfo['admin_type'],
+                            'staff_id' => $joinItemInfo['staff_id'],
+                            'ability_join_id' => $joinItemInfo['ability_join_id'],
+                            'ability_code' => $joinItemInfo['ability_code'],
+                            'contacts' => $joinItemInfo['contacts'],
+                            'mobile' => $joinItemInfo['mobile'],
+                            'tel' => $joinItemInfo['tel'],
+                            'ability_id' => $joinItemInfo['ability_id'],
+                            'join_time' => $joinItemInfo['join_time'],
+                            'status' => 1,
+                            'is_sample' => 1,
+                            // 'sample_time' => null,
+                            'submit_status' => 1,
+                            // 'submit_time' => null,
+                            'judge_status' => 1,
+                            // 'judge_time' => null,
+                            'result_status' => 1,
+                            'resource_ids' => '',
+                            'submit_remarks' => '',
+                        ];
+                        $searchConditon = [
+                            'ability_join_item_id' => $ability_join_item_id,
+                            'retry_no' => 1,
+                        ];
+                        $itemResultObj = null;
+                        static::updateOrCreate($itemResultObj, $searchConditon, $updateFields);
+
+                        //            对当前的这条单次记录 ability_join_items_results    status 8 已判定 ； result_status ；judge_status 是否评定  2 已评 judge_time；
+                        static::saveById([
+                            'status' => 8,
+                            'result_status' => $result_status,
+                            'judge_status' => 2,
+                            'judge_time' => $currentNow,
+                        ],$id);
+                        break;
+                    case 1:// 补测
+                        //           项目表 abilitys   补测不满意数 repair_fail_num + 1 ; 判断是否都判定完了【初测 和 补测】 -- 未完，不操作；完了 is_publish   2待公布
+                        AbilitysDBBusiness::fieldValIncDec($ability_id, 'repair_fail_num', 1, 'inc');
+                        if(AbilitysDBBusiness::judgeIsJudged($ability_id, 0) && AbilitysDBBusiness::judgeIsJudged($ability_id, 1)){
+                            AbilitysDBBusiness::saveById([
+                                'is_publish' => 2,
+                            ], $ability_id);
+                        }
+
+                        //           主报名表 abilityJoin  判断是否都判定完了【初测 和 补测】 status 状态改为 未完-- 8 部分评定【还有没有评定的】   或  已完-- 16 已评定【所有报名项都评定了】；
+                        //                                              补测不满意数 repair_fail_num + 1
+                        AbilityJoinDBBusiness::fieldValIncDec($ability_id, 'repair_fail_num', 1, 'inc');
+//                        if(){
+//
+//                        }
+
+                        //            报名项表 ability_join_items status 状态改为 8 已判定 ； result_status ；是否评定  2 已评 judge_time；
+                        //           对当前的这条单次记录 ability_join_items_results  status 8 已判定 ； result_status ；judge_status 是否评定  2 已评 judge_time；
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+        return $id;
+    }
+
+    /**
+     * 根据项目id--获得指定的单个或多个状态的数量
+     * @param mixed $status 单个或 多个：一维数组 ； 状态1已报名  2已取样  4已传数据   8已判定 16已完成
+     * @param int $retry_no 测试序号 0正常测 1补测1 2 补测2 .....
+     * @param int  $ability_id  项目id --可以为0：不参与查询
+     * @param int  $admin_type  类型1平台2企业4个人--可以为0：不参与查询
+     * @param int  $staff_id  所属人员id--可以为0：不参与查询
+     * @return  mixed 数量
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function getCountNum($status = 1, $retry_no = 0, $ability_id = 0, $admin_type = 0, $staff_id = 0){
+        $fieldValParams = [];
+        if(is_numeric($retry_no) && $retry_no >= 0) $fieldValParams['retry_no'] = $retry_no;
+        if(is_numeric($ability_id) && $ability_id > 0) $fieldValParams['ability_id'] = $ability_id;
+        if(is_numeric($admin_type) && $admin_type > 0) $fieldValParams['admin_type'] = $admin_type;
+        if(is_numeric($staff_id) && $staff_id > 0) $fieldValParams['staff_id'] = $staff_id;
+        if(!empty($fieldValParams)) $queryParams = Tool::getParamQuery($fieldValParams, [], []);
+        if(!empty($status)) Tool::appendParamQuery($queryParams, $status, 'status', [0, '0', ''], ',', false);
+
+        $queryParams['count'] = 0;
+        return static::getAllList($queryParams, []);
+    }
+
+    /**
+     * 根据项目id--获得指定的单个记录
+     * @param mixed $status 单个或 多个：一维数组 ； 状态1已报名  2已取样  4已传数据   8已判定 16已完成
+     * @param int $retry_no 测试序号 0正常测 1补测1 2 补测2 .....
+     * @param int  $ability_id  项目id --可以为0：不参与查询
+     * @param int  $admin_type  类型1平台2企业4个人--可以为0：不参与查询
+     * @param int  $staff_id  所属人员id--可以为0：不参与查询
+     * @return  mixed 数量
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function getInfoOne($status = 1, $retry_no = 0, $ability_id = 0, $admin_type = 0, $staff_id = 0){
+        $fieldValParams = [];
+        if(is_numeric($retry_no) && $retry_no >= 0) $fieldValParams['retry_no'] = $retry_no;
+        if(is_numeric($ability_id) && $ability_id > 0) $fieldValParams['ability_id'] = $ability_id;
+        if(is_numeric($admin_type) && $admin_type > 0) $fieldValParams['admin_type'] = $admin_type;
+        if(is_numeric($staff_id) && $staff_id > 0) $fieldValParams['staff_id'] = $staff_id;
+        if(!empty($fieldValParams)) $queryParams = Tool::getParamQuery($fieldValParams, [], []);
+        if(!empty($status)) Tool::appendParamQuery($queryParams, $status, 'status', [0, '0', ''], ',', false);
+        $info = static::getInfoByQuery(1, $queryParams, []);
+        return $info;
+    }
 }

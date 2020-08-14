@@ -27,8 +27,9 @@
 
           <input type="hidden" name="company_hidden"  value="1" />
           <span style="display: none;">
-                <input type="hidden" name="company_id"  value="{{ $info['company_id'] ?? '' }}" />
-                <span class="company_name">{{ $info['user_company_name'] ?? '' }}</span>
+                <input type="hidden" class="select_id" name="company_id"  value="{{ $info['company_id'] ?? '' }}" />
+                <span class="select_name company_name">{{ $info['user_company_name'] ?? '' }}</span>
+                <i class="close select_close company_id_close"  onclick="clearSelect(this)" style="display: none;">×</i>
                 <button  type="button"  class="btn btn-danger  btn-xs ace-icon fa fa-plus-circle bigger-60"  onclick="otheraction.selectCompany(this)">选择企业</button>
           </span>
           <select class="wmini" name="city_id" style="width: 80px;display: none;">
@@ -112,7 +113,7 @@
             <option value="id_number">身份证号</option>
             <option value="addr">通讯地址</option>
         </select>
-        <input type="text" value=""    name="keyword"  placeholder="请输入关键字" style="width: 100px;"/>
+        <input type="text" value=""    name="keyword"  placeholder="请输入关键字" style="width: 60px;"/>
         <button class="btn btn-normal search_frm">搜索</button>
       </div>
     </form>
@@ -229,6 +230,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/User_show.js?67') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/User_show.js?69') }}"  type="text/javascript"></script>
 </body>
 </html>

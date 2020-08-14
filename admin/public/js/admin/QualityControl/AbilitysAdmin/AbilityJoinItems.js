@@ -3,6 +3,7 @@ $(function(){
 
     $('.search_frm').trigger("click");// 触发搜索事件
     // reset_list_self(false, false, true, 2);
+    popSelectInit();// 初始化选择弹窗
 });
 
 //重载列表
@@ -34,9 +35,89 @@ var otheraction = {
         var tishi = "数据上报--" + ability_name;
         layeriframe(weburl,tishi,950,600,IFRAME_MODIFY_CLOSE_OPERATE);
         return false;
+    },
+    selectCompany: function(obj){// 选择商家
+        var recordObj = $(obj);
+        //获得表单各name的值
+        var weburl = SELECT_COMPANY_URL;
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = '选择所属企业';//"查看供应商";
+        console.log('weburl', weburl);
+        layeriframe(weburl,tishi,700,450,0);
+        return false;
     }
-
 };
+
+// 初始化，来决定*是显示还是隐藏
+function popSelectInit(){
+
+    $('.select_close').each(function(){
+        let closeObj = $(this);
+        let idObj = closeObj.siblings(".select_id");
+        if(idObj.length > 0 && idObj.val() != '' && idObj.val() != '0'  ){
+            closeObj.show();
+        }else{
+            closeObj.hide();
+        }
+    });
+}
+
+// 清空
+function clearSelect(Obj){
+    let closeObj = $(Obj);
+    console.log('closeObj=' , closeObj);
+
+    var index_query = layer.confirm('确定移除？', {
+        btn: ['确定','取消'] //按钮
+    }, function(){
+        // 清空id
+        let idObj = closeObj.siblings(".select_id");
+        if(idObj.length > 0 ){
+            idObj.val('');
+        }
+        // 清空名称文字
+        let nameObj = closeObj.siblings(".select_name");
+        if(nameObj.length > 0 ){
+            nameObj.html('');
+        }
+        closeObj.hide();
+        layer.close(index_query);
+    }, function(){
+    });
+}
+
+// 获得选中的企业id 数组
+function getSelectedCompanyIds(){
+    var company_ids = [];
+    var company_id = $('input[name=company_id]').val();
+    company_ids.push(company_id);
+    console.log('company_ids' , company_ids);
+    return company_ids;
+}
+
+// 取消
+// company_id 企业id
+function removeCompany(company_id){
+    var seled_company_id = $('input[name=company_id]').val();
+    if(company_id == seled_company_id){
+        $('input[name=company_id]').val('');
+        $('.company_name').html('');
+        $('.company_id_close').hide();
+    }
+}
+
+// 增加
+// company_id 企业id, 多个用,号分隔
+function addCompany(company_id, company_name){
+    $('input[name=company_id]').val(company_id);
+    $('.company_name').html(company_name);
+    $('.company_id_close').show();
+}
+
 (function() {
     document.write("");
     document.write("    <!-- 前端模板部分 -->");

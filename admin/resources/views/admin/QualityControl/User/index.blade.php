@@ -27,8 +27,9 @@
 
 
           <span>
-                <input type="hidden" name="company_id"  value="{{ $info['company_id'] ?? '' }}" />
-                <span class="company_name">{{ $info['user_company_name'] ?? '' }}</span>
+                <input type="hidden" class="select_id" name="company_id"  value="{{ $info['company_id'] ?? '' }}" />
+                <span class="select_name company_name">{{ $info['user_company_name'] ?? '' }}</span>
+                <i class="close select_close company_id_close"  onclick="clearSelect(this)" style="display: none;">×</i>
                 <button  type="button"  class="btn btn-danger  btn-xs ace-icon fa fa-plus-circle bigger-60"  onclick="otheraction.selectCompany(this)">选择企业</button>
           </span>
           <select class="wmini" name="city_id" style="width: 80px;">
@@ -259,6 +260,6 @@
       var IFRAME_IMPORT_URL = "{{url('admin/user/import_bath')}}/";// 导入
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/User.js?62') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/User.js?63') }}"  type="text/javascript"></script>
 </body>
 </html>

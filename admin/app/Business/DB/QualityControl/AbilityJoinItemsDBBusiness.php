@@ -93,6 +93,7 @@ class AbilityJoinItemsDBBusiness extends BasePublicDBBusiness
             }
 
             // 新加或修改
+            $resultDatas = null;
             if($id <= 0){// 新加
                 $resultDatas = static::create($saveData,$modelObj);
                 $id = $resultDatas['id'] ?? 0;
@@ -170,6 +171,12 @@ class AbilityJoinItemsDBBusiness extends BasePublicDBBusiness
                     , ['ability_join_item_id' => $id, 'retry_no' => $retry_no]
                     , $join_items_result, $isModify, $operate_staff_id, $operate_staff_id_history
                     , 'id', $company_id, $modifAddOprate, []);
+
+                // 初测/补测 提交数据数 + 1
+                $ability_id = $resultDatas['ability_id'] ?? 0;
+                $incFieldName = ($retry_no == 0) ? 'first_submit_num': 'repair_submit_num';
+                $queryParams = Tool::getParamQuery(['id' => $ability_id], [], []);
+                AbilitysDBBusiness::saveDecIncByQuery($incFieldName, 1,  'inc', $queryParams, []);
 
                 // 记录报名日志
                 // 获得操作人员信息

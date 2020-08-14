@@ -26,8 +26,9 @@
       <div class="msearch fr">
 
           <span>
-                <input type="hidden" name="company_id"  value="{{ $company_id ?? '' }}" />
-                <span class="company_name">{{ $user_company_name ?? '' }}</span>
+                <input type="hidden" class="select_id"  name="company_id"  value="{{ $company_id ?? '' }}" />
+                <span class="select_name company_name">{{ $user_company_name ?? '' }}</span>
+                <i class="close select_close company_id_close"  onclick="clearSelect(this)" style="display: none;">×</i>
                 <button  type="button"  class="btn btn-danger  btn-xs ace-icon fa fa-plus-circle bigger-60"  onclick="otheraction.selectCompany(this)">选择企业</button>
           </span>
 
@@ -125,6 +126,6 @@
       var SELECT_COMPANY_URL = "{{url('admin/company/select')}}";// 选择所属企业
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/CompanySchedule.js') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/CompanySchedule.js') }}?1"  type="text/javascript"></script>
 </body>
 </html>

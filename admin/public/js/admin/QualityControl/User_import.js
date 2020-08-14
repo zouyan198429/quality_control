@@ -106,7 +106,7 @@ $(function(){
             fileObj.value = ''; //虽然file的value不能设为有字符的值，但是可以设置为空值
         });
     });
-
+    popSelectInit();// 初始化选择弹窗
 });
 // 上传成功后的回调
 function finishUpfile(ret){
@@ -213,6 +213,45 @@ function finishUpfile(ret){
 //     });
 //     return false;
 // }
+
+// 初始化，来决定*是显示还是隐藏
+function popSelectInit(){
+
+    $('.select_close').each(function(){
+        let closeObj = $(this);
+        let idObj = closeObj.siblings(".select_id");
+        if(idObj.length > 0 && idObj.val() != '' && idObj.val() != '0'  ){
+            closeObj.show();
+        }else{
+            closeObj.hide();
+        }
+    });
+}
+
+// 清空
+function clearSelect(Obj){
+    let closeObj = $(Obj);
+    console.log('closeObj=' , closeObj);
+
+    var index_query = layer.confirm('确定移除？', {
+        btn: ['确定','取消'] //按钮
+    }, function(){
+        // 清空id
+        let idObj = closeObj.siblings(".select_id");
+        if(idObj.length > 0 ){
+            idObj.val('');
+        }
+        // 清空名称文字
+        let nameObj = closeObj.siblings(".select_name");
+        if(nameObj.length > 0 ){
+            nameObj.html('');
+        }
+        closeObj.hide();
+        layer.close(index_query);
+    }, function(){
+    });
+}
+
 // 获得选中的企业id 数组
 function getSelectedCompanyIds(){
     var company_ids = [];
@@ -229,6 +268,7 @@ function removeCompany(company_id){
     if(company_id == seled_company_id){
         $('input[name=company_id]').val('');
         $('.company_name').html('');
+        $('.company_id_close').hide();
     }
 }
 
@@ -237,4 +277,5 @@ function removeCompany(company_id){
 function addCompany(company_id, company_name){
     $('input[name=company_id]').val(company_id);
     $('.company_name').html(company_name);
+    $('.company_id_close').show();
 }

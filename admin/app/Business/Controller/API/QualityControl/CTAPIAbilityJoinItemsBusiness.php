@@ -283,6 +283,9 @@ class CTAPIAbilityJoinItemsBusiness extends BasicPublicCTAPIBusiness
         $admin_type = CommonRequest::getInt($request, 'admin_type');
         if($admin_type > 0 )  array_push($queryParams['where'], ['admin_type', '=', $admin_type]);
 
+        $company_id = CommonRequest::getInt($request, 'company_id');
+        if($company_id > 0 )  array_push($queryParams['where'], ['staff_id', '=', $company_id]);
+
         $staff_id = CommonRequest::getInt($request, 'staff_id');
         if($staff_id > 0 )  array_push($queryParams['where'], ['staff_id', '=', $staff_id]);
 
@@ -307,6 +310,12 @@ class CTAPIAbilityJoinItemsBusiness extends BasicPublicCTAPIBusiness
 
         $is_sample = CommonRequest::getInt($request, 'is_sample');
         if($is_sample > 0 )  array_push($queryParams['where'], ['is_sample', '=', $is_sample]);
+
+        $submit_status = CommonRequest::getInt($request, 'submit_status');
+        if($submit_status > 0 )  array_push($queryParams['where'], ['submit_status', '=', $submit_status]);
+
+        $judge_status = CommonRequest::getInt($request, 'judge_status');
+        if($judge_status > 0 )  array_push($queryParams['where'], ['judge_status', '=', $judge_status]);
 
 //        $ids = CommonRequest::get($request, 'ids');
 //        if(strlen($ids) > 0 && $ids != 0)  Tool::appendParamQuery($queryParams, $ids, 'id', [0, '0', ''], ',', false);
@@ -341,6 +350,17 @@ class CTAPIAbilityJoinItemsBusiness extends BasicPublicCTAPIBusiness
                 , ['admin_type' => 'admin_type', 'staff_id' => 'id']
                 , 1, 2
                 ,'','', [], ['where' => [['admin_type', 2]]], '', []),
+            // 获得企业名称
+            'company_info_all' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
+                , ['admin_type' => 'admin_type', 'staff_id' => 'id']
+                , 1, 32
+                ,'','', [
+                    // 企业的城市信息 1：1
+                    'city_info' => CTAPICitysBusiness::getTableRelationConfigInfo($request, $controller
+                        , ['city_id' => 'id']
+                        , 1, 2
+                        ,'','', [], [], '', []),
+                ], ['where' => [['admin_type', 2]]], '', []),
             // 获得项目
             'ability_info' => CTAPIAbilitysBusiness::getTableRelationConfigInfo($request, $controller
                 , ['ability_id' => 'id']
@@ -500,5 +520,25 @@ class CTAPIAbilityJoinItemsBusiness extends BasicPublicCTAPIBusiness
         }
 
         return $returnFields;
+    }
+
+    /**
+     * 获得列表数据时，对查询结果进行导出操作--有特殊的需要自己重写此方法
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $queryParams 已有的查询条件数组
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  null 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function exportListData(Request $request, Controller $controller, &$data_list, $notLog = 0){
+            $headArr = ['ability_code'=>'能力验证编号', 'company_name'=>'公司名称', 'city_name'=>'所在城市', 'addr'=>'公司地址'
+                , 'ability_name'=>'报名项目', 'contacts'=>'报名联系人', 'mobile'=>'报名联系人手机', 'tel'=>'报名联系人电话'];
+        $ability_id = CommonRequest::get($request,'ability_id');
+        $info = CTAPIAbilitysBusiness::getInfoData($request, $controller, $ability_id);
+        $ability_name = $info['ability_name'] ?? '';
+
+        ImportExport::export('',$ability_name . '报名企业列表' . date('YmdHis'),$data_list,1, $headArr, 0, ['sheet_title' => 'sheet名称']);
     }
 }
