@@ -78,7 +78,7 @@
 
                 <thead>
                   <tr>
-                    <th>项目</th>
+                    <th>项目<hr/>状态<hr/>取样状态</th>
                     <th>取样编号1</th>
                     <th>取样编号2</th>
                     <th>取样编号3</th>
@@ -97,14 +97,17 @@
                     $status = $item_info['status'];
                     $result_status = $item_info['result_status'];
                     $is_read_only = false;
-                    if(in_array($status, [16]) || in_array($result_status, [2, 16])) $is_read_only = true;
+                    if(in_array($status, [16, 32, 64]) || in_array($result_status, [2, 16])) $is_read_only = true;
                     ?>
                   <tr data-samples_num="1" data-project_name="{{ $item_info['ability_name'] ?? '' }}" data-join_item_id="{{ $item_info['id'] ?? '' }}">
                     <td>
                         {{ $item_info['ability_name'] ?? '' }}
                         <input type="hidden" name="join_item_ids[]" value="{{ $item_info['id'] ?? '' }}">
                         <input type="hidden" name="join_item_names[]" value="{{ $item_info['ability_name'] ?? '' }}">
+                        <hr/>
+                        {{ $item_info['status_text'] ?? '' }} <hr/>{{ $item_info['is_sample_text'] ?? '' }}
                     </td>
+
                     <td><input type="text" name="items_samples_{{ $item_info['id'] ?? '' }}_1[]" value="{{ $item_info['join_item_reslut_list'][$item_id . '_0' ]['join_items_samples_list']['0']['sample_one'] ?? '' }}"  @if ($record_samples_num != 1 || $is_read_only) readonly @endif lay-verify="title" autocomplete="off" class="layui-input" onkeyup="isnum(this) " onafterpaste="isnum(this)"  ></td>
                     <td><input type="text" name="items_samples_{{ $item_info['id'] ?? '' }}_1[]" value="{{ $item_info['join_item_reslut_list'][$item_id . '_0' ]['join_items_samples_list']['1']['sample_one'] ?? '' }}"   @if ($record_samples_num != 1 || $is_read_only ) readonly @endif lay-verify="title" autocomplete="off" class="layui-input" onkeyup="isnum(this) " onafterpaste="isnum(this)"  ></td>
                     <td><input type="text" name="items_samples_{{ $item_info['id'] ?? '' }}_1[]" value="{{ $item_info['join_item_reslut_list'][$item_id . '_0' ]['join_items_samples_list']['2']['sample_one'] ?? '' }}"   @if ($record_samples_num != 1 || $is_read_only ) readonly @endif lay-verify="title" autocomplete="off" class="layui-input" onkeyup="isnum(this) " onafterpaste="isnum(this)"  ></td>

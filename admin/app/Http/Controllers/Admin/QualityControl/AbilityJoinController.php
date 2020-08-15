@@ -301,6 +301,7 @@ class AbilityJoinController extends BasicController
 
         $info = CTAPIAbilityJoinBusiness::getInfoData($request, $this, $id, [], '', $extParams);
         if(empty($info)) throws('记录不存在！');
+        $join_retry_no = $info['retry_no'] ?? '';
         // 获得报名项
         $join_items = $info['join_items_sample_save'] ?? [];
         if(empty($join_items)) throws('没有报名的项目！');
@@ -336,7 +337,7 @@ class AbilityJoinController extends BasicController
 
             // 完成状态不可取样
             // 验证结果 2满意  16满意【补测满意】 不可取样
-            if(in_array($status, [16]) || in_array($result_status, [2, 16])) continue;
+            if(in_array($status, [16, 32, 64]) || in_array($result_status, [2, 16]) ) continue;
             $item_sample_nums = CommonRequest::get($request, 'items_samples_' . $join_id . '_' . ($retry_no + 1));
             // 如果是字符，则转为数组
             if(is_string($item_sample_nums) || is_numeric($item_sample_nums)){
@@ -368,10 +369,20 @@ class AbilityJoinController extends BasicController
         // throws(json_encode($sample_num_data));
 
         $saveData = [
-            'status' => 4,
-            'sample_time' => $currentNow,
             'sample_num_data' => $sample_num_data,
         ];
+        if($join_retry_no == 0){
+            $saveData = array_merge($saveData, [
+                'status' => 4,
+                'is_sample' => 2,
+                'sample_time' => $currentNow,
+            ]);
+        }else{
+            $saveData = array_merge($saveData, [
+                'is_sample' => 8,
+                'sample_time_repair' => $currentNow,
+            ]);
+        }
 
 //        if($id <= 0) {// 新加;要加入的特别字段
 //            $addNewData = [

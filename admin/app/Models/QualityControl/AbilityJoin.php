@@ -84,14 +84,32 @@ class AbilityJoin extends BasePublicModel
     // 状态(1已报名;2已取样;4已完成【已验证结果】【如果有有问题、不满意 --还可以再取样--进入已取样状态--- 可以打印证书;
     // 8已完成--不可再修改【打印证书后，不可再操作或大后台点《公布结果》后子项都已完成状态】)
     public static $statusArr = [
-        '1' => '已报名',
-        '2' => '补测中',
+        '1' => '已报名',// 初始状态
+//        '2' => '补测中',
 //        '2' => '补测待取样',
-        '4' => '已取样',// 不需要
-       //  '4' => '进行中',
-        '8' => '部分评定',
-        '16' => '全评定',
-        '32' => '已完成',
+//        '4' => '已取样',// 不需要
+        '4' => '进行中',// 进行中-- 初测取样开始---
+        '8' => '有判定',// 进行中---有部分有评定【初测或补测】---进行中[有评定]
+
+        '16' => '待发证',// 全部都有结果--都有评定了，有需要发证的---后面是发证流程--全评定
+        '32' => '无证书',// 如果没有有要进行证书的 或  没有一个满意的直接进入-- 终极状态--已完成[无证书]
+        '64' => '已发证书',// 发完证书的-- 终极状态---已完成[有证书]
+    ];
+
+    // 是否补测 0正常测 1补测1 2 补测2 .....
+    public static $retryNoArr = [
+        '0' => '初测',
+        '1' => '补测',
+//        '2' => '补测2',
+//        '3' => '补测3',
+    ];
+
+    // 是否取样1待取样--未取 2已取样--已取; 4 补测待取样 ; 8 补测已取样
+    public static $isSampleArr = [
+        '1' => '待取样',
+        '2' => '已取样',
+        '4' => '待取样[补测]',
+        '8' => '已取样[补测]',
     ];
 
     // 证书是否打印 1未打印 2 已打印
@@ -107,7 +125,7 @@ class AbilityJoin extends BasePublicModel
     ];
 
     // 表里没有的字段
-    protected $appends = ['admin_type_text', 'status_text', 'is_print_text', 'is_grant_text'];
+    protected $appends = ['admin_type_text', 'status_text', 'retry_no_text', 'is_sample_text', 'is_print_text', 'is_grant_text'];
 
 
     /**
@@ -128,6 +146,26 @@ class AbilityJoin extends BasePublicModel
     public function getStatusTextAttribute()
     {
         return static::$statusArr[$this->status] ?? '';
+    }
+
+    /**
+     * 获取是否补测文字
+     *
+     * @return string
+     */
+    public function getRetryNoTextAttribute()
+    {
+        return static::$retryNoArr[$this->retry_no] ?? '';
+    }
+
+    /**
+     * 获取是否取样文字
+     *
+     * @return string
+     */
+    public function getIsSampleTextAttribute()
+    {
+        return static::$isSampleArr[$this->is_sample] ?? '';
     }
 
     /**

@@ -141,7 +141,7 @@ class AbilityJoinItemsController extends BasicController
                 $user_info = $this->user_info;
                 if($info['admin_type'] != $user_info['admin_type'] || $info['staff_id'] != $this->user_id) throws('非法访问，您没有访问此记录的权限！');
 
-                if(!in_array($info['status'], [2]) || !in_array($info['is_sample'], [2])) throws('非已取样状态，不可进行此操作');
+                if(!in_array($info['status'], [2]) || !in_array($info['is_sample'], [2, 8]) || !in_array($info['submit_status'], [1, 4]) ) throws('非已取样状态，不可进行此操作');
                 $this->infoItemResult($request, $reDataArr, $info, $info['retry_no']);
             });
 
@@ -358,9 +358,11 @@ class AbilityJoinItemsController extends BasicController
         if($info['admin_type'] != $user_info['admin_type'] || $info['staff_id'] != $this->user_id) throws('非法访问，您没有访问此记录的权限！');
 
 
-        if(!in_array($info['status'], [2]) || !in_array($info['is_sample'], [2])) throws('非已取样状态，不可进行此操作');
+        if(!in_array($info['status'], [2]) || !in_array($info['is_sample'], [2, 8]) || !in_array($info['submit_status'], [1, 4]) ) throws('非已取样状态，不可进行此操作');
         $item_reslut_info = $info['join_item_reslut_info_save'] ?? [];
         if(empty($item_reslut_info)) throws('还没有能力验证单次结果记录');
+
+        $item_retry_no = $info['retry_no'];
 
         // 领样列表
         $items_samples_list = $item_reslut_info['items_samples_list'] ?? [];
@@ -502,9 +504,7 @@ class AbilityJoinItemsController extends BasicController
         if(!empty($resource_ids)) $resource_ids = ',' . $resource_ids . ',';
 
         $saveData = [
-            'status' => 4,
-            'submit_status' => 2,
-            'submit_time' => $currentNow,
+            // 'status' => 4,
             'join_items_result' => [// 能力验证单次结果
                 'id' => $item_reslut_info['id'],
                 'status' => 4,
@@ -519,6 +519,18 @@ class AbilityJoinItemsController extends BasicController
                 'resourceIds' => $resource_id,// 此下标为图片资源关系
             ]
         ];
+        if($item_retry_no == 0){
+            $saveData = array_merge($saveData, [
+                'submit_status' => 2,
+                'submit_time' => $currentNow,
+            ]);
+        }else{
+            $saveData = array_merge($saveData, [
+                'submit_status' => 8,
+                'submit_time' => $currentNow,
+            ]);
+
+        }
 
 //        if($id <= 0) {// 新加;要加入的特别字段
 //            $addNewData = [

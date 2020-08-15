@@ -160,7 +160,7 @@ function addCompany(company_id, company_name){
     document.write("                    <i class=\"ace-icon fa fa-check bigger-60\"> 查看<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
-    document.write("                <%if( item.status == 1  || item.status == 2 || item.status == 4){%>");
+    document.write("                <%if( item.status == 1  || item.status == 2 || item.status == 4 || item.status == 8){%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"otheraction.getSample(<%=item.id%>)\">");
     document.write("                    <i class=\"ace-icon fa fa-check bigger-60\"> 取样<\/i>");
     document.write("                <\/a>");

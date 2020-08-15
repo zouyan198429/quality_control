@@ -169,8 +169,7 @@ class AbilityJoinItemsResultsController extends BasicController
         $pageNum = ($id > 0) ? 256 : 32;
         return $this->exeDoPublicFun($request, $pageNum, 4,'', true
             , '', [], function (&$reDataArr, &$ability_id) use ($request){
-
-                throws('开发调试中...！');
+                // throws('开发调试中...！');
                 $abilityInfo = $this->getAbilityInfo($ability_id);
                 $id = CommonRequest::getInt($request, 'id');
                 // CommonRequest::judgeEmptyParams($request, 'id', $id);

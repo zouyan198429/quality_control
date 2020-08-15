@@ -282,10 +282,10 @@ class AbilityJoinDBBusiness extends BasePublicDBBusiness
 //                $resultDatas = static::create($saveData,$modelObj);
 //                $id = $resultDatas['id'] ?? 0;
             }else{// 修改
-                $saveData = array_merge($saveData,[
-                    'status' => 4,
-                    'sample_time' => $currentNow,
-                ]);
+//                $saveData = array_merge($saveData,[
+//                    'status' => 4,
+//                    'sample_time' => $currentNow,
+//                ]);
                 $saveBoolen = static::saveById($saveData, $id,$modelObj);
                 // $resultDatas = static::getInfo($id);
                 // 修改数据，是否当前版本号 + 1
@@ -314,15 +314,27 @@ class AbilityJoinDBBusiness extends BasePublicDBBusiness
 
                 // 完成状态不可取样
                 // 验证结果 2满意  16满意【补测满意】 不可取样
-                if(in_array($status, [16]) || in_array($result_status, [2, 16])) continue;
+                if(in_array($status, [16, 32, 64]) || in_array($result_status, [2, 16])) continue;
 
                 // 更新报名项目
+                $save_item_info = [
 
-                $saveItemData = array_merge([
-                    'status' => 2,
-                    'is_sample' => 2,
-                    'sample_time' => $currentNow,
-                ], $appendArr);
+                ];
+                if($retry_no == 0){
+                    $save_item_info = array_merge($save_item_info, [
+                        'status' => 2,
+                        'is_sample' => 2,
+                        'sample_time' => $currentNow,
+                    ]);
+                }else{
+                    $save_item_info = array_merge($save_item_info, [
+                        'status' => 2,
+                        'is_sample' => 8,
+                        'sample_time_repair' => $currentNow,
+                    ]);
+                }
+
+                $saveItemData = array_merge($save_item_info, $appendArr);
                 $itemObj = null;
                 $saveBoolen = AbilityJoinItemsDBBusiness::saveById($saveItemData, $join_item_id,$itemObj);
 

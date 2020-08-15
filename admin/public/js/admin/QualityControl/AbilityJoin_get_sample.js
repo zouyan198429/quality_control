@@ -119,6 +119,12 @@ function ajax_form(){
             let input_val = inputObj.val();
             console.log('input_val=', input_val);
             input_num++;
+
+            var readonly = inputObj.attr('readonly');
+            if(readonly == 'readonly') {// 只读时
+                return false;// break;
+            }
+
             let isMust = false;
             if(input_num == 1) isMust = true;
             var judge_seled = judge_validate(1,project_name + samples_num_txt + input_num,input_val,isMust,'digit','','');
