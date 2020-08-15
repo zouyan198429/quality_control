@@ -25,20 +25,20 @@
                         <li class="layui-col-xs3">
                             <a  class="layadmin-backlog-body">
                                 <h3>提交数据</h3>
-                                <p><cite>62</cite></p>
+                                <p><cite>0</cite></p>
                             </a>
                         </li>
                         <li class="layui-col-xs3">
                             <a  class="layadmin-backlog-body">
                                 <h3>二次验证</h3>
-                                <p><cite>12</cite></p>
+                                <p><cite>0</cite></p>
                             </a>
                         </li>
 
                         <li class="layui-col-xs3">
                             <a class="layadmin-backlog-body">
                                 <h3>合格数量</h3>
-                                <p><cite>39</cite></p>
+                                <p><cite>0</cite></p>
                             </a>
                         </li>
                     </ul>
