@@ -1455,14 +1455,14 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
             $sheetTitle = '系统管理员';
             switch($admin_type){
                 case 2:
-                    $headArr = ['company_name'=>'单位名称', 'company_grade_text'=>'会员类型', 'company_credit_code'=>'统一社会信用代码',  'company_is_legal_persion_text'=>'是否独立法人',
+                    $headArr = ['id'=>'单位id', 'company_name'=>'单位名称', 'company_grade_text'=>'会员类型', 'company_credit_code'=>'统一社会信用代码',  'company_is_legal_persion_text'=>'是否独立法人',
                         'company_legal_credit_code'=>'主体机构统一社会信用代码', 'company_legal_name'=>'主体机构',  'city_name'=>'所在城市',
                         'company_type_text'=>'企业类型',  'company_prop_text'=>'企业性质',  'addr'=>'通讯地址',
                         'zip_code'=>'邮编',  'fax'=>'传真',  'email'=>'企业邮箱',  'company_legal'=>'法人代表',  'company_peoples_num_text'=>'单位人数',
                         'industry_name'=>'所属行业',  'company_certificate_no'=>'证书编号',  'company_contact_name'=>'联系人',
                         'company_contact_mobile'=>'联系人手机',  'company_contact_tel'=>'联系电话', 'admin_username'=>'用户名',
                         'is_perfect_text'=>'完善资料', 'open_status_text'=>'审核', 'account_status_text'=>'状态',
-                        'lastlogintime'=>'上次登录', 'created_at'=>'创建时间'];
+                        'created_at'=>'创建时间'];// 'lastlogintime'=>'上次登录', 
                     $fileName = '企业';
                     $sheetTitle = '企业';
                     break;
