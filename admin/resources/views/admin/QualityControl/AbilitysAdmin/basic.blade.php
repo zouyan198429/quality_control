@@ -25,20 +25,20 @@
                         <li class="layui-col-xs3">
                             <a  class="layadmin-backlog-body">
                                 <h3>提交数据</h3>
-                                <p><cite>0</cite></p>
+                                <p><cite>{{ $info['first_submit_num'] + $info['repair_submit_num'] }}</cite></p>
                             </a>
                         </li>
                         <li class="layui-col-xs3">
                             <a  class="layadmin-backlog-body">
-                                <h3>二次验证</h3>
-                                <p><cite>0</cite></p>
+                                <h3>补测单位</h3>
+                                <p><cite>{{ $info['repair_num'] ?? '0' }}</cite></p>
                             </a>
                         </li>
 
                         <li class="layui-col-xs3">
                             <a class="layadmin-backlog-body">
                                 <h3>合格数量</h3>
-                                <p><cite>0</cite></p>
+                                <p><cite>{{ $info['first_success_num'] + $info['repair_success_num'] }}</cite></p>
                             </a>
                         </li>
                     </ul>

@@ -26,7 +26,7 @@ var otheraction = {
         console.log(IFRAME_SAMPLE_RESULT_INFO_URL);
         console.log(data);
         var url_params = get_url_param(data);// parent.get_url_param(data)
-        var weburl = IFRAME_SAMPLE_RESULT_INFO_URL + item_id + '/' + retry_no + '?' + url_params;
+        var weburl = IFRAME_SAMPLE_RESULT_INFO_URL + item_id + '/' + retry_no ;// + '?' + url_params;
         console.log(weburl);
         // go(SHOW_URL + item_id);
         // location.href='/pms/Supplier/show?supplier_id='+item_id;
@@ -169,8 +169,7 @@ function addCompany(company_id, company_name){
     document.write("            <td><%=item.is_sample_text%><hr/><%=item.sample_time%><\/td>");
     document.write("            <td><%=item.submit_status_text%><hr/><%=item.submit_time%><\/td>");
     document.write("            <td><%=item.judge_status_text%><hr/><%=item.judge_time%><\/td>");
-    document.write("            <td><%=item.status_text%>(<%=item.retry_no_text%>)<\/td>");
-    document.write("            <td><%=item.result_status_text%><\/td>");
+    document.write("            <td><%=item.status_text%>(<%=item.retry_no_text%>)<hr/><%=item.result_status_text%><\/td>");
     // document.write("            <td><%=item.created_at%><\/td>");
     // document.write("            <td><%=item.updated_at%><\/td>");
     document.write("            <td>");

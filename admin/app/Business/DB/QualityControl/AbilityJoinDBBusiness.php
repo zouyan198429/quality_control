@@ -211,7 +211,6 @@ class AbilityJoinDBBusiness extends BasePublicDBBusiness
      * @author zouyan(305463219@qq.com)
      */
     public static function sample_save($saveData, $company_id, &$id, $operate_staff_id = 0, $modifAddOprate = 0){
-
 //        DB::beginTransaction();
 //        try {
 //            DB::commit();

@@ -99,11 +99,10 @@
         <col>
         <col width="75">
         <col width="105">
-        <col  width="150">
-        <col width="150">
-        <col width="150">
-        <col width="150">
-        <col width="75">
+        <col  width="90">
+        <col width="90">
+        <col width="90">
+        <col width="90">
         <col width="75">
         <col width="150">
     </colgroup>
@@ -121,10 +120,9 @@
         <th>联系人手机<hr/>联系人电话</th>
         <th>报名时间</th>
         <th>是否取样<hr/>取样时间</th>
-        <th>是否提交数据<hr/>提交数据时间</th>
+        <th>是否提交<hr/>提交时间</th>
         <th>是否评定<hr/>评定时间</th>
-        <th>状态</th>
-        <th>验证结论</th>
+        <th>状态<hr/>验证结论</th>
         <th>操作</th>
     </tr>
     </thead>
@@ -173,6 +171,6 @@
       var SELECT_COMPANY_URL = "{{url('admin/company/select')}}";// 选择所属企业
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/AbilitysAdmin/AbilityJoinItemsResults.js?15') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/AbilitysAdmin/AbilityJoinItemsResults.js') }}?18"  type="text/javascript"></script>
 </body>
 </html>

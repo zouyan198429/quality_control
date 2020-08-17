@@ -99,7 +99,7 @@
                     $is_read_only = false;
                     if(in_array($status, [16, 32, 64]) || in_array($result_status, [2, 16])) $is_read_only = true;
                     ?>
-                  <tr data-samples_num="1" data-project_name="{{ $item_info['ability_name'] ?? '' }}" data-join_item_id="{{ $item_info['id'] ?? '' }}">
+                  <tr data-samples_num="{{ $record_samples_num ?? 1 }}" data-project_name="{{ $item_info['ability_name'] ?? '' }}" data-join_item_id="{{ $item_info['id'] ?? '' }}">
                     <td>
                         {{ $item_info['ability_name'] ?? '' }}
                         <input type="hidden" name="join_item_ids[]" value="{{ $item_info['id'] ?? '' }}">
@@ -141,6 +141,6 @@
     var LIST_URL = "{{url('admin/ability_join')}}";//保存成功后跳转到的地址
 
 </script>
-<script src="{{ asset('/js/admin/QualityControl/AbilityJoin_get_sample.js') }}"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/AbilityJoin_get_sample.js') }}?3"  type="text/javascript"></script>
 </body>
 </html>

@@ -31,7 +31,18 @@
                 <i class="close select_close company_id_close"  onclick="clearSelect(this)" style="display: none;">×</i>
                 <button  type="button"  class="btn btn-danger  btn-xs ace-icon fa fa-plus-circle bigger-60"  onclick="otheraction.selectCompany(this)">选择企业</button>
           </span>
-
+          <select class="wmini" name="retry_no" style="width: 80px;">
+              <option value="">测试次序</option>
+              @foreach ($retryNo as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultRetryNo) && $defaultRetryNo == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
+          <select class="wmini" name="is_sample" style="width: 80px;">
+              <option value="">是否取样</option>
+              @foreach ($isSample as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultIsSample) && $defaultIsSample == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
           <select class="wmini" name="status" style="width: 80px;">
               <option value="">状态</option>
               @foreach ($status as $k=>$txt)
@@ -71,11 +82,12 @@
         <col>
         <col width="75" >
         <col width="105">
-        <col  width="150">
+        <col  width="90">
         <col width="75">
         <col width="75">
         <col width="70">
         <col width="75">
+        <col width="60">
         <col width="75">
         <col width="150">
     </colgroup>
@@ -95,8 +107,9 @@
         <th>报名项目</th>
         <th>满意项目</th>
         <th>状态</th>
-        <th>打印证书</th>
-        <th>领取证书</th>
+        <th>取样状态</th>
+        <th>初测提交数据<hr/>补测提交数据</th>
+        <th>打印证书<hr/>领取证书</th>
         <th>操作</th>
     </tr>
     </thead>
@@ -143,6 +156,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/AbilityJoin.js') }}?5"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/AbilityJoin.js') }}?6"  type="text/javascript"></script>
 </body>
 </html>

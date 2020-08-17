@@ -22,10 +22,22 @@
     <div class="tabbox" >
       <a href="javascript:void(0);" class="on" onclick="action.iframeModify(0)">添加项目</a>
     </div>
-    <form onsubmit="return false;" class="form-horizontal" style="display: none;" role="form" method="post" id="search_frm" action="#">
+    <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
 
+          <select class="wmini" name="status" style="width: 80px;">
+              <option value="">状态</option>
+              @foreach ($status as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultStatus) && $defaultStatus == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
 
+          <select class="wmini" name="is_publish" style="width: 80px;display: none;">
+              <option value="">是否公布</option>
+              @foreach ($isPublish as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultIsPublish) && $defaultIsPublish == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
         <select style="width:80px; height:28px;" name="field">
           <option value="ability_name">检测项目</option>
         </select>
@@ -45,9 +57,11 @@
         <col>
         <col width="">
         <col width="90">
-        <col width="">
+        <col width="60">
+        <col width="60">
+        <col width="60">
+{{--        <col width="90">--}}
         <col width="90">
-        <col width="">
         <col width="150">
     </colgroup>
     <thead>
@@ -66,8 +80,10 @@
         <th>验证数据项</th>
         <th>提交时限</th>
         <th>状态</th>
-        <th>是否公布结果</th>
-        <th>公布时间</th>
+        <th>初测提交数据<hr/>补测提交数据</th>
+        <th>初测满意数<hr/>补测满意数</th>
+        <th>初测非满意数<hr/>补测非满意数</th>
+{{--        <th>是否公布<hr/>公布时间</th>--}}
       <th>创建时间</th>
       <th>操作</th>
     </tr>
@@ -115,6 +131,6 @@
       var EXPORT_JOIN_EXCEL_URL = "{{ url('admin/abilitys/export_join/') }}/";//导出报名企业EXCEL地址+ id
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/Abilitys.js?821') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/Abilitys.js') }}?823"  type="text/javascript"></script>
 </body>
 </html>

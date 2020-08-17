@@ -121,8 +121,10 @@ var otheraction = {
     document.write("            <td><%=item.submit_items_text%><\/td>");
     document.write("            <td><%=item.duration_minute%>天<\/td>");
     document.write("            <td class='status_text'><%=item.status_text%><\/td>");
-    document.write("            <td><%=item.is_publish_text%><\/td>");
-    document.write("            <td><%=item.publish_time%><\/td>");
+    document.write("            <td><%=item.first_submit_num%><hr/><%=item.repair_submit_num%><\/td>");
+    document.write("            <td><%=item.first_success_num%><hr/><%=item.repair_success_num%><\/td>");
+    document.write("            <td><%=item.first_fail_num%><hr/><%=item.repair_fail_num%><\/td>");
+    // document.write("            <td><%=item.is_publish_text%><hr/><%=item.publish_time%><\/td>");
     document.write("            <td><%=item.created_at%><\/td>");
     // document.write("            <td><%=item.updated_at%><\/td>");
     // document.write("            <td><%=item.sort_num%><\/td>");

@@ -219,7 +219,7 @@ $api->version('v1', function ($api) {
 
         // 能力验证结果--报名管理--参加单位
         $api->any('admin/abilitys_admin/{ability_id}/ability_join_items_results/ajax_alist', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@ajax_alist');//ajax获得列表数据
-
+        $api->any('admin/abilitys_admin/{ability_id}/ability_join_items_results/ajax_save', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@ajax_save');// 新加/修改
         //****************************************************************************
 
         // 能力验证--报名管理
@@ -233,7 +233,7 @@ $api->version('v1', function ($api) {
 //        $api->post('admin/ability_join/import', 'Admin\QualityControl\AbilityJoinController@import');// 导入excel
 //        $api->post('admin/ability_join/ajax_get_ids', 'Admin\QualityControl\AbilityJoinController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
-        $api->post('admin/ability_join/ajax_save_sample', 'Admin\QualityControl\AbilityJoinController@ajax_save_sample');// 保存取样
+        $api->any('admin/ability_join/ajax_save_sample', 'Admin\QualityControl\AbilityJoinController@ajax_save_sample');// 保存取样
         // 企业能力附表
         $api->any('admin/company_schedule/ajax_alist', 'Admin\QualityControl\CompanyScheduleController@ajax_alist');//ajax获得列表数据
         $api->post('admin/company_schedule/ajax_del', 'Admin\QualityControl\CompanyScheduleController@ajax_del');// 删除

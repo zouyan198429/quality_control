@@ -179,14 +179,14 @@ class AbilityJoinItemsResultsDBBusiness extends BasePublicDBBusiness
      * @author zouyan(305463219@qq.com)
      */
     public static function judgeResultById($saveData, $company_id, &$id, $operate_staff_id = 0, $modifAddOprate = 0){
-        // $result_status = $saveData['result_status'] ?? 0;
+         $result_status = $saveData['result_status'] ?? 0;
 //        if(!in_array($result_status, array_keys(AbilityJoinItemsResults::$resultStatusArr))) throws('参数【result_status】值无效！');
         $info = static::getInfo($id);
         if(empty($info)) throws('记录不存在！');
         $status = $info['status'] ?? 0;// 状态1已报名  2已取样  4已传数据   8已判定 16已完成
-        $result_status = $info['result_status'] ?? 0;// 验证结果1待判定  2满意、4有问题、8不满意   16满意【补测满意】
+        $info_result_status = $info['result_status'] ?? 0;// 验证结果1待判定  2满意、4有问题、8不满意   16满意【补测满意】
 
-        if($status != 4 || $result_status != 1) throws('非已传数据状态，不可进行此操作！');
+        if($status != 4 || $info_result_status != 1) throws('非已传数据状态，不可进行此操作！');
 
         $retry_no = $info['retry_no'] ?? 0;
         // 验证结果1待判定 2满意、4有问题、8不满意   16满意【补测满意】
@@ -198,7 +198,8 @@ class AbilityJoinItemsResultsDBBusiness extends BasePublicDBBusiness
             if(isset($resultStatus[2])) unset($resultStatus[2]);// 去掉 2满意
         }
         if(!in_array($result_status, array_keys($resultStatus))) throws('请选择正确的验证结果');
-
+        $result_status_text = $resultStatus[$result_status] ?? '';
+        $operate_staff_id_history = config('public.operate_staff_id_history', 0);
         // 具体操作
         // 有问题  不满意
         //     如果是第一次测试：
@@ -221,7 +222,12 @@ class AbilityJoinItemsResultsDBBusiness extends BasePublicDBBusiness
         //            报名项表 ability_join_items status  status 状态改为 8 已判定 ； result_status ；是否评定  2 已评 judge_time；
         //           对当前的这条单次记录 ability_join_items_results  status 8 已判定 ； result_status ；judge_status 是否评定  2 已评 judge_time；
 
-        CommonDB::doTransactionFun(function() use(&$saveData, &$company_id, &$id, &$operate_staff_id, &$modifAddOprate, &$result_status, &$retry_no, &$info){
+        CommonDB::doTransactionFun(function() use(&$saveData, &$company_id, &$id, &$operate_staff_id, &$operate_staff_id_history, &$modifAddOprate, &$result_status, &$retry_no, &$info, &$result_status_text){
+
+            // $ownProperty  自有属性值;
+            // $temNeedStaffIdOrHistoryId 当只有自己会用到时操作员工id和历史id时，用来判断是否需要获取 true:需要获取； false:不需要获取
+            list($ownProperty, $temNeedStaffIdOrHistoryId) = array_values(static::getNeedStaffIdOrHistoryId());
+            if($temNeedStaffIdOrHistoryId && $modifAddOprate) static::addOprate($saveData, $operate_staff_id,$operate_staff_id_history, 1);
             $ability_id = $info['ability_id'];// 所属能力验证
             $ability_join_id = $info['ability_join_id'];// 所属报名主表
             $ability_join_item_id = $info['ability_join_item_id'];// 所属能力验证报名项
@@ -243,12 +249,21 @@ class AbilityJoinItemsResultsDBBusiness extends BasePublicDBBusiness
             if(empty($joinItemInfo)) throws('报名项记录不存在！');
             if(!in_array($joinItemInfo['status'],[2,4])) throws('报名项记录非进行中状态，不可进行此操作！');
 
+            // 记录报名日志
+            // 获得操作人员信息
+            $operateInfo = StaffDBBusiness::getInfo($operate_staff_id);
+            $logContent = '判定[' . $result_status_text . ']数据：' . json_encode($saveData);
+            // $ability_join_id = $resultDatas['ability_join_id'] ?? 0;
+            AbilityJoinLogsDBBusiness::saveAbilityJoinLog($operateInfo['admin_type'], $operate_staff_id, $ability_join_id, $ability_join_item_id, $logContent, $operate_staff_id, $operate_staff_id_history);
+
             // 4有问题、8不满意
             if(in_array($result_status, [4, 8])){
                 switch($retry_no){
                     case 0:// 初测
                         // 项目表 abilitys   初测不满意数 first_fail_num + 1
                         AbilitysDBBusiness::fieldValIncDec($ability_id, 'first_fail_num', 1, 'inc');
+                        //  补测企业数量 + 1
+                        AbilitysDBBusiness::fieldValIncDec($ability_id, 'repair_num', 1, 'inc');
                         // 主报名表 abilityJoin retry_no 改为补测 is_sample 4  补测待取样 8 进行中[有评定]； 初测不满意数 first_fail_num + 1
                         AbilityJoinDBBusiness::fieldValIncDec($ability_join_id, 'first_fail_num', 1, 'inc');
                         AbilityJoinDBBusiness::saveById(['retry_no' => 1, 'is_sample' => 4, 'status' => 8], $ability_join_id);
@@ -294,6 +309,15 @@ class AbilityJoinItemsResultsDBBusiness extends BasePublicDBBusiness
                         ];
                         $itemResultObj = null;
                         static::updateOrCreate($itemResultObj, $searchConditon, $updateFields);
+
+                        // 记录报名日志--新建补测
+                        // 获得操作人员信息
+                        // $operateInfo = StaffDBBusiness::getInfo($operate_staff_id);
+                        $logContent = '新建补测数据：' . json_encode(array_merge($updateFields, $searchConditon));
+                        // $ability_join_id = $resultDatas['ability_join_id'] ?? 0;
+                        AbilityJoinLogsDBBusiness::saveAbilityJoinLog($operateInfo['admin_type'], $operate_staff_id, $ability_join_id, $ability_join_item_id, $logContent, $operate_staff_id, $operate_staff_id_history);
+
+
 
                         //            对当前的这条单次记录 ability_join_items_results    status 8 已判定 ； result_status ；judge_status 是否评定  2 已评 judge_time；
                         static::saveById([
@@ -403,8 +427,12 @@ class AbilityJoinItemsResultsDBBusiness extends BasePublicDBBusiness
                 AbilityJoinDBBusiness::saveById([
                     'status' => $tem_join_result_status
                 ], $ability_join_id);
+                // 满意项目数量 + 1
+                AbilityJoinDBBusiness::fieldValIncDec($ability_join_id, 'passed_num', 1, 'inc');
+
                 //            项目表 abilitys  初测满意数 first_success_num + 1; 判断是否都判定完了【初测 和 补测】 -- 未完，不操作；完了 is_publish   2待公布
-                AbilitysDBBusiness::fieldValIncDec($ability_id, $incFieldName, 1, 'inc');
+                 AbilitysDBBusiness::fieldValIncDec($ability_id, $incFieldName, 1, 'inc');
+
                 //    还有没有要判定的  有  : 状态不变
                 //                      没有（全都判定时）：  状态 不变  is_publish 2 待公布；
                 // 获得正在处理的一条记录

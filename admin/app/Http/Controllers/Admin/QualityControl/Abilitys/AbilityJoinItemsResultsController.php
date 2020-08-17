@@ -168,7 +168,7 @@ class AbilityJoinItemsResultsController extends BasicController
         $id = CommonRequest::getInt($request, 'id');
         $pageNum = ($id > 0) ? 256 : 32;
         return $this->exeDoPublicFun($request, $pageNum, 4,'', true
-            , '', [], function (&$reDataArr, &$ability_id) use ($request){
+            , '', [], function (&$reDataArr) use ($request, &$ability_id){
                 // throws('开发调试中...！');
                 $abilityInfo = $this->getAbilityInfo($ability_id);
                 $id = CommonRequest::getInt($request, 'id');
@@ -186,9 +186,9 @@ class AbilityJoinItemsResultsController extends BasicController
                 $info = CTAPIAbilityJoinItemsResultsBusiness::getInfoData($request, $this, $id, [], '', []);
                 if(empty($info)) throws('记录不存在！');
                 $status = $info['status'] ?? 0;// 状态1已报名  2已取样  4已传数据   8已判定 16已完成
-                $result_status = $info['result_status'] ?? 0;// 验证结果1待判定  2满意、4有问题、8不满意   16满意【补测满意】
+                $info_result_status = $info['result_status'] ?? 0;// 验证结果1待判定  2满意、4有问题、8不满意   16满意【补测满意】
 
-                if($status != 4 || $result_status != 1) throws('非已传数据状态，不可进行此操作！');
+                if($status != 4 || $info_result_status != 1) throws('非已传数据状态，不可进行此操作！');
 
         //        // $reDataArr = array_merge($reDataArr, $resultDatas);
                 $retry_no = $info['retry_no'] ?? 0;
@@ -514,9 +514,8 @@ class AbilityJoinItemsResultsController extends BasicController
         // $user_info = $this->user_info;
         $id = $extendParams['params']['id'] ?? 0;
         $ability_id = $extendParams['params']['ability_id'] ?? 0;
-//        // 拥有者类型1平台2企业4个人
-//        $reDataArr['adminType'] =  AbilityJoin::$adminTypeArr;
-//        $reDataArr['defaultAdminType'] = -1;// 列表页默认状态
+        $reDataArr['ability_id'] = $ability_id;
+
         $info = [
             'id'=>$id,
             //   'department_id' => 0,

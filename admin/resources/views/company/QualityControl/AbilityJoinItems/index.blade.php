@@ -113,6 +113,6 @@
       var IFRAME_SAMPLE_RESULT_INFO_URL = "{{url('company/ability_join_item/sample_result_info/')}}/"; // 获得指定测试序号的 单次测试数据 + id + retry_no
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/company/QualityControl/AbilityJoinItem.js?27') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/company/QualityControl/AbilityJoinItem.js?28') }}"  type="text/javascript"></script>
 </body>
 </html>

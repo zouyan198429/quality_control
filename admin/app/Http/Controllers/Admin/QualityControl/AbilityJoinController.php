@@ -302,6 +302,9 @@ class AbilityJoinController extends BasicController
         $info = CTAPIAbilityJoinBusiness::getInfoData($request, $this, $id, [], '', $extParams);
         if(empty($info)) throws('记录不存在！');
         $join_retry_no = $info['retry_no'] ?? '';
+        $first_submit_num = $info['first_submit_num'] ?? 0;
+        $repair_submit_num = $info['repair_submit_num'] ?? 0;
+        if( ($join_retry_no == 0 && $first_submit_num > 0) ||  ($join_retry_no == 1 && $repair_submit_num > 0)) throws('已传数据，不可进行取样操作！');
         // 获得报名项
         $join_items = $info['join_items_sample_save'] ?? [];
         if(empty($join_items)) throws('没有报名的项目！');
@@ -368,9 +371,7 @@ class AbilityJoinController extends BasicController
         if(empty($sample_num_data)) throws('没有领样信息');
         // throws(json_encode($sample_num_data));
 
-        $saveData = [
-            'sample_num_data' => $sample_num_data,
-        ];
+        $saveData = [];
         if($join_retry_no == 0){
             $saveData = array_merge($saveData, [
                 'status' => 4,
@@ -383,6 +384,7 @@ class AbilityJoinController extends BasicController
                 'sample_time_repair' => $currentNow,
             ]);
         }
+        $saveData['sample_num_data'] = $sample_num_data;
 
 //        if($id <= 0) {// 新加;要加入的特别字段
 //            $addNewData = [
@@ -648,6 +650,14 @@ class AbilityJoinController extends BasicController
         $reDataArr['isGrant'] =  AbilityJoin::$isGrantArr;
         $reDataArr['defaultIsGrant'] = -1;// 列表页默认状态
 
+        // 是否补测 0正常测 1补测1 2 补测2 .....
+        $retry_no = CommonRequest::get($request, 'retry_no');
+        $reDataArr['retryNo'] =  AbilityJoin::$retryNoArr;
+        $reDataArr['defaultRetryNo'] = (strlen($retry_no) > 0) ? $retry_no : -1;// 列表页默认
+
+        // 是否取样1待取样--未取 2已取样--已取
+        $reDataArr['isSample'] =  AbilityJoin::$isSampleArr;
+        $reDataArr['defaultIsSample'] = -1;// 列表页默认状态
 
     }
 

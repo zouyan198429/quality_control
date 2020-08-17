@@ -201,11 +201,17 @@ class CTAPIAbilityJoinBusiness extends BasicPublicCTAPIBusiness
         $company_id = CommonRequest::getInt($request, 'company_id');
         if($company_id > 0 )  array_push($queryParams['where'], ['staff_id', '=', $company_id]);
 
+        $retry_no = CommonRequest::get($request, 'retry_no');
+        if(is_numeric($retry_no) && $retry_no >= 0 )  array_push($queryParams['where'], ['retry_no', '=', $retry_no]);
+
         $status = CommonRequest::getInt($request, 'status');
         if($status > 0 )  array_push($queryParams['where'], ['status', '=', $status]);
 
 //        $status = CommonRequest::get($request, 'status');
 //        if(strlen($status) > 0 && $status != 0)  Tool::appendParamQuery($queryParams, $status, 'status', [0, '0', ''], ',', false);
+
+        $is_sample = CommonRequest::getInt($request, 'is_sample');
+        if($is_sample > 0 )  array_push($queryParams['where'], ['is_sample', '=', $is_sample]);
 
         $is_print = CommonRequest::getInt($request, 'is_print');
         if($is_print > 0 )  array_push($queryParams['where'], ['is_print', '=', $is_print]);

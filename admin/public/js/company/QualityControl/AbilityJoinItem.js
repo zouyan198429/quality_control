@@ -116,12 +116,12 @@ var otheraction = {
     document.write("                    <i class=\"ace-icon fa fa-check bigger-60\"> 补测数据上报<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
-    document.write("                <%if( item.retry_no > 0 || (item.retry_no == 0 && item.status >= 4)){%>");
+    document.write("                <%if( item.retry_no > 0 || (item.retry_no == 0 && item.submit_status == 2)){%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"otheraction.sampleResultInfo(<%=item.id%>,'<%=item.ability_name%>-初测查看', 0)\">");
     document.write("                    <i class=\"ace-icon fa fa-check bigger-60\"> 查看数据[初测]<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
-    document.write("                <%if( item.retry_no > 1 || (item.retry_no == 1 && item.status >= 4)){%>");
+    document.write("                <%if( item.retry_no > 1 || (item.retry_no == 1 && item.submit_status == 8)){%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"otheraction.sampleResultInfo(<%=item.id%>,'<%=item.ability_name%>-补测查看', 1)\">");
     document.write("                    <i class=\"ace-icon fa fa-check bigger-60\"> 查看数据[补测]<\/i>");
     document.write("                <\/a>");

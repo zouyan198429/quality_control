@@ -178,6 +178,12 @@ class AbilityJoinItemsDBBusiness extends BasePublicDBBusiness
                 $queryParams = Tool::getParamQuery(['id' => $ability_id], [], []);
                 AbilitysDBBusiness::saveDecIncByQuery($incFieldName, 1,  'inc', $queryParams, []);
 
+                // 报名主表 初测/补测 提交数据数 + 1
+                $ability_join_id = $resultDatas['ability_join_id'] ?? 0;
+                $incFieldName = ($retry_no == 0) ? 'first_submit_num': 'repair_submit_num';
+                $queryParams = Tool::getParamQuery(['id' => $ability_join_id], [], []);
+                AbilityJoinDBBusiness::saveDecIncByQuery($incFieldName, 1,  'inc', $queryParams, []);
+
                 // 记录报名日志
                 // 获得操作人员信息
                 $operateInfo = StaffDBBusiness::getInfo($operate_staff_id);

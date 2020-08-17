@@ -1323,7 +1323,6 @@ class BasicCTAPIBusiness extends APIOperate
 //        }
         // 特殊的验证
 
-
         // 验证数据
         $judgeType = ($id > 0) ? 4 : 2;// $judgeType 验证类型 1 普通数据验证--[默认] ; 2 新建数据验证 ；4 修改数据验证
         // $mustFields = [];

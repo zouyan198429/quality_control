@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\QualityControl;
 use App\Business\Controller\API\QualityControl\CTAPIAbilityJoinItemsBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIAbilitysBusiness;
 use App\Http\Controllers\WorksController;
+use App\Models\QualityControl\Abilitys;
 use App\Services\Request\CommonRequest;
 use App\Services\Tool;
 use Illuminate\Http\Request;
@@ -552,6 +553,13 @@ class AbilitysController extends BasicController
 //        $reDataArr['adminType'] =  AbilityJoin::$adminTypeArr;
 //        $reDataArr['defaultAdminType'] = -1;// 列表页默认状态
 
+        // 状态
+        $reDataArr['status'] =  Abilitys::$statusArr;
+        $reDataArr['defaultStatus'] = -1;// 列表页默认状态
+
+        // 是否公布结果1未公布  2待公布 4  已公布
+        $reDataArr['isPublish'] =  Abilitys::$isPublishArr;
+        $reDataArr['defaultIsPublish'] = -1;// 列表页默认状态
     }
 
     /**

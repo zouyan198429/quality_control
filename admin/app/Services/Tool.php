@@ -1214,13 +1214,47 @@ class Tool
      * @return boolean true:原数组是二维数组；false:原数组是一维数组或空数组
      */
     public static function isMultiArr(&$dataList, $convertMultiArr = false){
-        $isMultiArr = false; // true:二维;false:一维
+//        $isMultiArr = false; // true:二维;false:一维
         $dataArr = is_object($dataList) ? $dataList->toArray() : $dataList;
+//        foreach($dataArr as $k => $v){
+//            if(is_array($v) || is_object($v)){
+//                $isMultiArr = true;
+//            }
+//            break;
+//        }
+        $isMultiArr = true; // true:二维;false:一维
+        if(!is_array($dataArr) || empty($dataArr)) $isMultiArr = false;// 非数组或空数组，则为一维
+
+        // 优化：如果下标是0，1，2...这样的，我们只判断前面6条记录---目的是为减少判断的次数
+        $judge_num = 0;
+        $is_ubound_auto_inc = true;// true:下标是数字自增； false:下标不是数字自增
+        $max_judge_num = 6;// 最多判断 6次[6条记录]
+
         foreach($dataArr as $k => $v){
-            if(is_array($v) || is_object($v)){
-                $isMultiArr = true;
+//            if(is_array($v) || is_object($v)){
+//                $isMultiArr = true;
+//                continue;
+//            }else{
+//                $isMultiArr = false;
+//                break;
+//            }
+
+            if(!is_array($v) && !is_object($v)){
+                $isMultiArr = false;
+                break;
             }
-            break;
+
+            // 只对从0,1,2...自增的进行优化--减少判断的数量
+            if($is_ubound_auto_inc){
+                if(!is_numeric($k)) $is_ubound_auto_inc = false;
+                if($is_ubound_auto_inc){
+                    if($k != $judge_num) $is_ubound_auto_inc = false;
+                    if($is_ubound_auto_inc && $judge_num >= ($max_judge_num -1)){//  && $k == $judge_num
+                        break;
+                    }
+                    if($is_ubound_auto_inc) $judge_num++;
+                }
+            }
         }
         // 一维
         if(!$isMultiArr && $convertMultiArr) $dataList = [$dataList];

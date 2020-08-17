@@ -122,6 +122,7 @@ function ajax_form(){
 
             var readonly = inputObj.attr('readonly');
             if(readonly == 'readonly') {// 只读时
+                input_has_val = true;
                 return false;// break;
             }
 
@@ -170,6 +171,18 @@ function ajax_form(){
         return false;
     }
 
+    var index_query = layer.confirm('请仔细检查各项信息，谨防填选错误！<br/>提交后不能修改！', {
+        btn: ['确认提交','返回检查'] //按钮
+    }, function(){
+        ajax_save(id);
+        layer.close(index_query);
+    }, function(){
+    });
+
+}
+
+// 验证通过后，ajax保存
+function ajax_save(id) {
     // 验证通过
     SUBMIT_FORM = false;//标记为已经提交过
     var data = $("#addForm").serialize();
