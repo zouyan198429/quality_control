@@ -14,6 +14,9 @@ class AbilitysDBBusiness extends BasePublicDBBusiness
     public static $model_name = 'QualityControl\Abilitys';
     public static $table_name = 'abilitys';// 表名称
     public static $record_class = __CLASS__;// 当前的类名称 App\Business\***\***\**\***
+    // 历史表对比时 忽略历史表中的字段，[一维数组] - 必须会有 [历史表中对应主表的id字段]  格式 ['字段1','字段2' ... ]；
+    // 注：历史表不要重置此属性
+    public static $ignoreFields = [];
 
 
     /**
@@ -51,20 +54,18 @@ class AbilitysDBBusiness extends BasePublicDBBusiness
             // 方法标准
             $project_standards = [];
             $has_project_standard = false;// 是否有方法修改 false:没有 ； true:有
-            if(isset($saveData['project_standards'])){
-                $project_standards = $saveData['project_standards'];
-                unset($saveData['project_standards']);
-                $has_project_standard = true;
-            }
+            Tool::getInfoUboundVal($saveData, 'project_standards', $has_project_standard, $project_standards, 1);
 
             // 验证数据项
             $submit_items = [];
             $has_submit_item = false;// 是否有验证数据项修改 false:没有 ； true:有
-            if(isset($saveData['submit_items'])){
-                $submit_items = $saveData['submit_items'];
-                unset($saveData['submit_items']);
-                $has_submit_item = true;
-            }
+            Tool::getInfoUboundVal($saveData, 'submit_items', $has_submit_item, $submit_items, 1);
+
+            // 有此下标，会去判断状态应该是不是可以到完成状态
+            $judge_complete = [];
+            $has_judge_complete = false;// 是否有方法修改 false:没有 ； true:有
+            Tool::getInfoUboundVal($saveData, 'judge_complete', $has_judge_complete, $judge_complete, 1);
+
 
             $operate_staff_id_history = config('public.operate_staff_id_history', 0);// 0;--写上，不然后面要去取，但现在的系统不用历史表
             // 保存前的处理
@@ -253,11 +254,46 @@ class AbilitysDBBusiness extends BasePublicDBBusiness
 //                    ProjectSubmitItemsDBBusiness::deleteByIds($submitItemIds);
 //                }
 //            }
+            // 有此下标，会去判断状态应该是不是可以到完成状态
+            // 两个条件，1当前记录是已公布状态 2下面的证书都领取完了
+            if($has_judge_complete){
+                static::judgeAndDoComplete($id);
+            }
 
             // 保存成功后的处理
             static::replaceByIdAPISucess($isModify, $modelObj, $saveData, $company_id, $id, $operate_staff_id, $operate_staff_id_history, $modifAddOprate);
             return $id;
         });
+    }
+
+    /**
+     * 根据id判断是否应该已结束当前项目
+     *
+     * @param int $id id
+     * @return  null
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function judgeAndDoComplete($id){
+
+        // 判断是否已经公布
+//                $tem_is_publish = $saveData['is_publish'] ?? 0;
+//                if($tem_is_publish <= 0 ){
+        $tem_info = static::getInfo($id);
+        $tem_is_publish = $tem_info['is_publish'] ?? 0;
+        $tem_status = $tem_info['status'] ?? 0;
+//                }
+        if($tem_is_publish == 4 && $tem_status == 4){
+            // 2下面的证书都领取完了
+            // 获得正在处理的一条记录
+            $queryParams = Tool::getParamQuery(['ability_id' => $id], ['sqlParams' =>['whereIn' => ['status' => [1,2,4,8]]]], []);
+            $resultDoingInfo = AbilityJoinItemsResultsDBBusiness::getInfoByQuery(1, $queryParams, []);
+            if(empty($resultDoingInfo)){
+                static::saveById([
+                    'status' => 8,
+                    'complete_time' => date('Y-m-d H:i:s'),
+                ], $id);
+            }
+        }
     }
 
     /**
@@ -377,6 +413,49 @@ class AbilitysDBBusiness extends BasePublicDBBusiness
 //            Tool::appendParamQuery($saveQueryParams, $ids, 'id', [0, '0', ''], ',', false);
             $saveQueryParams = Tool::getParamQuery(['status' => [1,2], 'id' => $ids], [], []);
             static::save($saveDate, $saveQueryParams);
+        }
+    }
+
+    /**
+     * 指定时间公布的，时间一到结束，进行公布--每一分钟跑一次
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function autoPublishDoing()
+    {
+        $dateTime =  date('Y-m-d H:i:s');
+        // 读取所有未开始的
+//        $queryParams = [
+//            'where' => [
+//                // ['status', 2],
+//                ['join_end_date', '<=', $dateTime],
+//            ],
+//            'whereIn' => [ 'status' => [1,2]],
+//            'select' => ['id' ]
+//        ];
+        $queryParams = Tool::getParamQuery(['status' => 4, 'publish_type' => 4, 'is_publish' => 2], ['sqlParams' =>['select' =>['id' ], 'where' => [['publish_time', '<=', $dateTime]]]], []);
+        $dataList = static::getAllList($queryParams, [])->toArray();
+
+        if(!empty($dataList)){
+            $ids = array_values(array_unique(array_column($dataList,'id')));
+            $saveDate = [
+                'is_publish' => 4,
+                 // 'judge_complete' => 1,// 有此下标，会去判断状态应该是不是可以到完成状态
+            ];
+//            $saveQueryParams = [
+//                'where' => [
+//                    // ['status', 2],
+//                    // ['status_business', '!=', 1],
+//                ],
+//                'whereIn' => [ 'status' => [1,2]],
+//            ];
+//            Tool::appendParamQuery($saveQueryParams, $ids, 'id', [0, '0', ''], ',', false);
+            $saveQueryParams = Tool::getParamQuery(['status' => 4, 'id' => $ids], [], []);
+            static::save($saveDate, $saveQueryParams);
+            // 判断是否应该进入完成状态
+            foreach($ids as $tem_id){
+                static::judgeAndDoComplete($tem_id);
+            }
         }
     }
 

@@ -159,6 +159,18 @@ $api->version('v1', function ($api) {
         $api->post('admin/citys/import', 'Admin\QualityControl\CitysController@import');// 导入excel
         $api->post('admin/citys/ajax_get_ids', 'Admin\QualityControl\CitysController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
+        // 证书设置[一级分类]
+        $api->any('admin/ability_code/ajax_alist', 'Admin\QualityControl\AbilityCodeController@ajax_alist');//ajax获得列表数据
+//        $api->post('admin/ability_code/ajax_del', 'Admin\QualityControl\AbilityCodeController@ajax_del');// 删除
+        $api->any('admin/ability_code/ajax_save', 'Admin\QualityControl\AbilityCodeController@ajax_save');// 新加/修改
+//        $api->any('admin/ability_code/ajax_info', 'Admin\QualityControl\AbilityCodeController@ajax_info');// 详情
+//        $api->post('admin/ability_code/ajax_get_child', 'Admin\QualityControl\AbilityCodeController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+//        $api->post('admin/ability_code/ajax_get_areachild', 'Admin\QualityControl\AbilityCodeController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+//        $api->post('admin/ability_code/ajax_import_staff','Admin\QualityControl\AbilityCodeController@ajax_import'); // 导入员工
+//
+//        $api->post('admin/ability_code/import', 'Admin\QualityControl\AbilityCodeController@import');// 导入excel
+//        $api->post('admin/ability_code/ajax_get_ids', 'Admin\QualityControl\AbilityCodeController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
         // 老师登录验证码 验证码
         $api->any('admin/sms_code/ajax_alist', 'Admin\QualityControl\SmsCodeController@ajax_alist');//ajax获得列表数据
         $api->post('admin/sms_code/ajax_del', 'Admin\QualityControl\SmsCodeController@ajax_del');// 删除
@@ -203,6 +215,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/abilitys/import', 'Admin\QualityControl\AbilitysController@import');// 导入excel
         $api->post('admin/abilitys/ajax_get_ids', 'Admin\QualityControl\AbilitysController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
+        $api->post('admin/abilitys/ajax_save_publish', 'Admin\QualityControl\AbilitysController@ajax_save_publish');// 修改公布时间类型
         //****************************************************************************
         // 能力验证管理
 
@@ -234,6 +247,9 @@ $api->version('v1', function ($api) {
 //        $api->post('admin/ability_join/ajax_get_ids', 'Admin\QualityControl\AbilityJoinController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
         $api->any('admin/ability_join/ajax_save_sample', 'Admin\QualityControl\AbilityJoinController@ajax_save_sample');// 保存取样
+        $api->any('admin/ability_join/ajax_print', 'Admin\QualityControl\AbilityJoinController@ajax_print');// 操作(标记打印操作)
+        $api->any('admin/ability_join/ajax_grant', 'Admin\QualityControl\AbilityJoinController@ajax_grant');// 操作(标记证书领取操作)
+        $api->any('admin/ability_join/ajax_search_print', 'Admin\QualityControl\AbilityJoinController@ajax_search_print');// 按查询条件操作(标记打印操作)
         // 企业能力附表
         $api->any('admin/company_schedule/ajax_alist', 'Admin\QualityControl\CompanyScheduleController@ajax_alist');//ajax获得列表数据
         $api->post('admin/company_schedule/ajax_del', 'Admin\QualityControl\CompanyScheduleController@ajax_del');// 删除

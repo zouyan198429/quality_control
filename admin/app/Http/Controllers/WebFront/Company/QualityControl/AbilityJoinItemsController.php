@@ -201,7 +201,7 @@ class AbilityJoinItemsController extends BasicController
      */
     public function infoItemResult(Request $request, &$reDataArr, &$info, $retry_no = 0){
         if(!is_numeric($retry_no) || $retry_no < 0) $retry_no = 0;
-
+        $info['retry_no'] = $retry_no;
         $relationFormatConfigs = CTAPIAbilityJoinItemsBusiness::getRelationConfigs($request, $this, ['ability_info', 'join_item_reslut_info_updata', 'project_submit_items_list'], []);// , 'join_items'
         CTAPIAbilityJoinItemsBusiness::formatRelationList( $request, $this, $info, $relationFormatConfigs);
         // 所用仪器
@@ -618,6 +618,12 @@ class AbilityJoinItemsController extends BasicController
                 if(!isset($info['join_item_reslut_info']) || empty($info['join_item_reslut_info'])){
                     $data_list[$k]['join_item_reslut_info']['submit_status_text'] = '未上传';
                 }
+                $is_publish = $info['ability_info']['is_publish'] ?? 0;
+                if($is_publish != 4){// 未公布
+                    $data_list[$k]['result_status'] = 0;
+                    $data_list[$k]['result_status_text'] = '待公布';
+                }
+
             }
             $result['result']['data_list'] = $data_list;
             return $result;

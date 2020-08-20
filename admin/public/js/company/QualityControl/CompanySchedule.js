@@ -96,13 +96,13 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
     document.write("              </a>");
     document.write("            <%}%>");
     document.write("           <\/td>");
-    document.write("            <td><%=item.created_at%><\/td>"); 
+    document.write("            <td><%=item.created_at%><\/td>");
     document.write("            <td>");
     document.write("                <%if( false){%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"action.show(<%=item.id%>)\">");
-    document.write("                    <i class=\"ace-icon fa fa-check bigger-60\"> 查看<\/i>");
+    document.write("                    <i class=\"ace-icon  fa fa-eye  bigger-60\"> 查看<\/i>");
     document.write("                <\/a>");
-    document.write("                <%}%>"); 
+    document.write("                <%}%>");
     document.write("                <%if( can_modify){%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.del(<%=item.id%>)\">");
     document.write("                    <i class=\"ace-icon fa fa-trash-o bigger-60\"> 删除<\/i>");

@@ -12,12 +12,16 @@ class ResourceDBBusiness extends BasePublicDBBusiness
     public static $model_name = 'QualityControl\Resource';
     public static $table_name = 'resource';// 表名称
     public static $record_class = __CLASS__;// 当前的类名称 App\Business\***\***\**\***
+    // 历史表对比时 忽略历史表中的字段，[一维数组] - 必须会有 [历史表中对应主表的id字段]  格式 ['字段1','字段2' ... ]；
+    // 注：历史表不要重置此属性
+    public static $ignoreFields = ['resource_id'];
+
     // 获得记录历史id
     public static function getIdHistory($mainId = 0, &$mainDBObj = null, &$historyDBObj = null){
         // $mainDBObj = null ;
         // $historyDBObj = null ;
         return static::getHistoryId($mainDBObj, $mainId, ResourceHistoryDBBusiness::$model_name
-            , ResourceHistoryDBBusiness::$table_name, $historyDBObj, ['resource_id' => $mainId], []);
+            , ResourceHistoryDBBusiness::$table_name, $historyDBObj, ['resource_id' => $mainId], static::$ignoreFields);
     }
 
     /**
@@ -37,7 +41,7 @@ class ResourceDBBusiness extends BasePublicDBBusiness
         // $mainDBObj = null ;
         // $historyDBObj = null ;
         return static::compareHistoryOrUpdateVersion($mainDBObj, $id, ResourceHistoryDBBusiness::$model_name
-            , ResourceHistoryDBBusiness::$table_name, $historyDBObj, $historySearch, ['resource_id'], $forceIncVersion);
+            , ResourceHistoryDBBusiness::$table_name, $historyDBObj, $historySearch, static::$ignoreFields, $forceIncVersion);
     }
 
     /**

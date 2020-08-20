@@ -46,26 +46,13 @@ class AbilitysController extends BasicController
      * @return mixed
      * @author zouyan(305463219@qq.com)
      */
-//    public function select(Request $request)
-//    {
-//        $reDataArr = [];// 可以传给视图的全局变量数组
-//        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request){
-//            // 正常流程的代码
-//
-//            $this->InitParams($request);
-//            // $reDataArr = $this->reDataArr;
-//            $reDataArr = array_merge($reDataArr, $this->reDataArr);
-//            $reDataArr['province_kv'] = CTAPIAbilitysBusiness::getCityByPid($request, $this,  0);
-//            $reDataArr['province_kv'] = CTAPIAbilitysBusiness::getChildListKeyVal($request, $this, 0, 1 + 0, 0);
-//            $reDataArr['province_id'] = 0;
-//            return view('admin.QualityControl.Abilitys.select', $reDataArr);
-//
-//        }, $this->errMethod, $reDataArr, $this->errorView);
-//        return $this->exeDoPublicFun($request, 2048, 1, 'admin.QualityControl.RrrDddd.select', true
-//            , 'doListPage', [], function (&$reDataArr) use ($request){
-//
-//            });
-//    }
+    public function select(Request $request)
+    {
+        return $this->exeDoPublicFun($request, 2048, 1, 'admin.QualityControl.Abilitys.select', true
+            , 'doListPage', [], function (&$reDataArr) use ($request){
+
+            });
+    }
 
     /**
      * 添加
@@ -93,6 +80,33 @@ class AbilitysController extends BasicController
             , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
 
         });
+    }
+
+    /**
+     * 公布结果
+     *
+     * @param Request $request
+     * @param int $id
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function publish(Request $request,$id = 0)
+    {
+        return $this->exeDoPublicFun($request, 0, 8,'admin.QualityControl.Abilitys.publish', true
+            , '', [], function (&$reDataArr) use ($request, &$id){
+                $info = CTAPIAbilitysBusiness::getInfoData($request, $this, $id, [], '', []);
+                if(empty($info)) throws('记录不存在！');
+                $status = $info['status'];
+                $is_publish = $info['is_publish'];
+                if($status != 4 || $is_publish != 2) throws('非进行中状态或非待公布状态，不可进行此操作！');
+                $reDataArr['info'] = $info;
+
+                // 公布结果时间类型 1待指定  2立即公布 4  定时公布
+                $publishType = Abilitys::$publishTypeArr;
+                if(isset($publishType[1])) unset($publishType[1]);
+                $reDataArr['publishType'] = $publishType;
+                $reDataArr['defaultPublishType'] = -1;// 列表页默认状态
+            });
     }
 
     /**
@@ -279,6 +293,58 @@ class AbilitysController extends BasicController
                 $resultDatas = CTAPIAbilitysBusiness::replaceById($request, $this, $saveData, $id, $extParams, true);
                 return ajaxDataArr(1, $resultDatas, '');
         });
+    }
+
+
+    /**
+     * ajax保存数据 修改公布时间类型
+     *
+     * @param int $id
+     * @return Response
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_save_publish(Request $request)
+    {
+//        $this->InitParams($request);
+
+        return $this->exeDoPublicFun($request, 0, 4,'', true
+            , '', [], function (&$reDataArr) use ($request){
+                $id = CommonRequest::getInt($request, 'id');
+                $publish_type = CommonRequest::getInt($request, 'publish_type');
+                $publish_time = CommonRequest::get($request, 'publish_time');
+
+                // 公布结果时间类型 1待指定  2立即公布 4  定时公布
+                $publishType = Abilitys::$publishTypeArr;
+                if(!in_array($publish_type, array_keys($publishType))) throws('请选择正确的公布类型！');
+                $begin_time = date('Y-m-d H:i:s');
+                if($publish_type != 4) $publish_time = $begin_time;
+                if($publish_type == 4){
+                    // 判断指定公布时间
+                    Tool::judgeBeginEndDate($begin_time, $publish_time, 1 + 2 + 64 + 128 + 256 + 512, 1, date('Y-m-d H:i:s'), '指定公布时间');
+
+                }
+
+                $info = CTAPIAbilitysBusiness::getInfoData($request, $this, $id, [], '', []);
+                if(empty($info)) throws('记录不存在！');
+                $status = $info['status'];
+                $is_publish = $info['is_publish'];
+                if($status != 4 || $is_publish != 2) throws('非进行中状态或非待公布状态，不可进行此操作！');
+
+                $saveData = [
+                    'publish_type' => $publish_type,
+                    'publish_time' => $publish_time,
+                    // 'judge_complete' => 1,// 有此下标，会去判断状态应该是不是可以到完成状态
+                ];
+                if($publish_type == 2){// 2立即公布
+                    $saveData['is_publish'] = 4;
+                    $saveData['judge_complete'] = 1;// 有此下标，会去判断状态应该是不是可以到完成状态
+                }
+                $extParams = [
+                    'judgeDataKey' => 'replace',// 数据验证的下标
+                ];
+                $resultDatas = CTAPIAbilitysBusiness::replaceById($request, $this, $saveData, $id, $extParams, true);
+                return ajaxDataArr(1, $resultDatas, '');
+            });
     }
 
     /**

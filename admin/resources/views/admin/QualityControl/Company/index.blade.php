@@ -152,9 +152,9 @@
         <col width="80">
         <col width="105">
         <col width="80">
-        <col width="120">
+        <col width="75">
         <col width="50">
-        <col width="160">
+        <col width="90">
         <col width="200">
     </colgroup>
     <thead>

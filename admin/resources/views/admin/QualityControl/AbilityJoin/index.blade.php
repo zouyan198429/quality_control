@@ -24,7 +24,6 @@
 {{--    </div>--}}
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
-
           <span>
                 <input type="hidden" class="select_id" name="company_id"  value="{{ $info['company_id'] ?? '' }}" />
                 <span class="select_name company_name">{{ $info['user_company_name'] ?? '' }}</span>
@@ -73,10 +72,23 @@
       </div>
     </form>
   </div>
+    <div>
+        <p>证书打印说明：</p>
+        <p>1、<a href="javascript:void(0);" class="on" onclick="otheraction.downDrive(this)">下载网页打印机驱动</a>并安装。</p>
+        <p>2、确保C-Lodop云打印服务器开启【默认会开机自动开启】</p>
+        <p>3、确保C-Lodop云打印服务器开启端口：8000【可能通过(设置)变更】</p>
+        <p>4、项目报名后，打印证书前，请在《证书设置》设置对应年份的证书落款署名、证书落款日期。</p>
+    </div>
 
+    <div class="table-header">
+
+        <button class="btn btn-success  btn-xs export_excel ace-icon fa fa-cloud-download"  onclick="otheraction.downDrive(this)" >下载网页打印机驱动</button>
+        <button class="btn btn-success  btn-xs export_excel ace-icon fa fa-print"  onclick="otheraction.printSearch(this)" >打印证书[按条件]</button>
+        <button class="btn btn-success  btn-xs export_excel ace-icon fa fa-print"  onclick="otheraction.printSelected(this)" >打印证书[勾选]</button>
+    </div>
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
-{{--        <col width="50">--}}
+        <col width="50">
 {{--        <col width="50">--}}
         <col>
         <col>
@@ -93,11 +105,11 @@
     </colgroup>
     <thead>
     <tr>
-{{--     <th>--}}
-{{--        <label class="pos-rel">--}}
-{{--          <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>--}}
-{{--        </label>--}}
-{{--      </th>--}}
+     <th>
+        <label class="pos-rel">
+          <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>
+        </label>
+      </th>
 {{--        <th>ID</th>--}}
         <th>能力验证代码</th>
         <th>单位</th>
@@ -127,6 +139,7 @@
   <script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>
   <script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.all.js')}}"></script>
   {{--<script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.js')}}"></script>--}}
+<script src="{{asset('/static/js/LodopFuncs.js')}}"></script>
   @include('public.dynamic_list_foot')
 
   <script type="text/javascript">
@@ -153,9 +166,41 @@
 
       var IFRAME_SAMPLE_URL = "{{url('admin/ability_join/get_sample/')}}/";//添加/修改页面地址前缀 + id
       var SELECT_COMPANY_URL = "{{url('admin/company/select')}}";// 选择所属企业
+      var IFRAME_PRINT_URL = "{{url('admin/ability_join/print/')}}/";//打印证书页面地址前缀 + id
 
+      var IS_PRINT_URL = "{{ url('api/admin/ability_join/ajax_print') }}";//操作(标记打印操作)
+      var IS_GRANT_URL = "{{ url('api/admin/ability_join/ajax_grant') }}";//操作(标记证书领取操作)
+
+      var SEARCH_PRINT_URL = "{{ url('api/admin/ability_join/ajax_search_print') }}";//按查询条件结果操作(标记打印操作)
+      var DOWN_DRIVE_URL = "{{ url('admin/down_drive') }}";// 下载网页打印机驱动
+      // 打印配置
+      var PRINT_INT_ORIENT = 3;// intOrient,intPageWidth,intPageHeight,strPageName
+      var PRINT_INT_PAGE_WIDTH = 970;// 580;
+      var PRINT_INT_PAGE_HEIGHT = 45;
+      var PRINT_STR_PAGE_NAME = '';
+
+      // https://www.it610.com/article/2094844.htm  打印函数LODOP.SET_PRINT_PAGESIZE
+      // SET_PRINT_PAGESIZE(intOrient,intPageWidth,intPageHeight,strPageName);
+      //
+      // 参数含义：
+      // intOrient：打印方向及纸张类型
+      // 值为1---纵向打印，固定纸张；
+      // 值为2---横向打印，固定纸张；
+      // 值为3---纵向打印，宽度固定，高度按打印内容的高度自适应；
+      // 0(或其它)----打印方向由操作者自行选择或按打印机缺省设置。
+      // intPageWidth：
+      // 纸张宽，单位为0.1mm 譬如该参数值为45，则表示4.5mm,计量精度是0.1mm。
+      //
+      // intPageHeight：
+      // 固定纸张时该参数是纸张高；高度自适应时该参数是纸张底边的空白高，计量单位与纸张宽一样。
+      //
+      // strPageName：
+      // 纸张名，必须intPageWidth等于零时本参数才有效，有如下选择：
+      // Letter, LetterSmall, Tabloid, Ledger, Legal,Statement, Executive,
+      //     A3, A4, A4Small, A5, B4, B5, Folio, Quarto, qr10X14, qr11X17, Note,
+      //     Env9, Env10, Env11, Env12,Env14, Sheet, DSheet, ESheet
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/AbilityJoin.js') }}?6"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/AbilityJoin.js') }}?12"  type="text/javascript"></script>
 </body>
 </html>

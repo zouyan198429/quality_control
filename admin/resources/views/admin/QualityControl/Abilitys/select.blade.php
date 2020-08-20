@@ -19,12 +19,9 @@
   <div class="mmhead" id="mywork">
 
     @include('common.pageParams')
-    <div class="tabbox" >
-      <a href="javascript:void(0);" class="on" onclick="action.iframeModify(0)">添加项目</a>
-    </div>
+
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
-
           <select class="wmini" name="status" style="width: 80px;">
               <option value="">状态</option>
               @foreach ($status as $k=>$txt)
@@ -38,53 +35,36 @@
                   <option value="{{ $k }}"  @if(isset($defaultIsPublish) && $defaultIsPublish == $k) selected @endif >{{ $txt }}</option>
               @endforeach
           </select>
-        <select style="width:80px; height:28px;" name="field">
-          <option value="ability_name">检测项目</option>
-        </select>
-        <input type="text" value=""    name="keyword"  placeholder="请输入关键字"/>
-        <button class="btn btn-normal search_frm">搜索</button>
+          <select style="width:80px; height:28px;" name="field">
+              <option value="ability_name">检测项目</option>
+          </select>
+          <input type="text" value=""    name="keyword"  placeholder="请输入关键字"/>
+          <button class="btn btn-normal search_frm">搜索</button>
       </div>
     </form>
   </div>
 
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
-        <col width="50">
-        <col>
-       <!--  <col width="60"> -->
-        <col width="80">
-        <col>
-        <col>
-        <col width="">
-        <col width="90">
+
         <col width="60">
-        <col width="60">
-        <col width="60">
+        <col>
         <col width="90">
-        <col width="90">
-        <col width="150">
+        <col width="200">
+
     </colgroup>
     <thead>
     <tr>
-     <!--  <th>
+      <th style="display: none;">
         <label class="pos-rel">
           <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>
+          <!-- <span class="lbl">全选</span> -->
         </label>
-      </th> -->
-      <th>ID</th>
+      </th>
+      <th style="display: none;">ID</th>
       <th>检测项目</th>
-        <!-- <th>预估参加数</th> -->
-        <th>报名企业</th>
-        <th>报名起止时间</th>
-        <!-- <th>方法标准</th> -->
-        <th>验证数据项</th>
-        <th>提交时限</th>
-        <th>状态</th>
-        <th>初测提交数据<hr/>补测提交数据</th>
-        <th>初测满意数<hr/>补测满意数</th>
-        <th>初测非满意数<hr/>补测非满意数</th>
-        <th>是否公布<hr/>公布时间</th>
-      <th>创建时间</th>
+      <th>报名企业</th>
+      <th>报名起止时间</th>
       <th>操作</th>
     </tr>
     </thead>
@@ -112,11 +92,11 @@
       var ADD_URL = "{{ url('admin/abilitys/add/0') }}"; //添加url
 
       var IFRAME_MODIFY_URL = "{{url('admin/abilitys/add/')}}/";//添加/修改页面地址前缀 + id
-      var IFRAME_MODIFY_URL_TITLE = "项目" ;// 详情弹窗显示提示  [添加/修改] +  栏目/主题
+      var IFRAME_MODIFY_URL_TITLE = "单位" ;// 详情弹窗显示提示  [添加/修改] +  栏目/主题
       var IFRAME_MODIFY_CLOSE_OPERATE = 0 ;// 详情弹窗operate_num关闭时的操作0不做任何操作1刷新当前页面2刷新当前列表页面
 
       var SHOW_URL = "{{url('admin/abilitys/info/')}}/";//显示页面地址前缀 + id
-      var SHOW_URL_TITLE = "详情" ;// 详情弹窗显示提示
+      var SHOW_URL_TITLE = "" ;// 详情弹窗显示提示
       var SHOW_CLOSE_OPERATE = 0 ;// 详情弹窗operate_num关闭时的操作0不做任何操作1刷新当前页面2刷新当前列表页面
       var EDIT_URL = "{{url('admin/abilitys/add/')}}/";//修改页面地址前缀 + id
       var DEL_URL = "{{ url('api/admin/abilitys/ajax_del') }}";//删除页面地址
@@ -126,12 +106,11 @@
       var IMPORT_EXCEL_URL = "{{ url('api/admin/abilitys/import') }}";//导入EXCEL地址
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
 
+      var OPEN_OPERATE_URL = "{{ url('api/admin/abilitys/ajax_open') }}";//审核操作(通过/不通过)
+      var ACCOUNT_STATUS_URL = "{{ url('api/admin/abilitys/ajax_frozen') }}";//操作(冻结/解冻)
 
-      var ABILITYS_ADMIN_URL = "{{url('admin/abilitys_admin/')}}/";//项目管理 页面地址前缀 + id
-      var EXPORT_JOIN_EXCEL_URL = "{{ url('admin/abilitys/export_join/') }}/";//导出报名企业EXCEL地址+ id
-      var IFRAME_PUBLISH_URL = "{{url('admin/abilitys/publish/')}}/";//公布结果页面地址前缀 + id
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/Abilitys.js') }}?824"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/Abilitys_select.js') }}"  type="text/javascript"></script>
 </body>
 </html>

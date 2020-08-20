@@ -1354,6 +1354,21 @@ class Tool
 
     /**
      * 对一维数数值进行格式化处理，如果是字符，会自动转为数组
+     * 功能同 formatOneArrVals 方法，只是不会引用改变参数值
+     *
+     * @param string/array $paramVals 参数的值 数组-一维或字符 不是有效的字符或数组【源变量$paramVals设置为空数组】
+     * @param array $excludeVals 需要除外的参数值--不加入查询条件 [0, '0', ''] --默认；  ['']
+     * @param string $valsSeparator 如果是多值字符串，多个值的分隔符;默认逗号 ,
+     * @param int $operate_type 操作类型 1 每个元素去前后空；2值去重；4取差；8重置数组下标，0，1，2...
+     * @return  boolean true:有数据项  false:无数据或不是有效的字符或数组【源变量$paramVals设置为空数组】
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function formatOneArrValsExtend($paramVals = '', $excludeVals = [0, '0', ''], $valsSeparator = ',', $operate_type = (1 | 2 | 4 | 8)){
+        return static::formatOneArrVals($paramVals, $excludeVals, $valsSeparator, $operate_type);
+    }
+
+    /**
+     * 对一维数数值进行格式化处理，如果是字符，会自动转为数组
      *
      * @param string/array $paramVals 参数的值 数组-一维或字符 不是有效的字符或数组【源变量$paramVals设置为空数组】
      * @param array $excludeVals 需要除外的参数值--不加入查询条件 [0, '0', ''] --默认；  ['']

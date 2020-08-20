@@ -1662,7 +1662,7 @@ class CommonDB
      * @param object $historyObj 历史表对象
      * @param string $historyTable 历史表名字
      * @param array $historySearch 历史表查询字段[一维数组][一定要包含主表id的] +  版本号(不用传，自动会加上) 格式 ['字段1'=>'字段1的值','字段2'=>'字段2的值' ... ]
-     * @param array $ignoreFields 忽略都有的字段中，忽略历史表中的记录 [一维数组] 格式 ['字段1','字段2' ... ]
+     * @param array $ignoreFields 忽略都有的字段中，忽略历史表中的记录 [一维数组] - 必须会有 [历史表中对应主表的id字段]  格式 ['字段1','字段2' ... ]
      * @return int 历史表id
      * @author zouyan(305463219@qq.com)
      */
@@ -1670,6 +1670,7 @@ class CommonDB
 
         // 获得是否开通缓存
         $cachePower = static::getCachePowerNum($mainObj);
+
         $modelObjCopy = null;
         if($cachePower > 0){
             $modelObjCopy = Tool::copyObject($mainObj);
@@ -1681,6 +1682,7 @@ class CommonDB
         if(empty($mainObj)){
             throws("原记录[" . $primaryVal  . "] 不存在");
         }
+
         $versionNum = $mainObj->version_num;
         // 获得所有字段
         $historyColumns = static::getDbFieldsByName($mainObj, $HistoryTableName,1);// Schema::getColumnListing($HistoryTableName);
@@ -1688,7 +1690,7 @@ class CommonDB
         // 历史表需要保存的字段
         $historyData = [];// 要保存的历史记录
         $historySearchConditon = [];// 历史表查询字段
-        $ignoreFields = array_merge($ignoreFields,['id', 'updated_at', 'version_history_id', 'version_num_history']);
+        $ignoreFields = array_merge($ignoreFields,['id', 'updated_at']);// , 'version_history_id', 'version_num_history'
         foreach($historyColumns as $field){
             if(isset($mainObj->$field) && !in_array($field,$ignoreFields) ){
                 $historyData[$field] = $mainObj->$field;
@@ -1717,7 +1719,7 @@ class CommonDB
             $ignoreHistoryFields = $ignoreFields;
 
             // 忽略的比较字段
-            $ignoreHistoryFields = array_merge($ignoreHistoryFields,['id', 'version_history_id', 'version_num_history', 'created_at', 'updated_at', 'version_num', 'staff_id', 'operate_staff_id_history']);
+            $ignoreHistoryFields = array_merge($ignoreHistoryFields,['id', 'created_at', 'updated_at', 'version_num', 'version_history_id', 'version_num_history']);// 'staff_id' // , 'operate_staff_id', 'operate_staff_id_history'
 
             // 比较字段
             foreach($historyColumns as $field){
@@ -1727,43 +1729,53 @@ class CommonDB
                 }
             }
             if(!empty($diffArr)){// 有不同的值，则需要版本号+1
-                $modelHistoryObjCopy = Tool::copyObject($modelObjCopy);
 
                 $mainObj->version_num++;
-                $mainObj->save();
+
+                static::doTransactionFun(function() use(&$cachePower, &$modelObjCopy, &$mainObj){
+
+                    // 开通缓存，则更新缓存时间信息
+                    if($cachePower > 0){
+                        $modelHistoryObjCopy = Tool::copyObject($modelObjCopy);
+                        $dataCacheArr = is_object($mainObj) ? $mainObj->toArray() : $mainObj;
+                        static::updateTimeByData($modelHistoryObjCopy, $dataCacheArr, 2, false, []);
+                    }
+
+                    $mainObj->save();
+                });
 
                 $versionNum++;// $versionNum += 1;
                 // 查询加入版本号
                 $historySearchConditon["version_num"] = $versionNum;
                 $historyData['version_num'] = $versionNum;
-
-                // 开通缓存，则更新缓存时间信息
-                if($cachePower > 0){
-                    $dataCacheArr = is_object($mainObj) ? $mainObj->toArray() : $mainObj;
-                    static::updateTimeByData($modelHistoryObjCopy, $dataCacheArr, 2, false, []);
-                }
             }
         }
         // ~~~~~~~~~~判断~~~结束~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        // 查找历史表当前版本
-        static::firstOrCreate($historyObj, $historySearchConditon, $historyData );
+        return static::doTransactionFun(function() use(&$historyObj, &$historySearchConditon, &$historyData, &$cachePower, &$mainObj, &$modelObjCopy){
 
-        // $historyObj = $historyObj::firstOrCreate($historySearchConditon, $historyData);
-        $version_history_id = $historyObj->id;
-        // 如果主表有当前历史记录id,且值不等于最新的历史记录id,则更新主表当前历史记录id值
-        if(isset($mainObj->version_history_id) && $mainObj->version_history_id != $version_history_id){
-            $mainObj->version_history_id = $version_history_id;
-            if(isset($mainObj->version_num_history)) $mainObj->version_num_history = $historyObj->version_num ;
-            $mainObj->save();
+            // 查找历史表当前版本
+            static::firstOrCreate($historyObj, $historySearchConditon, $historyData );
 
-            // 开通缓存，则更新缓存时间信息
-            if($cachePower > 0){
-                $dataCacheArr = is_object($mainObj) ? $mainObj->toArray() : $mainObj;
-                static::updateTimeByData($modelObjCopy, $dataCacheArr, 2, false, []);
+            // $historyObj = $historyObj::firstOrCreate($historySearchConditon, $historyData);
+            $version_history_id = $historyObj->id;
+            // 如果主表有当前历史记录id,且值不等于最新的历史记录id,则更新主表当前历史记录id值
+            if(isset($mainObj->version_history_id) && $mainObj->version_history_id != $version_history_id){
+                $mainObj->version_history_id = $version_history_id;
+                if(isset($mainObj->version_num_history)) $mainObj->version_num_history = $historyObj->version_num ;
+
+                // 开通缓存，则更新缓存时间信息--更新缓存优先
+                if($cachePower > 0){
+                    // $mainObjCopyCache = Tool::copyObject($modelObjCopy);
+                    $dataCacheArr = is_object($mainObj) ? $mainObj->toArray() : $mainObj;
+                    static::updateTimeByData($modelObjCopy, $dataCacheArr, 2, false, []);
+                }
+
+                $mainObj->save();
+
             }
-        }
-        return $version_history_id;// $historyObj->id ;
+            return $version_history_id;// $historyObj->id ;
+        });
     }
 
     /**
@@ -1827,7 +1839,7 @@ class CommonDB
         if(empty($historyInfoObj)) return $diffArr;// 没有历史记录,不用更新版本
 
         // 忽略的比较字段
-        $ignoreFields = array_merge($ignoreFields,['id', 'version_history_id', 'version_num_history', 'created_at', 'updated_at', 'version_num', 'staff_id', 'operate_staff_id_history']);
+        $ignoreFields = array_merge($ignoreFields,['id', 'created_at', 'updated_at', 'version_num', 'version_history_id', 'version_num_history']);//, 'version_history_id', 'version_num_history' , 'staff_id', 'operate_staff_id_history'
 
         // 比较字段
         foreach($historyColumns as $field){
@@ -1839,13 +1851,17 @@ class CommonDB
         if(!empty($diffArr)){// 有不同的值，则需要版本号+1
             if ($forceIncVersion) {
                 $mainObj->version_num++;
-                $mainObj->save();
 
-                // 开通缓存，则更新缓存时间信息
-                if($cachePower > 0){
-                    $dataCacheArr = is_object($mainObj) ? $mainObj->toArray() : $mainObj;
-                    static::updateTimeByData($modelObjCopy, $dataCacheArr, 2, false, []);
-                }
+                static::doTransactionFun(function() use(&$cachePower, &$modelObjCopy, &$mainObj){
+
+                    // 开通缓存，则更新缓存时间信息
+                    if($cachePower > 0){
+                        $dataCacheArr = is_object($mainObj) ? $mainObj->toArray() : $mainObj;
+                        static::updateTimeByData($modelObjCopy, $dataCacheArr, 2, false, []);
+                    }
+                    $mainObj->save();
+                });
+
             }
             return $diffArr;
         }

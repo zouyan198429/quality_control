@@ -16,7 +16,9 @@ class StaffDBBusiness extends BasePublicDBBusiness
     public static $model_name = 'QualityControl\Staff';
     public static $table_name = 'staff';// 表名称
     public static $record_class = __CLASS__;// 当前的类名称 App\Business\***\***\**\***
-
+    // 历史表对比时 忽略历史表中的字段，[一维数组] - 必须会有 [历史表中对应主表的id字段]  格式 ['字段1','字段2' ... ]；
+    // 注：历史表不要重置此属性
+    public static $ignoreFields = ['staff_id', 'firstlogintime', 'lastlogintime'];
 
     /**
      * 对比主表和历史表是否相同，相同：不更新版本号，不同：版本号+1
@@ -35,7 +37,7 @@ class StaffDBBusiness extends BasePublicDBBusiness
         // $mainDBObj = null ;
         // $historyDBObj = null ;
         return static::compareHistoryOrUpdateVersion($mainDBObj, $id, StaffHistoryDBBusiness::$model_name
-            , StaffHistoryDBBusiness::$table_name, $historyDBObj, $historySearch, ['staff_id'], $forceIncVersion);
+            , StaffHistoryDBBusiness::$table_name, $historyDBObj, $historySearch, static::$ignoreFields, $forceIncVersion);
     }
 
     /**
@@ -145,6 +147,10 @@ class StaffDBBusiness extends BasePublicDBBusiness
 
             if( isset($saveData['mobile']) && static::judgeFieldExist($company_id, $id ,"mobile", $saveData['mobile'], [['admin_type', $saveData['admin_type']]],1)){
                 throws('手机号已存在！');
+            }
+            // 如果是企业，则要判断企业名称是否已经存在
+            if( isset($saveData['admin_type']) &&  isset($saveData['company_name']) && $saveData['admin_type'] == 2 &&  static::judgeFieldExist($company_id, $id ,"company_name", $saveData['company_name'], [['admin_type', $saveData['admin_type']]],1)){
+                throws('单位名称已存在！');
             }
 
             // 是否有图片资源
@@ -1058,7 +1064,6 @@ class StaffDBBusiness extends BasePublicDBBusiness
             Tool::appendParamQuery($saveQueryParams, $id, 'id');
             Tool::appendParamQuery($saveQueryParams, $organize_id, 'company_id', [0, '0', ''], ',', false);
             $modifyNum = static::save($updateData, $saveQueryParams);
-            DB::commit();
         });
         return $modifyNum;
     }

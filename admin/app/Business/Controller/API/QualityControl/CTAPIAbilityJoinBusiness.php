@@ -204,11 +204,11 @@ class CTAPIAbilityJoinBusiness extends BasicPublicCTAPIBusiness
         $retry_no = CommonRequest::get($request, 'retry_no');
         if(is_numeric($retry_no) && $retry_no >= 0 )  array_push($queryParams['where'], ['retry_no', '=', $retry_no]);
 
-        $status = CommonRequest::getInt($request, 'status');
-        if($status > 0 )  array_push($queryParams['where'], ['status', '=', $status]);
+//        $status = CommonRequest::getInt($request, 'status');
+//        if($status > 0 )  array_push($queryParams['where'], ['status', '=', $status]);
 
-//        $status = CommonRequest::get($request, 'status');
-//        if(strlen($status) > 0 && $status != 0)  Tool::appendParamQuery($queryParams, $status, 'status', [0, '0', ''], ',', false);
+        $status = CommonRequest::get($request, 'status');
+        if(strlen($status) > 0 && $status != 0)  Tool::appendParamQuery($queryParams, $status, 'status', [0, '0', ''], ',', false);
 
         $is_sample = CommonRequest::getInt($request, 'is_sample');
         if($is_sample > 0 )  array_push($queryParams['where'], ['is_sample', '=', $is_sample]);
@@ -260,6 +260,20 @@ class CTAPIAbilityJoinBusiness extends BasicPublicCTAPIBusiness
                 , 1// 企业名称
                 ,'',''
                 ,[], ['where' => [['admin_type', 2]]], '', []),
+            // 获得企业名称 企业--证书编号 -- 证书使用  1:1
+            'company_info_certificate' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
+                , ['admin_type' => 'admin_type', 'staff_id' => 'id']
+                , 1
+                , 64// 企业名称 企业--证书编号
+                ,'',''
+                ,[], ['where' => [['admin_type', 2]]], '', []),
+            // 获得证书设置信息
+            'ability_code_info' => CTAPIAbilityCodeBusiness::getTableRelationConfigInfo($request, $controller
+                , ['join_year' => 'number_year']
+                , 1
+                , 1// 企业名称
+                ,'',''
+                ,[], [], '', []),
             // 报名项目 1:n -- 读取到报名项
             'join_items' => CTAPIAbilityJoinItemsBusiness::getTableRelationConfigInfo($request, $controller
                 , ['id' => 'ability_join_id']
@@ -368,6 +382,19 @@ class CTAPIAbilityJoinBusiness extends BasicPublicCTAPIBusiness
 ////                                ,[], ['orderBy' => ['sample_one'=>'asc', 'id'=>'desc']], '', []),
 //                        ], [], '', []),
                 ], [], '', []),
+            // 报名项目 1:n -- 读取到报名项 --证书页使用
+            'join_items_print' => CTAPIAbilityJoinItemsBusiness::getTableRelationConfigInfo($request, $controller
+                , ['id' => 'ability_join_id']
+                , 2
+                ,0
+                ,'','',[
+                    // 下一级关系 报名项所属的项目 -- 的名称 1:1
+                    'ability_info' => CTAPIAbilitysBusiness::getTableRelationConfigInfo($request, $controller
+                        , ['ability_id' => 'id']
+                        , 1, 2// 项目名称  测试4
+                        ,'',''
+                        ,[], [], '', []),
+                ], ['whereIn' => ['result_status' => [2,16],'status' => [16, 64] ]], '', []),
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }
@@ -397,5 +424,56 @@ class CTAPIAbilityJoinBusiness extends BasicPublicCTAPIBusiness
         return $return_data;
     }
     // ****表关系***需要重写的方法**********结束***********************************
+
+
+    /**
+     *  批量 或 单条数据 操作(标记打印操作)
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param string $id 记录id，多个用逗号分隔
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  int 修改的数量   array 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function printAjax(Request $request, Controller $controller, $id = 0, $notLog = 0)
+    {
+        $company_id = $controller->company_id;
+        $user_id = $controller->user_id;
+        // 调用新加或修改接口
+        $apiParams = [
+            'company_id' => $company_id,
+            'id' => $id,
+            'operate_staff_id' => $user_id,
+            'modifAddOprate' => 0,
+        ];
+        $modifyNum = static::exeDBBusinessMethodCT($request, $controller, '',  'printById', $apiParams, $company_id, $notLog);
+        return $modifyNum;
+    }
+
+    /**
+     *  批量 或 单条数据 操作(标记证书领取操作)
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param string $id 记录id，多个用逗号分隔
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  int 修改的数量   array 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function grantAjax(Request $request, Controller $controller, $id = 0, $notLog = 0)
+    {
+        $company_id = $controller->company_id;
+        $user_id = $controller->user_id;
+        // 调用新加或修改接口
+        $apiParams = [
+            'company_id' => $company_id,
+            'id' => $id,
+            'operate_staff_id' => $user_id,
+            'modifAddOprate' => 0,
+        ];
+        $modifyNum = static::exeDBBusinessMethodCT($request, $controller, '',  'grantById', $apiParams, $company_id, $notLog);
+        return $modifyNum;
+    }
 
 }

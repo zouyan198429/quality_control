@@ -14,18 +14,18 @@ function needCLodop(){
 	var verOPR=ua.match(/OPR\D?\d+/i);
 	var verFF=ua.match(/Firefox\D?\d+/i);
 	var x64=ua.match(/x64/i);
-	if ((verTrident==null)&&(verIE==null)&&(x64!==null)) 
+	if ((verTrident==null)&&(verIE==null)&&(x64!==null))
 		return true; else
 	if ( verFF !== null) {
 		verFF = verFF[0].match(/\d+/);
 		if ( verFF[0] >= 42 ) return true;
-	} else 
+	} else
 	if ( verOPR !== null) {
 		verOPR = verOPR[0].match(/\d+/);
 		if ( verOPR[0] >= 32 ) return true;
-	} else 
+	} else
 	if ((verTrident==null)&&(verIE==null)) {
-		var verChrome=ua.match(/Chrome\D?\d+/i);		
+		var verChrome=ua.match(/Chrome\D?\d+/i);
 		if ( verChrome !== null ) {
 			verChrome = verChrome[0].match(/\d+/);
 			if (verChrome[0]>=42) return true;
@@ -71,13 +71,13 @@ function getLodop(oOBJECT,oEMBED){
              $("body").prepend(strCLodopInstall);
                  return;
             } else {
-	         if (CLODOP.CVERSION<"2.0.4.0") { 
+	         if (CLODOP.CVERSION<"2.0.4.0") {
 			if (isIE) document.write(strCLodopUpdate); else
 			document.documentElement.innerHTML=strCLodopUpdate+document.documentElement.innerHTML;
                 //$("body").prepend(strCLodopInstall);
 		 };
 		 if (oEMBED && oEMBED.parentNode) oEMBED.parentNode.removeChild(oEMBED);
-		 if (oOBJECT && oOBJECT.parentNode) oOBJECT.parentNode.removeChild(oOBJECT);	
+		 if (oOBJECT && oOBJECT.parentNode) oOBJECT.parentNode.removeChild(oOBJECT);
 	    };
         } else {
             var is64IE  = isIE && (navigator.userAgent.indexOf('x64')>=0);
@@ -139,3 +139,42 @@ function PrintOneURL(printUrl){
     LODOP.PRINT();
 }
 
+//打印证书
+function PrintCertificateURL(printUrl,intOrient,intPageWidth,intPageHeight,strPageName){
+    intOrient = intOrient || 3;
+    LODOP=getLodop();
+    if(typeof(LODOP) == 'undefined') {
+        return ;
+    }
+    LODOP.SET_LICENSES("","C8171E2E3C575B2C45D4E538794A758C","C94CEE276DB2187AE6B65D56B3FC2848","");
+    LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_按网址打印");
+    LODOP.ADD_PRINT_URL(0,0,"100%","100%", printUrl);
+    LODOP.SET_PRINT_STYLEA(0,"HOrient",3);
+    LODOP.SET_PRINT_STYLEA(0,"VOrient",3);
+//		LODOP.SET_SHOW_MODE("MESSAGE_GETING_URL",""); //该语句隐藏进度条或修改提示信息
+//		LODOP.SET_SHOW_MODE("MESSAGE_PARSING_URL","");//该语句隐藏进度条或修改提示信息
+//     LODOP.SET_PRINT_PAGESIZE(3,580,45,"");
+    LODOP.SET_PRINT_PAGESIZE(intOrient,intPageWidth,intPageHeight,strPageName);
+    //LODOP.PREVIEW();
+    LODOP.PRINT();
+}
+// https://www.it610.com/article/2094844.htm  打印函数LODOP.SET_PRINT_PAGESIZE
+// SET_PRINT_PAGESIZE(intOrient,intPageWidth,intPageHeight,strPageName);
+//
+// 参数含义：
+// intOrient：打印方向及纸张类型
+// 值为1---纵向打印，固定纸张；
+// 值为2---横向打印，固定纸张；
+// 值为3---纵向打印，宽度固定，高度按打印内容的高度自适应；
+// 0(或其它)----打印方向由操作者自行选择或按打印机缺省设置。
+// intPageWidth：
+// 纸张宽，单位为0.1mm 譬如该参数值为45，则表示4.5mm,计量精度是0.1mm。
+//
+// intPageHeight：
+// 固定纸张时该参数是纸张高；高度自适应时该参数是纸张底边的空白高，计量单位与纸张宽一样。
+//
+// strPageName：
+// 纸张名，必须intPageWidth等于零时本参数才有效，有如下选择：
+// Letter, LetterSmall, Tabloid, Ledger, Legal,Statement, Executive,
+//     A3, A4, A4Small, A5, B4, B5, Folio, Quarto, qr10X14, qr11X17, Note,
+//     Env9, Env10, Env11, Env12,Env14, Sheet, DSheet, ESheet

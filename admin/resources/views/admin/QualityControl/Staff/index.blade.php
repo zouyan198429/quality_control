@@ -142,8 +142,8 @@
         <col width="100">
         <col>
         <col>
-        <col width="160">
-        <col width="250">
+        <col width="90">
+        <col width="125">
     </colgroup>
     <thead>
     <tr>

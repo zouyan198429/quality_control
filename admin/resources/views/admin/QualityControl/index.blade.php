@@ -253,6 +253,9 @@
                       <dd>
                           <a lay-href="{{ url('admin/ability_join') }}">用户报名</a>
                       </dd>
+                      <dd>
+                          <a lay-href="{{ url('admin/ability_code') }}">证书设置</a>
+                      </dd>
 {{--                      <dd>--}}
 {{--                          <a lay-href="{{ url('admin/ability_type') }}?company_grade=4">领域管理</a>--}}
 {{--                      </dd>--}}

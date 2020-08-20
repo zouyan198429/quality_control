@@ -180,7 +180,7 @@
         <col width="75" >
 
 {{--        <col width="75">--}}
-        <col width="160">
+        <col width="90">
 {{--        <col width="160">--}}
         <col width="250">
     </colgroup>

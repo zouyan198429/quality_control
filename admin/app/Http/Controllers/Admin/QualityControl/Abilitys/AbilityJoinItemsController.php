@@ -165,9 +165,10 @@ class AbilityJoinItemsController extends BasicController
      */
     public function infoItemResult(Request $request, &$reDataArr, &$info, $retry_no = 0){
         if(!is_numeric($retry_no) || $retry_no < 0) $retry_no = 0;
-
+        $info['retry_no'] = $retry_no;
         $relationFormatConfigs = CTAPIAbilityJoinItemsBusiness::getRelationConfigs($request, $this, ['ability_info', 'join_item_reslut_info_updata', 'project_submit_items_list'], []);// , 'join_items'
         CTAPIAbilityJoinItemsBusiness::formatRelationList( $request, $this, $info, $relationFormatConfigs);
+
         // 所用仪器
         $results_instrument_list = $info['join_item_reslut_info_updata']['results_instrument_list'] ?? [];
         // -- 没有，则默认加入一条为0的

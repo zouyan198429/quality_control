@@ -81,7 +81,7 @@ class Abilitys extends BasePublicModel
         '1' => '待开始',// 新建--开始报名
         '2' => '报名中',// 报名的时间段
         '4' => '进行中',// 已经过了报名时间--发完证书
-        '8' => '已结束',// 发完证书 或没有一个要发证的
+        '8' => '已结束',// 发完证书 或没有一个要发证的 --- 已公布结果了  且  证书都已经处理了，就完成了
 //        '16' => '已取消',// 报名中或进行中时，可取消--暂无此功能
     ];
 
@@ -92,8 +92,14 @@ class Abilitys extends BasePublicModel
         '4' => '已公布',// 已公布结果，可以进行证书相关的操作了
     ];
 
+    // 公布结果时间类型 1待指定  2立即公布 4  定时公布
+    public static $publishTypeArr = [
+        '1' => '待指定',// 初始状态
+        '2' => '立即公布',
+        '4' => '定时公布',
+    ];
     // 表里没有的字段
-    protected $appends = ['status_text', 'is_publish_text'];
+    protected $appends = ['status_text', 'is_publish_text', 'publish_type_text'];
 
     /**
      * 获取拥有者类型文字
@@ -115,6 +121,15 @@ class Abilitys extends BasePublicModel
         return static::$isPublishArr[$this->is_publish] ?? '';
     }
 
+    /**
+     * 获取公布结果时间类型文字
+     *
+     * @return string
+     */
+    public function getPublishTypeTextAttribute()
+    {
+        return static::$publishTypeArr[$this->publish_type] ?? '';
+    }
     /**
      * 获取项目标准-二维
      */

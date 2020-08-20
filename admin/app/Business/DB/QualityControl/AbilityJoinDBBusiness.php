@@ -15,6 +15,9 @@ class AbilityJoinDBBusiness extends BasePublicDBBusiness
     public static $model_name = 'QualityControl\AbilityJoin';
     public static $table_name = 'ability_join';// 表名称
     public static $record_class = __CLASS__;// 当前的类名称 App\Business\***\***\**\***
+    // 历史表对比时 忽略历史表中的字段，[一维数组] - 必须会有 [历史表中对应主表的id字段]  格式 ['字段1','字段2' ... ]；
+    // 注：历史表不要重置此属性
+    public static $ignoreFields = [];
 
     /**
      * 根据id新加或修改单条数据-id 为0 新加，返回新的对象数组[-维],  > 0 ：修改对应的记录，返回true
@@ -315,9 +318,15 @@ class AbilityJoinDBBusiness extends BasePublicDBBusiness
                 // 验证结果 2满意  16满意【补测满意】 不可取样
                 if(in_array($status, [16, 32, 64]) || in_array($result_status, [2, 16])) continue;
 
+                $ability_id = $join_item_info['ability_id'];
+                $ability_info = AbilitysDBBusiness::getInfo($ability_id);
+                if(empty($ability_info)) throws('项目【' . $ability_id . '】 不存在！');
+                $duration_minute = $ability_info['duration_minute'];
+                $submit_off_time = Tool::addMinusDate(date('Y-m-d 23:59:59'), ['+' . $duration_minute . ' day'], 'Y-m-d H:i:s', 1, '时间');;
                 // 更新报名项目
                 $save_item_info = [
-
+                    'duration_minute' => $duration_minute,
+                    'submit_off_time' => $submit_off_time,
                 ];
                 if($retry_no == 0){
                     $save_item_info = array_merge($save_item_info, [
@@ -341,7 +350,9 @@ class AbilityJoinDBBusiness extends BasePublicDBBusiness
                 $updateFields = array_merge([
                     'status' => 2,
                     'is_sample' => 2,
-                    'sample_time' => $currentNow
+                    'sample_time' => $currentNow,
+                    'duration_minute' => $duration_minute,
+                    'submit_off_time' => $submit_off_time,
                 ], $appendArr);
                 $searchConditon = [
                     'ability_join_item_id' => $join_item_id,
@@ -412,6 +423,182 @@ class AbilityJoinDBBusiness extends BasePublicDBBusiness
         });
     }
 
+    /**
+     * 根据id操作(标记打印操作)单条或多条数据
+     *
+     * @param int  $company_id 企业id
+     * @param string/array $id id 数组或字符串
+     * @param int $operate_staff_id 操作人id
+     * @param int $modifAddOprate 修改时是否加操作人，1:加;0:不加[默认]
+     * @return  int 修改的数量   //  mixed array 记录id值，--一维数组
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function printById($company_id, $id = 0, $operate_staff_id = 0, $modifAddOprate = 0){
+        $modifyNum = 0;
+        // 没有需要处理的
+        if(!Tool::formatOneArrVals($id)) return $modifyNum;
+        $mainList = static::getDBFVFormatList(1, 1, ['id' => $id], false);
+        if(empty($mainList)) throws('记录不存在！');
+        // $info = static::getInfo($id);
+        foreach($mainList as $info){
+            $status = $info['status'];
+            $is_print = $info['is_print'];
+            if($status != 16 || $is_print != 1) throws('记录【' . $info['id'] . '】非待发证状态或非未打印证书，不可进行此操作！');
+        }
+
+        $currentNow = Carbon::now()->toDateTimeString();
+        $updateData = [
+            'is_print' => 2,
+            'print_time' => $currentNow
+        ];
+        // $ownProperty  自有属性值;
+        // $temNeedStaffIdOrHistoryId 当只有自己会用到时操作员工id和历史id时，用来判断是否需要获取 true:需要获取； false:不需要获取
+        list($ownProperty, $temNeedStaffIdOrHistoryId) = array_values(static::getNeedStaffIdOrHistoryId());
+        $operate_staff_id_history = 0;
+//        DB::beginTransaction();
+//        try {
+//        } catch ( \Exception $e) {
+//            DB::rollBack();
+////            throws('操作失败；信息[' . $e->getMessage() . ']');
+//            throws($e->getMessage());
+//        }
+        CommonDB::doTransactionFun(function() use(&$company_id, &$id, &$operate_staff_id, &$modifAddOprate, &$mainList, &$currentNow
+            , &$modifyNum, &$updateData, &$ownProperty, &$temNeedStaffIdOrHistoryId, &$operate_staff_id_history){
+            if($temNeedStaffIdOrHistoryId && $modifAddOprate) static::addOprate($updateData, $operate_staff_id,$operate_staff_id_history, 2);
+
+            $saveQueryParams = Tool::getParamQuery(['status' => 16, 'is_print' => 1],[], []);
+            // 加入 id
+            if(Tool::appendParamQuery($saveQueryParams, $id, 'id', [0, '0', ''], ',', false)){
+                $modifyNum = static::save($updateData, $saveQueryParams);
+
+
+                // 报名项 待发证 -> 已发证
+                $saveQuery = Tool::getParamQuery(['status' => 16, 'is_print' => 1],[], []);
+                Tool::appendParamQuery($saveQuery, $id, 'ability_join_id', [0, '0', ''], ',', false);
+                AbilityJoinItemsDBBusiness::save([
+                    'is_print' => 2,
+                    'print_time' => $currentNow
+                ], $saveQuery);
+
+                // 报名项单次 待发证 -> 已发证
+                $saveQuery = Tool::getParamQuery(['status' => 8, 'is_print' => 1],[], []);
+                Tool::appendParamQuery($saveQuery, $id, 'ability_join_id', [0, '0', ''], ',', false);
+                AbilityJoinItemsResultsDBBusiness::save([
+                    'is_print' => 2,
+                    'print_time' => $currentNow
+                ], $saveQuery);
+
+                $operateInfo = StaffDBBusiness::getInfo($operate_staff_id);
+                foreach($id as $tem_join_id){
+                    // 记录报名日志
+                    // 获得操作人员信息
+                    $logContent = '打印证书操作：';
+                    AbilityJoinLogsDBBusiness::saveAbilityJoinLog($operateInfo['admin_type'], $operate_staff_id, $tem_join_id, 0, $logContent, $operate_staff_id, $operate_staff_id_history);
+                }
+            }
+        });
+        return $modifyNum;
+    }
+
+    /**
+     * 根据id操作(标记证书领取操作) 单条或多条数据
+     *
+     * @param int  $company_id 企业id
+     * @param string/array $id id 数组或字符串
+     * @param int $operate_staff_id 操作人id
+     * @param int $modifAddOprate 修改时是否加操作人，1:加;0:不加[默认]
+     * @return  int 修改的数量   //  mixed array 记录id值，--一维数组
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function grantById($company_id, $id = 0, $operate_staff_id = 0, $modifAddOprate = 0){
+        $modifyNum = 0;
+        // 没有需要处理的
+        if(!Tool::formatOneArrVals($id)) return $modifyNum;
+        $mainList = static::getDBFVFormatList(1, 1, ['id' => $id], false);
+        if(empty($mainList)) throws('记录不存在！');
+        // $info = static::getInfo($id);
+        foreach($mainList as $info){
+            $status = $info['status'];
+            $is_print = $info['is_print'];
+            $is_grant = $info['is_grant'];
+            if($status != 16 || $is_print != 2 || $is_grant != 1) throws('记录【' . $info['id'] . '】非待发证状态或未打印证书或已领取，不可进行此操作！');
+
+        }
+        $currentNow = Carbon::now()->toDateTimeString();
+        $updateData = [
+            'status' => 64,
+            'is_grant' => 2,
+            'grant_time' => $currentNow
+        ];
+        // $ownProperty  自有属性值;
+        // $temNeedStaffIdOrHistoryId 当只有自己会用到时操作员工id和历史id时，用来判断是否需要获取 true:需要获取； false:不需要获取
+        list($ownProperty, $temNeedStaffIdOrHistoryId) = array_values(static::getNeedStaffIdOrHistoryId());
+        $operate_staff_id_history = 0;
+//        DB::beginTransaction();
+//        try {
+//        } catch ( \Exception $e) {
+//            DB::rollBack();
+////            throws('操作失败；信息[' . $e->getMessage() . ']');
+//            throws($e->getMessage());
+//        }
+        CommonDB::doTransactionFun(function() use(&$company_id, &$id, &$operate_staff_id, &$modifAddOprate, &$mainList, &$currentNow
+            , &$modifyNum, &$updateData, &$ownProperty, &$temNeedStaffIdOrHistoryId, &$operate_staff_id_history){
+            if($temNeedStaffIdOrHistoryId && $modifAddOprate) static::addOprate($updateData, $operate_staff_id,$operate_staff_id_history, 2);
+
+            $saveQueryParams = Tool::getParamQuery(['status' => 16, 'is_print' => 2, 'is_grant' => 1],[], []);
+            // 加入 id
+            if(Tool::appendParamQuery($saveQueryParams, $id, 'id', [0, '0', ''], ',', false)){
+                $modifyNum = static::save($updateData, $saveQueryParams);
+
+                // 报名项 待发证 -> 已发证
+                $saveQuery = Tool::getParamQuery(['status' => 16, 'is_print' => 2, 'is_grant' => 1],[], []);
+                Tool::appendParamQuery($saveQuery, $id, 'ability_join_id', [0, '0', ''], ',', false);
+                AbilityJoinItemsDBBusiness::save([
+                    'status'=> 64,
+                    'is_grant' => 2,
+                    'grant_time' => $currentNow
+                ], $saveQuery);
+
+                // 报名项单次 待发证 -> 已发证
+                $saveQuery = Tool::getParamQuery(['status' => 8, 'is_print' => 2, 'is_grant' => 1],[], []);
+                Tool::appendParamQuery($saveQuery, $id, 'ability_join_id', [0, '0', ''], ',', false);
+                AbilityJoinItemsResultsDBBusiness::save([
+                    'status'=> 32,
+                    'is_grant' => 2,
+                    'grant_time' => $currentNow
+                ], $saveQuery);
+
+                $operateInfo = StaffDBBusiness::getInfo($operate_staff_id);
+                foreach($id as $tem_join_id){
+                    // 记录报名日志
+                    // 获得操作人员信息
+                    $logContent = '领取证书操作：';
+                    AbilityJoinLogsDBBusiness::saveAbilityJoinLog($operateInfo['admin_type'], $operate_staff_id, $tem_join_id, 0, $logContent, $operate_staff_id, $operate_staff_id_history);
+
+                    // 判断证书是否都已经领取完，好标记项目为完成状态
+                    $join_item_list = AbilityJoinItemsDBBusiness::getDBFVFormatList(1, 1, ['ability_join_id' => $tem_join_id], false);
+                    foreach($join_item_list as $item_info){
+                        AbilitysDBBusiness::judgeAndDoComplete($item_info['ability_id']);
+//                        // 获得正在处理的一条记录
+//                        $queryParams = Tool::getParamQuery(['ability_id' => $item_info['ability_id']], ['sqlParams' =>['whereIn' => ['status' => [1,2,4,8]]]], []);
+//                        $resultDoingInfo = AbilityJoinItemsResultsDBBusiness::getInfoByQuery(1, $queryParams, []);
+//                        if(empty($resultDoingInfo)){
+//                            AbilitysDBBusiness::saveById([
+//                                'status' => 8,
+//                            ], $item_info['ability_id']);
+////
+////                            // 记录报名日志
+////                            // 获得操作人员信息
+////                            $logContent = '项目已结束操作：';
+////                            AbilityJoinLogsDBBusiness::saveAbilityJoinLog($operateInfo['admin_type'], $operate_staff_id, $tem_join_id, $item_info['id'], $logContent, $operate_staff_id, $operate_staff_id_history);
+//                        }
+                    }
+                }
+
+            }
+        });
+        return $modifyNum;
+    }
 
     /**
      * 根据id--指定数量 自增或自减

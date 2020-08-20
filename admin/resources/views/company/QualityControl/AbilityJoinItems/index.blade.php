@@ -44,10 +44,10 @@
                     <col >
                     <col width="75" >
                     <col width="105">
-                    <col >
-                    <col >
+                    <col  width="90">
+                    <col  width="90">
                     <col width="75">
-                    <col width="75">
+                    <col width="90">
                     <col width="80">
                     <col width="160">
                 </colgroup>
@@ -62,7 +62,7 @@
                     <th>发布时间</th>
                     <th>报名时间</th>
                     <th>是否取样</th>
-                    <th>上传数据</th>
+                    <th>上传数据<hr/>截止时间</th>
                     <th>验证结果</th>
                     <th>操作</th>
                 </tr>
@@ -113,6 +113,6 @@
       var IFRAME_SAMPLE_RESULT_INFO_URL = "{{url('company/ability_join_item/sample_result_info/')}}/"; // 获得指定测试序号的 单次测试数据 + id + retry_no
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/company/QualityControl/AbilityJoinItem.js?28') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/company/QualityControl/AbilityJoinItem.js') }}?30"  type="text/javascript"></script>
 </body>
 </html>

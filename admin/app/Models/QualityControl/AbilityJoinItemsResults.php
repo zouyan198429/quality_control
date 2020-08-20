@@ -128,8 +128,20 @@ class AbilityJoinItemsResults extends BasePublicModel
         '2' => '已评',
     ];
 
+
+    // 证书是否打印 1未打印 2 已打印
+    public static $isPrintArr = [
+        '1' => '未打印',
+        '2' => '已打印',
+    ];
+
+    // 证书是否领取 1未领取 2 已领取
+    public static $isGrantArr = [
+        '1' => '未领取',
+        '2' => '已领取',
+    ];
     // 表里没有的字段
-    protected $appends = ['admin_type_text', 'status_text', 'result_status_text', 'is_sample_text', 'retry_no_text', 'submit_status_text', 'judge_status_text'];
+    protected $appends = ['admin_type_text', 'status_text', 'result_status_text', 'is_sample_text', 'retry_no_text', 'submit_status_text', 'judge_status_text', 'is_print_text', 'is_grant_text'];
 
 
     /**
@@ -202,4 +214,25 @@ class AbilityJoinItemsResults extends BasePublicModel
     {
         return static::$judgeStatusArr[$this->judge_status] ?? '';
     }
+
+    /**
+     * 获取证书是否打印文字
+     *
+     * @return string
+     */
+    public function getIsPrintTextAttribute()
+    {
+        return static::$isPrintArr[$this->is_print] ?? '';
+    }
+
+    /**
+     * 获取证书是否领取文字
+     *
+     * @return string
+     */
+    public function getIsGrantTextAttribute()
+    {
+        return static::$isGrantArr[$this->is_grant] ?? '';
+    }
+
 }

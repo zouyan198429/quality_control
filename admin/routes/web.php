@@ -196,7 +196,7 @@ Route::get('admin/login', 'Admin\QualityControl\IndexController@login');//login.
 Route::get('admin/logout', 'Admin\QualityControl\IndexController@logout');// 注销--ok
 Route::get('admin/password', 'Admin\QualityControl\IndexController@password');//psdmodify.html 个人信息-修改密码--ok
 Route::get('admin/info', 'Admin\QualityControl\IndexController@info');//myinfo.html 个人信息--显示--ok
-//Route::get('admin/down_drive', 'Admin\QualityControl\IndexController@down_drive');// 下载网页打印机驱动
+Route::get('admin/down_drive', 'Admin\QualityControl\IndexController@down_drive');// 下载网页打印机驱动
 
 Route::get('admin/down_file', 'Admin\QualityControl\IndexController@down_file');// 下载文件
 // 系统管理员
@@ -237,6 +237,13 @@ Route::get('admin/citys/add/{id}', 'Admin\QualityControl\CitysController@add');/
 Route::get('admin/citys/export', 'Admin\QualityControl\CitysController@export');// 导出
 Route::get('admin/citys/import_template', 'Admin\QualityControl\CitysController@import_template');// 导入模版
 
+// 证书设置[一级分类]
+Route::get('admin/ability_code', 'Admin\QualityControl\AbilityCodeController@index');// 列表
+Route::get('admin/ability_code/add/{id}', 'Admin\QualityControl\AbilityCodeController@add');// 添加
+// Route::get('admin/ability_code/select', 'Admin\QualityControl\AbilityCodeController@select');// 选择-弹窗
+//Route::get('admin/ability_code/export', 'Admin\QualityControl\AbilityCodeController@export');// 导出
+//Route::get('admin/ability_code/import_template', 'Admin\QualityControl\AbilityCodeController@import_template');// 导入模版
+
 // 登录验证码 验证码
 Route::get('admin/sms_code', 'Admin\QualityControl\SmsCodeController@index');// 列表
 Route::get('admin/sms_code/add/{id}', 'Admin\QualityControl\SmsCodeController@add');// 添加
@@ -262,11 +269,11 @@ Route::get('admin/ability_type/import_template', 'Admin\QualityControl\AbilityTy
 Route::get('admin/abilitys', 'Admin\QualityControl\AbilitysController@index');// 列表
 Route::get('admin/abilitys/add/{id}', 'Admin\QualityControl\AbilitysController@add');// 添加
 Route::get('admin/abilitys/info/{id}', 'Admin\QualityControl\AbilitysController@info');// 查看-详情
-// Route::get('admin/abilitys/select', 'Admin\QualityControl\AbilitysController@select');// 选择-弹窗
+Route::get('admin/abilitys/select', 'Admin\QualityControl\AbilitysController@select');// 选择-弹窗
 Route::get('admin/abilitys/export', 'Admin\QualityControl\AbilitysController@export');// 导出
 Route::get('admin/abilitys/export_join/{ability_id}', 'Admin\QualityControl\AbilitysController@export_join');// 导出报名的企业信息
 Route::get('admin/abilitys/import_template', 'Admin\QualityControl\AbilitysController@import_template');// 导入模版
-
+Route::get('admin/abilitys/publish/{id}', 'Admin\QualityControl\AbilitysController@publish');// 公布结果页面
 //****************************************************************************
 // 能力验证管理
 Route::get('admin/abilitys_admin/{ability_id}', 'Admin\QualityControl\Abilitys\IndexController@index');// 首页
@@ -297,6 +304,7 @@ Route::get('admin/ability_join/info/{id}', 'Admin\QualityControl\AbilityJoinCont
 //Route::get('admin/ability_join/import_template', 'Admin\QualityControl\AbilityJoinController@import_template');// 导入模版
 
 Route::get('admin/ability_join/get_sample/{id}', 'Admin\QualityControl\AbilityJoinController@get_sample');// 取样
+Route::get('admin/ability_join/print/{id}', 'Admin\QualityControl\AbilityJoinController@print');// 打印证书
 
 // 企业能力附表
 Route::get('admin/company_schedule', 'Admin\QualityControl\CompanyScheduleController@index');// 列表

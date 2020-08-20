@@ -87,6 +87,22 @@ var otheraction = {
         }, function(){
         });
         return false;
+    },
+    iframePublish: function(id, ability_name){// 弹窗公布结果
+        //获得表单各name的值
+        var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
+        console.log(IFRAME_PUBLISH_URL);
+        console.log(data);
+        var url_params = get_url_param(data);// parent.get_url_param(data)
+        var weburl = IFRAME_PUBLISH_URL + id + '?' + url_params;
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = "公布结果-" + ability_name;//"添加/修改供应商";
+        layeriframe(weburl,tishi,950,600,IFRAME_MODIFY_CLOSE_OPERATE);
+        return false;
     }
 };
 (function() {
@@ -124,14 +140,14 @@ var otheraction = {
     document.write("            <td><%=item.first_submit_num%><hr/><%=item.repair_submit_num%><\/td>");
     document.write("            <td><%=item.first_success_num%><hr/><%=item.repair_success_num%><\/td>");
     document.write("            <td><%=item.first_fail_num%><hr/><%=item.repair_fail_num%><\/td>");
-    // document.write("            <td><%=item.is_publish_text%><hr/><%=item.publish_time%><\/td>");
+    document.write("            <td><%=item.is_publish_text%><hr/><%=item.publish_time%><\/td>");
     document.write("            <td><%=item.created_at%><\/td>");
     // document.write("            <td><%=item.updated_at%><\/td>");
     // document.write("            <td><%=item.sort_num%><\/td>");
     document.write("            <td>");
     document.write("                <%if( true){%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"action.show(<%=item.id%>)\">");
-    document.write("                    <i class=\"ace-icon fa fa-check bigger-60\"> 查看<\/i>");
+    document.write("                    <i class=\"ace-icon  fa fa-eye  bigger-60\"> 查看<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.export_join(<%=item.id%>)\">");
@@ -140,6 +156,11 @@ var otheraction = {
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.admin(<%=item.id%>)\">");
     document.write("                    <i class=\"ace-icon fa fa-pencil bigger-60\"> 管理<\/i>");
     document.write("                <\/a>");
+    document.write("                <%if( item.is_publish == 2 && item.status == 4){%>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.iframePublish(<%=item.id%>,'<%=item.ability_name%>')\">");
+    document.write("                    <i class=\"ace-icon fa fa-unlock bigger-60\"> 公布结果<\/i>");
+    document.write("                <\/a>");
+    document.write("                <%}%>");
     document.write("                <%if( can_modify){%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.iframeModify(<%=item.id%>)\">");
     document.write("                    <i class=\"ace-icon fa fa-pencil bigger-60\"> 编辑<\/i>");

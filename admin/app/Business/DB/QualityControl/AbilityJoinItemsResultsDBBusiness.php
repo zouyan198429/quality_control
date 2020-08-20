@@ -16,6 +16,9 @@ class AbilityJoinItemsResultsDBBusiness extends BasePublicDBBusiness
     public static $model_name = 'QualityControl\AbilityJoinItemsResults';
     public static $table_name = 'ability_join_items_results';// 表名称
     public static $record_class = __CLASS__;// 当前的类名称 App\Business\***\***\**\***
+    // 历史表对比时 忽略历史表中的字段，[一维数组] - 必须会有 [历史表中对应主表的id字段]  格式 ['字段1','字段2' ... ]；
+    // 注：历史表不要重置此属性
+    public static $ignoreFields = [];
 
     /**
      * 根据id新加或修改单条数据-id 为0 新加，返回新的对象数组[-维],  > 0 ：修改对应的记录，返回true
@@ -173,7 +176,7 @@ class AbilityJoinItemsResultsDBBusiness extends BasePublicDBBusiness
      * @param array $saveData 要保存或修改的数组 [ 'result_status' =>  2满意、4有问题、8不满意   16满意【补测满意】 ]
      * @param int  $company_id 企业id
      * @param int $id id
-     * @param int $operate_staff_id 操作人id
+     * @param int $operate_staff_id 操作人id--为0，测为系统脚本运行的--自动不满意
      * @param int $modifAddOprate 修改时是否加操作人，1:加;0:不加[默认]
      * @return  int 记录id值，
      * @author zouyan(305463219@qq.com)
@@ -186,8 +189,10 @@ class AbilityJoinItemsResultsDBBusiness extends BasePublicDBBusiness
         $status = $info['status'] ?? 0;// 状态1已报名  2已取样  4已传数据   8已判定 16已完成
         $info_result_status = $info['result_status'] ?? 0;// 验证结果1待判定  2满意、4有问题、8不满意   16满意【补测满意】
 
-        if($status != 4 || $info_result_status != 1) throws('非已传数据状态，不可进行此操作！');
-
+        // 人员操作的
+        if($operate_staff_id > 0 && ($status != 4 || $info_result_status != 1)) throws('非已传数据状态，不可进行此操作！');
+        // 脚本跑的
+        if($operate_staff_id <= 0 && ( !in_array($status, [2])|| $info_result_status != 1 )) throws('非已传数据状态，不可进行此操作！');
         $retry_no = $info['retry_no'] ?? 0;
         // 验证结果1待判定 2满意、4有问题、8不满意   16满意【补测满意】
         $resultStatus = AbilityJoinItemsResults::$resultStatusArr;
@@ -252,9 +257,12 @@ class AbilityJoinItemsResultsDBBusiness extends BasePublicDBBusiness
             // 记录报名日志
             // 获得操作人员信息
             $operateInfo = StaffDBBusiness::getInfo($operate_staff_id);
+            // 如果是脚本，测有为空的可能
+            $admin_type = $operateInfo['admin_type'] ?? 0;
             $logContent = '判定[' . $result_status_text . ']数据：' . json_encode($saveData);
-            // $ability_join_id = $resultDatas['ability_join_id'] ?? 0;
-            AbilityJoinLogsDBBusiness::saveAbilityJoinLog($operateInfo['admin_type'], $operate_staff_id, $ability_join_id, $ability_join_item_id, $logContent, $operate_staff_id, $operate_staff_id_history);
+            if($operate_staff_id <= 0) $logContent = '企业上传数据超时，系统自动做不满意处理。' . $logContent;
+                // $ability_join_id = $resultDatas['ability_join_id'] ?? 0;
+            AbilityJoinLogsDBBusiness::saveAbilityJoinLog($admin_type, $operate_staff_id, $ability_join_id, $ability_join_item_id, $logContent, $operate_staff_id, $operate_staff_id_history);
 
             // 4有问题、8不满意
             if(in_array($result_status, [4, 8])){
@@ -315,7 +323,7 @@ class AbilityJoinItemsResultsDBBusiness extends BasePublicDBBusiness
                         // $operateInfo = StaffDBBusiness::getInfo($operate_staff_id);
                         $logContent = '新建补测数据：' . json_encode(array_merge($updateFields, $searchConditon));
                         // $ability_join_id = $resultDatas['ability_join_id'] ?? 0;
-                        AbilityJoinLogsDBBusiness::saveAbilityJoinLog($operateInfo['admin_type'], $operate_staff_id, $ability_join_id, $ability_join_item_id, $logContent, $operate_staff_id, $operate_staff_id_history);
+                        AbilityJoinLogsDBBusiness::saveAbilityJoinLog($admin_type, $operate_staff_id, $ability_join_id, $ability_join_item_id, $logContent, $operate_staff_id, $operate_staff_id_history);
 
 
 
@@ -336,7 +344,7 @@ class AbilityJoinItemsResultsDBBusiness extends BasePublicDBBusiness
                             'judge_time' => $currentNow,
                         ],$id);
 
-                        //            报名项表 ability_join_items status 状态改为 32 无证 ； result_status ；是否评定  8  已评[补测] judge_time；
+                        // 报名项表 ability_join_items status 状态改为 32 无证 ； result_status ；是否评定  8  已评[补测] judge_time；
 
                         AbilityJoinItemsDBBusiness::saveById([
                             'status' => 32,
@@ -380,9 +388,17 @@ class AbilityJoinItemsResultsDBBusiness extends BasePublicDBBusiness
                         $queryParams = Tool::getParamQuery(['ability_id' => $ability_id], ['sqlParams' =>['whereIn' => ['status' => [1,2,4]]]], []);
                         $resultDoingInfo = static::getInfoByQuery(1, $queryParams, []);
                         if(empty($resultDoingInfo)){// 全都判定了
-                            AbilitysDBBusiness::saveById([
+                            $tem_ability_save = [
                                 'is_publish' => 2,
-                            ], $ability_id);
+                            ];
+                            // 没有一条要发证的
+//                            $queryParams = Tool::getParamQuery(['ability_id' => $ability_id], ['sqlParams' =>['whereIn' => ['status' => [1,2,4,8]]]], []);
+//                            $resultGrantInfo = static::getInfoByQuery(1, $queryParams, []);
+//                            if(empty($resultGrantInfo)) $tem_ability_save['status'] = 8;
+
+                            // AbilitysDBBusiness::saveById($tem_ability_save, $ability_id);
+                            $queryUpdateParams = Tool::getParamQuery(['id' => $ability_id, 'is_publish' => 1 ], [], []);
+                            AbilitysDBBusiness::save($tem_ability_save, $queryUpdateParams);
                         }
                         break;
                     default:
@@ -397,7 +413,6 @@ class AbilityJoinItemsResultsDBBusiness extends BasePublicDBBusiness
                     'judge_status' => 2,
                     'judge_time' => $currentNow,
                 ],$id);
-
                 // 报名项表 ability_join_items status  status 状态改为 16 待发证 ； result_status ；是否评定  2 已评 judge_time；
 
                 AbilityJoinItemsDBBusiness::saveById([
@@ -436,16 +451,53 @@ class AbilityJoinItemsResultsDBBusiness extends BasePublicDBBusiness
                 //    还有没有要判定的  有  : 状态不变
                 //                      没有（全都判定时）：  状态 不变  is_publish 2 待公布；
                 // 获得正在处理的一条记录
+
                 $queryParams = Tool::getParamQuery(['ability_id' => $ability_id], ['sqlParams' =>['whereIn' => ['status' => [1,2,4]]]], []);
+
                 $resultDoingInfo = static::getInfoByQuery(1, $queryParams, []);
                 if(empty($resultDoingInfo)){
-                    AbilitysDBBusiness::saveById([
+//                    AbilitysDBBusiness::saveById([
+//                        'is_publish' => 2,
+//                    ], $ability_id);
+                    $queryUpdateParams = Tool::getParamQuery(['id' => $ability_id, 'is_publish' => 1 ], [], []);
+
+                    AbilitysDBBusiness::save([
                         'is_publish' => 2,
-                    ], $ability_id);
+                    ],$queryUpdateParams);
                 }
             }
         });
         return $id;
+    }
+
+    // 如果企业没有按时提交数据，则自动判定结果为不满意--上传数据超时
+    public static function autosSubmitOverTime(){
+        $dateTime =  date('Y-m-d H:i:s');
+        // 读取所有未开始的
+//        $queryParams = [
+//            'where' => [
+//                // ['status', 2],
+//                ['join_end_date', '<=', $dateTime],
+//            ],
+//            'whereIn' => [ 'status' => [1,2]],
+//            'select' => ['id' ]
+//        ];
+        $queryParams = Tool::getParamQuery(['is_sample' => 2, 'submit_status' => 1, 'status' => 2], ['sqlParams' =>['select' =>['id' ], 'where' => [['submit_off_time', '<=', $dateTime]]]], []);
+        $dataList = static::getAllList($queryParams, [])->toArray();
+
+        if(!empty($dataList)){
+            $ids = array_values(array_unique(array_column($dataList,'id')));
+            // 自动进行不满意操作
+            foreach($ids as $tem_id){
+                $saveData = [
+                    'result_status' => 8,// 不满意
+                ];
+                $company_id = 0;
+                $user_id = 0;
+                $modifAddOprate = 0;
+                static::judgeResultById($saveData, $company_id, $tem_id, $user_id, $modifAddOprate);
+            }
+        }
     }
 
     /**
@@ -492,4 +544,5 @@ class AbilityJoinItemsResultsDBBusiness extends BasePublicDBBusiness
         $info = static::getInfoByQuery(1, $queryParams, []);
         return $info;
     }
+
 }

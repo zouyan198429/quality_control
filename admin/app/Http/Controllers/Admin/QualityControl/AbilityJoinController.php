@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\QualityControl;
 
 use App\Business\Controller\API\QualityControl\CTAPIAbilityJoinBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIAbilityJoinItemsBusiness;
 use App\Http\Controllers\WorksController;
 use App\Models\QualityControl\AbilityJoin;
 use App\Services\Request\CommonRequest;
@@ -108,35 +109,72 @@ class AbilityJoinController extends BasicController
      */
     public function get_sample(Request $request,$id = 0)
     {
-        $reDataArr = [];// 可以传给视图的全局变量数组
-        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request, &$id){
-            // 正常流程的代码
+//        $reDataArr = [];// 可以传给视图的全局变量数组
+//        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request, &$id){
+//            // 正常流程的代码
+//
+//            $this->InitParams($request);
+//            // $reDataArr = $this->reDataArr;
+//            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+//
+//            return view('admin.QualityControl.AbilityJoin.get_sample', $reDataArr);
+//
+//        }, $this->errMethod, $reDataArr, $this->errorView);
+        return $this->exeDoPublicFun($request, 0, 8, 'admin.QualityControl.AbilityJoin.get_sample', true
+            , '', [], function (&$reDataArr) use ($request, &$id){
 
-            $this->InitParams($request);
-            // $reDataArr = $this->reDataArr;
-            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+                if(!is_numeric($id) || $id <= 0){
+                    throws('参数[id]有误！');
+                }
+                $operate = "取样";
+                // $handleKeyArr = ['joinItems'];
+                $extParams = [
+                    // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                    'relationFormatConfigs'=> CTAPIAbilityJoinBusiness::getRelationConfigs($request, $this, ['company_info_data' ,'join_items_get'], []),// , 'join_items'
+                ];
 
-            if(!is_numeric($id) || $id <= 0){
-                throws('参数[id]有误！');
-            }
-            $operate = "取样";
-            // $handleKeyArr = ['joinItems'];
-            $extParams = [
-                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-                'relationFormatConfigs'=> CTAPIAbilityJoinBusiness::getRelationConfigs($request, $this, ['company_info_data' ,'join_items_get'], []),// , 'join_items'
-            ];
+                $info = CTAPIAbilityJoinBusiness::getInfoData($request, $this, $id, [], '', $extParams);
+                // $reDataArr = array_merge($reDataArr, $resultDatas);
+                if(empty($info)) {
+                    throws('记录不存在！');
+                }
 
-            $info = CTAPIAbilityJoinBusiness::getInfoData($request, $this, $id, [], '', $extParams);
-            // $reDataArr = array_merge($reDataArr, $resultDatas);
-            if(empty($info)) {
-                throws('记录不存在！');
-            }
+                $reDataArr['info'] = $info;
+                $reDataArr['operate'] = $operate;
+            });
+    }
 
-            $reDataArr['info'] = $info;
-            $reDataArr['operate'] = $operate;
-            return view('admin.QualityControl.AbilityJoin.get_sample', $reDataArr);
+    /**
+     * 取样
+     *
+     * @param Request $request
+     * @param int $id
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function print(Request $request,$id = 0)
+    {
+        return $this->exeDoPublicFun($request, 0, 8, 'admin.QualityControl.AbilityJoin.print', false
+            , '', [], function (&$reDataArr) use ($request, &$id){
 
-        }, $this->errMethod, $reDataArr, $this->errorView);
+                if(!is_numeric($id) || $id <= 0){
+                    throws('参数[id]有误！');
+                }
+                $operate = "打印证书";
+                // $handleKeyArr = ['joinItems'];
+                $extParams = [
+                    // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                    'relationFormatConfigs'=> CTAPIAbilityJoinBusiness::getRelationConfigs($request, $this, ['company_info_certificate' ,'join_items_print', 'ability_code_info'], []),// , 'join_items'
+                ];
+
+                $info = CTAPIAbilityJoinBusiness::getInfoData($request, $this, $id, [], '', $extParams, 1);
+                // $reDataArr = array_merge($reDataArr, $resultDatas);
+                if(empty($info)) {
+                    throws('记录不存在！');
+                }
+                $reDataArr['info'] = $info;
+                $reDataArr['operate'] = $operate;
+            });
     }
 
     /**
@@ -454,6 +492,42 @@ class AbilityJoinController extends BasicController
      * @return mixed
      * @author zouyan(305463219@qq.com)
      */
+    public function ajax_search_print(Request $request){
+        return $this->exeDoPublicFun($request, 0, 4,'', true, '', [], function (&$reDataArr) use ($request){
+            $mergeParams = [
+                'status' => '16,64',// 类型1平台2企业4个人
+            ];
+            CTAPIAbilityJoinBusiness::mergeRequest($request, $this, $mergeParams);
+
+            $relations = [];//  ['siteResources']
+            // $handleKeyArr = ['company'];
+
+            $extParams = [
+                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                // 'relationFormatConfigs'=> CTAPIAbilityJoinBusiness::getRelationConfigs($request, $this, ['company_info'], []),
+            ];
+            $result = CTAPIAbilityJoinBusiness::getList($request, $this, 1, [], $relations, $extParams);
+            $data_list = $result['result']['data_list'] ?? [];
+            $need_operate_ids = [];// 需要进行打印操作的id数组
+            foreach($data_list as $info){
+                $tem_id = $info['id'];
+                $tem_is_print = $info['is_print'];
+                if($tem_is_print == 1) array_push($need_operate_ids, $tem_id);
+            }
+            if(!empty($need_operate_ids)) CTAPIAbilityJoinBusiness::printAjax($request, $this, implode(',', $need_operate_ids));
+
+            $re_ids = array_column($data_list, 'id');
+            return ajaxDataArr(1, ['ids' => $re_ids], '');
+        });
+    }
+
+    /**
+     * ajax获得列表数据
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
 //    public function ajax_get_ids(Request $request){
 //        $this->InitParams($request);
 //        $result = CTAPIAbilityJoinBusiness::getList($request, $this, 1 + 0);
@@ -537,6 +611,36 @@ class AbilityJoinController extends BasicController
 //            return CTAPIRrrDdddBusiness::delAjax($request, $this);
 //        });
 //    }
+
+    /**
+     * ajax操作(标记打印操作)
+     *
+     * @param int $id
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_print(Request $request)
+    {
+        $this->InitParams($request);
+        $id = CommonRequest::get($request, 'id');// 报名id
+        $modifyNum = CTAPIAbilityJoinBusiness::printAjax($request, $this, $id);
+        return ajaxDataArr(1, ['modify_num' => $modifyNum], '');
+    }
+
+    /**
+     * ajax操作(标记证书领取操作)
+     *
+     * @param int $id
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_grant(Request $request)
+    {
+        $this->InitParams($request);
+        $id = CommonRequest::get($request, 'id');// 报名id
+        $modifyNum = CTAPIAbilityJoinBusiness::grantAjax($request, $this, $id);
+        return ajaxDataArr(1, ['modify_num' => $modifyNum], '');
+    }
 
     /**
      * ajax根据部门id,小组id获得所属部门小组下的员工数组[kv一维数组]

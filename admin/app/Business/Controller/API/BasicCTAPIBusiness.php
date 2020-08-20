@@ -135,7 +135,7 @@ class BasicCTAPIBusiness extends APIOperate
      *  $fieldValParams = [
      *      'ability_join_id' => [// 格式一
      *          'vals' => "字段值[可以是字符'多个逗号分隔'或一维数组] ",// -- 此种格式，必须指定此下标【值下标】
-     *          'excludeVals' => "过滤掉的值 默认[0, '0', '']",
+     *          'excludeVals' => "过滤掉的值 默认[''];// [0, '0', '']",
      *          'valsSeparator' => ',' 如果是多值字符串，多个值的分隔符;默认逗号 ,
      *          'hasInIsMerge=>  false 如果In条件有值时  true:合并；false:用新值--覆盖 --默认
      *      ],// 格式二
@@ -190,7 +190,7 @@ class BasicCTAPIBusiness extends APIOperate
             // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
         ];
         foreach($fieldValParams as $field => $valConfig){
-            $excludeVals = [0, '0', ''];
+            $excludeVals = [''];// [0, '0', ''];
             $fieldVals = [];
             // 是数组
             if(is_array($valConfig) && isset($valConfig['vals'])){
@@ -1771,9 +1771,10 @@ class BasicCTAPIBusiness extends APIOperate
                 $relationInfo['extParams']['formatDataUbound']['exceptUboundArr'] = $exceptUboundArr;
             }
 
-//            if($toObjClass == 'App\Business\Controller\API\QualityControl\CTAPICompanyCertificateBusiness'){
-//                pr($extParams);
-//            }
+//            if($toObjClass == 'App\Business\Controller\API\QualityControl\CTAPIAbilityJoinItemsResultsBusiness'){
+////                // pr($extParams);
+////                pr($fieldValParams);
+////            }
             $toDataList =  $toObjClass::getFVFormatList( $request,  $controller, 1, 1, $fieldValParams, $fieldEmptyQuery, $relations, $extParams);
             if(!$isNeedHandle && !empty($toDataList)) $isNeedHandle = true;
             if(!empty($toDataList)){

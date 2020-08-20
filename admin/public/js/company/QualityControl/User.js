@@ -269,7 +269,7 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
     document.write("            <td>");
     document.write("                <%if( false){%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"action.show(<%=item.id%>)\">");
-    document.write("                    <i class=\"ace-icon fa fa-check bigger-60\"> 查看<\/i>");
+    document.write("                    <i class=\"ace-icon  fa fa-eye  bigger-60\"> 查看<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
     document.write("                <%if(can_modify && item.open_status == 1){%>");

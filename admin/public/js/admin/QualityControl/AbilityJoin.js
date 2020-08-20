@@ -49,9 +49,294 @@ var otheraction = {
         console.log('weburl', weburl);
         layeriframe(weburl,tishi,700,450,0);
         return false;
+    },
+    print:function(operate_type, id, title, is_print){// 查看/打印证书 operate_type: 操作类型 1 查看  2 打印
+        //获得表单各name的值
+        var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
+        console.log(IFRAME_PRINT_URL);
+        console.log(data);
+        var url_params = get_url_param(data);// parent.get_url_param(data)
+        var weburl = IFRAME_PRINT_URL + id + '?' + url_params;
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+
+        var operateText = "查看证书";
+        var tishi = '';
+        if(operate_type == 2){// 打印
+            operateText = "打印证书";
+            // tishi = operateText + tishi;
+            printInfoPage(id, is_print, weburl, title);
+        }else{// 查看
+            tishi = operateText + tishi + title;
+            layeriframe(weburl,tishi,950,600,IFRAME_MODIFY_CLOSE_OPERATE);
+        }
+        return false;
+    },
+    grant : function(id, title){
+        var operateText = '领取证书-' + title;
+        var index_query = layer.confirm('确定' + operateText + '？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            other_operate_ajax('grant', id, operateText, {});
+            layer.close(index_query);
+        }, function(){
+        });
+        return false;
+    },
+    printInfo: function(id, title){//
+        var operateText = '打印证书-' + title;
+        var index_query = layer.confirm('确定' + operateText + '？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            other_operate_ajax('print', id, operateText, {});
+            layer.close(index_query);
+        }, function(){
+        });
+        return false;
+    },
+    downDrive : function(obj){// 下载网页打印机驱动
+        var recordObj = $(obj);
+        var index_query = layer.confirm('确定下载网页打印机驱动？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            down_drive();
+            layer.close(index_query);
+        }, function(){
+        });
+        return false;
+    },
+    printSelected: function(obj){// 打印勾选的
+        var recordObj = $(obj);
+        // var operateText = '打印勾选记录证书';
+        // var index_query = layer.confirm('确定' + operateText + '？', {
+        //     btn: ['确定','取消'] //按钮
+        // }, function(){
+            var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+            printSelecedRecord(ids);
+        //     layer.close(index_query);
+        // }, function(){
+        // });
+        return false;
+    },
+    printSearch: function(obj){// 打印证书[按条件]
+        var recordObj = $(obj);
+        var operateText = '打印查询所有条件记录证书';
+        var index_query = layer.confirm('确定' + operateText + '？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            searchPrint();// 按条件打印
+            layer.close(index_query);
+        }, function(){
+        });
+        return false;
     }
 };
 
+// 按条件打印
+function searchPrint() {
+    //获得表单各name的值
+    var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
+    console.log(SEARCH_PRINT_URL);
+    // console.log(data);
+    // var url_params = get_url_param(data);// parent.get_url_param(data)
+    // var weburl = SEARCH_PRINT_URL  + '?' + url_params;
+    // console.log(weburl);
+    // go(SHOW_URL + id);
+    // location.href='/pms/Supplier/show?supplier_id='+id;
+    // var weburl = SHOW_URL + id;
+    // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+    var reset_total = false;// 是否重新从数据库获取总页数 true:重新获取,false不重新获取  ---ok
+    var layer_index = layer.load();//layer.msg('加载中', {icon: 16});
+    $.ajax({
+        'type' : 'POST',
+        'url' : SEARCH_PRINT_URL,//'/pms/Supplier/ajax_del',
+        'data' : data,
+        'dataType' : 'json',
+        'success' : function(ret){
+            console.log('ret:',ret);
+            if(!ret.apistatus){//失败
+                //alert('失败');
+                // countdown_alert(ret.errorMsg,0,5);
+                layer_alert(ret.errorMsg,3,0);
+            }else{//成功
+                // reset_list(true, true);
+                let ids_arr = ret.result.ids;
+                console.log('ids_arr=', ids_arr);
+                printByIdsArr(ids_arr);
+                console.log(LIST_FUNCTION_NAME);
+                eval( LIST_FUNCTION_NAME + '(' + true +', ' + true +', ' + reset_total + ', 2)');
+            }
+            layer.close(layer_index)//手动关闭
+        }
+    });
+}
+
+// 打印勾选记录的证书
+// ids 20,19  选中的记录id
+function printSelecedRecord(ids) {
+    console.log('ids=', ids);
+    if(ids == ''){
+        err_alert('请选择需要操作的数据');
+        return false;
+    }
+    var operateText = '打印勾选记录证书';
+    var index_query = layer.confirm('确定' + operateText + '？', {
+        btn: ['确定','取消'] //按钮
+    }, function(){
+        var ids_arr = ids.split(",");
+        console.log('ids_arr=', ids_arr);
+        let need_is_print_ids = [];// 打印需要改变状态的记录id
+        $('#data_list').find('tr').each(function () {
+            var trObj = $(this);
+            var tem_id = trObj.data('id') + '';
+            var is_print = trObj.data('is_print') + '';
+            console.log('tem_id=', tem_id);
+            console.log('is_print=', is_print);
+            if(ids_arr.indexOf(tem_id) >= 0 && is_print == 1){// 选中且状态：未打印
+                need_is_print_ids.push(tem_id);
+            }
+        });
+        console.log('need_is_print_ids=', need_is_print_ids);
+        if(need_is_print_ids.length > 0){// 有需要状态处理的
+            var reset_total = false;// 是否重新从数据库获取总页数 true:重新获取,false不重新获取  ---ok
+            var layer_index = layer.load();//layer.msg('加载中', {icon: 16});
+            $.ajax({
+                'type' : 'POST',
+                'url' : IS_PRINT_URL,//'/pms/Supplier/ajax_del',
+                'data' : {'id': need_is_print_ids.join(',')},
+                'dataType' : 'json',
+                'success' : function(ret){
+                    console.log('ret:',ret);
+                    if(!ret.apistatus){//失败
+                        //alert('失败');
+                        // countdown_alert(ret.errorMsg,0,5);
+                        layer_alert(ret.errorMsg,3,0);
+                    }else{//成功
+                        // reset_list(true, true);
+                        printByIdsArr(ids_arr);
+                        console.log(LIST_FUNCTION_NAME);
+                        eval( LIST_FUNCTION_NAME + '(' + true +', ' + true +', ' + reset_total + ', 2)');
+                    }
+                    layer.close(layer_index)//手动关闭
+                }
+            });
+        }else{// 直接打印
+            printByIdsArr(ids_arr);
+        }
+        layer.close(index_query);
+    }, function(){
+    });
+
+}
+
+// 根据id数组打印证书
+function printByIdsArr(ids_arr) {
+    for (var i=0 ; i< ids_arr.length ; i++) {
+        var tem_id = ids_arr[i];// id
+        let weburl  = IFRAME_PRINT_URL + tem_id;
+        PrintCertificateURL(weburl, PRINT_INT_ORIENT, PRINT_INT_PAGE_WIDTH, PRINT_INT_PAGE_HEIGHT, PRINT_STR_PAGE_NAME);
+    }
+
+}
+
+function printInfoPage(id, is_print, weburl, tishi){
+    if(is_print == 1){// 需要先修改状态
+        otheraction.printInfo(id, tishi, weburl);
+    }else{// 直接打印
+        var index_query = layer.confirm('确定打印证书：' + tishi + '？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            PrintCertificateURL(weburl, PRINT_INT_ORIENT, PRINT_INT_PAGE_WIDTH, PRINT_INT_PAGE_HEIGHT, PRINT_STR_PAGE_NAME);
+            layer.close(index_query);
+        }, function(){
+        });
+    }
+
+}
+
+
+
+//下载网页打印机驱动
+function down_drive(){
+    var layer_index = layer.load();//layer.msg('加载中', {icon: 16});
+    //layer_alert("已打印"+print_nums+"打印第"+begin_page+"页-第"+end_page+"页;每次打"+per_page_num+"页",3);
+    var url = DOWN_DRIVE_URL ;
+    console.log('下载网页打印机驱动：', url);
+    // PrintOneURL(url);
+    go(url);
+    layer.close(layer_index)//手动关闭
+}
+
+//操作
+// params 其它参数对象  {}
+function other_operate_ajax(operate_type, id, operate_txt, params){
+    params = params || {};
+    if(operate_type == '' || id == ''){
+        err_alert('请选择需要操作的数据');
+        return false;
+    }
+    operate_txt = operate_txt || "";
+    var data = params;// {};
+    var ajax_url = "";
+    var reset_total = true;// 是否重新从数据库获取总页数 true:重新获取,false不重新获取  ---ok
+    switch(operate_type)
+    {
+        case 'print':// 打印证书
+                    // operate_txt = "开启";
+                    // data = {'id':id, 'activity_id': CURRENT_ACTIVITY_ID};
+                    // 合并对象
+            objAppendProps(data, {'id':id}, true);
+            ajax_url = IS_PRINT_URL;// /pms/Supplier/ajax_del?operate_type=1
+            reset_total = false;
+            break;
+        case 'grant':// 领取证书
+            // operate_txt = "开启";
+            // data = {'id':id, 'activity_id': CURRENT_ACTIVITY_ID};
+            // 合并对象
+            objAppendProps(data, {'id':id}, true);
+            ajax_url = IS_GRANT_URL;// /pms/Supplier/ajax_del?operate_type=1
+            reset_total = false;
+            break;
+        default:
+            break;
+    }
+    console.log('ajax_url:',ajax_url);
+    console.log('data:',data);
+    var layer_index = layer.load();//layer.msg('加载中', {icon: 16});
+    $.ajax({
+        'type' : 'POST',
+        'url' : ajax_url,//'/pms/Supplier/ajax_del',
+        'data' : data,
+        'dataType' : 'json',
+        'success' : function(ret){
+            console.log('ret:',ret);
+            if(!ret.apistatus){//失败
+                //alert('失败');
+                // countdown_alert(ret.errorMsg,0,5);
+                layer_alert(ret.errorMsg,3,0);
+            }else{//成功
+                var msg = ret.errorMsg;
+                if(msg === ""){
+                    msg = operate_txt+"成功";
+                }
+                // countdown_alert(msg,1,5);
+                if(operate_type == 'print'){// 是打印操作
+                    var printurl = IFRAME_PRINT_URL + id;
+                    // 打印页面
+                    PrintCertificateURL(printurl, PRINT_INT_ORIENT, PRINT_INT_PAGE_WIDTH, PRINT_INT_PAGE_HEIGHT, PRINT_STR_PAGE_NAME);
+                }
+                layer_alert(msg,1,0);
+                // reset_list(true, true);
+                console.log(LIST_FUNCTION_NAME);
+                eval( LIST_FUNCTION_NAME + '(' + true +', ' + true +', ' + reset_total + ', 2)');
+            }
+            layer.close(layer_index)//手动关闭
+        }
+    });
+}
 
 // 初始化，来决定*是显示还是隐藏
 function popSelectInit(){
@@ -128,18 +413,18 @@ function addCompany(company_id, company_name){
     document.write("        <%for(var i = 0; i<data_list.length;i++){");
     document.write("        var item = data_list[i];");
     document.write("        var can_modify = false;");
-   document.write("        if( item.status == 1 ){");
+   document.write("        if( (item.status == 16 || item.status == 64) ){");// 可以打印证书
     document.write("        can_modify = true;");
     document.write("        }");
     document.write("        %>");
     document.write("");
-    document.write("        <tr>");
-   // document.write("            <td>");
-   // document.write("                <label class=\"pos-rel\">");
-   // document.write("                    <input  onclick=\"action.seledSingle(this)\" type=\"checkbox\" class=\"ace check_item\" <%if( false &&  !can_modify){%> disabled <%}%>  value=\"<%=item.id%>\"\/>");
-   // document.write("                  <span class=\"lbl\"><\/span>");
-   // document.write("                <\/label>");
-   // document.write("            <\/td>");
+    document.write("        <tr data-id=\"<%=item.id%>\" data-is_print=\"<%=item.is_print%>\">");
+   document.write("            <td>");
+   document.write("                <label class=\"pos-rel\">");
+   document.write("                    <input  onclick=\"action.seledSingle(this)\" type=\"checkbox\" class=\"ace check_item\" <%if( !can_modify){%> disabled <%}%>  value=\"<%=item.id%>\"\/>");
+   document.write("                  <span class=\"lbl\"><\/span>");
+   document.write("                <\/label>");
+   document.write("            <\/td>");
     // document.write("            <td><%=item.id%><\/td>");
     document.write("            <td><%=item.ability_code%><\/td>");
    document.write("            <td><%=item.company_name%><\/td>");
@@ -158,12 +443,26 @@ function addCompany(company_id, company_name){
     document.write("            <td>");
     document.write("                <%if( true){%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"action.show(<%=item.id%>)\">");
-    document.write("                    <i class=\"ace-icon fa fa-check bigger-60\"> 查看报名项目<\/i>");
+    document.write("                    <i class=\"ace-icon  fa fa-eye  bigger-60\"> 查看报名项目<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
     document.write("                <%if( (item.status == 1  || item.status == 2 || item.status == 4 || item.status == 8 ) && ( (item.retry_no == 0 && item.first_submit_num <= 0) || (item.retry_no == 1 && item.repair_submit_num <= 0)  )){%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"otheraction.getSample(<%=item.id%>)\">");
-    document.write("                    <i class=\"ace-icon fa fa-check bigger-60\"> 取样<\/i>");
+    document.write("                    <i class=\"ace-icon fa fa-eyedropper bigger-60\"> 取样<\/i>");
+    document.write("                <\/a>");
+    document.write("                <%}%>");
+    // document.write("                <%if( item.status == 16  && item.is_print == 1){%>");
+    document.write("                <%if( (item.status == 16 || item.status == 64) ){%>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"otheraction.print(1,<%=item.id%>,'<%=item.company_name%>-<%=item.ability_code%>',<%=item.is_print%>)\">");
+    document.write("                    <i class=\"ace-icon fa fa-eye bigger-60\"> 查看证书<\/i>");
+    document.write("                <\/a>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"otheraction.print(2,<%=item.id%>,'<%=item.company_name%>-<%=item.ability_code%>',<%=item.is_print%>)\">");
+    document.write("                    <i class=\"ace-icon fa fa-print bigger-60\"> 打印证书<\/i>");
+    document.write("                <\/a>");
+    document.write("                <%}%>");
+    document.write("                <%if( item.status == 16  && item.is_print == 2 && item.is_grant == 1 ){%>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"otheraction.grant(<%=item.id%>,'<%=item.company_name%>-<%=item.ability_code%>')\">");
+    document.write("                    <i class=\"ace-icon fa fa-address-card-o bigger-60\"> 领取证书<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
     // document.write("                <%if( can_modify){%>");

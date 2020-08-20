@@ -809,6 +809,11 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
             if(!isset($return_data['fields_merge'])) $return_data['fields_merge'] = [];
             array_push($return_data['fields_merge'], $fields_merge);
         }
+        if(($return_num & 64) == 64){// 给上一级返回名称 company_name  下标
+            $fields_merge = Tool::arrEqualKeyVal(['company_name', 'company_certificate_no'],true);// 获得名称
+            if(!isset($return_data['fields_merge'])) $return_data['fields_merge'] = [];
+            array_push($return_data['fields_merge'], $fields_merge);
+        }
         return $return_data;
     }
 
@@ -1462,7 +1467,7 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
                         'industry_name'=>'所属行业',  'company_certificate_no'=>'证书编号',  'company_contact_name'=>'联系人',
                         'company_contact_mobile'=>'联系人手机',  'company_contact_tel'=>'联系电话', 'admin_username'=>'用户名',
                         'is_perfect_text'=>'完善资料', 'open_status_text'=>'审核', 'account_status_text'=>'状态',
-                        'created_at'=>'创建时间'];// 'lastlogintime'=>'上次登录', 
+                        'created_at'=>'创建时间'];// 'lastlogintime'=>'上次登录',
                     $fileName = '企业';
                     $sheetTitle = '企业';
                     break;

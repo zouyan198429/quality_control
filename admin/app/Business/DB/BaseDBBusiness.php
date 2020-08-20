@@ -21,6 +21,9 @@ class BaseDBBusiness extends BaseBusiness
     public static $model_name = '';// 相对于Models的数据模型名称;在子类中定义，使用时用static::,不用self::
     public static $table_name = '';// 表名称
     public static $record_class = __CLASS__;// 当前的类名称 App\Business\***\***\**\***
+    // 历史表对比时 忽略历史表中的字段，[一维数组] - 必须会有 [历史表中对应主表的id字段]  格式 ['字段1','字段2' ... ]；
+    // 注：历史表不要重置此属性
+    public static $ignoreFields = [];
 
     /**
      * 获得模型对象
@@ -632,13 +635,13 @@ class BaseDBBusiness extends BaseBusiness
     /**
      * 根据字段=》值数组；获得数据[格式化后的数据]
      *
-     * @param int $operate_type 操作为型  1 所有[默认] all 二维【数组】 2 ：指定返回数量 limit_num 1：一维【对象】 ，>1 二维【数组】 4：只返回一条 one_num 一维【对象】
+     * @param int $operate_type 操作为型  1 所有[默认] all 二维【数组】 2 ：指定返回数量 limit_num 1：一维【对象】 ，>1 二维【数组】 4：只返回一条 one_num 一维【对象】， 8：获得数量值
      * @param int $page_size 2时返回的数量
      * @param array $fieldValParams
      *  $fieldValParams = [
      *      'ability_join_id' => [// 格式一
      *          'vals' => "字段值[可以是字符'多个逗号分隔'或一维数组] ",// -- 此种格式，必须指定此下标【值下标】
-     *          'excludeVals' => "过滤掉的值 默认[0, '0', '']",
+     *          'excludeVals' => "过滤掉的值 默认[''];// [0, '0', '']",
      *          'valsSeparator' => ',' 如果是多值字符串，多个值的分隔符;默认逗号 ,
      *          'hasInIsMerge=>  false 如果In条件有值时  true:合并；false:用新值--覆盖 --默认
      *      ],// 格式二
@@ -674,7 +677,7 @@ class BaseDBBusiness extends BaseBusiness
      * @return  null 列表数据 一维或二维数组
      * @author zouyan(305463219@qq.com)
      */
-    public static function getFVFormatList($operate_type = 1, $page_size = 1, $fieldValParams = [], $fieldEmptyQuery = false, $relations = '', $extParams = [])
+    public static function getDBFVFormatList($operate_type = 1, $page_size = 1, $fieldValParams = [], $fieldEmptyQuery = false, $relations = '', $extParams = [])
     {
         $dataArr = [];
         $isEmpeyVals = true;//  查询字段值是否都为空; true:都为空，false:有值
@@ -692,7 +695,7 @@ class BaseDBBusiness extends BaseBusiness
             // 'orderBy' => static::$orderBy,// ['sort_num'=>'desc', 'id'=>'desc'],//
         ];
         foreach($fieldValParams as $field => $valConfig){
-            $excludeVals = [0, '0', ''];
+            $excludeVals = [''];// [0, '0', ''];
             $fieldVals = [];
             // 是数组
             if(is_array($valConfig) && isset($valConfig['vals'])){
@@ -735,6 +738,10 @@ class BaseDBBusiness extends BaseBusiness
                 case 1:
                     // $dataArr = static::getList(1, $queryParams, $relations, $extParams, $notLog)['result']['data_list'] ?? [];
                     $dataArr = static::getAllList($queryParams, $relations)->toArray();
+                    break;
+                case 8:// 获得数量值
+                    $queryParams['count'] = 0;
+                    $dataArr = static::getAllList($queryParams, []);
                     break;
                 case 2:
                     $company_id = 0;// $controller->company_id;
@@ -1314,7 +1321,7 @@ class BaseDBBusiness extends BaseBusiness
         $staffDBObj = null ;
         $staffHistoryDBObj = null ;
         $operate_staff_id_history = StaffDBBusiness::getHistoryId($staffDBObj, $operate_staff_id, StaffHistoryDBBusiness::$model_name
-            , StaffHistoryDBBusiness::$table_name, $staffHistoryDBObj, ['staff_id' => $operate_staff_id], []);
+            , StaffHistoryDBBusiness::$table_name, $staffHistoryDBObj, ['staff_id' => $operate_staff_id], StaffDBBusiness::$ignoreFields);
         return $operate_staff_id_history;
     }
 
@@ -1566,7 +1573,7 @@ class BaseDBBusiness extends BaseBusiness
     // 获得记录历史id
     public static function getIdHistory($mainId = 0, &$mainDBObj = null, &$historyDBObj = null){
 //        return static::getHistoryId($mainDBObj, $mainId, CityHistoryDBBusiness::$model_name
-//            , CityHistoryDBBusiness::$table_name, $historyDBObj, ['city_table_id' => $mainId], []);
+//            , CityHistoryDBBusiness::$table_name, $historyDBObj, ['city_table_id' => $mainId], ['city_table_id']);
         return 0;
     }
 

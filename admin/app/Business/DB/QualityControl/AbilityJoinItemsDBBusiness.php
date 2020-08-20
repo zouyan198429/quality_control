@@ -15,6 +15,9 @@ class AbilityJoinItemsDBBusiness extends BasePublicDBBusiness
     public static $model_name = 'QualityControl\AbilityJoinItems';
     public static $table_name = 'ability_join_items';// 表名称
     public static $record_class = __CLASS__;// 当前的类名称 App\Business\***\***\**\***
+    // 历史表对比时 忽略历史表中的字段，[一维数组] - 必须会有 [历史表中对应主表的id字段]  格式 ['字段1','字段2' ... ]；
+    // 注：历史表不要重置此属性
+    public static $ignoreFields = [];
 
     /**
      * 根据id新加或修改单条数据-id 为0 新加，返回新的对象数组[-维],  > 0 ：修改对应的记录，返回true
@@ -321,7 +324,7 @@ class AbilityJoinItemsDBBusiness extends BasePublicDBBusiness
 //        foreach($dataListArr as $k => $v){
 //            $ability_join_item_id = $v['id'];
 //            $retry_no  = $v['retry_no'];
-//            $resultInfo = AbilityJoinItemsResultsDBBusiness::getFVFormatList(4, 1, ['ability_join_item_id' => $ability_join_item_id, 'retry_no' => $retry_no], false, '', []);
+//            $resultInfo = AbilityJoinItemsResultsDBBusiness::getDBFVFormatList(4, 1, ['ability_join_item_id' => $ability_join_item_id, 'retry_no' => $retry_no], false, '', []);
 //            $result_id = $resultInfo['id'] ?? 0;
 //            $result_info = [
 //                'ability_join_item_id' => $ability_join_item_id,

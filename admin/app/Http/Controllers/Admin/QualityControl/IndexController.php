@@ -13,6 +13,7 @@ use App\Services\DB\CommonDB;
 use App\Services\File\DownFile;
 use App\Services\Request\CommonRequest;
 use App\Services\Tool;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -21,27 +22,34 @@ class IndexController extends BasicController
     public $controller_id =0;// 功能小模块[控制器]id - controller_id  历史表 、正在进行表 与原表相同
 
     public function test(Request $request){
+
+        $currentNow = Carbon::now()->toDateTimeString();
+        $aa = date('Y-m-d 23:59:59');
+        $duration_minute = 13;
+        $submit_off_time = Tool::addMinusDate(date('Y-m-d 23:59:59'), ['+' . $duration_minute . ' day'], 'Y-m-d H:i:s', 1, '时间');;
+        echo $submit_off_time;
 //        AbilityJoinItemsDBBusiness::initReslut();
 //        die();
-        $bbb = '555';
-        $aaa = CommonDB::doTransactionFun(function () use(&$bbb){
-            $bbb .= '666';
-            return 'bcd';
-        });
-        echo $bbb . '<br/>';
+//        $bbb = '555';
+//        $aaa = CommonDB::doTransactionFun(function () use(&$bbb){
+//            $bbb .= '666';
+//            return 'bcd';
+//        });
+//        echo $bbb . '<br/>';
+//
+//        pr($aaa);
 
-        pr($aaa);
-
-        $operate_type = 2;
-        $page_size = 2;
-        $fieldValParams = ['issuper' => 1];
-        $fieldEmptyQuery = false;
-        $relations = '';
-        $extParams = [];
-        $data = StaffDBBusiness::getFVFormatList($operate_type, $page_size, $fieldValParams, $fieldEmptyQuery, $relations, $extParams);
-        if(is_object($data)) vd($data);
-        if(is_array($data)) pr($data);
-        phpinfo();
+//        $operate_type = 8;
+//        $page_size = 2;
+//        $fieldValParams = ['issuper' => 1];
+//        $fieldEmptyQuery = false;
+//        $relations = '';
+//        $extParams = [];
+//        $data = StaffDBBusiness::getDBFVFormatList($operate_type, $page_size, $fieldValParams, $fieldEmptyQuery, $relations, $extParams);
+//
+//        if(is_object($data)) vd($data);
+//        if(is_array($data)) pr($data);
+         phpinfo();
         die;
         $extParams['sqlParams']['whereIn']['id'] = 123;
         pr($extParams);
@@ -352,17 +360,17 @@ class IndexController extends BasicController
      * @return mixed
      * @author zouyan(305463219@qq.com)
      */
-//    public function down_drive(Request $request)
-//    {
-////        $this->InitParams($request);
-//        // $this->source = 2;
-////        $reDataArr = $this->reDataArr;
-//        // 下载二维码文件
-//        $publicPath = Tool::getPath('public');
-//        $fileName = '/CLodopPrint_Setup_for_Win32NT.exe';
-//        $res = DownFile::downFilePath(2, $publicPath . '/' . $fileName);
-//        if(is_string($res)) echo $res;
-//    }
+    public function down_drive(Request $request)
+    {
+//        $this->InitParams($request);
+        // $this->source = 2;
+//        $reDataArr = $this->reDataArr;
+        // 下载二维码文件
+        $publicPath = Tool::getPath('public');
+        $fileName = '/CLodopPrint_Setup_for_Win32NT.exe';
+        $res = DownFile::downFilePath(2, $publicPath . '/' . $fileName);
+        if(is_string($res)) echo $res;
+    }
 
     // **************公用方法**********************开始*******************************
 
