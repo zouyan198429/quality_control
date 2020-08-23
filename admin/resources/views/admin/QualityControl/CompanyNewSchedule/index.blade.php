@@ -132,6 +132,6 @@
       var DOWN_FILE_URL = "{{ url('admin/down_file') }}";// 下载网页打印机驱动
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/CompanyNewSchedule.js') }}?4"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/CompanyNewSchedule.js') }}?6"  type="text/javascript"></script>
 </body>
 </html>

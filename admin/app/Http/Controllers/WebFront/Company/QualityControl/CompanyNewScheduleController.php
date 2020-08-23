@@ -674,8 +674,8 @@ class CompanyNewScheduleController extends BasicController
         // 下载二维码文件
         $publicPath = Tool::getPath('public');
         $fileName = '/download/moban.xlsx';
-
-        $res = DownFile::downFilePath(2, $publicPath . $fileName);
+        $save_file_name = CommonRequest::get($request, 'save_file_name');// 下载时保存的文件名 [可以不用加文件扩展名，不加会自动加上]--可以为空：用源文件的名称
+        $res = DownFile::downFilePath(2, $publicPath . $fileName, 1024, $save_file_name);
         if(is_string($res)) echo $res;
     }
 }

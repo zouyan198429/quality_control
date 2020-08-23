@@ -300,7 +300,8 @@ class IndexController extends BasicController
 //        if($has_qrcode != 2 ) die('记录不存在或未生成二维码');
 //        // 下载二维码文件
 //        $publicPath = Tool::getPath('public');
-//        $res = DownFile::downFilePath(2, $publicPath . $qrcode_url_old);
+//        $save_file_name = CommonRequest::get($request, 'save_file_name');// 下载时保存的文件名 [可以不用加文件扩展名，不加会自动加上]--可以为空：用源文件的名称
+//        $res = DownFile::downFilePath(2, $publicPath . $qrcode_url_old, 1024, $save_file_name);
 //        if(is_string($res)) echo $res;
 //    }
 
@@ -319,7 +320,8 @@ class IndexController extends BasicController
 //        // 下载二维码文件
 //        $publicPath = Tool::getPath('public');
 //        $fileName = '/CLodopPrint_Setup_for_Win32NT.exe';
-//        $res = DownFile::downFilePath(2, $publicPath . '/' . $fileName);
+//        $save_file_name = CommonRequest::get($request, 'save_file_name');// 下载时保存的文件名 [可以不用加文件扩展名，不加会自动加上]--可以为空：用源文件的名称
+//        $res = DownFile::downFilePath(2, $publicPath . '/' . $fileName, 1024, $save_file_name);
 //        if(is_string($res)) echo $res;
 //    }
 

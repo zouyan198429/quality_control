@@ -34,10 +34,10 @@ var otheraction = {
         layeriframe(weburl,tishi,700,450,0);
         return false;
     },
-    down_file:function(resource_url){//下载网页打印机驱动
+    down_file:function(resource_url, save_file_name){//下载网页打印机驱动
         var layer_index = layer.load();//layer.msg('加载中', {icon: 16});
         //layer_alert("已打印"+print_nums+"打印第"+begin_page+"页-第"+end_page+"页;每次打"+per_page_num+"页",3);
-        var url = DOWN_FILE_URL + '?resource_url=' + resource_url;
+        var url = DOWN_FILE_URL + '?resource_url=' + resource_url + '&save_file_name=' + save_file_name;
         console.log('下载文件：', url);
         // PrintOneURL(url);
         go(url);
@@ -171,7 +171,7 @@ function addCompany(company_id, company_name){
     document.write("                    <i class=\"ace-icon fa fa-eye bigger-60\"> 查看<\/i>");
     // document.write("                <img  src=\"<%=jitem.resource_url%>\"  style=\"width:100px;\">");
     document.write("              </a>");
-    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"otheraction.down_file('<%=jitem.resource_url_old%>')\">");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"otheraction.down_file('<%=jitem.resource_url_old%>','<%=item.company_id%>-<%=item.user_company_name%>-<%=jitem.resource_name%>')\">");
     document.write("                    <i class=\"ace-icon fa fa-cloud-download bigger-60\"> 下载<\/i>");
     document.write("                <\/a>");
     document.write("            <%}%>");

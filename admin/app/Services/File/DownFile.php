@@ -42,10 +42,11 @@ class DownFile{
      * @param string $errDo 错误处理方式 1 throws 2直接返回错误
      * @param string $file_path 文件路径[系统全路径] + 文件名  全部的路径了all/a.exe /srv/www/runbuy/admin.cunwo.net/public/resource/company/1/down/2019/10/06/20191006102805433363870c5b369e.png
      * @param int $buffer_size 每次读取多少
+     * @param string $down_file_name 下载时保存的文件名 [可以不用加文件扩展名，不加会自动加上]--可以为空：用源文件的名称
      * @return  mixed sting 具体错误 ； throws 错误 ；正确 true
      * @author zouyan(305463219@qq.com)
      */
-    public static function downFilePath($errDo = 1,$file_path = "", $buffer_size = 1024){
+    public static function downFilePath($errDo = 1,$file_path = "", $buffer_size = 1024, $down_file_name = ''){
         if(!file_exists($file_path)){
             $errMsg = '该文件不存在!';
             if($errDo == 1) throws($errMsg);
@@ -53,7 +54,7 @@ class DownFile{
         }
         $file_dir = dirname($file_path);// dirname() 函数返回路径中的目录名称部分
         $file_name = basename($file_path);// basename() 函数返回路径中的文件名部分。
-        return static::down($errDo, $file_dir, $file_name, $buffer_size);
+        return static::down($errDo, $file_dir, $file_name, $buffer_size, $down_file_name);
     }
 
     /**
@@ -63,15 +64,24 @@ class DownFile{
      * @param string $file_dir 文件路径 比如 all "/xxx/xxx"
      * @param string $file_name 文件名 比如 a.exe  合起来就是全部的路径了all/a.exe
      * @param int $buffer_size 每次读取多少
+     * @param string $down_file_name 下载时保存的文件名 [可以不用加文件扩展名，不加会自动加上]--可以为空：用源文件的名称
      * @return  mixed sting 具体错误 ； throws 错误 ；正确 true
      * @author zouyan(305463219@qq.com)
      */
-    public static function down($errDo = 1,$file_dir = "", $file_name = "", $buffer_size = 1024){
+    public static function down($errDo = 1,$file_dir = "", $file_name = "", $buffer_size = 1024, $down_file_name = ''){
         //用以解决中文不能显示出来的问题
         $file_dir = iconv("utf-8","gb2312",$file_dir);
         $file_name = iconv("utf-8","gb2312",$file_name);
         $path = $file_dir . "/" . $file_name;
         $suffix = pathinfo($file_name,PATHINFO_EXTENSION);
+
+        if($down_file_name == ''){
+            $down_file_name = $file_name;
+        }else{
+            $tem_extend = '.' . $suffix;
+            $right_part = substr($path, - strlen($tem_extend));
+            if(strtolower($right_part) != strtolower($tem_extend)) $down_file_name .= $tem_extend;
+        }
 
         if(!file_exists($path)){
             $errMsg = '该文件不存在!';
@@ -86,7 +96,7 @@ class DownFile{
         //流的方式发送给浏览器 header("Content-Type: application/octet-stream")
         header("Content-type: ".$content_type);
         //以附件的形式发送给浏览器(也就是弹出，下载的对话框)
-        header('Content-Disposition: attachment; filename="'.$file_name.'"');
+        header('Content-Disposition: attachment; filename="'. $down_file_name .'"');
         header("Content-type:text/html;charset=utf-8");
         @header("Cache-control: public");
         @header("Pragma: public");
