@@ -110,7 +110,7 @@
       var OPERATE_TYPE = <?php echo isset($operate_type)?$operate_type:0; ?>;
       var AUTO_READ_FIRST = false;//自动读取第一页 true:自动读取 false:指定地方读取
       var LIST_FUNCTION_NAME = "reset_list_self";// 列表刷新函数名称, 需要列表刷新同步时，使用自定义方法reset_list_self；异步时没有必要自定义
-      var AJAX_URL = "{{ url('api/admin/company_new_schedule/ajax_alist') }}";//ajax请求的url
+      var AJAX_URL = "{{ url('api/admin/company_new_schedule/ajax_alist_company') }}";//ajax请求的url
       var ADD_URL = "{{ url('admin/company_new_schedule/add/0') }}"; //添加url
 
       var IFRAME_MODIFY_URL = "{{url('admin/company_new_schedule/add/')}}/";//添加/修改页面地址前缀 + id
@@ -132,6 +132,6 @@
       var DOWN_FILE_URL = "{{ url('admin/down_file') }}";// 下载网页打印机驱动
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/CompanyNewSchedule.js') }}?4"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/CompanyNewSchedule_list.js') }}?1"  type="text/javascript"></script>
 </body>
 </html>

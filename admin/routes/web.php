@@ -321,6 +321,7 @@ Route::get('admin/company_new_schedule/add/{id}', 'Admin\QualityControl\CompanyN
 // Route::get('admin/company_new_schedule/select', 'Admin\QualityControl\CompanyNewScheduleController@select');// 选择-弹窗
 Route::get('admin/company_new_schedule/export', 'Admin\QualityControl\CompanyNewScheduleController@export');// 导出
 Route::get('admin/company_new_schedule/import_template', 'Admin\QualityControl\CompanyNewScheduleController@import_template');// 导入模版
+Route::get('admin/company_new_schedule/list', 'Admin\QualityControl\CompanyNewScheduleController@list');// 列表--按企业id降序
 
 
 // 企业后台 company

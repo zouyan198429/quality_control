@@ -276,6 +276,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/company_new_schedule/up_word', 'Admin\QualityControl\CompanyNewScheduleController@up_word');// 上传word地址
         $api->post('admin/company_new_schedule/up_pdf', 'Admin\QualityControl\CompanyNewScheduleController@up_pdf');// 上传pdf地址
         $api->post('admin/company_new_schedule/up_excel', 'Admin\QualityControl\CompanyNewScheduleController@up_excel');// 上传excel地址
+        $api->any('admin/company_new_schedule/ajax_alist_company', 'Admin\QualityControl\CompanyNewScheduleController@ajax_alist_company');//ajax获得列表数据--按企业id降序
 
         // 企业后台 company
         // 验证码 -- ok

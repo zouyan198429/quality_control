@@ -35,6 +35,27 @@ class CompanyNewScheduleController extends BasicController
     }
 
     /**
+     * 列表页--按企业id降序
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function list(Request $request)
+    {
+        $reDataArr = [];// 可以传给视图的全局变量数组
+        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request){
+            // 正常流程的代码
+
+            $this->InitParams($request);
+            // $reDataArr = $this->reDataArr;
+            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+            return view('admin.QualityControl.CompanyNewSchedule.list', $reDataArr);
+
+        }, $this->errMethod, $reDataArr, $this->errorView);
+    }
+
+    /**
      * 首页--单个企业显示
      *
      * @param Request $request
@@ -281,6 +302,34 @@ class CompanyNewScheduleController extends BasicController
         return CTAPICompanyScheduleBusiness::getList($request, $this, 2 + 4, [], $relations, $extParams);
     }
 
+    /**
+     * ajax获得列表数据--按企业id降序
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_alist_company(Request $request){
+        $this->InitParams($request);
+        $relations = [];//  ['siteResources']
+        $extParams = [
+            // 'handleKeyArr' => ['company', 'siteResources'],//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+            'relationFormatConfigs'=> CTAPICompanyScheduleBusiness::getRelationConfigs($request, $this, ['company_info', 'resource_list', 'resource_pdf_list'], []),
+        ];
+        $queryParams = [
+            'where' => [
+//                ['company_id', $company_id],
+//                //['mobile', $keyword],
+            ],
+//            'select' => [
+//                'id','company_id','position_name','sort_num'
+//                //,'operate_staff_id','operate_staff_id_history'
+//                ,'created_at'
+//            ],
+            'orderBy' => ['company_id'=>'desc', 'id'=>'desc'],//
+        ];
+        return CTAPICompanyScheduleBusiness::getList($request, $this, 2 + 4, $queryParams, $relations, $extParams);
+    }
     /**
      * ajax获得列表数据
      *

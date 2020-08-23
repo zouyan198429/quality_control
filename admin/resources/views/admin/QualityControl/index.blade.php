@@ -256,6 +256,12 @@
                       <dd>
                           <a lay-href="{{ url('admin/ability_code') }}">证书设置</a>
                       </dd>
+                      <dd>
+                          <a lay-href="{{ url('admin/company_new_schedule') }}">能力附表[id降序]</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="{{ url('admin/company_new_schedule/list') }}">能力附表[企业id降序]</a>
+                      </dd>
 {{--                      <dd>--}}
 {{--                          <a lay-href="{{ url('admin/ability_type') }}?company_grade=4">领域管理</a>--}}
 {{--                      </dd>--}}
