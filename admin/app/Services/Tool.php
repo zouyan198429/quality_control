@@ -4479,4 +4479,15 @@ class Tool
         return $returnFields;
     }
 
+    /**
+     * 判断是否微信访问 true:微信访问 ；false:非微信访问
+     * @return bool
+     */
+    public static function isWeixinVisit(){
+        if (strpos($_SERVER['HTTP_USER_AGENT'], 'MicroMessenger') !== false) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

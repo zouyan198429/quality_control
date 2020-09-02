@@ -42,6 +42,7 @@
 {{--                    <col width="50">--}}
                     <col>
                     <col >
+                    <col >
                     <col width="75" >
                     <col width="105">
                     <col  width="90">
@@ -56,6 +57,7 @@
 
 {{--                    <th>ID</th>--}}
                     <th>检测项目</th>
+                    <th>能力验证编码</th>
                     <th>方法标准(已选)</th>
                     <th>联系人</th>
                     <th>联系人手机</th>
@@ -113,6 +115,6 @@
       var IFRAME_SAMPLE_RESULT_INFO_URL = "{{url('company/ability_join_item/sample_result_info/')}}/"; // 获得指定测试序号的 单次测试数据 + id + retry_no
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/company/QualityControl/AbilityJoinItem.js') }}?30"  type="text/javascript"></script>
+  <script src="{{ asset('js/company/QualityControl/AbilityJoinItem.js') }}?31"  type="text/javascript"></script>
 </body>
 </html>

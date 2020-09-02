@@ -8,6 +8,7 @@ use App\Services\Tool;
 
 class BasicController extends \App\Http\Controllers\WebFront\BasicController
 {
+    public static $ALLOW_BROWSER_OPEN = true;// 微信内支付：调试用开关，true:所有浏览器都能开； false:只有微信内浏览器
     // 每一种登录项的唯一标识【大后台：adimn; 企业：company;用户：user】,每一种后台控制器父类，修改成自己的唯一值
     //        用途，如加入到登录状态session中，就可以一个浏览器同时登录多个后台。--让每一个后台session的键都唯一，不串（重）
 //    public $siteLoginUniqueKey = 'web';
