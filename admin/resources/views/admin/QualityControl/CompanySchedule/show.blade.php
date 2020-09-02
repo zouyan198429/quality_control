@@ -14,22 +14,17 @@
 </head>
 <body>
 
-{{--<div id="crumb"><i class="fa fa-reorder fa-fw" aria-hidden="true"></i> 我的同事</div>--}}
-<div class="mm">
+ <div class="mm">
   <div class="mmhead" id="mywork">
 
     @include('common.pageParams')
-{{--    <div class="tabbox" >--}}
-{{--      <a href="javascript:void(0);" class="on" onclick="action.iframeModify(0)">添加能力附表</a>--}}
-{{--    </div>--}}
+ 
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
 
           <span>
                 <input type="hidden" class="select_id"  name="company_id"  value="{{ $company_id ?? '' }}" />
-                <span class="select_name company_name">{{ $user_company_name ?? '' }}</span>
-{{--                <i class="close select_close company_id_close"  onclick="clearSelect(this)" style="display: none;">×</i>--}}
-{{--                <button  type="button"  class="btn btn-danger  btn-xs ace-icon fa fa-plus-circle bigger-60"  onclick="otheraction.selectCompany(this)">选择企业</button>--}}
+                <span class="select_name company_name">{{ $user_company_name ?? '' }}</span> 
           </span>
 
         {{--<select class="wmini" name="province_id">--}}
