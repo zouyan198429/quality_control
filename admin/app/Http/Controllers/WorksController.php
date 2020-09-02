@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 
 class WorksController extends BaseController
 {
+    public static $ALLOW_BROWSER_OPEN = true;// 微信内支付：调试用开关，true:所有浏览器都能开； false:只有微信内浏览器
 
     public function InitParams(Request $request)
     {

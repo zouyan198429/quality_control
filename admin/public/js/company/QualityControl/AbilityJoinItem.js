@@ -76,6 +76,7 @@ var otheraction = {
    // document.write("            <\/td>");
    //  document.write("            <td><%=item.id%><\/td>");
     document.write("            <td><%=item.ability_name%><\/td>");
+    document.write("            <td><%=item.ability_code%><\/td>");
     document.write("            <td>");
     document.write("            <%for(var j = 0; j<join_standards_tag.length;j++){");
     document.write("                var jitem = join_standards_tag[j];");
