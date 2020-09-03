@@ -201,6 +201,6 @@
       //     Env9, Env10, Env11, Env12,Env14, Sheet, DSheet, ESheet
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/AbilityJoin.js') }}?12"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/AbilityJoin.js') }}?13"  type="text/javascript"></script>
 </body>
 </html>

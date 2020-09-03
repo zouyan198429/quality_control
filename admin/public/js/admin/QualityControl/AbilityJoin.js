@@ -446,11 +446,11 @@ function addCompany(company_id, company_name){
     document.write("                    <i class=\"ace-icon  fa fa-eye  bigger-60\"> 查看报名项目<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
-    document.write("                <%if( (item.status == 1  || item.status == 2 || item.status == 4 || item.status == 8 ) && ( (item.retry_no == 0 && item.first_submit_num <= 0) || (item.retry_no == 1 && item.repair_submit_num <= 0)  )){%>");
-    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"otheraction.getSample(<%=item.id%>)\">");
-    document.write("                    <i class=\"ace-icon fa fa-eyedropper bigger-60\"> 取样<\/i>");
-    document.write("                <\/a>");
-    document.write("                <%}%>");
+    // document.write("                <%if( (item.status == 1  || item.status == 2 || item.status == 4 || item.status == 8 ) && ( (item.retry_no == 0 && item.first_submit_num <= 0) || (item.retry_no == 1 && item.repair_submit_num <= 0)  )){%>");
+    // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"otheraction.getSample(<%=item.id%>)\">");
+    // document.write("                    <i class=\"ace-icon fa fa-eyedropper bigger-60\"> 取样<\/i>");
+    // document.write("                <\/a>");
+    // document.write("                <%}%>");
     // document.write("                <%if( item.status == 16  && item.is_print == 1){%>");
     document.write("                <%if( (item.status == 16 || item.status == 64) ){%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"otheraction.print(1,<%=item.id%>,'<%=item.company_name%>-<%=item.ability_code%>',<%=item.is_print%>)\">");

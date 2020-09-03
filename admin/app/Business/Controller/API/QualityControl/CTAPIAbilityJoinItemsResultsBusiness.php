@@ -83,11 +83,24 @@ class CTAPIAbilityJoinItemsResultsBusiness extends BasicPublicCTAPIBusiness
                 , ['admin_type' => 'admin_type', 'staff_id' => 'id']
                 , 1, 2
                 ,'','', [], ['where' => [['admin_type', 2]]], '', []),
+            // 获得企业信息
+            'company_info_data' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
+                , ['admin_type' => 'admin_type', 'staff_id' => 'id']
+                , 1
+                , 1// 企业名称
+                ,'',''
+                ,[], ['where' => [['admin_type', 2]]], '', []),
             // 获得项目
             'ability_info' => CTAPIAbilitysBusiness::getTableRelationConfigInfo($request, $controller
                 , ['ability_id' => 'id']
                 , 1, 1 | 2
                 ,'','', [], [], '', []),
+            // 下一级关系 报名项所属的项目 -- 的名称 1:1
+            'ability_info_name' => CTAPIAbilitysBusiness::getTableRelationConfigInfo($request, $controller
+                , ['ability_id' => 'id']
+                , 1, 2// 项目名称  测试4
+                ,'',''
+                ,[], [], '', []),
             // 需要验证数据项 1:n
             'project_submit_items_list' => CTAPIProjectSubmitItemsBusiness::getTableRelationConfigInfo($request, $controller
                 , ['ability_id' => 'ability_id']
@@ -108,6 +121,12 @@ class CTAPIAbilityJoinItemsResultsBusiness extends BasicPublicCTAPIBusiness
                 , ['ability_join_item_id' => 'ability_join_item_id', 'retry_no' => 'retry_no', 'id' => 'result_id']
                 , 2, 1
                 ,'','', [], [], '', []),
+            // 下一级关系 每一项的取样具体数据  1:n
+            'join_items_samples_list' => CTAPIAbilityJoinItemsSamplesBusiness::getTableRelationConfigInfo($request, $controller
+                , ['id' => 'result_id']// , 'ability_join_item_id' => 'ability_join_item_id', 'retry_no' => 'retry_no'
+                , 2, 1// 项目名称  测试4
+                ,'',''
+                ,[], ['orderBy' => ['serial_number'=>'asc', 'id'=>'desc']], '', []),
             // 登记样品 1：n
             'items_samples_list' => CTAPIAbilityJoinItemsSamplesBusiness::getTableRelationConfigInfo($request, $controller
                 , ['ability_join_item_id' => 'ability_join_item_id', 'retry_no' => 'retry_no', 'id' => 'result_id']

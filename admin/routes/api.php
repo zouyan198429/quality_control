@@ -233,6 +233,7 @@ $api->version('v1', function ($api) {
         // 能力验证结果--报名管理--参加单位
         $api->any('admin/abilitys_admin/{ability_id}/ability_join_items_results/ajax_alist', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@ajax_alist');//ajax获得列表数据
         $api->any('admin/abilitys_admin/{ability_id}/ability_join_items_results/ajax_save', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@ajax_save');// 新加/修改
+        $api->any('admin/abilitys_admin/{ability_id}/ability_join_items_results/ajax_save_sample', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@ajax_save_sample');// 新加/修改--取样
         //****************************************************************************
 
         // 能力验证--报名管理

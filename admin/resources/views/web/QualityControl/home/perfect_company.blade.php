@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/css/layui.css')}}" media="all">
     @include('web.QualityControl.layout_public.pagehead')
     <!-- zui css -->
-    <link rel="stylesheet" href="{{asset('dist/css/zui.min.css') }}">     
+    <link rel="stylesheet" href="{{asset('dist/css/zui.min.css') }}">
 </head>
 <body style=" background:#f8f8f8; ">
     @include('web.QualityControl.layout_public.header')
@@ -158,7 +158,7 @@
                 </div>
                 <div class="form-item">
                     <label for="text" class="form-label">资质认定证书编号 <span class="red">*</span></label>
-                    <div class="form-input"><input type="number" name="company_certificate_no" class="form-control" autocomplete="off" value="{{ $info['company_certificate_no'] ?? '' }}">
+                    <div class="form-input"><input type="text" name="company_certificate_no" class="form-control" autocomplete="off" value="{{ $info['company_certificate_no'] ?? '' }}">
 
                         <p class="gray">是12位数字！</p>
 
@@ -231,6 +231,6 @@
 {{--<script src="{{asset('js/baguetteBox.js/highlight.min.js')}}" async></script>--}}
 <!-- zui js -->
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
-<script src="{{ asset('/js/web/QualityControl/perfect_company.js') }}?1"  type="text/javascript"></script>
+<script src="{{ asset('/js/web/QualityControl/perfect_company.js') }}?2"  type="text/javascript"></script>
 @component('component.upfileincludejs')
 @endcomponent

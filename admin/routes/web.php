@@ -293,6 +293,7 @@ Route::get('admin/abilitys_admin/{ability_id}/ability_join_items/sample_result_i
 Route::get('admin/abilitys_admin/{ability_id}/ability_join_items_results', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@index');// 列表
 Route::get('admin/abilitys_admin/{ability_id}/ability_join_items_results/add/{id}', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@add');// 添加--判定
 Route::get('admin/abilitys_admin/{ability_id}/ability_join_items_results/export', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@export');// 导出
+Route::get('admin/abilitys_admin/{ability_id}/ability_join_items_results/get_sample/{id}', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@get_sample');// 取样
 
 //****************************************************************************
 // 能力验证--报名管理

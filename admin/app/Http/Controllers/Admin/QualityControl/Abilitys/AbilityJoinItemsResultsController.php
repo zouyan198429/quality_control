@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Admin\QualityControl\Abilitys;
 
+use App\Business\Controller\API\QualityControl\CTAPIAbilityJoinBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIAbilityJoinItemsResultsBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIAbilitysBusiness;
 use App\Http\Controllers\WorksController;
 use App\Models\QualityControl\AbilityJoinItemsResults;
 use App\Services\Request\CommonRequest;
 use App\Services\Tool;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class AbilityJoinItemsResultsController extends BasicController
@@ -66,6 +69,196 @@ class AbilityJoinItemsResultsController extends BasicController
 //
 //            });
 //    }
+
+
+    /**
+     * 取样
+     *
+     * @param Request $request
+     * @param int $ability_id
+     * @param int $id
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function get_sample(Request $request, $ability_id = 0, $id = 0)
+    {
+//        $reDataArr = [];// 可以传给视图的全局变量数组
+//        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request, &$id){
+//            // 正常流程的代码
+//
+//            $this->InitParams($request);
+//            // $reDataArr = $this->reDataArr;
+//            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+//
+//            return view('admin.QualityControl.AbilityJoin.get_sample', $reDataArr);
+//
+//        }, $this->errMethod, $reDataArr, $this->errorView);
+        return $this->exeDoPublicFun($request, 0, 8, 'admin.QualityControl.AbilitysAdmin.AbilityJoinItemsResults.get_sample', true
+            , '', [], function (&$reDataArr) use ($request, &$ability_id, &$id){
+
+                if(!is_numeric($id) || $id <= 0){
+                    throws('参数[id]有误！');
+                }
+
+                $reDataArr['ability_id'] = $ability_id;
+
+                $abilityInfo = $this->getAbilityInfo($ability_id);
+                $reDataArr['info'] = $abilityInfo;
+
+                $operate = "取样";
+                // $handleKeyArr = ['joinItems'];
+                $extParams = [
+                    // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                    'relationFormatConfigs'=> CTAPIAbilityJoinItemsResultsBusiness::getRelationConfigs($request, $this, ['company_info_data' ,'ability_info_name', 'join_items_samples_list'], []),// , 'join_items'
+                ];
+
+                $info = CTAPIAbilityJoinItemsResultsBusiness::getInfoData($request, $this, $id, [], '', $extParams);
+                // $reDataArr = array_merge($reDataArr, $resultDatas);
+                if(empty($info)) {
+                    throws('记录不存在！');
+                }
+                $join_items_samples_list = $info['join_items_samples_list'] ?? [];
+
+                $reDataArr['info'] = $info;
+                $reDataArr['operate'] = $operate;
+            });
+    }
+
+    /**
+     * ajax保存数据--取样
+     *
+     * @param int $id
+     * @param int $ability_id
+     * @return Response
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_save_sample(Request $request, $ability_id = 0)
+    {
+        $this->InitParams($request);
+        $id = CommonRequest::getInt($request, 'id');// 报名id
+        // CommonRequest::judgeEmptyParams($request, 'id', $id);
+        //$type_name = CommonRequest::get($request, 'type_name');
+        //$sort_num = CommonRequest::getInt($request, 'sort_num');
+
+        if(!is_numeric($id) || $id <= 0){
+            throws('参数[id]有误！');
+        }
+
+        $reDataArr['ability_id'] = $ability_id;
+
+        $abilityInfo = $this->getAbilityInfo($ability_id);
+        $reDataArr['info'] = $abilityInfo;
+
+        // 获得报名信息
+        $extParams = [
+            // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+            'relationFormatConfigs'=> CTAPIAbilityJoinItemsResultsBusiness::getRelationConfigs($request, $this, ['join_items_samples_list'], []),// , 'join_items'
+        ];
+
+        $info = CTAPIAbilityJoinItemsResultsBusiness::getInfoData($request, $this, $id, [], '', $extParams);
+        if(empty($info)) throws('记录不存在！');
+        $status = $info['status'] ?? '';
+        if(!in_array($status, [1,2])) throws('不可进行取样操作！');
+        $join_item_id = $info['ability_join_item_id'] ?? '0';
+        $ability_join_id = $info['ability_join_id'] ?? '0';
+        $retry_no = $info['retry_no'] ?? '';
+        $currentNow = Carbon::now()->toDateTimeString();
+
+        $join_info = CTAPIAbilityJoinBusiness::getInfoData($request, $this, $ability_join_id, [], '', []);
+        if(empty($join_info)) throws('报名记录不存在！');
+
+        $sample_num_data = [];
+        $item_sample_nums = CommonRequest::get($request, 'items_samples');
+        // 如果是字符，则转为数组
+        if(is_string($item_sample_nums) || is_numeric($item_sample_nums)){
+            if(strlen(trim($item_sample_nums)) > 0){
+                $item_sample_nums = explode(',' ,$item_sample_nums);
+            }
+        }
+        if(!is_array($item_sample_nums)) $item_sample_nums = [];
+        if(empty($item_sample_nums)) throws('请输入取样编号');
+        $i = 1;
+        foreach($item_sample_nums as $sample_number){
+            if(empty($sample_number)) continue;
+            if(trim($sample_number) == '') continue;
+            array_push($sample_num_data, [
+                'id' => $info['join_items_samples_list'][$i - 1]['id'] ?? 0,
+                'ability_join_item_id' => $join_item_id,
+                'retry_no' => $retry_no,
+                'serial_number' => $i,
+                'sample_one' => $sample_number,
+                'result_id' => $id, // 保存时再去查询
+                'sample_time' => $currentNow
+            ]);
+            $i++;
+        }
+        if(empty($sample_num_data)) throws('没有领样信息');
+        // throws(json_encode($sample_num_data));
+
+        $ability_id = $info['ability_id'];
+        $ability_info = CTAPIAbilitysBusiness::getInfoData($request, $this, $ability_id, [], '', []);
+        if(empty($ability_info)) throws('项目【' . $ability_id . '】 不存在！');
+        $duration_minute = $ability_info['duration_minute'];
+        $submit_off_time = Tool::addMinusDate(date('Y-m-d 23:59:59'), ['+' . $duration_minute . ' day'], 'Y-m-d H:i:s', 1, '时间');;
+        // 更新报名项目
+        $save_item_info = [
+            'duration_minute' => $duration_minute,
+            'submit_off_time' => $submit_off_time,
+        ];
+        $saveData = [
+            'status' => 2,
+            'is_sample' => 2,
+            'sample_time' => $currentNow,
+            'duration_minute' => $duration_minute,
+            'submit_off_time' => $submit_off_time,
+        ];
+        $join_data = [];
+        if($join_info['status'] == 1) $join_data['status'] = 4;// 进行中
+        if($retry_no == 0){
+//            $saveData = array_merge($saveData, [
+//                'status' => 4,
+//                'is_sample' => 2,
+//                'sample_time' => $currentNow,
+//            ]);
+            $saveData['join_item_data'] = [
+                'id' => $join_item_id,
+                'status' => 2,
+                'is_sample' => 2,
+                'sample_time' => $currentNow,
+            ];
+            $join_data['is_sample'] = 2;
+            $join_data['sample_time'] = $currentNow;
+        }else{
+//            $saveData = array_merge($saveData, [
+//                'is_sample' => 8,
+//                'sample_time_repair' => $currentNow,
+//            ]);
+            $saveData['join_item_data'] = [// 报名具体项表
+                'id' => $join_item_id,
+                'status' => 2,
+                'is_sample' => 8,
+                'sample_time_repair' => $currentNow,
+            ];
+            $join_data['is_sample'] = 8;
+            $join_data['sample_time_repair'] = $currentNow;
+        }
+        $saveData['join_item_data'] = array_merge($saveData['join_item_data'], $save_item_info);
+        $saveData['sample_num_data'] = $sample_num_data;// 领样表
+        $saveData['join_data'] = $join_data;// 报名主表
+
+//        if($id <= 0) {// 新加;要加入的特别字段
+//            $addNewData = [
+//                // 'account_password' => $account_password,
+//            ];
+//            $saveData = array_merge($saveData, $addNewData);
+//        }
+        $extParams = [
+            'judgeDataKey' => 'replace',// 数据验证的下标
+           // 'methodName' => 'sample_save'
+        ];
+        $resultDatas = CTAPIAbilityJoinItemsResultsBusiness::replaceById($request, $this, $saveData, $id, $extParams, true);
+        return ajaxDataArr(1, $resultDatas, '');
+    }
 
     /**
      * 添加--判定

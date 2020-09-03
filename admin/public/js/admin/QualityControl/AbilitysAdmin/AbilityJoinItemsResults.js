@@ -20,6 +20,22 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
 
 //业务逻辑部分
 var otheraction = {
+    getSample : function(id){// 弹窗取样
+        //获得表单各name的值
+        var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
+        console.log(IFRAME_SAMPLE_URL);
+        console.log(data);
+        var url_params = get_url_param(data);// parent.get_url_param(data)
+        var weburl = IFRAME_SAMPLE_URL + id + '?' + url_params;
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = "取样";
+        layeriframe(weburl,tishi,950,600,IFRAME_MODIFY_CLOSE_OPERATE);
+        return false;
+    },
     sampleResultInfo:function(item_id, ability_name, retry_no){// 数据上报 item_id : 报名项目表的id  ability_name:项目名称
         //获得表单各name的值
         var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
@@ -181,6 +197,12 @@ function addCompany(company_id, company_name){
     document.write("                <%if( item.retry_no == 1 && item.submit_status == 2){%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"otheraction.sampleResultInfo(<%=item.ability_join_item_id%>,'<%=item.ability_name%>-补测查看', 1)\">");
     document.write("                    <i class=\"ace-icon  fa fa-eye  bigger-60\"> 查看数据[补测]<\/i>");
+    document.write("                <\/a>");
+    document.write("                <%}%>");
+    // document.write("                <%if(item.status == 1  &&  item.is_sample == 1 ){%>");
+    document.write("                <%if( (item.status == 1 || item.status == 2) ){%>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"otheraction.getSample(<%=item.id%>)\">");
+    document.write("                    <i class=\"ace-icon fa fa-eyedropper bigger-60\"> 取样<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
     // document.write("                <%if( false){%>");

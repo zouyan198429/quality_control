@@ -161,6 +161,6 @@
       var SELECT_COMPANY_URL = "{{url('admin/company/select')}}";// 选择所属企业
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/AbilitysAdmin/AbilityJoinItems.js?11') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/AbilitysAdmin/AbilityJoinItems.js') }}?12"  type="text/javascript"></script>
 </body>
 </html>

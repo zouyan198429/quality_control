@@ -80,6 +80,22 @@ class AbilityJoinItemsResultsDBBusiness extends BasePublicDBBusiness
             // if(isset($saveData['resource_ids']))  unset($saveData['resource_ids']);
             // if(isset($saveData['resource_id']))  unset($saveData['resource_id']);
 
+            // 取样功能
+
+            // 样品编号
+            $sample_num_data = [];
+            $has_sample_num_data = false;// 是否有 false:没有 ； true:有
+            Tool::getInfoUboundVal($saveData, 'sample_num_data', $has_sample_num_data, $sample_num_data, 1);
+
+            // 报名项
+            $join_item_data = [];
+            $has_join_item_data = false;// 是否有 false:没有 ； true:有
+            Tool::getInfoUboundVal($saveData, 'join_item_data', $has_join_item_data, $join_item_data, 1);
+
+            // 报名表
+            $join_info_data = [];
+            $has_join_info_data = false;// 是否有 false:没有 ； true:有
+            Tool::getInfoUboundVal($saveData, 'join_data', $has_join_info_data, $join_info_data, 1);
 
             $operate_staff_id_history = config('public.operate_staff_id_history', 0);// 0;--写上，不然后面要去取，但现在的系统不用历史表
             // 保存前的处理
@@ -111,6 +127,7 @@ class AbilityJoinItemsResultsDBBusiness extends BasePublicDBBusiness
             }
 
             // 新加或修改
+            $resultDatas = [];
             if($id <= 0){// 新加
                 $resultDatas = static::create($saveData,$modelObj);
                 $id = $resultDatas['id'] ?? 0;
@@ -153,6 +170,42 @@ class AbilityJoinItemsResultsDBBusiness extends BasePublicDBBusiness
                     , 'id', $company_id, $modifAddOprate, []);
             }
 
+            // 能力验证取样登记表修改
+            if($has_sample_num_data){
+
+                $items_samples_num_ids = AbilityJoinItemsSamplesDBBusiness::updateByDataList(['result_id' => $id], ['result_id' => $id]
+                    , $sample_num_data, $isModify, $operate_staff_id, $operate_staff_id_history
+                    , 'id', $company_id, $modifAddOprate, []);
+
+            }
+
+            // 能力验证报名项表修改
+            if($has_join_item_data){
+                if(empty($resultDatas)) $resultDatas = static::getInfo($id);
+                $join_item_data['operate_staff_id'] = $operate_staff_id;
+                $join_item_data['operate_staff_id_history'] = $operate_staff_id_history;
+                $ability_join_item_id = $resultDatas['ability_join_item_id'];
+                AbilityJoinItemsDBBusiness::replaceById($join_item_data, $company_id, $ability_join_item_id, $operate_staff_id, $modifAddOprate);
+//                $items_item_ids = AbilityJoinItemsDBBusiness::updateByDataList(['id' => $resultDatas['ability_join_item_id']], ['id' => $resultDatas['ability_join_item_id']]
+//                    , $join_item_data, $isModify, $operate_staff_id, $operate_staff_id_history
+//                    , 'id', $company_id, $modifAddOprate, []);
+            }
+
+            // 能力验证报名表修改
+            if($has_join_info_data){
+                if(empty($resultDatas)) $resultDatas = static::getInfo($id);
+                $join_info_data['operate_staff_id'] = $operate_staff_id;
+                $join_info_data['operate_staff_id_history'] = $operate_staff_id_history;
+                $ability_join_id = $resultDatas['ability_join_id'];
+                AbilityJoinDBBusiness::replaceById($join_info_data, $company_id, $ability_join_id, $operate_staff_id, $modifAddOprate);
+                // 记录报名日志
+                // 获得操作人员信息
+                $operateInfo = StaffDBBusiness::getInfo($operate_staff_id);
+                $logContent = '取样操作：' . json_encode(['join' => $join_info_data, 'join_item' => $join_item_data, 'join_item_result' => $saveData, 'sample_num' => $sample_num_data]);
+                $ability_join_item_id = $resultDatas['ability_join_item_id'];
+                AbilityJoinLogsDBBusiness::saveAbilityJoinLog($operateInfo['admin_type'], $operate_staff_id, $ability_join_id, $ability_join_item_id, $logContent, $operate_staff_id, $operate_staff_id_history);
+
+            }
 
             // 同步修改图片资源关系
             if($hasResource){
