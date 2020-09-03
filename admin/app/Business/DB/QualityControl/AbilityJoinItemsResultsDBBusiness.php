@@ -3,6 +3,7 @@
 namespace App\Business\DB\QualityControl;
 
 use App\Models\QualityControl\AbilityJoinItemsResults;
+use App\Models\QualityControl\AbilityJoinItemsSamples;
 use App\Services\DB\CommonDB;
 use App\Services\Tool;
 use Carbon\Carbon;
@@ -540,15 +541,24 @@ class AbilityJoinItemsResultsDBBusiness extends BasePublicDBBusiness
 
         if(!empty($dataList)){
             $ids = array_values(array_unique(array_column($dataList,'id')));
+
+            // 去掉标记为000的样品--以后这里可以去掉
+            $queryParams = Tool::getParamQuery(['result_id' => $ids, 'submit_status' => 1, 'sample_one' => '000'], ['sqlParams' =>['select' =>['id', 'result_id']]], []);
+            $sampleDataList = AbilityJoinItemsSamples::getAllList($queryParams, [])->toArray();
+            $delIds = array_values(array_unique(array_column($sampleDataList,'result_id')));
+            if(!empty($delIds))  $ids = array_diff($ids, $delIds);
+
             // 自动进行不满意操作
-            foreach($ids as $tem_id){
-                $saveData = [
-                    'result_status' => 8,// 不满意
-                ];
-                $company_id = 0;
-                $user_id = 0;
-                $modifAddOprate = 0;
-                static::judgeResultById($saveData, $company_id, $tem_id, $user_id, $modifAddOprate);
+            if(!empty($ids)){
+                foreach($ids as $tem_id){
+                    $saveData = [
+                        'result_status' => 8,// 不满意
+                    ];
+                    $company_id = 0;
+                    $user_id = 0;
+                    $modifAddOprate = 0;
+                    static::judgeResultById($saveData, $company_id, $tem_id, $user_id, $modifAddOprate);
+                }
             }
         }
     }
