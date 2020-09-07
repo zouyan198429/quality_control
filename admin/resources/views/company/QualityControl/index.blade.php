@@ -141,6 +141,9 @@
                       <dd>
                           <a lay-href="{{ url('company/ability_join_item') }}">已报名项目</a>
                       </dd>
+                      <dd>
+                          <a lay-href="{{ url('/download/nengli.html') }}">资料下载</a>
+                      </dd>
                   </dl>
               </li>
               <li data-name="user" class="layui-nav-item">
