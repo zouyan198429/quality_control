@@ -29,16 +29,17 @@
 
         <div class="layui-row layui-card-body">
 
-            <form  method="post"  id="addForm">
+            <form  method="post"  id="addForm" >
                 <input type="hidden" name="id" value="{{ $info['id'] ?? 0 }}"/>
 
                 <fieldset class="layui-elem-field layui-field-title">
                     <legend>测试结果</legend>
                 </fieldset>
+                <div  style="padding:25px 0;">
                 @foreach ($info['join_item_reslut_info_updata']['items_samples_list'] as $k => $sample_info)
-                <div class="layui-form-item">
+                <div class="layui-form-item" >
                     <!-- <label class="layui-form-label">样品编号： </label> -->
-                    <div class="" style="padding-left:30px; font-style: 16px; line-height: 180%;" data-sample_one="{{ $sample_info['sample_one'] ?? '' }}">
+                    <div class="layui-input-block sample_list"  style="padding-left:30px; font-size: 16px; line-height: 180%;" data-sample_one="{{ $sample_info['sample_one'] ?? '' }}">
                         样品编号: <b> {{ $sample_info['sample_one'] ?? '' }} </b> <br >
 
                         <?php $sample_result_list = $sample_info['sample_result_list'] ?>
@@ -51,7 +52,7 @@
                     </div>
                 </div>
                 @endforeach
-
+                </div>
                 <fieldset class="layui-elem-field layui-field-title">
                     <legend>检测所用仪器</legend>
                 </fieldset>

@@ -62,11 +62,9 @@
         <col width="60">
         <col width="">
         <col width="70">
+        <col width=""> 
+        <col width=""> 
         <col width="">
-{{--        <col width="">--}}
-{{--        <col width="150">--}}
-{{--        <col width="150">--}}
-        <col width="150">
     </colgroup>
     <thead>
     <tr>
@@ -76,17 +74,12 @@
           <!-- <span class="lbl">全选</span> -->
         </label>
       </th>
-      <th>ID</th>
-{{--      <th>所属客户端</th>--}}
+      <th>ID</th> 
       <th>所属企业</th>
       <th>企业ID</th>
       <th>文档类型</th>
-      <th>文件</th>
-{{--      <th>pdf文件</th>--}}
-{{--      <th>excel文件</th>--}}
-      <th>创建时间</th>
-{{--      <th>更新时间</th>--}}
-      {{--<th>排序[降序]</th>--}}
+      <th>文件</th> 
+      <th>创建时间</th> 
       <th>操作</th>
     </tr>
     </thead>

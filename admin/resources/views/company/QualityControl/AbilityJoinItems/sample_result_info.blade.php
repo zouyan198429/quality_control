@@ -34,9 +34,10 @@
                 </fieldset>
                 @foreach ($info['join_item_reslut_info_updata']['items_samples_list'] as $k => $sample_info)
                 <div class="layui-form-item">
-                    <label class="layui-form-label">样品编号： </label>
-                    <div class="layui-input-block sample_list" data-sample_one="{{ $sample_info['sample_one'] ?? '' }}">
-                       编号 {{ $sample_info['sample_one'] ?? '' }}
+<!--                     <label class="layui-form-label">样品编号： </label>
+ -->                 
+                     <div class="layui-input-block sample_list"  style="padding-left:30px; font-size: 16px; line-height: 180%;"   data-sample_one="{{ $sample_info['sample_one'] ?? '' }}">
+                       样品编号: {{ $sample_info['sample_one'] ?? '' }} <br>
                     {{-- 样品id _需要收集项目的数据项目的数据类型id --}}
                         <?php $sample_result_list = $sample_info['sample_result_list'] ?>
                         @foreach ($info['project_submit_items_list'] as $t_k => $submit_info)
@@ -119,7 +120,6 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label"></label>
                             <div class="layui-input-block">
-
                                 {!! $method_info['content'] ?? '' !!}
                             </div>
                         </div>
@@ -132,7 +132,7 @@
                         <div class="row  baguetteBoxOne gallery ">
                             @foreach ($info['join_item_reslut_info_updata']['resource_list'] as $k => $resource_info)
                             <a href="{{ $resource_info['resource_url'] ?? '' }}">
-                            <img src="{{ $resource_info['resource_url'] ?? '' }}" alt="{{ $resource_info['resource_name'] ?? '' }}" title="{{ $resource_info['resource_name'] ?? '' }}"/>
+                            <img src="{{ $resource_info['resource_url'] ?? '' }}" alt="{{ $resource_info['resource_name'] ?? '' }}"  style="width: 100px;" title="{{ $resource_info['resource_name'] ?? '' }}"/>
                             </a>
                             @endforeach
                         </div>
