@@ -94,16 +94,15 @@
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
         <col width="50">
-{{--        <col width="50">--}}
         <col>
         <col>
         <col width="75">
-        <col width="105">
-        <col  width="90">
+        <col width="150">
+        <col>
+        <col>
+        <col>
         <col width="90">
-        <col width="90">
-        <col width="90">
-        <col width="75">
+        <col width="125">
         <col width="150">
     </colgroup>
     <thead>
@@ -113,11 +112,10 @@
           <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>
         </label>
       </th>
-{{--        <th>ID</th>--}}
         <th>能力验证代码</th>
         <th>单位</th>
         <th>联系人</th>
-        <th>联系人手机<hr/>联系人电话</th>
+        <th>联系人手机</th>
         <th>报名时间</th>
         <th>是否取样<hr/>取样时间</th>
         <th>是否提交<hr/>提交时间</th>
