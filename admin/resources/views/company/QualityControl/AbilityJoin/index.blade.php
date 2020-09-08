@@ -13,11 +13,11 @@
   <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/style/admin.css')}}" media="all">
 </head>
 <body>
- 
+
 <div class="mm">
   <div class="mmhead" id="mywork">
 
-    @include('common.pageParams') 
+    @include('common.pageParams')
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
           <select class="wmini" name="status" style="width: 80px;">
@@ -59,7 +59,7 @@
         <col  width="150">
         <col width="75">
         <col width="75">
-        <col width="70"> 
+        <col width="70">
         <col width="150">
     </colgroup>
     <thead>
@@ -74,7 +74,7 @@
         <th>报名时间</th>
         <th>报名项目</th>
         <th>满意项目</th>
-        <th>状态</th> 
+        <th>状态</th>
         <th>操作</th>
     </tr>
     </thead>
@@ -114,6 +114,11 @@
       var IMPORT_EXCEL_TEMPLATE_URL = "{{ url('company/ability_join/import_template') }}";//导入EXCEL模版地址
       var IMPORT_EXCEL_URL = "{{ url('api/company/ability_join/import') }}";//导入EXCEL地址
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
+
+      // 列表数据每隔指定时间就去执行一次刷新【如果表有更新时】--定时执行
+      var IFRAME_TAG_KEY = "";// "QualityControl\\CTAPIStaff";// 获得模型表更新时间的关键标签，可为空：不获取
+      var IFRAME_TAG_TIMEOUT = 60000;// 获得模型表更新时间运行间隔 1000:1秒 ；可以不要此变量：默认一分钟
+
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
   <script src="{{ asset('js/company/QualityControl/AbilityJoin.js?0') }}"  type="text/javascript"></script>

@@ -88,6 +88,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/ajax_password_save', 'Admin\QualityControl\IndexController@ajax_password_save');// 修改密码--ok
         $api->any('admin/ajax_info_save', 'Admin\QualityControl\IndexController@ajax_info_save');// 修改设置--ok
 
+        $api->any('admin/ajax_getTableUpdateTime', 'Admin\QualityControl\IndexController@ajax_getTableUpdateTime');// 获得模块表的最新更新时间
         // 上传图片
         $api->post('admin/upload', 'Admin\QualityControl\UploadController@index');
         $api->post('admin/upload/ajax_del', 'Admin\QualityControl\UploadController@ajax_del');// 根据id删除文件
@@ -181,6 +182,45 @@ $api->version('v1', function ($api) {
 
         $api->post('admin/sms_code/import', 'Admin\QualityControl\SmsCodeController@import');// 导入excel
         $api->post('admin/sms_code/ajax_get_ids', 'Admin\QualityControl\SmsCodeController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        // 证书
+        $api->any('admin/certificate/ajax_alist', 'Admin\QualityControl\CertificateController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/certificate/ajax_del', 'Admin\QualityControl\CertificateController@ajax_del');// 删除
+        $api->post('admin/certificate/ajax_save', 'Admin\QualityControl\CertificateController@ajax_save');// 新加/修改
+        $api->any('admin/certificate/ajax_info', 'Admin\QualityControl\CertificateController@ajax_info');// 详情
+        $api->post('admin/certificate/ajax_get_child', 'Admin\QualityControl\CertificateController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/certificate/ajax_get_areachild', 'Admin\QualityControl\CertificateController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/certificate/ajax_import_staff','Admin\QualityControl\CertificateController@ajax_import'); // 导入员工
+
+        $api->post('admin/certificate/import', 'Admin\QualityControl\CertificateController@import');// 导入excel
+        $api->post('admin/certificate/ajax_get_ids', 'Admin\QualityControl\CertificateController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        // 证书-能力范围
+        $api->any('admin/certificate_schedule/ajax_alist', 'Admin\QualityControl\CertificateScheduleController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/certificate_schedule/ajax_del', 'Admin\QualityControl\CertificateScheduleController@ajax_del');// 删除
+        $api->any('admin/certificate_schedule/ajax_save', 'Admin\QualityControl\CertificateScheduleController@ajax_save');// 新加/修改
+        $api->any('admin/certificate_schedule/ajax_info', 'Admin\QualityControl\CertificateScheduleController@ajax_info');// 详情
+        $api->post('admin/certificate_schedule/ajax_get_child', 'Admin\QualityControl\CertificateScheduleController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/certificate_schedule/ajax_get_areachild', 'Admin\QualityControl\CertificateScheduleController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/certificate_schedule/ajax_import_staff','Admin\QualityControl\CertificateScheduleController@ajax_import'); // 导入员工
+
+        $api->post('admin/certificate_schedule/import', 'Admin\QualityControl\CertificateScheduleController@import');// 导入excel
+        $api->post('admin/certificate_schedule/ajax_get_ids', 'Admin\QualityControl\CertificateScheduleController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        $api->post('admin/certificate_schedule/up_excel', 'Admin\QualityControl\CertificateScheduleController@up_excel');// 上传excel地址
+        $api->post('admin/certificate_schedule/ajax_excel_save', 'Admin\QualityControl\CertificateScheduleController@ajax_excel_save');// 上传excel--导入保存
+
+        // 证书-证书导入批次
+        $api->any('admin/certificate_import_log/ajax_alist', 'Admin\QualityControl\CertificateImportLogController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/certificate_import_log/ajax_del', 'Admin\QualityControl\CertificateImportLogController@ajax_del');// 删除
+        $api->any('admin/certificate_import_log/ajax_save', 'Admin\QualityControl\CertificateImportLogController@ajax_save');// 新加/修改
+        $api->any('admin/certificate_import_log/ajax_info', 'Admin\QualityControl\CertificateImportLogController@ajax_info');// 详情
+        $api->post('admin/certificate_import_log/ajax_get_child', 'Admin\QualityControl\CertificateImportLogController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/certificate_import_log/ajax_get_areachild', 'Admin\QualityControl\CertificateImportLogController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/certificate_import_log/ajax_import_staff','Admin\QualityControl\CertificateImportLogController@ajax_import'); // 导入员工
+
+        $api->post('admin/certificate_import_log/import', 'Admin\QualityControl\CertificateImportLogController@import');// 导入excel
+        $api->post('admin/certificate_import_log/ajax_get_ids', 'Admin\QualityControl\CertificateImportLogController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
         // 资质证书类型[一级分类]
         $api->any('admin/company_certificate_type/ajax_alist', 'Admin\QualityControl\CompanyCertificateTypeController@ajax_alist');//ajax获得列表数据

@@ -106,18 +106,18 @@ class AbilityCodeController extends BasicController
     }
 
     /**
-     * @OA\Get(
+     * @ OA\Get(
      *     path="/api/admin/citys/ajax_info",
      *     tags={"大后台-系统设置-城市"},
      *     summary="城市--详情",
      *     description="根据单个id,查询详情记录......",
      *     operationId="adminQualityControlCitysAjax_info",
      *     deprecated=false,
-     *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_citys_id_required"),
-     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_info_citys"),
-     *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
-     *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
+     *     @ OA\Parameter(ref="#/components/parameters/Accept"),
+     *     @ OA\Parameter(ref="#/components/parameters/Schema_QualityControl_citys_id_required"),
+     *     @ OA\Response(response=200,ref="#/components/responses/Response_QualityControl_info_citys"),
+     *     @ OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
+     *     @ OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
      *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_citys"}
@@ -145,18 +145,18 @@ class AbilityCodeController extends BasicController
     }
 
     /**
-     * @OA\Post(
+     * @ OA\Post(
      *     path="/api/admin/citys/ajax_save",
      *     tags={"大后台-系统设置-城市"},
      *     summary="城市--新加/修改",
      *     description="根据单个id,新加/修改记录(id>0:修改；id=0:新加)......",
      *     operationId="adminQualityControlCitysAjax_save",
      *     deprecated=false,
-     *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_citys_id_required"),
-     *     @OA\Response(response=200,ref="#/components/responses/common_Response_modify"),
-     *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
-     *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
+     *     @ OA\Parameter(ref="#/components/parameters/Accept"),
+     *     @ OA\Parameter(ref="#/components/parameters/Schema_QualityControl_citys_id_required"),
+     *     @ OA\Response(response=200,ref="#/components/responses/common_Response_modify"),
+     *     @ OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
+     *     @ OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
      *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_citys"}
@@ -202,18 +202,18 @@ class AbilityCodeController extends BasicController
     }
 
     /**
-     * @OA\Get(
+     * @ OA\Get(
      *     path="/api/admin/citys/ajax_alist",
      *     tags={"大后台-系统设置-城市"},
      *     summary="城市--列表",
      *     description="城市--列表......",
      *     operationId="adminQualityControlCitysAjax_alist",
      *     deprecated=false,
-     *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_citys_id_optional"),
-     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_list_citys"),
-     *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
-     *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
+     *     @ OA\Parameter(ref="#/components/parameters/Accept"),
+     *     @ OA\Parameter(ref="#/components/parameters/Schema_QualityControl_citys_id_optional"),
+     *     @ OA\Response(response=200,ref="#/components/responses/Response_QualityControl_list_citys"),
+     *     @ OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
+     *     @ OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
      *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_citys"}
@@ -288,18 +288,18 @@ class AbilityCodeController extends BasicController
 
 
     /**
-     * @OA\Post(
+     * @ OA\Post(
      *     path="/api/admin/citys/ajax_del",
      *     tags={"大后台-系统设置-城市"},
      *     summary="城市--删除",
      *     description="根据单个id,删除记录......",
      *     operationId="adminQualityControlCitysAjax_del",
      *     deprecated=false,
-     *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_citys_id_required"),
-     *     @OA\Response(response=200,ref="#/components/responses/common_Response_del"),
-     *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
-     *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
+     *     @ OA\Parameter(ref="#/components/parameters/Accept"),
+     *     @ OA\Parameter(ref="#/components/parameters/Schema_QualityControl_citys_id_required"),
+     *     @ OA\Response(response=200,ref="#/components/responses/common_Response_del"),
+     *     @ OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
+     *     @ OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
      *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_citys"}

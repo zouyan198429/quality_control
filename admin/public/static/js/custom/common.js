@@ -60,6 +60,41 @@ function get_ajax_headers(in_headers, type_num){
     return in_headers;
 }
 
+// 根据设置，自动刷新列表数据【每隔一定时间执行一次】
+// 参数
+// record_page_url  一般就是当前页面/为空时： window.location.href
+// tag_key  获得模型表更新时间的关键标签，可为空：不获取
+// timeout  获得模型表更新时间运行间隔 1000:1秒 ；可以不要此变量：默认一分钟
+// 使用页面需要这两个参数
+// var IFRAME_TAG_KEY = "QualityControl\\CTAPIStaff";// 获得模型表更新时间的关键标签，可为空：不获取
+// var IFRAME_TAG_TIMEOUT = 60000;// 获得模型表更新时间运行间隔 1000:1秒 ；可以不要此变量：默认一分钟
+// var SUBMIT_FORM = true;//防止多次点击提交 true:可进行提交操作；false:有其它操作正在进行，不可以操作
+function autoRefeshList(record_page_url, tag_key, timeout) {
+    // let tag_key = IFRAME_TAG_KEY || '';
+    if( tag_key !== ''){
+        // 自动更新数据
+        var autoIframeTagObj = new Object();
+        //var record_page_url = window.location.href;
+        record_page_url = record_page_url || window.location.href;
+        autoIframeTagObj.refeshList = function(){
+            let submiting = SUBMIT_FORM;// true:可进行提交操作；false:有其它操作正在进行，不可以操作
+            if(typeof(submiting) != 'boolean'){
+                submiting =  true;
+            }
+            console.log('submiting=true-可进行提交操作==真实值为：', submiting);
+            if(submiting && window.parent.autoRefeshList(record_page_url, tag_key)){
+                console.log('刷新列表数据');
+                //刷新当前列表页面-自己页面操作时[适合更新操作-不更新总数]
+                list_fun_name = LIST_FUNCTION_NAME || 'reset_list';
+                eval( '' + list_fun_name + '(' + true +', ' + true +', ' + false +', 2)');
+            }
+        };
+        // let timeout = IFRAME_TAG_TIMEOUT || 60000;// 默认一分钟
+        timeout = timeout || 60000;// 默认一分钟
+        setInterval(autoIframeTagObj.refeshList,timeout);
+    }
+}
+
 // -----------json对象--属性相关的操作---------------------
 //是否有对象属性 ；有属性：true ;无属性:false  undefined/null:返回true -- 对 数组同样试用
 // obj 要判断的对象
@@ -2161,7 +2196,7 @@ function getDiffTime(leftTime){
 
     // 分钟
     returnObj.a_min_m = Math.floor(leftTime / 1000 / 60);// 共多少分钟 -- 向下取整
-    returnObj.a_min_m = Math.ceil(leftTime / 1000 / 60);// 共多少分钟 -- 向上取整
+    returnObj.a_max_m = Math.ceil(leftTime / 1000 / 60);// 共多少分钟 -- 向上取整
 
     returnObj.y_mix_m = Math.floor( leftTime / 1000 / 60  % (365 * 24 * 60 ) );// -- 向下取整
     returnObj.y_max_m = Math.ceil( leftTime / 1000 / 60  % (365 * 24  * 60 ) );// -- 向上取整
@@ -2171,7 +2206,7 @@ function getDiffTime(leftTime){
 
     // 秒
     returnObj.a_min_s = Math.floor(leftTime / 1000);// 共多少分钟 -- 向下取整
-    returnObj.a_min_s = Math.ceil(leftTime / 1000);// 共多少分钟 -- 向上取整
+    returnObj.a_max_s = Math.ceil(leftTime / 1000);// 共多少分钟 -- 向上取整
 
     returnObj.y_mix_s = Math.floor( leftTime / 1000 % (365 * 24 * 60 * 60 ) );// -- 向下取整
     returnObj.y_max_s = Math.ceil( leftTime / 1000 % (365 * 24  * 60 * 60 ) );// -- 向上取整
@@ -2181,7 +2216,7 @@ function getDiffTime(leftTime){
 
     // 毫秒
     returnObj.a_min_ms = Math.floor(leftTime);// 共多少毫秒 -- 向下取整
-    returnObj.a_min_ms = Math.ceil(leftTime);// 共多少毫秒 -- 向上取整
+    returnObj.a_max_ms = Math.ceil(leftTime);// 共多少毫秒 -- 向上取整
 
     returnObj.y_mix_ms = Math.floor( leftTime % (365 * 24 * 60 * 60 * 1000) );// -- 向下取整
     returnObj.y_max_ms = Math.ceil( leftTime % (365 * 24  * 60 * 60  * 1000) );// -- 向上取整

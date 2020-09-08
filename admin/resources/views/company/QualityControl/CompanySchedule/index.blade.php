@@ -23,21 +23,21 @@
             <div class="layui-btn-group layuiadmin-btn-group" >
               <a href="javascript:void(0);" class="layui-btn layui-btn-sm layui-btn-normal" onclick="action.iframeModify(0)">添加能力附表</a>
             </div>
-          
-          </div> 
+
+          </div>
 
                <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
-                <div class="msearch fr"> 
+                <div class="msearch fr">
                   <button class="btn btn-normal search_frm" style="display: none;">搜索</button>
                 </div>
               </form>
-           <div class="layui-card-body" pad15>  
+           <div class="layui-card-body" pad15>
 
               <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
                 <colgroup>
-                    <col width="60"> 
+                    <col width="60">
                     <col width="">
-                    <col width="180"> 
+                    <col width="180">
                     <col width="90">
                 </colgroup>
                 <thead>
@@ -47,9 +47,9 @@
                       <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>
                     </label>
                   </th> -->
-                  <th>ID</th> 
+                  <th>ID</th>
                   <th>文件</th>
-                  <th>创建时间</th> 
+                  <th>创建时间</th>
                   <th>操作</th>
                 </tr>
                 </thead>
@@ -96,6 +96,11 @@
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
 
       var SELECT_COMPANY_URL = "{{url('company/company/select')}}";// 选择所属企业
+
+      // 列表数据每隔指定时间就去执行一次刷新【如果表有更新时】--定时执行
+      var IFRAME_TAG_KEY = "";// "QualityControl\\CTAPIStaff";// 获得模型表更新时间的关键标签，可为空：不获取
+      var IFRAME_TAG_TIMEOUT = 60000;// 获得模型表更新时间运行间隔 1000:1秒 ；可以不要此变量：默认一分钟
+
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
   <script src="{{ asset('js/company/QualityControl/CompanySchedule.js?8') }}"  type="text/javascript"></script>

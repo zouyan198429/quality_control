@@ -197,18 +197,18 @@ class AbilityJoinItemsController extends BasicController
     }
 
     /**
-     * @OA\Get(
+     * @ OA\Get(
      *     path="/api/admin/ability_join_items/ajax_info",
      *     tags={"大后台-能力验证-能力验证报名项"},
      *     summary="能力验证报名项--详情",
      *     description="根据单个id,查询详情记录......",
      *     operationId="adminQualityControlAbilityJoinItemsAjax_info",
      *     deprecated=false,
-     *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_ability_join_items_id_required"),
-     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_info_ability_join_items"),
-     *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
-     *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
+     *     @ OA\Parameter(ref="#/components/parameters/Accept"),
+     *     @ OA\Parameter(ref="#/components/parameters/Schema_QualityControl_ability_join_items_id_required"),
+     *     @ OA\Response(response=200,ref="#/components/responses/Response_QualityControl_info_ability_join_items"),
+     *     @ OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
+     *     @ OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
      *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_ability_join_items"}
@@ -236,18 +236,18 @@ class AbilityJoinItemsController extends BasicController
 //    }
 
     /**
-     * @OA\Post(
+     * @ OA\Post(
      *     path="/api/admin/ability_join_items/ajax_save",
      *     tags={"大后台-能力验证-能力验证报名项"},
      *     summary="能力验证报名项--新加/修改",
      *     description="根据单个id,新加/修改记录(id>0:修改；id=0:新加)......",
      *     operationId="adminQualityControlAbilityJoinItemsAjax_save",
      *     deprecated=false,
-     *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_ability_join_items_id_required"),
-     *     @OA\Response(response=200,ref="#/components/responses/common_Response_modify"),
-     *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
-     *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
+     *     @ OA\Parameter(ref="#/components/parameters/Accept"),
+     *     @ OA\Parameter(ref="#/components/parameters/Schema_QualityControl_ability_join_items_id_required"),
+     *     @ OA\Response(response=200,ref="#/components/responses/common_Response_modify"),
+     *     @ OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
+     *     @ OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
      *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_ability_join_items"}
@@ -293,18 +293,18 @@ class AbilityJoinItemsController extends BasicController
 //    }
 
     /**
-     * @OA\Get(
+     * @ OA\Get(
      *     path="/api/admin/ability_join_items/ajax_alist",
      *     tags={"大后台-能力验证-能力验证报名项"},
      *     summary="能力验证报名项--列表",
      *     description="能力验证报名项--列表......",
      *     operationId="adminQualityControlAbilityJoinItemsAjax_alist",
      *     deprecated=false,
-     *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_ability_join_items_id_optional"),
-     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_list_ability_join_items"),
-     *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
-     *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
+     *     @ OA\Parameter(ref="#/components/parameters/Accept"),
+     *     @ OA\Parameter(ref="#/components/parameters/Schema_QualityControl_ability_join_items_id_optional"),
+     *     @ OA\Response(response=200,ref="#/components/responses/Response_QualityControl_list_ability_join_items"),
+     *     @ OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
+     *     @ OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
      *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_ability_join_items"}
@@ -397,18 +397,18 @@ class AbilityJoinItemsController extends BasicController
 
 
     /**
-     * @OA\Post(
+     * @ OA\Post(
      *     path="/api/admin/ability_join_items/ajax_del",
      *     tags={"大后台-能力验证-能力验证报名项"},
      *     summary="能力验证报名项--删除",
      *     description="根据单个id,删除记录......",
      *     operationId="adminQualityControlAbilityJoinItemsAjax_del",
      *     deprecated=false,
-     *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_ability_join_items_id_required"),
-     *     @OA\Response(response=200,ref="#/components/responses/common_Response_del"),
-     *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
-     *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
+     *     @ OA\Parameter(ref="#/components/parameters/Accept"),
+     *     @ OA\Parameter(ref="#/components/parameters/Schema_QualityControl_ability_join_items_id_required"),
+     *     @ OA\Response(response=200,ref="#/components/responses/common_Response_del"),
+     *     @ OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
+     *     @ OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
      *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_ability_join_items"}

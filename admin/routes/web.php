@@ -251,9 +251,34 @@ Route::get('admin/sms_code/add/{id}', 'Admin\QualityControl\SmsCodeController@ad
 Route::get('admin/sms_code/export', 'Admin\QualityControl\SmsCodeController@export');// 导出
 Route::get('admin/sms_code/import_template', 'Admin\QualityControl\SmsCodeController@import_template');// 导入模版
 
+// 证书
+Route::get('admin/certificate', 'Admin\QualityControl\CertificateController@index');// 列表
+Route::get('admin/certificate/add/{id}', 'Admin\QualityControl\CertificateController@add');// 添加
+// Route::get('admin/certificate/select', 'Admin\QualityControl\CertificateController@select');// 选择-弹窗
+Route::get('admin/certificate/export', 'Admin\QualityControl\CertificateController@export');// 导出
+Route::get('admin/certificate/import_template', 'Admin\QualityControl\CertificateController@import_template');// 导入模版
+
+// 证书-能力范围
+Route::get('admin/certificate_schedule', 'Admin\QualityControl\CertificateScheduleController@index');// 列表
+Route::get('admin/certificate_schedule/add/{id}', 'Admin\QualityControl\CertificateScheduleController@add');// 添加
+// Route::get('admin/certificate_schedule/select', 'Admin\QualityControl\CertificateScheduleController@select');// 选择-弹窗
+Route::get('admin/certificate_schedule/export', 'Admin\QualityControl\CertificateScheduleController@export');// 导出
+Route::get('admin/certificate_schedule/import_template', 'Admin\QualityControl\CertificateScheduleController@import_template');// 导入模版
+
+Route::get('admin/certificate_schedule/add_excel/{id}', 'Admin\QualityControl\CertificateScheduleController@add_excel');// 添加--导入
+
+// 证书-证书导入批次
+Route::get('admin/certificate_import_log', 'Admin\QualityControl\CertificateImportLogController@index');// 列表
+Route::get('admin/certificate_import_log/add/{id}', 'Admin\QualityControl\CertificateImportLogController@add');// 添加
+Route::get('admin/certificate_import_log/info/{id}', 'Admin\QualityControl\CertificateImportLogController@info');// 查看-详情
+// Route::get('admin/certificate_import_log/select', 'Admin\QualityControl\CertificateImportLogController@select');// 选择-弹窗
+Route::get('admin/certificate_import_log/export', 'Admin\QualityControl\CertificateImportLogController@export');// 导出
+Route::get('admin/certificate_import_log/import_template', 'Admin\QualityControl\CertificateImportLogController@import_template');// 导入模版
+
 // 资质证书类型[一级分类]
 Route::get('admin/company_certificate_type', 'Admin\QualityControl\CompanyCertificateTypeController@index');// 列表
 Route::get('admin/company_certificate_type/add/{id}', 'Admin\QualityControl\CompanyCertificateTypeController@add');// 添加
+Route::get('admin/company_certificate_type/info/{id}', 'Admin\QualityControl\CompanyCertificateTypeController@info');// 查看-详情
 // Route::get('admin/company_certificate_type/select', 'Admin\QualityControl\CompanyCertificateTypeController@select');// 选择-弹窗
 Route::get('admin/company_certificate_type/export', 'Admin\QualityControl\CompanyCertificateTypeController@export');// 导出
 Route::get('admin/company_certificate_type/import_template', 'Admin\QualityControl\CompanyCertificateTypeController@import_template');// 导入模版
