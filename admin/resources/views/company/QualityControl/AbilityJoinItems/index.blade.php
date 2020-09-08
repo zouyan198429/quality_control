@@ -39,16 +39,15 @@
           <div class="layui-card-body">
               <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
                 <colgroup>
-{{--                    <col width="50">--}}
                     <col>
                     <col >
                     <col >
                     <col width="75" >
                     <col width="105">
-                    <col  width="90">
-                    <col  width="90">
+                    <col width="150">
+                    <col width="150">
                     <col width="75">
-                    <col width="90">
+                    <col width="150">
                     <col width="80">
                     <col width="160">
                 </colgroup>

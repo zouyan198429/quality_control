@@ -29,27 +29,30 @@
 
         <div class="layui-row layui-card-body">
 
-            <form  method="post"  id="addForm">
+            <form  method="post"  id="addForm" >
                 <input type="hidden" name="id" value="{{ $info['id'] ?? 0 }}"/>
 
                 <fieldset class="layui-elem-field layui-field-title">
                     <legend>测试结果</legend>
                 </fieldset>
+                <div  style="padding:25px 0;">
                 @foreach ($info['join_item_reslut_info_updata']['items_samples_list'] as $k => $sample_info)
-                <div class="layui-form-item">
-                    <label class="layui-form-label">样品编号： </label>
-                    <div class="layui-input-block sample_list" data-sample_one="{{ $sample_info['sample_one'] ?? '' }}">
-                       编号 {{ $sample_info['sample_one'] ?? '' }}
-                    {{-- 样品id _需要收集项目的数据项目的数据类型id --}}
+                <div class="layui-form-item" >
+                    <!-- <label class="layui-form-label">样品编号： </label> -->
+                    <div class="layui-input-block sample_list"  style="padding-left:30px; font-size: 16px; line-height: 180%;" data-sample_one="{{ $sample_info['sample_one'] ?? '' }}">
+                        样品编号: <b> {{ $sample_info['sample_one'] ?? '' }} </b> <br >
+
                         <?php $sample_result_list = $sample_info['sample_result_list'] ?>
+
                         @foreach ($info['project_submit_items_list'] as $t_k => $submit_info)
                             <?php $key = ($sample_info['id'] ?? '') . '_' . ($submit_info['id'] ?? '') ?>
-                            {{ $submit_info['name'] ?? '' }}：<input type="text" value="{{ $sample_result_list[$key]['sample_result'] ?? '' }}" data-name="{{ $submit_info['name'] ?? '' }}" name="sample_result_{{ $sample_info['id'] ?? '' }}_{{ $submit_info['id'] ?? '' }}" lay-verify="title" autocomplete="off" placeholder="请输入{{ $submit_info['name'] ?? '' }}" style="width:120px; display:inline;" class="layui-input">
+                            {{ $submit_info['name'] ?? '' }}：<input type="text" value="{{ $sample_result_list[$key]['sample_result'] ?? '' }}" data-name="{{ $submit_info['name'] ?? '' }}" name="sample_result_{{ $sample_info['id'] ?? '' }}_{{ $submit_info['id'] ?? '' }}" lay-verify="title" autocomplete="off" placeholder="请输入{{ $submit_info['name'] ?? '' }}" style="width:200px; border:2px solid #888; height: 32px; font-size:16px;  display:inline;" class="layui-input">
                         @endforeach
+                        <span style="color:red;">注：这里填写实验数据，不填写样品编号。</span>
                     </div>
                 </div>
                 @endforeach
-
+                </div>
                 <fieldset class="layui-elem-field layui-field-title">
                     <legend>检测所用仪器</legend>
                 </fieldset>
@@ -88,6 +91,7 @@
                 <fieldset class="layui-elem-field layui-field-title">
                     <legend>标准物质</legend>
                 </fieldset>
+                <p style="text-indent: 2em; color:red; padding-bottom: 15px; ">注：水泥抗压强度（3d）项目，不需要填写此项，如要填写，全部填写数字0即可。</p>
                 @foreach ($info['join_item_reslut_info_updata']['results_standard_list'] as $k => $standard_info)
                     <div class="standard_list">
                         <input type="hidden" name="standard_id[]" value="{{ $standard_info['id'] ?? '' }}">
@@ -208,7 +212,7 @@
 {{--<script src="{{asset('js/baguetteBox.js/highlight.min.js')}}" async></script>--}}
 <!-- zui js -->
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
-<script src="{{ asset('/js/company/QualityControl/AbilityJoinItems_sample_result.js') }}?11"  type="text/javascript"></script>
+<script src="{{ asset('/js/company/QualityControl/AbilityJoinItems_sample_result.js?131') }}"  type="text/javascript"></script>
 @component('component.upfileincludejs')
 @endcomponent
 </body>
