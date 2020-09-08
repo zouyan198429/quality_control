@@ -79,7 +79,6 @@
     var UPLOAD_EXCEL_URL = "{{ url('api/company/company_new_schedule/up_excel') }}";//上传excel地址
     var UPLOAD_PDF_URL = "{{ url('api/company/company_new_schedule/up_pdf') }}";//上传pdf地址
 
-
     var FLASH_SWF_URL = "{{asset('dist/lib/uploader/Moxie.swf') }}";// flash 上传组件地址  默认为 lib/uploader/Moxie.swf
     var SILVERLIGHT_XAP_URL = "{{asset('dist/lib/uploader/Moxie.xap') }}";// silverlight_xap_url silverlight 上传组件地址  默认为 lib/uploader/Moxie.xap  请确保在文件上传页面能够通过此地址访问到此文件。
 

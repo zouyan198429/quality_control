@@ -130,6 +130,11 @@
       var ABILITYS_ADMIN_URL = "{{url('admin/abilitys_admin/')}}/";//项目管理 页面地址前缀 + id
       var EXPORT_JOIN_EXCEL_URL = "{{ url('admin/abilitys/export_join/') }}/";//导出报名企业EXCEL地址+ id
       var IFRAME_PUBLISH_URL = "{{url('admin/abilitys/publish/')}}/";//公布结果页面地址前缀 + id
+
+      // 列表数据每隔指定时间就去执行一次刷新【如果表有更新时】--定时执行
+      var IFRAME_TAG_KEY = "";// "QualityControl\\CTAPIStaff";// 获得模型表更新时间的关键标签，可为空：不获取
+      var IFRAME_TAG_TIMEOUT = 60000;// 获得模型表更新时间运行间隔 1000:1秒 ；可以不要此变量：默认一分钟
+
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
   <script src="{{ asset('js/admin/QualityControl/Abilitys.js') }}?824"  type="text/javascript"></script>

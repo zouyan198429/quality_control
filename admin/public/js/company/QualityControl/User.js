@@ -1,8 +1,13 @@
 
+var SUBMIT_FORM = true;//防止多次点击提交
+
 $(function(){
 
     $('.search_frm').trigger("click");// 触发搜索事件
     // reset_list_self(false, false, true, 2);
+
+    // window.location.href 返回 web 主机的域名，如：http://127.0.0.1:8080/testdemo/test.html?id=1&name=test
+    autoRefeshList(window.location.href, IFRAME_TAG_KEY, IFRAME_TAG_TIMEOUT);// 根据设置，自动刷新列表数据【每隔一定时间执行一次】
 });
 
 //重载列表
@@ -168,6 +173,7 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
     $.ajax({
         'type' : 'POST',
         'url' : ajax_url,//'/pms/Supplier/ajax_del',
+        'headers':get_ajax_headers({}, ADMIN_AJAX_TYPE_NUM),
         'data' : data,
         'dataType' : 'json',
         'success' : function(ret){

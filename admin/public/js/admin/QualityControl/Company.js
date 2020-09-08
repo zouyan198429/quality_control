@@ -1,8 +1,13 @@
 
+var SUBMIT_FORM = true;//防止多次点击提交
+
 $(function(){
 
     $('.search_frm').trigger("click");// 触发搜索事件
     // reset_list_self(false, false, true, 2);
+
+    // window.location.href 返回 web 主机的域名，如：http://127.0.0.1:8080/testdemo/test.html?id=1&name=test
+    autoRefeshList(window.location.href, IFRAME_TAG_KEY, IFRAME_TAG_TIMEOUT);// 根据设置，自动刷新列表数据【每隔一定时间执行一次】
 });
 
 //重载列表
@@ -112,6 +117,23 @@ var otheraction = {
         var tishi = "员工管理";
         layeriframe(weburl,tishi,1050,700,5);
         return false;
+    },
+    certificate_schedule_num : function(id){// 查看能力范围
+        //获得表单各name的值
+        var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
+        console.log(CERTIFICATE_SCHEDULE_URL);
+        console.log(data);
+        var url_params = get_url_param(data);// parent.get_url_param(data);
+        var weburl = CERTIFICATE_SCHEDULE_URL + '?company_id=' + id ;// + url_params;// + id + '?' + url_params;
+        // var weburl = STAFF_SHOW_URL + '?company_id=' + id
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = "能力范围管理";
+        layeriframe(weburl,tishi,1050,700,5);
+        return false;
     }
 };
 
@@ -171,6 +193,7 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
     $.ajax({
         'type' : 'POST',
         'url' : ajax_url,//'/pms/Supplier/ajax_del',
+        'headers':get_ajax_headers({}, ADMIN_AJAX_TYPE_NUM),
         'data' : data,
         'dataType' : 'json',
         'success' : function(ret){
@@ -269,6 +292,9 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
     document.write("                <\/a>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.staff_num(<%=item.id%>)\">");
     document.write("                    <i class=\"ace-icon bigger-60\">员工(<%=item.extend_info.staff_num%>)<\/i>");
+    document.write("                <\/a>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.certificate_schedule_num(<%=item.id%>)\">");
+    document.write("                    <i class=\"ace-icon bigger-60\">能力范围(<%=item.extend_info.certificate_schedule_num%>)<\/i>");
     document.write("                <\/a>");
     document.write("");
     document.write("            <\/td>");

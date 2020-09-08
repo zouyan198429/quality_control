@@ -136,6 +136,11 @@
       var ACCOUNT_STATUS_URL = "{{ url('api/company/user/ajax_frozen') }}";//操作(冻结/解冻)
 
        var IFRAME_IMPORT_URL = "{{url('company/user/import_bath')}}/";// 导入
+
+      // 列表数据每隔指定时间就去执行一次刷新【如果表有更新时】--定时执行
+      var IFRAME_TAG_KEY = "";// "QualityControl\\CTAPIStaff";// 获得模型表更新时间的关键标签，可为空：不获取
+      var IFRAME_TAG_TIMEOUT = 60000;// 获得模型表更新时间运行间隔 1000:1秒 ；可以不要此变量：默认一分钟
+
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
   <script src="{{ asset('js/company/QualityControl/User.js?632') }}"  type="text/javascript"></script>

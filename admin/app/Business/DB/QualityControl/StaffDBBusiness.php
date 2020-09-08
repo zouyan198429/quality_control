@@ -500,6 +500,43 @@ class StaffDBBusiness extends BasePublicDBBusiness
     }
 
     /**
+     * 更新企业有效的能力范围数
+     *
+     * @param int  / array $company_ids 企业id  多个时为一维数组或逗号分隔的字符串
+     * @return  mixed 员工人数
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function updateCertificateScheduleNum($company_ids = 0){
+        // 没有需要处理的
+        if(!Tool::formatOneArrVals($company_ids)) return true;
+        // 更新企业的员工人数
+//        DB::beginTransaction();
+//        try {
+//            DB::commit();
+//        } catch ( \Exception $e) {
+//            DB::rollBack();
+//            throws($e->getMessage());
+//            // throws($e->getMessage());
+//        }
+        CommonDB::doTransactionFun(function() use(&$company_ids){
+
+            foreach($company_ids as $company_id){
+                $count = CertificateScheduleDBBusiness::getCertificateScheduleCount($company_id);
+                $updateFields = [
+                    'certificate_schedule_num' => $count,
+                ];
+                $searchConditon = [
+                    'admin_type' => 2,
+                    'staff_id' => $company_id,
+                ];
+                $mainObj = null;
+                StaffExtendDBBusiness::updateOrCreate($mainObj, $searchConditon, $updateFields );
+            }
+        });
+        return true;
+    }
+
+    /**
      * 根据id删除--可批量删除
      * 删除员工--还需要重新统计企业的员工数
      * 企业删除 ---有员工的企业不能删除，需要先删除/解绑员工

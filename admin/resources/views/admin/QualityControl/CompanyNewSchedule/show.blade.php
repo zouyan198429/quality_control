@@ -130,6 +130,11 @@
 
       var SELECT_COMPANY_URL = "{{url('admin/company/select')}}";// 选择所属企业
       var DOWN_FILE_URL = "{{ url('admin/down_file') }}";// 下载网页打印机驱动
+
+      // 列表数据每隔指定时间就去执行一次刷新【如果表有更新时】--定时执行
+      var IFRAME_TAG_KEY = "";// "QualityControl\\CTAPIStaff";// 获得模型表更新时间的关键标签，可为空：不获取
+      var IFRAME_TAG_TIMEOUT = 60000;// 获得模型表更新时间运行间隔 1000:1秒 ；可以不要此变量：默认一分钟
+
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
   <script src="{{ asset('js/admin/QualityControl/CompanyNewSchedule_show.js') }}?3"  type="text/javascript"></script>

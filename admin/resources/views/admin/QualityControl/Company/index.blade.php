@@ -224,8 +224,13 @@
 
       var SCHEDULE_SHOW_URL = "{{ url('admin/company_new_schedule/show')}}/";//查看企业能力附表 + 企业id
       var STAFF_SHOW_URL = "{{ url('admin/user/show')}}/";//查看企业能力附表 + 企业id "{{ url('admin/user')}}"; //
+      var CERTIFICATE_SCHEDULE_URL = "{{ url('admin/certificate_schedule')}}/";// 查看能力范围
+      // 列表数据每隔指定时间就去执行一次刷新【如果表有更新时】--定时执行
+      var IFRAME_TAG_KEY = "";// "QualityControl\\CTAPIStaff";// 获得模型表更新时间的关键标签，可为空：不获取
+      var IFRAME_TAG_TIMEOUT = 60000;// 获得模型表更新时间运行间隔 1000:1秒 ；可以不要此变量：默认一分钟
+
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/Company.js') }}?5"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/Company.js') }}?6"  type="text/javascript"></script>
 </body>
 </html>

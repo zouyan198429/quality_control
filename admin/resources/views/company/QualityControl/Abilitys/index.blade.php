@@ -110,6 +110,11 @@
       var JOIN_URL = "{{ url('company/abilitys/join/') }}/";//报名地址
       var COMPANY_EXTEND_URL = "{{ url('api/company/abilitys/ajax_schedule_num') }}/";//验证是否有上传能力附表 ajax_company_extend
       var COMPANY_SCHEDULE_URL = "{{ url('company/company_new_schedule') }}/";//能力附表列表地址
+
+      // 列表数据每隔指定时间就去执行一次刷新【如果表有更新时】--定时执行
+      var IFRAME_TAG_KEY = "";// "QualityControl\\CTAPIStaff";// 获得模型表更新时间的关键标签，可为空：不获取
+      var IFRAME_TAG_TIMEOUT = 60000;// 获得模型表更新时间运行间隔 1000:1秒 ；可以不要此变量：默认一分钟
+
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
   <script src="{{ asset('js/company/QualityControl/Abilitys.js?32') }}"  type="text/javascript"></script>
