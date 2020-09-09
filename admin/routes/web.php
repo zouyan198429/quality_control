@@ -457,6 +457,17 @@ Route::get('web/login_user', 'WebFront\Web\QualityControl\HomeController@login_u
 Route::get('web/certificate', 'WebFront\Web\QualityControl\Certificate\CertificateScheduleController@index');// 查询
 Route::get('web/certificate/index', 'WebFront\Web\QualityControl\Certificate\CertificateScheduleController@index');// 查询
 Route::get('web/certificate/list', 'WebFront\Web\QualityControl\Certificate\CertificateScheduleController@list');// 企业列表
+// 企业列表
+// 城市id  city_id
+// 行业id  industry_id
+// field   检验机构名称  统一社会信用代码或组织机构代码   证书号
+// keyword
+// 每页数量  pagesize
+// 当前页号 page
+//total
+//?field=&keyword=
+Route::get('web/certificate/company/{city_id}_{industry_id}_{pagesize}_{page}', 'WebFront\Web\QualityControl\Certificate\CertificateScheduleController@company');
+
 Route::get('web/certificate/info/{id}', 'WebFront\Web\QualityControl\Certificate\CertificateScheduleController@info');// 企业资质认定详情列表
 // 首页
 //Route::get('web/test', 'WebFront\Web\QualityControl\IndexController@test');// 测试

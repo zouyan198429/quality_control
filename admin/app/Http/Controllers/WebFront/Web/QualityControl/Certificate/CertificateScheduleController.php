@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\WebFront\Web\QualityControl\Certificate;
 
 use App\Business\Controller\API\QualityControl\CTAPICertificateScheduleBusiness;
+use App\Business\Controller\API\QualityControl\CTAPICitysBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIIndustryBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
 use App\Http\Controllers\WorksController;
 use App\Services\Request\CommonRequest;
@@ -53,6 +55,39 @@ class CertificateScheduleController extends BasicController
             });
     }
 
+    /**
+     *  列表页--企业的
+     * ?field=&keyword=
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function company(Request $request, $city_id = 0, $industry_id = 0, $pagesize = 20, $page = 1)
+    {
+        return $this->exeDoPublicFun($request, 0, 8, 'web.QualityControl.CertificateSchedule.company', false
+            , '', [], function (&$reDataArr) use ($request, &$city_id, &$industry_id, &$pagesize, &$page){
+
+            $field = CommonRequest::getInt($request, 'field');
+            $keyword = CommonRequest::getInt($request, 'keyword');
+            $pathParamStr = $city_id . '_' . $industry_id . '_' . $pagesize . '_{page}';// . $page;
+            if($field != '' && $keyword != '') $pathParamStr .= '?field=' . $field . '&keyword=' . $keyword;
+
+            CTAPIStaffBusiness::mergeRequest($request, $this,  [
+                'city_id' => $city_id,
+                'industry_id' => $industry_id,
+                'pagesize' => $pagesize,
+                'page' => $page,
+            ]);
+
+            $extParams = [
+                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                // 'relationFormatConfigs'=> CTAPIStaffBusiness::getRelationConfigs($request, $this, ['industry_info', 'extend_info', 'city_info'], []),
+            ];
+
+            $company_list = CTAPIStaffBusiness::getList($request, $this, 2 + 4, [], [], $extParams);
+            pr($company_list);
+        });
+    }
     /**
      * 同事选择-弹窗
      *
@@ -510,7 +545,43 @@ class CertificateScheduleController extends BasicController
 //        $reDataArr['info'] = $info;
 //        $reDataArr['company_hidden'] = $company_hidden;// =1 : 隐藏企业选择
         // 获得企业总数
+        $company_count = CTAPIStaffBusiness::getFVFormatList( $request,  $this, 8, 1
+            ,  ['admin_type' => 2], false,[], ['sqlParams' => ['where' => [['is_perfect', 2], ['open_status', 2], ['account_status', 1]]]]);
 
+        $reDataArr['company_count'] = $company_count;
+        // 获得最新注册企业
+        $company_new_list = CTAPIStaffBusiness::getFVFormatList( $request,  $this, 2, 9
+            ,  ['admin_type' => 2], false,[]
+            , [
+                'sqlParams' => [
+                    'where' => [['is_perfect', 2], ['open_status', 2], ['account_status', 1]],
+                    'orderBy' => CTAPIStaffBusiness::$orderBy
+                ]
+            ]);
+        foreach($company_new_list as $k => $v){
+            $company_new_list[$k]['created_at_fmt'] = judgeDate($v['created_at'],'Y-m-d');
+        }
+        $reDataArr['company_new_list'] = $company_new_list;
+        // 获得最新更新企业
+        $company_update_list = CTAPIStaffBusiness::getFVFormatList( $request,  $this, 2, 9
+            ,  ['admin_type' => 2], false,[]
+            , [
+                'sqlParams' => [
+                    'where' => [['is_perfect', 2], ['open_status', 2], ['account_status', 1]],
+                    'orderBy' => ['updated_at' => 'desc', 'id' => 'desc']
+                ]
+            ]);
+        foreach($company_update_list as $k => $v){
+            $company_update_list[$k]['updated_at_fmt'] = judgeDate($v['updated_at'],'Y-m-d');
+        }
+        $reDataArr['company_update_list'] = $company_update_list;
+        // 行业及企业数量
+
+        $industry_list = CTAPIIndustryBusiness::exeDBBusinessMethodCT($request, $this, '',  'getCompanyNumGroup', [], 1, 1);
+        $reDataArr['industry_list'] = $industry_list;
+        // 地区分布及企业数量
+        $city_list = CTAPICitysBusiness::exeDBBusinessMethodCT($request, $this, '',  'getCompanyNumGroup', [], 1, 1);
+        $reDataArr['city_list'] = $city_list;
 
     }
 

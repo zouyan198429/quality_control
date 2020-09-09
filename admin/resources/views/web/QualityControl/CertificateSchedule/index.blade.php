@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
 	<head>
-        <title>秦检通</title>
+        <title>秦检通_陕西省质量认证认可协会_陕西质量认证咨询中心_检验检测能力</title>
+        <meta name="keywords" content="秦检通,陕西省质量认证认可协会,陕西质量认证咨询中心,检验检测能力" />
+        <meta name="description" content="秦检通,陕西省质量认证认可协会,陕西质量认证咨询中心,检验检测能力" />
         @include('web.QualityControl.CertificateSchedule.layout_public.pagehead')
 	</head>
 	<body>
@@ -43,7 +45,7 @@
 					<dt></dt>
 					<dd>
 						<span>入驻企业</span>
-						<strong>1652</strong>
+						<strong>{{ $company_count ?? '0' }}</strong>
 					</dd>
 				</dl>
 				<dl class="dv1 dva2">
@@ -74,130 +76,35 @@
 					</div>
 					<div class="bd">
 						<ul class="comtabul">
+                            @foreach ($company_new_list as $k => $v)
 							<li>
 								<div class="com-logo">
 
 								</div>
 								<div class="name">
-									西安某某检测有限公司
+                                    {{ $v['company_name'] ?? '' }}
 								</div>
 								<div class="date">
-									注册日期：2020-05-24
+									注册日期： {{ $v['created_at_fmt'] ?? '' }}
 								</div>
 							</li>
-							<li>
-								<div class="com-logo">
-
-								</div>
-								<div class="name">
-									西安某某检测有限公司
-								</div>
-								<div class="date">
-									注册日期：2020-05-24
-								</div>
-							</li>
-							<li>
-								<div class="com-logo">
-
-								</div>
-								<div class="name">
-									西安某某检测有限公司
-								</div>
-								<div class="date">
-									注册日期：2020-05-24
-								</div>
-							</li>
-							<li>
-								<div class="com-logo">
-
-								</div>
-								<div class="name">
-									西安某某检测有限公司
-								</div>
-								<div class="date">
-									注册日期：2020-05-24
-								</div>
-							</li>
-							<li>
-								<div class="com-logo">
-
-								</div>
-								<div class="name">
-									西安某某检测有限公司
-								</div>
-								<div class="date">
-									注册日期：2020-05-24
-								</div>
-							</li>
-							<li>
-								<div class="com-logo">
-
-								</div>
-								<div class="name">
-									西安某某检测有限公司
-								</div>
-								<div class="date">
-									注册日期：2020-05-24
-								</div>
-							</li>
+                           @endforeach
 							<div class="c"></div>
 						</ul>
 						<ul class="comtabul">
+                            @foreach ($company_update_list as $k => $v)
 							<li>
 								<div class="com-logo">
 
 								</div>
 								<div class="name">
-									西安某某检测有限公司
+                                    {{ $v['company_name'] ?? '' }}
 								</div>
 								<div class="date">
-									变更日期：2020-05-24
+									变更日期：{{ $v['updated_at_fmt'] ?? '' }}
 								</div>
 							</li>
-							<li>
-								<div class="com-logo">
-
-								</div>
-								<div class="name">
-									西安某某检测有限公司
-								</div>
-								<div class="date">
-									变更日期：2020-05-24
-								</div>
-							</li>
-							<li>
-								<div class="com-logo">
-
-								</div>
-								<div class="name">
-									西安某某检测有限公司
-								</div>
-								<div class="date">
-									变更日期：2020-05-24
-								</div>
-							</li>
-							<li>
-								<div class="com-logo">
-
-								</div>
-								<div class="name">
-									西安某某检测有限公司
-								</div>
-								<div class="date">
-									变更日期：2020-05-24
-								</div>
-							</li>
-							<li>
-								<div class="com-logo">
-
-								</div>
-								<div class="name">
-									西安某某检测有限公司
-								</div>
-								<div class="date">
-									变更日期：2020-05-24
-								</div>
-							</li>
+                            @endforeach
 							<div class="c"></div>
 						</ul>
 
@@ -230,89 +137,30 @@
 					</div>
 					<div class="bd">
 						<ul class="typetab">
-							<li>
-								<div class="type-name">
-									建筑工程及建材
-								</div>
-								<div class="com-data">
-									34
-								</div>
-							</li>
-							<li>
-								<div class="type-name">
-									建筑工程及建材
-								</div>
-								<div class="com-data">
-									34
-								</div>
-							</li>
-							<li>
-								<div class="type-name">
-									建筑工程及建材
-								</div>
-								<div class="com-data">
-									34
-								</div>
-							</li>
-							<li>
-								<div class="type-name">
-									建筑工程及建材
-								</div>
-								<div class="com-data">
-									34
-								</div>
-							</li>
-							<li>
-								<div class="type-name">
-									建筑工程及建材
-								</div>
-								<div class="com-data">
-									34
-								</div>
-							</li>
+
+                            @foreach ($industry_list as $k => $v)
+                                <li>
+                                    <div class="type-name">
+                                        {{ $v['industry_name'] ?? '' }}
+                                    </div>
+                                    <div class="com-data">
+                                        {{ $v['company_count'] ?? '0' }}
+                                    </div>
+                                </li>
+                            @endforeach
 							<div class="c"></div>
 						</ul>
 						<ul class="typetab">
+                            @foreach ($city_list as $k => $v)
 							<li>
 								<div class="type-name">
-									西安
+                                    {{ $v['city_name'] ?? '' }}
 								</div>
 								<div class="com-data">
-									252
+                                    {{ $v['company_count'] ?? '0' }}
 								</div>
 							</li>
-							<li>
-								<div class="type-name">
-									西安
-								</div>
-								<div class="com-data">
-									252
-								</div>
-							</li>
-							<li>
-								<div class="type-name">
-									西安
-								</div>
-								<div class="com-data">
-									252
-								</div>
-							</li>
-							<li>
-								<div class="type-name">
-									西安
-								</div>
-								<div class="com-data">
-									252
-								</div>
-							</li>
-							<li>
-								<div class="type-name">
-									西安
-								</div>
-								<div class="com-data">
-									252
-								</div>
-							</li>
+                            @endforeach
 							<div class="c"></div>
 						</ul>
 
