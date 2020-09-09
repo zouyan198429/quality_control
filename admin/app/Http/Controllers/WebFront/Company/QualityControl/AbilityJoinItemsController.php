@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\WebFront\Company\QualityControl;
 
 use App\Business\Controller\API\QualityControl\CTAPIAbilityJoinItemsBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIResourceBusiness;
 use App\Http\Controllers\WorksController;
 use App\Services\Request\CommonRequest;
 use App\Services\Tool;
@@ -94,6 +95,28 @@ class AbilityJoinItemsController extends BasicController
 //
 //        });
 //    }
+
+    /**
+     * 单文件上传-上传pdf
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function up_pdf(Request $request)
+    {
+        $this->InitParams($request);
+        // $this->company_id = 1;
+        // 企业 的 个人--只能读自己的人员信息
+        $organize_id = $this->user_id;// CommonRequest::getInt($request, 'company_id');
+        if(!is_numeric($organize_id) || $organize_id <= 0) throws('所属企业参数有误！');
+
+        $userInfo = $this->getStaffInfo($organize_id);
+        if(empty($userInfo)) throws('企业记录不存在！');
+
+        // 上传并保存文件
+        return CTAPIResourceBusiness::filePlupload($request, $this, 8);
+    }
 
     /**
      * 数据上报
@@ -453,6 +476,7 @@ class AbilityJoinItemsController extends BasicController
         $standard_valid_date = CommonRequest::get($request, 'standard_valid_date');
         Tool::formatOneArrVals($standard_valid_date, [null, ''], ',', 1 | 8);
         foreach($standard_id as $k => $standard_id_val){
+            if($standard_name[$k] == '' && $produce_unit[$k] == '' && $batch_number[$k] == '' && $standard_valid_date[$k] == '') continue;
             if($standard_name[$k] == '') throws('标准物质名称不能为空');
             array_push($standard_arr,[
                 'id' => $standard_id[$k],
@@ -511,14 +535,17 @@ class AbilityJoinItemsController extends BasicController
                 'submit_status' => 2,
                 'submit_time' => $currentNow,
                 'results_instrument' => $instrument_arr,// 能力验证检测所用仪器
-                'results_standard' => $standard_arr,// 能力验证检测标准物质
+                // 'results_standard' => $standard_arr,// 能力验证检测标准物质
                 'results_method' => $method_arr,// 检测方法依据
                 'items_samples' => $items_samples_list,// 能力验证取样登记表
                 // 'resource_id' => $resource_id[0] ?? 0,// 第一个图片资源的id
+                'resource_type' => 2,
                 'resource_ids' => $resource_ids,// 图片资源id串(逗号分隔-未尾逗号结束)
                 'resourceIds' => $resource_id,// 此下标为图片资源关系
             ]
         ];
+        // 标准物质可以为空
+        if(!empty($standard_arr)) $saveData['join_items_result']['results_standard'] = $standard_arr;
         if($item_retry_no == 0){
             $saveData = array_merge($saveData, [
                 'submit_status' => 2,

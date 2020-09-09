@@ -9,6 +9,7 @@
     <!-- zui css -->
 {{--    <link rel="stylesheet" href="{{asset('dist/css/zui.min.css') }}">--}}
 {{--    @include('admin.layout_public.pagehead')--}}
+    @include('admin.layout_public.pagehead')
     <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/css/layui.css')}}" media="all">
     <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/style/admin.css')}}" media="all">
     <link rel="stylesheet" href="{{asset('layuiadmin_quality/layui/css/layui.css')}}" media="all">
@@ -35,7 +36,7 @@
                 @foreach ($info['join_item_reslut_info_updata']['items_samples_list'] as $k => $sample_info)
                 <div class="layui-form-item">
 <!--                     <label class="layui-form-label">样品编号： </label>
- -->                 
+ -->
                      <div class="layui-input-block sample_list"  style="padding-left:30px; font-size: 16px; line-height: 180%;"   data-sample_one="{{ $sample_info['sample_one'] ?? '' }}">
                        样品编号: {{ $sample_info['sample_one'] ?? '' }} <br>
                     {{-- 样品id _需要收集项目的数据项目的数据类型id --}}
@@ -127,15 +128,35 @@
                 @endforeach
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label">图片上传</label>
+                    <label class="layui-form-label">上传资料</label>
                     <div class="layui-input-block">
-                        <div class="row  baguetteBoxOne gallery ">
-                            @foreach ($info['join_item_reslut_info_updata']['resource_list'] as $k => $resource_info)
-                            <a href="{{ $resource_info['resource_url'] ?? '' }}">
-                            <img src="{{ $resource_info['resource_url'] ?? '' }}" alt="{{ $resource_info['resource_name'] ?? '' }}"  style="width: 100px;" title="{{ $resource_info['resource_name'] ?? '' }}"/>
-                            </a>
-                            @endforeach
-                        </div>
+                        <?php
+                        $resource_type = $info['join_item_reslut_info_updata']['resource_type'] ?? 1;
+                        ?>
+                         @if (isset($resource_type) && $resource_type == 1 )
+                            <div class="row  baguetteBoxOne gallery ">
+                                @foreach ($info['join_item_reslut_info_updata']['resource_list'] as $k => $resource_info)
+                                    <a href="{{ $resource_info['resource_url'] ?? '' }}">
+                                    <img src="{{ $resource_info['resource_url'] ?? '' }}" alt="{{ $resource_info['resource_name'] ?? '' }}"  style="width: 100px;" title="{{ $resource_info['resource_name'] ?? '' }}"/>
+                                    </a>
+                                @endforeach
+                            </div>
+                        @else
+
+
+                                <div class="row">
+
+                                    @foreach ($info['join_item_reslut_info_updata']['resource_list'] as $k => $resource_info)
+                                        {{ $resource_info['resource_name'] ?? '' }}
+                                        <a href="{{ $resource_info['resource_url_format'] ?? '' }}" class="btn btn-mini btn-success"   target='_blank'>
+                                        <i class="ace-icon fa fa-eye bigger-60"> 查看</i>
+                                        </a>
+                                        <a href="javascript:void(0);" class="btn btn-mini btn-success"  onclick="otheraction.down_file('{{ $resource_info["resource_url_old"] ?? "" }}')">
+                                        <i class="ace-icon fa fa-cloud-download bigger-60"> 下载</i>
+                                        </a>
+                                    @endforeach
+                                </div>
+                        @endif
                     </div>
                 </div>
 
@@ -152,13 +173,13 @@
 <script type="text/javascript">
     // var SAVE_URL = "{{ url('api/company/ability_join_item/ajax_save_result_sample') }}";// ajax保存提交数据地址
     var LIST_URL = "{{url('company/ability_join_item')}}";//保存成功后跳转到的地址
-
+    var DOWN_FILE_URL = "{{ url('company/down_file') }}";// 下载网页打印机驱动
 </script>
 <link rel="stylesheet" href="{{asset('js/baguetteBox.js/baguetteBox.min.css')}}">
 <script src="{{asset('js/baguetteBox.js/baguetteBox.min.js')}}" async></script>
 <!--{{--<script src="{{asset('js/baguetteBox.js/highlight.min.js')}}" async></script>--}}-->
 
-<script src="{{ asset('/js/company/QualityControl/AbilityJoinItems_sample_result_info.js') }}?12"  type="text/javascript"></script>
+<script src="{{ asset('/js/company/QualityControl/AbilityJoinItems_sample_result_info.js') }}?13"  type="text/javascript"></script>
 
 </body>
 </html>

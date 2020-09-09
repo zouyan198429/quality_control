@@ -117,7 +117,7 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
                 $certificateObj = null ;
                 $searchConditon = [
                     'company_id' => $certificate_info['company_id'],
-                    'certificate_no' => $certificate_info['certificate_no'],
+                    // 'certificate_no' => $certificate_info['certificate_no'],// 一个企业只能有一个证书，所以去掉这个字段
                 ];
                 CertificateDBBusiness::updateOrCreate($certificateObj, $searchConditon, $certificate_info);
                 $saveData['certificate_id'] = $certificateObj->id;// $certificate_id;

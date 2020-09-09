@@ -52,6 +52,42 @@ $(function(){
         return false;
     });
 
+
+    $('#myUploader').uploader({
+        url: UPLOAD_PDF_URL,
+        lang: 'zh_cn',// 界面语言 默认情况下设置为空值，会从浏览器 <html lang=""> 属性上获取语言设置，但有也可以手动指定为以下选项：'zh_cn'：简体中文；'zh_tw'：繁体中文；
+        file_data_name:'photo',//   文件域在表单中的名称  默认 'file'
+        filters:{
+            // 只允许上传图片或图标（.ico）
+            mime_types: [
+                {title: 'PDF', extensions: 'pdf'},
+                // {title: '图标', extensions: 'ico'}
+            ],
+            // 最大上传文件为 2MB
+            max_file_size: '100mb',
+            // 不允许上传重复文件
+            // prevent_duplicates: true
+        },
+        multipart_params:{pro_unit_id:'0'},// 附加参数	函数或对象，默认 {}
+        resize:{quuality: 40},
+        // limitSumCount:1,// 自定义的可以上传的总数，一直不变动
+        limitFilesCount:1, // 限制文件上传数目  false（默认）或数字
+        multi_selection:false,// 是否可用一次选取多个文件    默认 true
+        flash_swf_url: FLASH_SWF_URL, // "http://work.kefu.cunwo.net/dist/lib/uploader/Moxie.swf",// flash 上传组件地址  默认为 lib/uploader/Moxie.swf
+        silverlight_xap_url:SILVERLIGHT_XAP_URL,// "http://work.kefu.cunwo.net/dist/lib/uploader/Moxie.xap",// silverlight 上传组件地址  默认为 lib/uploader/Moxie.xap  请确保在文件上传页面能够通过此地址访问到此文件。
+        onUploadFile: function(file) {
+            console.log('上传成功', file);
+        },
+        onFileUploaded: function(file, responseObject) {// 当队列中的一个文件上传完成后触发
+            console.log('onFileUploaded上传成功', responseObject);
+            var responseObj = $.parseJSON( responseObject.response );
+            console.log('onFileUploaded上传成功remoteData',responseObj);
+            console.log('onFileUploaded-file', file);
+            $('input[name=resource_id]').val(file.remoteId);
+
+        },
+    });
+
 });
 
 //ajax提交表单
@@ -219,7 +255,7 @@ function ajax_form(){
         // 名称
         var standard_name = infoObj.find('input[name="standard_name[]"]').val();
         console.log('standard_name=', standard_name);
-        if(!judge_validate(4,'标准物质【名称】',standard_name,true,'length',1,50)){
+        if(!judge_validate(4,'标准物质【名称】',standard_name,false,'length',1,50)){
             has_err = true;
             return false;
         }
@@ -279,7 +315,7 @@ function ajax_form(){
     var imgObj = $('#myUploader').closest('.resourceBlock').find(".upload_img");
 
     if( (!judge_list_checked(imgObj,3)) && filesCount <=0 ) {//没有选中的
-        layer_alert('请选择要上传的图片资料！',3,0);
+        layer_alert('请选择要上传的资料！',3,0);
         return false;
     }
 

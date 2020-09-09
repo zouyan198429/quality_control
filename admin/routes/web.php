@@ -453,7 +453,11 @@ Route::get('web/logout', 'WebFront\Web\QualityControl\HomeController@logout');//
 
 Route::get('web/login_company', 'WebFront\Web\QualityControl\HomeController@login_company');// login.html 登录--为登录测试  补充资料用
 Route::get('web/login_user', 'WebFront\Web\QualityControl\HomeController@login_user');// login.html 登录--为登录测试  补充资料用
-
+// 资质认定获证机构查询
+Route::get('web/certificate', 'WebFront\Web\QualityControl\Certificate\CertificateScheduleController@index');// 查询
+Route::get('web/certificate/index', 'WebFront\Web\QualityControl\Certificate\CertificateScheduleController@index');// 查询
+Route::get('web/certificate/list', 'WebFront\Web\QualityControl\Certificate\CertificateScheduleController@list');// 企业列表
+Route::get('web/certificate/info/{id}', 'WebFront\Web\QualityControl\Certificate\CertificateScheduleController@info');// 企业资质认定详情列表
 // 首页
 //Route::get('web/test', 'WebFront\Web\QualityControl\IndexController@test');// 测试
 //Route::get('web/index', 'WebFront\Web\QualityControl\IndexController@index');// 首页--ok

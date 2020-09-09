@@ -127,15 +127,35 @@
                 @endforeach
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label">图片上传</label>
+                    <label class="layui-form-label">上传资料</label>
                     <div class="layui-input-block">
-                        <div class="row  baguetteBoxOne gallery ">
-                            @foreach ($info['join_item_reslut_info_updata']['resource_list'] as $k => $resource_info)
-                            <a href="{{ $resource_info['resource_url'] ?? '' }}">
-                            <img src="{{ $resource_info['resource_url'] ?? '' }}" alt="{{ $resource_info['resource_name'] ?? '' }}" title="{{ $resource_info['resource_name'] ?? '' }}"/>
-                            </a>
-                            @endforeach
-                        </div>
+                        <?php
+                        $resource_type = $info['join_item_reslut_info_updata']['resource_type'] ?? 1;
+                        ?>
+                        @if (isset($resource_type) && $resource_type == 1 )
+                            <div class="row  baguetteBoxOne gallery ">
+                                @foreach ($info['join_item_reslut_info_updata']['resource_list'] as $k => $resource_info)
+                                    <a href="{{ $resource_info['resource_url'] ?? '' }}">
+                                        <img src="{{ $resource_info['resource_url'] ?? '' }}" alt="{{ $resource_info['resource_name'] ?? '' }}"  style="width: 100px;" title="{{ $resource_info['resource_name'] ?? '' }}"/>
+                                    </a>
+                                @endforeach
+                            </div>
+                        @else
+
+
+                            <div class="row">
+
+                                @foreach ($info['join_item_reslut_info_updata']['resource_list'] as $k => $resource_info)
+                                    {{ $resource_info['resource_name'] ?? '' }}
+                                    <a href="{{ $resource_info['resource_url_format'] ?? '' }}" class="btn btn-mini btn-success"   target='_blank'>
+                                        <i class="ace-icon fa fa-eye bigger-60"> 查看</i>
+                                    </a>
+                                    <a href="javascript:void(0);" class="btn btn-mini btn-success"  onclick="otheraction.down_file('{{ $resource_info["resource_url_old"] ?? "" }}')">
+                                        <i class="ace-icon fa fa-cloud-download bigger-60"> 下载</i>
+                                    </a>
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
                 </div>
 
@@ -152,13 +172,14 @@
 <script type="text/javascript">
     // var SAVE_URL = "{{ url('api/admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items/ajax_save_result_sample') }}";// ajax保存提交数据地址
     var LIST_URL = "{{url('admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items')}}";//保存成功后跳转到的地址
+    var DOWN_FILE_URL = "{{ url('admin/down_file') }}";// 下载网页打印机驱动
 
 </script>
 <link rel="stylesheet" href="{{asset('js/baguetteBox.js/baguetteBox.min.css')}}">
 <script src="{{asset('js/baguetteBox.js/baguetteBox.min.js')}}" async></script>
 <!--{{--<script src="{{asset('js/baguetteBox.js/highlight.min.js')}}" async></script>--}}-->
 
-<script src="{{ asset('/js/admin/QualityControl/AbilitysAdmin/AbilityJoinItems_sample_result_info.js') }}?12"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/AbilitysAdmin/AbilityJoinItems_sample_result_info.js') }}?13"  type="text/javascript"></script>
 
 </body>
 </html>

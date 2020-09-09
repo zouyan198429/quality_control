@@ -762,6 +762,21 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
                         , 2, 0
                         ,'','', [], [], '', ['extendConfig' => ['listHandleKeyArr' => ['format_resource'], 'infoHandleKeyArr' => ['resource_list']]]),
                 ], ['where' => [['type_id', 5]]], '', []),
+            // 证书 1:1
+            'certificate_detail' => CTAPICertificateBusiness::getTableRelationConfigInfo($request, $controller
+                , ['id' => 'company_id']
+                , 1, 1
+                ,'','', [], [], '', []),
+            // 获得 企业的授权签字人--正常状态的 1:n
+            'user_auth_list' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
+                , ['id' => 'company_id']
+                , 2, 1
+                ,'','', [], ['where' => [['admin_type', 4], ['role_num', '&', '8=8'], ['sign_status', 2], ['is_perfect', 2], ['account_status', 1], ['open_status', 2]]], '', []),
+            // 获得 企业的能力范围 1:n
+            'certificate_list' => CTAPICertificateScheduleBusiness::getTableRelationConfigInfo($request, $controller
+                , ['id' => 'company_id']
+                , 2, 1
+                ,'','', [], [], '', []),
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }

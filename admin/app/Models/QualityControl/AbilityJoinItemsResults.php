@@ -140,8 +140,15 @@ class AbilityJoinItemsResults extends BasePublicModel
         '1' => '未领取',
         '2' => '已领取',
     ];
+
+    // 资源类型 1图片2pdf
+    public static $resourceTypeArr = [
+        '1' => '图片',
+        '2' => 'pdf',
+    ];
     // 表里没有的字段
-    protected $appends = ['admin_type_text', 'status_text', 'result_status_text', 'is_sample_text', 'retry_no_text', 'submit_status_text', 'judge_status_text', 'is_print_text', 'is_grant_text'];
+    protected $appends = ['admin_type_text', 'status_text', 'result_status_text', 'is_sample_text', 'retry_no_text'
+        , 'submit_status_text', 'judge_status_text', 'is_print_text', 'is_grant_text', 'resource_type_text'];
 
 
     /**
@@ -235,4 +242,13 @@ class AbilityJoinItemsResults extends BasePublicModel
         return static::$isGrantArr[$this->is_grant] ?? '';
     }
 
+    /**
+     * 获取资源类型文字
+     *
+     * @return string
+     */
+    public function getResourceTypeTextAttribute()
+    {
+        return static::$resourceTypeArr[$this->resource_type] ?? '';
+    }
 }
