@@ -20,6 +20,7 @@
 					</div>
 					<div class="bd">
 						<ul class="searchbox">
+
 							<input type="radio" name="oncom" value="1" id="killOrder1" checked><label for="killOrder1">检验机构名称</label>
 							<input type="radio" name="oncom" value="2" id="killOrder2" ><label for="killOrder2">统一社会信用代码或组织机构代码</label>
 							<input type="text" name="admin_username" placeholder="" class="inp" ><button class="searchbtn" >搜索</button>

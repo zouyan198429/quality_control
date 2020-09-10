@@ -107,6 +107,15 @@ class APIOperate extends BaseBusiness
         // 获得对象
         static::requestGetObj($request, $controller,$modelObj);
         $result = $modelObj::getBaseListData($company_id, $pageParams, $model_name, $queryParams, $relations, $oprateBit, $notLog);
+        if(  ($oprateBit & 8) == 8 ){// 分页函数--直接链接地址--主要给前端页面用seo
+            $url_model = CommonRequest::get($request, 'url_model');
+            $page_tag = CommonRequest::get($request, 'url_model');
+            if($page_tag == '') $page_tag = '{page}';
+            $totalPage = $result['totalPage'] ?? 0;
+            $page = $result['page'] ?? 0;
+            $total = $result['total'] ?? 0;
+            $result['pageInfoLink'] = showPageLink($url_model, $page_tag, $totalPage,$page,$total,12,1);
+        }
         return $result;
     }
 

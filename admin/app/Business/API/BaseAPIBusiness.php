@@ -161,9 +161,14 @@ class BaseAPIBusiness extends BaseBusiness
             'totalPage'=> $totalPage,// 总页数
             'pageInfo' => "",//showPage($totalPage,$page,$total,12,1),
         ];
-        if(  ($oprateBit & 4) == 4 ){
+        if(  ($oprateBit & 4) == 4 ){// ajax 翻页代码
             $result['pageInfo'] = showPage($totalPage,$page,$total,12,1);
         }
+//        if(  ($oprateBit & 8) == 8 ){// 分页函数--直接链接地址--主要给前端页面用seo
+//            $url_model = '';
+//            $page_tag = '{page}';
+//            $result['pageInfoLink'] = showPageLink($url_model, $page_tag, $totalPage,$page,$total,12,1);
+//        }
         return $result;
 
     }
