@@ -48,7 +48,7 @@
                             <?php $key = ($sample_info['id'] ?? '') . '_' . ($submit_info['id'] ?? '') ?>
                             {{ $submit_info['name'] ?? '' }}：<input type="text" value="{{ $sample_result_list[$key]['sample_result'] ?? '' }}" data-name="{{ $submit_info['name'] ?? '' }}" name="sample_result_{{ $sample_info['id'] ?? '' }}_{{ $submit_info['id'] ?? '' }}" lay-verify="title" autocomplete="off" placeholder="请输入{{ $submit_info['name'] ?? '' }}" style="width:200px; border:2px solid #888; height: 32px; font-size:16px;  display:inline;" class="layui-input">
                         @endforeach
-                        <span style="color:red;">注：这里填写实验数据，不填写样品编号。</span>
+                        <span style="color:red;">注：这里填写实验数据，不填写样品编号。不需要加单位，如:MPN。</span>
                     </div>
                 </div>
                 @endforeach
@@ -137,9 +137,13 @@
                         </div>
                     </div>
                 @endforeach
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>资料上传</legend>
+                </fieldset>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label">资料上传</label>
+                     <p style="text-indent: 2em; color:red; padding-bottom: 15px; ">注：将结果报告表（加盖公章）、检测报告、原始记录等资料扫描成一个PDF上传，上传完请机构再次确认，无误后提交。</p>
+                    <label class="layui-form-label"> </label>
                     <div class="layui-input-block">
 
                         <input type="hidden" name="resource_id" value=""/>
