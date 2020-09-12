@@ -13,14 +13,15 @@
   <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/style/admin.css')}}" media="all">
 </head>
 <body>
-
-{{--<div id="crumb"><i class="fa fa-reorder fa-fw" aria-hidden="true"></i> 我的同事</div>--}}
+ 
 <div class="mm">
   <div class="mmhead" id="mywork">
 
     @include('common.pageParams')
     <div class="tabbox" >
-      <a href="javascript:void(0);" class="on" onclick="action.iframeModify(0)">添加证书能力范围</a>
+		<button class="btn  import_excel"  onclick="otheraction.upExcelFile(0)">导入能力附表</button>  
+      <!-- <a href="javascript:void(0);" class="on" onclick="action.iframeModify(0)">添加能力附表</a> -->
+		<a class="import_excel"  onclick="action.importExcelTemplate(this)">导入模版[EXCEL]下载</a>
     </div>
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
@@ -31,13 +32,7 @@
                 <span class="select_name company_name">{{ $info['user_company_name'] ?? '' }}</span>
                 <i class="close select_close company_id_close"  onclick="clearSelect(this)" style="display: none;">×</i>
                 <button  type="button"  class="btn btn-danger  btn-xs ace-icon fa fa-plus-circle bigger-60"  onclick="otheraction.selectCompany(this)">选择企业</button>
-          </span>
-        {{--<select class="wmini" name="province_id">--}}
-          {{--<option value="">全部</option>--}}
-          {{--@foreach ($province_kv as $k=>$txt)--}}
-            {{--<option value="{{ $k }}"  @if(isset($province_id) && $province_id == $k) selected @endif >{{ $txt }}</option>--}}
-          {{--@endforeach--}}
-        {{--</select>--}}
+          </span> 
         <select style="width:80px; height:28px;" name="field">
             <option value="certificate_no">CMA证书号</option>
             <option value="addr">实验室地址</option>
@@ -54,13 +49,14 @@
     </form>
   </div>
   <div class="table-header">
-    {{--<button class="btn btn-danger  btn-xs batch_del"  onclick="action.batchDel(this)">批量删除</button>--}}
+	  
+    
+	
     <button class="btn btn-success  btn-xs export_excel"  onclick="action.batchExportExcel(this)" >导出[按条件]</button>
     <button class="btn btn-success  btn-xs export_excel"  onclick="action.exportExcel(this)" >导出[勾选]</button>
-    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcelTemplate(this)">导入模版[EXCEL]</button>
+	{{--<button class="btn btn-danger  btn-xs batch_del"  onclick="action.batchDel(this)">批量删除</button>--}}
 {{--    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcel(this)">导入证书能力范围</button>--}}
 {{--    <div style="display:none;" ><input type="file" class="import_file img_input"></div>--}}{{--导入file对象--}}
-      <button class="btn btn-success  btn-xs import_excel"  onclick="otheraction.upExcelFile(0)">导入证书能力范围</button>
   </div>
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>

@@ -269,7 +269,7 @@
               </li><li data-name="user" class="layui-nav-item">
                   <a href="javascript:;" lay-tips="开票管理" lay-direction="2">
                       <i class="layui-icon layui-icon-component"></i>
-                      <cite>证书能力范围管理</cite>
+                      <cite>获证机构管理</cite>
                   </a>
                   <dl class="layui-nav-child">
 {{--                      <dd>--}}
