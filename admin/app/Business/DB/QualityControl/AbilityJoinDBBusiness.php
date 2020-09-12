@@ -72,7 +72,7 @@ class AbilityJoinDBBusiness extends BasePublicDBBusiness
 
             $ability_code = $saveData['ability_code'] ?? '';
             // 没有单号，则重新生成
-            if(empty($ability_code)){// $id <= 0
+            if($has_join_item && empty($ability_code)){// $id <= 0
                 $ability_code = AbilityCodeDBBusiness::getAbilityCode();// 单号 生成  2020NLYZ0001
             }
 
