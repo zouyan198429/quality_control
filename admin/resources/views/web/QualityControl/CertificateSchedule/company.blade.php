@@ -5,7 +5,9 @@
         <meta name="keywords" content="秦检通,陕西省质量认证认可协会,陕西质量认证咨询中心,检验检测能力" />
         <meta name="description" content="秦检通,陕西省质量认证认可协会,陕西质量认证咨询中心,检验检测能力" />
         @include('web.QualityControl.CertificateSchedule.layout_public.pagehead')
+        <link href="{{asset('static/css/bootstrap.css')}}" rel="stylesheet" type="text/css" />
 	</head>
+
 	<body>
         @include('web.QualityControl.CertificateSchedule.layout_public.header')
 
@@ -54,153 +56,34 @@
 				<div class="list">
 
 					<ul class="comlist">
+                        @foreach ($company_list as $k => $v)
 						<li>
 							<div class="com-logo">
 
 							</div>
 							<div class="com-name">
-								西安某某检测有限公司
+                                {{ $v['company_name'] ?? '' }}
 							</div>
 							<div class="more">
-								<a href="details.html" >查看详情</a>
+								<a href="{{url('web/certificate/info/' . $v['id'])}}" target="_blank" >查看详情</a>
 							</div>
 							<div class="content-info">
-								<p>CMA证书编号：<span>456345635746</span></p>
-								<p>公司地址：<span>西安市科技路88号</span></p>
-								<p>联系人：<span>李宇明</span></p>
-								<p>联系电话：<span>13356888875</span></p>
+								<p>CMA证书编号：<span>{{ $v['company_certificate_no'] ?? '' }}</span></p>
+								<p>公司地址：<span>{{ $v['addr'] ?? '' }}</span></p>
+								<p>联系人：<span>{{ $v['company_contact_name'] ?? '' }}</span></p>
+								<p>联系电话：<span>{{ $v['company_contact_mobile'] ?? '' }}/{{ $v['company_contact_tel'] ?? '' }}</span></p>
 							</div>
 							<div class="c"></div>
 						</li>
-						<li>
-							<div class="com-logo">
-
-							</div>
-							<div class="com-name">
-								西安某某检测有限公司
-							</div>
-							<div class="more">
-								<a href="details.html" >查看详情</a>
-							</div>
-							<div class="content-info">
-								<p>CMA证书编号：<span>456345635746</span></p>
-								<p>公司地址：<span>西安市科技路88号</span></p>
-								<p>联系人：<span>李宇明</span></p>
-								<p>联系电话：<span>13356888875</span></p>
-							</div>
-							<div class="c"></div>
-						</li>
-						<li>
-							<div class="com-logo">
-
-							</div>
-							<div class="com-name">
-								西安某某检测有限公司
-							</div>
-							<div class="more">
-								<a href="details.html" >查看详情</a>
-							</div>
-							<div class="content-info">
-								<p>CMA证书编号：<span>456345635746</span></p>
-								<p>公司地址：<span>西安市科技路88号</span></p>
-								<p>联系人：<span>李宇明</span></p>
-								<p>联系电话：<span>13356888875</span></p>
-							</div>
-							<div class="c"></div>
-						</li>
-						<li>
-							<div class="com-logo">
-
-							</div>
-							<div class="com-name">
-								西安某某检测有限公司
-							</div>
-							<div class="more">
-								<a href="details.html" >查看详情</a>
-							</div>
-							<div class="content-info">
-								<p>CMA证书编号：<span>456345635746</span></p>
-								<p>公司地址：<span>西安市科技路88号</span></p>
-								<p>联系人：<span>李宇明</span></p>
-								<p>联系电话：<span>13356888875</span></p>
-							</div>
-							<div class="c"></div>
-						</li>
-						<li>
-							<div class="com-logo">
-
-							</div>
-							<div class="com-name">
-								西安某某检测有限公司
-							</div>
-							<div class="more">
-								<a href="details.html" >查看详情</a>
-							</div>
-							<div class="content-info">
-								<p>CMA证书编号：<span>456345635746</span></p>
-								<p>公司地址：<span>西安市科技路88号</span></p>
-								<p>联系人：<span>李宇明</span></p>
-								<p>联系电话：<span>13356888875</span></p>
-							</div>
-							<div class="c"></div>
-						</li>
-						<li>
-							<div class="com-logo">
-
-							</div>
-							<div class="com-name">
-								西安某某检测有限公司
-							</div>
-							<div class="more">
-								<a href="details.html" >查看详情</a>
-							</div>
-							<div class="content-info">
-								<p>CMA证书编号：<span>456345635746</span></p>
-								<p>公司地址：<span>西安市科技路88号</span></p>
-								<p>联系人：<span>李宇明</span></p>
-								<p>联系电话：<span>13356888875</span></p>
-							</div>
-							<div class="c"></div>
-						</li>
-						<li>
-							<div class="com-logo">
-
-							</div>
-							<div class="com-name">
-								西安某某检测有限公司
-							</div>
-							<div class="more">
-								<a href="details.html" >查看详情</a>
-							</div>
-							<div class="content-info">
-								<p>CMA证书编号：<span>456345635746</span></p>
-								<p>公司地址：<span>西安市科技路88号</span></p>
-								<p>联系人：<span>李宇明</span></p>
-								<p>联系电话：<span>13356888875</span></p>
-							</div>
-							<div class="c"></div>
-						</li>
-						<li>
-							<div class="com-logo">
-
-							</div>
-							<div class="com-name">
-								西安某某检测有限公司
-							</div>
-							<div class="more">
-								<a href="details.html" >查看详情</a>
-							</div>
-							<div class="content-info">
-								<p>CMA证书编号：<span>456345635746</span></p>
-								<p>公司地址：<span>西安市科技路88号</span></p>
-								<p>联系人：<span>李宇明</span></p>
-								<p>联系电话：<span>13356888875</span></p>
-							</div>
-							<div class="c"></div>
-						</li>
-
+                        @endforeach
 
 					</ul>
+                    <div class="mmfoot">
+                        <div class="mmfleft"></div>
+                        <div class="pagination">
+                            {!! $pageInfoLink ?? ''  !!}
+                        </div>
+                    </div>
 
 				</div>
 

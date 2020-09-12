@@ -79,7 +79,7 @@ class APIOperate extends BaseBusiness
      * @param string $queryParams 条件数组/json字符
      *
      * @param string $relations 关系数组/json字符
-     * @param int $oprateBit 操作类型位 1:获得所有的; 2 分页获取[同时有1和2，2优先]；4 返回分页html翻页代码
+     * @param int $oprateBit 操作类型位 1:获得所有的; 2 分页获取[同时有1和2，2优先]；4 返回分页html翻页代码 8 返回分页html翻页代码--a链接形式seo用
      * @param int $notLog 是否需要登陆 0需要1不需要
      * @return  array 列表数据
         $result = [
@@ -101,21 +101,17 @@ class APIOperate extends BaseBusiness
             'page' => $page,// 当前页,如果不正确默认第一页
             'pagesize' => $pagesize,// 每页显示数量,取值1 -- 100 条之间,默认15条
             'total' => $total,// 总记录数,优化方案：传0传重新获取总数，如果传了，则不会再获取，而是用传的，减软数据库压力;=-5:只统计条件记录数量，不返回数据
+            // 追加两个参数 - 需要时才用
+            // 链接地址模板 http://www.***.com/list/{page} 主要是这个page 替换为具体的页数
+            'url_model' => $url_model,
+            // 链接地址模板 $url_model 中的页数标签 默认 {page}
+            'page_tag' => $page_tag,
         ]
          */
         $pageParams = CommonRequest::getPageParams($request);
         // 获得对象
         static::requestGetObj($request, $controller,$modelObj);
         $result = $modelObj::getBaseListData($company_id, $pageParams, $model_name, $queryParams, $relations, $oprateBit, $notLog);
-        if(  ($oprateBit & 8) == 8 ){// 分页函数--直接链接地址--主要给前端页面用seo
-            $url_model = CommonRequest::get($request, 'url_model');
-            $page_tag = CommonRequest::get($request, 'url_model');
-            if($page_tag == '') $page_tag = '{page}';
-            $totalPage = $result['totalPage'] ?? 0;
-            $page = $result['page'] ?? 0;
-            $total = $result['total'] ?? 0;
-            $result['pageInfoLink'] = showPageLink($url_model, $page_tag, $totalPage,$page,$total,12,1);
-        }
         return $result;
     }
 

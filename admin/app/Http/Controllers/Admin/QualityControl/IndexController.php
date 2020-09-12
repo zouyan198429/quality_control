@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\QualityControl;
 
 use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
 // use App\Business\Controller\API\RunBuy\CTAPITablesBusiness;
+use App\Business\DB\QualityControl\AbilityCodeDBBusiness;
 use App\Business\DB\QualityControl\AbilityJoinItemsDBBusiness;
 use App\Business\DB\QualityControl\StaffDBBusiness;
 use App\Http\Controllers\WorksController;
@@ -22,7 +23,8 @@ class IndexController extends BasicController
     public $controller_id =0;// 功能小模块[控制器]id - controller_id  历史表 、正在进行表 与原表相同
 
     public function test(Request $request){
-
+        // $ability_code = AbilityCodeDBBusiness::getAbilityCode();// 单号 生成  2020NLYZ0001
+        //pr($ability_code);
         $currentNow = Carbon::now()->toDateTimeString();
         $aa = date('Y-m-d 23:59:59');
         $duration_minute = 13;

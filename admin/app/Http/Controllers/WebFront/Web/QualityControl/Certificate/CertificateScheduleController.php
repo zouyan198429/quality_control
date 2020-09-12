@@ -67,24 +67,29 @@ class CertificateScheduleController extends BasicController
         return $this->exeDoPublicFun($request, 0, 8, 'web.QualityControl.CertificateSchedule.company', false
             , '', [], function (&$reDataArr) use ($request, &$city_id, &$industry_id, &$pagesize, &$page){
 
-            $field = CommonRequest::getInt($request, 'field');
-            $keyword = CommonRequest::getInt($request, 'keyword');
+            $field = CommonRequest::get($request, 'field');
+            $keyword = CommonRequest::get($request, 'keyword');
             $pathParamStr = $city_id . '_' . $industry_id . '_' . $pagesize . '_{page}';// . $page;
             if($field != '' && $keyword != '') $pathParamStr .= '?field=' . $field . '&keyword=' . $keyword;
-
-            CTAPIStaffBusiness::mergeRequest($request, $this,  [
+            $appParams = [
                 'city_id' => $city_id,
                 'industry_id' => $industry_id,
                 'pagesize' => $pagesize,
                 'page' => $page,
-            ]);
+                'url_model' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/web/certificate/company/' . $pathParamStr,
+            ];
+            CTAPIStaffBusiness::mergeRequest($request, $this, $appParams);
+            $reDataArr = array_merge($reDataArr, $appParams);
+
 
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-                // 'relationFormatConfigs'=> CTAPIStaffBusiness::getRelationConfigs($request, $this, ['industry_info', 'extend_info', 'city_info'], []),
+                // 'relationFormatConfigs'=> CTAPIStaffBusiness::getRelationConfigs($request, $this, ['industry_info', 'city_info'], []),// , 'extend_info'
             ];
-            $company_list = CTAPIStaffBusiness::getList($request, $this, 2 + 4, [], [], $extParams);
-            pr($company_list);
+            $company_arr = CTAPIStaffBusiness::getList($request, $this, 2 + 8, [], [], $extParams)['result'] ?? [];
+            $reDataArr['company_list'] = $company_arr['data_list'] ?? [];
+            $reDataArr['pageInfoLink'] = $company_arr['pageInfoLink'] ?? '';
+
         });
     }
     /**
