@@ -7,6 +7,7 @@ use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
 // use App\Business\Controller\API\RunBuy\CTAPITablesBusiness;
 use App\Business\DB\QualityControl\AbilityCodeDBBusiness;
 use App\Business\DB\QualityControl\AbilityJoinItemsDBBusiness;
+use App\Business\DB\QualityControl\AbilityJoinItemsResultsDBBusiness;
 use App\Business\DB\QualityControl\CertificateScheduleDBBusiness;
 use App\Business\DB\QualityControl\StaffDBBusiness;
 use App\Http\Controllers\WorksController;
@@ -25,23 +26,23 @@ class IndexController extends BasicController
     public $controller_id =0;// 功能小模块[控制器]id - controller_id  历史表 、正在进行表 与原表相同
 
     public function test(Request $request){
-        CTAPICertificateScheduleBusiness::mergeRequest($request, $this, [
-            'field' => 'method_name',
-            'keyword' => '标',
-        ]);
-        $queryParams = [
-            'select' => [
-                'company_id'
-                //,'position_name','sort_num'
-                //,'operate_staff_id','operate_staff_id_history'
-                // ,'created_at'
-            ],
-            'distinct'=> 'company_id',
-        ];
-        $aa = CTAPICertificateScheduleBusiness::getList($request, $this, 2 + 4, $queryParams, [], []);
-        pr($aa);
-        CertificateScheduleDBBusiness::test();
-        pr(123);
+//        CTAPICertificateScheduleBusiness::mergeRequest($request, $this, [
+//            'field' => 'method_name',
+//            'keyword' => '标',
+//        ]);
+//        $queryParams = [
+//            'select' => [
+//                'company_id'
+//                //,'position_name','sort_num'
+//                //,'operate_staff_id','operate_staff_id_history'
+//                // ,'created_at'
+//            ],
+//            'distinct'=> 'company_id',
+//        ];
+//        $aa = CTAPICertificateScheduleBusiness::getList($request, $this, 2 + 4, $queryParams, [], []);
+//        pr($aa);
+//        CertificateScheduleDBBusiness::test();
+//        pr(123);
         // $ability_code = AbilityCodeDBBusiness::getAbilityCode();// 单号 生成  2020NLYZ0001
         //pr($ability_code);
         $currentNow = Carbon::now()->toDateTimeString();

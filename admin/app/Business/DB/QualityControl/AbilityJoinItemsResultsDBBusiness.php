@@ -544,7 +544,7 @@ class AbilityJoinItemsResultsDBBusiness extends BasePublicDBBusiness
 
             // 去掉标记为000的样品--以后这里可以去掉
             $queryParams = Tool::getParamQuery(['result_id' => $ids, 'submit_status' => 1, 'sample_one' => '000'], ['sqlParams' =>['select' =>['id', 'result_id']]], []);
-            $sampleDataList = AbilityJoinItemsSamples::getAllList($queryParams, [])->toArray();
+            $sampleDataList = AbilityJoinItemsSamplesDBBusiness::getAllList($queryParams, [])->toArray();
             $delIds = array_values(array_unique(array_column($sampleDataList,'result_id')));
             if(!empty($delIds))  $ids = array_diff($ids, $delIds);
 
