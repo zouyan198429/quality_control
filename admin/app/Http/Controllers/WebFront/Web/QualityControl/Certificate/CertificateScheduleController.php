@@ -658,6 +658,10 @@ class CertificateScheduleController extends BasicController
         $city_list = CTAPICitysBusiness::exeDBBusinessMethodCT($request, $this, '',  'getCompanyNumGroup', [], 1, 1);
         $reDataArr['city_list'] = $city_list;
 
+        $reDataArr['rang_f_type'] = 0;
+        $reDataArr['field'] = '';
+        $reDataArr['qkey'] = 0;
+
     }
 
     /**
