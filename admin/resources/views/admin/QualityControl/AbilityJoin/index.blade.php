@@ -12,16 +12,11 @@
   <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/css/layui.css')}}" media="all">
   <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/style/admin.css')}}" media="all">
 </head>
-<body>
-
-{{--<div id="crumb"><i class="fa fa-reorder fa-fw" aria-hidden="true"></i> 我的同事</div>--}}
+<body> 
 <div class="mm">
   <div class="mmhead" id="mywork">
 
-    @include('common.pageParams')
-{{--    <div class="tabbox" >--}}
-{{--      <a href="javascript:void(0);" class="on" onclick="action.iframeModify(0)">添加项目</a>--}}
-{{--    </div>--}}
+    @include('common.pageParams') 
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
           <span>
@@ -72,7 +67,7 @@
       </div>
     </form>
   </div>
-    <div>
+    <div style="padding-bottom: 15px;">
         <p>证书打印说明：</p>
         <p>1、<a href="javascript:void(0);" class="on" onclick="otheraction.downDrive(this)">下载网页打印机驱动</a>并安装。</p>
         <p>2、确保C-Lodop云打印服务器开启【默认会开机自动开启】</p>
@@ -88,18 +83,17 @@
     </div>
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
-        <col width="50">
-{{--        <col width="50">--}}
+        <col width="50"> 
         <col>
         <col>
         <col width="75" >
         <col width="105">
-        <col  width="90">
+        <col width="150">
         <col width="75">
         <col width="75">
-        <col width="70">
+        <col width="120">
         <col width="75">
-        <col width="60">
+        <col width="110">
         <col width="75">
         <col width="150">
     </colgroup>
