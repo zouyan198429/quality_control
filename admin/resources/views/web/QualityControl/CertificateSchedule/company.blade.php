@@ -1,51 +1,19 @@
 <!DOCTYPE html>
 <html>
 	<head>
-        <title>秦检通_陕西省质量认证认可协会_陕西质量认证咨询中心_检验检测能力</title>
-        <meta name="keywords" content="秦检通,陕西省质量认证认可协会,陕西质量认证咨询中心,检验检测能力" />
-        <meta name="description" content="秦检通,陕西省质量认证认可协会,陕西质量认证咨询中心,检验检测能力" />
+        <title>秦检通_{{ $key_str ?? '' }}资质认定获证机构_陕西{{ $key_str ?? '' }}资质认定获证机构第{{ $page ?? '' }}页_检验检测能力</title>
+        <meta name="keywords" content="秦检通,{{ $key_str ?? '' }}资质认定获证机构,陕西{{ $key_str ?? '' }}资质认定获证机构第{{ $page ?? '' }}页,检验检测能力" />
+        <meta name="description" content="秦检通,{{ $key_str ?? '' }}资质认定获证机构,陕西{{ $key_str ?? '' }}资质认定获证机构第{{ $page ?? '' }}页,检验检测能力" />
         @include('web.QualityControl.CertificateSchedule.layout_public.pagehead')
         <link href="{{asset('static/css/bootstrap.css')}}" rel="stylesheet" type="text/css" />
 	</head>
 
 	<body>
         @include('web.QualityControl.CertificateSchedule.layout_public.header')
-
-		<div class="search">
-			<div class="wrap">
-
-				<h1>资质认定获证机构查询</h1>
-
-				<div class="slideTxtBox">
-					<div class="hd">
-						<ul><li>按企业信息查</li><li>按检测项目查</li><li>按证书号查询</li></ul>
-					</div>
-					<div class="bd">
-						<ul class="searchbox">
-
-							<input type="radio" name="oncom" value="1" id="killOrder1" checked><label for="killOrder1">检验机构名称</label>
-							<input type="radio" name="oncom" value="2" id="killOrder2" ><label for="killOrder2">统一社会信用代码或组织机构代码</label>
-							<input type="text" name="admin_username" placeholder="" class="inp" ><button class="searchbtn" >搜索</button>
-						</ul>
-						<ul class="searchbox">
-							<input type="radio" name="onzhengshu" value="1" id="killOrder3" checked><label for="killOrder3">标准名称</label>
-							<input type="radio" name="onzhengshu" value="2" id="killOrder4" ><label for="killOrder4">标准编号</label>
-							<input type="text" name="admin_username" placeholder="" class="inp" ><button class="searchbtn" >搜索</button>
-						</ul>
-						<ul class="searchbox">
-							<input type="text" name="admin_username" placeholder="证书号" class="inp" ><button class="searchbtn" >搜索</button>
-						</ul>
-						<div class="c"></div>
-					</div>
-				</div>
-				<script type="text/javascript">jQuery(".slideTxtBox").slide();</script>
-			</div>
-
-		</div>
-
+        @include('web.QualityControl.CertificateSchedule.layout_public.search')
 		<div class="keyword">
 			<div class="wrap">
-				<p>关键词：<strong>某某某某</strong></p>
+				<p>关键词：<strong>{{ $key_str ?? '' }}</strong></p>
 				<div class="c"></div>
 			</div>
 		</div>
@@ -96,14 +64,9 @@
 						</div>
 						<div class="bd">
 							<ul class="txtlist">
-								<li><a href="">西安某某企业有限公司</a></li>
-								<li><a href="">西安某某企业有限公司</a></li>
-								<li><a href="">西安某某企业有限公司</a></li>
-								<li><a href="">西安某某企业有限公司</a></li>
-								<li><a href="">西安某某企业有限公司</a></li>
-								<li><a href="">西安某某企业有限公司</a></li>
-								<li><a href="">西安某某企业有限公司</a></li>
-								<li><a href="">西安某某企业有限公司</a></li>
+                                @foreach ($company_update_list as $k => $v)
+								<li><a href="{{url('web/certificate/info/' . $v['id'])}}" target="_blank">{{ $v['company_name'] ?? '' }}</a></li>
+                                @endforeach
 							</ul>
 						</div>
 					</div>
@@ -132,3 +95,14 @@
         @include('web.QualityControl.CertificateSchedule.layout_public.footer')
 	</body>
 </html>
+
+<script type="text/javascript">
+    var SEARCH_COMPANY_URL = "{{url('web/certificate/company/' . ($city_id ?? 0)  . '_' . ($industry_id ?? 0)  . '_0_1')}}";//保存成功后跳转到的地址
+
+</script>
+{{--<script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>--}}
+<script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.all.js')}}"></script>
+{{--<script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.js')}}"></script>--}}
+@include('public.dynamic_list_foot')
+
+<script src="{{ asset('/js/web/QualityControl/CertificateSchedule/search.js') }}?1"  type="text/javascript"></script>

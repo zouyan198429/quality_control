@@ -47,13 +47,13 @@ class CertificateScheduleController extends BasicController
      * @return mixed
      * @author zouyan(305463219@qq.com)
      */
-    public function list(Request $request)
-    {
-        return $this->exeDoPublicFun($request, 1, 1, 'web.QualityControl.CertificateSchedule.list', false
-            , 'doListPage', [], function (&$reDataArr) use ($request){
-
-            });
-    }
+//    public function list(Request $request)
+//    {
+//        return $this->exeDoPublicFun($request, 1, 1, 'web.QualityControl.CertificateSchedule.list', false
+//            , 'doListPage', [], function (&$reDataArr) use ($request){
+//
+//            });
+//    }
 
     /**
      *  列表页--企业的
@@ -67,28 +67,99 @@ class CertificateScheduleController extends BasicController
         return $this->exeDoPublicFun($request, 0, 8, 'web.QualityControl.CertificateSchedule.company', false
             , '', [], function (&$reDataArr) use ($request, &$city_id, &$industry_id, &$pagesize, &$page){
 
+            $qkey = CommonRequest::getInt($request, 'qkey');// 查询表的类型 1 企业表查询  2 能力范围表查询 4 按证书号查询
+            $rang_f_type  = CommonRequest::getInt($request, 'rang_f_type');
             $field = CommonRequest::get($request, 'field');
             $keyword = CommonRequest::get($request, 'keyword');
             $pathParamStr = $city_id . '_' . $industry_id . '_' . $pagesize . '_{page}';// . $page;
             if($field != '' && $keyword != '') $pathParamStr .= '?field=' . $field . '&keyword=' . $keyword;
+
+            $reDataArr['qkey'] = $qkey;
+
+            // 加上查询表的类型参数
+            $pathParamStr .= ((strpos($pathParamStr, '?') === false) ? '?' : '&') . 'qkey=' . $qkey;
+            if($qkey == 2 && is_numeric($rang_f_type) && $rang_f_type > 0) $pathParamStr .= ((strpos($pathParamStr, '?') === false) ? '?' : '&') . 'rang_f_type=' . $rang_f_type;
+            $reDataArr['rang_f_type'] = $rang_f_type;
+
             $appParams = [
                 'city_id' => $city_id,
                 'industry_id' => $industry_id,
                 'pagesize' => $pagesize,
                 'page' => $page,
                 'url_model' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/web/certificate/company/' . $pathParamStr,
+                'admin_type' => 2,
+                'is_perfect' => 2,
+                'open_status' => 2,
+                'account_status' => 1
             ];
             CTAPIStaffBusiness::mergeRequest($request, $this, $appParams);
             $reDataArr = array_merge($reDataArr, $appParams);
+            $keyArr = [];
+            $reDataArr['page'] = $page;
+            $reDataArr['field'] = $field;
+            $reDataArr['keyword'] = $keyword;
 
+            // 获得城市名称
+            if(is_numeric($city_id) && $city_id > 0){
+                $cityInfo = CTAPICitysBusiness::getInfoData($request, $this, $city_id, [], '', []);
+                $city_name = $cityInfo['city_name'] ?? '';
+                array_push($keyArr, $city_name);
+            }
 
-            $extParams = [
-                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-                // 'relationFormatConfigs'=> CTAPIStaffBusiness::getRelationConfigs($request, $this, ['industry_info', 'city_info'], []),// , 'extend_info'
-            ];
-            $company_arr = CTAPIStaffBusiness::getList($request, $this, 2 + 8, [], [], $extParams)['result'] ?? [];
-            $reDataArr['company_list'] = $company_arr['data_list'] ?? [];
-            $reDataArr['pageInfoLink'] = $company_arr['pageInfoLink'] ?? '';
+            // 获得行业名称
+            if(is_numeric($industry_id) && $industry_id > 0){
+                $industryInfo = CTAPIIndustryBusiness::getInfoData($request, $this, $industry_id, [], '', []);
+                $industry_name = $industryInfo['industry_name'] ?? '';
+                array_push($keyArr, $industry_name);
+            }
+            if($field != '' && $keyword != '') array_push($keyArr, $keyword);
+
+            if($qkey == 2){
+
+                $queryParams = [
+                    'select' => [
+                        'company_id'
+                        //,'position_name','sort_num'
+                        //,'operate_staff_id','operate_staff_id_history'
+                        // ,'created_at'
+                    ],
+                    'distinct'=> 'company_id',
+                ];
+                $company_arr = CTAPICertificateScheduleBusiness::getList($request, $this, 2 + 8, $queryParams, [], [])['result'] ?? [];
+                $companyIdArr = $company_arr['data_list'] ?? [];
+                $companyIds = array_column($companyIdArr, 'company_id');
+                $company_list = [];
+                if(!empty($companyIds)){
+                    $queryParams = [
+                        'where' => [['admin_type', 2], ['is_perfect', 2], ['open_status', 2], ['account_status', 1]],
+                        'whereIn' =>  ['id' => $companyIds],
+                    ];
+                    $extParams = ['useQueryParams' => false];
+                    $company_list = CTAPIStaffBusiness::getList($request, $this, 1, $queryParams, [], $extParams)['result']['data_list'] ?? [];
+                }
+                $reDataArr['company_list'] = $company_list;
+                $reDataArr['pageInfoLink'] = $company_arr['pageInfoLink'] ?? '';
+            }else{
+                $extParams = [
+                    // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                    // 'relationFormatConfigs'=> CTAPIStaffBusiness::getRelationConfigs($request, $this, ['industry_info', 'city_info'], []),// , 'extend_info'
+                ];
+                $company_arr = CTAPIStaffBusiness::getList($request, $this, 2 + 8, [], [], $extParams)['result'] ?? [];
+                $reDataArr['company_list'] = $company_arr['data_list'] ?? [];
+                $reDataArr['pageInfoLink'] = $company_arr['pageInfoLink'] ?? '';
+            }
+
+            // 获得最新更新企业
+            $company_update_list = CTAPIStaffBusiness::getFVFormatList( $request,  $this, 2, 20
+                ,  ['admin_type' => 2], false,[]
+                , [
+                    'sqlParams' => [
+                        'where' => [['is_perfect', 2], ['open_status', 2], ['account_status', 1]],
+                        'orderBy' => ['updated_at' => 'desc', 'id' => 'desc']
+                    ]
+                ]);
+            $reDataArr['company_update_list'] = $company_update_list;
+            $reDataArr['key_str'] = implode(',', $keyArr);
 
         });
     }

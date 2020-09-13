@@ -588,6 +588,7 @@ class BasicCTAPIBusiness extends APIOperate
         $field = CommonRequest::get($request, 'field');
         $keyWord = CommonRequest::get($request, 'keyword');
         if (!empty($field) && !empty($keyWord)) {
+            if(!isset($queryParams['where'])) $queryParams['where'] = [];
             array_push($queryParams['where'], [$field, 'like', '%' . $keyWord . '%']);
         }
 

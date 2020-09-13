@@ -456,7 +456,7 @@ Route::get('web/login_user', 'WebFront\Web\QualityControl\HomeController@login_u
 // 资质认定获证机构查询
 Route::get('web/certificate', 'WebFront\Web\QualityControl\Certificate\CertificateScheduleController@index');// 查询
 Route::get('web/certificate/index', 'WebFront\Web\QualityControl\Certificate\CertificateScheduleController@index');// 查询
-Route::get('web/certificate/list', 'WebFront\Web\QualityControl\Certificate\CertificateScheduleController@list');// 企业列表
+//Route::get('web/certificate/list', 'WebFront\Web\QualityControl\Certificate\CertificateScheduleController@list');// 企业列表
 // 企业列表
 // 城市id  city_id
 // 行业id  industry_id

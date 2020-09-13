@@ -2,8 +2,10 @@
 // 所属企业检验检测机构资质认定证书附表
 namespace App\Business\DB\QualityControl;
 
+use App\Models\QualityControl\CertificateSchedule;
 use App\Services\DB\CommonDB;
 use App\Services\Tool;
+use Illuminate\Support\Facades\DB;
 
 /**
  *
@@ -345,6 +347,19 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
             StaffDBBusiness::updateCertificateScheduleNum($organize_id);
         });
         return $returnIds;
+    }
+
+    public static function test(){
+        $key = '标';
+        // 获得数量
+
+        $tableName = (new CertificateSchedule)->getTable();
+        // DB::table($tableName)->selectRaw('price * ? as price_with_tax', [1.0825])->get();
+//        $count = DB::table($tableName)->distinct()->count();
+        $count = DB::table($tableName)->distinct('company_id')->count('company_id');
+//        DB::table($tableName)->raw("distinct(company_id)")->count();
+//        $count = DB::table(' ((select distinct company_id from certificate_schedule ))')->count();
+        pr(456);
     }
 
 }

@@ -17,7 +17,7 @@
 	height: 40px;
 	width: 500px;
 	padding-left: 35px;
-	background: url(images/icon.png) no-repeat 10px -53px;
+	background: url("../images/icon.png") no-repeat 10px -53px;
 }
 
 .footer {

@@ -95,6 +95,50 @@ function autoRefeshList(record_page_url, tag_key, timeout) {
     }
 }
 
+// 翻页跳转方法
+// objThis 点击的当前按钮对象
+// pageType 翻页的类型 1：ajax翻页 2 a 链接翻页--适合前端seo
+function btn_go(objThis, pageType){
+    let obj = $(objThis);
+    var page = parseInt(obj.parent().find('.pagenum').val());
+    var reg2 = /^\d+$/;// /^\d+(\.\d{0,})?$/
+    if(!reg2.test(page) || page<=0){
+        err_alert("请输入正确的页码");
+        //var nr_html = "请输入正确的页码";
+        //baidutemplate_init_modal(body_data_id+'alert_Modal',0+1+2+4+8,'提示信息',nr_html,'','','');
+        return false;
+    }
+    var totalpage = parseInt(obj.attr("totalpage"));
+    if (!page || isNaN(page) || page<=0) { page = 1; }
+    if(page > totalpage) { page = totalpage; }
+    switch(pageType){
+        case 1:
+            if($('#page').length>=1){
+                $('#page').val(page);
+            }
+            // 根据页数据更新数据
+            // reset_list(true, ajax_async, false, 2);
+            console.log(LIST_FUNCTION_NAME);
+            eval( LIST_FUNCTION_NAME + '(' + true +', false, false, 2)');
+            // ajaxPageList(
+            //     dynamic_id,baidu_template_page,ajax_url,true,frm_ids,
+            //     false,baidu_template,body_data_id,baidu_template_loding,baidu_template_empty,
+            //     page_id,pagesize,total_id,ajax_async
+            // );
+            break;
+        case 2:
+            var url_model = obj.parent().parent().find('input[name=url_model]').val();
+            console.log('url_model=',url_model);
+            var page_tag = obj.parent().parent().find('input[name=page_tag]').val();
+            console.log('page_tag=',page_tag);
+            // 地址替换为指定页
+            go(url_model.replace(page_tag, page));
+            break;
+        default:
+            break;
+    }
+}
+
 // -----------json对象--属性相关的操作---------------------
 //是否有对象属性 ；有属性：true ;无属性:false  undefined/null:返回true -- 对 数组同样试用
 // obj 要判断的对象

@@ -441,7 +441,7 @@ function showPage($totalpg, $pg = 1, $record = 0,$showpage = 9,$show_num = 0)
     }
     if ($totalpg >= 1 && ( ($show_num & 2) ==2 ) ) {//2输入页码跳转[按钮]通过btn_go()方法实现翻页；第一个参数：当前对象；第二个参数数字:代表类型[可能会用其它同类方法]
         $page .= '&nbsp;&nbsp;<span class="pagespan2"><input class="form-control pagenum" id="page_num" name="page_num" type="text" value=""  onkeyup="this.value=this.value.replace(/[^0-9]/g, \'\');" style="width:50px;">';
-        $page .= '&nbsp;&nbsp;<button class="btn btn-primary btn-page btn-xs" type="button" onclick="btn_go(this, 1)" > 跳转 </button></span>';
+        $page .= '&nbsp;&nbsp;<button class="btn btn-primary btn-page btn-xs" type="button" onclick="btn_go(this, 1)"  totalpage="' . $totalpg . '" > 跳转 </button></span>';
     }
     return $totalpg >= 1 ? $page : '';
 }
@@ -558,7 +558,7 @@ function showPageLink($url_model, $page_tag = '{page}', $totalpg = 0, $pg = 1, $
     }
     if ($totalpg >= 1 && ( ($show_num & 2) ==2 ) ) {//2输入页码跳转[按钮]通过btn_go()方法实现翻页；第一个参数：当前对象；第二个参数数字:代表类型[可能会用其它同类方法]
         $page .= '&nbsp;&nbsp;<span class="pagespan2"><input class="form-control pagenum" id="page_num" name="page_num" type="text" value=""  onkeyup="this.value=this.value.replace(/[^0-9]/g, \'\');" style="width:50px;">';
-        $page .= '&nbsp;&nbsp;<button class="btn btn-primary btn-page btn-xs" type="button" onclick="btn_go(this, 2)" > 跳转 </button></span>';
+        $page .= '&nbsp;&nbsp;<button class="btn btn-primary btn-page btn-xs" type="button" onclick="btn_go(this, 2)"  totalpage="' . $totalpg . '" > 跳转 </button></span>';
     }
     return $totalpg >= 1 ? $page : '';
 }
