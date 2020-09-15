@@ -233,6 +233,10 @@ $api->version('v1', function ($api) {
         $api->post('admin/company_certificate_type/import', 'Admin\QualityControl\CompanyCertificateTypeController@import');// 导入excel
         $api->post('admin/company_certificate_type/ajax_get_ids', 'Admin\QualityControl\CompanyCertificateTypeController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
+        // 面授培训
+        $api->post('admin/ability_type/ajax_save', [Admin\QualityControl\FaceToFaceTrainingController::class, 'ajax_save']);// 新加/修改
+
+
         // 能力验证行业分类[一级分类]
         $api->any('admin/ability_type/ajax_alist', 'Admin\QualityControl\AbilityTypeController@ajax_alist');//ajax获得列表数据
         $api->any('admin/ability_type/ajax_del', 'Admin\QualityControl\AbilityTypeController@ajax_del');// 删除
