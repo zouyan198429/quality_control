@@ -453,6 +453,15 @@ class Staff extends BasePublicModel
         return $this->hasMany('App\Models\QualityControl\AbilityJoin', 'staff_id', 'id');
     }
 
+
+    /**
+     * 获取面授操作日志-二维
+     */
+    public function courseLog()
+    {
+        return $this->hasMany('App\Models\QualityControl\CourseLog', 'staff_id', 'id');
+    }
+
     /**
      * 获取企业的所有用户-二维
      */

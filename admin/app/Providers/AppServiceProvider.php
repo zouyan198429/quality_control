@@ -56,6 +56,7 @@ class AppServiceProvider extends ServiceProvider
             'company_certificate'                 => 'App\Models\QualityControl\CompanyCertificate',           // 1质检-企业资质证书图片
             'company_schedule'                 => 'App\Models\QualityControl\CompanySchedule',           // 2企业能力附表 pdf或word
             'company_ability'                 => 'App\Models\QualityControl\AbilityJoinItemsResults',           // 4企业能力验证上传图片
+            'course'                 => 'App\Models\QualityControl\Course',           // 8课程主图上传图片
         ]);
 
         DB::listen(function ($query) {
