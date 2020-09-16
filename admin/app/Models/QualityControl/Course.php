@@ -80,6 +80,15 @@ class Course extends BasePublicModel
         '2' => '下架',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'resource_ids' => 'array',
+    ];
+
     // 表里没有的字段
     protected $appends = ['status_online_text'];
 

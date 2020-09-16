@@ -12,7 +12,7 @@
 */
 // welcome
 //Route::get('/welcome', 'IndexController@welcome');
-use App\Http\Controllers\Admin\QualityControl\FaceToFaceTrainingController;
+use App\Http\Controllers\Admin\QualityControl\CourseController;
 
 Route::get('/', 'IndexController@index');// 首页
 //Route::get('/aaa', function () {
@@ -293,8 +293,8 @@ Route::get('admin/ability_type/export', 'Admin\QualityControl\AbilityTypeControl
 Route::get('admin/ability_type/import_template', 'Admin\QualityControl\AbilityTypeController@import_template');// 导入模版
 
 // 面授培训
-Route::get('admin/face_to_face_training', [FaceToFaceTrainingController::class, 'index']);
-Route::get('admin/face_to_face_training/create/{id}', [FaceToFaceTrainingController::class, 'create']);
+Route::get('admin/courses', [CourseController::class, 'index']);
+Route::get('admin/courses/create/{id}', [CourseController::class, 'create']);
 
 // 能力验证
 Route::get('admin/abilitys', 'Admin\QualityControl\AbilitysController@index');// 列表

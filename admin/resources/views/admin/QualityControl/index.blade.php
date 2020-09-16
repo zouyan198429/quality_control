@@ -248,10 +248,10 @@
                   </a>
                   <dl class="layui-nav-child">
                       <dd>
-                          <a lay-href="{{ url('admin/face_to_face_training') }}">课程管理</a>
+                          <a lay-href="{{ url('admin/courses') }}">课程管理</a>
                       </dd>
                       <dd>
-                          <a lay-href="{{ url('admin/face_to_face_training/create') }}">报名企业</a>
+                          <a lay-href="{{ url('admin/courses/create') }}">报名企业</a>
                       </dd>
                       <dd>
                           <a lay-href="{{ url('admin/ability_code') }}">报名学员</a>
