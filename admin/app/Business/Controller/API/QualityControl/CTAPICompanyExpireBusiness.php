@@ -1,5 +1,5 @@
 <?php
-//面授操作日志
+// 企业到期配置
 namespace App\Business\Controller\API\QualityControl;
 
 use App\Services\DBRelation\RelationDB;
@@ -12,10 +12,10 @@ use App\Services\Request\CommonRequest;
 use App\Http\Controllers\BaseController as Controller;
 use Illuminate\Support\Facades\Hash;
 
-class CTAPICourseLogBusiness extends BasicPublicCTAPIBusiness
+class CTAPICompanyExpireBusiness extends BasicPublicCTAPIBusiness
 {
-    public static $model_name = 'API\QualityControl\CourseLogAPI';
-    public static $table_name = 'course_log';// 表名称
+    public static $model_name = 'API\QualityControl\CompanyExpireAPI';
+    public static $table_name = 'company_expire';// 表名称
     public static $record_class = __CLASS__;// 当前的类名称 App\Business\***\***\**\***
 
     // 是否激活(0:未激活；1：已激活)
@@ -126,23 +126,29 @@ class CTAPICourseLogBusiness extends BasicPublicCTAPIBusiness
     public static function joinListParams(Request $request, Controller $controller, &$queryParams, $notLog = 0){
         // 自己的参数查询拼接在这里-- 注意：多个id 的查询默认就已经有了，参数是 ids  多个用逗号分隔
 
-        $course_id = CommonRequest::getInt($request, 'course_id');
-        if($course_id > 0 )  array_push($queryParams['where'], ['course_id', '=', $course_id]);
+        $year_num = CommonRequest::getInt($request, 'year_num');
+        if($year_num > 0 )  array_push($queryParams['where'], ['year_num', '=', $year_num]);
 
-        $course_order_id = CommonRequest::getInt($request, 'course_order_id');
-        if($course_order_id > 0 )  array_push($queryParams['where'], ['course_order_id', '=', $course_order_id]);
+        $month_num = CommonRequest::getInt($request, 'month_num');
+        if($month_num > 0 )  array_push($queryParams['where'], ['month_num', '=', $month_num]);
 
-        $class_id = CommonRequest::getInt($request, 'class_id');
-        if($class_id > 0 )  array_push($queryParams['where'], ['class_id', '=', $class_id]);
+        $day_num = CommonRequest::getInt($request, 'day_num');
+        if($day_num > 0 )  array_push($queryParams['where'], ['day_num', '=', $day_num]);
 
-        $course_staff_id = CommonRequest::getInt($request, 'course_staff_id');
-        if($course_staff_id > 0 )  array_push($queryParams['where'], ['course_staff_id', '=', $course_staff_id]);
+        $hour_num = CommonRequest::getInt($request, 'hour_num');
+        if($hour_num > 0 )  array_push($queryParams['where'], ['hour_num', '=', $hour_num]);
 
-        $staff_id = CommonRequest::getInt($request, 'staff_id');
-        if($staff_id > 0 )  array_push($queryParams['where'], ['staff_id', '=', $staff_id]);
+        $min_num = CommonRequest::getInt($request, 'min_num');
+        if($min_num > 0 )  array_push($queryParams['where'], ['min_num', '=', $min_num]);
 
-        $admin_type = CommonRequest::get($request, 'admin_type');
-        if(strlen($admin_type) > 0 && $admin_type != 0)  Tool::appendParamQuery($queryParams, $admin_type, 'admin_type', [0, '0', ''], ',', false);
+        $sec_num = CommonRequest::getInt($request, 'sec_num');
+        if($sec_num > 0 )  array_push($queryParams['where'], ['sec_num', '=', $sec_num]);
+
+        $sec_total = CommonRequest::getInt($request, 'sec_total');
+        if($sec_total > 0 )  array_push($queryParams['where'], ['sec_total', '=', $sec_total]);
+
+//        $status = CommonRequest::get($request, 'status');
+//        if(strlen($status) > 0 && $status != 0)  Tool::appendParamQuery($queryParams, $status, 'status', [0, '0', ''], ',', false);
 
 //        $ids = CommonRequest::get($request, 'ids');
 //        if(strlen($ids) > 0 && $ids != 0)  Tool::appendParamQuery($queryParams, $ids, 'id', [0, '0', ''], ',', false);

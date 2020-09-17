@@ -16,6 +16,7 @@ use App\Services\Captcha\CaptchaCode;
 use App\Services\DB\CommonDB;
 use App\Services\File\DownFile;
 use App\Services\Request\CommonRequest;
+use App\Services\SessionCustom\SessionCustom;
 use App\Services\Tool;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -26,6 +27,20 @@ class IndexController extends BasicController
     public $controller_id =0;// 功能小模块[控制器]id - controller_id  历史表 、正在进行表 与原表相同
 
     public function test(Request $request){
+        $aaa = SessionCustom::set('test', '1112', 0);
+        pr($aaa);
+        $bbb = SessionCustom::get('loginKeyadmin',true);
+
+        pr($bbb);
+        $redisKey = 'PHPREDIS_SESSION:' . session_id();
+        pr($redisKey);
+        $currentTime = date('Y-m-d H:i:s');
+        $endTime = '2020-06-02 15:48:49';
+        $endCarbon = carbon::parse ($endTime); // 格式化一个时间日期字符串为 carbon 对象
+        // 减当前时间 ; > 0 没有过期 = 0 马上过期  < 0 过期
+        $diffSeconds = (new Carbon)->diffInSeconds ($endCarbon, false); // $int 为正负数
+        // $diffSeconds = strtotime($currentTime) - strtotime($endTime);
+        dd($diffSeconds);
 //        CTAPICertificateScheduleBusiness::mergeRequest($request, $this, [
 //            'field' => 'method_name',
 //            'keyword' => '标',

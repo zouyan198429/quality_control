@@ -244,6 +244,17 @@ $api->version('v1', function ($api) {
         $api->post('admin/ability_type/import', 'Admin\QualityControl\AbilityTypeController@import');// 导入excel
         $api->post('admin/ability_type/ajax_get_ids', 'Admin\QualityControl\AbilityTypeController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
+        // 企业内容管理
+        $api->any('admin/company_content/ajax_alist', 'Admin\QualityControl\CompanyContentController@ajax_alist');//ajax获得列表数据
+        $api->any('admin/company_content/ajax_del', 'Admin\QualityControl\CompanyContentController@ajax_del');// 删除
+        $api->any('admin/company_content/ajax_save', 'Admin\QualityControl\CompanyContentController@ajax_save');// 新加/修改
+        $api->post('admin/company_content/ajax_get_child', 'Admin\QualityControl\CompanyContentController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/company_content/ajax_get_areachild', 'Admin\QualityControl\CompanyContentController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/company_content/ajax_import_staff','Admin\QualityControl\CompanyContentController@ajax_import'); // 导入员工
+
+        $api->post('admin/company_content/import', 'Admin\QualityControl\CompanyContentController@import');// 导入excel
+        $api->post('admin/company_content/ajax_get_ids', 'Admin\QualityControl\CompanyContentController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
         // 能力验证
         $api->any('admin/abilitys/ajax_alist', 'Admin\QualityControl\AbilitysController@ajax_alist');//ajax获得列表数据
         $api->post('admin/abilitys/ajax_del', 'Admin\QualityControl\AbilitysController@ajax_del');// 删除

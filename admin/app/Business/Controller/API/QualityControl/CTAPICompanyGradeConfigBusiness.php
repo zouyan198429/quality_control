@@ -1,5 +1,5 @@
 <?php
-//面授操作日志
+//企业会员等级配置
 namespace App\Business\Controller\API\QualityControl;
 
 use App\Services\DBRelation\RelationDB;
@@ -12,10 +12,10 @@ use App\Services\Request\CommonRequest;
 use App\Http\Controllers\BaseController as Controller;
 use Illuminate\Support\Facades\Hash;
 
-class CTAPICourseLogBusiness extends BasicPublicCTAPIBusiness
+class CTAPICompanyGradeConfigBusiness extends BasicPublicCTAPIBusiness
 {
-    public static $model_name = 'API\QualityControl\CourseLogAPI';
-    public static $table_name = 'course_log';// 表名称
+    public static $model_name = 'API\QualityControl\CompanyGradeConfigAPI';
+    public static $table_name = 'company_grade_config';// 表名称
     public static $record_class = __CLASS__;// 当前的类名称 App\Business\***\***\**\***
 
     // 是否激活(0:未激活；1：已激活)
@@ -126,23 +126,23 @@ class CTAPICourseLogBusiness extends BasicPublicCTAPIBusiness
     public static function joinListParams(Request $request, Controller $controller, &$queryParams, $notLog = 0){
         // 自己的参数查询拼接在这里-- 注意：多个id 的查询默认就已经有了，参数是 ids  多个用逗号分隔
 
-        $course_id = CommonRequest::getInt($request, 'course_id');
-        if($course_id > 0 )  array_push($queryParams['where'], ['course_id', '=', $course_id]);
+        $company_id = CommonRequest::getInt($request, 'company_id');
+        if($company_id > 0 )  array_push($queryParams['where'], ['company_id', '=', $company_id]);
 
-        $course_order_id = CommonRequest::getInt($request, 'course_order_id');
-        if($course_order_id > 0 )  array_push($queryParams['where'], ['course_order_id', '=', $course_order_id]);
+        $company_grade_add = CommonRequest::get($request, 'company_grade_add');
+        if(strlen($company_grade_add) > 0 && $company_grade_add != 0)  Tool::appendParamQuery($queryParams, $company_grade_add, 'company_grade_add', [0, '0', ''], ',', false);
 
-        $class_id = CommonRequest::getInt($request, 'class_id');
-        if($class_id > 0 )  array_push($queryParams['where'], ['class_id', '=', $class_id]);
+        $company_grade = CommonRequest::get($request, 'company_grade');
+        if(strlen($company_grade) > 0 && $company_grade != 0)  Tool::appendParamQuery($queryParams, $company_grade, 'company_grade', [0, '0', ''], ',', false);
 
-        $course_staff_id = CommonRequest::getInt($request, 'course_staff_id');
-        if($course_staff_id > 0 )  array_push($queryParams['where'], ['course_staff_id', '=', $course_staff_id]);
+        $open_status = CommonRequest::get($request, 'open_status');
+        if(strlen($open_status) > 0 && $open_status != 0)  Tool::appendParamQuery($queryParams, $open_status, 'open_status', [0, '0', ''], ',', false);
 
-        $staff_id = CommonRequest::getInt($request, 'staff_id');
-        if($staff_id > 0 )  array_push($queryParams['where'], ['staff_id', '=', $staff_id]);
+        $valid_status = CommonRequest::get($request, 'valid_status');
+        if(strlen($valid_status) > 0 && $valid_status != 0)  Tool::appendParamQuery($queryParams, $valid_status, 'valid_status', [0, '0', ''], ',', false);
 
-        $admin_type = CommonRequest::get($request, 'admin_type');
-        if(strlen($admin_type) > 0 && $admin_type != 0)  Tool::appendParamQuery($queryParams, $admin_type, 'admin_type', [0, '0', ''], ',', false);
+        $company_grade_final = CommonRequest::get($request, 'company_grade_final');
+        if(strlen($company_grade_final) > 0 && $company_grade_final != 0)  Tool::appendParamQuery($queryParams, $company_grade_final, 'company_grade_final', [0, '0', ''], ',', false);
 
 //        $ids = CommonRequest::get($request, 'ids');
 //        if(strlen($ids) > 0 && $ids != 0)  Tool::appendParamQuery($queryParams, $ids, 'id', [0, '0', ''], ',', false);

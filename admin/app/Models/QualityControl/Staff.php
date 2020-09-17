@@ -203,9 +203,16 @@ class Staff extends BasePublicModel
         '2' => '非食品',
     ];
 
+    // 企业--会员等级是否有续期1没有2有
+    public static $companyGradeContinueArr = [
+        '1' => '无续期',
+        '2' => '有续期',
+    ];
+
     // 表里没有的字段
     protected $appends = ['is_perfect_text', 'admin_type_text', 'issuper_text', 'open_status_text', 'account_status_text', 'sex_text', 'company_is_legal_persion_text'
-        , 'company_type_text', 'company_prop_text', 'company_peoples_num_text', 'company_grade_text', 'role_num_text', 'role_status_text', 'sign_status_text', 'sign_is_food_text'];
+        , 'company_type_text', 'company_prop_text', 'company_peoples_num_text', 'company_grade_text', 'role_num_text', 'role_status_text', 'sign_status_text'
+        , 'sign_is_food_text', 'company_grade_continue_text'];
 
     /**
      * 获取用户的是否完善资料文字
@@ -315,6 +322,16 @@ class Staff extends BasePublicModel
     public function getCompanyGradeTextAttribute()
     {
         return static::$companyGradeArr[$this->company_grade] ?? '';
+    }
+
+    /**
+     * 获取用户的是否完善资料文字
+     *
+     * @return string
+     */
+    public function getCompanyGradeContinueTextAttribute()
+    {
+        return static::$companyGradeContinueArr[$this->company_grade_continue] ?? '';
     }
 
     /**

@@ -1,30 +1,13 @@
 <?php
-// session方案
-// 如果系统有配置  config('public.redis.default.host') 的Redis , 则使用Redis保存 session
-// 否则使用 php.ini配置的方式，一般为文件方式保存，优化的话，可以多层文件保存
-namespace App\Services\SessionCustom;
 
-/*
-    demo.php
 
-    session_start();
-
-    $data = '123456';
-    SessionCustom::set('test', $data, 10);
-    echo SessionCustom::get('test'); // 未过期，输出
-    sleep(10);
-    echo SessionCustom::get('test'); // 已过期
-*/
-
-use App\Services\Tool;
-use Carbon\Carbon;
-
+ini_set('date.timezone','Asia/Shanghai');// 指定上海时区--不然时间有问题
 class SessionCustom{
-   // session_save_path('E:/ttt');
+    // session_save_path('E:/ttt');
     public static $redisHost = 'localhost';
     public static $redisPort = 6379;
-    public static $redisAuth = '';// 密码
-    public static $redisDatabase = 0;// 缓存数据的Redis 数据库编号
+    public static $redisAuth = 'ABCabc123456!@!';// 密码
+    public static $redisDatabase = 2;// 缓存数据的Redis 数据库编号
     // Session数据在服务器端储存的时间，如果超过这个时间，那么Session数据就自动删除！
     // 一晚上没关电脑浏览器，第二天上午还能正常继期-----所以继期时间
     // 要大于  下午5点下班（24-17） + 第二天上午全上午（ 12-0） =  7 + 12 = 19  ,
@@ -36,9 +19,10 @@ class SessionCustom{
      * 获得Session数据在服务器端储存的时间，如果超过这个时间，那么Session数据就自动删除！
      */
     public static function getGcMaxlifetime(){
-        $gcMaxlifetime = config('public.sessionGCMaxlifetime', static::$gcMaxlifetime);
-        if( !is_numeric($gcMaxlifetime)) $gcMaxlifetime = static::$gcMaxlifetime;
-        return $gcMaxlifetime;
+//        $gcMaxlifetime = config('public.sessionGCMaxlifetime', static::$gcMaxlifetime);
+//        if( !is_numeric($gcMaxlifetime)) $gcMaxlifetime = static::$gcMaxlifetime;
+//        return $gcMaxlifetime;
+        return static::$gcMaxlifetime;
     }
 
     /**
@@ -58,13 +42,13 @@ class SessionCustom{
         $redisAuth = $redisConfig['auth'] ?? '';
         $redisDatabase = $redisConfig['database'] ?? -1;
 
-        if(empty($redisHost)) $redisHost = config('public.redis.default.host', static::$redisHost);// 'localhost'); // '127.0.0.1';//
-        if(empty($redisPort)) $redisPort = config('public.redis.default.port', static::$redisPort);// 6379);
+        if(empty($redisHost)) $redisHost = static::$redisHost;// config('public.redis.default.host', static::$redisHost);// 'localhost'); // '127.0.0.1';//
+        if(empty($redisPort)) $redisPort = static::$redisPort;// config('public.redis.default.port', static::$redisPort);// 6379);
         // php session 存储到redis里(转)
         if( strlen($redisHost) > 0 && strlen($redisPort) > 0){
-            if(empty($redisAuth)) $redisAuth =  config('public.redis.default.password', static::$redisAuth);// '');
+            if(empty($redisAuth)) $redisAuth = static::$redisAuth;// config('public.redis.default.password', static::$redisAuth);// '');
             if(!is_numeric($redisDatabase) || $redisDatabase < 0){
-                $redisDatabase =  config('public.sessionRedisDatabase', static::$redisDatabase);
+                $redisDatabase = static::$redisDatabase;// config('public.sessionRedisDatabase', static::$redisDatabase);
             }
 
             $savePath = 'tcp://' . $redisHost . ':' . $redisPort;// "tcp://127.0.0.1:6379"
@@ -112,7 +96,8 @@ class SessionCustom{
         $session_data = array();
         $session_data['data'] = $data;
         // $currentTime = Carbon::now();// date('Y-m-d H:i:s');//当前时间 2020-06-02 15:48:49
-        $expireTime = Carbon::now()->addSeconds($expire)->toDateTimeString();// 最后的有效期  格式  2020-06-02 15:48:49
+        // $expireTime = Carbon::now()->addSeconds($expire)->toDateTimeString();// 最后的有效期  格式  2020-06-02 15:48:49
+        $expireTime = date('Y-m-d H:i:s', strtotime ("+" . $expire ." seconds", strtotime(date('Y-m-d H:i:s'))));
         $session_data['expire'] = $expire;// 有效期 (秒)   time() + $expire;
         $session_data['endTime'] = $expireTime;// 到期时间点 格式  2020-06-02 15:48:49
         static::sesseionStart($redisConfig);
@@ -151,14 +136,14 @@ class SessionCustom{
      * @return Mixed false:失败
      */
     public static function get($name, $isExtendExpire = false, $extendExpireFun = null, $redisConfig = []){
-         static::sesseionStart($redisConfig);
+        static::sesseionStart($redisConfig);
         if(isset($_SESSION[$name])){
-            $currentTime = Carbon::now();// date('Y-m-d H:i:s');//当前时间 2020-06-02 15:48:49
+            $currentTime = date('Y-m-d H:i:s');// Carbon::now();// date('Y-m-d H:i:s');//当前时间 2020-06-02 15:48:49
             $endTime = $_SESSION[$name]['endTime'] ?? $currentTime;// 最后的有效期  格式  2020-06-02 15:48:49
-            $endCarbon = carbon::parse ($endTime); // 格式化一个时间日期字符串为 carbon 对象
-            // 减当前时间 ; > 0 没有过期 = 0 马上过期  < 0 过期
-            $diffSeconds = (new Carbon)->diffInSeconds ($endCarbon, false); // $int 为正负数
-
+//            $endCarbon = carbon::parse ($endTime); // 格式化一个时间日期字符串为 carbon 对象
+//            // 减当前时间 ; > 0 没有过期 = 0 马上过期  < 0 过期
+//            $diffSeconds = (new Carbon)->diffInSeconds ($endCarbon, false); // $int 为正负数
+            $diffSeconds = strtotime($endTime) - strtotime($currentTime);
             // if($_SESSION[$name]['expire'] > time() ){
             if($diffSeconds > 0 ){
                 $data = $_SESSION[$name]['data'] ?? null;

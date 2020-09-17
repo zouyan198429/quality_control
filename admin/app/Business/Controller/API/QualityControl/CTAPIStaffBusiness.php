@@ -437,6 +437,9 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
         $company_grade = CommonRequest::getInt($request, 'company_grade');
         if(is_numeric($company_grade) && $company_grade > 0 )  array_push($queryParams['where'], ['company_grade', '=', $company_grade]);
 
+        $company_expire = CommonRequest::getInt($request, 'company_expire');
+        if(is_numeric($company_expire) && $company_expire > 0 )  array_push($queryParams['where'], ['company_expire', '=', $company_expire]);
+
         $role_num = CommonRequest::getInt($request, 'role_num');
         if(is_numeric($role_num) && $role_num > 0 )  array_push($queryParams['where'], ['role_num', '&', $role_num . '=' . $role_num]);
 
