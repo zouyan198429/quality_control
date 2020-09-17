@@ -72,17 +72,14 @@ class CTAPICourseBusiness extends BasicPublicCTAPIBusiness
      */
     public static function getRelationConfigs(Request $request, Controller $controller, $relationKeys = [], $extendParams = []){
         if(empty($relationKeys)) return [];
-        $user_info = $controller->user_info;
-        $user_id = $controller->user_id;
-        $user_type = $controller->user_type;
         // 关系配置
+
         $relationFormatConfigs = [
-            // 下标 'relationConfig' => []// 下一个关系
-            // 获得企业名称
-//            'company_info' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
-//                , ['admin_type' => 'admin_type', 'staff_id' => 'id']
-//                , 1, 2
-//                ,'','', [], ['where' => [['admin_type', 2]]], '', []),
+            'resource_list' => CTAPIResourceBusiness::getTableRelationConfigInfo($request, $controller
+                , ['resource_id' => 'id']
+                , 2, 0
+                ,'','', [], [], '', ['extendConfig' => ['listHandleKeyArr' => ['format_resource'], 'infoHandleKeyArr' => ['resource_list']]]),
+            'course_content' => CTAPICourseContentBusiness::getTableRelationConfigInfo($request, $controller, ['id' => 'course_id'], 1),
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }
@@ -112,5 +109,4 @@ class CTAPICourseBusiness extends BasicPublicCTAPIBusiness
         return $return_data;
     }
     // ****表关系***需要重写的方法**********结束***********************************
-
 }

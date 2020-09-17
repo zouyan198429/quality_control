@@ -95,7 +95,26 @@ function ajax_form(){
         return false;
     }
 
+    // 上传图片
+    if(filesCount > 0){
+        var layer_index = layer.load();
+        uploader.start();
+        var intervalId = setInterval(function(){
+            var status = uploader.getState();
+            console.log('获取上传队列状态代码',uploader.getState());
+            if(status == 1){
+                layer.close(layer_index)//手动关闭
+                clearInterval(intervalId);
+                ajax_save(id);
+            }
+        },1000);
+    }else{
+        ajax_save(id);
+    }
+}
 
+// 验证通过后，ajax保存
+function ajax_save(id){
     // 验证通过
     SUBMIT_FORM = false;//标记为已经提交过
     var data = $("#addForm").serialize();
@@ -112,8 +131,14 @@ function ajax_form(){
             console.log(ret);
             if(!ret.apistatus){//失败
                 SUBMIT_FORM = true;//标记为未提交过
+                //alert('失败');
                 err_alert(ret.errorMsg);
             }else{//成功
+                // go(LIST_URL);
+
+                // countdown_alert("操作成功!",1,5);
+                // parent_only_reset_list(false);
+                // wait_close_popus(2,PARENT_LAYER_INDEX);
                 layer.msg('操作成功！', {
                     icon: 1,
                     shade: 0.3,
@@ -122,7 +147,14 @@ function ajax_form(){
                     var reset_total = true; // 是否重新从数据库获取总页数 true:重新获取,false不重新获取
                     if(id > 0) reset_total = false;
                     parent_reset_list_iframe_close(reset_total);// 刷新并关闭
+                    //do something
                 });
+                // var supplier_id = ret.result['supplier_id'];
+                //if(SUPPLIER_ID_VAL <= 0 && judge_integerpositive(supplier_id)){
+                //    SUPPLIER_ID_VAL = supplier_id;
+                //    $('input[name="supplier_id"]').val(supplier_id);
+                //}
+                // save_success();
             }
             layer.close(layer_index)//手动关闭
         }

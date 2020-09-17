@@ -58,7 +58,7 @@
             <tr>
                 <th>详细内容</th>
                 <td>
-                    <input type="text" class="inp wnormal"  name="course_content" value="{{ $info['course_content'] ?? '' }}"/>
+                    <input type="text" class="inp wnormal"  name="course_content" value="{{ $info['course_content']['course_content'] ?? '' }}"/>
                 </td>
             </tr>
             <tr>
@@ -98,7 +98,21 @@
 <script type="text/javascript">
     var SAVE_URL = "{{ url('api/admin/courses/save') }}";// ajax保存记录地址
     var LIST_URL = "{{url('admin/courses')}}";//保存成功后跳转到的地址
+    // 上传图片变量
     var FILE_UPLOAD_URL = "{{ url('api/admin/upload') }}";// 文件上传提交地址 'your/file/upload/url'
+    var PIC_DEL_URL = "{{ url('api/admin/upload/ajax_del') }}";// 删除图片url
+    var MULTIPART_PARAMS = {pro_unit_id:'0'};// 附加参数	函数或对象，默认 {}
+    var LIMIT_FILES_COUNT = 1;//   限制文件上传数目	false（默认）或数字
+    var MULTI_SELECTION = false;//  是否可用一次选取多个文件	默认 true false
+    var FLASH_SWF_URL = "{{asset('dist/lib/uploader/Moxie.swf') }}";// flash 上传组件地址  默认为 lib/uploader/Moxie.swf
+    var SILVERLIGHT_XAP_URL = "{{asset('dist/lib/uploader/Moxie.xap') }}";// silverlight_xap_url silverlight 上传组件地址  默认为 lib/uploader/Moxie.xap  请确保在文件上传页面能够通过此地址访问到此文件。
+    var SELF_UPLOAD = true;//  是否自己触发上传 TRUE/1自己触发上传方法 FALSE/0控制上传按钮
+    var FILE_UPLOAD_METHOD = 'initPic()';// 单个上传成功后执行方法 格式 aaa();  或  空白-没有
+    var FILE_UPLOAD_COMPLETE = '';  // 所有上传成功后执行方法 格式 aaa();  或  空白-没有
+    var FILE_RESIZE = {quuality: 40};
+    var RESOURCE_LIST = @json($info['resource_list'] ?? []);
+    var PIC_LIST_JSON =  {'data_list': RESOURCE_LIST };// piclistJson 数据列表json对象格式  {‘data_list’:[{'id':1,'resource_name':'aaa.jpg','resource_url':'picurl','created_at':'2018-07-05 23:00:06'}]}
+
 </script>
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
 <script src="{{ asset('/js/admin/QualityControl/Course_edit.js') }}"  type="text/javascript"></script>
