@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Admin\QualityControl;
 
-use App\Business\Controller\API\QualityControl\CTAPICompanyContentBusiness;
-use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
+use App\Business\Controller\API\QualityControl\CTAPICompanyExpireBusiness;
 use App\Http\Controllers\WorksController;
+use App\Models\QualityControl\CompanyExpire;
 use App\Services\Request\CommonRequest;
 use App\Services\Tool;
 use Illuminate\Http\Request;
 
-class CompanyContentController extends BasicController
+class CompanyExpireController extends BasicController
 {
     public $controller_id =0;// 功能小模块[控制器]id - controller_id  历史表 、正在进行表 与原表相同
 
@@ -29,10 +29,10 @@ class CompanyContentController extends BasicController
 //            $this->InitParams($request);
 //            // $reDataArr = $this->reDataArr;
 //            $reDataArr = array_merge($reDataArr, $this->reDataArr);
-//            return view('admin.QualityControl.CompanyContent.index', $reDataArr);
+//            return view('admin.QualityControl.CompanyExpire.index', $reDataArr);
 //
 //        }, $this->errMethod, $reDataArr, $this->errorView);
-        return $this->exeDoPublicFun($request, 1, 1, 'admin.QualityControl.CompanyContent.index', true
+        return $this->exeDoPublicFun($request, 1, 1, 'admin.QualityControl.CompanyExpire.index', true
             , 'doListPage', [], function (&$reDataArr) use ($request){
 
             });
@@ -54,13 +54,13 @@ class CompanyContentController extends BasicController
 //            $this->InitParams($request);
 //            // $reDataArr = $this->reDataArr;
 //            $reDataArr = array_merge($reDataArr, $this->reDataArr);
-//            $reDataArr['province_kv'] = CTAPICompanyContentBusiness::getCityByPid($request, $this,  0);
-//            $reDataArr['province_kv'] = CTAPICompanyContentBusiness::getChildListKeyVal($request, $this, 0, 1 + 0, 0);
+//            $reDataArr['province_kv'] = CTAPICompanyExpireBusiness::getCityByPid($request, $this,  0);
+//            $reDataArr['province_kv'] = CTAPICompanyExpireBusiness::getChildListKeyVal($request, $this, 0, 1 + 0, 0);
 //            $reDataArr['province_id'] = 0;
-//            return view('admin.QualityControl.CompanyContent.select', $reDataArr);
+//            return view('admin.QualityControl.CompanyExpire.select', $reDataArr);
 //
 //        }, $this->errMethod, $reDataArr, $this->errorView);
-//        return $this->exeDoPublicFun($request, 2048, 1, 'admin.QualityControl.CompanyContent.select', true
+//        return $this->exeDoPublicFun($request, 2048, 1, 'admin.QualityControl.RrrDddd.select', true
 //            , 'doListPage', [], function (&$reDataArr) use ($request){
 //
 //            });
@@ -83,12 +83,12 @@ class CompanyContentController extends BasicController
 //            $this->InitParams($request);
 //            // $reDataArr = $this->reDataArr;
 //            $reDataArr = array_merge($reDataArr, $this->reDataArr);
-//            return view('admin.QualityControl.CompanyContent.add', $reDataArr);
+//            return view('admin.QualityControl.CompanyExpire.add', $reDataArr);
 //
 //        }, $this->errMethod, $reDataArr, $this->errorView);
 
         $pageNum = ($id > 0) ? 64 : 16;
-        return $this->exeDoPublicFun($request, $pageNum, 1,'admin.QualityControl.CompanyContent.add', true
+        return $this->exeDoPublicFun($request, $pageNum, 1,'admin.QualityControl.CompanyExpire.add', true
             , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
 
         });
@@ -96,20 +96,20 @@ class CompanyContentController extends BasicController
 
     /**
      * @OA\Get(
-     *     path="/api/admin/ability_type/ajax_info",
-     *     tags={"大后台-能力验证-行业分类"},
-     *     summary="行业分类--详情",
+     *     path="/api/admin/industry/ajax_info",
+     *     tags={"大后台-系统设置-行业"},
+     *     summary="行业--详情",
      *     description="根据单个id,查询详情记录......",
-     *     operationId="adminQualityControlCompanyContentAjax_info",
+     *     operationId="adminQualityControlcompany_expireAjax_info",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_ability_type_id_required"),
-     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_info_ability_type"),
+     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_industry_id_required"),
+     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_info_industry"),
      *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
      *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
-     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_ability_type"}
+     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_industry"}
      */
     /**
      * ajax获得详情数据
@@ -119,36 +119,36 @@ class CompanyContentController extends BasicController
      * @author zouyan(305463219@qq.com)
      */
     public function ajax_info(Request $request){
-        $this->InitParams($request);
-        $id = CommonRequest::getInt($request, 'id');
-        if(!is_numeric($id) || $id <=0) return ajaxDataArr(0, null, '参数[id]有误！');
-        $info = CTAPICompanyContentBusiness::getInfoData($request, $this, $id, [], '', []);
-        $resultDatas = ['info' => $info];
-        return ajaxDataArr(1, $resultDatas, '');
-
+//        $this->InitParams($request);
 //        $id = CommonRequest::getInt($request, 'id');
 //        if(!is_numeric($id) || $id <=0) return ajaxDataArr(0, null, '参数[id]有误！');
-//        return $this->exeDoPublicFun($request, 128, 2,'', true, 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
-//
-//        });
+//        $info = CTAPICompanyExpireBusiness::getInfoData($request, $this, $id, [], '', []);
+//        $resultDatas = ['info' => $info];
+//        return ajaxDataArr(1, $resultDatas, '');
+
+        $id = CommonRequest::getInt($request, 'id');
+        if(!is_numeric($id) || $id <=0) return ajaxDataArr(0, null, '参数[id]有误！');
+        return $this->exeDoPublicFun($request, 128, 2,'', true, 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
+
+        });
     }
 
     /**
      * @OA\Post(
-     *     path="/api/admin/ability_type/ajax_save",
-     *     tags={"大后台-能力验证-行业分类"},
-     *     summary="行业分类--新加/修改",
+     *     path="/api/admin/industry/ajax_save",
+     *     tags={"大后台-系统设置-行业"},
+     *     summary="行业--新加/修改",
      *     description="根据单个id,新加/修改记录(id>0:修改；id=0:新加)......",
-     *     operationId="adminQualityControlCompanyContentAjax_save",
+     *     operationId="adminQualityControlcompany_expireAjax_save",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_ability_type_id_required"),
+     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_industry_id_required"),
      *     @OA\Response(response=200,ref="#/components/responses/common_Response_modify"),
      *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
      *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
-     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_ability_type"}
+     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_industry"}
      */
 
     /**
@@ -161,19 +161,29 @@ class CompanyContentController extends BasicController
     public function ajax_save(Request $request)
     {
 //        $this->InitParams($request);
+
         $id = CommonRequest::getInt($request, 'id');
         $pageNum = ($id > 0) ? 256 : 32;
         return $this->exeDoPublicFun($request, $pageNum, 4,'', true
             , '', [], function (&$reDataArr) use ($request){
                 $id = CommonRequest::getInt($request, 'id');
                 // CommonRequest::judgeEmptyParams($request, 'id', $id);
-                $company_id = CommonRequest::getInt($request, 'company_id');
-                $company_content = CommonRequest::get($request, 'company_content');
-                $company_content = stripslashes($company_content);
+                $industry_name = CommonRequest::get($request, 'industry_name');
+                $year_num = CommonRequest::getInt($request, 'year_num');
+                $month_num = CommonRequest::getInt($request, 'month_num');
+                $day_num = CommonRequest::getInt($request, 'day_num');
+                $hour_num = CommonRequest::getInt($request, 'hour_num');
+                $min_num = CommonRequest::getInt($request, 'min_num');
+                $sec_num = CommonRequest::getInt($request, 'sec_num');
 
                 $saveData = [
-                    'company_id' => $company_id,
-                    'company_content' => $company_content,
+                    'industry_name' => $industry_name,
+                    'year_num' => $year_num,
+                    'month_num' => $month_num,
+                    'day_num' => $day_num,
+                    'hour_num' => $hour_num,
+                    'min_num' => $min_num,
+                    'sec_num' => $sec_num,
                 ];
 
 //        if($id <= 0) {// 新加;要加入的特别字段
@@ -185,28 +195,27 @@ class CompanyContentController extends BasicController
                 $extParams = [
                     'judgeDataKey' => 'replace',// 数据验证的下标
                 ];
-                $resultDatas = CTAPICompanyContentBusiness::replaceById($request, $this, $saveData, $id, $extParams, true);
+                $resultDatas = CTAPICompanyExpireBusiness::replaceById($request, $this, $saveData, $id, $extParams, true);
                 return ajaxDataArr(1, $resultDatas, '');
-
         });
     }
 
     /**
      * @OA\Get(
-     *     path="/api/admin/ability_type/ajax_alist",
-     *     tags={"大后台-能力验证-行业分类"},
-     *     summary="行业分类--列表",
-     *     description="行业分类--列表......",
-     *     operationId="adminQualityControlCompanyContentAjax_alist",
+     *     path="/api/admin/industry/ajax_alist",
+     *     tags={"大后台-系统设置-行业"},
+     *     summary="行业--列表",
+     *     description="行业--列表......",
+     *     operationId="adminQualityControlcompany_expireAjax_alist",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_ability_type_id_optional"),
-     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_list_ability_type"),
+     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_industry_id_optional"),
+     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_list_industry"),
      *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
      *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
-     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_ability_type"}
+     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_industry"}
      */
     /**
      * ajax获得列表数据
@@ -217,15 +226,9 @@ class CompanyContentController extends BasicController
      */
     public function ajax_alist(Request $request){
 //        $this->InitParams($request);
-//        return  CTAPICompanyContentBusiness::getList($request, $this, 2 + 4);
+//        return  CTAPICompanyExpireBusiness::getList($request, $this, 2 + 4);
         return $this->exeDoPublicFun($request, 4, 4,'', true, '', [], function (&$reDataArr) use ($request){
-
-            $handleKeyConfigArr = ['company_info'];
-            $extParams = [
-                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-                'relationFormatConfigs'=> CTAPICompanyContentBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
-            ];
-            return  CTAPICompanyContentBusiness::getList($request, $this, 2 + 4, [], [], $extParams);
+            return  CTAPICompanyExpireBusiness::getList($request, $this, 2 + 4);
         });
     }
 
@@ -238,7 +241,7 @@ class CompanyContentController extends BasicController
      */
 //    public function ajax_get_ids(Request $request){
 //        $this->InitParams($request);
-//        $result = CTAPICompanyContentBusiness::getList($request, $this, 1 + 0);
+//        $result = CTAPICompanyExpireBusiness::getList($request, $this, 1 + 0);
 //        $data_list = $result['result']['data_list'] ?? [];
 //        $ids = implode(',', array_column($data_list, 'id'));
 //        return ajaxDataArr(1, $ids, '');
@@ -258,19 +261,13 @@ class CompanyContentController extends BasicController
      * @return mixed
      * @author zouyan(305463219@qq.com)
      */
-//    public function export(Request $request){
-////        $this->InitParams($request);
-////        CTAPICompanyContentBusiness::getList($request, $this, 1 + 0);
-//        return $this->exeDoPublicFun($request, 4096, 8,'', true, '', [], function (&$reDataArr) use ($request){
-//
-//            $handleKeyConfigArr = ['company_info'];
-//            $extParams = [
-//                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-//                'relationFormatConfigs'=> CTAPICompanyContentBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
-//            ];
-//            CTAPIRrrDdddBusiness::getList($request, $this, 1 + 0, [], [], $extParams);
-//        });
-//    }
+    public function export(Request $request){
+//        $this->InitParams($request);
+//        CTAPICompanyExpireBusiness::getList($request, $this, 1 + 0);
+        return $this->exeDoPublicFun($request, 4096, 8,'', true, '', [], function (&$reDataArr) use ($request){
+            CTAPICompanyExpireBusiness::getList($request, $this, 1 + 0);
+        });
+    }
 
 
     /**
@@ -280,31 +277,31 @@ class CompanyContentController extends BasicController
      * @return mixed
      * @author zouyan(305463219@qq.com)
      */
-//    public function import_template(Request $request){
+    public function import_template(Request $request){
 //        $this->InitParams($request);
-//        CTAPICompanyContentBusiness::importTemplate($request, $this);
-//        return $this->exeDoPublicFun($request, 16384, 8,'', true, '', [], function (&$reDataArr) use ($request){
-//            CTAPIRrrDdddBusiness::importTemplate($request, $this);
-//        });
-//    }
+//        CTAPICompanyExpireBusiness::importTemplate($request, $this);
+        return $this->exeDoPublicFun($request, 16384, 8,'', true, '', [], function (&$reDataArr) use ($request){
+            CTAPICompanyExpireBusiness::importTemplate($request, $this);
+        });
+    }
 
 
     /**
      * @OA\Post(
-     *     path="/api/admin/ability_type/ajax_del",
-     *     tags={"大后台-能力验证-行业分类"},
-     *     summary="行业分类--删除",
+     *     path="/api/admin/industry/ajax_del",
+     *     tags={"大后台-系统设置-行业"},
+     *     summary="行业--删除",
      *     description="根据单个id,删除记录......",
-     *     operationId="adminQualityControlCompanyContentAjax_del",
+     *     operationId="adminQualityControlcompany_expireAjax_del",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_ability_type_id_required"),
+     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_industry_id_required"),
      *     @OA\Response(response=200,ref="#/components/responses/common_Response_del"),
      *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
      *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
-     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_ability_type"}
+     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_industry"}
      */
     /**
      * 子帐号管理-删除
@@ -316,15 +313,13 @@ class CompanyContentController extends BasicController
     public function ajax_del(Request $request)
     {
 //        $this->InitParams($request);
-//        return CTAPICompanyContentBusiness::delAjax($request, $this);
+//        return CTAPICompanyExpireBusiness::delAjax($request, $this);
 
         $tem_id = CommonRequest::get($request, 'id');
         Tool::formatOneArrVals($tem_id, [null, ''], ',', 1 | 2 | 4 | 8);
         $pageNum = (is_array($tem_id) && count($tem_id) > 1 ) ? 1024 : 512;
         return $this->exeDoPublicFun($request, $pageNum, 4,'', true, '', [], function (&$reDataArr) use ($request){
-            $organize_id = CommonRequest::getInt($request, 'company_id');// 可有此参数
-            return CTAPICompanyContentBusiness::delCustomizeAjax($request,  $this, $organize_id, [], '');
-             // return CTAPICompanyContentBusiness::delAjax($request, $this);
+            return CTAPICompanyExpireBusiness::delAjax($request, $this);
         });
     }
 
@@ -339,8 +334,8 @@ class CompanyContentController extends BasicController
 //        $this->InitParams($request);
 //        $parent_id = CommonRequest::getInt($request, 'parent_id');
 //        // 获得一级城市信息一维数组[$k=>$v]
-//        $childKV = CTAPICompanyContentBusiness::getCityByPid($request, $this, $parent_id);
-//        // $childKV = CTAPICompanyContentBusiness::getChildListKeyVal($request, $this, $parent_id, 1 + 0);
+//        $childKV = CTAPICompanyExpireBusiness::getCityByPid($request, $this, $parent_id);
+//        // $childKV = CTAPICompanyExpireBusiness::getChildListKeyVal($request, $this, $parent_id, 1 + 0);
 //
 //        return  ajaxDataArr(1, $childKV, '');;
 //        return $this->exeDoPublicFun($request, 8589934592, 4,'', true, '', [], function (&$reDataArr) use ($request){
@@ -358,7 +353,7 @@ class CompanyContentController extends BasicController
 //    public function ajax_import(Request $request){
 //        $this->InitParams($request);
 //        $fileName = 'staffs.xlsx';
-//        $resultDatas = CTAPICompanyContentBusiness::importByFile($request, $this, $fileName);
+//        $resultDatas = CTAPICompanyExpireBusiness::importByFile($request, $this, $fileName);
 //        return ajaxDataArr(1, $resultDatas, '');
 ///
 //        return $this->exeDoPublicFun($request, 32768, 4,'', true, '', [], function (&$reDataArr) use ($request){
@@ -383,7 +378,7 @@ class CompanyContentController extends BasicController
 //        if($result['apistatus'] == 0) return $result;
 //        // 文件上传成功
 //        $fileName = Tool::getPath('public') . '/' . $result['result']['filePath'];
-//        $resultDatas = CTAPICompanyContentBusiness::importByFile($request, $this, $fileName);
+//        $resultDatas = CTAPICompanyExpireBusiness::importByFile($request, $this, $fileName);
 //        return ajaxDataArr(1, $resultDatas, '');
 //        return $this->exeDoPublicFun($request, 32768, 4,'', true, '', [], function (&$reDataArr) use ($request){
 //            // 上传并保存文件
@@ -391,7 +386,7 @@ class CompanyContentController extends BasicController
 //            if($result['apistatus'] == 0) return $result;
 //            // 文件上传成功
 //            $fileName = Tool::getPath('public') . '/' . $result['result']['filePath'];
-//            $resultDatas = CTAPICompanyContentBusiness::importByFile($request, $this, $fileName);
+//            $resultDatas = CTAPICompanyExpireBusiness::importByFile($request, $this, $fileName);
 //            return ajaxDataArr(1, $resultDatas, '');
 //        });
 //    }
@@ -425,19 +420,31 @@ class CompanyContentController extends BasicController
 //        // 拥有者类型1平台2企业4个人
 //        $reDataArr['adminType'] =  AbilityJoin::$adminTypeArr;
 //        $reDataArr['defaultAdminType'] = -1;// 列表页默认状态
-        $company_id = CommonRequest::getInt($request, 'company_id');
-        $info = [];
-        $company_hidden = 0;
-        if(is_numeric($company_id) && $company_id > 0){
-            // 获得企业信息
-            $companyInfo = CTAPIStaffBusiness::getInfoData($request, $this, $company_id);
-            if(empty($companyInfo)) throws('企业信息不存在！');
-            $info['company_id'] = $company_id;
-            $info['user_company_name'] = $companyInfo['company_name'] ?? '';
-            $company_hidden = 1;
-        }
-        $reDataArr['info'] = $info;
-        $reDataArr['company_hidden'] = $company_hidden;// =1 : 隐藏企业选择
+
+        // 年
+        $reDataArr['yearNum'] =  CompanyExpire::$yearNumArr;
+        $reDataArr['defaultYearNum'] = -1;// 列表页默认状态
+
+        // 月
+        $reDataArr['monthNum'] =  CompanyExpire::$monthNumArr;
+        $reDataArr['defaultMonthNum'] =  -1;// 列表页默认状态
+
+        // 日
+        $reDataArr['dayNum'] =  CompanyExpire::$dayNumArr;
+        $reDataArr['defaultDayNum'] =  -1;// 列表页默认状态
+
+        // 时
+        $reDataArr['hourNum'] =  CompanyExpire::$hourNumArr;
+        $reDataArr['defaultHourNum'] =  -1;// 列表页默认状态
+
+        // 分
+        $reDataArr['minNum'] =  CompanyExpire::$minNumArr;
+        $reDataArr['defaultMinNum'] =  -1;// 列表页默认状态
+
+        // 秒
+        $reDataArr['secNum'] =  CompanyExpire::$secNumArr;
+        $reDataArr['defaultSecNum'] =  -1;// 列表页默认状态
+
 
     }
 
@@ -468,50 +475,43 @@ class CompanyContentController extends BasicController
 //        // 拥有者类型1平台2企业4个人
 //        $reDataArr['adminType'] =  AbilityJoin::$adminTypeArr;
 //        $reDataArr['defaultAdminType'] = -1;// 列表页默认状态
-
         $info = [
             'id'=>$id,
             //   'department_id' => 0,
         ];
-
-        $handleKeyConfigArr = ['company_info'];
-        $extParams = [
-            // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-            'relationFormatConfigs'=> CTAPICompanyContentBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
-        ];
-        // 如果是企业列表点《企业简介》
-        $company_id = CommonRequest::getInt($request, 'company_id');
-        $contentInfo = [];
-        if($id <= 0 && $company_id > 0){
-            // 获得企业的简价记录
-            $contentInfo = CTAPICompanyContentBusiness::getFVFormatList( $request,  $this, 4, 1
-                , ['company_id' => $company_id], false, [], $extParams);
-            $id = $contentInfo['id'] ?? 0;
-            if(empty($contentInfo)){
-                $companyInfo = CTAPIStaffBusiness::getInfoData($request, $this, $company_id);
-                if(empty($companyInfo)) throws('企业信息不存在！');
-                $info['company_id'] = $company_id;
-                $info['user_company_name'] = $companyInfo['company_name'] ?? '';
-            }
-
-        }
-
         $operate = "添加";
 
         if ($id > 0) { // 获得详情数据
             $operate = "修改";
-            if(empty($contentInfo)){
-                $info = CTAPICompanyContentBusiness::getInfoData($request, $this, $id, [], '', $extParams);
-            }else{
-                $info = $contentInfo;
-            }
+            $info = CTAPICompanyExpireBusiness::getInfoData($request, $this, $id, [], '', []);
         }
         // $reDataArr = array_merge($reDataArr, $resultDatas);
         $reDataArr['info'] = $info;
         $reDataArr['operate'] = $operate;
 
-        $company_hidden = CommonRequest::getInt($request, 'company_hidden');
-        $reDataArr['company_hidden'] = $company_hidden;// =1 : 隐藏企业选择
+        // 年
+        $reDataArr['yearNum'] =  CompanyExpire::$yearNumArr;
+        $reDataArr['defaultYearNum'] = $info['year_num'] ?? -1;// 列表页默认状态
+
+        // 月
+        $reDataArr['monthNum'] =  CompanyExpire::$monthNumArr;
+        $reDataArr['defaultMonthNum'] = $info['month_num'] ?? -1;// 列表页默认状态
+
+        // 日
+        $reDataArr['dayNum'] =  CompanyExpire::$dayNumArr;
+        $reDataArr['defaultDayNum'] = $info['day_num'] ?? -1;// 列表页默认状态
+
+        // 时
+        $reDataArr['hourNum'] =  CompanyExpire::$hourNumArr;
+        $reDataArr['defaultHourNum'] = $info['hour_num'] ?? -1;// 列表页默认状态
+
+        // 分
+        $reDataArr['minNum'] =  CompanyExpire::$minNumArr;
+        $reDataArr['defaultMinNum'] = $info['min_num'] ?? -1;// 列表页默认状态
+
+        // 秒
+        $reDataArr['secNum'] =  CompanyExpire::$secNumArr;
+        $reDataArr['defaultSecNum'] = $info['sec_num'] ?? -1;// 列表页默认状态
 
     }
     // **************公用方法********************结束*********************************

@@ -1277,6 +1277,39 @@ class BasicCTAPIBusiness extends APIOperate
 
     }
 
+    /**
+     * 删除单条数据--2企业4个人 数据删除
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param int $organize_id 操作的所属企业id 可以为0：没有所属企业--企业后台，操作用户时用来限制，只能操作自己企业的用户
+     * @param array $extendParams 其它参数--扩展用参数
+     * @param string $methodName 删除的方法名 为空：默认delById
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  mixed 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function delCustomizeAjax(Request $request, Controller $controller, $organize_id = 0, $extendParams = [], $methodName = 'delById', $notLog = 0)
+    {
+        $company_id = $controller->company_id;
+        $user_id = $controller->user_id;
+        $id = CommonRequest::get($request, 'id');
+        if(is_array($id)) $id = implode(',', $id);
+        // 调用删除接口
+        $apiParams = [
+            'company_id' => $company_id,
+            'id' => $id,
+            'operate_staff_id' => $user_id,
+            'modifAddOprate' => 1,
+            'extendParams' => array_merge(['organize_id' => $organize_id], $extendParams)
+        ];
+        if(empty($methodName)) $methodName = 'delById';
+        static::exeDBBusinessMethodCT($request, $controller, '',  $methodName, $apiParams, $company_id, $notLog);
+        return ajaxDataArr(1, $id, '');
+        // return static::delAjaxBase($request, $controller, '', $notLog);
+
+    }
+
 
     /**
      * 根据id新加或修改单条数据-id 为0 新加，返回新的对象数组[-维],  > 0 ：修改对应的记录，返回true

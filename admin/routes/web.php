@@ -230,6 +230,13 @@ Route::get('admin/industry/add/{id}', 'Admin\QualityControl\IndustryController@a
 Route::get('admin/industry/export', 'Admin\QualityControl\IndustryController@export');// 导出
 Route::get('admin/industry/import_template', 'Admin\QualityControl\IndustryController@import_template');// 导入模版
 
+// 企业到期配置
+Route::get('admin/company_expire', 'Admin\QualityControl\CompanyExpireController@index');// 列表
+Route::get('admin/company_expire/add/{id}', 'Admin\QualityControl\CompanyExpireController@add');// 添加
+// Route::get('admin/company_expire/select', 'Admin\QualityControl\CompanyExpireController@select');// 选择-弹窗
+Route::get('admin/company_expire/export', 'Admin\QualityControl\CompanyExpireController@export');// 导出
+Route::get('admin/company_expire/import_template', 'Admin\QualityControl\CompanyExpireController@import_template');// 导入模版
+
 // 城市[一级分类]
 Route::get('admin/citys', 'Admin\QualityControl\CitysController@index');// 列表
 Route::get('admin/citys/add/{id}', 'Admin\QualityControl\CitysController@add');// 添加

@@ -148,6 +148,17 @@ $api->version('v1', function ($api) {
         $api->post('admin/industry/import', 'Admin\QualityControl\IndustryController@import');// 导入excel
         $api->post('admin/industry/ajax_get_ids', 'Admin\QualityControl\IndustryController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
+        // 企业到期配置
+        $api->any('admin/company_expire/ajax_alist', 'Admin\QualityControl\CompanyExpireController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/company_expire/ajax_del', 'Admin\QualityControl\CompanyExpireController@ajax_del');// 删除
+        $api->post('admin/company_expire/ajax_save', 'Admin\QualityControl\CompanyExpireController@ajax_save');// 新加/修改
+        $api->post('admin/company_expire/ajax_get_child', 'Admin\QualityControl\CompanyExpireController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/company_expire/ajax_get_areachild', 'Admin\QualityControl\CompanyExpireController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/company_expire/ajax_import_staff','Admin\QualityControl\CompanyExpireController@ajax_import'); // 导入员工
+
+        $api->post('admin/company_expire/import', 'Admin\QualityControl\CompanyExpireController@import');// 导入excel
+        $api->post('admin/company_expire/ajax_get_ids', 'Admin\QualityControl\CompanyExpireController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
         // 城市[一级分类]
         $api->any('admin/citys/ajax_alist', 'Admin\QualityControl\CitysController@ajax_alist');//ajax获得列表数据
         $api->post('admin/citys/ajax_del', 'Admin\QualityControl\CitysController@ajax_del');// 删除

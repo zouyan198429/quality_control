@@ -158,4 +158,78 @@ class CTAPICompanyExpireBusiness extends BasicPublicCTAPIBusiness
         static::joinListParamsLike($request, $controller, $queryParams, $notLog);
     }
 
+    /**
+     * 获得列表数据时，对查询结果进行导出操作--有特殊的需要自己重写此方法
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $data_list 初始数据  -- 二维数组
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  null 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function importTemplateExcel(Request $request, Controller $controller, $data_list = [], $notLog = 0){
+        $data_list = [];
+        $headArr = ['industry_name'=>'过期配置名称', 'year_num_text'=>'年', 'month_num_text'=>'月', 'day_num_text'=>'日',
+            'hour_num_text'=>'时', 'min_num_text'=>'分钟', 'sec_num_text'=>'秒'];
+        ImportExport::export('','到期配置导入模版',$data_list,1, $headArr, 0, ['sheet_title' => '到期配置导入模版']);
+    }
+
+    /**
+     * 获得列表数据时，对查询结果进行导出操作--有特殊的需要自己重写此方法
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $queryParams 已有的查询条件数组
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  null 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function exportListData(Request $request, Controller $controller, &$data_list, $notLog = 0){
+            $headArr = ['industry_name'=>'过期配置名称', 'year_num_text'=>'年', 'month_num_text'=>'月', 'day_num_text'=>'日',
+                'hour_num_text'=>'时', 'min_num_text'=>'分钟', 'sec_num_text'=>'秒'];
+            ImportExport::export('','到期配置',$data_list,1, $headArr, 0, ['sheet_title' => '到期配置']);
+    }
+
+    /**
+     * 批量导入员工--通过文件路径
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param string $fileName 文件全路径
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function importByFile(Request $request, Controller $controller, $fileName = '', $notLog = 0){
+        // $fileName = 'staffs.xlsx';
+        $dataStartRow = 1;// 数据开始的行号[有抬头列，从抬头列开始],从1开始
+        // 需要的列的值的下标关系：一、通过列序号[1开始]指定；二、通过专门的列名指定;三、所有列都返回[文件中的行列形式],$headRowNum=0 $headArr=[]
+        $headRowNum = 1;//0:代表第一种方式，其它数字：第二种方式; 1开始 -必须要设置此值，$headArr 参数才起作用
+        // 下标对应关系,如果设置了，则只获取设置的列的值
+        // 方式一格式：['1' => 'name'，'2' => 'chinese',]
+        // 方式二格式: ['姓名' => 'name'，'语文' => 'chinese',]
+        $headArr = [
+            '县区' => 'department',
+            '归属营业厅或片区' => 'group',
+            '姓名或渠道名称' => 'channel',
+            //'姓名' => 'real_name',
+            '工号' => 'work_num',
+            '职务' => 'position',
+            '手机号' => 'mobile',
+            '性别' => 'sex',
+        ];
+//        $headArr = [
+//            '1' => 'name',
+//            '2' => 'chinese',
+//            '3' => 'maths',
+//            '4' => 'english',
+//        ];
+        try{
+            $dataArr = ImportExport::import($fileName, $dataStartRow, $headRowNum, $headArr);
+        } catch ( \Exception $e) {
+            throws($e->getMessage());
+        }
+        return self::import($request, $controller, $dataArr, $notLog);
+    }
+
 }
