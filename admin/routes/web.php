@@ -12,6 +12,8 @@
 */
 // welcome
 //Route::get('/welcome', 'IndexController@welcome');
+use App\Http\Controllers\Admin\QualityControl\CourseController;
+
 Route::get('/', 'IndexController@index');// 首页
 //Route::get('/aaa', function () {
 //    echo 'aaa';
@@ -289,6 +291,10 @@ Route::get('admin/ability_type/add/{id}', 'Admin\QualityControl\AbilityTypeContr
 // Route::get('admin/ability_type/select', 'Admin\QualityControl\AbilityTypeController@select');// 选择-弹窗
 Route::get('admin/ability_type/export', 'Admin\QualityControl\AbilityTypeController@export');// 导出
 Route::get('admin/ability_type/import_template', 'Admin\QualityControl\AbilityTypeController@import_template');// 导入模版
+
+// 面授培训
+Route::get('admin/courses', [CourseController::class, 'index']);
+Route::get('admin/courses/create/{id}', [CourseController::class, 'create']);
 
 // 企业内容管理
 Route::get('admin/company_content', 'Admin\QualityControl\CompanyContentController@index');// 列表

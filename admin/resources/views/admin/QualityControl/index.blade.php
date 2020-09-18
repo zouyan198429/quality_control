@@ -244,6 +244,26 @@
               <li data-name="user" class="layui-nav-item">
                   <a href="javascript:;" lay-tips="能力验证" lay-direction="2">
                       <i class="layui-icon layui-icon-component"></i>
+                      <cite>面授培训</cite>
+                  </a>
+                  <dl class="layui-nav-child">
+                      <dd>
+                          <a lay-href="{{ url('admin/courses') }}">课程管理</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="{{ url('admin/courses/create') }}">报名企业</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="{{ url('admin/ability_code') }}">报名学员</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="{{ url('admin/company_new_schedule') }}">培训班管理</a>
+                      </dd>
+                  </dl>
+              </li>
+              <li data-name="user" class="layui-nav-item">
+                  <a href="javascript:;" lay-tips="能力验证" lay-direction="2">
+                      <i class="layui-icon layui-icon-component"></i>
                       <cite>能力验证</cite>
                   </a>
                   <dl class="layui-nav-child">
@@ -266,7 +286,8 @@
 {{--                          <a lay-href="{{ url('admin/ability_type') }}?company_grade=4">领域管理</a>--}}
 {{--                      </dd>--}}
                   </dl>
-              </li><li data-name="user" class="layui-nav-item">
+              </li>
+              <li data-name="user" class="layui-nav-item">
                   <a href="javascript:;" lay-tips="开票管理" lay-direction="2">
                       <i class="layui-icon layui-icon-component"></i>
                       <cite>获证机构管理</cite>
