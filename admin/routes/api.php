@@ -366,6 +366,17 @@ $api->version('v1', function ($api) {
         $api->any('company/user/ajax_open', 'WebFront\Company\QualityControl\UserController@ajax_open');// 审核操作(通过/不通过)
         $api->post('company/user/ajax_frozen', 'WebFront\Company\QualityControl\UserController@ajax_frozen');// 操作(冻结/解冻)
 
+        // 企业内容管理
+        $api->any('company/company_content/ajax_alist', 'WebFront\Company\QualityControl\CompanyContentController@ajax_alist');//ajax获得列表数据
+        $api->any('company/company_content/ajax_del', 'WebFront\Company\QualityControl\CompanyContentController@ajax_del');// 删除
+        $api->any('company/company_content/ajax_save', 'WebFront\Company\QualityControl\CompanyContentController@ajax_save');// 新加/修改
+        $api->post('company/company_content/ajax_get_child', 'WebFront\Company\QualityControl\CompanyContentController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('company/company_content/ajax_get_areachild', 'WebFront\Company\QualityControl\CompanyContentController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('company/company_content/ajax_import_staff','WebFront\Company\QualityControl\CompanyContentController@ajax_import'); // 导入员工
+
+        $api->post('company/company_content/import', 'WebFront\Company\QualityControl\CompanyContentController@import');// 导入excel
+        $api->post('company/company_content/ajax_get_ids', 'WebFront\Company\QualityControl\CompanyContentController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
         // 能力验证
         $api->any('company/abilitys/ajax_alist', 'WebFront\Company\QualityControl\AbilitysController@ajax_alist');//ajax获得列表数据
 //        $api->post('company/abilitys/ajax_join_save', 'WebFront\Company\QualityControl\AbilitysController@ajax_join_save');// 报名

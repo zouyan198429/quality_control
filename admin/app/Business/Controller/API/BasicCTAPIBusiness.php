@@ -278,6 +278,7 @@ class BasicCTAPIBusiness extends APIOperate
                     break;
             }
         }
+        if($operate_type == 8 && !is_numeric($dataArr)) $dataArr = 0;
         return $dataArr;
     }
 

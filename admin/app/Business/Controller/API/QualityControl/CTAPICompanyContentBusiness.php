@@ -140,4 +140,36 @@ class CTAPICompanyContentBusiness extends BasicPublicCTAPIBusiness
         static::joinListParamsLike($request, $controller, $queryParams, $notLog);
     }
 
+    /**
+     * 删除单条数据--2企业4个人 数据删除
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param int $organize_id 操作的所属企业id 可以为0：没有所属企业--企业后台，操作用户时用来限制，只能操作自己企业的用户
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  mixed 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function delDatasAjax(Request $request, Controller $controller, $organize_id = 0, $notLog = 0)
+    {
+        $company_id = $controller->company_id;
+        $user_id = $controller->user_id;
+        $id = CommonRequest::get($request, 'id');
+        if(is_array($id)) $id = implode(',', $id);
+        // 调用删除接口
+        $apiParams = [
+            'company_id' => $company_id,
+            'id' => $id,
+            'operate_staff_id' => $user_id,
+            'modifAddOprate' => 1,
+            'extendParams' => [
+                'organize_id' => $organize_id,
+            ]
+        ];
+        static::exeDBBusinessMethodCT($request, $controller, '',  'delById', $apiParams, $company_id, $notLog);
+        return ajaxDataArr(1, $id, '');
+        // return static::delAjaxBase($request, $controller, '', $notLog);
+
+    }
+
 }

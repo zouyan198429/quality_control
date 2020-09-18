@@ -194,6 +194,9 @@
                   <dd>
                       <a lay-href="{{ url('company/company_new_schedule') }}">能力附表</a>
                   </dd>
+                  <dd>
+                      <a lay-href="{{ url('company/company_content/basic/0') }}">企业简介</a>
+                  </dd>
 <!--                   <dd>
                       <a lay-href="javascript:void(83);">开票信息</a>
                   </dd>

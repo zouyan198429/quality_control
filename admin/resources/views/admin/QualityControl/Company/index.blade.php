@@ -229,8 +229,10 @@
       var IFRAME_TAG_KEY = "";// "QualityControl\\CTAPIStaff";// 获得模型表更新时间的关键标签，可为空：不获取
       var IFRAME_TAG_TIMEOUT = 60000;// 获得模型表更新时间运行间隔 1000:1秒 ；可以不要此变量：默认一分钟
 
+      var COMPANY_CONTENT_EDIT_URL = "{{ url('admin/company_content/add/0') }}"; // 企业简介修改/添加url
+
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/Company.js') }}?6"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/Company.js') }}?10"  type="text/javascript"></script>
 </body>
 </html>

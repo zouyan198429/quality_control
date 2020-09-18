@@ -134,9 +134,25 @@ var otheraction = {
         var tishi = "能力范围管理";
         layeriframe(weburl,tishi,1050,700,5);
         return false;
+    },
+    company_content : function(id, company_name){// 查看或修改企业简介
+        //获得表单各name的值
+        var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
+        console.log(CERTIFICATE_SCHEDULE_URL);
+        console.log(data);
+        var url_params = get_url_param(data);// parent.get_url_param(data);
+        var weburl = COMPANY_CONTENT_EDIT_URL + '?company_id=' + id + "&company_hidden=1" ;// + url_params;// + id + '?' + url_params;
+        // var weburl = STAFF_SHOW_URL + '?company_id=' + id
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = company_name + "-企业简介";
+        layeriframe(weburl,tishi,1050,700,5);
+        return false;
     }
 };
-
 
 //操作
 // params 其它参数对象  {}
@@ -271,12 +287,12 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
     document.write("                <%}%>");
     document.write("                <%if(can_modify &&  item.account_status == 1){%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.frozen(<%=item.id%>, 2)\">");
-    document.write("                    <i class=\"ace-icon bigger-60\"> 冻结<\/i>");
+    document.write("                    <i class=\"ace-icon fa fa-lock bigger-60\"> 冻结<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
     document.write("                <%if( can_modify && item.account_status == 2){%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.frozen(<%=item.id%>, 1)\">");
-    document.write("                    <i class=\"ace-icon bigger-60\"> 解冻<\/i>");
+    document.write("                    <i class=\"ace-icon fa fa-unlock bigger-60\"> 解冻<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.iframeModify(<%=item.id%>)\">");
@@ -288,13 +304,16 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
     document.write("                <\/a>");
     document.write("                <%}%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.schedule(<%=item.id%>)\">");
-    document.write("                    <i class=\"ace-icon bigger-60\">能力附表(<%=item.extend_info.schedule_num%>)<\/i>");
+    document.write("                    <i class=\"ace-icon  fa fa-cloud-download  bigger-60\">能力附表(<%=item.extend_info.schedule_num%>)<\/i>");
     document.write("                <\/a>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.staff_num(<%=item.id%>)\">");
-    document.write("                    <i class=\"ace-icon bigger-60\">员工(<%=item.extend_info.staff_num%>)<\/i>");
+    document.write("                    <i class=\"ace-icon fa fa-user-circle bigger-60\">员工(<%=item.extend_info.staff_num%>)<\/i>");
     document.write("                <\/a>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.certificate_schedule_num(<%=item.id%>)\">");
-    document.write("                    <i class=\"ace-icon bigger-60\">能力范围(<%=item.extend_info.certificate_schedule_num%>)<\/i>");
+    document.write("                    <i class=\"ace-icon fa fa-file-text bigger-60\">能力范围(<%=item.extend_info.certificate_schedule_num%>)<\/i>");
+    document.write("                <\/a>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn fa fa-search btn-mini btn-info\" onclick=\"otheraction.company_content(<%=item.id%>,'<%=item.company_name%>')\">");
+    document.write("                    <i class=\"ace-icon bigger-60\">企业简介(<%=item.extend_info.company_content_num%>)<\/i>");
     document.write("                <\/a>");
     document.write("");
     document.write("            <\/td>");

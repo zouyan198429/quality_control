@@ -386,6 +386,14 @@ Route::get('company/user/export', 'WebFront\Company\QualityControl\UserControlle
 Route::get('company/user/import_template', 'WebFront\Company\QualityControl\UserController@import_template');// 导入模版
 Route::get('company/user/import_bath/{company_id}', 'WebFront\Company\QualityControl\UserController@import_bath');// 导入批量
 
+// 企业内容管理
+Route::get('company/company_content', 'WebFront\Company\QualityControl\CompanyContentController@index');// 列表
+Route::get('company/company_content/add/{id}', 'WebFront\Company\QualityControl\CompanyContentController@add');// 添加
+// Route::get('company/company_content/select', 'WebFront\Company\QualityControl\CompanyContentController@select');// 选择-弹窗
+Route::get('company/company_content/export', 'WebFront\Company\QualityControl\CompanyContentController@export');// 导出
+Route::get('company/company_content/import_template', 'WebFront\Company\QualityControl\CompanyContentController@import_template');// 导入模版
+
+Route::get('company/company_content/basic/{id}', 'WebFront\Company\QualityControl\CompanyContentController@basic');// 添加
 // 能力验证
 Route::get('company/abilitys', 'WebFront\Company\QualityControl\AbilitysController@index');// 列表
 Route::get('company/abilitys/info/{id}', 'WebFront\Company\QualityControl\AbilitysController@info');// 查看-详情

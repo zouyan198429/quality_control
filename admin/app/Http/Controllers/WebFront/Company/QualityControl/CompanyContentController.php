@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin\QualityControl;
+namespace App\Http\Controllers\WebFront\Company\QualityControl;
 
 use App\Business\Controller\API\QualityControl\CTAPICompanyContentBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
@@ -29,10 +29,10 @@ class CompanyContentController extends BasicController
 //            $this->InitParams($request);
 //            // $reDataArr = $this->reDataArr;
 //            $reDataArr = array_merge($reDataArr, $this->reDataArr);
-//            return view('admin.QualityControl.CompanyContent.index', $reDataArr);
+//            return view('company.QualityControl.CompanyContent.index', $reDataArr);
 //
 //        }, $this->errMethod, $reDataArr, $this->errorView);
-        return $this->exeDoPublicFun($request, 1, 1, 'admin.QualityControl.CompanyContent.index', true
+        return $this->exeDoPublicFun($request, 1, 1, 'company.QualityControl.CompanyContent.index', true
             , 'doListPage', [], function (&$reDataArr) use ($request){
 
             });
@@ -57,10 +57,10 @@ class CompanyContentController extends BasicController
 //            $reDataArr['province_kv'] = CTAPICompanyContentBusiness::getCityByPid($request, $this,  0);
 //            $reDataArr['province_kv'] = CTAPICompanyContentBusiness::getChildListKeyVal($request, $this, 0, 1 + 0, 0);
 //            $reDataArr['province_id'] = 0;
-//            return view('admin.QualityControl.CompanyContent.select', $reDataArr);
+//            return view('company.QualityControl.CompanyContent.select', $reDataArr);
 //
 //        }, $this->errMethod, $reDataArr, $this->errorView);
-//        return $this->exeDoPublicFun($request, 2048, 1, 'admin.QualityControl.CompanyContent.select', true
+//        return $this->exeDoPublicFun($request, 2048, 1, 'company.QualityControl.CompanyContent.select', true
 //            , 'doListPage', [], function (&$reDataArr) use ($request){
 //
 //            });
@@ -83,17 +83,44 @@ class CompanyContentController extends BasicController
 //            $this->InitParams($request);
 //            // $reDataArr = $this->reDataArr;
 //            $reDataArr = array_merge($reDataArr, $this->reDataArr);
-//            return view('admin.QualityControl.CompanyContent.add', $reDataArr);
+//            return view('company.QualityControl.CompanyContent.add', $reDataArr);
 //
 //        }, $this->errMethod, $reDataArr, $this->errorView);
 
         $pageNum = ($id > 0) ? 64 : 16;
-        return $this->exeDoPublicFun($request, $pageNum, 1,'admin.QualityControl.CompanyContent.add', true
+        return $this->exeDoPublicFun($request, $pageNum, 1,'company.QualityControl.CompanyContent.add', true
             , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
 
         });
     }
 
+    /**
+     * 添加
+     *
+     * @param Request $request
+     * @param int $id
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function basic(Request $request,$id = 0)
+    {
+//        $reDataArr = [];// 可以传给视图的全局变量数组
+//        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request, &$id){
+//            // 正常流程的代码
+//
+//            $this->InitParams($request);
+//            // $reDataArr = $this->reDataArr;
+//            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+//            return view('company.QualityControl.CompanyContent.add', $reDataArr);
+//
+//        }, $this->errMethod, $reDataArr, $this->errorView);
+
+        $pageNum = ($id > 0) ? 64 : 16;
+        return $this->exeDoPublicFun($request, $pageNum, 1,'company.QualityControl.CompanyContent.basic', true
+            , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
+
+            });
+    }
     /**
      * @OA\Get(
      *     path="/api/admin/ability_type/ajax_info",
@@ -123,6 +150,11 @@ class CompanyContentController extends BasicController
         $id = CommonRequest::getInt($request, 'id');
         if(!is_numeric($id) || $id <=0) return ajaxDataArr(0, null, '参数[id]有误！');
         $info = CTAPICompanyContentBusiness::getInfoData($request, $this, $id, [], '', []);
+        if(empty($info)) {
+            throws('记录不存在！');
+        }
+        if($info['company_id'] != $this->user_id) throws('非法访问，您没有访问此记录的权限！');
+
         $resultDatas = ['info' => $info];
         return ajaxDataArr(1, $resultDatas, '');
 
@@ -167,7 +199,7 @@ class CompanyContentController extends BasicController
             , '', [], function (&$reDataArr) use ($request){
                 $id = CommonRequest::getInt($request, 'id');
                 // CommonRequest::judgeEmptyParams($request, 'id', $id);
-                $company_id = CommonRequest::getInt($request, 'company_id');
+                $company_id = $this->user_id;// CommonRequest::getInt($request, 'company_id');
                 $company_content = CommonRequest::get($request, 'company_content');
                 $company_content = stripslashes($company_content);
 
@@ -220,6 +252,11 @@ class CompanyContentController extends BasicController
 //        return  CTAPICompanyContentBusiness::getList($request, $this, 2 + 4);
         return $this->exeDoPublicFun($request, 4, 4,'', true, '', [], function (&$reDataArr) use ($request){
 
+            // 根据条件获得项目列表数据
+            $mergeParams = [
+                'company_id' => $this->user_id,
+            ];
+            CTAPICompanyContentBusiness::mergeRequest($request, $this, $mergeParams);
             $handleKeyConfigArr = ['company_info'];
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
@@ -322,7 +359,13 @@ class CompanyContentController extends BasicController
         Tool::formatOneArrVals($tem_id, [null, ''], ',', 1 | 2 | 4 | 8);
         $pageNum = (is_array($tem_id) && count($tem_id) > 1 ) ? 1024 : 512;
         return $this->exeDoPublicFun($request, $pageNum, 4,'', true, '', [], function (&$reDataArr) use ($request){
-            $organize_id = CommonRequest::getInt($request, 'company_id');// 可有此参数
+            $organize_id = $this->user_id;// CommonRequest::getInt($request, 'company_id');// 可有此参数
+            $id = CommonRequest::getInt($request, 'id');
+            $info = CTAPICompanyContentBusiness::getInfoDataBase($request, $this, '', $id, [], '', 1);
+            if(empty($info)) throws('记录不存在！');
+            // $user_info = $this->user_info;
+            if( $info['company_id'] != $this->user_id) throws('非法访问，您没有访问此记录的权限！');
+
              return CTAPICompanyContentBusiness::delDatasAjax($request, $this, $organize_id);
              // return CTAPICompanyContentBusiness::delAjax($request, $this);
         });
@@ -425,19 +468,19 @@ class CompanyContentController extends BasicController
 //        // 拥有者类型1平台2企业4个人
 //        $reDataArr['adminType'] =  AbilityJoin::$adminTypeArr;
 //        $reDataArr['defaultAdminType'] = -1;// 列表页默认状态
-        $company_id = CommonRequest::getInt($request, 'company_id');
-        $info = [];
-        $company_hidden = 0;
-        if(is_numeric($company_id) && $company_id > 0){
-            // 获得企业信息
-            $companyInfo = CTAPIStaffBusiness::getInfoData($request, $this, $company_id);
-            if(empty($companyInfo)) throws('企业信息不存在！');
-            $info['company_id'] = $company_id;
-            $info['user_company_name'] = $companyInfo['company_name'] ?? '';
-            $company_hidden = 1;
-        }
-        $reDataArr['info'] = $info;
-        $reDataArr['company_hidden'] = $company_hidden;// =1 : 隐藏企业选择
+//        $company_id = $this->user_id;// CommonRequest::getInt($request, 'company_id');
+//        $info = [];
+//        $company_hidden = 0;
+//        if(is_numeric($company_id) && $company_id > 0){
+//            // 获得企业信息
+//            $companyInfo = CTAPIStaffBusiness::getInfoData($request, $this, $company_id);
+//            if(empty($companyInfo)) throws('企业信息不存在！');
+//            $info['company_id'] = $company_id;
+//            $info['user_company_name'] = $companyInfo['company_name'] ?? '';
+//            $company_hidden = 1;
+//        }
+//        $reDataArr['info'] = $info;
+//        $reDataArr['company_hidden'] = $company_hidden;// =1 : 隐藏企业选择
 
     }
 
@@ -474,26 +517,19 @@ class CompanyContentController extends BasicController
             //   'department_id' => 0,
         ];
 
-        $handleKeyConfigArr = ['company_info'];
+        $handleKeyConfigArr = [];// ['company_info'];
         $extParams = [
             // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
             'relationFormatConfigs'=> CTAPICompanyContentBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
         ];
         // 如果是企业列表点《企业简介》
-        $company_id = CommonRequest::getInt($request, 'company_id');
+        $company_id = $this->user_id;// CommonRequest::getInt($request, 'company_id');
         $contentInfo = [];
         if($id <= 0 && $company_id > 0){
             // 获得企业的简价记录
             $contentInfo = CTAPICompanyContentBusiness::getFVFormatList( $request,  $this, 4, 1
                 , ['company_id' => $company_id], false, [], $extParams);
             $id = $contentInfo['id'] ?? 0;
-            if(empty($contentInfo)){
-                $companyInfo = CTAPIStaffBusiness::getInfoData($request, $this, $company_id);
-                if(empty($companyInfo)) throws('企业信息不存在！');
-                $info['company_id'] = $company_id;
-                $info['user_company_name'] = $companyInfo['company_name'] ?? '';
-            }
-
         }
 
         $operate = "添加";
@@ -502,6 +538,9 @@ class CompanyContentController extends BasicController
             $operate = "修改";
             if(empty($contentInfo)){
                 $info = CTAPICompanyContentBusiness::getInfoData($request, $this, $id, [], '', $extParams);
+                if(empty($info)) throws('记录不存在！');
+                // $user_info = $this->user_info;
+                if( $info['company_id'] != $this->user_id) throws('非法访问，您没有访问此记录的权限！');
             }else{
                 $info = $contentInfo;
             }
@@ -510,8 +549,6 @@ class CompanyContentController extends BasicController
         $reDataArr['info'] = $info;
         $reDataArr['operate'] = $operate;
 
-        $company_hidden = CommonRequest::getInt($request, 'company_hidden');
-        $reDataArr['company_hidden'] = $company_hidden;// =1 : 隐藏企业选择
 
     }
     // **************公用方法********************结束*********************************

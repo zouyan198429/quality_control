@@ -191,10 +191,11 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
 //            'count' => 0,
 //            // 'select' => ['id', 'amount', 'status', 'my_order_no' ]
 //        ];
-        $queryParams = Tool::getParamQuery(['company_id' => $company_id], [], []);
-        $queryParams['count'] = 0;
-        $count = static::getAllList($queryParams, []);
-        return $count;
+//        $queryParams = Tool::getParamQuery(['company_id' => $company_id], [], []);
+//        $queryParams['count'] = 0;
+//        $count = static::getAllList($queryParams, []);
+//        return $count;
+        return static::getDBFVFormatList(8, 1, ['company_id' => $company_id], false);
     }
 
 
