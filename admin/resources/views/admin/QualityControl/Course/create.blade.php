@@ -76,10 +76,8 @@
             <tr>
                 <th>显示状态</th>
                 <td>
-                    <div class="layui-input-block">
-                        <input type="radio" name="status_online" value="1" title="上架" checked>
-                        <input type="radio" name="status_online" value="2" title="下架">
-                    </div>
+                    <label><input type="radio" name="status_online" value="1" title="上架" {{$info['status_online'] == 1 ? 'checked' : null}}>上架</label>
+                    <label><input type="radio" name="status_online" value="2" title="下架" {{$info['status_online'] == 2 ? 'checked' : null}}>下架</label>
                 </td>
             </tr>
             <tr>

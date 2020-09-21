@@ -13,6 +13,8 @@
 // welcome
 //Route::get('/welcome', 'IndexController@welcome');
 use App\Http\Controllers\Admin\QualityControl\CourseController;
+use App\Http\Controllers\Admin\QualityControl\CourseClassController;
+use App\Http\Controllers\Admin\QualityControl\CourseClassManagementController;
 
 Route::get('/', 'IndexController@index');// 首页
 //Route::get('/aaa', function () {
@@ -292,9 +294,14 @@ Route::get('admin/ability_type/add/{id}', 'Admin\QualityControl\AbilityTypeContr
 Route::get('admin/ability_type/export', 'Admin\QualityControl\AbilityTypeController@export');// 导出
 Route::get('admin/ability_type/import_template', 'Admin\QualityControl\AbilityTypeController@import_template');// 导入模版
 
-// 面授培训
+// 课程管理
 Route::get('admin/courses', [CourseController::class, 'index']);
 Route::get('admin/courses/create/{id}', [CourseController::class, 'create']);
+// 培训班管理
+Route::get('admin/courses_class', [CourseClassController::class, 'index']);
+Route::get('admin/courses_class/create/{id}', [CourseClassController::class, 'create']);
+
+Route::get('admin/courses_class/management/{class_id}', [CourseClassManagementController::class, 'index']);
 
 // 企业内容管理
 Route::get('admin/company_content', 'Admin\QualityControl\CompanyContentController@index');// 列表

@@ -251,13 +251,13 @@
                           <a lay-href="{{ url('admin/courses') }}">课程管理</a>
                       </dd>
                       <dd>
+                          <a lay-href="{{ url('admin/courses_class') }}">培训班管理</a>
+                      </dd>
+                      <dd>
                           <a lay-href="{{ url('admin/courses/create') }}">报名企业</a>
                       </dd>
                       <dd>
                           <a lay-href="{{ url('admin/ability_code') }}">报名学员</a>
-                      </dd>
-                      <dd>
-                          <a lay-href="{{ url('admin/company_new_schedule') }}">培训班管理</a>
                       </dd>
                   </dl>
               </li>

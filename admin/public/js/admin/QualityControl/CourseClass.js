@@ -21,6 +21,12 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
     reset_list(is_read_page, false, reset_total, do_num);
     // initList();
 }
+
+function management(id){// 项目管理
+    var weburl = COURSE_CLASS_MANAGEMENT_URL + id ;
+    console.log(weburl);
+    goOpenUrl(weburl,'_blank');
+}
 (function() {
     document.write("");
     document.write("    <!-- 前端模板部分 -->");
@@ -43,18 +49,15 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
     // document.write("                <\/label>");
     // document.write("            <\/td>");
     // document.write("            <td><%=item.id%><\/td>");
-    document.write("            <td><%=item.course_name%><\/td>");
-    document.write("            <td><%=item.hits%><\/td>");
+    document.write("            <td><%=item.class_name%><\/td>");
     document.write("            <td><%=item.join_num%><\/td>");
-    document.write("            <td><%=item.status_online_text%><\/td>");
+    document.write("            <td><%=item.city.city_name%><\/td>");
+    document.write("            <td><%=item.remarks%><\/td>");
     document.write("            <td><%=item.created_at%><\/td>");
-    document.write("            <td><%=item.updated_at%><\/td>");
     document.write("            <td>");
-    document.write("                <%if( false){%>");
-    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"action.show(<%=item.id%>)\">");
-    document.write("                    <i class=\"ace-icon fa fa-check bigger-60\"> 查看<\/i>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"management(<%=item.id%>)\">");
+    document.write("                    <i class=\"fa bigger-60\"> 管理<\/i>");
     document.write("                <\/a>");
-    document.write("                <%}%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.iframeModify(<%=item.id%>)\">");
     document.write("                    <i class=\"ace-icon fa fa-pencil bigger-60\"> 编辑<\/i>");
     document.write("                <\/a>");

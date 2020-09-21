@@ -89,4 +89,12 @@ class CourseClass extends BasePublicModel
     {
         return $this->hasMany('App\Models\QualityControl\CourseLog', 'class_id', 'id');
     }
+
+    /**
+     * 获取城市-一维
+     */
+    public function city()
+    {
+        return $this->belongsTo('App\Models\QualityControl\Citys', 'city_id', 'id');
+    }
 }

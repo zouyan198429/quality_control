@@ -19,7 +19,7 @@
 
     @include('common.pageParams')
     <div class="tabbox" >
-      <a href="javascript:void(0);" class="on" onclick="action.iframeModify(0)">添加课程</a>
+      <a href="javascript:void(0);" class="on" onclick="action.iframeModify(0)">添加培训班</a>
     </div>
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
@@ -40,12 +40,11 @@
             </colgroup>
             <thead>
             <tr>
-                <th>课程</th>
-                <th>浏览量</th>
-                <th>报名池人数</th>
-                <th>状态</th>
+                <th>培训班名称</th>
+                <th>人数</th>
+                <th>城市</th>
+                <th>备注</th>
                 <th>创建时间</th>
-                <th>最后修改</th>
                 <th>操作</th>
             </tr>
             </thead>
@@ -65,22 +64,22 @@
   @include('public.dynamic_list_foot')
 
   <script type="text/javascript">
-      var OPERATE_TYPE = <?php echo isset($operate_type)?$operate_type:0; ?>;
-      var AUTO_READ_FIRST = false;//自动读取第一页 true:自动读取 false:指定地方读取
-      var LIST_FUNCTION_NAME = "reset_list_self";// 列表刷新函数名称, 需要列表刷新同步时，使用自定义方法reset_list_self；异步时没有必要自定义
-      var AJAX_URL = "{{ url('api/admin/courses/ajax_list') }}";//ajax请求的url
-      var ADD_URL = "{{ url('admin/courses/create/0') }}"; //添加url
+      const OPERATE_TYPE = <?php echo isset($operate_type)?$operate_type:0; ?>;
+      const AUTO_READ_FIRST = false;//自动读取第一页 true:自动读取 false:指定地方读取
+      const AJAX_URL = "{{ url('api/admin/courses_class/ajax_list') }}";//ajax请求的url
+      const ADD_URL = "{{ url('admin/courses_class/create/0') }}"; //添加url
 
-      var IFRAME_MODIFY_URL = "{{url('admin/courses/create/')}}/";//添加/修改页面地址前缀 + id
-      var IFRAME_MODIFY_URL_TITLE = "课程" ;// 详情弹窗显示提示  [添加/修改] +  栏目/主题
-      var IFRAME_MODIFY_CLOSE_OPERATE = 0 ;// 详情弹窗operate_num关闭时的操作0不做任何操作1刷新当前页面2刷新当前列表页面
+      const IFRAME_MODIFY_URL = "{{url('admin/courses_class/create/')}}/";//添加/修改页面地址前缀 + id
+      const IFRAME_MODIFY_URL_TITLE = "培训班" ;// 详情弹窗显示提示  [添加/修改] +  栏目/主题
+      const IFRAME_MODIFY_CLOSE_OPERATE = 0 ;// 详情弹窗operate_num关闭时的操作0不做任何操作1刷新当前页面2刷新当前列表页面
 
-      var SHOW_URL = "{{url('admin/courses/info/')}}/";//显示页面地址前缀 + id
-      var SHOW_URL_TITLE = "" ;// 详情弹窗显示提示
-      var SHOW_CLOSE_OPERATE = 0 ;// 详情弹窗operate_num关闭时的操作0不做任何操作1刷新当前页面2刷新当前列表页面
-      var EDIT_URL = "{{url('admin/courses/create/')}}/";//修改页面地址前缀 + id
+      const SHOW_URL = "{{url('admin/courses_class/info/')}}/";//显示页面地址前缀 + id
+      const SHOW_URL_TITLE = "" ;// 详情弹窗显示提示
+      const SHOW_CLOSE_OPERATE = 0 ;// 详情弹窗operate_num关闭时的操作0不做任何操作1刷新当前页面2刷新当前列表页面
+      const EDIT_URL = "{{url('admin/courses_class/create/')}}/";//修改页面地址前缀 + id
+      const COURSE_CLASS_MANAGEMENT_URL = "{{url('admin/courses_class/management/')}}/";//培训班管理 页面地址前缀 + id
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/Course.js') }}?1"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/CourseClass.js') }}"  type="text/javascript"></script>
 </body>
 </html>
