@@ -368,6 +368,9 @@
                 <dd>
                   <a lay-href="{{ url('admin/staff') }}">管理员管理</a>
                 </dd>
+                  <dd>
+                      <a lay-href="{{ url('admin/expert') }}">数据查看人员管理</a>
+                  </dd>
                   <!-- <dd>
                       <a lay-href="javascript:void(91);">角色权限</a>
                   </dd> -->

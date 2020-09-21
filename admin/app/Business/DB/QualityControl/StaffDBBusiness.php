@@ -142,7 +142,7 @@ class StaffDBBusiness extends BasePublicDBBusiness
             if( isset($saveData['mobile'])){
                 // 修改手机号时---必须要有 admin_type  拥有者类型1平台2老师4学生
                 $admin_type = $saveData['admin_type'] ?? '';
-                if(!is_numeric($admin_type) || !in_array($admin_type, [1,2,4])) throws('用户类型参数有误！');
+                if(!is_numeric($admin_type) || !in_array($admin_type, [1,2,4,8])) throws('用户类型参数有误！');
             }
 
             if( isset($saveData['mobile']) && static::judgeFieldExist($company_id, $id ,"mobile", $saveData['mobile'], [['admin_type', $saveData['admin_type']]],1)){

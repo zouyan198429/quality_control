@@ -39,7 +39,7 @@ class staff extends BaseDBVerify
                     // 'must_message' => '数据校验不通过，没有{fieldName}数据值！',// 必填时，无值的错误提示
                     'valiDateParam' => [// 参数有值时验证信息；如需要多个验证--此值为二维数组【注意：此时的多语言resources\lang\zh-CN 下具体的表文件中的message也有用一维数组】
                         // "input"=>$_POST["market_id"],"require"=>"false","var_name" => "queue" ,
-                        "validator"=>"custom","regexp"=>"/^([0124])$/","message" => '',// '{fieldName}' . ($langModel['validValueIs'] ?? '')  . '（1平台2城市分站4城市代理8商家16店铺32快跑人员64用户）'
+                        "validator"=>"custom","regexp"=>"/^([01248])$/","message" => '',// '{fieldName}' . ($langModel['validValueIs'] ?? '')  . '（1平台2城市分站4城市代理8商家16店铺32快跑人员64用户）'
                     ],
                     'powerNum' => 0,// (2 | 4)  特殊权限[小心设置] 2新加时必填;8修改时如果有下标则判断必填[主键不要设置，不然新建不了] 4不可修改
                 ],

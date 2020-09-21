@@ -185,6 +185,64 @@ Route::get('layui/set/user/password', 'Layui\Set\UserController@password');// �
 // 授权  //www.layui.com/admin/#get
 
 // --- 质量认证认可协会
+// --  数据查看人员后台
+
+// 首页
+Route::get('expert/test', 'Expert\QualityControl\IndexController@test');// 测试
+Route::get('expert/index', 'Expert\QualityControl\IndexController@index');// 首页--ok
+Route::get('expert', 'Expert\QualityControl\IndexController@index');// --ok
+Route::get('expert/login', 'Expert\QualityControl\IndexController@login');//login.html 登录--ok
+Route::get('expert/logout', 'Expert\QualityControl\IndexController@logout');// 注销--ok
+Route::get('expert/password', 'Expert\QualityControl\IndexController@password');//psdmodify.html 个人信息-修改密码--ok
+Route::get('expert/info', 'Expert\QualityControl\IndexController@info');//myinfo.html 个人信息--显示--ok
+Route::get('expert/down_drive', 'Expert\QualityControl\IndexController@down_drive');// 下载网页打印机驱动
+
+Route::get('expert/down_file', 'Expert\QualityControl\IndexController@down_file');// 下载文件
+
+// 企业帐号管理
+Route::get('expert/company', 'Expert\QualityControl\CompanyController@index');// 列表
+//Route::get('expert/company/add/{id}', 'Expert\QualityControl\CompanyController@add');// 添加
+Route::get('expert/company/select', 'Expert\QualityControl\CompanyController@select');// 选择-弹窗
+//Route::get('expert/company/export', 'Expert\QualityControl\CompanyController@export');// 导出
+//Route::get('expert/company/import_template', 'Expert\QualityControl\CompanyController@import_template');// 导入模版
+
+//Route::get('expert/company/grade_area', 'Expert\QualityControl\CompanyController@grade_area');// 会员地区分布统计
+//Route::get('expert/company/grade_industry', 'Expert\QualityControl\CompanyController@grade_industry');// 会员行业分布统计
+
+// 能力验证
+Route::get('expert/abilitys', 'Expert\QualityControl\AbilitysController@index');// 列表
+//Route::get('expert/abilitys/add/{id}', 'Expert\QualityControl\AbilitysController@add');// 添加
+Route::get('expert/abilitys/info/{id}', 'Expert\QualityControl\AbilitysController@info');// 查看-详情
+Route::get('expert/abilitys/select', 'Expert\QualityControl\AbilitysController@select');// 选择-弹窗
+Route::get('expert/abilitys/export', 'Expert\QualityControl\AbilitysController@export');// 导出
+Route::get('expert/abilitys/export_join/{ability_id}', 'Expert\QualityControl\AbilitysController@export_join');// 导出报名的企业信息
+Route::get('expert/abilitys/import_template', 'Expert\QualityControl\AbilitysController@import_template');// 导入模版
+//Route::get('expert/abilitys/publish/{id}', 'Expert\QualityControl\AbilitysController@publish');// 公布结果页面
+
+//****************************************************************************
+// 能力验证管理
+Route::get('expert/abilitys_admin/{ability_id}', 'Expert\QualityControl\Abilitys\IndexController@index');// 首页
+Route::get('expert/abilitys_admin/{ability_id}/basic', 'Expert\QualityControl\Abilitys\IndexController@basic');// 基础信息
+
+// 能力验证--报名管理--参加单位
+Route::get('expert/abilitys_admin/{ability_id}/ability_join_items', 'Expert\QualityControl\Abilitys\AbilityJoinItemsController@index');// 列表
+//Route::get('expert/abilitys_admin/{ability_id}/ability_join_items/add/{id}', 'Expert\QualityControl\Abilitys\AbilityJoinItemsController@add');// 添加
+// Route::get('expert/abilitys_admin/{ability_id}/ability_join_items/info/{id}', 'Expert\QualityControl\Abilitys\AbilityJoinItemsController@info');// 查看-详情
+// Route::get('expert/abilitys_admin/{ability_id}/ability_join_items/select', 'Expert\QualityControl\Abilitys\AbilityJoinItemsController@select');// 选择-弹窗
+//Route::get('expert/abilitys_admin/{ability_id}/ability_join_items/export', 'Expert\QualityControl\Abilitys\AbilityJoinItemsController@export');// 导出
+//Route::get('expert/abilitys_admin/{ability_id}/ability_join_items/import_template', 'Expert\QualityControl\Abilitys\AbilityJoinItemsController@import_template');// 导入模版
+
+Route::get('expert/abilitys_admin/{ability_id}/ability_join_items/sample_result_info/{item_id}/{retry_no}', 'Expert\QualityControl\Abilitys\AbilityJoinItemsController@sample_result_info');// 查看上传的数据
+
+// 能力验证结果--报名管理--参加单位
+Route::get('expert/abilitys_admin/{ability_id}/ability_join_items_results', 'Expert\QualityControl\Abilitys\AbilityJoinItemsResultsController@index');// 列表
+Route::get('expert/abilitys_admin/{ability_id}/ability_join_items_results/add/{id}', 'Expert\QualityControl\Abilitys\AbilityJoinItemsResultsController@add');// 添加--判定
+Route::get('expert/abilitys_admin/{ability_id}/ability_join_items_results/export', 'Expert\QualityControl\Abilitys\AbilityJoinItemsResultsController@export');// 导出
+Route::get('expert/abilitys_admin/{ability_id}/ability_join_items_results/get_sample/{id}', 'Expert\QualityControl\Abilitys\AbilityJoinItemsResultsController@get_sample');// 取样
+
+//****************************************************************************
+
+// --- 质量认证认可协会
 // -- 后台
 
 
@@ -199,12 +257,20 @@ Route::get('admin/info', 'Admin\QualityControl\IndexController@info');//myinfo.h
 Route::get('admin/down_drive', 'Admin\QualityControl\IndexController@down_drive');// 下载网页打印机驱动
 
 Route::get('admin/down_file', 'Admin\QualityControl\IndexController@down_file');// 下载文件
+
 // 系统管理员
 Route::get('admin/staff', 'Admin\QualityControl\StaffController@index');// 列表
 Route::get('admin/staff/add/{id}', 'Admin\QualityControl\StaffController@add');// 添加
 // Route::get('admin/staff/select', 'Admin\QualityControl\StaffController@select');// 选择-弹窗
 Route::get('admin/staff/export', 'Admin\QualityControl\StaffController@export');// 导出
 Route::get('admin/staff/import_template', 'Admin\QualityControl\StaffController@import_template');// 导入模版
+
+// 专家
+Route::get('admin/expert', 'Admin\QualityControl\ExpertController@index');// 列表
+Route::get('admin/expert/add/{id}', 'Admin\QualityControl\ExpertController@add');// 添加
+// Route::get('admin/expert/select', 'Admin\QualityControl\ExpertController@select');// 选择-弹窗
+Route::get('admin/expert/export', 'Admin\QualityControl\ExpertController@export');// 导出
+Route::get('admin/expert/import_template', 'Admin\QualityControl\ExpertController@import_template');// 导入模版
 
 // 企业帐号管理
 Route::get('admin/company', 'Admin\QualityControl\CompanyController@index');// 列表

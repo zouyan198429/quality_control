@@ -70,6 +70,68 @@ $api->version('v1', function ($api) {
         $api->get('excel/import','ExcelController@import'); // 导入
         $api->get('excel/import_test','ExcelController@import_test'); // 导入 - 测试
 
+        // ------数据查看人员后台
+
+        // 验证码 -- ok
+//        $api->get('expert/ajax_captcha', 'Expert\QualityControl\IndexController@ajax_captcha');// api生成验证码
+//        $api->post('expert/ajax_captcha_verify', 'Expert\QualityControl\IndexController@ajax_captcha_verify');// api生成验证码-验证
+        $api->get('expert/ajax_captcha', 'Expert\QualityControl\CaptchaController@ajax_captcha');// api生成验证码--ok
+        $api->post('expert/ajax_captcha_verify', 'Expert\QualityControl\CaptchaController@ajax_captcha_verify');// api生成验证码-验证--ok
+
+        //// 登陆
+        $api->any('expert/ajax_login', 'Expert\QualityControl\IndexController@ajax_login');// 登陆--ok
+        $api->any('expert/ajax_login_sms', 'Expert\QualityControl\IndexController@ajax_login_sms');// 登陆-手机短信验证码--ok
+        $api->post('expert/ajax_password_save', 'Expert\QualityControl\IndexController@ajax_password_save');// 修改密码--ok
+        $api->any('expert/ajax_info_save', 'Expert\QualityControl\IndexController@ajax_info_save');// 修改设置--ok
+
+        $api->any('expert/ajax_getTableUpdateTime', 'Expert\QualityControl\IndexController@ajax_getTableUpdateTime');// 获得模块表的最新更新时间
+
+        // 企业帐号管理
+        $api->any('expert/company/ajax_alist', 'Expert\QualityControl\CompanyController@ajax_alist');//ajax获得列表数据
+//        $api->any('expert/company/ajax_del', 'Expert\QualityControl\CompanyController@ajax_del');// 删除
+//        $api->post('expert/company/ajax_save', 'Expert\QualityControl\CompanyController@ajax_save');// 新加/修改
+        $api->post('expert/company/ajax_get_child', 'Expert\QualityControl\CompanyController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('expert/company/ajax_get_areachild', 'Expert\QualityControl\CompanyController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('expert/company/ajax_import_staff','Expert\QualityControl\CompanyController@ajax_import'); // 导入员工
+
+//        $api->post('expert/company/import', 'Expert\QualityControl\CompanyController@import');// 导入excel
+        $api->post('expert/company/ajax_get_ids', 'Expert\QualityControl\CompanyController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+//        $api->any('expert/company/ajax_open', 'Expert\QualityControl\CompanyController@ajax_open');// 审核操作(通过/不通过)
+//        $api->post('expert/company/ajax_frozen', 'Expert\QualityControl\CompanyController@ajax_frozen');// 操作(冻结/解冻)
+
+        // 能力验证
+        $api->any('expert/abilitys/ajax_alist', 'Expert\QualityControl\AbilitysController@ajax_alist');//ajax获得列表数据
+//        $api->post('expert/abilitys/ajax_del', 'Expert\QualityControl\AbilitysController@ajax_del');// 删除
+//        $api->post('expert/abilitys/ajax_save', 'Expert\QualityControl\AbilitysController@ajax_save');// 新加/修改
+        $api->post('expert/abilitys/ajax_get_child', 'Expert\QualityControl\AbilitysController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('expert/abilitys/ajax_get_areachild', 'Expert\QualityControl\AbilitysController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('expert/abilitys/ajax_import_staff','Expert\QualityControl\AbilitysController@ajax_import'); // 导入员工
+
+        $api->post('expert/abilitys/import', 'Expert\QualityControl\AbilitysController@import');// 导入excel
+        $api->post('expert/abilitys/ajax_get_ids', 'Expert\QualityControl\AbilitysController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+//        $api->post('expert/abilitys/ajax_save_publish', 'Expert\QualityControl\AbilitysController@ajax_save_publish');// 修改公布时间类型
+        //****************************************************************************
+        // 能力验证管理
+
+        // 能力验证--报名管理--参加单位
+        $api->any('expert/abilitys_admin/{ability_id}/ability_join_items/ajax_alist', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@ajax_alist');//ajax获得列表数据
+//        $api->post('expert/abilitys_admin/{ability_id}/ability_join_items/ajax_del', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@ajax_del');// 删除
+//        $api->post('expert/abilitys_admin/{ability_id}/ability_join_items/ajax_save', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@ajax_save');// 新加/修改
+//        $api->post('expert/abilitys_admin/{ability_id}/ability_join_items/ajax_get_child', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+//        $api->post('expert/abilitys_admin/{ability_id}/ability_join_items/ajax_get_areachild', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+//        $api->post('expert/abilitys_admin/{ability_id}/ability_join_items/ajax_import_staff','Admin\QualityControl\Abilitys\AbilityJoinItemsController@ajax_import'); // 导入员工
+
+//        $api->post('expert/abilitys_admin/{ability_id}/ability_join_items/import', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@import');// 导入excel
+//        $api->post('expert/abilitys_admin/{ability_id}/ability_join_items/ajax_get_ids', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        // 能力验证结果--报名管理--参加单位
+        $api->any('expert/abilitys_admin/{ability_id}/ability_join_items_results/ajax_alist', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@ajax_alist');//ajax获得列表数据
+        $api->any('expert/abilitys_admin/{ability_id}/ability_join_items_results/ajax_save', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@ajax_save');// 新加/修改
+        $api->any('expert/abilitys_admin/{ability_id}/ability_join_items_results/ajax_save_sample', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@ajax_save_sample');// 新加/修改--取样
+        //****************************************************************************
+
         // ------后台
 
         // 验证码 -- ok
@@ -89,6 +151,7 @@ $api->version('v1', function ($api) {
         $api->any('admin/ajax_info_save', 'Admin\QualityControl\IndexController@ajax_info_save');// 修改设置--ok
 
         $api->any('admin/ajax_getTableUpdateTime', 'Admin\QualityControl\IndexController@ajax_getTableUpdateTime');// 获得模块表的最新更新时间
+
         // 上传图片
         $api->post('admin/upload', 'Admin\QualityControl\UploadController@index');
         $api->post('admin/upload/ajax_del', 'Admin\QualityControl\UploadController@ajax_del');// 根据id删除文件
@@ -106,6 +169,20 @@ $api->version('v1', function ($api) {
 
         $api->any('admin/staff/ajax_open', 'Admin\QualityControl\StaffController@ajax_open');// 审核操作(通过/不通过)
         $api->any('admin/staff/ajax_frozen', 'Admin\QualityControl\StaffController@ajax_frozen');// 操作(冻结/解冻)
+
+        // 专家
+        $api->any('admin/expert/ajax_alist', 'Admin\QualityControl\ExpertController@ajax_alist');//ajax获得列表数据
+        $api->any('admin/expert/ajax_del', 'Admin\QualityControl\ExpertController@ajax_del');// 删除
+        $api->post('admin/expert/ajax_save', 'Admin\QualityControl\ExpertController@ajax_save');// 新加/修改
+        $api->post('admin/expert/ajax_get_child', 'Admin\QualityControl\ExpertController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/expert/ajax_get_areachild', 'Admin\QualityControl\ExpertController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/expert/ajax_import_staff','Admin\QualityControl\ExpertController@ajax_import'); // 导入员工
+
+        $api->post('admin/expert/import', 'Admin\QualityControl\ExpertController@import');// 导入excel
+        $api->post('admin/expert/ajax_get_ids', 'Admin\QualityControl\ExpertController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        $api->any('admin/expert/ajax_open', 'Admin\QualityControl\ExpertController@ajax_open');// 审核操作(通过/不通过)
+        $api->any('admin/expert/ajax_frozen', 'Admin\QualityControl\ExpertController@ajax_frozen');// 操作(冻结/解冻)
 
         // 企业帐号管理
         $api->any('admin/company/ajax_alist', 'Admin\QualityControl\CompanyController@ajax_alist');//ajax获得列表数据

@@ -248,14 +248,16 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
         if($userInfo['open_status'] == 1 &&
             (
                 ( in_array($userInfo['admin_type'], [2, 4]) && $userInfo['is_perfect'] == 2)  ||
-                $userInfo['admin_type'] == 1
+                // $userInfo['admin_type'] == 1
+                in_array($userInfo['admin_type'], [1, 8])
             )
          ) throws('审核中，请耐心等待！');
         if($userInfo['open_status'] == 4 ) throws('审核未通过！');
         if($userInfo['open_status'] != 2   &&
             (
                 ( in_array($userInfo['admin_type'], [2, 4]) && $userInfo['is_perfect'] == 2) ||
-                $userInfo['admin_type'] == 1
+                // $userInfo['admin_type'] == 1
+                in_array($userInfo['admin_type'], [1, 8])
             )
         ) throws('非审核通过！');
 //        $staffCity = $userInfo['city'] ?? [];// 城市分站
@@ -1453,7 +1455,8 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
             $info = $controller->judgePower($request, $id);
             if($info['issuper'] == 1) throws('超级帐户不可删除!');
         }
-        if($admin_type != 1)  throws('只能对管理员进行操作!');
+        // if($admin_type != 1)  throws('只能对管理员进行操作!');
+        if(!in_array($admin_type, [1, 8]))  throws('只能对管理员或数据查看人员进行操作!');
         // 根据Id删除数据
         // return CTAPIStaffBusiness::delAjax($request, $controller);
         // 根据条件删除数据
@@ -1520,6 +1523,9 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
                     $fileName = '用户';
                     $sheetTitle = '用户';
                     break;
+                case 8:
+                    $fileName = '数据查看人员';
+                    $sheetTitle = '数据查看人员';
                 default:
                     break;
             }
@@ -1555,6 +1561,10 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
                     ];// , 'open_status'=>'审核状态[待审核|审核通过|审核不通过]', 'account_status'=>'冻结状态[正常|冻结]'
                 $fileName = '用户导入模版';
                 $sheetTitle = '用户';
+                break;
+            case 8:
+                $fileName = '数据查看人员导入模版';
+                $sheetTitle = '数据查看人员';
                 break;
             default:
                 break;
