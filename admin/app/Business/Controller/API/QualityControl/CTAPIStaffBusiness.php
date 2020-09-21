@@ -440,6 +440,9 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
         $company_expire = CommonRequest::getInt($request, 'company_expire');
         if(is_numeric($company_expire) && $company_expire > 0 )  array_push($queryParams['where'], ['company_expire', '=', $company_expire]);
 
+        $company_grade_continue = CommonRequest::getInt($request, 'company_grade_continue');
+        if(is_numeric($company_grade_continue) && $company_grade_continue > 0 )  array_push($queryParams['where'], ['company_grade_continue', '=', $company_grade_continue]);
+
         $role_num = CommonRequest::getInt($request, 'role_num');
         if(is_numeric($role_num) && $role_num > 0 )  array_push($queryParams['where'], ['role_num', '&', $role_num . '=' . $role_num]);
 
@@ -451,7 +454,24 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
 
         $sign_status = CommonRequest::getInt($request, 'sign_status');
         if(is_numeric($sign_status) && $sign_status > 0 )  array_push($queryParams['where'], ['sign_status', '=', $sign_status]);
+        // 数据类型
+        $record_type = CommonRequest::get($request, 'record_type');
+        if(is_numeric($record_type) && $record_type > 0 ){
+            $dateTime =  date('Y-m-d H:i:s');
+            switch($record_type) {
+                case 2:// 30天内过期
+                    array_push($queryParams['where'], ['company_end_time', '<=', Tool::addMinusDate($dateTime, ['+30 day'], 'Y-m-d H:i:s', 1, '时间')]);
+                    array_push($queryParams['where'], ['company_end_time', '>=', $dateTime]);
+                    break;
+                case 4:// 已过期30天内
 
+                    array_push($queryParams['where'], ['company_end_time', '<=', $dateTime]);
+                    array_push($queryParams['where'], ['company_end_time', '>=', Tool::addMinusDate($dateTime, ['-30 day'], 'Y-m-d H:i:s', 1, '时间')]);
+                    break;
+                default:
+                    break;
+            }
+        }
         // 方法最下面
         // 注意重写方法中，如果不是特殊的like，同样需要调起此默认like方法--特殊的写自己特殊的方法
         static::joinListParamsLike($request, $controller, $queryParams, $notLog);
@@ -1478,7 +1498,9 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
             $sheetTitle = '系统管理员';
             switch($admin_type){
                 case 2:
-                    $headArr = ['id'=>'单位id', 'company_name'=>'单位名称', 'company_grade_text'=>'会员类型', 'company_credit_code'=>'统一社会信用代码',  'company_is_legal_persion_text'=>'是否独立法人',
+                    $headArr = ['id'=>'单位id', 'company_name'=>'单位名称', 'company_grade_text'=>'会员类型',
+                        // 'company_begin_time'=>'会员开始时间', 'company_end_time'=>'会员结束时间', 'company_grade_continue_text'=>'续期配置',
+                        'company_credit_code'=>'统一社会信用代码',  'company_is_legal_persion_text'=>'是否独立法人',
                         'company_legal_credit_code'=>'主体机构统一社会信用代码', 'company_legal_name'=>'主体机构',  'city_name'=>'所在城市',
                         'company_type_text'=>'企业类型',  'company_prop_text'=>'企业性质',  'addr'=>'通讯地址',
                         'zip_code'=>'邮编',  'fax'=>'传真',  'email'=>'企业邮箱',  'company_legal'=>'法人代表',  'company_peoples_num_text'=>'单位人数',

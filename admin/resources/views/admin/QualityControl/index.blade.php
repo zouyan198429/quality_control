@@ -165,10 +165,24 @@
                     <dd>
                       <a lay-href="{{ url('admin/user') }}">个人会员</a>
                     </dd>
-                    <dd>
-                        <a lay-href="javascript:void(01);">会员分析</a>
+{{--                    <dd>--}}
+{{--                        <a lay-href="javascript:void(01);">会员分析</a>--}}
+{{--                    </dd>--}}
+                    <dd class="layui-nav-itemed">
+                        <a href="javascript:;">会员分析</a>
+                        <dl class="layui-nav-child">
+                            <dd><a lay-href="{{ url('admin/company/grade_area') }}">会员地区分布</a></dd>
+                            <dd><a lay-href="{{ url('admin/company/grade_industry') }}">会员行业分布</a></dd>
+                            <dd><a lay-href="{{ url('admin/company') }}?record_type=2">快到期会员(所有)</a></dd>
+                            <dd><a lay-href="{{ url('admin/company') }}?record_type=2&company_grade_continue=1">快到期会员(无续期)</a></dd>
+                            <dd><a lay-href="{{ url('admin/company') }}?record_type=2&company_grade_continue=2">快到期会员(有续期)</a></dd>
+                            <dd><a lay-href="{{ url('admin/company') }}?record_type=4">已过期会员</a></dd>
+                            <dd><a lay-href="{{ url('admin/company') }}?record_type=4&company_grade_continue=1">已过期会员(无续期)</a></dd>
+                            <dd><a lay-href="{{ url('admin/company') }}?record_type=4&company_grade_continue=2">已过期会员(有续期)</a></dd>
+                        </dl>
                     </dd>
                 </dl>
+
             </li>
             <!-- <li data-name="user" class="layui-nav-item">
                   <a href="javascript:;" lay-tips="会员管理" lay-direction="2">

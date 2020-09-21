@@ -903,6 +903,19 @@ class StaffController extends BasicController
 
         // 所属行业--只有企业有
         if(static::$ADMIN_TYPE == 2){
+            // 数据类型
+            $record_type = CommonRequest::getInt($request, 'record_type');
+            if(strlen($record_type) <= 0 ) $record_type = -1;
+            $reDataArr['recordType'] =  Staff::$recordTypeArr;
+            $reDataArr['defaultRecordType'] = $record_type;// -1;// 列表页默认状态
+
+            // 企业--会员等级是否有续期1没有2有
+            $company_grade_continue = CommonRequest::getInt($request, 'company_grade_continue');
+            if(strlen($company_grade_continue) <= 0 ) $company_grade_continue = -1;
+            $reDataArr['companyGradeContinue'] =  Staff::$companyGradeContinueArr;
+            $reDataArr['defaultCompanyGradeContinue'] = $company_grade_continue;// -1;// 列表页默认状态
+
+
             $reDataArr['industry_kv'] = CTAPIIndustryBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'industry_name']);
             $reDataArr['defaultIndustry'] = $info['company_industry_id'] ?? -1;// 默认
 

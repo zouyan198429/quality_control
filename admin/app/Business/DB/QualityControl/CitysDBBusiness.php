@@ -60,4 +60,46 @@ class CitysDBBusiness extends BasePublicDBBusiness
         // return array_values($dataList);
         return $returnArr;
     }
+
+    /**
+     * 分组获得各城市的企业类型数量
+     * @return array
+     * @author zouyan(305463219@qq.com)
+     */
+    //
+    public static function getCompanyGradeNumGroup(){
+        // 获得行业的kv
+        $queryParams = Tool::getParamQuery([], ['sqlParams' => ['orderBy' =>['sort_num' => 'desc', 'id' => 'desc']]]);
+        $city_kv = static::getKeyVals(['key' => 'id', 'val' => 'city_name'], [], $queryParams);
+        $grade_KV = Staff::$companyGradeArr;
+        if(empty($city_kv) || empty($grade_KV)) return [
+            'city_kv' => $city_kv,
+            'grade_kv' => $grade_KV,
+            'data_list' => [],
+        ];
+
+        $where = [['admin_type' ,2], ['is_perfect', 2], ['open_status', 2], ['account_status', 1]];
+        $companyObj = Staff::where($where);
+        // 是数组
+//        if(!empty($status) && is_array($status)){
+//            $orderObj = $companyObj->whereIn('status',$status);
+//        }
+        //
+        $dataList = $companyObj->select(DB::raw('count(*) as company_count, city_id, company_grade'))
+            ->groupBy('city_id')
+            ->groupBy('company_grade')
+            // ->orderBy('company_count', 'desc')
+            ->get()->toArray();
+        foreach($dataList as $k => $v){
+            $dataList[$k]['city_name'] = $city_kv[$v['city_id']] ?? '';
+            $dataList[$k]['grade_name'] = $grade_KV[$v['company_grade']] ?? '';
+        }
+        $dataList = Tool::arrUnderReset($dataList, 'city_id,company_grade', 1, '_');
+        $returnArr = [
+            'city_kv' => $city_kv,
+            'grade_kv' => $grade_KV,
+            'data_list' => $dataList,
+        ];
+        return $returnArr;
+    }
 }

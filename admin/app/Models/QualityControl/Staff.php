@@ -91,6 +91,13 @@ class Staff extends BasePublicModel
         $this->attributes['admin_password'] = md5($value);
     }
 
+    // 数据类型
+    public static $recordTypeArr = [
+        '1' => '所有数据',
+        '2' => '30天内过期',
+        '4' => '已过期30天内',
+    ];
+
     // 拥有者类型1平台2企业4个人
     public static $adminTypeArr = [
         '1' => '平台',

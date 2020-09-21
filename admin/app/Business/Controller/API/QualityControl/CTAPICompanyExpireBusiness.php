@@ -17,6 +17,7 @@ class CTAPICompanyExpireBusiness extends BasicPublicCTAPIBusiness
     public static $model_name = 'API\QualityControl\CompanyExpireAPI';
     public static $table_name = 'company_expire';// 表名称
     public static $record_class = __CLASS__;// 当前的类名称 App\Business\***\***\**\***
+    public static $orderBy = ['sec_total' => 'asc', 'id' => 'desc'];// 默认的排序字段数组 ['id' => 'desc']--默认 或 ['sort_num' => 'desc', 'id' => 'desc']
 
     // 是否激活(0:未激活；1：已激活)
 //    public static $isActiveArr = [

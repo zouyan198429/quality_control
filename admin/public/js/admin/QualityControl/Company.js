@@ -151,7 +151,25 @@ var otheraction = {
         var tishi = company_name + "-企业简介";
         layeriframe(weburl,tishi,1050,700,5);
         return false;
+    },
+    grade_config : function(id, company_name){// 查看或修改企业简介
+        //获得表单各name的值
+        var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
+        console.log(GRADE_CONFIG_URL);
+        console.log(data);
+        var url_params = get_url_param(data);// parent.get_url_param(data);
+        var weburl = GRADE_CONFIG_URL + '?company_id=' + id + "&company_hidden=1" ;// + url_params;// + id + '?' + url_params;
+        // var weburl = STAFF_SHOW_URL + '?company_id=' + id
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = company_name + "-会员等级配置";
+        layeriframe(weburl,tishi,1050,700,5);
+        return false;
     }
+
 };
 
 //操作
@@ -258,15 +276,15 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
     document.write("            <td><%=item.id%><\/td>");
     document.write("            <td><%=item.city_name%><\/td>");
     document.write("            <td><%=item.company_name%><\/td>");
-    document.write("            <td><%=item.industry_name%><\/td>");
+    document.write("            <td><%=item.industry_name%><hr/><%=item.company_grade_text%><\/td>");
     document.write("            <td><%=item.extend_info.staff_num%><\/td>");
     document.write("            <td><%=item.company_certificate_no%><\/td>");
     document.write("            <td><%=item.company_contact_name%><\/td>");
     document.write("            <td><%=item.company_contact_mobile%><\/td>");
-    document.write("            <td><%=item.is_perfect_text%><\/td>");
+    document.write("            <td><%=item.is_perfect_text%><hr/><%=item.company_grade_continue_text%><\/td>");
     document.write("            <td><%=item.open_status_text%><\/td>");
     document.write("            <td><%=item.account_status_text%><\/td>");
-    document.write("            <td><%=item.created_at%><\/td>");
+    document.write("            <td><%=item.created_at%><hr/><%=item.company_end_time%><\/td>");
     // document.write("            <td><%=item.lastlogintime%><\/td>");
     // document.write("            <td><%=item.created_at%><\/td>");
     // document.write("            <td><%=item.updated_at%><\/td>");
@@ -314,6 +332,9 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
     document.write("                <\/a>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn fa fa-search btn-mini btn-info\" onclick=\"otheraction.company_content(<%=item.id%>,'<%=item.company_name%>')\">");
     document.write("                    <i class=\"ace-icon bigger-60\">企业简介(<%=item.extend_info.company_content_num%>)<\/i>");
+    document.write("                <\/a>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn fa fa-handshake-o btn-mini btn-info\" onclick=\"otheraction.grade_config(<%=item.id%>,'<%=item.company_name%>')\">");
+    document.write("                    <i class=\"ace-icon bigger-60\">会员等级配置(<%=item.extend_info.grade_config_num%>)<\/i>");
     document.write("                <\/a>");
     document.write("");
     document.write("            <\/td>");

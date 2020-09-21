@@ -50,7 +50,7 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
     document.write("            <td><%=item.hour_num_text%><\/td>");
     document.write("            <td><%=item.min_num_text%><\/td>");
     document.write("            <td><%=item.sec_num_text%><\/td>");
-    document.write("            <td><%=item.sec_total_text%><\/td>");
+    document.write("            <td><%=item.sec_total%><\/td>");
     document.write("            <td><%=item.created_at%><\/td>");
     document.write("            <td><%=item.updated_at%><\/td>");
     document.write("            <td>");

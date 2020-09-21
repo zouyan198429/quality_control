@@ -60,4 +60,46 @@ class IndustryDBBusiness extends BasePublicDBBusiness
         // return array_values($dataList);
         return $returnArr;
     }
+
+    /**
+     * 分组获得各行业的企业类型数量
+     * @return array
+     * @author zouyan(305463219@qq.com)
+     */
+    //
+    public static function getCompanyGradeNumGroup(){
+        // 获得行业的kv
+        $queryParams = Tool::getParamQuery([], ['sqlParams' => ['orderBy' =>['sort_num' => 'asc', 'id' => 'desc']]]);
+        $industrys_kv = static::getKeyVals(['key' => 'id', 'val' => 'industry_name'], [], $queryParams);
+        $grade_KV = Staff::$companyGradeArr;
+        if(empty($industrys_kv) || empty($grade_KV)) return [
+            'industry_kv' => $industrys_kv,
+            'grade_kv' => $grade_KV,
+            'data_list' => [],
+        ];
+
+        $where = [['admin_type' ,2], ['is_perfect', 2], ['open_status', 2], ['account_status', 1]];
+        $companyObj = Staff::where($where);
+        // 是数组
+//        if(!empty($status) && is_array($status)){
+//            $orderObj = $companyObj->whereIn('status',$status);
+//        }
+        //
+        $dataList = $companyObj->select(DB::raw('count(*) as company_count,  company_industry_id as industry_id, company_grade'))
+            ->groupBy('company_industry_id')
+            ->groupBy('company_grade')
+            // ->orderBy('company_count', 'desc')
+            ->get()->toArray();
+        foreach($dataList as $k => $v){
+            $dataList[$k]['industry_name'] = $industrys_kv[$v['industry_id']] ?? '';
+            $dataList[$k]['grade_name'] = $grade_KV[$v['company_grade']] ?? '';
+        }
+        $dataList = Tool::arrUnderReset($dataList, 'industry_id,company_grade', 1, '_');
+        $returnArr = [
+            'industry_kv' => $industrys_kv,
+            'grade_kv' => $grade_KV,
+            'data_list' => $dataList,
+        ];
+        return $returnArr;
+    }
 }

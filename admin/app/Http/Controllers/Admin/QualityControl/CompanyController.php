@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin\QualityControl;
 
+use App\Business\Controller\API\QualityControl\CTAPICitysBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIIndustryBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
 use App\Http\Controllers\WorksController;
 use App\Services\Request\CommonRequest;
@@ -142,5 +144,41 @@ class CompanyController extends StaffController
         });
     }
 
+
+    /**
+     * 获得会员地区分布
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function grade_area(Request $request)
+    {
+        return $this->exeDoPublicFun($request, 1, 1, 'admin.QualityControl.' . static::$VIEW_NAME . '.grade_area', true
+            , '', [], function (&$reDataArr) use ($request){
+
+                // 地区分布及企业数量
+                $city_list = CTAPICitysBusiness::exeDBBusinessMethodCT($request, $this, '',  'getCompanyGradeNumGroup', [], 1, 1);
+                $reDataArr['city_count'] = $city_list;
+            });
+    }
+
+    /**
+     * 获得会员行业分布
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function grade_industry(Request $request)
+    {
+        return $this->exeDoPublicFun($request, 1, 1, 'admin.QualityControl.' . static::$VIEW_NAME . '.grade_industry', true
+            , '', [], function (&$reDataArr) use ($request){
+
+                // 行业分布及企业数量
+                $industry_list = CTAPIIndustryBusiness::exeDBBusinessMethodCT($request, $this, '',  'getCompanyGradeNumGroup', [], 1, 1);
+                $reDataArr['industry_count'] = $industry_list;
+            });
+    }
 
 }

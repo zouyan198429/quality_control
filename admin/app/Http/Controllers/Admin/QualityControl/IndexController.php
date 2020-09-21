@@ -27,6 +27,11 @@ class IndexController extends BasicController
     public $controller_id =0;// 功能小模块[控制器]id - controller_id  历史表 、正在进行表 与原表相同
 
     public function test(Request $request){
+
+        $dateTime =  date('Y-m-d H:i:s');
+        $aaa = Tool::addMinusDate($dateTime, ['+30 day'], 'Y-m-d H:i:s', 1, '时间');
+        pr($aaa);
+
         $aaa = SessionCustom::set('test', '1112', 0);
         pr($aaa);
         $bbb = SessionCustom::get('loginKeyadmin',true);

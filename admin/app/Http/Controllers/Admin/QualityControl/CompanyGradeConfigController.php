@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\Admin\QualityControl;
 
-use App\Business\Controller\API\QualityControl\CTAPICompanyExpireBusiness;
+use App\Business\Controller\API\QualityControl\CTAPICompanyContentBusiness;
+use App\Business\Controller\API\QualityControl\CTAPICompanyGradeConfigBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
 use App\Http\Controllers\WorksController;
-use App\Models\QualityControl\CompanyExpire;
+use App\Models\QualityControl\CompanyGradeConfig;
 use App\Services\Request\CommonRequest;
 use App\Services\Tool;
 use Illuminate\Http\Request;
 
-class CompanyExpireController extends BasicController
+class CompanyGradeConfigController extends BasicController
 {
     public $controller_id =0;// 功能小模块[控制器]id - controller_id  历史表 、正在进行表 与原表相同
 
@@ -29,10 +31,10 @@ class CompanyExpireController extends BasicController
 //            $this->InitParams($request);
 //            // $reDataArr = $this->reDataArr;
 //            $reDataArr = array_merge($reDataArr, $this->reDataArr);
-//            return view('admin.QualityControl.CompanyExpire.index', $reDataArr);
+//            return view('admin.QualityControl.CompanyGradeConfig.index', $reDataArr);
 //
 //        }, $this->errMethod, $reDataArr, $this->errorView);
-        return $this->exeDoPublicFun($request, 1, 1, 'admin.QualityControl.CompanyExpire.index', true
+        return $this->exeDoPublicFun($request, 1, 1, 'admin.QualityControl.CompanyGradeConfig.index', true
             , 'doListPage', [], function (&$reDataArr) use ($request){
 
             });
@@ -54,10 +56,10 @@ class CompanyExpireController extends BasicController
 //            $this->InitParams($request);
 //            // $reDataArr = $this->reDataArr;
 //            $reDataArr = array_merge($reDataArr, $this->reDataArr);
-//            $reDataArr['province_kv'] = CTAPICompanyExpireBusiness::getCityByPid($request, $this,  0);
-//            $reDataArr['province_kv'] = CTAPICompanyExpireBusiness::getChildListKeyVal($request, $this, 0, 1 + 0, 0);
+//            $reDataArr['province_kv'] = CTAPICompanyGradeConfigBusiness::getCityByPid($request, $this,  0);
+//            $reDataArr['province_kv'] = CTAPICompanyGradeConfigBusiness::getChildListKeyVal($request, $this, 0, 1 + 0, 0);
 //            $reDataArr['province_id'] = 0;
-//            return view('admin.QualityControl.CompanyExpire.select', $reDataArr);
+//            return view('admin.QualityControl.CompanyGradeConfig.select', $reDataArr);
 //
 //        }, $this->errMethod, $reDataArr, $this->errorView);
 //        return $this->exeDoPublicFun($request, 2048, 1, 'admin.QualityControl.RrrDddd.select', true
@@ -83,12 +85,12 @@ class CompanyExpireController extends BasicController
 //            $this->InitParams($request);
 //            // $reDataArr = $this->reDataArr;
 //            $reDataArr = array_merge($reDataArr, $this->reDataArr);
-//            return view('admin.QualityControl.CompanyExpire.add', $reDataArr);
+//            return view('admin.QualityControl.CompanyGradeConfig.add', $reDataArr);
 //
 //        }, $this->errMethod, $reDataArr, $this->errorView);
 
         $pageNum = ($id > 0) ? 64 : 16;
-        return $this->exeDoPublicFun($request, $pageNum, 1,'admin.QualityControl.CompanyExpire.add', true
+        return $this->exeDoPublicFun($request, $pageNum, 1,'admin.QualityControl.CompanyGradeConfig.add', true
             , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
 
         });
@@ -122,7 +124,7 @@ class CompanyExpireController extends BasicController
 //        $this->InitParams($request);
 //        $id = CommonRequest::getInt($request, 'id');
 //        if(!is_numeric($id) || $id <=0) return ajaxDataArr(0, null, '参数[id]有误！');
-//        $info = CTAPICompanyExpireBusiness::getInfoData($request, $this, $id, [], '', []);
+//        $info = CTAPICompanyGradeConfigBusiness::getInfoData($request, $this, $id, [], '', []);
 //        $resultDatas = ['info' => $info];
 //        return ajaxDataArr(1, $resultDatas, '');
 
@@ -131,6 +133,25 @@ class CompanyExpireController extends BasicController
         return $this->exeDoPublicFun($request, 128, 2,'', true, 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
 
         });
+    }
+
+    /**
+     * 子帐号管理-审核操作(通过/不通过)
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_open(Request $request)
+    {
+        $this->InitParams($request);
+        $id = CommonRequest::get($request, 'id');// 单个id 或 逗号分隔的多个，或 多个的一维数组
+        if(is_array($id)) $id = implode(',', $id);
+        $open_status = CommonRequest::getInt($request, 'open_status');// 操作类型 2审核通过     4审核不通过
+
+        $organize_id = 0;
+        $modifyNum = CTAPICompanyGradeConfigBusiness::openAjax($request, $this, $organize_id, $id, $open_status);
+        return ajaxDataArr(1, ['modify_num' => $modifyNum], '');
     }
 
     /**
@@ -168,35 +189,35 @@ class CompanyExpireController extends BasicController
             , '', [], function (&$reDataArr) use ($request){
                 $id = CommonRequest::getInt($request, 'id');
                 // CommonRequest::judgeEmptyParams($request, 'id', $id);
-                $industry_name = CommonRequest::get($request, 'industry_name');
-                $year_num = CommonRequest::getInt($request, 'year_num');
-                $month_num = CommonRequest::getInt($request, 'month_num');
-                $day_num = CommonRequest::getInt($request, 'day_num');
-                $hour_num = CommonRequest::getInt($request, 'hour_num');
-                $min_num = CommonRequest::getInt($request, 'min_num');
-                $sec_num = CommonRequest::getInt($request, 'sec_num');
+                $company_id = CommonRequest::getInt($request, 'company_id');
+                $remarks = CommonRequest::get($request, 'remarks');
+                $company_grade = CommonRequest::getInt($request, 'company_grade');
+                $open_status = CommonRequest::getInt($request, 'open_status');
+                $begin_date = CommonRequest::get($request, 'begin_date');
+                $end_date = CommonRequest::get($request, 'end_date');
+
+                // 判断开始结束日期
+                Tool::judgeBeginEndDate($begin_date, $end_date, 1 + 2 + 16 + 128 + 256 + 512, 1, date('Y-m-d H:i:s'), '报名时间');
 
                 $saveData = [
-                    'industry_name' => $industry_name,
-                    'year_num' => $year_num,
-                    'month_num' => $month_num,
-                    'day_num' => $day_num,
-                    'hour_num' => $hour_num,
-                    'min_num' => $min_num,
-                    'sec_num' => $sec_num,
-                    'sec_total' => $year_num * (60 * 60 * 24 * 30 * 365) + $month_num * (60 * 60 * 24 * 30) +  $day_num * (60 * 60 * 24) + $hour_num * (60 * 60) + $min_num * (60) + $sec_num,
+                    'company_id' => $company_id,
+                    'remarks' => replace_enter_char($remarks, 1),
+                    'company_grade' => $company_grade,
+                    'open_status' => $open_status,
+                    'begin_date' => $begin_date,
+                    'end_date' => $end_date,
                 ];
 
-//        if($id <= 0) {// 新加;要加入的特别字段
-//            $addNewData = [
-//                // 'account_password' => $account_password,
-//            ];
-//            $saveData = array_merge($saveData, $addNewData);
-//        }
+                if($id <= 0) {// 新加;要加入的特别字段
+                    $addNewData = [
+                        // 'account_password' => $account_password,
+                    ];
+                    $saveData = array_merge($saveData, $addNewData);
+                }
                 $extParams = [
                     'judgeDataKey' => 'replace',// 数据验证的下标
                 ];
-                $resultDatas = CTAPICompanyExpireBusiness::replaceById($request, $this, $saveData, $id, $extParams, true);
+                $resultDatas = CTAPICompanyGradeConfigBusiness::replaceById($request, $this, $saveData, $id, $extParams, true);
                 return ajaxDataArr(1, $resultDatas, '');
         });
     }
@@ -227,9 +248,14 @@ class CompanyExpireController extends BasicController
      */
     public function ajax_alist(Request $request){
 //        $this->InitParams($request);
-//        return  CTAPICompanyExpireBusiness::getList($request, $this, 2 + 4);
+//        return  CTAPICompanyGradeConfigBusiness::getList($request, $this, 2 + 4);
         return $this->exeDoPublicFun($request, 4, 4,'', true, '', [], function (&$reDataArr) use ($request){
-            return  CTAPICompanyExpireBusiness::getList($request, $this, 2 + 4);
+            $handleKeyConfigArr = ['company_info'];
+            $extParams = [
+                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                'relationFormatConfigs'=> CTAPICompanyGradeConfigBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
+            ];
+            return  CTAPICompanyGradeConfigBusiness::getList($request, $this, 2 + 4, [], [], $extParams);
         });
     }
 
@@ -242,7 +268,7 @@ class CompanyExpireController extends BasicController
      */
 //    public function ajax_get_ids(Request $request){
 //        $this->InitParams($request);
-//        $result = CTAPICompanyExpireBusiness::getList($request, $this, 1 + 0);
+//        $result = CTAPICompanyGradeConfigBusiness::getList($request, $this, 1 + 0);
 //        $data_list = $result['result']['data_list'] ?? [];
 //        $ids = implode(',', array_column($data_list, 'id'));
 //        return ajaxDataArr(1, $ids, '');
@@ -264,9 +290,15 @@ class CompanyExpireController extends BasicController
      */
     public function export(Request $request){
 //        $this->InitParams($request);
-//        CTAPICompanyExpireBusiness::getList($request, $this, 1 + 0);
+//        CTAPICompanyGradeConfigBusiness::getList($request, $this, 1 + 0);
         return $this->exeDoPublicFun($request, 4096, 8,'', true, '', [], function (&$reDataArr) use ($request){
-            CTAPICompanyExpireBusiness::getList($request, $this, 1 + 0);
+
+            $handleKeyConfigArr = ['company_info'];
+            $extParams = [
+                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                'relationFormatConfigs'=> CTAPICompanyGradeConfigBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
+            ];
+            CTAPICompanyGradeConfigBusiness::getList($request, $this, 1 + 0, [], [], $extParams);
         });
     }
 
@@ -280,9 +312,9 @@ class CompanyExpireController extends BasicController
      */
     public function import_template(Request $request){
 //        $this->InitParams($request);
-//        CTAPICompanyExpireBusiness::importTemplate($request, $this);
+//        CTAPICompanyGradeConfigBusiness::importTemplate($request, $this);
         return $this->exeDoPublicFun($request, 16384, 8,'', true, '', [], function (&$reDataArr) use ($request){
-            CTAPICompanyExpireBusiness::importTemplate($request, $this);
+            CTAPICompanyGradeConfigBusiness::importTemplate($request, $this);
         });
     }
 
@@ -314,13 +346,15 @@ class CompanyExpireController extends BasicController
     public function ajax_del(Request $request)
     {
 //        $this->InitParams($request);
-//        return CTAPICompanyExpireBusiness::delAjax($request, $this);
+//        return CTAPICompanyGradeConfigBusiness::delAjax($request, $this);
 
         $tem_id = CommonRequest::get($request, 'id');
         Tool::formatOneArrVals($tem_id, [null, ''], ',', 1 | 2 | 4 | 8);
         $pageNum = (is_array($tem_id) && count($tem_id) > 1 ) ? 1024 : 512;
         return $this->exeDoPublicFun($request, $pageNum, 4,'', true, '', [], function (&$reDataArr) use ($request){
-            return CTAPICompanyExpireBusiness::delAjax($request, $this);
+            $organize_id = 0;//CommonRequest::getInt($request, 'company_id');// 可有此参数
+            return CTAPICompanyGradeConfigBusiness::delCustomizeAjax($request,  $this, $organize_id, [], '');
+            // return CTAPICompanyGradeConfigBusiness::delAjax($request, $this);
         });
     }
 
@@ -335,8 +369,8 @@ class CompanyExpireController extends BasicController
 //        $this->InitParams($request);
 //        $parent_id = CommonRequest::getInt($request, 'parent_id');
 //        // 获得一级城市信息一维数组[$k=>$v]
-//        $childKV = CTAPICompanyExpireBusiness::getCityByPid($request, $this, $parent_id);
-//        // $childKV = CTAPICompanyExpireBusiness::getChildListKeyVal($request, $this, $parent_id, 1 + 0);
+//        $childKV = CTAPICompanyGradeConfigBusiness::getCityByPid($request, $this, $parent_id);
+//        // $childKV = CTAPICompanyGradeConfigBusiness::getChildListKeyVal($request, $this, $parent_id, 1 + 0);
 //
 //        return  ajaxDataArr(1, $childKV, '');;
 //        return $this->exeDoPublicFun($request, 8589934592, 4,'', true, '', [], function (&$reDataArr) use ($request){
@@ -354,7 +388,7 @@ class CompanyExpireController extends BasicController
 //    public function ajax_import(Request $request){
 //        $this->InitParams($request);
 //        $fileName = 'staffs.xlsx';
-//        $resultDatas = CTAPICompanyExpireBusiness::importByFile($request, $this, $fileName);
+//        $resultDatas = CTAPICompanyGradeConfigBusiness::importByFile($request, $this, $fileName);
 //        return ajaxDataArr(1, $resultDatas, '');
 ///
 //        return $this->exeDoPublicFun($request, 32768, 4,'', true, '', [], function (&$reDataArr) use ($request){
@@ -379,7 +413,7 @@ class CompanyExpireController extends BasicController
 //        if($result['apistatus'] == 0) return $result;
 //        // 文件上传成功
 //        $fileName = Tool::getPath('public') . '/' . $result['result']['filePath'];
-//        $resultDatas = CTAPICompanyExpireBusiness::importByFile($request, $this, $fileName);
+//        $resultDatas = CTAPICompanyGradeConfigBusiness::importByFile($request, $this, $fileName);
 //        return ajaxDataArr(1, $resultDatas, '');
 //        return $this->exeDoPublicFun($request, 32768, 4,'', true, '', [], function (&$reDataArr) use ($request){
 //            // 上传并保存文件
@@ -387,7 +421,7 @@ class CompanyExpireController extends BasicController
 //            if($result['apistatus'] == 0) return $result;
 //            // 文件上传成功
 //            $fileName = Tool::getPath('public') . '/' . $result['result']['filePath'];
-//            $resultDatas = CTAPICompanyExpireBusiness::importByFile($request, $this, $fileName);
+//            $resultDatas = CTAPICompanyGradeConfigBusiness::importByFile($request, $this, $fileName);
 //            return ajaxDataArr(1, $resultDatas, '');
 //        });
 //    }
@@ -422,31 +456,39 @@ class CompanyExpireController extends BasicController
 //        $reDataArr['adminType'] =  AbilityJoin::$adminTypeArr;
 //        $reDataArr['defaultAdminType'] = -1;// 列表页默认状态
 
-        // 年
-        $reDataArr['yearNum'] =  CompanyExpire::$yearNumArr;
-        $reDataArr['defaultYearNum'] = -1;// 列表页默认状态
+        // 企业--会员等级[添加记录时]
+        $reDataArr['companyGradeAdd'] =  CompanyGradeConfig::$companyGradeAddArr;
+        $reDataArr['defaultCompanyGradeAdd'] = -1;// 列表页默认状态
 
-        // 月
-        $reDataArr['monthNum'] =  CompanyExpire::$monthNumArr;
-        $reDataArr['defaultMonthNum'] =  -1;// 列表页默认状态
+        // 企业--会员等级[最终]
+        $reDataArr['companyGrade'] =  CompanyGradeConfig::$companyGradeArr;
+        $reDataArr['defaultCompanyGrade'] =  -1;// 列表页默认状态
 
-        // 日
-        $reDataArr['dayNum'] =  CompanyExpire::$dayNumArr;
-        $reDataArr['defaultDayNum'] =  -1;// 列表页默认状态
+        // 审核状态
+        $reDataArr['openStatus'] =  CompanyGradeConfig::$openStatusArr;
+        $reDataArr['defaultOpenStatus'] =  -1;// 列表页默认状态
 
-        // 时
-        $reDataArr['hourNum'] =  CompanyExpire::$hourNumArr;
-        $reDataArr['defaultHourNum'] =  -1;// 列表页默认状态
+        // 有效状态
+        $reDataArr['validStatus'] =  CompanyGradeConfig::$validStatusArr;
+        $reDataArr['defaultValidStatus'] =  -1;// 列表页默认状态
 
-        // 分
-        $reDataArr['minNum'] =  CompanyExpire::$minNumArr;
-        $reDataArr['defaultMinNum'] =  -1;// 列表页默认状态
+        // 企业--会员等级[更改时的]
+        $reDataArr['companyGradeFinal'] =  CompanyGradeConfig::$companyGradeFinalArr;
+        $reDataArr['defaultCompanyGradeFinal'] =  -1;// 列表页默认状态
 
-        // 秒
-        $reDataArr['secNum'] =  CompanyExpire::$secNumArr;
-        $reDataArr['defaultSecNum'] =  -1;// 列表页默认状态
-
-
+        $company_id = CommonRequest::getInt($request, 'company_id');
+        $info = [];
+        $company_hidden = 0;
+        if(is_numeric($company_id) && $company_id > 0){
+            // 获得企业信息
+            $companyInfo = CTAPIStaffBusiness::getInfoData($request, $this, $company_id);
+            if(empty($companyInfo)) throws('企业信息不存在！');
+            $info['company_id'] = $company_id;
+            $info['user_company_name'] = $companyInfo['company_name'] ?? '';
+            $company_hidden = 1;
+        }
+        $reDataArr['info'] = $info;
+        $reDataArr['company_hidden'] = $company_hidden;// =1 : 隐藏企业选择
     }
 
     /**
@@ -481,38 +523,50 @@ class CompanyExpireController extends BasicController
             //   'department_id' => 0,
         ];
         $operate = "添加";
+        // 如果是企业列表点《企业简介》
+        $company_id = CommonRequest::getInt($request, 'company_id');
+        if($id <= 0 && $company_id > 0){
+            $companyInfo = CTAPIStaffBusiness::getInfoData($request, $this, $company_id);
+            if(empty($companyInfo)) throws('企业信息不存在！');
+            $info['company_id'] = $company_id;
+            $info['user_company_name'] = $companyInfo['company_name'] ?? '';
+        }
 
         if ($id > 0) { // 获得详情数据
             $operate = "修改";
-            $info = CTAPICompanyExpireBusiness::getInfoData($request, $this, $id, [], '', []);
+            $handleKeyConfigArr = ['company_info'];
+            $extParams = [
+                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                'relationFormatConfigs'=> CTAPICompanyGradeConfigBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
+            ];
+            $info = CTAPICompanyGradeConfigBusiness::getInfoData($request, $this, $id, [], '', $extParams);
         }
         // $reDataArr = array_merge($reDataArr, $resultDatas);
         $reDataArr['info'] = $info;
         $reDataArr['operate'] = $operate;
 
-        // 年
-        $reDataArr['yearNum'] =  CompanyExpire::$yearNumArr;
-        $reDataArr['defaultYearNum'] = $info['year_num'] ?? -1;// 列表页默认状态
+        // 企业--会员等级[添加记录时]
+        $reDataArr['companyGradeAdd'] =  CompanyGradeConfig::$companyGradeAddArr;
+        $reDataArr['defaultCompanyGradeAdd'] = $info['sec_num'] ?? -1;// 列表页默认状态
 
-        // 月
-        $reDataArr['monthNum'] =  CompanyExpire::$monthNumArr;
-        $reDataArr['defaultMonthNum'] = $info['month_num'] ?? -1;// 列表页默认状态
+        // 企业--会员等级[最终]
+        $reDataArr['companyGrade'] =  CompanyGradeConfig::$companyGradeArr;
+        $reDataArr['defaultCompanyGrade'] = $info['company_grade'] ??  -1;// 列表页默认状态
 
-        // 日
-        $reDataArr['dayNum'] =  CompanyExpire::$dayNumArr;
-        $reDataArr['defaultDayNum'] = $info['day_num'] ?? -1;// 列表页默认状态
+        // 审核状态
+        $reDataArr['openStatus'] =  CompanyGradeConfig::$openStatusArr;
+        $reDataArr['defaultOpenStatus'] = $info['open_status'] ??  -1;// 列表页默认状态
 
-        // 时
-        $reDataArr['hourNum'] =  CompanyExpire::$hourNumArr;
-        $reDataArr['defaultHourNum'] = $info['hour_num'] ?? -1;// 列表页默认状态
+        // 有效状态
+        $reDataArr['validStatus'] =  CompanyGradeConfig::$validStatusArr;
+        $reDataArr['defaultValidStatus'] = $info['valid_status'] ??  -1;// 列表页默认状态
 
-        // 分
-        $reDataArr['minNum'] =  CompanyExpire::$minNumArr;
-        $reDataArr['defaultMinNum'] = $info['min_num'] ?? -1;// 列表页默认状态
+        // 企业--会员等级[更改时的]
+        $reDataArr['companyGradeFinal'] =  CompanyGradeConfig::$companyGradeFinalArr;
+        $reDataArr['defaultCompanyGradeFinal'] = $info['company_grade_final'] ??  -1;// 列表页默认状态
 
-        // 秒
-        $reDataArr['secNum'] =  CompanyExpire::$secNumArr;
-        $reDataArr['defaultSecNum'] = $info['sec_num'] ?? -1;// 列表页默认状态
+        $company_hidden = CommonRequest::getInt($request, 'company_hidden');
+        $reDataArr['company_hidden'] = $company_hidden;// =1 : 隐藏企业选择
 
     }
     // **************公用方法********************结束*********************************

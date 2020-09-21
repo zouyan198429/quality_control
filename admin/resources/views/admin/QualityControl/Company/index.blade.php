@@ -32,6 +32,18 @@
             {{--<option value="{{ $k }}"  @if(isset($province_id) && $province_id == $k) selected @endif >{{ $txt }}</option>--}}
           {{--@endforeach--}}
         {{--</select>--}}
+          <select class="wmini" name="record_type" style="width: 80px;display: none;">
+              <option value="">数据类型</option>
+              @foreach ($recordType as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultRecordType) && $defaultRecordType == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
+          <select class="wmini" name="company_grade_continue" style="width: 80px;display: none;">
+              <option value="">是否有续期</option>
+              @foreach ($companyGradeContinue as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultCompanyGradeContinue) && $defaultCompanyGradeContinue == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
           <select class="wmini" name="city_id" style="width: 80px;">
               <option value="">城市</option>
               @foreach ($citys_kv as $k=>$txt)
@@ -168,15 +180,15 @@
       <th>ID</th>
       <th>城市</th>
         <th>单位名称</th>
-        <th>行业</th>
+        <th>行业<hr/>会员类型</th>
         <th>员工</th>
         <th>证书编号</th>
         <th>联系人</th>
         <th>联系人手机</th>
-        <th>完善资料</th>
+        <th>完善资料<hr/>续期配置</th>
         <th>审核</th>
         <th>状态</th>
-        <th>注册时间</th>
+        <th>注册时间<hr/>到期时间</th>
       <th>操作</th>
     </tr>
     </thead>
@@ -231,8 +243,10 @@
 
       var COMPANY_CONTENT_EDIT_URL = "{{ url('admin/company_content/add/0') }}"; // 企业简介修改/添加url
 
+      var GRADE_CONFIG_URL = "{{ url('admin/company_grade_config')}}/";// 查看企业等级配置
+
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/Company.js') }}?10"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/Company.js') }}?14"  type="text/javascript"></script>
 </body>
 </html>

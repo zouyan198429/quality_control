@@ -17,6 +17,7 @@ class CTAPICompanyGradeConfigBusiness extends BasicPublicCTAPIBusiness
     public static $model_name = 'API\QualityControl\CompanyGradeConfigAPI';
     public static $table_name = 'company_grade_config';// 表名称
     public static $record_class = __CLASS__;// 当前的类名称 App\Business\***\***\**\***
+    public static $orderBy = ['begin_date' => 'desc', 'id' => 'desc'];// 默认的排序字段数组 ['id' => 'desc']--默认 或 ['sort_num' => 'desc', 'id' => 'desc']
 
     // 是否激活(0:未激活；1：已激活)
 //    public static $isActiveArr = [
@@ -79,10 +80,10 @@ class CTAPICompanyGradeConfigBusiness extends BasicPublicCTAPIBusiness
         $relationFormatConfigs = [
             // 下标 'relationConfig' => []// 下一个关系
             // 获得企业名称
-//            'company_info' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
-//                , ['admin_type' => 'admin_type', 'staff_id' => 'id']
-//                , 1, 2
-//                ,'','', [], ['where' => [['admin_type', 2]]], '', []),
+            'company_info' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
+                , ['company_id' => 'id']
+                , 1, 16
+                ,'','', [], ['where' => [['admin_type', 2]]], '', []),
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }
@@ -152,4 +153,34 @@ class CTAPICompanyGradeConfigBusiness extends BasicPublicCTAPIBusiness
         static::joinListParamsLike($request, $controller, $queryParams, $notLog);
     }
 
+    /**
+     * 开启 批量 或 单条数据
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param int $organize_id 操作的所属企业id 可以为0：没有所属企业--企业后台，操作用户时用来限制，只能操作自己企业的用户
+     * @param string $id 记录id，多个用逗号分隔
+     * @param int $open_status 操作 状态 2审核通过     4审核不通过
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  int 修改的数量   array 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function openAjax(Request $request, Controller $controller, $organize_id = 0, $id = 0, $open_status = 2, $notLog = 0)
+    {
+        $company_id = $controller->company_id;
+        $user_id = $controller->user_id;
+        // 调用新加或修改接口
+        $apiParams = [
+            'company_id' => $company_id,
+            'organize_id' => $organize_id,
+            'id' => $id,
+            'open_status' => $open_status,
+            'operate_staff_id' => $user_id,
+            'modifAddOprate' => 0,
+        ];
+        $modifyNum = static::exeDBBusinessMethodCT($request, $controller, '',  'openStatusById', $apiParams, $company_id, $notLog);
+        return $modifyNum;
+        // return static::delAjaxBase($request, $controller, '', $notLog);
+
+    }
 }

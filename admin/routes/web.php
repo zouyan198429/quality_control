@@ -213,6 +213,8 @@ Route::get('admin/company/add/{id}', 'Admin\QualityControl\CompanyController@add
 Route::get('admin/company/export', 'Admin\QualityControl\CompanyController@export');// 导出
 Route::get('admin/company/import_template', 'Admin\QualityControl\CompanyController@import_template');// 导入模版
 
+Route::get('admin/company/grade_area', 'Admin\QualityControl\CompanyController@grade_area');// 会员地区分布统计
+Route::get('admin/company/grade_industry', 'Admin\QualityControl\CompanyController@grade_industry');// 会员行业分布统计
 // 个从帐号管理
 Route::get('admin/user', 'Admin\QualityControl\UserController@index');// 列表
 Route::get('admin/user/add/{id}', 'Admin\QualityControl\UserController@add');// 添加
@@ -236,6 +238,13 @@ Route::get('admin/company_expire/add/{id}', 'Admin\QualityControl\CompanyExpireC
 // Route::get('admin/company_expire/select', 'Admin\QualityControl\CompanyExpireController@select');// 选择-弹窗
 Route::get('admin/company_expire/export', 'Admin\QualityControl\CompanyExpireController@export');// 导出
 Route::get('admin/company_expire/import_template', 'Admin\QualityControl\CompanyExpireController@import_template');// 导入模版
+
+// 企业会员等级配置
+Route::get('admin/company_grade_config', 'Admin\QualityControl\CompanyGradeConfigController@index');// 列表
+Route::get('admin/company_grade_config/add/{id}', 'Admin\QualityControl\CompanyGradeConfigController@add');// 添加
+// Route::get('admin/company_grade_config/select', 'Admin\QualityControl\CompanyGradeConfigController@select');// 选择-弹窗
+Route::get('admin/company_grade_config/export', 'Admin\QualityControl\CompanyGradeConfigController@export');// 导出
+Route::get('admin/company_grade_config/import_template', 'Admin\QualityControl\CompanyGradeConfigController@import_template');// 导入模版
 
 // 城市[一级分类]
 Route::get('admin/citys', 'Admin\QualityControl\CitysController@index');// 列表
