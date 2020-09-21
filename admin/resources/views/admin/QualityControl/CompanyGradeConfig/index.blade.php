@@ -22,7 +22,7 @@
     <div class="tabbox" >
       <a href="javascript:void(0);" class="on fa fa-plus" onclick="action.iframeModify(0)">添加会员等级配置</a>
     </div>
-    <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
+    <form onsubmit="return false;" class="form-horizontal" style="display: none;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
           <input type="hidden" name="company_hidden"  value="{{ $company_hidden ?? 0 }}" />
           <span   @if (isset($company_hidden) && $company_hidden == 1 ) style="display: none;"  @endif>
