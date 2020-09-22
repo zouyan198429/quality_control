@@ -15,6 +15,7 @@
 use App\Http\Controllers\Admin\QualityControl\CourseController;
 use App\Http\Controllers\Admin\QualityControl\CourseClassController;
 use App\Http\Controllers\Admin\QualityControl\CourseClassManagementController;
+use App\Http\Controllers\Admin\QualityControl\CourseOrderController;
 
 Route::get('/', 'IndexController@index');// 首页
 //Route::get('/aaa', function () {
@@ -302,6 +303,9 @@ Route::get('admin/courses_class', [CourseClassController::class, 'index']);
 Route::get('admin/courses_class/create/{id}', [CourseClassController::class, 'create']);
 
 Route::get('admin/courses_class/management/{class_id}', [CourseClassManagementController::class, 'index']);
+Route::get('admin/courses_class/management/{class_id}/basic', [CourseClassManagementController::class, 'basic']);
+Route::get('admin/courses_class/management/{class_id}/course_order', [CourseOrderController::class, 'index']);
+Route::get('admin/courses_class/management/{class_id}/course_order_staff', [CourseClassManagementController::class, 'index']);
 
 // 企业内容管理
 Route::get('admin/company_content', 'Admin\QualityControl\CompanyContentController@index');// 列表

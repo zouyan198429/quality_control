@@ -239,6 +239,8 @@ $api->version('v1', function ($api) {
         // 培训班管理
         $api->post('admin/courses_class/save', 'Admin\QualityControl\CourseClassController@save');// 新加/修改
         $api->post('admin/courses_class/ajax_list', 'Admin\QualityControl\CourseClassController@ajaxList');// 新加/修改
+        $api->post('admin/courses_order/management/{class_id}/ajax_list', 'Admin\QualityControl\CourseOrderController@ajaxList');// 新加/修改
+        $api->post('admin/courses_order_staff/management/{class_id}/ajax_list', 'Admin\QualityControl\CourseClassManagementController@ajaxStudentList');// 新加/修改
 
 
         // 能力验证行业分类[一级分类]

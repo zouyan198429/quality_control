@@ -4,22 +4,23 @@ namespace App\Http\Controllers\Admin\QualityControl;
 
 use App\Business\Controller\API\QualityControl\CTAPICitysBusiness;
 use App\Business\Controller\API\QualityControl\CTAPICourseClassBusiness;
+use App\Business\Controller\API\QualityControl\CTAPICourseOrderBusiness;
 use App\Services\Request\CommonRequest;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 /**
- * 培训班管理.
+ * 报名单位.
  * Class CourseClassManagementController
  * @package App\Http\Controllers\Admin\QualityControl
  */
-class CourseClassManagementController extends BasicController
+class CourseOrderController extends BasicController
 {
 
     public static $ADMIN_TYPE = 1;// 类型1平台2企业4个人
 
     /**
-     * 主页
+     * 报名单位
      * @param Request $request
      * @param $class_id
      * @return View
@@ -35,18 +36,12 @@ class CourseClassManagementController extends BasicController
     }
 
     /**
-     * 基础信息
+     * 返回列表数据
      * @param Request $request
-     * @param $class_id
-     * @return View
+     * @return mixed
      */
-    public function basic(Request $request, $class_id): View
+    public function ajaxList(Request $request)
     {
-        return $this->exeDoPublicFun($request, 1, 1, $this->view(__FUNCTION__),
-            true, '', [], function (&$reDataArr) use ($request, $class_id)
-            {
-                $reDataArr['info'] = CTAPICourseClassBusiness::getInfoData($request, $this, $class_id, [], ['city']);
-                return $reDataArr;
-            });
+        return CTAPICourseOrderBusiness::getList($request, $this);
     }
 }
