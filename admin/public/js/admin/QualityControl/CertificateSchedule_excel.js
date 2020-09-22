@@ -37,7 +37,7 @@ $(function(){
         elem: '.ratify_date' //指定元素
         ,type: 'date'
         ,value: BEGIN_TIME// '2018-08-18' //必须遵循format参数设定的格式
-        ,min: get_now_format('Y-m-d')//'2017-1-1'
+       // ,min: get_now_format('Y-m-d')//'2017-1-1'
         //,max: get_now_format()//'2017-12-31'
         ,calendar: true//是否显示公历节日
         ,ready: function(date){// 控件在打开时触发
@@ -74,7 +74,7 @@ $(function(){
         elem: '.valid_date' //指定元素
         ,type: 'date'
         ,value: END_TIME// '2018-08-18' //必须遵循format参数设定的格式
-        ,min: get_now_format('Y-m-d')//'2017-1-1'
+       // ,min: get_now_format('Y-m-d')//'2017-1-1'
         //,max: get_now_format()//'2017-12-31'
         ,calendar: true//是否显示公历节日
         ,ready: function(date){// 控件在打开时触发

@@ -108,7 +108,7 @@
 {{--<script src="{{asset('js/baguetteBox.js/highlight.min.js')}}" async></script>--}}
 <!-- zui js -->
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
-<script src="{{ asset('/js/admin/QualityControl/CertificateSchedule_excel.js') }}"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/CertificateSchedule_excel.js') }}?1"  type="text/javascript"></script>
 
 <link href="{{asset('dist/lib/uploader/zui.uploader.min.css') }}" rel="stylesheet">
 <script src="{{asset('dist/lib/uploader/zui.uploader.min.js') }}"></script>{{--此文件引用一次就可以了--}}
