@@ -219,17 +219,17 @@ function ajax_form(){
     }
 
     var category_name = $('input[name=category_name]').val();
-    if(!judge_validate(4,'类别名称',category_name,true,'length',1,100)){
+    if(!judge_validate(4,'类别名称',category_name,false,'length',1,100)){
         return false;
     }
 
     var project_name = $('input[name=project_name]').val();
-    if(!judge_validate(4,'产品名称',project_name,true,'length',1,100)){
+    if(!judge_validate(4,'产品名称',project_name,false,'length',1,100)){
         return false;
     }
 
     var param_name = $('input[name=param_name]').val();
-    if(!judge_validate(4,'项目名称',param_name,true,'length',1,100)){
+    if(!judge_validate(4,'项目名称',param_name,false,'length',1,100)){
         return false;
     }
 

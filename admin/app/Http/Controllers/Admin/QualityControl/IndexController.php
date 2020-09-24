@@ -28,24 +28,24 @@ class IndexController extends BasicController
 
     public function test(Request $request){
 
-        $dateTime =  date('Y-m-d H:i:s');
-        $aaa = Tool::addMinusDate($dateTime, ['+30 day'], 'Y-m-d H:i:s', 1, '时间');
-        pr($aaa);
-
-        $aaa = SessionCustom::set('test', '1112', 0);
-        pr($aaa);
-        $bbb = SessionCustom::get('loginKeyadmin',true);
-
-        pr($bbb);
-        $redisKey = 'PHPREDIS_SESSION:' . session_id();
-        pr($redisKey);
-        $currentTime = date('Y-m-d H:i:s');
-        $endTime = '2020-06-02 15:48:49';
-        $endCarbon = carbon::parse ($endTime); // 格式化一个时间日期字符串为 carbon 对象
-        // 减当前时间 ; > 0 没有过期 = 0 马上过期  < 0 过期
-        $diffSeconds = (new Carbon)->diffInSeconds ($endCarbon, false); // $int 为正负数
-        // $diffSeconds = strtotime($currentTime) - strtotime($endTime);
-        dd($diffSeconds);
+//        $dateTime =  date('Y-m-d H:i:s');
+//        $aaa = Tool::addMinusDate($dateTime, ['+30 day'], 'Y-m-d H:i:s', 1, '时间');
+//        pr($aaa);
+//
+//        $aaa = SessionCustom::set('test', '1112', 0);
+//        pr($aaa);
+//        $bbb = SessionCustom::get('loginKeyadmin',true);
+//
+//        pr($bbb);
+//        $redisKey = 'PHPREDIS_SESSION:' . session_id();
+//        pr($redisKey);
+//        $currentTime = date('Y-m-d H:i:s');
+//        $endTime = '2020-06-02 15:48:49';
+//        $endCarbon = carbon::parse ($endTime); // 格式化一个时间日期字符串为 carbon 对象
+//        // 减当前时间 ; > 0 没有过期 = 0 马上过期  < 0 过期
+//        $diffSeconds = (new Carbon)->diffInSeconds ($endCarbon, false); // $int 为正负数
+//        // $diffSeconds = strtotime($currentTime) - strtotime($endTime);
+//        dd($diffSeconds);
 //        CTAPICertificateScheduleBusiness::mergeRequest($request, $this, [
 //            'field' => 'method_name',
 //            'keyword' => '标',
@@ -65,11 +65,11 @@ class IndexController extends BasicController
 //        pr(123);
         // $ability_code = AbilityCodeDBBusiness::getAbilityCode();// 单号 生成  2020NLYZ0001
         //pr($ability_code);
-        $currentNow = Carbon::now()->toDateTimeString();
-        $aa = date('Y-m-d 23:59:59');
-        $duration_minute = 13;
-        $submit_off_time = Tool::addMinusDate(date('Y-m-d 23:59:59'), ['+' . $duration_minute . ' day'], 'Y-m-d H:i:s', 1, '时间');;
-        echo $submit_off_time;
+//        $currentNow = Carbon::now()->toDateTimeString();
+//        $aa = date('Y-m-d 23:59:59');
+//        $duration_minute = 13;
+//        $submit_off_time = Tool::addMinusDate(date('Y-m-d 23:59:59'), ['+' . $duration_minute . ' day'], 'Y-m-d H:i:s', 1, '时间');;
+//        echo $submit_off_time;
 //        AbilityJoinItemsDBBusiness::initReslut();
 //        die();
 //        $bbb = '555';

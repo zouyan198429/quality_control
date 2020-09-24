@@ -21,3 +21,4 @@ shoping
 /admin/app/Exceptions/ExportException.php
 /admin/public/dist/lib/kindeditor/php/upload_json.php
 /admin/public/dist/lib/kindeditor/php/SessionCustom.php
+/admin/public/swoole_mooc

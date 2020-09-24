@@ -49,19 +49,19 @@
                 </td>
             </tr>
             <tr>
-                <th>类别名称<span class="must">*</span></th>
+                <th>类别名称<span class="must"></span></th>
                 <td>
                     <input type="text" class="inp wnormal"  name="category_name" value="{{ $info['category_name'] ?? '' }}" placeholder="请输入类别名称"/>
                 </td>
             </tr>
             <tr>
-                <th>产品名称<span class="must">*</span></th>
+                <th>产品名称<span class="must"></span></th>
                 <td>
                     <input type="text" class="inp wnormal"  name="project_name" value="{{ $info['project_name'] ?? '' }}" placeholder="请输入产品名称"/>
                 </td>
             </tr>
             <tr>
-                <th>项目名称<span class="must">*</span></th>
+                <th>项目名称<span class="must"></span></th>
                 <td>
                     <input type="text" class="inp wnormal"  name="param_name" value="{{ $info['param_name'] ?? '' }}" placeholder="请输入项目名称"/>
 
@@ -111,6 +111,6 @@
 
     var SELECT_COMPANY_URL = "{{url('admin/company/select')}}";// 选择所属企业
 </script>
-<script src="{{ asset('/js/admin/QualityControl/CertificateSchedule_edit.js') }}"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/CertificateSchedule_edit.js') }}?1"  type="text/javascript"></script>
 </body>
 </html>

@@ -317,13 +317,18 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
             $limit_range = $info['limit_range'] ?? '';// 限制范围
             $explain_text = $info['explain_text'] ?? '';// 说明
             if(!is_numeric($company_id) || $company_id <= 0) array_push($recordErr, '所属企业不能为空!');
-            if(empty($category_name) && empty($project_name) && empty($param_name)) array_push($recordErr, '类别、产品、项目不能都为空!');
+           // if(empty($category_name) && empty($project_name) && empty($param_name)) array_push($recordErr, '类别、产品、项目不能都为空!');
             if(empty($method_name)) array_push($recordErr, '标准（方法）名称不能都为空!');
 
             if(!empty($recordErr)){
                 array_push($errsArr,'第' . ($k + 1) . '条记录:<br/>' . implode('<br/>', $recordErr));
             }
-            $temInfo = static::getDBFVFormatList(4, 1, ['company_id' => $company_id, 'category_name' => $category_name, 'project_name' => $project_name, 'param_name' => $param_name], false);
+            if(empty($category_name) && empty($project_name) && empty($param_name)){
+                $queryParams = ['method_name' => $method_name ];
+            }else{
+                $queryParams = ['company_id' => $company_id, 'category_name' => $category_name, 'project_name' => $project_name, 'param_name' => $param_name];
+            }
+            $temInfo = static::getDBFVFormatList(4, 1, $queryParams, false);
             $saveData[$k]['id'] = $temInfo['id'] ?? 0;
         }
         // 如果有错，则返回错误
