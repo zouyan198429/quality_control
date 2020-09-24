@@ -5,6 +5,7 @@ namespace App\Http\Controllers\WebFront\Company\QualityControl;
 use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
 use App\Http\Controllers\WorksController;
 use App\Services\Tool;
+use Illuminate\Support\Str;
 
 class BasicController extends \App\Http\Controllers\WebFront\BasicController
 {
@@ -113,5 +114,18 @@ class BasicController extends \App\Http\Controllers\WebFront\BasicController
 //            throws('非审核通过！');
 //        }
         return $userInfo;
+    }
+
+    /**
+     * Returns the full view name.
+     * @param string $name View name.
+     * @return string
+     */
+    public function view(string $name): string
+    {
+        $child_class = get_class($this);
+        $controller = Str::afterLast($child_class, '\\');
+        $directory = str_replace_last('Controller', '', $controller);
+        return 'company.QualityControl.'. $directory . '.' . $name;
     }
 }

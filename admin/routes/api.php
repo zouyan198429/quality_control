@@ -240,7 +240,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/courses_class/save', 'Admin\QualityControl\CourseClassController@save');// 新加/修改
         $api->post('admin/courses_class/ajax_list', 'Admin\QualityControl\CourseClassController@ajaxList');// 新加/修改
         $api->post('admin/courses_order/management/{class_id}/ajax_list', 'Admin\QualityControl\CourseOrderController@ajaxList');// 新加/修改
-        $api->post('admin/courses_order_staff/management/{class_id}/ajax_list', 'Admin\QualityControl\CourseClassManagementController@ajaxStudentList');// 新加/修改
+        $api->post('admin/courses_order_staff/management/{class_id}/ajax_list', 'Admin\QualityControl\CourseOrderStaffController@ajaxList');// 新加/修改
 
 
         // 能力验证行业分类[一级分类]
@@ -386,6 +386,11 @@ $api->version('v1', function ($api) {
 
         $api->post('company/company_content/import', 'WebFront\Company\QualityControl\CompanyContentController@import');// 导入excel
         $api->post('company/company_content/ajax_get_ids', 'WebFront\Company\QualityControl\CompanyContentController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        // 面授培训
+        $api->post('company/courses/ajax_list', 'WebFront\Company\QualityControl\CourseController@ajaxList');// ajax获得列表数据
+        $api->post('company/courses/staff_list', 'WebFront\Company\QualityControl\CourseController@staffList');// 员工列表数据
+        $api->post('company/courses/sign-up', 'WebFront\Company\QualityControl\CourseController@signUp');// 报名
 
         // 能力验证
         $api->any('company/abilitys/ajax_alist', 'WebFront\Company\QualityControl\AbilitysController@ajax_alist');//ajax获得列表数据

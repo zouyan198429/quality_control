@@ -132,6 +132,20 @@
               <li data-name="user" class="layui-nav-item">
                   <a href="javascript:;" lay-tips="能力验证" lay-direction="2">
                       <i class="layui-icon layui-icon-component"></i>
+                      <cite>面授培训</cite>
+                  </a>
+                  <dl class="layui-nav-child">
+                      <dd>
+                          <a lay-href="{{ url('company/courses') }}">近期课程</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="{{ url('company/courses_order') }}">我的报名</a>
+                      </dd>
+                  </dl>
+              </li>
+              <li data-name="user" class="layui-nav-item">
+                  <a href="javascript:;" lay-tips="能力验证" lay-direction="2">
+                      <i class="layui-icon layui-icon-component"></i>
                       <cite>能力验证</cite>
                   </a>
                   <dl class="layui-nav-child">
