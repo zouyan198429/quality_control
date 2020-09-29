@@ -114,7 +114,7 @@ class CourseController extends BasicController
      * @author zouyan(305463219@qq.com)
      */
     public function doInfoPage(Request $request, &$reDataArr, $extendParams = []) {
-        $id = $extendParams['params']['id'] ?? 0;
+        $id = (int) $extendParams['params']['id'] ?? 0;
         if ($id > 0) { // 获得详情数据
             $extParams = ['relationFormatConfigs'=> CTAPICourseBusiness::getRelationConfigs(
                 $request,
@@ -126,11 +126,11 @@ class CourseController extends BasicController
             ];
             $course = CTAPICourseBusiness::getInfoData($request, $this, $id, [], '', $extParams);
         } else {
-            $course = [];
+            $course = ['status_online' => 2];
         }
         $reDataArr = [
             'info'     => $course,
-            'id'       =>$id,
+            'id'       => $id,
             'role_num' => 0,
         ];
         return;
