@@ -31,8 +31,8 @@
                 <col>
                 <col width="160">
                 <col width="150">
-                <col width="150">
-                <col width="150">
+                <col>
+                <col width="160">
                 <col width="150">
                 <col width="150">
             </colgroup>

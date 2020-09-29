@@ -6,7 +6,9 @@ use App\Business\Controller\API\QualityControl\CTAPICourseBusiness;
 use App\Business\Controller\API\QualityControl\CTAPICourseOrderBusiness;
 use App\Business\Controller\API\QualityControl\CTAPICourseOrderStaffBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
+use App\Http\Resources\CourseBusinessResource;
 use App\Services\Tool;
+use Arr;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -18,13 +20,16 @@ class CourseController extends BasicController
 
     /**
      * 首页
+     * @param Request $request
      * @return View
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-//        dd($this->getUserInfo());
-
-        return view($this->view(__FUNCTION__));
+        $view = $this->view(__FUNCTION__);
+        return Tool::doViewPages($this, $request,
+            function () use($view, $request) {
+                return view($view);
+            }, $this->errMethod, $reDataArr, $this->errorView);
     }
 
     /**
@@ -34,12 +39,12 @@ class CourseController extends BasicController
      * @param $course_id
      * @return mixed
      */
-    public function form(Request $request,$course_id)
+    public function form(Request $request, $course_id)
     {
         $reDataArr = [];// 可以传给视图的全局变量数组
         $view = $this->view(__FUNCTION__);
         return Tool::doViewPages($this, $request,
-            function (&$reDataArr) use($view, $request, &$course_id) {
+            function () use($view, $request, $course_id) {
                 $info = CTAPICourseBusiness::getInfoData($request, $this, $course_id);
                 return view($view, compact('info'));
         }, $this->errMethod, $reDataArr, $this->errorView);
@@ -49,30 +54,47 @@ class CourseController extends BasicController
      * 报名
      *
      * @param Request $request
+     * @param $class_id
      * @return mixed
      */
     public function signUp(Request $request)
     {
-        $id = 0;
-        $data = $request->all();
-        $course_order_item = [
-            'tel' => $data['tel'],
-            'contacts' => $data['contacts'],
-            'course_id' => $data['course_id'],
-            'company_id' => $data['company_id'],
-        ];
-        $course = CTAPICourseBusiness::getInfoData($request, $this, (int) $data['course_id']);
-        $course_order = CTAPICourseOrderBusiness::replaceById($request, $this, $course_order_item, $id);
-        $course_order_staff_item = [
-            'tel' => $data['tel'],
-            'contacts' => $data['contacts'],
-            'course_id' => $data['course_id'],
-            'course_order_id' => $course_order,
-            'company_id' => $this->getUserInfo()->id,
-        ];
-        $course_order_staff = CTAPICourseOrderStaffBusiness::replaceById($request, $this, $course_order_staff_item, $id);
-        dump($course);
-        dump($result);
+        return $this->exeDoPublicFun($request, 4, 4, '', true, '', [],
+            function () use ($request) {
+                $id = 0;
+                $data = $request->all();
+                $course = CTAPICourseBusiness::getInfoData($request, $this, (int) $data['course_id']);
+                $staffs_id = explode(',', $data['ids']);
+                $company_grade = $this->getUserInfo()['company_grade'];
+                if ($company_grade === 1) {
+                    $price = $course['price_general'];
+                } else {
+                    $price = $course['price_member'];
+                }
+                $course_order_item = [
+                    'tel'        => $data['tel'],
+                    'price'      => $price,
+                    'join_num'   => count($staffs_id),
+                    'contacts'   => $data['contacts'],
+                    'course_id'  => $data['course_id'],
+                    'order_date' => now()->toDateString(),
+                    'company_id' => $this->getUserInfo()['id'],
+                ];
+                $course_order = CTAPICourseOrderBusiness::replaceById($request, $this, $course_order_item, $id);
+
+                // Create course order.
+                $course_order_staff_item = [];
+                foreach ($staffs_id as $staff_key => $staff_id) {
+                    $course_order_staff_item[$staff_key] = [
+                        'staff_id'        => $staff_id,
+                        'course_id'       => $data['course_id'],
+                        'company_id'      => $this->getUserInfo()['id'],
+                        'course_order_id' => $course_order,
+                    ];
+                }
+                $resultData = CTAPICourseOrderStaffBusiness::createBathByPrimaryKeyCTL($request, $this, null, $course_order_staff_item);
+                return ajaxDataArr(1, $resultData, '');
+            });
     }
 
     /**
@@ -82,12 +104,16 @@ class CourseController extends BasicController
      * @return mixed
      */
     public function ajaxList(Request $request){
+        $request->company_id = $this->getUserInfo()['id'];
+        $extParams = [
+            'relationFormatConfigs'=> CTAPICourseBusiness::getRelationConfigs($request, $this, ['resource_list']),
+        ];
+        $course_item = CTAPICourseBusiness::getList($request, $this, 2 + 4, [], [], $extParams);
+        $resource = CourseBusinessResource::collection($course_item['result']['data_list']);
+        $course_item['result']['data_list'] = $resource;
         return $this->exeDoPublicFun($request, 4, 4,'', true, '', [],
-            function () use ($request){
-                $extParams = [
-                    'relationFormatConfigs'=> CTAPICourseBusiness::getRelationConfigs($request, $this, ['resource_list']),
-                ];
-                return CTAPICourseBusiness::getList($request, $this, 2 + 4, [], [], $extParams);
+            function () use ($course_item) {
+                return $course_item;
         });
     }
 

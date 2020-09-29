@@ -1,14 +1,4 @@
-
 var SUBMIT_FORM = true;//防止多次点击提交
-
-$(function(){
-
-    $('.search_frm').trigger("click");// 触发搜索事件
-    // reset_list_self(false, false, true, 2);
-
-    // window.location.href 返回 web 主机的域名，如：http://127.0.0.1:8080/testdemo/test.html?id=1&name=test
-    autoRefeshList(window.location.href, IFRAME_TAG_KEY, IFRAME_TAG_TIMEOUT);// 根据设置，自动刷新列表数据【每隔一定时间执行一次】
-});
 
 //重载列表
 //is_read_page 是否读取当前页,否则为第一页 true:读取,false默认第一页
@@ -21,16 +11,16 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
     reset_list(is_read_page, false, reset_total, do_num);
     // initList();
 }
-function signUpInfo(course_id) {
-    var operateText = '报名信息';
-    console.log(SHOW_URL);
-
-    var weburl = SHOW_URL + course_id;
-    console.log(weburl);
-    tishi = operateText;
-    layeriframe(weburl,tishi,950,600,IFRAME_MODIFY_CLOSE_OPERATE);
-    return false;
+var PARENT_LAYER_INDEX = parent.layer.getFrameIndex(window.name);
+//关闭弹窗,并刷新父窗口列表
+// reset_total 是否重新从数据库获取总页数 true:重新获取,false不重新获取
+function parent_reset_list_iframe_close(reset_total){
+    // window.parent.reset_list(true, true, reset_total, 2);//刷新父窗口列表
+    let list_fun_name = window.parent.LIST_FUNCTION_NAME || 'reset_list';
+    eval( 'window.parent.' + list_fun_name + '(' + true +', ' + true +', ' + reset_total +', 2)');
+    parent.layer.close(PARENT_LAYER_INDEX);
 }
+
 (function() {
     document.write("");
     document.write("    <!-- 前端模板部分 -->");
@@ -39,22 +29,15 @@ function signUpInfo(course_id) {
     document.write("");
     document.write("        <%for(var i = 0; i<data_list.length;i++){");
     document.write("        var item = data_list[i];");
-    //document.write("        var can_modify = false;");
-    // document.write("        if( item.issuper==0 ){");
     document.write("        can_modify = true;");
     //document.write("        }");
     document.write("        %>");
     document.write("");
     document.write("        <tr>");
-    document.write("            <td><img src=<%=item.course.resource_list[0].resource_url_format%>><\/td>");
-    document.write("            <td><%=item.course.course_name%><\/td>");
-    document.write("            <td><%=item.order_date%><\/td>");
-    document.write("            <td><%=item.join_num%><\/td>");
-    document.write("            <td>");
-    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"signUpInfo(<%=item.id%>)\">");
-    document.write("                    <i class=\"ace-icon fa bigger-60\">报名信息<\/i>");
-    document.write("                <\/a>");
-    document.write("            <\/td>");
+    document.write("            <td><%=item.staff.real_name%><\/td>");
+    document.write("            <td><%=item.staff.sex_text%><\/td>");
+    document.write("            <td><%=item.staff.mobile%><\/td>");
+    document.write("            <td><%=item.staff.id_number%><\/td>");
     document.write("        <\/tr>");
     document.write("    <%}%>");
     document.write("<\/script>");

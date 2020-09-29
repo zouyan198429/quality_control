@@ -46,10 +46,10 @@ function form(course_id){
     document.write("        %>");
     document.write("");
     document.write("        <tr>");
-    document.write("            <td><img src=<%=item.resource_list[0].resource_url_format%>><\/td>");
+    document.write("            <td><img src=<%=item.resource%>><\/td>");
     document.write("            <td><%=item.course_name%><\/td>");
     document.write("            <td><%=item.status_online_text%><\/td>");
-    document.write("            <td><%=item.order_date%><\/td>");
+    document.write("            <td><%=item.sign_up_status%><\/td>");
     document.write("            <td>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"form(<%=item.id%>)\">");
     document.write("                    <i class=\"ace-icon fa bigger-60\">报名<\/i>");

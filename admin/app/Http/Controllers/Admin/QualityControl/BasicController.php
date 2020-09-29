@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin\QualityControl;
 use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
 use App\Http\Controllers\WorksController;
 use App\Services\Tool;
-use Illuminate\Support\Str;
+use Str;
 
 class BasicController extends WorksController
 {
@@ -116,6 +116,7 @@ class BasicController extends WorksController
         $child_class = get_class($this);
         $controller = Str::afterLast($child_class, '\\');
         $directory = str_replace_last('Controller', '', $controller);
-        return 'admin.QualityControl.'. $directory . '.' . $name;
+        $blade_name = Str::snake($name);
+        return 'admin.QualityControl.'. $directory . '.' . $blade_name;
     }
 }

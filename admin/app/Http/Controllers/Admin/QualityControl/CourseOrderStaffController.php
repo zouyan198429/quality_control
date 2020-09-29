@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\QualityControl;
 use App\Business\Controller\API\QualityControl\CTAPICitysBusiness;
 use App\Business\Controller\API\QualityControl\CTAPICourseClassBusiness;
 use App\Business\Controller\API\QualityControl\CTAPICourseOrderBusiness;
+use App\Business\Controller\API\QualityControl\CTAPICourseOrderStaffBusiness;
 use App\Services\Request\CommonRequest;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -38,10 +39,12 @@ class CourseOrderStaffController extends BasicController
     /**
      * 返回列表数据
      * @param Request $request
+     * @param $class_id
      * @return mixed
      */
-    public function ajaxList(Request $request)
+    public function ajaxList(Request $request, $class_id)
     {
-        return CTAPICourseOrderBusiness::getList($request, $this);
+        $query_condition = ['where' => ['class_id' => $class_id]];
+        return CTAPICourseOrderStaffBusiness::getList($request, $this, 2 + 4, $query_condition, ['staff', 'class', 'company']);
     }
 }

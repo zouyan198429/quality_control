@@ -21,14 +21,31 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
     reset_list(is_read_page, false, reset_total, do_num);
     // initList();
 }
-function signUpInfo(course_id) {
-    var operateText = '报名信息';
-    console.log(SHOW_URL);
-
-    var weburl = SHOW_URL + course_id;
-    console.log(weburl);
-    tishi = operateText;
-    layeriframe(weburl,tishi,950,600,IFRAME_MODIFY_CLOSE_OPERATE);
+function paid(id){
+    var operateText = '完成缴费';
+    var index_query = layer.confirm('确定' + operateText + '当前记录？', {
+        btn: ['确定','取消'] //按钮
+    }, function(){
+        $.ajax({
+            'type' : 'POST',
+            'url' : PAID_URL,//'/pms/Supplier/ajax_del',
+            'headers':get_ajax_headers({}, ADMIN_AJAX_TYPE_NUM),
+            'data' : {'order_id':id},
+            'dataType' : 'json',
+            'success' : function(ret){
+                console.log('ret:',ret);
+                msg = operateText+"成功";
+                // countdown_alert(msg,1,5);
+                layer_alert(msg,1,0);
+                // reset_list(true, true);
+                console.log(LIST_FUNCTION_NAME);
+                eval( LIST_FUNCTION_NAME + '(' + true +', ' + true +', ' + true + ', 2)');
+                layer.close(layer_index)//手动关闭
+            }
+        })
+        layer.close(index_query);
+    }, function(){
+    });
     return false;
 }
 (function() {
@@ -46,13 +63,21 @@ function signUpInfo(course_id) {
     document.write("        %>");
     document.write("");
     document.write("        <tr>");
-    document.write("            <td><img src=<%=item.course.resource_list[0].resource_url_format%>><\/td>");
-    document.write("            <td><%=item.course.course_name%><\/td>");
-    document.write("            <td><%=item.order_date%><\/td>");
-    document.write("            <td><%=item.join_num%><\/td>");
     document.write("            <td>");
-    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"signUpInfo(<%=item.id%>)\">");
-    document.write("                    <i class=\"ace-icon fa bigger-60\">报名信息<\/i>");
+    document.write("                <label class=\"pos-rel\">");
+    document.write("                    <input onclick=\"selectSingle(this)\" type=\"checkbox\" class=\"ace check_item\" <%if( false &&  !can_modify){%> disabled <%}%>  value=\"<%=item.id%>\"\/>");
+    document.write("                  <span class=\"lbl\"><\/span>");
+    document.write("                <\/label>");
+    document.write("            <\/td>");
+    document.write("            <td><%=item.contacts%><\/td>");
+    document.write("            <td><%=item.tel%><\/td>");
+    document.write("            <td><%=item.company.company_name%><\/td>");
+    document.write("            <td><%=item.join_class_status_text%><\/td>");
+    document.write("            <td><%=item.pay_status_text%><\/td>");
+    document.write("            <td><%=item.order_date%><\/td>");
+    document.write("            <td>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"paid(<%=item.id%>)\">");
+    document.write("                    <i class=\"ace-icon bigger-60\">完成缴费<\/i>");
     document.write("                <\/a>");
     document.write("            <\/td>");
     document.write("        <\/tr>");

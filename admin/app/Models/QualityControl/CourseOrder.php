@@ -162,4 +162,20 @@ class CourseOrder extends BasePublicModel
     {
         return $this->hasMany('App\Models\QualityControl\CourseLog', 'course_id', 'id');
     }
+
+    /**
+     * 获取订单里的员工item
+     */
+    public function staff()
+    {
+        return $this->hasMany(CourseOrderStaff::class);
+    }
+
+    /**
+     * 获取公司
+     */
+    public function company()
+    {
+        return $this->belongsTo(Staff::class, 'company_id', 'id');
+    }
 }

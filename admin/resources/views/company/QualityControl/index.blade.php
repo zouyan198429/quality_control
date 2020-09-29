@@ -139,7 +139,7 @@
                           <a lay-href="{{ url('company/courses') }}">近期课程</a>
                       </dd>
                       <dd>
-                          <a lay-href="{{ url('company/courses_order') }}">我的报名</a>
+                          <a lay-href="{{ url('company/courses/order') }}">我的报名</a>
                       </dd>
                   </dl>
               </li>

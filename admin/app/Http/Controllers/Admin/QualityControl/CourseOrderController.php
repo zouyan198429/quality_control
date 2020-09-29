@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\QualityControl;
 use App\Business\Controller\API\QualityControl\CTAPICitysBusiness;
 use App\Business\Controller\API\QualityControl\CTAPICourseClassBusiness;
 use App\Business\Controller\API\QualityControl\CTAPICourseOrderBusiness;
+use App\Http\Resources\CourseOrderBusinessResource;
 use App\Services\Request\CommonRequest;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -42,6 +43,8 @@ class CourseOrderController extends BasicController
      */
     public function ajaxList(Request $request)
     {
-        return CTAPICourseOrderBusiness::getList($request, $this);
+        $item = CTAPICourseOrderBusiness::getList($request, $this, 2 + 4, [], ['staff', 'company']);
+        $item['result']['data_list'] = CourseOrderBusinessResource::collection($item['result']['data_list']);
+        return $item;
     }
 }

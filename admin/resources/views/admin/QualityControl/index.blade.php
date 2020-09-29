@@ -254,10 +254,10 @@
                           <a lay-href="{{ url('admin/courses_class') }}">培训班管理</a>
                       </dd>
                       <dd>
-                          <a lay-href="{{ url('admin/courses/create') }}">报名企业</a>
+                          <a lay-href="{{ url('admin/courses/sign_up/company') }}">报名企业</a>
                       </dd>
                       <dd>
-                          <a lay-href="{{ url('admin/ability_code') }}">报名学员</a>
+                          <a lay-href="{{ url('admin/courses/sign_up/staff') }}">报名学员</a>
                       </dd>
                   </dl>
               </li>

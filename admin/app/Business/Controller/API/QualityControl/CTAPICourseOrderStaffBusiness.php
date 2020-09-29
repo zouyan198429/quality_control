@@ -72,17 +72,12 @@ class CTAPICourseOrderStaffBusiness extends BasicPublicCTAPIBusiness
      */
     public static function getRelationConfigs(Request $request, Controller $controller, $relationKeys = [], $extendParams = []){
         if(empty($relationKeys)) return [];
-        $user_info = $controller->user_info;
-        $user_id = $controller->user_id;
-        $user_type = $controller->user_type;
         // 关系配置
         $relationFormatConfigs = [
-            // 下标 'relationConfig' => []// 下一个关系
-            // 获得企业名称
-//            'company_info' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
-//                , ['admin_type' => 'admin_type', 'staff_id' => 'id']
-//                , 1, 2
-//                ,'','', [], ['where' => [['admin_type', 2]]], '', []),
+            'class' => CTAPICourseClassBusiness::getTableRelationConfigInfo($request, $controller, ['class_id' => 'id'], 1, 0),
+            'staff' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller, ['staff_id' => 'id'], 1, 0),
+            'company' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller, ['company_id' => 'id'], 1, 0),
+            'order' => CTAPICourseOrderBusiness::getTableRelationConfigInfo($request, $controller, ['course_order_id' => 'id'], 1, 0),
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }

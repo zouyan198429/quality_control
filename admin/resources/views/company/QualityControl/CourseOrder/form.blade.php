@@ -67,13 +67,13 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">联络人员</label>
                     <div class="layui-input-block">
-                        <input type="text" name="contacts" value=""  lay-verify="title" autocomplete="off" placeholder="请输入联络人" class="layui-input">
+                        <input type="text" name="contacts" value="{{ $info['contacts'] ?? '' }}"  lay-verify="title" autocomplete="off" placeholder="请输入联络人" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">联络人电话</label>
                     <div class="layui-input-block">
-                        <input type="text" name="tel" value="" lay-verify="title" autocomplete="off" placeholder="请输入联络人电话" class="layui-input">
+                        <input type="text" name="tel" value="{{ $info['tel'] ?? '' }}"  lay-verify="title" autocomplete="off" placeholder="请输入联络人电话" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -95,7 +95,7 @@
     var AUTO_READ_FIRST = true;//自动读取第一页 true:自动读取 false:指定地方读取
     // var LIST_FUNCTION_NAME = "reset_list_self";// 列表刷新函数名称, 需要列表刷新同步时，使用自定义方法reset_list_self；异步时没有必要自定义
     var SAVE_URL = "{{ url('api/company/courses/sign-up') }}";// ajax保存记录地址
-    var LIST_URL = "{{ url('company/courses') }}";//保存成功后跳转到的地址
+    var LIST_URL = "{{url('company/courses')}}";//保存成功后跳转到的地址
     var AJAX_URL = "{{ url('api/company/courses/staff_list') }}";//ajax请求的url
     var IFRAME_TAG_KEY = "";// "QualityControl\\CTAPIStaff";// 获得模型表更新时间的关键标签，可为空：不获取
     var IFRAME_TAG_TIMEOUT = 60000;// 获得模型表更新时间运行间隔 1000:1秒 ；可以不要此变量：默认一分钟

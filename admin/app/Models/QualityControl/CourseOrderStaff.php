@@ -117,4 +117,36 @@ class CourseOrderStaff extends BasePublicModel
     {
         return $this->belongsTo('App\Models\QualityControl\CourseClass', 'class_id', 'id');
     }
+
+    /**
+     * 获取员工信息
+     */
+    public function staff()
+    {
+        return $this->belongsTo(Staff::class);
+    }
+
+    /**
+     * 获取班级信息
+     */
+    public function class()
+    {
+        return $this->belongsTo(CourseClass::class);
+    }
+
+    /**
+     * 获取公司
+     */
+    public function company()
+    {
+        return $this->belongsTo(Staff::class, 'company_id', 'id');
+    }
+
+    /**
+     * 获取订单
+     */
+    public function order()
+    {
+        return $this->belongsTo(CourseOrder::class, 'course_order_id', 'id');
+    }
 }

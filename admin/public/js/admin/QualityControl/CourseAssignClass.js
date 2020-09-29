@@ -21,16 +21,7 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
     reset_list(is_read_page, false, reset_total, do_num);
     // initList();
 }
-function signUpInfo(course_id) {
-    var operateText = '报名信息';
-    console.log(SHOW_URL);
 
-    var weburl = SHOW_URL + course_id;
-    console.log(weburl);
-    tishi = operateText;
-    layeriframe(weburl,tishi,950,600,IFRAME_MODIFY_CLOSE_OPERATE);
-    return false;
-}
 (function() {
     document.write("");
     document.write("    <!-- 前端模板部分 -->");
@@ -46,13 +37,14 @@ function signUpInfo(course_id) {
     document.write("        %>");
     document.write("");
     document.write("        <tr>");
-    document.write("            <td><img src=<%=item.course.resource_list[0].resource_url_format%>><\/td>");
-    document.write("            <td><%=item.course.course_name%><\/td>");
-    document.write("            <td><%=item.order_date%><\/td>");
+    document.write("            <td><%=item.id%><\/td>");
+    document.write("            <td><%=item.class_name%><\/td>");
+    document.write("            <td><%=item.city.city_name%><\/td>");
+    document.write("            <td><%=item.created_at%><\/td>");
     document.write("            <td><%=item.join_num%><\/td>");
     document.write("            <td>");
-    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"signUpInfo(<%=item.id%>)\">");
-    document.write("                    <i class=\"ace-icon fa bigger-60\">报名信息<\/i>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"management(<%=item.id%>)\">");
+    document.write("                    <i class=\"fa bigger-60\">选择<\/i>");
     document.write("                <\/a>");
     document.write("            <\/td>");
     document.write("        <\/tr>");

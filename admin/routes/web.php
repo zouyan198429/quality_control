@@ -13,7 +13,10 @@
 // welcome
 //Route::get('/welcome', 'IndexController@welcome');
 use App\Http\Controllers\Admin\QualityControl\CourseController;
+use App\Http\Controllers\Admin\QualityControl\CourseSignUpCompanyController;
+use App\Http\Controllers\Admin\QualityControl\CourseSignUpStaffController;
 use App\Http\Controllers\WebFront\Company\QualityControl\CourseController as CompanyCourseController;
+use App\Http\Controllers\WebFront\Company\QualityControl\CourseOrderController as CompanyCourseOrderController;
 use App\Http\Controllers\Admin\QualityControl\CourseClassController;
 use App\Http\Controllers\Admin\QualityControl\CourseClassManagementController;
 use App\Http\Controllers\Admin\QualityControl\CourseOrderController;
@@ -299,7 +302,10 @@ Route::get('admin/ability_type/import_template', 'Admin\QualityControl\AbilityTy
 
 // 课程管理
 Route::get('admin/courses', [CourseController::class, 'index']);
-Route::get('admin/courses/create/{id}', [CourseController::class, 'create']);
+Route::get('admin/courses/create/{id}', [CourseController::class, 'create']);// 创建课程
+Route::get('admin/courses/sign_up/staff', [CourseSignUpStaffController::class, 'index']);// 报名学员
+Route::get('admin/courses/assign_class', [CourseSignUpStaffController::class, 'assignClass']);// 报名学员-分配班级
+Route::get('admin/courses/sign_up/company', [CourseSignUpCompanyController::class, 'index']);// 报名企业
 // 培训班管理
 Route::get('admin/courses_class', [CourseClassController::class, 'index']);
 Route::get('admin/courses_class/create/{id}', [CourseClassController::class, 'create']);
@@ -416,10 +422,10 @@ Route::get('company/company_content/basic/{id}', 'WebFront\Company\QualityContro
 
 // 面授培训
 Route::get('company/courses', [CompanyCourseController::class, 'index']);// 列表
+Route::get('company/courses/order', [CompanyCourseOrderController::class, 'index']);// 列表
 Route::get('company/courses/sign-up/form/{course_id}', [CompanyCourseController::class, 'form']);// 填写报名信息
 Route::get('company/courses/sign-up/{course_id}', [CompanyCourseController::class, 'index']);// 报名
-Route::get('company/abilitys/info/{id}', 'WebFront\Company\QualityControl\AbilitysController@info');// 查看-详情
-Route::get('company/abilitys/join/{ids}', 'WebFront\Company\QualityControl\AbilitysController@join');
+Route::get('company/courses/order/sign-up/show/{course_id}', [CompanyCourseOrderController::class, 'show']);// 报名信息
 
 //// 能力验证
 Route::get('company/abilitys', 'WebFront\Company\QualityControl\AbilitysController@index');// 列表

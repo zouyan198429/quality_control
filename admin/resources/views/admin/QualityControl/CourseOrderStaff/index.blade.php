@@ -16,7 +16,7 @@
 
         @include('common.pageParams')
         <div class="tabbox" >
-            <a href="javascript:void(0);" class="on" onclick="action.iframeModify(0)">添加培训班</a>
+            <h3>报名管理</h3>
         </div>
         <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
             <div class="msearch fr">
@@ -32,7 +32,7 @@
             <col width="125">
             <col>
             <col>
-            <col width="125">
+            <col width="150">
         </colgroup>
         <thead>
         <tr>

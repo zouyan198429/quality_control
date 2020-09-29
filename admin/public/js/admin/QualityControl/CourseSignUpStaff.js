@@ -1,4 +1,14 @@
+
 var SUBMIT_FORM = true;//防止多次点击提交
+
+$(function(){
+
+    $('.search_frm').trigger("click");// 触发搜索事件
+    // reset_list_self(false, false, true, 2);
+
+    // window.location.href 返回 web 主机的域名，如：http://127.0.0.1:8080/testdemo/test.html?id=1&name=test
+    autoRefeshList(window.location.href, IFRAME_TAG_KEY, IFRAME_TAG_TIMEOUT);// 根据设置，自动刷新列表数据【每隔一定时间执行一次】
+});
 
 //重载列表
 //is_read_page 是否读取当前页,否则为第一页 true:读取,false默认第一页
@@ -11,97 +21,13 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
     reset_list(is_read_page, false, reset_total, do_num);
     // initList();
 }
-var PARENT_LAYER_INDEX = parent.layer.getFrameIndex(window.name);
-//关闭弹窗,并刷新父窗口列表
-// reset_total 是否重新从数据库获取总页数 true:重新获取,false不重新获取
-function parent_reset_list_iframe_close(reset_total){
-    // window.parent.reset_list(true, true, reset_total, 2);//刷新父窗口列表
-    let list_fun_name = window.parent.LIST_FUNCTION_NAME || 'reset_list';
-    eval( 'window.parent.' + list_fun_name + '(' + true +', ' + true +', ' + reset_total +', 2)');
-    parent.layer.close(PARENT_LAYER_INDEX);
-}
-function ajax_form(){
-    if (!SUBMIT_FORM) return false;//false，则返回
-
-    // // 验证信息
-    var course_id = $('input[name=course_id]').val();
-    if(!judge_validate(4,'课程id',course_id,true,'digit')){
-        return false;
-    }
-    var contacts = $('input[name=contacts]').val();
-    if(!judge_validate(4,'联络人', contacts, true, 'length', 1,10)){
-        return false;
-    }
-    var tel = $('input[name=tel]').val();
-    if(!judge_validate(4,'联络人电话', tel, true, 'mobile')){
-        return false;
-    }
+function assignClass() {
     var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
-    if(!judge_validate(4,'学员', ids, true)){
-        return false;
-    }
-
-    // 验证通过
-    SUBMIT_FORM = false;//标记为已经提交过
-
-    var layer_index = layer.load();
-    $.ajax({
-        'type' : 'POST',
-        'url' : SAVE_URL,
-        'headers':get_ajax_headers({}, ADMIN_AJAX_TYPE_NUM),
-        'data' : {
-            'ids':ids,
-            'tel':tel,
-            'course_id':course_id,
-            'contacts':contacts
-        },
-        'dataType' : 'json',
-        'success' : function(ret){
-            console.log(ret);
-            if(!ret.apistatus){//失败
-                SUBMIT_FORM = true;//标记为未提交过
-                //alert('失败');
-                err_alert(ret.errorMsg);
-            }else{//成功
-                // go(LIST_URL);
-                layer.msg('操作成功！', {
-                    icon: 1,
-                    shade: 0.3,
-                    time: 3000 //2秒关闭（如果不配置，默认是3秒）
-                }, function(){
-                    var reset_total = true; // 是否重新从数据库获取总页数 true:重新获取,false不重新获取
-                    parent_reset_list_iframe_close(reset_total);// 刷新并关闭
-                    //do something
-                });
-            }
-            layer.close(layer_index)//手动关闭
-        }
-    });
-    return false;
+    var weburl = ASSIGN_CLASS_URL + '?ids=' + ids;
+    var tishi = '选择班级';
+    console.log('weburl', weburl);
+    layeriframe(weburl,tishi,700,450,0);
 }
-
-$(function(){
-    //提交
-    $(document).on("click","#submitBtn",function(){
-        ajax_form();
-        return false;
-    });
-});
-function selectAll(obj){
-    var checkAllObj =  $(obj);
-    /*
-    checkAllObj.closest('#' + DYNAMIC_TABLE).find('input:checkbox').each(function(){
-        if(!$(this).prop('disabled')){
-            $(this).prop('checked', checkAllObj.prop('checked'));
-        }
-    });
-    */
-    checkAllObj.closest('#' + DYNAMIC_TABLE).find('.check_item').each(function(){
-        if(!$(this).prop('disabled')){
-            $(this).prop('checked', checkAllObj.prop('checked'));
-        }
-    });
-};
 function selectSingle(obj) {// 单选点击
     var checkObj = $(obj);
     var allChecked = true;
@@ -135,6 +61,7 @@ function selectSingle(obj) {// 单选点击
     });
 
 };
+
 (function() {
     document.write("");
     document.write("    <!-- 前端模板部分 -->");
@@ -143,6 +70,8 @@ function selectSingle(obj) {// 单选点击
     document.write("");
     document.write("        <%for(var i = 0; i<data_list.length;i++){");
     document.write("        var item = data_list[i];");
+    //document.write("        var can_modify = false;");
+    // document.write("        if( item.issuper==0 ){");
     document.write("        can_modify = true;");
     //document.write("        }");
     document.write("        %>");
@@ -154,10 +83,13 @@ function selectSingle(obj) {// 单选点击
     document.write("                  <span class=\"lbl\"><\/span>");
     document.write("                <\/label>");
     document.write("            <\/td>");
-    document.write("            <td><%=item.real_name%><\/td>");
-    document.write("            <td><%=item.sex_text%><\/td>");
-    document.write("            <td><%=item.mobile%><\/td>");
-    document.write("            <td><%=item.id_number%><\/td>");
+    document.write("            <td><%=item.staff.real_name%><\/td>");
+    document.write("            <td><%=item.staff.mobile%><\/td>");
+    document.write("            <td><%=item.company.company_name%><\/td>");
+    document.write("            <td><%=item.join_class_status_text%><\/td>");
+    document.write("            <td><%=item.order.pay_status_text%><\/td>");
+    document.write("            <td><%=item.order.order_date%><\/td>");
+    document.write("            <td><\/td>");
     document.write("        <\/tr>");
     document.write("    <%}%>");
     document.write("<\/script>");
