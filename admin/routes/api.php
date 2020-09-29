@@ -239,8 +239,12 @@ $api->version('v1', function ($api) {
         // 培训班管理
         $api->post('admin/courses_class/save', 'Admin\QualityControl\CourseClassController@save');// 新加/修改
         $api->post('admin/courses_class/ajax_list', 'Admin\QualityControl\CourseClassController@ajaxList');// 新加/修改
-        $api->post('admin/courses_order/management/{class_id}/ajax_list', 'Admin\QualityControl\CourseOrderController@ajaxList');// 新加/修改
-        $api->post('admin/courses_order_staff/management/{class_id}/ajax_list', 'Admin\QualityControl\CourseOrderStaffController@ajaxList');// 新加/修改
+        $api->post('admin/courses_order/management/{class_id}/ajax_list', 'Admin\QualityControl\CourseOrderController@ajaxList');// 培训班管理-报名单位
+        $api->post('admin/courses_order_staff/management/{class_id}/ajax_list', 'Admin\QualityControl\CourseOrderStaffController@ajaxList');// 报名学员
+        $api->post('admin/courses/sign_up/staff/ajax_list', 'Admin\QualityControl\CourseSignUpStaffController@ajaxList');// 报名学员
+        $api->post('admin/courses/sign_up/staff/class_list', 'Admin\QualityControl\CourseSignUpStaffController@classList');// 报名学员-分配班级
+        $api->post('admin/courses/sign_up/company/ajax_list', 'Admin\QualityControl\CourseSignUpCompanyController@ajaxList');// 报名单位
+        $api->post('admin/courses/sign_up/company/update', 'Admin\QualityControl\CourseSignUpCompanyController@update');// 报名单位-完成缴费
 
 
         // 能力验证行业分类[一级分类]
@@ -389,7 +393,9 @@ $api->version('v1', function ($api) {
 
         // 面授培训
         $api->post('company/courses/ajax_list', 'WebFront\Company\QualityControl\CourseController@ajaxList');// ajax获得列表数据
+        $api->post('company/courses/order/ajax_list', 'WebFront\Company\QualityControl\CourseOrderController@ajaxList');// ajax获得列表数据
         $api->post('company/courses/staff_list', 'WebFront\Company\QualityControl\CourseController@staffList');// 员工列表数据
+        $api->post('company/courses/order/staff_list/{course_id}', 'WebFront\Company\QualityControl\CourseOrderController@staffList');// 员工列表数据
         $api->post('company/courses/sign-up', 'WebFront\Company\QualityControl\CourseController@signUp');// 报名
 
         // 能力验证
