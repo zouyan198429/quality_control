@@ -39,7 +39,7 @@ class CertificateImportLogDBBusiness extends BasePublicDBBusiness
             'import_time' => date('Y-m-d H:i:s'),// 导入时间
             'success_num' => count($dataList),// 所属报名主表--没有则为0
             'fail_num' => 0,// 所属能力验证报名项--没有则为0
-            'import_content' => json_encode($dataList), // 记录内容
+            'import_content' => '',//json_encode($dataList), // 记录内容
             'operate_staff_id' => $operate_staff_id,//$orderObj->operate_staff_id, // 操作员工id
             'operate_staff_id_history' => $operate_staff_id_history,//$orderObj->operate_staff_id_history,// 操作员工历史id
         ];

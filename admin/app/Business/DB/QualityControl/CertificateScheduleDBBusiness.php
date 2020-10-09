@@ -352,7 +352,7 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
 
             }
             // 添加日志
-            CertificateImportLogDBBusiness::saveImportLog($saveData, $operate_staff_id, $operate_staff_id_history);
+             CertificateImportLogDBBusiness::saveImportLog($saveData, $operate_staff_id, $operate_staff_id_history);
             // 根据企业id更企业能力范围数
             StaffDBBusiness::updateCertificateScheduleNum($organize_id);
         });
