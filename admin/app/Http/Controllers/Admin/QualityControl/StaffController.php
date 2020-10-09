@@ -99,7 +99,7 @@ class StaffController extends BasicController
 
             // 是否完善资料1待完善2已完善
             $reDataArr['isPerfect'] =  Staff::$isPerfectArr;
-            $reDataArr['defaultIsPerfect'] = -1;// 列表页默认状态
+            $reDataArr['defaultIsPerfect'] = 2;// -1;// 列表页默认状态
 
             // 是否超级帐户2否1是
             $reDataArr['issuper'] =  Staff::$issuperArr;
@@ -107,13 +107,13 @@ class StaffController extends BasicController
 
             // 审核状态1待审核2审核通过4审核不通过
             $open_status = CommonRequest::get($request, 'open_status');
-            if(strlen($open_status) <= 0 ) $open_status = -1;
+            if(strlen($open_status) <= 0 ) $open_status = 2;// -1;
             $reDataArr['openStatus'] =  Staff::$openStatusArr;
             $reDataArr['defaultOpenStatus'] = $open_status;// -1;// 列表页默认状态
 
             // 状态 1正常 2冻结
             $reDataArr['accountStatus'] =  Staff::$accountStatusArr;
-            $reDataArr['defaultAccountStatus'] = -1;// 列表页默认状态
+            $reDataArr['defaultAccountStatus'] = 1;// -1;// 列表页默认状态
 
             // 性别0未知1男2女
             $reDataArr['sex'] =  Staff::$sexArr;

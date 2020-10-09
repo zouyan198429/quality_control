@@ -1950,7 +1950,7 @@ class CommonDB
                     // 如果查询的数量大于1，则有问题
                     if($cachePower > 0 && count($dataCacheArr) > 1){
                         $isReturnFunRes = true;
-                        throws('不可更新多条记录！');
+                        throws('不可更新多条记录！');//  . json_encode($updateFields) . json_encode($dataCacheArr)
                     }
 
                     foreach($updateFields as $t_field => $t_fv){
