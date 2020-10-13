@@ -79,6 +79,16 @@
 				<div class="bd">
 
 					<table border="" cellspacing="" cellpadding="" class="table wb100">
+						<colgroup>
+							  <col width="120">
+							  <col width="120"> 
+							  <col width="120">
+							  <col>
+							  <col width="180">
+							  <col width="180">
+							  <col width="120"> 
+							  <col>
+						</colgroup> 
 						<thead>
 							<tr>
 								<th>产品类别</th>
