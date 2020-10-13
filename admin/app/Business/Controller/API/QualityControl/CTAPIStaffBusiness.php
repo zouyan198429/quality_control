@@ -206,8 +206,8 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
                     if(!empty($userCompareInfo)) throws('用户名已存在！');
                 }
                 array_push($queryParams['where'], ['admin_password', md5($admin_password)]);
-
                 $userInfo = static::getInfoQuery($request, $controller, '', 0, 1, $queryParams, $relations, 1);
+
                 // 如果是注册-- 用户信息已经存在
                 if($operateType == 2 && !empty($userInfo)){
                     throws('用户名已存在！');

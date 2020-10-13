@@ -33,7 +33,7 @@
                                 {{ $v['company_name'] ?? '' }}
 							</div>
 							<div class="more">
-								<a href="{{url('web/certificate/info/' . $v['id'])}}" target="_blank" >查看详情</a>
+								<a href="{{url('jigou/info/' . $v['id'])}}" target="_blank" >查看详情</a>
 							</div>
 							<div class="content-info">
 								<p>CMA证书编号：<span>{{ $v['company_certificate_no'] ?? '' }}</span></p>
@@ -65,7 +65,7 @@
 						<div class="bd">
 							<ul class="txtlist">
                                 @foreach ($company_update_list as $k => $v)
-								<li><a href="{{url('web/certificate/info/' . $v['id'])}}" target="_blank">{{ $v['company_name'] ?? '' }}</a></li>
+								<li><a href="{{url('jigou/info/' . $v['id'])}}" target="_blank">{{ $v['company_name'] ?? '' }}</a></li>
                                 @endforeach
 							</ul>
 						</div>
@@ -97,7 +97,8 @@
 </html>
 
 <script type="text/javascript">
-    var SEARCH_COMPANY_URL = "{{url('web/certificate/company/' . ($city_id ?? 0)  . '_' . ($industry_id ?? 0)  . '_0_1')}}";//保存成功后跳转到的地址
+    // var SEARCH_COMPANY_URL = "{ {url('web/certificate/company/' . ($city_id ?? 0)  . '_' . ($industry_id ?? 0)  . '_0_1')}}";//保存成功后跳转到的地址
+    var SEARCH_COMPANY_URL = "{{url('jigou/list/company/' . ($city_id ?? 0)  . '_' . ($industry_id ?? 0)  . '_0_1')}}";//保存成功后跳转到的地址
 
 </script>
 {{--<script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>--}}

@@ -47,7 +47,7 @@ function throws($message, $code = -1)
 
 function throwsException($message, $code = -1)
 {
-    throw new \App\Exceptions\ExportException($message, $code);
+    throw new \App\Exceptions\ExportException($message, (int) $code);
 }
 
 //判断数据不是JSON格式:
