@@ -98,7 +98,7 @@
 
 <script type="text/javascript">
     // var SEARCH_COMPANY_URL = "{ {url('web/certificate/company/' . ($city_id ?? 0)  . '_' . ($industry_id ?? 0)  . '_0_1')}}";//保存成功后跳转到的地址
-    var SEARCH_COMPANY_URL = "{{url('jigou/list/company/' . ($city_id ?? 0)  . '_' . ($industry_id ?? 0)  . '_0_1')}}";//保存成功后跳转到的地址
+    var SEARCH_COMPANY_URL = "{{url('jigou/list/' . ($city_id ?? 0)  . '_' . ($industry_id ?? 0)  . '_0_1')}}";//保存成功后跳转到的地址
 
 </script>
 {{--<script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>--}}
