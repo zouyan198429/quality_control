@@ -26,7 +26,7 @@
 			</div>
 		</div>
 
-		<div class="det-floor1">
+		<div class="det-floor1" style="display: none;">
 			<div class="wrap">
 				<div class="zhengshu box1">
 					<div class="hd">资质证书</div>
