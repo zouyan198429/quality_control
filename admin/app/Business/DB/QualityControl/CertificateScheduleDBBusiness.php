@@ -331,7 +331,7 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
             }else{
                 $queryParams = ['company_id' => $company_id, 'category_name' => $category_name, 'project_name' => $project_name, 'param_name' => $param_name];
             }
-            $temInfo = static::getDBFVFormatList(4, 1, $queryParams, false);
+            $temInfo = [];// static::getDBFVFormatList(4, 1, $queryParams, false); --不用修改，都是插入新的记录
             $saveData[$k]['id'] = $temInfo['id'] ?? 0;
         }
         // 如果有错，则返回错误
