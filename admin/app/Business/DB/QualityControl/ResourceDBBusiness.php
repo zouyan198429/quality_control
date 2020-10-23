@@ -3,6 +3,7 @@
 namespace App\Business\DB\QualityControl;
 
 use App\Services\DB\CommonDB;
+use App\Services\Tool;
 use Illuminate\Support\Facades\DB;
 /**
  *
@@ -117,6 +118,117 @@ class ResourceDBBusiness extends BasePublicDBBusiness
                 static::compareHistory($id, 1);
             }
             return $id;
+        });
+    }
+
+    /**
+     * 根据主表记录id，删除图片资源记录
+     * @param object $mainObj 主表对象
+     * @param  int/sting/array $id  单条记录或 多条[,号分隔] 或一维数组
+     * @param  int $columnType 主表的类型标识
+     * @param  int $doOperate 执行的操作 1 删除源图片[默认]
+     * @return  array $resourceIds 删除的资源表的id 数组
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function delResourceByIds($mainObj, $id, $columnType, $doOperate = 1){
+        $resourceIds = [];
+        // 没有需要处理的
+        if(!Tool::formatOneArrVals($id, [0, '0', ''])) return $resourceIds;
+        if(!Tool::formatOneArrVals($columnType, [0, '0', ''])) return $resourceIds;
+
+        $delFilesArr = [];// 删除成功，要执行的删除文件
+
+        CommonDB::doTransactionFun(function() use(&$resourceIds, &$mainObj, &$id, &$columnType, &$delFilesArr, &$doOperate){
+
+            foreach($id as $itemId){
+                // 删除图片资源关系
+                $mainObj::delResourceDetach($itemId, []);
+
+                // 获得图片记录
+//            $queryParams = [
+//                'where' => [
+//                    ['column_type', '=' , 3],
+//                    ['column_id', '=' , $itemId],
+//                    // ['main_name', 'like', '' . $main_name . '%'],
+//                    // ['id', '&' , '16=16'],
+//                ],
+//                'select' => [
+//                    'resource_url'
+//                ]
+//            ];
+                $queryParams = Tool::getParamQuery(['column_type' => $columnType, 'column_id' => $itemId], ['sqlParams' =>['select' =>['id', 'resource_url' ]]], []);
+                $resourceList = Tool::objectToArray(static::getList($queryParams,[]));
+                $temResourceIds = Tool::getArrFields($resourceList, 'id');
+                $resourceIds = array_merge($resourceIds, $temResourceIds);
+                // 删除图片文件
+                // Tool::resourceDelFile($resourceList);
+                $delFilesArr = array_merge($delFilesArr, $resourceList);
+
+                // 删除图片表
+                // static::del($queryParams);
+            }
+            if(!empty($resourceIds)) static::deleteByIds($resourceIds);
+            // 删除图片文件
+            if(($doOperate & 1) == 1) Tool::resourceDelFile($delFilesArr);
+            return $resourceIds;
+        });
+        return $resourceIds;
+    }
+
+    /**
+     * 同步修改图片资源关系
+     * @param object $mainObj  主表对象  例如 new CourseDBBusiness()
+     * @param  int $columnType 主表的类型标识
+     * @param int $id 主表记录id
+     * @param array $resourceIds  关联的门资源id， 可以为空数组：代表清除
+     * @param array $otherData 一维数组 关联表的其它字段值 -- 一般为空
+     * @param int $operate_staff_id  操作人id
+     * @param int $operate_staff_id_history 操作人历史id
+     */
+    public static function resourceSync($mainObj, $columnType, $id, $resourceIds, $otherData = [], $operate_staff_id = 0, $operate_staff_id_history = 0){
+
+        CommonDB::doTransactionFun(function() use(&$mainObj, &$columnType, &$id, &$resourceIds, &$otherData, &$operate_staff_id, &$operate_staff_id_history){
+
+            $saveData = [];
+            // $mainObj::setOperateStaffIdHistory($saveData, $operate_staff_id, $operate_staff_id_history, 2);
+            $mainObj::addOprate($saveData, $operate_staff_id, $operate_staff_id_history, 2);
+
+            $mainObj::saveResourceSync($id, $resourceIds, $operate_staff_id, $operate_staff_id_history, $otherData);
+            // 更新图片资源表
+            if(!empty($resourceIds)) {
+                $resourceArr = ['column_type' => $columnType, 'column_id' => $id];
+                static::saveByIds($resourceArr, $resourceIds);
+            }
+        });
+    }
+
+    /**
+     * 批量同步修改图片资源关系
+     * @param object $mainObj  主表对象 例如 new CourseDBBusiness()
+     * @param  int $columnType 主表的类型标识
+     * @param array $mainKeyArr 二维数组  需要批量操作的数据
+     *  [
+     *     [
+     *          'id' => 1,-- 主表id
+     *          'resourceIds' => [23,1], -- 相关的资源id
+     *          'otherData' => [],-- 此下标可选  资源中间表的其它字段值 ， 一般为空数组
+     *     ]
+     *  ]
+     * @param int $operate_staff_id 操作人id
+     * @param int $operate_staff_id_history 操作人历史id
+     */
+    public static function bathResourceSync($mainObj, $columnType, $mainKeyArr, $operate_staff_id = 0, $operate_staff_id_history = 0)
+    {
+        CommonDB::doTransactionFun(function() use(&$mainObj, &$columnType, &$mainKeyArr, &$operate_staff_id, &$operate_staff_id_history){
+            $saveData = [];
+            // $mainObj::setOperateStaffIdHistory($saveData, $operate_staff_id, $operate_staff_id_history, 2);
+            $mainObj::addOprate($saveData, $operate_staff_id, $operate_staff_id_history, 2);
+            foreach($mainKeyArr  as $info){
+                $id = $info['id'];
+                $resourceIds = $info['resourceIds'];
+                $otherData = $info['otherData'] ?? [];
+                static::resourceSync($mainObj, $columnType, $id, $resourceIds, $otherData, $operate_staff_id, $operate_staff_id_history);
+            }
         });
     }
 }

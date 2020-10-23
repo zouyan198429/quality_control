@@ -153,6 +153,7 @@ function addCompany(company_id, company_name){
     document.write("            <td><%=item.certificate_no%><hr/><%=item.addr%><\/td>");
     document.write("            <td><%=item.ratify_date%><hr/><%=item.valid_date%><\/td>");
     document.write("            <td><%=item.category_name%><hr/><%=item.project_name%><\/td>");
+    document.write("            <td><%=item.three_name%><hr/><%=item.four_name%><\/td>");
     document.write("            <td><%=item.param_name%><hr/><%=item.method_name%><\/td>");
     document.write("            <td><%=item.limit_range%><hr/><%=item.explain_text%><\/td>");
     document.write("            <td><%=item.created_at%><hr/><%=item.updated_at%><\/td>");

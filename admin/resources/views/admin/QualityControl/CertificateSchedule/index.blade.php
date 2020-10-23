@@ -13,13 +13,13 @@
   <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/style/admin.css')}}" media="all">
 </head>
 <body>
- 
+
 <div class="mm">
   <div class="mmhead" id="mywork">
 
     @include('common.pageParams')
     <div class="tabbox" >
-		<button class="btn  import_excel"  onclick="otheraction.upExcelFile(0)">导入能力附表</button>  
+		<button class="btn  import_excel"  onclick="otheraction.upExcelFile(0)">导入能力附表</button>
       <!-- <a href="javascript:void(0);" class="on" onclick="action.iframeModify(0)">添加能力附表</a> -->
 		<a class="import_excel"  onclick="action.importExcelTemplate(this)">导入模版[EXCEL]下载</a>
     </div>
@@ -32,12 +32,14 @@
                 <span class="select_name company_name">{{ $info['user_company_name'] ?? '' }}</span>
                 <i class="close select_close company_id_close"  onclick="clearSelect(this)" style="display: none;">×</i>
                 <button  type="button"  class="btn btn-danger  btn-xs ace-icon fa fa-plus-circle bigger-60"  onclick="otheraction.selectCompany(this)">选择企业</button>
-          </span> 
+          </span>
         <select style="width:80px; height:28px;" name="field">
             <option value="certificate_no">CMA证书号</option>
             <option value="addr">实验室地址</option>
-            <option value="category_name">类别名称</option>
-            <option value="project_name">产品名称</option>
+            <option value="category_name">一级名称</option>
+            <option value="project_name">二级名称</option>
+            <option value="three_name">三级名称</option>
+            <option value="four_name">四级名称</option>
             <option value="param_name">项目名称</option>
             <option value="method_name">标准（方法）名称</option>
             <option value="limit_range">限制范围</option>
@@ -49,9 +51,9 @@
     </form>
   </div>
   <div class="table-header">
-	  
-    
-	
+
+
+
     <button class="btn btn-success  btn-xs export_excel"  onclick="action.batchExportExcel(this)" >导出[按条件]</button>
     <button class="btn btn-success  btn-xs export_excel"  onclick="action.exportExcel(this)" >导出[勾选]</button>
 	{{--<button class="btn btn-danger  btn-xs batch_del"  onclick="action.batchDel(this)">批量删除</button>--}}
@@ -65,6 +67,7 @@
         <col>
         <col>
         <col width="95">
+        <col>
         <col>
         <col>
         <col>
@@ -83,7 +86,8 @@
       <th>所属企业</th>
       <th>CMA证书号<hr/>实验室地址</th>
       <th>批准日期<hr/>有效期至</th>
-      <th>类别名称<hr/>产品名称</th>
+      <th>一级名称<hr/>二级名称</th>
+      <th>三级名称<hr/>四级名称</th>
       <th>项目名称<hr/>标准（方法）名称</th>
         <th>限制范围<hr/>说明</th>
       <th>创建时间<hr/>更新时间</th>
@@ -140,6 +144,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/CertificateSchedule.js') }}?4"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/CertificateSchedule.js') }}?5"  type="text/javascript"></script>
 </body>
 </html>

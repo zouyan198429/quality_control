@@ -205,6 +205,8 @@ class CertificateScheduleController extends BasicController
                 $valid_date = CommonRequest::get($request, 'valid_date');
                 $category_name = CommonRequest::get($request, 'category_name');
                 $project_name = CommonRequest::get($request, 'project_name');
+                $three_name = CommonRequest::get($request, 'three_name');
+                $four_name = CommonRequest::get($request, 'four_name');
                 $param_name = CommonRequest::get($request, 'param_name');
                 $method_name = CommonRequest::get($request, 'method_name');
                 $limit_range = CommonRequest::get($request, 'limit_range');
@@ -220,6 +222,8 @@ class CertificateScheduleController extends BasicController
                     'addr' => $addr,
                     'category_name' => $category_name,
                     'project_name' => $project_name,
+                    'three_name' => $three_name,
+                    'four_name' => $four_name,
                     'param_name' => $param_name,
                     'method_name' => replace_enter_char($method_name, 1),
                     'limit_range' => replace_enter_char($limit_range, 1),

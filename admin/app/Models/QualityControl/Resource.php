@@ -161,6 +161,54 @@ class Resource extends BasePublicModel
     }
 
     /**
+     * 获取机构信息管理--能力附表-二维
+     */
+    public function companySchedule()
+    {
+        return $this->hasMany('App\Models\QualityControl\CompanySchedule', 'resource_id', 'id');
+    }
+
+    /**
+     * 获取机构信息管理--能力附表pdf-二维
+     */
+    public function companySchedulePdf()
+    {
+        return $this->hasMany('App\Models\QualityControl\CompanySchedule', 'resource_id_pdf', 'id');
+    }
+
+    /**
+     * 获取 机构自我声明管理-二维
+     */
+    public function companyStatement()
+    {
+        return $this->hasMany('App\Models\QualityControl\CompanyStatement', 'resource_id', 'id');
+    }
+
+    /**
+     * 获取机构处罚管理-二维
+     */
+    public function companyPunish()
+    {
+        return $this->hasMany('App\Models\QualityControl\CompanyPunish', 'resource_id', 'id');
+    }
+
+    /**
+     * 获取通知公告管理-二维
+     */
+    public function platformNotices()
+    {
+        return $this->hasMany('App\Models\QualityControl\PlatformNotices', 'resource_id', 'id');
+    }
+
+    /**
+     * 获取表格下载管理-二维
+     */
+    public function platformDownFiles()
+    {
+        return $this->hasMany('App\Models\QualityControl\PlatformDownFiles', 'resource_id', 'id');
+    }
+
+    /**
      * 获取拥有者的员工-一维
      */
     public function owerStaff()

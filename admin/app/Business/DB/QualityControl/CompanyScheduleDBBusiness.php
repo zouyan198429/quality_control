@@ -114,12 +114,13 @@ class CompanyScheduleDBBusiness extends BasePublicDBBusiness
 
             // 同步修改图片资源关系
             if($hasResource){
-                static::saveResourceSync($id, $resourceIds, $operate_staff_id, $operate_staff_id_history, []);
-                // 更新图片资源表
-                if(!empty($resourceIds)) {
-                    $resourceArr = ['column_type' => 3, 'column_id' => $id];
-                    ResourceDBBusiness::saveByIds($resourceArr, $resourceIds);
-                }
+//                static::saveResourceSync($id, $resourceIds, $operate_staff_id, $operate_staff_id_history, []);
+//                // 更新图片资源表
+//                if(!empty($resourceIds)) {
+//                    $resourceArr = ['column_type' => 3, 'column_id' => $id];
+//                    ResourceDBBusiness::saveByIds($resourceArr, $resourceIds);
+//                }
+                ResourceDBBusiness::resourceSync(static::thisObj(), 3, $id, $resourceIds, [], $operate_staff_id, $operate_staff_id_history);
             }
             // 如果是加，则增加企业能力附表数量
             if(!$isModify){
@@ -239,12 +240,13 @@ class CompanyScheduleDBBusiness extends BasePublicDBBusiness
 
             // 同步修改图片资源关系
             if($hasResource){
-                static::saveResourceSync($id, $resourceIds, $operate_staff_id, $operate_staff_id_history, []);
-                // 更新图片资源表
-                if(!empty($resourceIds)) {
-                    $resourceArr = ['column_type' => 3, 'column_id' => $id];
-                    ResourceDBBusiness::saveByIds($resourceArr, $resourceIds);
-                }
+//                static::saveResourceSync($id, $resourceIds, $operate_staff_id, $operate_staff_id_history, []);
+//                // 更新图片资源表
+//                if(!empty($resourceIds)) {
+//                    $resourceArr = ['column_type' => 3, 'column_id' => $id];
+//                    ResourceDBBusiness::saveByIds($resourceArr, $resourceIds);
+//                }
+                ResourceDBBusiness::resourceSync(static::thisObj(), 3, $id, $resourceIds, [], $operate_staff_id, $operate_staff_id_history);
             }
             // 如果是加，则增加企业能力附表数量
             if(!$isModify){

@@ -237,6 +237,7 @@ class StaffDBBusiness extends BasePublicDBBusiness
 //                    $resourceArr = ['column_type' => 2, 'column_id' => $id];
 //                    ResourceDBBusiness::saveByIds($resourceArr, $resourceIds);
 //                }
+//                ResourceDBBusiness::resourceSync(static::thisObj(), 2, $id, $resourceIds, [], $operate_staff_id, $operate_staff_id_history);
 //            }
             if($hasResource){
                 // 查询当前企业的营业执照记录id

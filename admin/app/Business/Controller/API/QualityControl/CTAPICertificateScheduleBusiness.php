@@ -187,7 +187,7 @@ class CTAPICertificateScheduleBusiness extends BasicPublicCTAPIBusiness
     public static function exportListData(Request $request, Controller $controller, &$data_list, $notLog = 0){
 
         $headArr = ['company_id'=>'所属企业ID', 'user_company_name'=>'所属企业', 'certificate_no'=>'CMA证书号', 'ratify_date'=>'批准日期', 'valid_date'=>'有效期至'
-            , 'addr'=>'实验室地址', 'category_name'=>'类别名称', 'project_name'=>'产品名称', 'param_name'=>'项目名称', 'method_name'=>'标准（方法）名称', 'limit_range'=>'限制范围'
+            , 'addr'=>'实验室地址', 'category_name'=>'一级名称', 'project_name'=>'二级名称', 'three_name'=>'三级名称', 'four_name'=>'四级名称',  'param_name'=>'项目名称', 'method_name'=>'标准（方法）名称', 'limit_range'=>'限制范围'
             , 'explain_text'=>'说明', 'created_at'=>'创建时间', 'updated_at'=>'更新时间'];
 //        foreach($data_list as $k => $v){
 //            if(isset($v['method_name'])) $data_list[$k]['method_name'] =replace_enter_char($v['method_name'],2);
@@ -210,7 +210,7 @@ class CTAPICertificateScheduleBusiness extends BasicPublicCTAPIBusiness
      */
     public static function importTemplateExcel(Request $request, Controller $controller, $data_list = [], $notLog = 0){
         $data_list = [];
-        $headArr = ['category_name'=>'类别', 'project_name'=>'产品', 'param_name'=>'项目'
+        $headArr = ['category_name'=>'一级', 'project_name'=>'二级', 'three_name'=>'三级', 'four_name'=>'四级', 'param_name'=>'项目'
             , 'method_name'=>'标准（方法）名称', 'limit_range'=>'限制范围', 'explain_text'=>'说明'];
         ImportExport::export('','能力范围导入模版',$data_list,1, $headArr, 0, ['sheet_title' => '能力范围导入模版']);
     }
@@ -266,8 +266,10 @@ class CTAPICertificateScheduleBusiness extends BasicPublicCTAPIBusiness
         // 方式一格式：['1' => 'name'，'2' => 'chinese',]
         // 方式二格式: ['姓名' => 'name'，'语文' => 'chinese',]
         $headArr = [
-            '类别' => 'category_name',
-            '产品' => 'project_name',
+            '一级' => 'category_name',
+            '二级' => 'project_name',
+            '三级' => 'three_name',
+            '四级' => 'four_name',
             '项目' => 'param_name',
             '标准（方法）名称' => 'method_name',
             '限制范围' => 'limit_range',

@@ -8,6 +8,7 @@ use App\Business\DB\QualityControl\StaffDBBusiness;
 use App\Business\DB\QualityControl\StaffHistoryDBBusiness;
 use App\Services\DB\CommonDB;
 use App\Services\Request\CommonRequest;
+use App\Services\Response\Data\CommonAPIFromDBBusiness;
 use App\Services\Tool;
 use Illuminate\Support\Facades\DB;
 
@@ -24,6 +25,16 @@ class BaseDBBusiness extends BaseBusiness
     // 历史表对比时 忽略历史表中的字段，[一维数组] - 必须会有 [历史表中对应主表的id字段]  格式 ['字段1','字段2' ... ]；
     // 注：历史表不要重置此属性
     public static $ignoreFields = [];
+
+    /**
+     * 获得对象自己，相当于 $this
+     * @param string $model_name 要实例化的，为空，则实例化当前对象 "App\\Business\\DB\\" . $modelName . 'DBBusiness'; 中的  $modelName值
+     * @return object
+     */
+    public static function thisObj($model_name = ''){
+        if(empty($model_name)) $model_name = static::$model_name;
+        return CommonAPIFromDBBusiness::getBusinessDBObjByModelName($model_name);
+    }
 
     /**
      * 获得模型对象
@@ -1386,6 +1397,33 @@ class BaseDBBusiness extends BaseBusiness
         }
         return $saveData;
     }
+
+    /**
+     * 数据加入操作人员历史id
+     * @param array $saveData 需要操作的数组 [一维或二维数组]
+     * @param int $operate_staff_id 操作人id
+     * @param int $operate_staff_id_history 操作人历史id
+     * @param int $operate_type 操作类型 主要用1，2-一般不用，一般会在使用之前判断是不是应该用此来获取
+     *                              1 [默认]必须要获得[下面代码也要用] $operate_staff_id_history 操作人历史id;--肯定要获取到
+     *                              2 当前对象有这个字段就获取或只有调用的地方会用到 $operate_staff_id_history 操作人历史id;--不一定要获取
+     * @return  mixed 单条数据 - -维数组 为0 新加，返回新的对象数组[-维],  > 0 ：修改对应的记录，返回true
+     * @author zouyan(305463219@qq.com)
+     */
+//    public static function setOperateStaffIdHistory(&$saveData = [], $operate_staff_id = 0, &$operate_staff_id_history = 0, $operate_type = 1){
+//
+//        // if($operate_staff_id_history <= 0){
+//
+//        CommonDB::doTransactionFun(function() use( &$saveData, &$operate_staff_id, &$operate_staff_id_history, &$operate_type){
+//
+//            // $ownProperty  自有属性值;
+//            // $temNeedStaffIdOrHistoryId 当只有自己会用到时操作员工id和历史id时，用来判断是否需要获取 true:需要获取； false:不需要获取
+//            list($ownProperty, $temNeedStaffIdOrHistoryId) = array_values(static::getNeedStaffIdOrHistoryId());
+//            // 加入操作人员信息
+//            // $temData = [];
+//            if($temNeedStaffIdOrHistoryId) static::addOprate($saveData, $operate_staff_id,$operate_staff_id_history, $operate_type);
+//        });
+//        // }
+//    }
 
     // 判断权限-----开始
     // 判断权限 ,返回当前记录[可再进行其它判断], 有其它主字段的，可以重新此方法

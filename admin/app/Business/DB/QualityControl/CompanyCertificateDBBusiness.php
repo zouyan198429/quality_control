@@ -103,12 +103,13 @@ class CompanyCertificateDBBusiness extends BasePublicDBBusiness
            }
            // 同步修改图片资源关系
            if($hasResource){
-               static::saveResourceSync($id, $resourceIds, $operate_staff_id, $operate_staff_id_history, []);
-               // 更新图片资源表
-               if(!empty($resourceIds)) {
-                   $resourceArr = ['column_type' => 2, 'column_id' => $id];
-                   ResourceDBBusiness::saveByIds($resourceArr, $resourceIds);
-               }
+//               static::saveResourceSync($id, $resourceIds, $operate_staff_id, $operate_staff_id_history, []);
+//               // 更新图片资源表
+//               if(!empty($resourceIds)) {
+//                   $resourceArr = ['column_type' => 2, 'column_id' => $id];
+//                   ResourceDBBusiness::saveByIds($resourceArr, $resourceIds);
+//               }
+               ResourceDBBusiness::resourceSync(static::thisObj(), 2, $id, $resourceIds, [], $operate_staff_id, $operate_staff_id_history);
            }
            if($isModify && ($ownProperty & 1) == 1){// 1：有历史表 ***_history;
                static::compareHistory($id, 1);

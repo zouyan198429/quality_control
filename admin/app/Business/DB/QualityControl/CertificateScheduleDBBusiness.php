@@ -130,6 +130,12 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
             if(isset($saveData['project_name'])){
                 $saveData['project_name_id'] = CertificateNamesDBBusiness::getNameId(trim($saveData['project_name']), $operate_staff_id, $operate_staff_id_history);
             }
+            if(isset($saveData['three_name'])){
+                $saveData['three_name_id'] = CertificateNamesDBBusiness::getNameId(trim($saveData['three_name']), $operate_staff_id, $operate_staff_id_history);
+            }
+            if(isset($saveData['four_name'])){
+                $saveData['four_name_id'] = CertificateNamesDBBusiness::getNameId(trim($saveData['four_name']), $operate_staff_id, $operate_staff_id_history);
+            }
             if(isset($saveData['param_name'])){
                 $saveData['param_name_id'] = CertificateNamesDBBusiness::getNameId(trim($saveData['param_name']), $operate_staff_id, $operate_staff_id_history);
             }
@@ -315,6 +321,8 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
             $company_id = $info['company_id'] ?? 0;
             $category_name = $info['category_name'] ?? '';// 类别
             $project_name = $info['project_name'] ?? '';// 产品
+            $three_name = $info['three_name'] ?? '';// 三级
+            $four_name = $info['four_name'] ?? '';// 四级
             $param_name = $info['param_name'] ?? '';// 项目
             $method_name = $info['method_name'] ?? '';// 标准（方法）名称
             $limit_range = $info['limit_range'] ?? '';// 限制范围
@@ -326,10 +334,10 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
             if(!empty($recordErr)){
                 array_push($errsArr,'第' . ($k + 1) . '条记录:<br/>' . implode('<br/>', $recordErr));
             }
-            if(empty($category_name) && empty($project_name) && empty($param_name)){
+            if(empty($category_name) && empty($project_name) && empty($three_name) && empty($four_name) && empty($param_name)){
                 $queryParams = ['method_name' => $method_name ];
             }else{
-                $queryParams = ['company_id' => $company_id, 'category_name' => $category_name, 'project_name' => $project_name, 'param_name' => $param_name];
+                $queryParams = ['company_id' => $company_id, 'category_name' => $category_name, 'project_name' => $project_name, 'three_name' => $three_name, 'four_name' => $four_name, 'param_name' => $param_name];
             }
             $temInfo = [];// static::getDBFVFormatList(4, 1, $queryParams, false); --不用修改，都是插入新的记录
             $saveData[$k]['id'] = $temInfo['id'] ?? 0;

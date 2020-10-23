@@ -298,6 +298,41 @@ Route::get('admin/industry/add/{id}', 'Admin\QualityControl\IndustryController@a
 Route::get('admin/industry/export', 'Admin\QualityControl\IndustryController@export');// 导出
 Route::get('admin/industry/import_template', 'Admin\QualityControl\IndustryController@import_template');// 导入模版
 
+// 课程管理
+Route::get('admin/course', 'Admin\QualityControl\CourseController@index');// 列表
+Route::get('admin/course/add/{id}', 'Admin\QualityControl\CourseController@add');// 添加
+// Route::get('admin/course/select', 'Admin\QualityControl\CourseController@select');// 选择-弹窗
+Route::get('admin/course/export', 'Admin\QualityControl\CourseController@export');// 导出
+Route::get('admin/course/import_template', 'Admin\QualityControl\CourseController@import_template');// 导入模版
+
+// 培训班管理
+Route::get('admin/course_class', 'Admin\QualityControl\CourseClassController@index');// 列表
+Route::get('admin/course_class/add/{id}', 'Admin\QualityControl\CourseClassController@add');// 添加
+// Route::get('admin/course_class/select', 'Admin\QualityControl\CourseClassController@select');// 选择-弹窗
+Route::get('admin/course_class/export', 'Admin\QualityControl\CourseClassController@export');// 导出
+Route::get('admin/course_class/import_template', 'Admin\QualityControl\CourseClassController@import_template');// 导入模版
+
+// 报名企业(主表)
+Route::get('admin/course_order', 'Admin\QualityControl\CourseOrderController@index');// 列表
+Route::get('admin/course_order/add/{id}', 'Admin\QualityControl\CourseOrderController@add');// 添加
+// Route::get('admin/course_order/select', 'Admin\QualityControl\CourseOrderController@select');// 选择-弹窗
+Route::get('admin/course_order/export', 'Admin\QualityControl\CourseOrderController@export');// 导出
+Route::get('admin/course_order/import_template', 'Admin\QualityControl\CourseOrderController@import_template');// 导入模版
+
+// 报名学员
+Route::get('admin/course_order_staff', 'Admin\QualityControl\CourseOrderStaffController@index');// 列表
+Route::get('admin/course_order_staff/add/{id}', 'Admin\QualityControl\CourseOrderStaffController@add');// 添加
+// Route::get('admin/course_order_staff/select', 'Admin\QualityControl\CourseOrderStaffController@select');// 选择-弹窗
+Route::get('admin/course_order_staff/export', 'Admin\QualityControl\CourseOrderStaffController@export');// 导出
+Route::get('admin/course_order_staff/import_template', 'Admin\QualityControl\CourseOrderStaffController@import_template');// 导入模版
+
+// 面授操作日志
+Route::get('admin/course_log', 'Admin\QualityControl\CourseLogController@index');// 列表
+Route::get('admin/course_log/add/{id}', 'Admin\QualityControl\CourseLogController@add');// 添加
+// Route::get('admin/course_log/select', 'Admin\QualityControl\CourseLogController@select');// 选择-弹窗
+Route::get('admin/course_log/export', 'Admin\QualityControl\CourseLogController@export');// 导出
+Route::get('admin/course_log/import_template', 'Admin\QualityControl\CourseLogController@import_template');// 导入模版
+
 // 企业到期配置
 Route::get('admin/company_expire', 'Admin\QualityControl\CompanyExpireController@index');// 列表
 Route::get('admin/company_expire/add/{id}', 'Admin\QualityControl\CompanyExpireController@add');// 添加

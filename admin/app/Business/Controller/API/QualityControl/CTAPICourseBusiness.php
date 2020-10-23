@@ -83,6 +83,16 @@ class CTAPICourseBusiness extends BasicPublicCTAPIBusiness
 //                , ['admin_type' => 'admin_type', 'staff_id' => 'id']
 //                , 1, 2
 //                ,'','', [], ['where' => [['admin_type', 2]]], '', []),
+            // 获得详细内容
+            'course_content' => CTAPICourseContentBusiness::getTableRelationConfigInfo($request, $controller
+                , ['id' => 'course_id']
+                , 1, 2
+                ,'','', [], [], '', []),
+            // 获得封面图
+            'resource_list' => CTAPIResourceBusiness::getTableRelationConfigInfo($request, $controller
+                , ['resource_id' => 'id']
+                , 2, 0
+                ,'','', [], [], '', ['extendConfig' => ['listHandleKeyArr' => ['format_resource'], 'infoHandleKeyArr' => ['resource_list']]]),
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }

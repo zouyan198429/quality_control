@@ -184,20 +184,27 @@
                 </dl>
 
             </li>
-            <!-- <li data-name="user" class="layui-nav-item">
-                  <a href="javascript:;" lay-tips="会员管理" lay-direction="2">
-                      <i class="layui-icon layui-icon-component"></i>
-                      <cite>面授培训</cite>
-                  </a>
-                  <dl class="layui-nav-child">
-                      <dd>
-                          <a lay-href="javascript:void(10);">培训班管理</a>
-                      </dd>
-                      <dd>
-                          <a lay-href="javascript:void(11);">课程管理</a>
-                      </dd>
-                  </dl>
-              </li>
+{{--            <li data-name="user" class="layui-nav-item">--}}
+{{--                  <a href="javascript:;" lay-tips="面授培训" lay-direction="2">--}}
+{{--                      <i class="layui-icon layui-icon-component"></i>--}}
+{{--                      <cite>面授培训</cite>--}}
+{{--                  </a>--}}
+{{--                  <dl class="layui-nav-child">--}}
+{{--                      <dd>--}}
+{{--                          <a lay-href="{{ url('admin/course') }}">课程管理</a>--}}
+{{--                      </dd>--}}
+{{--                      <dd>--}}
+{{--                          <a lay-href="javascript:void(10);">报名企业</a>--}}
+{{--                      </dd>--}}
+{{--                      <dd>--}}
+{{--                          <a lay-href="javascript:void(10);">报名学员</a>--}}
+{{--                      </dd>--}}
+{{--                      <dd>--}}
+{{--                          <a lay-href="{{ url('admin/course_class') }}">培训班管理</a>--}}
+{{--                      </dd>--}}
+{{--                  </dl>--}}
+{{--              </li>--}}
+              <!--
               <li data-name="user" class="layui-nav-item">
                   <a href="javascript:;" lay-tips="在线直播" lay-direction="2">
                       <i class="layui-icon layui-icon-component"></i>

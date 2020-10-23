@@ -49,15 +49,27 @@
                 </td>
             </tr>
             <tr>
-                <th>类别名称<span class="must"></span></th>
+                <th>一级名称<span class="must"></span></th>
                 <td>
-                    <input type="text" class="inp wnormal"  name="category_name" value="{{ $info['category_name'] ?? '' }}" placeholder="请输入类别名称"/>
+                    <input type="text" class="inp wnormal"  name="category_name" value="{{ $info['category_name'] ?? '' }}" placeholder="请输入一级名称"/>
                 </td>
             </tr>
             <tr>
-                <th>产品名称<span class="must"></span></th>
+                <th>二级名称<span class="must"></span></th>
                 <td>
-                    <input type="text" class="inp wnormal"  name="project_name" value="{{ $info['project_name'] ?? '' }}" placeholder="请输入产品名称"/>
+                    <input type="text" class="inp wnormal"  name="project_name" value="{{ $info['project_name'] ?? '' }}" placeholder="请输入二级名称"/>
+                </td>
+            </tr>
+            <tr>
+                <th>三级名称<span class="must"></span></th>
+                <td>
+                    <input type="text" class="inp wnormal"  name="three_name" value="{{ $info['three_name'] ?? '' }}" placeholder="请输入三级名称"/>
+                </td>
+            </tr>
+            <tr>
+                <th>四级名称<span class="must"></span></th>
+                <td>
+                    <input type="text" class="inp wnormal"  name="four_name" value="{{ $info['four_name'] ?? '' }}" placeholder="请输入四级名称"/>
                 </td>
             </tr>
             <tr>
@@ -111,6 +123,6 @@
 
     var SELECT_COMPANY_URL = "{{url('admin/company/select')}}";// 选择所属企业
 </script>
-<script src="{{ asset('/js/admin/QualityControl/CertificateSchedule_edit.js') }}?1"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/CertificateSchedule_edit.js') }}?2"  type="text/javascript"></script>
 </body>
 </html>

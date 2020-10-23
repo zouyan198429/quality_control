@@ -96,4 +96,28 @@ class CompanySchedule extends BasePublicModel
     {
         return static::$typeIdArr[$this->type_id] ?? '';
     }
+
+    /**
+     * 获取所属企业--一维
+     */
+    public function company()
+    {
+        return $this->belongsTo('App\Models\QualityControl\Staff', 'company_id', 'id');
+    }
+
+    /**
+     * 获取所属资源--一维
+     */
+    public function resource()
+    {
+        return $this->belongsTo('App\Models\QualityControl\Resource', 'resource_id', 'id');
+    }
+
+    /**
+     * 获取所属资源pdf--一维
+     */
+    public function resourcePdf()
+    {
+        return $this->belongsTo('App\Models\QualityControl\Resource', 'resource_id_pdf', 'id');
+    }
 }
