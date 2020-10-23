@@ -7,7 +7,6 @@
         @include('web.QualityControl.CertificateSchedule.layout_public.pagehead')
         <link href="{{asset('static/css/bootstrap.css')}}" rel="stylesheet" type="text/css" />
 	</head>
-
 	<body>
         @include('web.QualityControl.CertificateSchedule.layout_public.header')
         @include('web.QualityControl.CertificateSchedule.layout_public.search')
@@ -17,7 +16,6 @@
 				<div class="c"></div>
 			</div>
 		</div>
-
 		<div class="list-wrap">
 			<div class="wrap">
 
@@ -30,7 +28,7 @@
 
 							</div>
 							<div class="com-name">
-                                {{ $v['company_name'] ?? '' }}
+                                <a href="{{url('jigou/info/' . $v['id'])}}" target="_blank" >{{ $v['company_name'] ?? '' }}</a>
 							</div>
 							<div class="more">
 								<a href="{{url('jigou/info/' . $v['id'])}}" target="_blank" >查看详情</a>
@@ -46,8 +44,8 @@
                         @endforeach
 
 					</ul>
-                    <div class="mmfoot">
-                        <div class="mmfleft"></div>
+                    <div class="mmfoot"><!-- 
+                        <div class="mmfleft"></div> -->
                         <div class="pagination">
                             {!! $pageInfoLink ?? ''  !!}
                         </div>

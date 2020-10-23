@@ -162,14 +162,16 @@ class BaseAPIBusiness extends BaseBusiness
             'pageInfo' => "",//showPage($totalPage,$page,$total,12,1),
         ];
         if(  ($oprateBit & 4) == 4 ){// ajax 翻页代码
-            $result['pageInfo'] = showPage($totalPage,$page,$total,12,1);
+            // $result['pageInfo'] = showPage($totalPage,$page,$total,12,1);
+            $result['pageInfo'] = showPage($totalPage,$page,$total,10,1);
         }
         if(  ($oprateBit & 8) == 8 ){// 分页函数--直接链接地址--主要给前端页面用seo
             // 加上总数量参数
             if ( $total > 0 && strpos($url_model, 'total=') === false) { // 没有
                 $url_model .= ((strpos($url_model, '?') === false) ? '?' : '&') . 'total=' . $total;
             }
-            $result['pageInfoLink'] = showPageLink($url_model, $page_tag, $totalPage, $page, $total,12,2);
+            // $result['pageInfoLink'] = showPageLink($url_model, $page_tag, $totalPage, $page, $total,12,2);
+            $result['pageInfoLink'] = showPageLink($url_model, $page_tag, $totalPage, $page, $total,10,2);
         }
         return $result;
 

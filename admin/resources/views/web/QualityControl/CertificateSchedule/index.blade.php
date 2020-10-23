@@ -22,14 +22,14 @@
 				<dl class="dv1 dva2">
 					<dt></dt>
 					<dd><span>可检测产品</span>
-						<strong>1652</strong>
+						<strong>13252</strong>
 					</dd>
 				</dl>
 				<dl class="dv1 dva3">
 					<dt></dt>
 					<dd>
 						<span>可检测项目</span>
-						<strong>1652</strong>
+						<strong>36752</strong>
 					</dd>
 				</dl>
 				<div class="c"></div>
@@ -52,11 +52,12 @@
 								<div class="com-logo">
 
 								</div>
-								<div class="name">
-                                    {{ $v['company_name'] ?? '' }}
+								<div class="name"> 
+                                   <a href="{{url('jigou/info/' . $v['id'])}}" target="_blank" >{{ $v['company_name'] ?? '' }}</a>
 								</div>
 								<div class="date">
-									注册日期： {{ $v['created_at_fmt'] ?? '' }}
+									<!-- 注册日期： {{ $v['created_at_fmt'] ?? '' }} -->
+									CMA证书编号：<span>{{ $v['company_certificate_no'] ?? '' }}
 								</div>
 							</li>
                            @endforeach
@@ -69,7 +70,7 @@
 
 								</div>
 								<div class="name">
-                                    {{ $v['company_name'] ?? '' }}
+                                   <a href="{{url('jigou/info/' . $v['id'])}}" target="_blank" > {{ $v['company_name'] ?? '' }}</a>
 								</div>
 								<div class="date">
 									变更日期：{{ $v['updated_at_fmt'] ?? '' }}

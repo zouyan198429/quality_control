@@ -71,8 +71,8 @@
 			</div>
 		</div>
 		<div class="k20"></div>
-		<div class="wrap">
-			<div class="box1">
+		<div class="wrap" style="width: 80%;">
+			<div class="box1" style="min-height: 500px;">
 				<div class="hd">
 					检验检测能力
 				</div>
@@ -84,7 +84,8 @@
 							  <col width="120"> 
 							  <col width="120">
 							  <col>
-							  <col width="180">
+							  <col width="150">
+							  <col width="150">
 							  <col width="180">
 							  <col width="120"> 
 							  <col>
@@ -95,7 +96,8 @@
 								<th>检测产品</th>
 								<th>检测参数</th>
 								<th>依据的标准（方法）</th>
-								<th>限制范围或说明</th>
+								<th>限制范围</th>
+                                <th>说明</th>
 								<th>场所地址</th>
 								<th>批准日期</th>
 							</tr>
@@ -110,7 +112,8 @@
 								<td>{{ $v['project_name'] ?? '' }}</td>
 								<td>{{ $v['param_name'] ?? '' }}</td>
 								<td>{{ $v['method_name'] ?? '' }}</td>
-								<td>{{ $v['limit_range'] ?? '' }}{{ $v['explain_text'] ?? '' }}</td>
+								<td>{{ $v['limit_range'] ?? '' }}</td>
+                                <td>{{ $v['explain_text'] ?? '' }}</td>
 								<td>{{ $v['addr'] ?? '' }}</td>
 								<td>{{ $v['ratify_date'] ?? '' }}</td>
 							</tr>
@@ -125,6 +128,7 @@
 
 		<div class="c"></div>
 		<div class="k20"></div>
+		<div class="k50"></div> 
 
 
 		<div class="floor2">
