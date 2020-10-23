@@ -11,6 +11,8 @@
 
 .header {
 	padding:15px 0;
+	height: 100px;
+	overflow: hidden; 
 }
 .toptell {
 	margin-top: 30px;
@@ -32,14 +34,13 @@
 
 .search {
 	min-height: 360px;
-	background: #003488 url(../images/searchbg.jpg) repeat center bottom;
+	background: #003488 url(../images/searchbg.jpg) repeat center top;
 	color: #fff;
 
 }
-.search h1 {
-	padding-top: 40px;
+.search h1 { 
+	padding-top:40px;
 }
-
 
 
 .searchbox {
@@ -131,6 +132,7 @@ button.searchbtn {
 }
 .dv1 dd strong {
 	font-size: 36px;
+	font-weight: normal;
 }
 
 .comtab { width:100%; padding:80px 0 50px 0;   }
@@ -168,6 +170,10 @@ border-radius: 33px; }
 	font-size: 16px;
 	line-height: 44px;
 	margin-top: 15px;
+	height: 36px;
+	margin-bottom: 8px;
+	overflow: hidden;
+	display: block;
 }
 .comtab .date {
 	color: #888;
@@ -199,13 +205,13 @@ border-radius: 33px; }
 }
 
 
-.comtypetab { width:100%; padding:70px 0;   }
+.comtypetab { width:100%; padding:70px 0;    }
 .comtypetab .hd { height:60px; line-height:30px;  position:relative; }
 .comtypetab .hd ul{  text-align: center;  }
 .comtypetab .hd ul li{  display: inline-block; background-color: #fff; color: #444;  cursor:pointer; padding:5px 25px; margin:0 15px;
 border-radius: 33px; }
 .comtypetab .hd ul li.on{ height:30px;  background:#0060CD; color: #fff;   }
-.comtypetab .bd ul{ padding:15px;  zoom:1;  }
+.comtypetab .bd ul{ padding:15px;  zoom:1; min-height: 340px; }
 
 .floor3 {
 	background-color: #efefef;
@@ -257,6 +263,7 @@ border-radius: 33px; }
 .list {
 	width: 920px;
 	float: left;
+	padding-bottom: 50px;
 }
 
 .comlist {
@@ -315,6 +322,7 @@ border-radius: 33px; }
 	width:360px;
 	float: left;
 	padding:4px 0;
+	margin:0;
 }
 
 .tjcom {
@@ -331,6 +339,15 @@ border-radius: 33px; }
 .txtlist li {
 	text-indent: 1em;
 	padding:5px 0;
+	min-height: 40px;
+	overflow: hidden;
+}
+.txtlist li a {
+	color: #333; 
+	display: block;
+	height: 24px;
+	overflow: hidden;
+	width: 16em;
 }
 
 
@@ -340,8 +357,8 @@ border-radius: 33px; }
 /* detail */
 
 .details-header {
-	min-height: 280px;
-	background: #003488 url(../images/searchbg.jpg) repeat center bottom;
+	min-height: 240px;
+	background: #003488 url(../images/searchbg.jpg) repeat center top;
 	color: #fff;
 	padding-top:30px;
 }
@@ -350,7 +367,7 @@ border-radius: 33px; }
 }
 .details-header .com-logo {
 	position: absolute;
-	left:20px;
+	left:0px;
 	top:0px;
 	width: 120px;
 	height: 120px;
@@ -360,21 +377,21 @@ border-radius: 33px; }
 	float: left;
 	margin-right: 30px;
 	margin-left: 10px;
-	margin-top: 15px;
+	margin-top: 10px;
 }
 .details-header .com-name {
 	font-size: 28px;
-	padding-bottom: 30px;
-	padding-left:200px;
+	padding-bottom: 20px;
+	padding-left:170px;
 	margin-top:20px;
 }
 .details-header .content-info {
-	padding-left:200px;
+	padding-left:170px;
 }
 
 .details-header .content-info  p {
 	display: block;
-	width:440px;
+	min-width:340px;
 	float: left;
 	padding:4px 0;
 	font-size: 16px;
@@ -382,7 +399,7 @@ border-radius: 33px; }
 
 
 .box1 {
-	box-shadow: 0 0 3px #aaa;
+	box-shadow: 0 0 3px #aaa;	
 }
 .box1 .hd {
 	height: 48px;
@@ -436,4 +453,13 @@ border-radius: 33px; }
 	margin-top:30px;
 	margin-left: 110px;
 }
-
+.pagination {
+	width: 100%;
+}
+.pagespan2 {
+	display: inline;
+	float: right;
+}
+input.form-control {
+	display: inline;
+}
