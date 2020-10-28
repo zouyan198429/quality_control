@@ -1,12 +1,11 @@
 <div class="search">
-    <div class="wrap">
-        <h1>市场监督管理局查询</h1>
+    <div class="wrap"> 
         <div class="slideTxtBox">
             <div class="hd">
                 <ul>
-                    <li @if (isset($qkey) && $qkey == 1 )  class="on" @endif>按企业信息查</li>
-                    <li @if (isset($qkey) && $qkey == 2 )  class="on" @endif>按检测项目查</li>
-                    <li @if (isset($qkey) && $qkey == 4 )  class="on" @endif>按证书号查询</li>
+                    <li @if (isset($qkey) && $qkey == 1 )  class="on" @endif>机构名称/执照号</li>
+                    <li @if (isset($qkey) && $qkey == 2 )  class="on" @endif>类别/产品名称</li>
+                    <li @if (isset($qkey) && $qkey == 4 )  class="on" @endif>证书编号</li>
                 </ul>
             </div>
             <div class="bd">

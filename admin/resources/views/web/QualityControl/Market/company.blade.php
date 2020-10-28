@@ -7,47 +7,66 @@
         @include('web.QualityControl.Market.layout_public.pagehead')
         <link href="{{asset('static/css/bootstrap.css')}}" rel="stylesheet" type="text/css" />
 	</head>
-	<body>
+	<body style="background-color: #F0F6FC;">
         @include('web.QualityControl.Market.layout_public.header')
         @include('web.QualityControl.Market.layout_public.search')
-		<div class="keyword">
+		<!-- <div class="keyword">
 			<div class="wrap">
 				<p>关键词：<strong>{{ $key_str ?? '' }}</strong></p>
 				<div class="c"></div>
 			</div>
-		</div>
+		</div> -->
 		<div class="list-wrap">
 			<div class="wrap">
 
-				<div class="list">
+				<div class="list content">
 
-					<ul class="comlist">
+					<table class=" comlist">
+						<thead>
+							<tr>
+								<th style="width:750px;">机构名称</th>
+								<th>资质认定证书编号</th>
+								<th>机构信息</th>
+								<th>能力附表</th>
+								<th>自我声明公告	</th>
+								<th>监督检查信息	</th>
+								<th>行政处罚信息</th>
+							</tr>
+						</thead>
                         @foreach ($company_list as $k => $v)
-						<li>
-{{--							<div class="com-logo">--}}
-
-{{--							</div>--}}
-							<div class="com-name">
+						<tr> 
+							<td class="com-name">
                                 {{ $v['company_name'] ?? '' }}
-							</div>
-							<div class="content-info">
-								<p>CMA证书编号：<span>{{ $v['company_certificate_no'] ?? '' }}</span></p>
-{{--								<p>公司地址：<span>{{ $v['addr'] ?? '' }}</span></p>--}}
-{{--								<p>联系人：<span>{{ $v['company_contact_name'] ?? '' }}</span></p>--}}
-{{--								<p>联系电话：<span>{{ $v['company_contact_mobile'] ?? '' }}/{{ $v['company_contact_tel'] ?? '' }}</span></p>--}}
-                                <a href="javascript:void(0);" onclick="otheraction.browseInfo('{{ $v["id"] ?? "0" }}','{{ $v["company_name"] ?? "" }}-机构信息')">机构信息-查看</a>
-                                <a href="javascript:void(0);" onclick="otheraction.schedule('{{ $v["id"] ?? "0" }}','{{ $v["company_name"] ?? "" }}-能力附表')">能力附表-查看({{ $v['extend_info']['schedule_num'] ?? '0' }})</a>
-
-                                <a href="javascript:void(0);" onclick="otheraction.company_statement_num('{{ $v["id"] ?? "0" }}','{{ $v["company_name"] ?? "" }}-自我声明公告')">自我声明公告-查看({{ $v['extend_info']['statement_num'] ?? '0' }})</a>
-                                <a href="javascript:void(0);" onclick="otheraction.company_supervise('{{ $v["id"] ?? "0" }}','{{ $v["company_name"] ?? "" }}-监督检查信息')">监督检查信息-查看({{ $v['extend_info']['supervise_num'] ?? '0' }})</a>
-                                <a href="javascript:void(0);" onclick="otheraction.company_punish_num('{{ $v["id"] ?? "0" }}','{{ $v["company_name"] ?? "" }}-行政处罚信息')">行政处罚信息-查看({{ $v['extend_info']['punish_num'] ?? '0' }})</a>
-
-							</div>
-							<div class="c"></div>
-						</li>
+							</td>
+							<td class="content-info">
+								{{ $v['company_certificate_no'] ?? '' }}
+							</td>
+							<td>								
+ 								 <!-- <p>公司地址：<span>{{ $v['addr'] ?? '' }}</span></p> 
+ 								<p>联系人：<span>{{ $v['company_contact_name'] ?? '' }}</span></p> 
+ 								<p>联系电话：<span>{{ $v['company_contact_mobile'] ?? '' }}/{{ $v['company_contact_tel'] ?? '' }}</span></p>  --> 
+                                <a href="javascript:void(0);" onclick="otheraction.browseInfo('{{ $v["id"] ?? "0" }}','{{ $v["company_name"] ?? "" }}')" alt="机构信息" > <img src="{{asset('quality/Market/images/details12.png')}}" alt="" /> </a>
+							</td>
+							<td>
+                                <a href="javascript:void(0);" onclick="otheraction.schedule('{{ $v["id"] ?? "0" }}','{{ $v["company_name"] ?? "" }}')" alt="能力附表"> <img src="{{asset('quality/Market/images/details12.png')}}" alt="" /> </a> 
+								<!-- ({{ $v['extend_info']['schedule_num'] ?? '0' }}) -->
+							</td>
+							<td>
+                                <a href="javascript:void(0);" onclick="otheraction.company_statement_num('{{ $v["id"] ?? "0" }}','{{ $v["company_name"] ?? "" }}')" alt="自我声明公告"> <img src="{{asset('quality/Market/images/details12.png')}}" alt="" /> </a>
+								<!-- ({{ $v['extend_info']['statement_num'] ?? '0' }}) -->
+							</td>
+							<td>
+                                <a href="javascript:void(0);" onclick="otheraction.company_supervise('{{ $v["id"] ?? "0" }}','{{ $v["company_name"] ?? "" }}')" alt="监督检查信息"> <img src="{{asset('quality/Market/images/details12.png')}}" alt="" /> </a>
+								<!-- ({{ $v['extend_info']['supervise_num'] ?? '0' }}) -->
+							</td>
+							<td>
+                                <a href="javascript:void(0);" onclick="otheraction.company_punish_num('{{ $v["id"] ?? "0" }}','{{ $v["company_name"] ?? "" }}')" alt="行政处罚信息"> <img src="{{asset('quality/Market/images/details12.png')}}" alt="" /> </a>
+								<!-- ({{ $v['extend_info']['punish_num'] ?? '0' }}) -->
+							</td> 
+						</tr>
                         @endforeach
 
-					</ul>
+					</table>
                     <div class="mmfoot"><!--
                         <div class="mmfleft"></div> -->
                         <div class="pagination">
@@ -57,43 +76,16 @@
 
 				</div>
 
-{{--				<div class="list-side">--}}
+ 
 
-
-{{--					<div class="tjcom">--}}
-{{--						<div class="hd">--}}
-{{--							推荐企业--}}
-{{--						</div>--}}
-{{--						<div class="bd">--}}
-{{--							<ul class="txtlist">--}}
-{{--                                @foreach ($company_update_list as $k => $v)--}}
-{{--								<li><a href="{{url('jigou/info/' . $v['id'])}}" target="_blank">{{ $v['company_name'] ?? '' }}</a></li>--}}
-{{--                                @endforeach--}}
-{{--							</ul>--}}
-{{--						</div>--}}
-{{--					</div>--}}
-
-
-
-
-{{--				</div>--}}
+ 
 
 				<div class="c"></div>
 
 			</div>
 		</div>
 
-		<div class="c"></div>
-
-
-		<div class="floor2">
-			<div class="wrap">
-				<div class="adv1 adva1">权威数据</div>
-				<div class="adv1 adva2">精确查询</div>
-				<div class="adv1 adva3">实时更新</div>
-							<div class="c"></div>
-			</div>
-		</div>
+		<div class="c"></div> 
         @include('web.QualityControl.Market.layout_public.footer')
 	</body>
 </html>
