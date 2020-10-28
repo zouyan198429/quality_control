@@ -85,23 +85,24 @@ var otheraction = {
         });
         return false;
     },
-    schedule : function(id){// 查看能力附表
+    schedule : function(id, company_name){// 查看能力附表
         //获得表单各name的值
         var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
         console.log(SCHEDULE_SHOW_URL);
         console.log(data);
         var url_params = get_url_param(data);// parent.get_url_param(data);
-        var weburl = SCHEDULE_SHOW_URL + id + '?' + url_params;
+        // var weburl = SCHEDULE_SHOW_URL + id + '?' + url_params;
+        var weburl = SCHEDULE_SHOW_URL + '?company_id=' + id + '&' + url_params;
         console.log(weburl);
         // go(SHOW_URL + id);
         // location.href='/pms/Supplier/show?supplier_id='+id;
         // var weburl = SHOW_URL + id;
         // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
-        var tishi = "能力附表";
-        layeriframe(weburl,tishi,950,600,SHOW_CLOSE_OPERATE);
+        var tishi = company_name + "-能力附表";
+        layeriframe(weburl,tishi,980,650,SHOW_CLOSE_OPERATE);
         return false;
     },
-    staff_num : function(id){// 查看员工
+    staff_num : function(id, company_name){// 查看员工
         //获得表单各name的值
         var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
         console.log(STAFF_SHOW_URL);
@@ -114,11 +115,11 @@ var otheraction = {
         // location.href='/pms/Supplier/show?supplier_id='+id;
         // var weburl = SHOW_URL + id;
         // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
-        var tishi = "员工管理";
+        var tishi = company_name + "-员工管理";
         layeriframe(weburl,tishi,1050,700,5);
         return false;
     },
-    certificate_schedule_num : function(id){// 查看能力范围
+    certificate_schedule_num : function(id, company_name){// 查看能力范围
         //获得表单各name的值
         var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
         console.log(CERTIFICATE_SCHEDULE_URL);
@@ -131,7 +132,41 @@ var otheraction = {
         // location.href='/pms/Supplier/show?supplier_id='+id;
         // var weburl = SHOW_URL + id;
         // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
-        var tishi = "能力范围管理";
+        var tishi = company_name + "-能力范围管理";
+        layeriframe(weburl,tishi,1050,700,5);
+        return false;
+    },
+    company_statement_num : function(id, company_name){// 查看机构自我声明
+        //获得表单各name的值
+        var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
+        console.log(COMPANY_STATEMENT_URL);
+        console.log(data);
+        var url_params = get_url_param(data);// parent.get_url_param(data);
+        var weburl = COMPANY_STATEMENT_URL + '?company_id=' + id ;// + url_params;// + id + '?' + url_params;
+        // var weburl = STAFF_SHOW_URL + '?company_id=' + id
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = company_name + "-机构自我声明管理";
+        layeriframe(weburl,tishi,1050,700,5);
+        return false;
+    },
+    company_punish_num : function(id, company_name){// 查看机构处罚
+        //获得表单各name的值
+        var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
+        console.log(COMPANY_PUNISH_URL);
+        console.log(data);
+        var url_params = get_url_param(data);// parent.get_url_param(data);
+        var weburl = COMPANY_PUNISH_URL + '?company_id=' + id ;// + url_params;// + id + '?' + url_params;
+        // var weburl = STAFF_SHOW_URL + '?company_id=' + id
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = company_name + "-机构处罚管理";
         layeriframe(weburl,tishi,1050,700,5);
         return false;
     },
@@ -149,6 +184,23 @@ var otheraction = {
         // var weburl = SHOW_URL + id;
         // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
         var tishi = company_name + "-企业简介";
+        layeriframe(weburl,tishi,1050,700,5);
+        return false;
+    },
+    company_supervise : function(id, company_name){// 查看或修改企业简介
+        //获得表单各name的值
+        var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
+        console.log(COMPANY_SUPERVISE_EDIT_URL);
+        console.log(data);
+        var url_params = get_url_param(data);// parent.get_url_param(data);
+        var weburl = COMPANY_SUPERVISE_EDIT_URL + '?company_id=' + id + "&company_hidden=1" ;// + url_params;// + id + '?' + url_params;
+        // var weburl = STAFF_SHOW_URL + '?company_id=' + id
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = company_name + "-监督检查信息";
         layeriframe(weburl,tishi,1050,700,5);
         return false;
     },
@@ -321,17 +373,26 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
     document.write("                    <i class=\"ace-icon fa fa-trash-o bigger-60\"> 删除<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
-    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.schedule(<%=item.id%>)\">");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.schedule(<%=item.id%>,'<%=item.company_name%>')\">");
     document.write("                    <i class=\"ace-icon  fa fa-cloud-download  bigger-60\">能力附表(<%=item.extend_info.schedule_num%>)<\/i>");
     document.write("                <\/a>");
-    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.staff_num(<%=item.id%>)\">");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.staff_num(<%=item.id%>,'<%=item.company_name%>')\">");
     document.write("                    <i class=\"ace-icon fa fa-user-circle bigger-60\">员工(<%=item.extend_info.staff_num%>)<\/i>");
     document.write("                <\/a>");
-    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.certificate_schedule_num(<%=item.id%>)\">");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.certificate_schedule_num(<%=item.id%>,'<%=item.company_name%>')\">");
     document.write("                    <i class=\"ace-icon fa fa-file-text bigger-60\">能力范围(<%=item.extend_info.certificate_schedule_num%>)<\/i>");
     document.write("                <\/a>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn fa fa-search btn-mini btn-info\" onclick=\"otheraction.company_content(<%=item.id%>,'<%=item.company_name%>')\">");
     document.write("                    <i class=\"ace-icon bigger-60\">企业简介(<%=item.extend_info.company_content_num%>)<\/i>");
+    document.write("                <\/a>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn fa fa-hdd-o btn-mini btn-info\" onclick=\"otheraction.company_supervise(<%=item.id%>,'<%=item.company_name%>')\">");
+    document.write("                    <i class=\"ace-icon bigger-60\">监督检查信息(<%=item.extend_info.supervise_num%>)<\/i>");
+    document.write("                <\/a>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.company_statement_num(<%=item.id%>,'<%=item.company_name%>')\">");
+    document.write("                    <i class=\"ace-icon fa fa-bullhorn bigger-60\">机构自我声明(<%=item.extend_info.statement_num%>)<\/i>");
+    document.write("                <\/a>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.company_punish_num(<%=item.id%>,'<%=item.company_name%>')\">");
+    document.write("                    <i class=\"ace-icon fa fa-exclamation-triangle bigger-60\">机构处罚(<%=item.extend_info.punish_num%>)<\/i>");
     document.write("                <\/a>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn fa fa-handshake-o btn-mini btn-info\" onclick=\"otheraction.grade_config(<%=item.id%>,'<%=item.company_name%>')\">");
     document.write("                    <i class=\"ace-icon bigger-60\">会员等级配置(<%=item.extend_info.grade_config_num%>)<\/i>");

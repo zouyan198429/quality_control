@@ -248,7 +248,7 @@ class CTAPIResourceBusiness extends BasicPublicCTAPIBusiness
      * post参数 photo 文件；name  文件名称;note 资源说明[可为空];;;;
      * @param Request $request 请求信息
      * @param Controller $controller 控制对象
-     * @param int $resource_type 资源类型 1:图片;2:excel
+     * @param int $resource_type 资源类型 1:图片;2:excel ； 可以上传的文件类型编号 ，多个 用 ｜ 如 ： 1 ｜ 2 ｜ 4
      * @return  array 列表数据
      * {"id":8330,"name":"测试名称","savePath":"/resource/company/1/excel/2020/06/21/",
      * "saveName":"202006211522330a4022f5282c1530.xlsx","
@@ -307,6 +307,22 @@ class CTAPIResourceBusiness extends BasicPublicCTAPIBusiness
                 Log::info('上传文件日志-文件后缀',[$ext]);// 文件后缀 ["jpg"]
 
                 if(empty($ext)) $ext = $extFirst;
+
+                // 根据扩展名，重新获得文件的操作类型
+                $resourceConfig = UploadFile::getResourceConfig($ext);
+                if(empty($resourceConfig)) throws('请选择正确的文件！');
+                $resourceType = $resourceConfig['resource_type'] ?? 0;
+                // 判断上传文件的类型，是否是允许的类型
+                if(($resource_type & $resourceType) !== $resourceType){
+                    $resourceName = $resourceConfig['name'] ?? '';
+                    $resourceExt = $resourceConfig['ext'] ?? [];
+                    // $errMsg = $resourceName . '扩展名必须为[' . implode('、', $resourceExt) . ']';
+                    // throws($errMsg);
+                    throws('文件类型有误，请上传正确类型的文件');
+                }
+                // 修改文件类型为当前正确的文件类型--历史原因，只能在这里重新改值
+                $resource_type = $resourceType;
+
                 $hashname = $photo->hashName();// "geEGcIfovpc8gRSlTYREDZiW4frld0helrZKzmoA.jpeg"
                 //获取上传文件的大小
                 $size = $photo->getSize();
@@ -329,6 +345,7 @@ class CTAPIResourceBusiness extends BasicPublicCTAPIBusiness
                     'name' => $name,// 文件名称
                     'allBlockUuid' => $allBlockUuid,// 分片时，所有片的共同标识
                     'ext' => $ext,// 文件扩展名
+                    'mime_type' => $type,// 资源mime类型
                     'size' => $size,// 文件大小
                     'count' => $count,// 分片总数量 3
                     'saveData' => [// 要保存的一维数据
@@ -355,26 +372,26 @@ class CTAPIResourceBusiness extends BasicPublicCTAPIBusiness
                         // $handle = fopen($publicPath . $path_name,"rb");
                         $handle = fopen($realPath,"rb");
                         //读取临时文件 写入最终文件
-                        Tool::setRedis(static::getProjectKeyPre(1) . 'tmpFilesBin', md5($path_name), fread($handle, filesize($realPath)), 60*5, 2); // 5分钟
+                        Tool::setRedis(static::getProjectKeyPre(1) . 'tmpFilesBin', md5($path_name), fread($handle, filesize($realPath)), 60*20, 2); // 5分钟
                         //关闭句柄 不关闭删除文件会出现没有权限
                         fclose($handle);
                     }
 
                     // 缓存0的扩展名
                     if ($num == 0){
-                        Tool::setRedis(static::getProjectKeyPre(1) . 'extend', md5($allBlockUuid), $ext, 60*5, 2); // 5分钟
+                        Tool::setRedis(static::getProjectKeyPre(1) . 'extend', md5($allBlockUuid), $ext, 60*20, 2); // 5分钟
                     }
                     // 文件大小处理
                     $allSize = Tool::getRedis(static::getProjectKeyPre(1) . 'size' . md5($allBlockUuid), 2);
                     if(!is_numeric($allSize)) $allSize = 0;
-                    Tool::setRedis(static::getProjectKeyPre(1) . 'size', md5($allBlockUuid), $allSize + $size, 60*5, 2); // 5分钟
+                    Tool::setRedis(static::getProjectKeyPre(1) . 'size', md5($allBlockUuid), $allSize + $size, 60*20, 2); // 5分钟
 
                     // 缓存分存临时文件名
                     $tmpFiles = Tool::getRedis(static::getProjectKeyPre(1) . 'tmpFiles' . md5($allBlockUuid), 2);
                     if(!is_array($tmpFiles)) $tmpFiles = [];
                     array_push($tmpFiles, $path_name);
 
-                    Tool::setRedis(static::getProjectKeyPre(1) . 'tmpFiles', md5($allBlockUuid), $tmpFiles, 60*5, 2); // 5分钟
+                    Tool::setRedis(static::getProjectKeyPre(1) . 'tmpFiles', md5($allBlockUuid), $tmpFiles, 60*20, 2); // 5分钟
 
                     //当分片上传完时 合并
                     // if(($num + 1) == $count){
@@ -393,6 +410,10 @@ class CTAPIResourceBusiness extends BasicPublicCTAPIBusiness
                             'saveName' => $filename,// 保存文件名称
                             'store_result' => $path_name,// storeAs
                             // 'info' => [],// 资源表记录 一维
+                            'resource_size' => $size,// 文件大小
+                            'resource_size_format' => Tool::formatBytesSize($size, 2),// 文件大小
+                            'resource_file_extension' => $ext,// 扩展名
+                            'resource_mime_type' => $type,// 资源mime类型
                         ];
                     }
                 }
@@ -456,6 +477,7 @@ class CTAPIResourceBusiness extends BasicPublicCTAPIBusiness
         $name = $fileArr['name'] ?? '';
         $allBlockUuid = $fileArr['allBlockUuid'] ?? '';
         $ext = $fileArr['ext'] ?? '';
+        $mime_type = $fileArr['mime_type'] ?? '';// 资源mime类型
         $size =  $fileArr['size'] ?? 0;
         $count =  $fileArr['count'] ?? 0;
         $saveData =  $fileArr['saveData'] ?? [];
@@ -545,6 +567,10 @@ class CTAPIResourceBusiness extends BasicPublicCTAPIBusiness
                 'resource_name' => $name,
                 'resource_type' => $resource_type,
                 'resource_url' => $savePath . $saveName,
+                'resource_size' => $size,
+                'resource_size_format' => Tool::formatBytesSize($size, 2),
+                'resource_ext' => $ext,
+                'resource_mime_type' => $mime_type,
             ]);
 
             // 加入上传者用户类型
@@ -580,6 +606,10 @@ class CTAPIResourceBusiness extends BasicPublicCTAPIBusiness
             'saveName' => $saveName,// 保存文件名称
             'store_result' => $store_result,// storeAs
             // 'info' => $reslut,// 资源表记录 一维
+            'resource_size' => $size,// 文件大小
+            'resource_size_format' => Tool::formatBytesSize($size, 2),// 文件大小
+            'resource_file_extension' => $ext,// 扩展名
+            'resource_mime_type' => $mime_type,// 资源mime类型
         ];
     }
 
@@ -602,12 +632,21 @@ class CTAPIResourceBusiness extends BasicPublicCTAPIBusiness
                 'url'=> url($result['savePath'] . $result['saveName']),//'http://example.com/file-10001.jpg',// 文件的下载地址  "http://dogtools.admin.cunwo.net/resource/company/1/images/2020/06/21/20200621143249a9f868c5b4baf7cb.png"
                 'store_result' => $result['store_result'],// "resource/company/1/images/2020/06/21//20200621143249a9f868c5b4baf7cb.png"
                 'data_list' => [
-                    [
+                    array_merge([
                         'id' => $result['id'],// 8324
                         'resource_name' => $result['name'],// "测试名称"
                         'resource_url' => url($result['savePath'] . $result['saveName']),// "http://dogtools.admin.cunwo.net/resource/company/1/images/2020/06/21/20200621143249a9f868c5b4baf7cb.png",
                         'created_at' =>  date('Y-m-d H:i:s',time()),// "2020-06-21 14:32:49"
-                    ]
+                        'column_type' => 0,//'',
+                        'column_id' => 0,// '',
+                        'resource_url_old' => $result['savePath'] . $result['saveName'],// /resource/company/47/pdf/2020/10/24/202010241053524a8f99d830f58729.pdf
+                        'resource_size' => $result['resource_size'],
+                        'resource_size_format' => $result['resource_size_format'],
+                        'resource_file_extension' => $result['resource_file_extension'],
+                        'resource_mime_type' => $result['resource_mime_type'],
+                        // 'resource_file_name' => '',// 202010241053524a8f99d830f58729.pdf
+                        // 'resource_url_format' => '', // "http://qualitycontrol.admin.cunwo.net/resource/company/47/pdf/2020/10/24/202010241053524a8f99d830f58729.pdf"
+                    ], Tool::formatUrlByExtension(url($result['savePath'] . $result['saveName'])))
                 ],
             ];
             Log::info('上传文件日志-成功',$sucArr);

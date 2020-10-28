@@ -79,10 +79,10 @@ class CTAPICompanySuperviseBusiness extends BasicPublicCTAPIBusiness
         $relationFormatConfigs = [
             // 下标 'relationConfig' => []// 下一个关系
             // 获得企业名称
-//            'company_info' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
-//                , ['admin_type' => 'admin_type', 'staff_id' => 'id']
-//                , 1, 2
-//                ,'','', [], ['where' => [['admin_type', 2]]], '', []),
+            'company_info' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
+                , ['company_id' => 'id']
+                , 1, 16
+                ,'','', [], ['where' => [['admin_type', 2]]], '', []),
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }
@@ -112,5 +112,32 @@ class CTAPICompanySuperviseBusiness extends BasicPublicCTAPIBusiness
         return $return_data;
     }
     // ****表关系***需要重写的方法**********结束***********************************
+
+    /**
+     * 获得列表数据时，查询条件的参数拼接--有特殊的需要自己重写此方法--每个字类都有此方法
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $queryParams 已有的查询条件数组
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  null 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function joinListParams(Request $request, Controller $controller, &$queryParams, $notLog = 0){
+        // 自己的参数查询拼接在这里-- 注意：多个id 的查询默认就已经有了，参数是 ids  多个用逗号分隔
+
+        $company_id = CommonRequest::getInt($request, 'company_id');
+        if($company_id > 0 )  array_push($queryParams['where'], ['company_id', '=', $company_id]);
+
+//        $status = CommonRequest::get($request, 'status');
+//        if(strlen($status) > 0 && $status != 0)  Tool::appendParamQuery($queryParams, $status, 'status', [0, '0', ''], ',', false);
+
+//        $ids = CommonRequest::get($request, 'ids');
+//        if(strlen($ids) > 0 && $ids != 0)  Tool::appendParamQuery($queryParams, $ids, 'id', [0, '0', ''], ',', false);
+
+        // 方法最下面
+        // 注意重写方法中，如果不是特殊的like，同样需要调起此默认like方法--特殊的写自己特殊的方法
+        static::joinListParamsLike($request, $controller, $queryParams, $notLog);
+    }
 
 }

@@ -3066,6 +3066,10 @@ class Tool
                 'column_type' => $v['column_type'] ?? 0,
                 'column_id' => $v['column_id'] ?? 0,
                 'resource_url_old' => $v['resource_url'],
+                'resource_size' => $v['resource_size'],
+                'resource_size_format' => $v['resource_size_format'],
+                'resource_file_extension' => $v['resource_ext'],
+                'resource_mime_type' => $v['resource_mime_type'],
             ];
             $temArr = array_merge($temArr, static::formatUrlByExtension($resource_url));
             array_push($reList, $temArr);
@@ -4489,5 +4493,39 @@ class Tool
         } else {
             return false;
         }
+    }
+
+    /**
+     * 将文件字节大小转换为格式化后的形式
+     * @param $bytes
+     * @param int $prec
+     * @return string 2.38 MB
+     */
+    public static function formatBytesSize($bytes, $prec = 2){
+        $rank = 0;
+        $size = $bytes;
+        $unit = "B";
+        while( $size > 1024){
+            $size = $size / 1024;
+            $rank++;
+        }
+        $size = round($size, $prec);
+        switch ($rank){
+            case "1":
+                $unit = "KB";
+                break;
+            case "2":
+                $unit = "MB";
+                break;
+            case "3":
+                $unit = "GB";
+                break;
+            case "4":
+                $unit = "TB";
+                break;
+            default :
+
+        }
+        return $size . " " . $unit;
     }
 }

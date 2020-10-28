@@ -304,6 +304,26 @@
                       </dd>
                   </dl>
               </li>
+              <li data-name="user" class="layui-nav-item">
+                  <a href="javascript:;" lay-tips="检验机构信息管理" lay-direction="2">
+                      <i class="layui-icon layui-icon-component"></i>
+                      <cite>检验机构信息管理</cite>
+                  </a>
+                  <dl class="layui-nav-child">
+                      <dd>
+                          <a lay-href="{{ url('admin/platform_notices') }}">通知公告</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="{{ url('admin/platform_down_files') }}">表格下载</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="{{ url('admin/company_statement') }}">机构自我声明</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="{{ url('admin/company_punish') }}">机构处罚</a>
+                      </dd>
+                  </dl>
+              </li>
               <!-- <li data-name="user" class="layui-nav-item">
                   <a href="javascript:;" lay-tips="开票管理" lay-direction="2">
                       <i class="layui-icon layui-icon-component"></i>

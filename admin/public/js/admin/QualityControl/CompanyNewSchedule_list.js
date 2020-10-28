@@ -40,13 +40,14 @@ var otheraction = {
         return false;
     },
     down_file:function(resource_url, save_file_name){//下载网页打印机驱动
-        var layer_index = layer.load();//layer.msg('加载中', {icon: 16});
-        //layer_alert("已打印"+print_nums+"打印第"+begin_page+"页-第"+end_page+"页;每次打"+per_page_num+"页",3);
-        var url = DOWN_FILE_URL + '?resource_url=' + resource_url + '&save_file_name=' + save_file_name;
-        console.log('下载文件：', url);
-        // PrintOneURL(url);
-        go(url);
-        layer.close(layer_index)//手动关闭
+        // var layer_index = layer.load();//layer.msg('加载中', {icon: 16});
+        // //layer_alert("已打印"+print_nums+"打印第"+begin_page+"页-第"+end_page+"页;每次打"+per_page_num+"页",3);
+        // var url = DOWN_FILE_URL + '?resource_url=' + resource_url + '&save_file_name=' + save_file_name;
+        // console.log('下载文件：', url);
+        // // PrintOneURL(url);
+        // go(url);
+        // layer.close(layer_index)//手动关闭
+        commonaction.down_file(DOWN_FILE_URL, resource_url, save_file_name);
     }
 };
 

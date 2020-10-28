@@ -234,7 +234,7 @@
       var ACCOUNT_STATUS_URL = "{{ url('api/admin/company/ajax_frozen') }}";//操作(冻结/解冻)
 
 
-      var SCHEDULE_SHOW_URL = "{{ url('admin/company_new_schedule/show')}}/";//查看企业能力附表 + 企业id
+      var SCHEDULE_SHOW_URL = "{{ url('admin/company_new_schedule')}}";// "{ { url('admin/company_new_schedule/show')}}/";//查看企业能力附表 + 企业id
       var STAFF_SHOW_URL = "{{ url('admin/user/show')}}/";//查看企业能力附表 + 企业id "{{ url('admin/user')}}"; //
       var CERTIFICATE_SCHEDULE_URL = "{{ url('admin/certificate_schedule')}}/";// 查看能力范围
       // 列表数据每隔指定时间就去执行一次刷新【如果表有更新时】--定时执行
@@ -242,11 +242,17 @@
       var IFRAME_TAG_TIMEOUT = 60000;// 获得模型表更新时间运行间隔 1000:1秒 ；可以不要此变量：默认一分钟
 
       var COMPANY_CONTENT_EDIT_URL = "{{ url('admin/company_content/add/0') }}"; // 企业简介修改/添加url
+      var COMPANY_SUPERVISE_EDIT_URL = "{{ url('admin/company_supervise/add/0') }}"; // 监督检查信息修改/添加url
+
+
+      var COMPANY_STATEMENT_URL = "{{ url('admin/company_statement')}}/";// 查看机构自我声明
+      var COMPANY_PUNISH_URL = "{{ url('admin/company_punish')}}/";// 查看机构处罚
+
 
       var GRADE_CONFIG_URL = "{{ url('admin/company_grade_config')}}/";// 查看企业等级配置
 
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/Company.js') }}?14"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/Company.js') }}?22"  type="text/javascript"></script>
 </body>
 </html>

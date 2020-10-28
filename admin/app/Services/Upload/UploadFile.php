@@ -29,13 +29,6 @@ class UploadFile
             'maxSize' => 100,// 文件最大值 单位 M
             'other' => [],// 其它各自类型需要判断的指标
         ],
-        '4' => [
-            'name' => 'PDF、word文件',
-            'ext' => ['pdf', 'doc', 'docx'],// 扩展名
-            'dir' => 'pdfword',// 文件夹名称
-            'maxSize' => 100,// 文件最大值 单位 M
-            'other' => [],// 其它各自类型需要判断的指标
-        ],
         '8' => [
             'name' => 'PDF文件',
             'ext' => ['pdf'],// 扩展名
@@ -50,7 +43,116 @@ class UploadFile
             'maxSize' => 100,// 文件最大值 单位 M
             'other' => [],// 其它各自类型需要判断的指标
         ],
+        '4' => [// 后面不用这种方式了--放到后面是因为，放前面会优先了
+            'name' => 'PDF、word文件',
+            'ext' => ['pdf', 'doc', 'docx'],// 扩展名
+            'dir' => 'pdfword',// 文件夹名称
+            'maxSize' => 100,// 文件最大值 单位 M
+            'other' => [],// 其它各自类型需要判断的指标
+        ],
+        '32' => [
+            'name' => 'ppt文件',
+            'ext' => [ 'ppt', 'pptx'],// 扩展名
+            'dir' => 'ppt',// 文件夹名称
+            'maxSize' => 100,// 文件最大值 单位 M
+            'other' => [],// 其它各自类型需要判断的指标
+        ],
+        '64' => [
+            'name' => 'html文件',
+            'ext' => [ 'htm', 'html'],// 扩展名
+            'dir' => 'html',// 文件夹名称
+            'maxSize' => 100,// 文件最大值 单位 M
+            'other' => [],// 其它各自类型需要判断的指标
+        ],
+        '128' => [
+            'name' => 'android文件',
+            'ext' => [ 'apk'],// 扩展名
+            'dir' => 'android',// 文件夹名称
+            'maxSize' => 100,// 文件最大值 单位 M
+            'other' => [],// 其它各自类型需要判断的指标
+        ],
+        '256' => [
+            'name' => 'windows文件',
+            'ext' => [ 'exe'],// 扩展名
+            'dir' => 'windows',// 文件夹名称
+            'maxSize' => 100,// 文件最大值 单位 M
+            'other' => [],// 其它各自类型需要判断的指标
+        ],
+        '512' => [
+            'name' => 'book文件',
+            'ext' => [ 'epub'],// 扩展名
+            'dir' => 'book',// 文件夹名称
+            'maxSize' => 100,// 文件最大值 单位 M
+            'other' => [],// 其它各自类型需要判断的指标
+        ],
+        '1024' => [
+            'name' => 'cube文件',
+            'ext' => [ 'pkg', 'msi', 'dmg'],// 扩展名
+            'dir' => 'cube',// 文件夹名称
+            'maxSize' => 100,// 文件最大值 单位 M
+            'other' => [],// 其它各自类型需要判断的指标
+        ],
+        '2048' => [
+            'name' => 'diamond文件',
+            'ext' => [ 'sketch'],// 扩展名
+            'dir' => 'diamond',// 文件夹名称
+            'maxSize' => 100,// 文件最大值 单位 M
+            'other' => [],// 其它各自类型需要判断的指标
+        ],
+        '4096' => [
+            'name' => 'zip文件',
+            'ext' => [ 'zip', 'x-rar', 'x-7z-compressed'],// 扩展名
+            'dir' => 'zip',// 文件夹名称
+            'maxSize' => 100,// 文件最大值 单位 M
+            'other' => [],// 其它各自类型需要判断的指标
+        ],
+        '8192' => [
+            'name' => 'video文件',
+            'ext' => [ 'mp4', 'avi', 'rmvb', 'rm', 'flv', 'mkv', 'mov', 'qt', 'asf', 'ogg', 'mod', 'wmv', 'mpg', 'mpeg', 'dat', 'asx', 'wvx', 'mpe', 'mpa', 'vob'],// 扩展名
+            'dir' => 'video',// 文件夹名称
+            'maxSize' => 5120,// 文件最大值 单位 M
+            'other' => [],// 其它各自类型需要判断的指标
+        ],
+        '16384' => [
+            'name' => 'audio文件',
+            'ext' => [ 'mp3', 'wma', 'acc', 'ac3', 'ogg', 'rm', 'wav', 'mid', 'midi', 'mka', 'voc'],// 扩展名
+            'dir' => 'audio',// 文件夹名称
+            'maxSize' => 100,// 文件最大值 单位 M
+            'other' => [],// 其它各自类型需要判断的指标
+        ],
+        '32768' => [
+            'name' => 'text文件',
+            'ext' => [ 'txt', 'text'],// 扩展名
+            'dir' => 'text',// 文件夹名称
+            'maxSize' => 100,// 文件最大值 单位 M
+            'other' => [],// 其它各自类型需要判断的指标
+        ],
+        '65536' => [
+            'name' => 'code文件',
+            'ext' => [ 'js', 'php', 'cs', 'jsx', 'css', 'less', 'json', 'java', 'lua', 'py', 'c', 'cpp', 'swift', 'h', 'sh', 'rb', 'yml', 'ini', 'sql', 'xml'],// 扩展名
+            'dir' => 'code',// 文件夹名称
+            'maxSize' => 10,// 文件最大值 单位 M
+            'other' => [],// 其它各自类型需要判断的指标
+        ],
     ];
+
+    /**
+     * 根据扩展名，获得文件配置
+     * @param $ext
+     * @return array 可能为空数组 ； resource_type 下标为标识号
+     */
+    public static function getResourceConfig($ext){
+        $reResourceConfig = [];
+        $resourceType = static::$resource_type;
+        foreach($resourceType as $resourceNo => $resourceConfig){
+            $extArr = $resourceConfig['ext'] ?? [];
+            if(in_array($ext, $extArr)){
+                $reResourceConfig = array_merge($resourceConfig, ['resource_type' => $resourceNo]);
+                break;
+            }
+        }
+        return $reResourceConfig;
+    }
 
     /**
      * 功能：获得上传或生成文件的相关路径--目录不存在会自动创建

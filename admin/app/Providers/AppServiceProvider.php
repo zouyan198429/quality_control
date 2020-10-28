@@ -57,6 +57,10 @@ class AppServiceProvider extends ServiceProvider
             'company_schedule'                 => 'App\Models\QualityControl\CompanySchedule',           // 2企业能力附表 pdf或word
             'company_ability'                 => 'App\Models\QualityControl\AbilityJoinItemsResults',           // 4企业能力验证上传图片
             'course'                 => 'App\Models\QualityControl\Course',           // 8课程主图上传图片
+            'company_statement'                 => 'App\Models\QualityControl\CompanyStatement',           // 16机构自我声明
+            'company_punish'                 => 'App\Models\QualityControl\CompanyPunish',           // 32机构处罚
+            'platform_notices'                 => 'App\Models\QualityControl\PlatformNotices',           // 64通知公告
+            'platform_down_files'                 => 'App\Models\QualityControl\PlatformDownFiles',           // 128表格下载
         ]);
 
         DB::listen(function ($query) {

@@ -20,14 +20,16 @@
 
     @include('common.pageParams')
     <div class="tabbox" >
-      <a href="javascript:void(0);" class="on" onclick="action.iframeModify(0)">添加能力附表</a>
+      <a href="javascript:void(0);" class="" onclick="otheraction.upExcelFile(0)">上传excel文件</a>
+      <a href="javascript:void(0);" class="on" onclick="action.iframeModify(0)">上传PDF文件</a>
     </div>
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
+          <input type="hidden" name="company_hidden"  value="{{ $company_hidden ?? 0 }}" />
 
-          <span>
-                <input type="hidden" class="select_id"  name="company_id"  value="{{ $company_id ?? '' }}" />
-                <span class="select_name company_name">{{ $user_company_name ?? '' }}</span>
+          <span  @if (isset($company_hidden) && $company_hidden == 1 ) style="display: none;"  @endif>
+                <input type="hidden" class="select_id"  name="company_id"  value="{{ $info['company_id'] ?? '' }}" />
+                <span class="select_name company_name">{{ $info['user_company_name'] ?? '' }}</span>
                 <i class="close select_close company_id_close"  onclick="clearSelect(this)" style="display: none;">×</i>
                 <button  type="button"  class="btn btn-danger  btn-xs ace-icon fa fa-plus-circle bigger-60"  onclick="otheraction.selectCompany(this)">选择企业</button>
           </span>
@@ -42,7 +44,7 @@
 {{--          <option value="type_name">能力附表</option>--}}
 {{--        </select>--}}
 {{--        <input type="text" value=""    name="keyword"  placeholder="请输入关键字"/>--}}
-        <button class="btn btn-normal search_frm" >搜索</button>
+        <button class="btn btn-normal search_frm"   @if (isset($company_hidden) && $company_hidden == 1 ) style="display: none;"  @endif>搜索</button>
       </div>
     </form>
   </div>
@@ -62,8 +64,8 @@
         <col width="60">
         <col width="">
         <col width="70">
-        <col width=""> 
-        <col width=""> 
+        <col width="">
+        <col width="">
         <col width="">
     </colgroup>
     <thead>
@@ -74,12 +76,12 @@
           <!-- <span class="lbl">全选</span> -->
         </label>
       </th>
-      <th>ID</th> 
+      <th>ID</th>
       <th>所属企业</th>
       <th>企业ID</th>
       <th>文档类型</th>
-      <th>文件</th> 
-      <th>创建时间</th> 
+      <th>文件</th>
+      <th>创建时间</th>
       <th>操作</th>
     </tr>
     </thead>
@@ -122,6 +124,12 @@
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
 
       var SELECT_COMPANY_URL = "{{url('admin/company/select')}}";// 选择所属企业
+
+      var IFRAME_UPEXCEL_URL = "{{url('admin/company_new_schedule/add_excel/')}}/";//添加/修改页面地址前缀 + id
+      var IFRAME_UPEXCEL_URL_TITLE = "excel文件" ;// 详情弹窗显示提示  [添加/修改] +  栏目/主题
+
+
+      var DOWN_MOBAN_URL = "{{ url('admin/company_new_schedule/down_moban') }}";// 下载excel模板文件
       var DOWN_FILE_URL = "{{ url('admin/down_file') }}";// 下载网页打印机驱动
 
       // 列表数据每隔指定时间就去执行一次刷新【如果表有更新时】--定时执行
@@ -130,6 +138,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/CompanyNewSchedule.js') }}?6"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/CompanyNewSchedule.js') }}?7"  type="text/javascript"></script>
 </body>
 </html>

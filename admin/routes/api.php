@@ -485,6 +485,77 @@ $api->version('v1', function ($api) {
         $api->post('admin/company_new_schedule/up_excel', 'Admin\QualityControl\CompanyNewScheduleController@up_excel');// 上传excel地址
         $api->any('admin/company_new_schedule/ajax_alist_company', 'Admin\QualityControl\CompanyNewScheduleController@ajax_alist_company');//ajax获得列表数据--按企业id降序
 
+
+        // 省局企业相关的
+
+        // 监督检查信息管理
+        $api->any('admin/company_supervise/ajax_alist', 'Admin\QualityControl\CompanySuperviseController@ajax_alist');//ajax获得列表数据
+        $api->any('admin/company_supervise/ajax_del', 'Admin\QualityControl\CompanySuperviseController@ajax_del');// 删除
+        $api->any('admin/company_supervise/ajax_save', 'Admin\QualityControl\CompanySuperviseController@ajax_save');// 新加/修改
+        $api->post('admin/company_supervise/ajax_get_child', 'Admin\QualityControl\CompanySuperviseController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/company_supervise/ajax_get_areachild', 'Admin\QualityControl\CompanySuperviseController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/company_supervise/ajax_import_staff','Admin\QualityControl\CompanySuperviseController@ajax_import'); // 导入员工
+
+        $api->post('admin/company_supervise/import', 'Admin\QualityControl\CompanySuperviseController@import');// 导入excel
+        $api->post('admin/company_supervise/ajax_get_ids', 'Admin\QualityControl\CompanySuperviseController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        // 机构自我声明
+        $api->any('admin/company_statement/ajax_alist', 'Admin\QualityControl\CompanyStatementController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/company_statement/ajax_del', 'Admin\QualityControl\CompanyStatementController@ajax_del');// 删除
+        $api->any('admin/company_statement/ajax_save', 'Admin\QualityControl\CompanyStatementController@ajax_save');// 新加/修改
+        $api->any('admin/company_statement/ajax_info', 'Admin\QualityControl\CompanyStatementController@ajax_info');// 详情
+        $api->post('admin/company_statement/ajax_get_child', 'Admin\QualityControl\CompanyStatementController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/company_statement/ajax_get_areachild', 'Admin\QualityControl\CompanyStatementController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/company_statement/ajax_import_staff','Admin\QualityControl\CompanyStatementController@ajax_import'); // 导入员工
+
+        $api->post('admin/company_statement/import', 'Admin\QualityControl\CompanyStatementController@import');// 导入excel
+        $api->post('admin/company_statement/ajax_get_ids', 'Admin\QualityControl\CompanyStatementController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        $api->post('admin/company_statement/up_file', 'Admin\QualityControl\CompanyStatementController@up_file');// 上传文件地址
+
+        // 机构处罚
+        $api->any('admin/company_punish/ajax_alist', 'Admin\QualityControl\CompanyPunishController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/company_punish/ajax_del', 'Admin\QualityControl\CompanyPunishController@ajax_del');// 删除
+        $api->any('admin/company_punish/ajax_save', 'Admin\QualityControl\CompanyPunishController@ajax_save');// 新加/修改
+        $api->any('admin/company_punish/ajax_info', 'Admin\QualityControl\CompanyPunishController@ajax_info');// 详情
+        $api->post('admin/company_punish/ajax_get_child', 'Admin\QualityControl\CompanyPunishController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/company_punish/ajax_get_areachild', 'Admin\QualityControl\CompanyPunishController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/company_punish/ajax_import_staff','Admin\QualityControl\CompanyPunishController@ajax_import'); // 导入员工
+
+        $api->post('admin/company_punish/import', 'Admin\QualityControl\CompanyPunishController@import');// 导入excel
+        $api->post('admin/company_punish/ajax_get_ids', 'Admin\QualityControl\CompanyPunishController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        $api->post('admin/company_punish/up_file', 'Admin\QualityControl\CompanyPunishController@up_file');// 上传文件地址
+
+        // 通知公告
+        $api->any('admin/platform_notices/ajax_alist', 'Admin\QualityControl\PlatformNoticesController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/platform_notices/ajax_del', 'Admin\QualityControl\PlatformNoticesController@ajax_del');// 删除
+        $api->any('admin/platform_notices/ajax_save', 'Admin\QualityControl\PlatformNoticesController@ajax_save');// 新加/修改
+        $api->any('admin/platform_notices/ajax_info', 'Admin\QualityControl\PlatformNoticesController@ajax_info');// 详情
+        $api->post('admin/platform_notices/ajax_get_child', 'Admin\QualityControl\PlatformNoticesController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/platform_notices/ajax_get_areachild', 'Admin\QualityControl\PlatformNoticesController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/platform_notices/ajax_import_staff','Admin\QualityControl\PlatformNoticesController@ajax_import'); // 导入员工
+
+        $api->post('admin/platform_notices/import', 'Admin\QualityControl\PlatformNoticesController@import');// 导入excel
+        $api->post('admin/platform_notices/ajax_get_ids', 'Admin\QualityControl\PlatformNoticesController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        $api->post('admin/platform_notices/up_file', 'Admin\QualityControl\PlatformNoticesController@up_file');// 上传文件地址
+
+        // 表格下载
+        $api->any('admin/platform_down_files/ajax_alist', 'Admin\QualityControl\PlatformDownFilesController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/platform_down_files/ajax_del', 'Admin\QualityControl\PlatformDownFilesController@ajax_del');// 删除
+        $api->any('admin/platform_down_files/ajax_save', 'Admin\QualityControl\PlatformDownFilesController@ajax_save');// 新加/修改
+        $api->any('admin/platform_down_files/ajax_info', 'Admin\QualityControl\PlatformDownFilesController@ajax_info');// 详情
+        $api->post('admin/platform_down_files/ajax_get_child', 'Admin\QualityControl\PlatformDownFilesController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/platform_down_files/ajax_get_areachild', 'Admin\QualityControl\PlatformDownFilesController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/platform_down_files/ajax_import_staff','Admin\QualityControl\PlatformDownFilesController@ajax_import'); // 导入员工
+
+        $api->post('admin/platform_down_files/import', 'Admin\QualityControl\PlatformDownFilesController@import');// 导入excel
+        $api->post('admin/platform_down_files/ajax_get_ids', 'Admin\QualityControl\PlatformDownFilesController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        $api->post('admin/platform_down_files/up_file', 'Admin\QualityControl\PlatformDownFilesController@up_file');// 上传文件地址
+
+
         // 企业后台 company
         // 验证码 -- ok
 //        $api->get('company/ajax_captcha', 'WebFront\Company\QualityControl\IndexController@ajax_captcha');// api生成验证码

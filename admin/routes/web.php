@@ -465,13 +465,54 @@ Route::get('admin/company_schedule/export', 'Admin\QualityControl\CompanySchedul
 Route::get('admin/company_schedule/import_template', 'Admin\QualityControl\CompanyScheduleController@import_template');// 导入模版
 
 // 企业能力附表-最新
+Route::get('admin/company_new_schedule/test/{id}', 'Admin\QualityControl\CompanyNewScheduleController@test');// 测试上传
 Route::get('admin/company_new_schedule', 'Admin\QualityControl\CompanyNewScheduleController@index');// 列表
 Route::get('admin/company_new_schedule/show/{company_id}', 'Admin\QualityControl\CompanyNewScheduleController@show');// 查看
 Route::get('admin/company_new_schedule/add/{id}', 'Admin\QualityControl\CompanyNewScheduleController@add');// 添加
+Route::get('admin/company_new_schedule/add_excel/{id}', 'Admin\QualityControl\CompanyNewScheduleController@add_excel');// 添加
 // Route::get('admin/company_new_schedule/select', 'Admin\QualityControl\CompanyNewScheduleController@select');// 选择-弹窗
 Route::get('admin/company_new_schedule/export', 'Admin\QualityControl\CompanyNewScheduleController@export');// 导出
 Route::get('admin/company_new_schedule/import_template', 'Admin\QualityControl\CompanyNewScheduleController@import_template');// 导入模版
 Route::get('admin/company_new_schedule/list', 'Admin\QualityControl\CompanyNewScheduleController@list');// 列表--按企业id降序
+
+Route::get('admin/company_new_schedule/down_moban', 'Admin\QualityControl\CompanyNewScheduleController@down_moban');// 下载文件模板
+
+// 省局企业相关的
+
+// 监督检查信息管理
+Route::get('admin/company_supervise', 'Admin\QualityControl\CompanySuperviseController@index');// 列表
+Route::get('admin/company_supervise/add/{id}', 'Admin\QualityControl\CompanySuperviseController@add');// 添加
+// Route::get('admin/company_supervise/select', 'Admin\QualityControl\CompanySuperviseController@select');// 选择-弹窗
+Route::get('admin/company_supervise/export', 'Admin\QualityControl\CompanySuperviseController@export');// 导出
+Route::get('admin/company_supervise/import_template', 'Admin\QualityControl\CompanySuperviseController@import_template');// 导入模版
+
+// 机构自我声明
+Route::get('admin/company_statement', 'Admin\QualityControl\CompanyStatementController@index');// 列表
+Route::get('admin/company_statement/add/{id}', 'Admin\QualityControl\CompanyStatementController@add');// 添加
+// Route::get('admin/company_statement/select', 'Admin\QualityControl\CompanyStatementController@select');// 选择-弹窗
+Route::get('admin/company_statement/export', 'Admin\QualityControl\CompanyStatementController@export');// 导出
+Route::get('admin/company_statement/import_template', 'Admin\QualityControl\CompanyStatementController@import_template');// 导入模版
+
+// 机构处罚
+Route::get('admin/company_punish', 'Admin\QualityControl\CompanyPunishController@index');// 列表
+Route::get('admin/company_punish/add/{id}', 'Admin\QualityControl\CompanyPunishController@add');// 添加
+// Route::get('admin/company_punish/select', 'Admin\QualityControl\CompanyPunishController@select');// 选择-弹窗
+Route::get('admin/company_punish/export', 'Admin\QualityControl\CompanyPunishController@export');// 导出
+Route::get('admin/company_punish/import_template', 'Admin\QualityControl\CompanyPunishController@import_template');// 导入模版
+
+// 通知公告
+Route::get('admin/platform_notices', 'Admin\QualityControl\PlatformNoticesController@index');// 列表
+Route::get('admin/platform_notices/add/{id}', 'Admin\QualityControl\PlatformNoticesController@add');// 添加
+// Route::get('admin/platform_notices/select', 'Admin\QualityControl\PlatformNoticesController@select');// 选择-弹窗
+Route::get('admin/platform_notices/export', 'Admin\QualityControl\PlatformNoticesController@export');// 导出
+Route::get('admin/platform_notices/import_template', 'Admin\QualityControl\PlatformNoticesController@import_template');// 导入模版
+
+// 表格下载
+Route::get('admin/platform_down_files', 'Admin\QualityControl\PlatformDownFilesController@index');// 列表
+Route::get('admin/platform_down_files/add/{id}', 'Admin\QualityControl\PlatformDownFilesController@add');// 添加
+// Route::get('admin/platform_down_files/select', 'Admin\QualityControl\PlatformDownFilesController@select');// 选择-弹窗
+Route::get('admin/platform_down_files/export', 'Admin\QualityControl\PlatformDownFilesController@export');// 导出
+Route::get('admin/platform_down_files/import_template', 'Admin\QualityControl\PlatformDownFilesController@import_template');// 导入模版
 
 
 // 企业后台 company
