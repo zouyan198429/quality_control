@@ -17,16 +17,16 @@
     @include('web.QualityControl.Market.layout_public.pagehead')
     <link href="{{asset('static/css/bootstrap.css')}}" rel="stylesheet" type="text/css" />
 </head>
-<body>
+<body style="background-color: #F0F6FC;">
 
 @include('web.QualityControl.Market.layout_public.header')
 
-<div class="mm">
-  <div class="mmhead" id="mywork">
+<div class="subheader">
+	<div class="wrap">
 
     @include('common.pageParams')
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
-      <div class="msearch fr">
+      <div class="msearch tc">
         <select style="width:80px; height:28px;display: none;" name="field">
             <option value="resource_name">资源名称</option>
         </select>
@@ -34,55 +34,49 @@
         <button class="btn btn-normal search_frm">搜索</button>
       </div>
     </form>
-  </div>
-  <div class="table-header">
 
-
-
-{{--    <button class="btn btn-success  btn-xs export_excel"  onclick="action.batchExportExcel(this)" >导出[按条件]</button>--}}
-{{--    <button class="btn btn-success  btn-xs export_excel"  onclick="action.exportExcel(this)" >导出[勾选]</button>--}}
-	{{--<button class="btn btn-danger  btn-xs batch_del"  onclick="action.batchDel(this)">批量删除</button>--}}
-{{--    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcel(this)">导入表格下载</button>--}}
-{{--    <div style="display:none;" ><input type="file" class="import_file img_input"></div>--}}{{--导入file对象--}}
-  </div>
-  <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
-    <colgroup>
-{{--        <col width="50">--}}
-{{--        <col width="60">--}}
-        <col>
-        <col>
-        <col>
-{{--        <col width="95">--}}
-{{--        <col width="95">--}}
-{{--        <col width="140">--}}
-    </colgroup>
-    <thead>
-    <tr>
-{{--      <th>--}}
-{{--        <label class="pos-rel">--}}
-{{--          <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>--}}
-{{--          <!-- <span class="lbl">全选</span> -->--}}
-{{--        </label>--}}
-{{--      </th>--}}
-{{--      <th>ID</th>--}}
-      <th>文件名称</th>
-        <th>文件</th>
-      <th>时间</th>
-{{--        <th>更新时间</th>--}}
-{{--      <th></th>--}}
-{{--      <th>操作</th>--}}
-    </tr>
-    </thead>
-    <tbody id="data_list">
-    </tbody>
-  </table>
+	</div>
+</div>
+ 
+ 
+  <div class="wrap">
+	  <div class="content">
+		<table lay-even class="layui-table table2  comlist"  lay-size="lg"  id="dynamic-table">
+			<colgroup> 
+				<col>
+				<col>
+				<col> 
+			</colgroup>
+		<thead>
+		<tr>
+	{{--      <th>--}}
+	{{--        <label class="pos-rel">--}}
+	{{--          <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>--}}
+	{{--          <!-- <span class="lbl">全选</span> -->--}}
+	{{--        </label>--}}
+	{{--      </th>--}}
+	{{--      <th>ID</th>--}}
+		  <th>文件名称</th>
+			<th>文件</th>
+		  <th>时间</th>
+	{{--        <th>更新时间</th>--}}
+	{{--      <th></th>--}}
+	{{--      <th>操作</th>--}}
+		</tr>
+		</thead>
+		<tbody id="data_list">
+		</tbody>
+		</table>
+	</div>
+</div>
+  
   <div class="mmfoot">
     <div class="mmfleft"></div>
     <div class="pagination">
     </div>
   </div>
 
-</div>
+
 
 @include('web.QualityControl.Market.layout_public.footer')
   <script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>

@@ -9,11 +9,42 @@
 	width: 100%;
 }
 
-.header {
-	padding:15px 0;
-	height: 100px;
-	overflow: hidden; 
+.wrap {
+	width: 90%;
 }
+body {
+	background-color: #F0F6FC;
+	height: 100%;
+}
+.header { 
+	background: #fff url(../images/logo_bg.png) no-repeat;
+	    background-size: 100%;
+	    width: 100%;
+	    height: 100px;
+}
+.logo {
+	width: 572px;
+	    height: 69px;
+	    float: left;
+	    margin-left: 5%;
+	    margin-top: 15px; 
+}
+.logo-i {
+	margin-left: 7%;
+	    margin-top: 2.5%;
+}
+
+.foot-i {
+	position: fixed;
+	    bottom: 20px;
+	    width: 100%;
+	    min-width: 840px;
+	    height: 14px;
+	    color: #fff;
+	    font-size: 12px;
+	    text-align: center;
+}
+	
 .toptell {
 	margin-top: 30px;
 	height: 40px;
@@ -23,28 +54,22 @@
 }
 
 .footer {
-	    background: #173072;
+	    background: #2267b3;
 	    text-align: center;
-	    height: 50px;
+	    height: 32px;
 	    color: #fff;
-		line-height: 50px;
+		line-height: 32px; 
+		width: 100%;
+		margin-top:50px;
 }
 
 
 
 .search {
-	min-height: 360px;
-	background: #003488 url(../images/searchbg.jpg) repeat center top;
-	color: #fff;
-
-}
-.search h1 { 
-	padding-top:40px;
+	min-height: 100px;  
 }
 
-
-.searchbox {
-	background-color: #fff;
+.searchbox { 
 	border-radius: 8px;
 	color: #333;
 	text-align: center;
@@ -52,24 +77,17 @@
 .searchbox label {
 	padding-right: 10px;
 }
-.slideTxtBox { width:100%; padding:40px 0;   }
-.slideTxtBox .hd { height:60px; line-height:30px;  position:relative; }
+.slideTxtBox { width:100%; padding:20px 0;   }
+.slideTxtBox .hd { height:30px; line-height:30px;  position:relative; }
 .slideTxtBox .hd ul{  text-align: center;  }
-.slideTxtBox .hd ul li{  display: inline-block;  color: #fff;  cursor:pointer; padding:5px 25px; margin:0 15px;
-border-radius: 4px; position: relative;  }
-.slideTxtBox .hd ul li.on{ height:30px;  background:#0060CD;   }
-.slideTxtBox .bd ul{ padding:25px 0;  zoom:1;  }
+.slideTxtBox .hd ul li{  display: inline-block;  cursor:pointer;   margin:0 5px;
+ padding:0 10px;  position: relative;  }
+.slideTxtBox .hd ul li.on{ height:30px; background: #a3bde2;  }
+.slideTxtBox .bd ul{ padding:0;  zoom:1;  }
 .slideTxtBox .bd li{ height:24px; line-height:24px;   }
 .slideTxtBox .bd li .date{ float:right; color:#999;  }
-.slideTxtBox .hd ul li.on::before {
-  content: '';
-  position: absolute;
-  top:40px;
-  left: 44%;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-top: 8px solid #0060CD;
-}
+ 
+
 
 input.inp {
 	height: 40px;
@@ -97,6 +115,42 @@ button.searchbtn {
 	    margin: 3px 7px 3px 0;
 }
 
+/* nav */
+
+.nav {
+	width: 100%;
+	    height: 39px;
+	    background: url(../images/nav.png) repeat-x;
+		overflow: hidden;
+}
+.nav ul {
+    height: auto;
+    position: absolute;
+    list-style: none;
+	margin-left:5%;
+	width: 80%;
+}
+
+.nav1 {
+    width: 100%;
+}
+.li1  {
+	width: 100px;
+    height: 38px;
+    line-height: 38px;
+    text-align: center;
+    position: relative;
+    float: left;
+    display: inline;
+    background: url(../images/nav_kh.png) no-repeat;
+
+}
+.nav ul a {
+    font-family: '微软雅黑';
+    font-size: 14px;
+    color: #fff;
+    text-decoration: none;
+}
 
 .dataview {
 	background:#fff;
@@ -134,6 +188,36 @@ button.searchbtn {
 	font-size: 36px;
 	font-weight: normal;
 }
+
+/* index */
+
+#indexbody {
+	width: 100%;height: 100%;overflow-x: hidden;
+	font-family: "微软雅黑";
+	text-align: center;
+	    margin: 0;
+	    padding: 0;
+	    background-image: url(../images/henan_home1920.jpg);
+}
+.btngroup {
+	margin:15em auto;
+	text-align: center;
+	width: 100%;
+	height: 100px; 
+}
+a.butStyle {
+	width: 176px;
+	height: 52px;
+	border-radius: 5px;
+	background-color: #186eb8;
+	line-height: 52px;
+	color: #fefeff;
+	font-size: 16px; 
+	cursor: pointer; 
+	display: inline-block;
+	margin-right: 12px;
+}
+
 
 .comtab { width:100%; padding:80px 0 50px 0;   }
 .comtab .hd { height:60px; line-height:30px;  position:relative; }
@@ -256,68 +340,46 @@ border-radius: 33px; }
 	padding:20px 0;
 
 }
-.list-side {
-	width: 240px;
-	float: right;
+.list-side { 
 }
-.list {
-	width: 920px;
-	float: left;
+.list { 
 	padding-bottom: 50px;
 }
 
 .comlist {
-
+	width: 100%;
 }
-.comlist li {
-	background-color: #fff;
-	box-shadow: 0 0 3px #ddd;
-	padding:15px 0;
-	margin-bottom: 15px;
-	position: relative;
+.comlist td {
+	background-color: #fff; 
+	padding:5px 0; 
+	border-bottom:1px solid #dedede ;
+	position: relative; 
+	text-align: center;
 }
-.comlist li .com-logo {
-	width: 80px;
-	height: 80px;
-	background: url(../images/logo-no.jpg) no-repeat center center;
-	border-radius: 12px;
-	overflow: hidden;
-	float: left;
-	margin-right: 26px;
-	margin-left: 26px;
-	margin-top: 15px;
+.comlist th {
+	border:1px solid #d4d4d3;
+	color: #058;
+	line-height: 28px;
+	    padding: 5px 10px;
+	text-align: center;
 }
-.comlist li .com-name {
-	font-size: 18px;
+ 
+.comlist td .com-name {
+	font-size: 14px;
 	line-height: 24px;
 	padding-bottom: 0px;
-	text-indent: 1.5em;
-	margin-top: 10px;
+	text-indent: 1.5em; 
 	font-weight: bold;
-}
-.comlist li .more {
-	position: absolute;
-	top:20px;
-	right: 20px;
-	background:#0060CD;
-	color: #fff;
-	padding: 5px 8px;
-	border-radius: 3px;
-}
-.comlist li .more a {
-	color: #fff;
-}
-.comlist li .more:hover {
-	background-color: #0D6ADB;
-}
-.comlist li .content-info {
+	width: 30%;
+} 
+.comlist td .content-info {
 	display: block;
 	float: right;
 	width: 770px;
 	padding:10px;
 	color: #555;
 }
-.comlist li .content-info p {
+.comlist td .content-info p {
 	display: block;
 	width:360px;
 	float: left;
@@ -349,7 +411,18 @@ border-radius: 33px; }
 	overflow: hidden;
 	width: 16em;
 }
+.content { 
+    min-width: 1300px;
+    background-color: #fff;
+    padding: 10px;
+    margin: 0 auto !important; 
+	margin-bottom: 50px;
+}
 
+
+.subheader {
+	padding:25px 0;
+}
 
 
 
@@ -396,6 +469,8 @@ border-radius: 33px; }
 	padding:4px 0;
 	font-size: 16px;
 }
+
+
 
 
 .box1 {

@@ -6,16 +6,22 @@
         <meta name="description" content="检验检测机构信息查询,陕西省市场监督管理局,陕西省检验检测机构信息管理平台,检验检测能力" />
         @include('web.QualityControl.Market.layout_public.pagehead')
 	</head>
-	<body>
-        @include('web.QualityControl.Market.layout_public.header')
-        @include('web.QualityControl.Market.layout_public.search')
-{{--        这里写新的内容--}}
-        <a href="{{ url('web/market/company') }}" >机构信息查询</a>
-        <a href="{{ url('web/market/platform_notices') }}" >通知公告</a>
-        <a href="{{ url('web/market/platform_down_files') }}" >表格下载</a>
-        <a href="{{ url('web/market/link') }}" target="_blank">相关链接</a>
-
-        @include('web.QualityControl.Market.layout_public.footer')
+	<body id="indexbody">
+        @include('web.QualityControl.Market.layout_public.header-i')
+        
+{{--    @include('web.QualityControl.Market.layout_public.search')    这里写新的内容--}}
+		<div class="btngroup">
+			<a href="{{ url('web/market/company') }}" class="butStyle" > <img src="{{asset('quality/Market/images/xyhzc.png')}}" alt=""> 机构信息查询</a>
+			<a href="{{ url('web/market/platform_notices') }}" class="butStyle" > <img src="{{asset('quality/Market/images/xyhzc.png')}}" alt=""> 通知公告</a>
+			<a href="{{ url('web/market/platform_down_files') }}" class="butStyle" > <img src="{{asset('quality/Market/images/xyhzc.png')}}" alt=""> 表格下载</a>
+			<a href="{{ url('web/market/link') }}" target="_blank" class="butStyle" > <img src="{{asset('quality/Market/images/qydl.png')}}" alt=""> 相关链接</a>
+			<br><br><br><br>
+			<a href="http://snamr.snaic.gov.cn/" target="_blank"  > <img src="{{asset('quality/Market/images/ic_home.png')}}" alt=""> 返回首页</a>
+			<a href="http://snamr.snaic.gov.cn/" target="_blank"  > <img src="{{asset('quality/Market/images/ic_return.png')}}" alt=""> 返回上一页</a>
+		</div>
+        <div class="foot-i" style="color: #fff;">
+			技术支持：北京永杰友信科技有限公司
+		</div>
 	</body>
 </html>
 
