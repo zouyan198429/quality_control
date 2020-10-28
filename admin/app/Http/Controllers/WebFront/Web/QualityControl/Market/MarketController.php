@@ -718,7 +718,7 @@ class MarketController extends BasicController
         // id是企业id
         if ($id > 0) { // 获得详情数据
             $operate = "修改";
-            $handleKeyConfigArr = ['certificate_detail', 'user_auth_list', 'certificate_list','industry_info', 'city_info'];
+            $handleKeyConfigArr = [];// ['certificate_detail', 'user_auth_list', 'certificate_list','industry_info', 'city_info'];
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                 'relationFormatConfigs'=> CTAPIStaffBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),

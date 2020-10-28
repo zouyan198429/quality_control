@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 	<head>
-        <title>检验检测机构信息查询_陕西省市场监督管理局_陕西省检验检测机构信息管理平台_检验检测能力</title>
-        <meta name="keywords" content="检验检测机构信息查询,陕西省市场监督管理局,陕西省检验检测机构信息管理平台,检验检测能力" />
-        <meta name="description" content="检验检测机构信息查询,陕西省市场监督管理局,陕西省检验检测机构信息管理平台,检验检测能力" />
+        <title>陕西省市场监督管理局_陕西省检验检测机构信息查询_陕西省检验检测机构信息管理平台_检验检测能力</title>
+        <meta name="keywords" content="陕西省市场监督管理局,陕西省检验检测机构信息查询,陕西省检验检测机构信息管理平台,检验检测能力" />
+        <meta name="description" content="陕西省市场监督管理局,陕西省检验检测机构信息查询,陕西省检验检测机构信息管理平台,检验检测能力" />
         @include('web.QualityControl.Market.layout_public.pagehead')
 	</head>
 	<body id="indexbody">
         @include('web.QualityControl.Market.layout_public.header-i')
-        
+
 {{--    @include('web.QualityControl.Market.layout_public.search')    这里写新的内容--}}
 		<div class="btngroup">
 			<a href="{{ url('web/market/company') }}" class="butStyle" > <img src="{{asset('quality/Market/images/xyhzc.png')}}" alt=""> 机构信息查询</a>
