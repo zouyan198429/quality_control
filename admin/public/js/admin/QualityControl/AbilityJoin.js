@@ -175,7 +175,7 @@ function searchPrint() {
                 console.log(LIST_FUNCTION_NAME);
                 eval( LIST_FUNCTION_NAME + '(' + true +', ' + true +', ' + reset_total + ', 2)');
             }
-            layer.close(layer_index)//手动关闭
+            layer.close(layer_index);//手动关闭
         }
     });
 }
@@ -227,7 +227,7 @@ function printSelecedRecord(ids) {
                         console.log(LIST_FUNCTION_NAME);
                         eval( LIST_FUNCTION_NAME + '(' + true +', ' + true +', ' + reset_total + ', 2)');
                     }
-                    layer.close(layer_index)//手动关闭
+                    layer.close(layer_index);//手动关闭
                 }
             });
         }else{// 直接打印
@@ -274,7 +274,7 @@ function down_drive(){
     console.log('下载网页打印机驱动：', url);
     // PrintOneURL(url);
     go(url);
-    layer.close(layer_index)//手动关闭
+    layer.close(layer_index);//手动关闭
 }
 
 //操作
@@ -341,7 +341,7 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
                 console.log(LIST_FUNCTION_NAME);
                 eval( LIST_FUNCTION_NAME + '(' + true +', ' + true +', ' + reset_total + ', 2)');
             }
-            layer.close(layer_index)//手动关闭
+            layer.close(layer_index);//手动关闭
         }
     });
 }

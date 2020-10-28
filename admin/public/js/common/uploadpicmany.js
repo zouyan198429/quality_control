@@ -38,7 +38,10 @@
 
 
 $(function(){
-    init_upload_many();// 初始化多个上传对象
+    console.log('++typeof(FILE_UPLOAD_OBJ)++', typeof(FILE_UPLOAD_OBJ));
+    if(typeof(FILE_UPLOAD_OBJ) === "object") {
+        init_upload_many(FILE_UPLOAD_OBJ);// 初始化多个上传对象
+    }
     // 初始化上传组件
     // initUploader(UPLOAD_ID, AUTO_UPLOAD, FILE_UPLOAD_URL, FILE_DATA_NAME, MULTIPART_PARAMS, UPLOAD_FILE_FILTERS, LIMIT_FILES_COUNT, MULTI_SELECTION, FLASH_SWF_URL, SILVERLIGHT_XAP_URL, SELF_UPLOAD, BAIDU_TEM_PIC_LIST, FILE_UPLOAD_METHOD, FILE_UPLOAD_COMPLETE, FILE_RESIZE);
     //自定义的-- 删除
@@ -98,10 +101,11 @@ $(function(){
 });
 
 // 初始化多个上传对象
-function init_upload_many() {
+// file_upload_config_obj 上传初始化配置对象
+function init_upload_many(file_upload_config_obj) {
 
-    for(var upload_id in FILE_UPLOAD_OBJ){
-        var uploadObj = FILE_UPLOAD_OBJ[upload_id];
+    for(var upload_id in file_upload_config_obj){
+        var uploadObj = file_upload_config_obj[upload_id];
 
         // var UPLOAD_ID = upload_id || 'myUploader';//上传对象的 id
         var files_type = uploadObj.files_type;// 0 图片文件 1 其它文件
@@ -176,6 +180,59 @@ function init_upload_many() {
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~操作~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// ************************列表页***资源初始化**开始**************************************************
+
+// 文件列表显示初始化
+// uploadAttrObj 上传对象要加入的属性对象  {down_url:DOWN_FILE_URL, del_url: DEL_FILE_URL,del_fun_pre:'',files_type: 1,  icon : 'file-o', operate_auth:1 };  files_type  0 图片文件 1 其它文件; operate_auth 操作权限 1 查看 ；2 下载 ；4 删除
+// resourceListObj  需要解析的 包含有 class .resource_list 数据的对象 ;  resource_list:为待解析的文件对象的字符串
+// resource_show_css 每个 resourceListObj 对象内要显示文件的 class 名称  如： class :  .resource_show
+// upload_baidu_tem  使用的上传组件百度模板名--  上传组件代码-- 图片组的
+// baidu_tem_pic_list  每一个文件显示时使用的百度模板名 -- 每个图片
+// checkbox_name  'resource_id[]';  //	上传后文件id的复选框名称 默认：resource_id[]
+function initFileShow(uploadAttrObj, resourceListObj, resource_show_class, upload_baidu_tem, baidu_tem_pic_list, checkbox_name){
+    var resource_no = resourceListObj.length;
+    checkbox_name =  checkbox_name || 'resource_id[]';
+    resourceListObj.each(function(){
+        var trObj = $(this);
+        var resourceShowObj = trObj.find('.'+ resource_show_class);
+        if(resourceShowObj.length <= 0){
+            // return false;// break;
+            return true;// continue
+        }
+        var resource_list = trObj.find('.resource_list').html();
+        console.log('==resource_list==', resource_list);
+        var resourceObj = JSON.parse(resource_list);
+        console.log('==resourceObj==', resourceObj);
+        // 设置对象id
+        var upload_id = 'upload_' + resource_show_class + '_' + resource_no;// 上传组件id名称
+        trObj.data('upload_id', upload_id);// 在对象上记录
+        resource_no--;
+
+        // 加入图片显示框代码--加壳
+        var resourceShowHtml = '';//
+        var resourceShowInitObj = {upload_id: upload_id, upload_url:''};
+        resourceShowHtml = resolve_baidu_template(upload_baidu_tem, resourceShowInitObj, '');
+        console.log('==resourceShowHtml==', resourceShowHtml);
+        resourceShowObj.append(resourceShowHtml);
+
+        // 获得 文件 上传对象
+        console.log('==upload_id==', upload_id);
+        // var uploadObj = $('#' + upload_id);
+        var uploadObj = resourceShowObj.find('#' + upload_id);
+        console.log('==uploadObj.length==', uploadObj.length);
+        for(var prop_key in uploadAttrObj) {
+            uploadObj.data(prop_key, uploadAttrObj[prop_key]);
+        }
+        // 加入文件
+        var pic_list_json = {'data_list': resourceObj };
+        pic_list_json.checkbox_name = checkbox_name;
+        init_upload_pic(upload_id, baidu_tem_pic_list, pic_list_json);
+
+
+    });
+}
+
+// ************************列表页***资源初始化***结束*************************************************
 // 将数据自动转换为默认方式的初始化数据---初始化用
 // 返回格式化好的对象
 function initDataToStaticFiles(pic_list_json){
@@ -202,26 +259,36 @@ function init_upload_pic(upload_id,baidu_tem_name,picobj){
     $('#' + upload_id).closest('.resourceBlock').find(".upload_img").append(htmlStr);
 
     var files_type = $('#'+ upload_id).data('files_type');// 0 图片文件 1 其它文件
+    if(isEmpeyVal(files_type)){
+        files_type = 0;
+    }
     var icon = $('#'+ upload_id).data('icon');
-    var operate_auth = $('#'+ upload_id).data('operate_auth');
     if(isEmpeyVal(icon)){
         icon = 'file-o';
     }
+    var operate_auth = $('#'+ upload_id).data('operate_auth');
+    if(isEmpeyVal(operate_auth)){
+        operate_auth = 0;
+    }
+
     var file_icon_html = '<i class="icon icon-"' + icon + ' data-type="undefined" data-ext=""></i>';
 
 
     $('#' + upload_id).closest('.resourceBlock').find(".upload_img").find(".resource").each(function(){
         let resource_obj = $(this);
         var tem_file_icon_html = file_icon_html;
-        if(files_type != 0){// 非图片文件时
+        var item_files_type = files_type;
+        if(item_files_type != 0){// 非图片文件时
             var ext = resource_obj.data('resource_file_extension');
             var resource_mime_type = resource_obj.data('resource_mime_type');
             // 根据 扩展名，再次去纠正文件是否是图片
+            console.log('****ext****', ext);
             var mimeTypeObj = commonaction.getFileMimeTypeObjByExt(ext);
+            console.log('****mimeTypeObj****', mimeTypeObj);
             if(!isEmpeyVal(mimeTypeObj)){
                 var tem_files_type = getAttrVal(mimeTypeObj, 'files_type', null, null);
                 if(!isEmpeyVal(tem_files_type)){
-                    files_type = tem_files_type;
+                    item_files_type = tem_files_type;
                 }
                 var tem_icon = getAttrVal(mimeTypeObj, 'icon', null, null);
                 if(!isEmpeyVal(tem_icon)){
@@ -229,6 +296,7 @@ function init_upload_pic(upload_id,baidu_tem_name,picobj){
                 }
             }
         }
+        console.log('****item_files_type****', item_files_type);
 
 
         // 操作权限 1 查看 ；2 下载 ；4 删除
@@ -262,7 +330,7 @@ function init_upload_pic(upload_id,baidu_tem_name,picobj){
             }
         }
 
-        if(files_type != 0){
+        if(item_files_type != 0){
             // 文件图标--非图片文件时
             var file_icon_obj = resource_obj.find(".file-icon");
             if(file_icon_obj.length >= 1){
@@ -337,9 +405,11 @@ function delResource(resource_id, type, obj, $key){
                     case 2:
                         obj.remove();
                         var uploader = $('#'+ $key).data('zui.uploader');
-                        var files = uploader.getFiles();
-                        console.log('this对象变动的总数limitFilesCount', uploader.options.limitFilesCount);
-                        uploader.options.limitFilesCount++;
+                        if(!isEmpeyVal(uploader)){// 存在对象
+                            var files = uploader.getFiles();
+                            console.log('this对象变动的总数limitFilesCount', uploader.options.limitFilesCount);
+                            uploader.options.limitFilesCount++;
+                        }
                         break;
                     default:
                 }
@@ -709,4 +779,87 @@ function initUploader(upload_id, autoUpload, submit_url, file_data_name, multipa
     document.write("    <%}%>");
     document.write("<\/script>");
     document.write("<!-- 加载中模板部分 结束-->");
+}).call();
+
+// 上传代码模板部分 --------------
+
+// 普通文件列表
+(function() {
+    document.write("<!-- 普通文件列表模板部分 开始-->");
+    document.write("<!-- 对数对象格式：{upload_id:\'上传对象的id-必填\', upload_url:\'上传文件接口地址[可为空]\'} -->");
+    document.write("<script type=\"text\/template\"  id=\"baidu_template_upload_file_common\">");
+    document.write("    <div class=\"resourceBlock\">");
+    document.write("        <div class=\"cards upload_img uploader-files file-list file-list-grid file-rename-by-click\">");
+    document.write("        <\/div>");
+    document.write("        <div id=\"<%=upload_id%>\" class=\"uploader\"  data-url=\"<%=upload_url%>\">");
+    document.write("            <div class=\"file-list\" data-drag-placeholder=\"请拖拽文件到此处\"><\/div>");
+    document.write("            <button type=\"button\" class=\"btn btn-primary uploader-btn-browse\"><i class=\"icon icon-cloud-upload\"><\/i> 选择文件<\/button>");
+    document.write("        <\/div>");
+    document.write("    <\/div>");
+    document.write("<\/script>");
+    document.write("<!-- 普通文件列表模板部分 结束-->");
+}).call();
+
+// 大号文件列表
+(function() {
+    document.write("<!-- 大号文件列表模板部分 开始-->");
+    document.write("<!-- 对数对象格式：{upload_id:\'上传对象的id-必填\', upload_url:\'上传文件接口地址[可为空]\'} -->");
+    document.write("<script type=\"text\/template\"  id=\"baidu_template_upload_file_large\">");
+    document.write("    <div class=\"resourceBlock\">");
+    document.write("        <div class=\"cards upload_img uploader-files file-list file-list-grid file-rename-by-click\">");
+    document.write("        <\/div>");
+    document.write("        <div id=\"<%=upload_id%>\" class=\"uploader\" data-ride=\"uploader\" data-url=\"<%=upload_url%>\">");
+    document.write("            <div class=\"uploader-message text-center\">");
+    document.write("                <div class=\"content\"><\/div>");
+    document.write("                <button type=\"button\" class=\"close\">×<\/button>");
+    document.write("            <\/div>");
+    document.write("            <div class=\"uploader-files file-list file-list-lg\" data-drag-placeholder=\"请拖拽文件到此处\"><\/div>");
+    document.write("            <div class=\"uploader-actions\">");
+    document.write("                <div class=\"uploader-status pull-right text-muted\"><\/div>");
+    document.write("                <button type=\"button\" class=\"btn btn-link uploader-btn-browse\"><i class=\"icon icon-plus\"><\/i> 选择文件<\/button>");
+    document.write("                <button type=\"button\" class=\"btn btn-link uploader-btn-start\"><i class=\"icon icon-cloud-upload\"><\/i> 开始上传<\/button>");
+    document.write("            <\/div>");
+    document.write("        <\/div>");
+    document.write("    <\/div>");
+    document.write("<\/script>");
+    document.write("<!-- 大号文件列表模板部分 结束-->");
+}).call();
+
+// 网格文件列表
+(function() {
+    document.write("<!-- 网格文件列表模板部分 开始-->");
+    document.write("<!-- 对数对象格式：{upload_id:\'上传对象的id-必填\', upload_url:\'上传文件接口地址[可为空]\'} -->");
+    document.write("<script type=\"text\/template\"  id=\"baidu_template_upload_file_grid\">");
+    document.write("    <div class=\"resourceBlock\">");
+    document.write("        <div class=\"cards upload_img uploader-files file-list file-list-grid file-rename-by-click\">");
+    document.write("        <\/div>");
+    document.write("        <div id=\"<%=upload_id%>\" class=\"uploader\" data-ride=\"uploader\" data-url=\"<%=upload_url%>\">");
+    document.write("            <div class=\"uploader-message text-center\">");
+    document.write("                <div class=\"content\"><\/div>");
+    document.write("                <button type=\"button\" class=\"close\">×<\/button>");
+    document.write("            <\/div>");
+    document.write("            <div class=\"uploader-files file-list file-list-grid\"><\/div>");
+    document.write("            <div>");
+    document.write("                <div class=\"uploader-status pull-right text-muted\"><\/div>");
+    document.write("                <button type=\"button\" class=\"btn btn-link uploader-btn-browse\"><i class=\"icon icon-plus\"><\/i> 选择文件<\/button>");
+    document.write("                <button type=\"button\" class=\"btn btn-link uploader-btn-start\"><i class=\"icon icon-cloud-upload\"><\/i> 开始上传<\/button>");
+    document.write("            <\/div>");
+    document.write("        <\/div>");
+    document.write("    <\/div>");
+    document.write("<\/script>");
+    document.write("<!-- 网格文件列表模板部分 结束-->");
+}).call();
+// 列列显示文件用
+(function() {
+    document.write("<!-- 列列显示文件列表模板部分 开始-->");
+    document.write("<!-- 对数对象格式：{upload_id:\'上传对象的id-必填\', upload_url:\'上传文件接口地址[可为空]\'} -->");
+    document.write("<script type=\"text\/template\"  id=\"baidu_template_upload_file_show\">");
+    document.write("    <div class=\"resourceBlock\">");
+    document.write("        <div class=\"cards upload_img uploader-files file-list file-list-grid file-rename-by-click\">");
+    document.write("        <\/div>");
+    document.write("        <span id=\"<%=upload_id%>\" class=\"uploader\" data-ride=\"uploader\" data-url=\"<%=upload_url%>\" style=\"display: none;\">");
+    document.write("        <\/span>");
+    document.write("    <\/div>");
+    document.write("<\/script>");
+    document.write("<!-- 列列显示文件列表模板部分 结束-->");
 }).call();

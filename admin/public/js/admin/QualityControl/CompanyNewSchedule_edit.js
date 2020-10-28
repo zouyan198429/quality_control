@@ -268,7 +268,7 @@ function ajax_form(){
             var status = uploader.getState();
             console.log('获取上传队列状态代码',uploader.getState());
             if(status == 1){
-                layer.close(layer_index)//手动关闭
+                layer.close(layer_index);//手动关闭
                 clearInterval(intervalId);
                 ajax_save(id);
             }
@@ -321,7 +321,7 @@ function ajax_save(id) {
                 //}
                 // save_success();
             }
-            layer.close(layer_index)//手动关闭
+            layer.close(layer_index);//手动关闭
         }
     });
     return false;

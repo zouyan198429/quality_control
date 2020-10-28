@@ -20,9 +20,22 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
     console.log('ajax_async', typeof(ajax_async));
     var layer_index = layer.load();
     reset_list(is_read_page, false, reset_total, do_num);
+
+    // 初始化列表文件显示功能
+    var uploadAttrObj = {
+        down_url:DOWN_FILE_URL,
+        del_url: DEL_FILE_URL,
+        del_fun_pre:'',
+        files_type: 0,
+        icon : 'file-o',
+        operate_auth:(1 | 2)
+    };
+    var resourceListObj = $('#data_list').find('tr');
+    initFileShow(uploadAttrObj, resourceListObj, 'resource_show', 'baidu_template_upload_file_show', 'baidu_template_upload_pic', 'resource_id[]');
+
     // initList();
     initPic();
-    layer.close(layer_index)//手动关闭
+    layer.close(layer_index);//手动关闭
 }
 
 window.onload = function() {
@@ -60,16 +73,20 @@ function initPic(){
     document.write("            <td><%=item.course_name%><\/td>");
     document.write("            <td>¥<%=item.price_member%><\/td>");
     document.write("            <td>¥<%=item.price_general%><\/td>");
-    document.write("           <td>");
-    document.write("            <%for(var j = 0; j<resource_list.length;j++){");
-    document.write("                var jitem = resource_list[j];");
-    document.write("                 %>");
-    document.write("               <a href=\"<%=jitem.resource_url_format%>\" target='_blank'>");
-    // document.write("                    <%=jitem.resource_name%>--查看");
-    document.write("                <img  src=\"<%=jitem.resource_url_format%>\"  style=\"width:100px;\">");
-    document.write("              </a>");
-    document.write("            <%}%>");
-    document.write("           <\/td>");
+    document.write("            <td>");
+    document.write("               <span class=\"resource_list\"  style=\"display: none;\"><%=JSON.stringify(item.resource_list)%></span>");
+    document.write("               <span  class=\"resource_show\"></span>");
+    document.write("            <\/td>");
+    // document.write("           <td>");
+    // document.write("            <%for(var j = 0; j<resource_list.length;j++){");
+    // document.write("                var jitem = resource_list[j];");
+    // document.write("                 %>");
+    // document.write("               <a href=\"<%=jitem.resource_url_format%>\" target='_blank'>");
+    // // document.write("                    <%=jitem.resource_name%>--查看");
+    // document.write("                <img  src=\"<%=jitem.resource_url_format%>\"  style=\"width:100px;\">");
+    // document.write("              </a>");
+    // document.write("            <%}%>");
+    // document.write("           <\/td>");
     document.write("            <td><%=item.created_at%><\/td>");
     document.write("            <td><%=item.updated_at%><\/td>");
     document.write("            <td><%=item.hits%><\/td>");

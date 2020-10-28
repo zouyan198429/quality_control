@@ -3,7 +3,7 @@ var SUBMIT_FORM = true;//防止多次点击提交
 
 $(function(){
 
-    $('.search_frm').trigger("click");// 触发搜索事件
+    // $('.search_frm').trigger("click");// 触发搜索事件
     // reset_list_self(false, false, true, 2);
     popSelectInit();// 初始化选择弹窗
 
@@ -19,9 +19,36 @@ $(function(){
 function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
     console.log('is_read_page', typeof(is_read_page));
     console.log('ajax_async', typeof(ajax_async));
+    var layer_index = layer.load();
     reset_list(is_read_page, false, reset_total, do_num);
+
+    // 初始化列表文件显示功能
+    var uploadAttrObj = {
+        down_url:DOWN_FILE_URL,
+        del_url: DEL_FILE_URL,
+        del_fun_pre:'',
+        files_type: 1,
+        icon : 'file-o',
+        operate_auth:(1 | 2)
+    };
+    var resourceListObj = $('#data_list').find('tr');
+    initFileShow(uploadAttrObj, resourceListObj, 'resource_show', 'baidu_template_upload_file_show', 'baidu_template_upload_pic', 'resource_id[]');
+
     // initList();
+    initPic();
+    layer.close(layer_index);//手动关闭
 }
+
+window.onload = function() {
+    $('.search_frm').trigger("click");// 触发搜索事件
+    // reset_list_self(false, false, true, 2);
+//     initPic();
+};
+function initPic(){
+    baguetteBox.run('.baguetteBoxOne');
+    // baguetteBox.run('.baguetteBoxTwo');
+}
+
 //业务逻辑部分
 var otheraction = {
     selectCompany: function(obj){// 选择商家
@@ -45,7 +72,7 @@ var otheraction = {
         // console.log('下载文件：', url);
         // // PrintOneURL(url);
         // go(url);
-        // layer.close(layer_index)//手动关闭
+        // layer.close(layer_index);//手动关闭
         commonaction.down_file(DOWN_FILE_URL, resource_url, save_file_name);
     }
 };
@@ -141,20 +168,24 @@ function addCompany(company_id, company_name){
     // document.write("            <td><%=item.id%><\/td>");
     document.write("            <td><%=item.user_company_name%><\/td>");
     document.write("            <td><%=item.resource_name%><\/td>");
-    document.write("           <td>");
-    document.write("            <%for(var j = 0; j<resource_list.length;j++){");
-    document.write("                var jitem = resource_list[j];");
-    document.write("                 %>");
-    document.write("               <p><%=jitem.resource_name%>");
-    document.write("               <a href=\"javascript:void(0);\"  class=\"btn btn-mini btn-success\"    onclick=\"commonaction.browse_file('<%=jitem.resource_url_format%>','<%=jitem.resource_name%>')\">");
-    document.write("                    <i class=\"ace-icon fa fa-eye bigger-60\"> 查看<\/i>");
-    // document.write("                <img  src=\"<%=jitem.resource_url%>\"  style=\"width:100px;\">");
-    document.write("              </a>");
-    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"otheraction.down_file('<%=jitem.resource_url_old%>','<%=item.company_id%>-<%=item.user_company_name%>-<%=jitem.resource_name%>')\">");
-    document.write("                    <i class=\"ace-icon fa fa-cloud-download bigger-60\"> 下载<\/i>");
-    document.write("                <\/a></p>");
-    document.write("            <%}%>");
-    document.write("           <\/td>");
+    document.write("            <td>");
+    document.write("               <span class=\"resource_list\"  style=\"display: none;\"><%=JSON.stringify(item.resource_list)%></span>");
+    document.write("               <span  class=\"resource_show\"></span>");
+    document.write("            <\/td>");
+    // document.write("           <td>");
+    // document.write("            <%for(var j = 0; j<resource_list.length;j++){");
+    // document.write("                var jitem = resource_list[j];");
+    // document.write("                 %>");
+    // document.write("               <p><%=jitem.resource_name%>");
+    // document.write("               <a href=\"javascript:void(0);\"  class=\"btn btn-mini btn-success\"    onclick=\"commonaction.browse_file('<%=jitem.resource_url_format%>','<%=jitem.resource_name%>')\">");
+    // document.write("                    <i class=\"ace-icon fa fa-eye bigger-60\"> 查看<\/i>");
+    // // document.write("                <img  src=\"<%=jitem.resource_url%>\"  style=\"width:100px;\">");
+    // document.write("              </a>");
+    // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"otheraction.down_file('<%=jitem.resource_url_old%>','<%=item.company_id%>-<%=item.user_company_name%>-<%=jitem.resource_name%>')\">");
+    // document.write("                    <i class=\"ace-icon fa fa-cloud-download bigger-60\"> 下载<\/i>");
+    // document.write("                <\/a></p>");
+    // document.write("            <%}%>");
+    // document.write("           <\/td>");
     document.write("            <td><%=item.created_at%><\/td>");
     document.write("            <td><%=item.updated_at%><\/td>");
     // document.write("            <td><\/td>");

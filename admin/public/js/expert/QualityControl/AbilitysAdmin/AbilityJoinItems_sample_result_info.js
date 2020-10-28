@@ -33,7 +33,7 @@ function parent_reset_list(){
 window.onload = function() {
     var layer_index = layer.load();
     initPic();
-    layer.close(layer_index)//手动关闭
+    layer.close(layer_index);//手动关闭
 };
 function initPic(){
     baguetteBox.run('.baguetteBoxOne');
@@ -63,7 +63,7 @@ var otheraction = {
         // console.log('下载文件：', url);
         // // PrintOneURL(url);
         // go(url);
-        // layer.close(layer_index)//手动关闭
+        // layer.close(layer_index);//手动关闭
         commonaction.down_file(DOWN_FILE_URL, resource_url, '');
     }
 };
@@ -307,7 +307,7 @@ var otheraction = {
 //                 var status = uploader.getState();
 //                 console.log('获取上传队列状态代码',uploader.getState());
 //                 if(status == 1){
-//                     layer.close(layer_index)//手动关闭
+//                     layer.close(layer_index);//手动关闭
 //                     clearInterval(intervalId);
 //                     ajax_save(id);
 //                 }
@@ -366,7 +366,7 @@ var otheraction = {
 //                 //}
 //                 // save_success();
 //             }
-//             layer.close(layer_index)//手动关闭
+//             layer.close(layer_index);//手动关闭
 //         }
 //     });
 //     return false;

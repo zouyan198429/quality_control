@@ -105,7 +105,7 @@ function delResource(resource_id, type, obj, $key){
                     default:
                 }
             }
-            layer.close(layer_index)//手动关闭
+            layer.close(layer_index);//手动关闭
         }
     })
 }

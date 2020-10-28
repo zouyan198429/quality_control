@@ -77,7 +77,7 @@ class MarketController extends BasicController
      * @return mixed
      * @author zouyan(305463219@qq.com)
      */
-    public function company(Request $request, $city_id = 0, $industry_id = 0, $pagesize = 20, $page = 1)
+    public function company(Request $request, $city_id = 0, $industry_id = 0, $pagesize = 8, $page = 1)
     {
         return $this->exeDoPublicFun($request, 0, 8, 'web.QualityControl.Market.company', false
             , '', [], function (&$reDataArr) use ($request, &$city_id, &$industry_id, &$pagesize, &$page){

@@ -236,6 +236,8 @@ $api->version('v1', function ($api) {
         $api->post('admin/course/import', 'Admin\QualityControl\CourseController@import');// 导入excel
         $api->post('admin/course/ajax_get_ids', 'Admin\QualityControl\CourseController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
+        $api->post('admin/course/up_file', 'Admin\QualityControl\CourseController@up_file');// 上传文件地址
+
         // 培训班管理
         $api->any('admin/course_class/ajax_alist', 'Admin\QualityControl\CourseClassController@ajax_alist');//ajax获得列表数据
         $api->post('admin/course_class/ajax_del', 'Admin\QualityControl\CourseClassController@ajax_del');// 删除

@@ -82,7 +82,7 @@ function getTagTableUpdateTime(tag_key) {
                 // console.log(LIST_FUNCTION_NAME);
                 // eval( LIST_FUNCTION_NAME + '(' + true +', ' + true +', ' + reset_total + ', 2)');
             }
-            // layer.close(layer_index)//手动关闭
+            // layer.close(layer_index);//手动关闭
         }
     });
     console.log('请求数据表最新更新时间--：' , now_time);

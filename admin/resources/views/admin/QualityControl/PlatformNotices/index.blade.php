@@ -8,6 +8,8 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <!-- zui css -->
+    <link rel="stylesheet" href="{{asset('dist/css/zui.min.css') }}">
   @include('admin.layout_public.pagehead')
   <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/css/layui.css')}}" media="all">
   <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/style/admin.css')}}" media="all">
@@ -68,7 +70,7 @@
       <th>操作</th>
     </tr>
     </thead>
-    <tbody id="data_list">
+    <tbody id="data_list"  class=" baguetteBoxOne gallery">
     </tbody>
   </table>
   <div class="mmfoot">
@@ -107,13 +109,24 @@
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
 
       var DOWN_FILE_URL = "{{ url('admin/down_file') }}";// 下载
+      var DEL_FILE_URL = "{{ url('api/admin/upload/ajax_del') }}";// 删除文件的接口地址
 
       // 列表数据每隔指定时间就去执行一次刷新【如果表有更新时】--定时执行
       var IFRAME_TAG_KEY = "";// "QualityControl\\CTAPIStaff";// 获得模型表更新时间的关键标签，可为空：不获取
       var IFRAME_TAG_TIMEOUT = 60000;// 获得模型表更新时间运行间隔 1000:1秒 ；可以不要此变量：默认一分钟
 
   </script>
-  <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/PlatformNotices.js') }}?5"  type="text/javascript"></script>
+
+<link rel="stylesheet" href="{{asset('js/baguetteBox.js/baguetteBox.min.css')}}">
+<script src="{{asset('js/baguetteBox.js/baguetteBox.min.js')}}" async></script>
+{{--<script src="{{asset('js/baguetteBox.js/highlight.min.js')}}" async></script>--}}
+<!-- zui js -->
+<script src="{{asset('dist/js/zui.min.js') }}"></script>
+
+<script src="{{asset('js/common/list.js')}}"></script>
+  <script src="{{ asset('js/admin/QualityControl/PlatformNotices.js') }}?6"  type="text/javascript"></script>
+
+@component('component.upfileincludejsmany')
+@endcomponent
 </body>
 </html>

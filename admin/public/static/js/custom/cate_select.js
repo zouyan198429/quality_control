@@ -5,10 +5,10 @@
 //pid 分类父编号 0 获得第一级
 //level 城市等级 1:第一级;2:第二级;3:第三级
 //click_obj 点击省/市的当前点击对象
-//[去掉返回值,改用异步]返回select 的option html代码		
+//[去掉返回值,改用异步]返回select 的option html代码
 function reset_cate_sel(pid,level,click_obj){
 	var option_html = "";
-	if(pid>=0 && level>0){			
+	if(pid>=0 && level>0){
                 var layer_index = layer.load();//layer.msg('加载中', {icon: 16});
 		//ajax请求银行信息
 		var data = {};
@@ -40,17 +40,17 @@ function reset_cate_sel(pid,level,click_obj){
 							break;
 						default:
 					}
-				}			
-                                layer.close(layer_index)//手动关闭
+				}
+                                layer.close(layer_index);//手动关闭
 			}
 		});
 	}
 	//return option_html;
 }
 //初始化[页面所有的]省下拉框
-//select 的option html代码	
+//select 的option html代码
 function reset_cate_first(option_html){
-	var cate_first_obj = $(".cate_first_id");			
+	var cate_first_obj = $(".cate_first_id");
 	//初始省下拉项及给改变值事件
 	$(".cate_first_id").each(function () {
 		empty_cate_first_option($(this));
@@ -59,10 +59,10 @@ function reset_cate_first(option_html){
 			//var cate_first_id = $(this).val();
 			change_cate_first_sel($(this));
 		});
-	}); 
+	});
 }
 //点击省重置市下拉框[清空不在此，请在之前处理]
-//select 的option html代码	
+//select 的option html代码
 //click_obj 点击省/市的当前点击对象
 function reset_cate_two(option_html,click_obj){
 	//清空市、县/区
@@ -79,7 +79,7 @@ function reset_cate_two(option_html,click_obj){
 }
 
 //点击市重置县/区下拉框[清空不在此，请在之前处理]
-//select 的option html代码	
+//select 的option html代码
 //click_obj 点击省/市的当前点击对象
 function reset_cate_three(option_html,click_obj){
 	//清空市、县/区
@@ -149,7 +149,7 @@ function empty_cate_three_option(record_obj){
 	record_obj.append(empty_option_html);
 }
 //初始化下拉框json串[注意:option_json下标名不能变];{"option_json":{"1": "北京","2": "天津","3": "上海"}}
-//返回select 的option html代码	
+//返回select 的option html代码
 function reset_cate_sel_option(option_json){
 	var sel_option_json={"option_json":option_json};//{"option_json":{"1": "北京","2": "天津","3": "上海"}};
 	var html_sel_option = resolve_baidu_template('baidu_template_option_list',sel_option_json,'');//解析
@@ -177,12 +177,12 @@ function init_category_sel(category_json,level){
 			break;
 		default:
 	}
-		
+
 	//下拉框名称
 	var select_name_id = sel_json.id || '';
 	if( trim(select_name_id) == ''  ){
 		return false;
-	}	
+	}
 	var select_obj = $("#"+select_name_id);
 	if(select_obj.length<=0){
 		return false;
@@ -190,7 +190,7 @@ function init_category_sel(category_json,level){
 	var select_val_id = sel_json.value || '';
 	if( trim(select_val_id) == '' || (!judge_positive_int(select_val_id)) ){
 		return false;
-	}	
+	}
 	//三次去指定省下拉框
 	var sec_num = 3;
 	var intervalId =setInterval(function(){
@@ -204,7 +204,7 @@ function init_category_sel(category_json,level){
 			var option_num = $("#"+ select_name_id +" option").length;
 			if(option_num > 1){
 				close_loop = true;
-				select_obj.val(select_val_id).change();// 如果#select有定义change()事件就会调用		
+				select_obj.val(select_val_id).change();// 如果#select有定义change()事件就会调用
 
 			}
 		}else{//关闭弹窗
@@ -216,6 +216,6 @@ function init_category_sel(category_json,level){
 			var tem_level = level+1;
 			init_category_sel(category_json,tem_level);
 		}
-	},1000);	
+	},1000);
 }
 //城市下拉框功能方法结束

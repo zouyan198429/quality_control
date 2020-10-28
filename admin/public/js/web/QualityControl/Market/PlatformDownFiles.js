@@ -31,7 +31,7 @@ var otheraction = {
         // console.log('下载文件：', url);
         // // PrintOneURL(url);
         // go(url);
-        // layer.close(layer_index)//手动关闭
+        // layer.close(layer_index);//手动关闭
         commonaction.down_file(DOWN_FILE_URL, resource_url, save_file_name);
     }
 };

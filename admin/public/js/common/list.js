@@ -349,7 +349,7 @@ function operate_ajax(operate_type,id){
                 console.log(LIST_FUNCTION_NAME);
                 eval( LIST_FUNCTION_NAME + '(' + true +', ' + true +', ' + reset_total + ', 2)');
             }
-            layer.close(layer_index)//手动关闭
+            layer.close(layer_index);//手动关闭
         }
     });
 }

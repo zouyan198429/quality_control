@@ -330,7 +330,7 @@ function ajax_save(id) {
                 //}
                 // save_success();
             }
-            layer.close(layer_index)//手动关闭
+            layer.close(layer_index);//手动关闭
         }
     });
     return false;

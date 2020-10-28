@@ -249,4 +249,27 @@ class CTAPICompanyScheduleBusiness extends BasicPublicCTAPIBusiness
 
     }
 
+    /**
+     * 获得列表数据时，对查询结果进行for循环处理--有特殊的需要自己重写此方法
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $queryParams 已有的查询条件数组
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  null 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function forFormatListData(Request $request, Controller $controller, &$data_list, $notLog = 0){
+        foreach($data_list as $k => &$v){
+            // 公司名称
+//            $data_list[$k]['company_name'] = $v['company_info']['company_name'] ?? '';
+//            if(isset($data_list[$k]['company_info'])) unset($data_list[$k]['company_info']);
+
+            if(isset($v['resource_list'])){
+                $resource_pdf_list = $v['resource_pdf_list'] ?? [];
+                $v['resource_union'] = array_merge($v['resource_list'], $resource_pdf_list);
+            }
+        }
+    }
+
 }

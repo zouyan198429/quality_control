@@ -19,11 +19,11 @@
     <!-- 前端模板开始 -->
 
     <!-- 上传图片模板部分 开始-->
-    <?php 
+    <?php
         // has_pic 是否有上传的图片 0:没有;1:有
-        // input_primary_name:图片地址id input 名称,如：pic_id[] 
+        // input_primary_name:图片地址id input 名称,如：pic_id[]
         // img_primary_id : 图片地址id input 值,如0
-        // input_name:图片地址input 名称,如：img[] 
+        // input_name:图片地址input 名称,如：img[]
         // img_id: 图片地址input 值,如 150-50-ad9d33475c2e55cb6583ae917db2f0c1
         // url :图片网络地址 ,如http://test2.img.hiwemeet.com/pic/150-50-ad9d33475c2e55cb6583ae917db2f0c1/400 、 /assets/img/image_empty.png
         // height 图片高度px ,如 100
@@ -38,15 +38,15 @@
             <div class="btn btn-info btn-sm img_btn_div"> 上传
                 <input type="file" class="image_file img_input">
             </div>
-            <a class="img_a_left btn btn-link">左移</a> 
-            <a class="img_a_right btn btn-link">右移</a> 
+            <a class="img_a_left btn btn-link">左移</a>
+            <a class="img_a_right btn btn-link">右移</a>
         </div>
     </script>
     <!-- 上传图片模板部分 结束-->
     <!-- 前端模板结束 -->
-    
+
     <!-- 图片上传 -->
-	<script type="text/javascript">	
+	<script type="text/javascript">
 
         //var modify = $("input[name='modify']").val();
         //var delBtn = '<i class="glyphicon glyphicon-remove remove-btn" onclick="delImage(this)"></i>';
@@ -60,10 +60,10 @@
                     return false;
                 }
                 var new_src = "";
-                var src_arr= new Array(); //定义一数组 
-                src_arr = img_src.split("/"); //字符分割 
-                for (var i=0;i<(src_arr.length-1) ;i++ ) 
-                { 
+                var src_arr= new Array(); //定义一数组
+                src_arr = img_src.split("/"); //字符分割
+                for (var i=0;i<(src_arr.length-1) ;i++ )
+                {
                     if(new_src != ""){new_src += "/";}
                     new_src += src_arr[i];
                 }
@@ -71,7 +71,7 @@
                 window.open(new_src);
             });
             //上传商品图片
-            $(document).on("change",".upload_big_img",function(){ 
+            $(document).on("change",".upload_big_img",function(){
                 //$(".img_error").html('');
                 //$(".saveSubmit").removeAttr('disabled');
 //            var imgStr = $("input[name='img[]']");
@@ -94,7 +94,7 @@
 //            }
                 var upload_div_obj = $(this).closest('.upload_pic');
                 var upload_type = upload_div_obj.attr("upload_type");
-                
+
                 var data = new FormData();
                 var filesLength = this.files.length;
                 for (var i = 0; i < filesLength; i++) {
@@ -104,7 +104,7 @@
                 data.append('size', 1024*2);
                 data.append('maxWidth', 800);
                 data.append('maxHeight', 800);
-                data.append('upload_type', upload_type);//上传操作编号				
+                data.append('upload_type', upload_type);//上传操作编号
                 var layer_index = layer.load();
                 $.ajax({
                     url: '/public/AjaxData/uploadImg',
@@ -149,14 +149,14 @@
                                 err_alert(err_msg);
                             }
                         }
-                        layer.close(layer_index)//手动关闭
+                        layer.close(layer_index);//手动关闭
                     }
                 });
                 $(this).val('')
             });
 
             // 图片右移
-            $(document).on("click",".img_a_right",function(){ 
+            $(document).on("click",".img_a_right",function(){
                 var imgUrl1 = $(this).siblings('img').attr('src');
                 //var imgId1 = $(this).siblings('input[name="img[]"]').val();
                 //var imgId1 = $(this).siblings('input').val();
@@ -171,7 +171,7 @@
                 var imgId2 = $(this).parent("div").next('div').children('.pic_val').val();
                 var imgIdName2 = $(this).parent("div").next('div').children('.pic_id').val();
                 var has_pic2 = $(this).parent("div").next('div').attr("has_pic");
-                
+
                 //修改自己
                 $(this).siblings('img').attr('src', imgUrl2);
                 //$(this).siblings('input[name="img[]"]').val(imgId2);
@@ -184,30 +184,30 @@
                 }else{
                     $(this).siblings('.remove-btn').hide();
                 }
-                
+
                 //要右移的是否有图片
                 var preClass = "no_upload";
                 if($(this).parent(".img_div").hasClass('add_upload')){
                     preClass = "add_upload";
                 }
-                
+
                 //右边移过来的是否有图片
                 var nextClass = "no_upload";
                 if($(this).parent(".img_div").next('.img_div').hasClass('add_upload')){
                     nextClass = "add_upload";
                 }
-                
+
                 //换效是否有图片样式
                 $(this).parent(".img_div").removeClass(preClass).addClass(nextClass);
                 $(this).parent(".img_div").next('.img_div').removeClass(nextClass).addClass(preClass);
-                
+
                 //右边的图片变为..
                 $(this).parent(".img_div").next('.img_div').children('img').attr('src', imgUrl1);
                 //$(this).parent(".img_div").next('.img_div').children('input[name="img[]"]').val(imgId1);
                 //$(this).parent(".img_div").next('.img_div').children('input').val(imgId1);
                 $(this).parent(".img_div").next('.img_div').children('.pic_val').val(imgId1);
                 $(this).parent(".img_div").next('.img_div').children('.pic_id').val(imgIdName1);
-                $(this).parent(".img_div").next('.img_div').attr("has_pic",has_pic1);       
+                $(this).parent(".img_div").next('.img_div').attr("has_pic",has_pic1);
                 if(has_pic1 == 1){
                     $(this).parent(".img_div").next('.img_div').children('.remove-btn').show();
                 }else{
@@ -252,23 +252,23 @@
                 }else{
                     $(this).siblings('.remove-btn').hide();
                 }
-                
+
                 //要左移的是否有图片
                 var preClass = "no_upload";
                 if($(this).parent(".img_div").hasClass('add_upload')){
                     preClass = "add_upload";
                 }
-                
+
                 //左边移过来的是否有图片
                 var nextClass = "no_upload";
                 if($(this).parent(".img_div").prev('.img_div').hasClass('add_upload')){
                     nextClass = "add_upload";
                 }
-                
+
                 //换效是否有图片样式
                 $(this).parent(".img_div").removeClass(preClass).addClass(nextClass);
                 $(this).parent(".img_div").prev('.img_div').removeClass(nextClass).addClass(preClass);
-                
+
                 //左边的图片变为..
                 $(this).parent(".img_div").prev('.img_div').children('img').attr('src', imgUrl1);
                 //$(this).parent(".img_div").prev('.img_div').children('input[name="img[]"]').val(imgId1);
@@ -281,7 +281,7 @@
                 }else{
                     $(this).parent(".img_div").prev('.img_div').children('.remove-btn').hide();
                 }
-                
+
                 //if(preClass == "add_upload"){
                 //    $(this).parent(".img_div").prev('.img_div').children('input[name="img[]"]').before(delBtn);
                 //}else{
@@ -293,7 +293,7 @@
 
             })
             // 单独图片上传
-            $(document).on("change",".image_file",function(){ 
+            $(document).on("change",".image_file",function(){
                 var upload_div_obj = $(this).closest('.upload_pic');
                 var upload_type = upload_div_obj.attr("upload_type");
                 //$(".img_error").html('');
@@ -309,8 +309,8 @@
                 data.append('size', 1024*2);
                 //data.append('maxWidth', 800);
                 //data.append('maxHeight', 800);
-                data.append('upload_type', upload_type);				
-                var layer_index = layer.load();                
+                data.append('upload_type', upload_type);
+                var layer_index = layer.load();
                 $.ajax({
                     url: '/public/AjaxData/uploadImg2',
                     type: 'POST',
@@ -333,7 +333,7 @@
                             $imgFile.parent("div").attr("has_pic",1);
                             $imgFile.siblings('img').attr('src', r.result.url);
                         }
-                        layer.close(layer_index)//手动关闭
+                        layer.close(layer_index);//手动关闭
                     }
                 });
             });
@@ -361,16 +361,16 @@
             //ajax_url 请求的ajax的url 可以带参数?supplier_id=1 ,返回二维数组 [{"img_primary_id":"0","img_id":"","url":""},...]
             //max_num 图片最多数量
             //pic_div_id 最外层div id
-            //input_primary_name input_primary_name:图片地址id input 名称,如：pic_id[] 
+            //input_primary_name input_primary_name:图片地址id input 名称,如：pic_id[]
             //input_name 图片地址input 名称
             //height 图片高度px ,如 100
             //width 图片宽度px ,如 100
             //is_modify 是否显示操作相关的0不显示[上传、删除、移动] 1:上传[有];2:删除[有],4:移动[有]
-            function init_img_ajax_upload(ajax_url,max_num,pic_div_id,input_primary_name,input_name,height,width,is_modify){ 
+            function init_img_ajax_upload(ajax_url,max_num,pic_div_id,input_primary_name,input_name,height,width,is_modify){
                 var empty_start_num = 1;
                 //ajax请求银行信息
                 var data = {};
-                //data['supplier_id'] = supplier_id;				
+                //data['supplier_id'] = supplier_id;
                 var layer_index = layer.load();
                 $.ajax({
                     'type' : 'POST',
@@ -381,7 +381,7 @@
                     'success' : function(ret){
                         if(!ret.apistatus){//失败
                             //alert('失败');
-                            err_alert(ret.errorMsg);   
+                            err_alert(ret.errorMsg);
                         }else{//成功
                             //alert('成功');
                             //图片信息
@@ -399,7 +399,7 @@
                             pic_push(pic_info_json,pic_div_id,input_primary_name,input_name,height,width);
                         }
                         format_pic_upload(pic_div_id,is_modify);//加载完成后，格式化图片显示
-                        layer.close(layer_index)//手动关闭
+                        layer.close(layer_index);//手动关闭
                     }
                 });
             }
@@ -408,12 +408,12 @@
             //pic_list_json json数据 [{"img_id":"","url":""},...]
             //max_num 图片最多数量
             //pic_div_id 最外层div id
-            //input_primary_name input_primary_name:图片地址id input 名称,如：pic_id[] 
+            //input_primary_name input_primary_name:图片地址id input 名称,如：pic_id[]
             //input_name 图片地址input 名称
             //height 图片高度px ,如 100
             //width 图片宽度px ,如 100
             //is_modify 是否显示操作相关的0不显示[上传、删除、移动] 1:上传[有];2:删除[有],4:移动[有]
-            function init_img_json_upload(pic_list_json,max_num,pic_div_id,input_primary_name,input_name,height,width,is_modify){ 
+            function init_img_json_upload(pic_list_json,max_num,pic_div_id,input_primary_name,input_name,height,width,is_modify){
                 var empty_start_num = 1;
                 for (var i in pic_list_json) {
                     pic_push(pic_list_json[i],pic_div_id,input_primary_name,input_name,height,width);
@@ -430,7 +430,7 @@
             }
             //单条插入图片信息
             //pic_div_id 最外层div id
-            //input_primary_name input_primary_name:图片地址id input 名称,如：pic_id[] 
+            //input_primary_name input_primary_name:图片地址id input 名称,如：pic_id[]
             //input_name 图片地址input 名称
             //height 图片高度px ,如 100
             //width 图片宽度px ,如 100
@@ -470,14 +470,14 @@
                     }else{
                         obj.find(".remove-btn").hide();
                     }
-		}); 
-                if( (is_modify & 1) != 1){//1:上传[有];                  
+		});
+                if( (is_modify & 1) != 1){//1:上传[有];
                    pic_lis_obj.find(".img_btn_div").hide();
                 }
-                if( (is_modify & 2) != 2){//2:删除[有]                
+                if( (is_modify & 2) != 2){//2:删除[有]
                    pic_lis_obj.find(".remove-btn").hide();
                 }
-                if( (is_modify & 2) != 2){//4:移动[有]                   
+                if( (is_modify & 2) != 2){//4:移动[有]
                    pic_lis_obj.find(".img_a_left,.img_a_right").hide();
                 }
             }

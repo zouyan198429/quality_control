@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\QualityControl;
 
 use App\Business\Controller\API\QualityControl\CTAPICourseBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIResourceBusiness;
 use App\Http\Controllers\WorksController;
 use App\Models\QualityControl\Course;
 use App\Services\Request\CommonRequest;
@@ -416,6 +417,28 @@ class CourseController extends BasicController
 //            return ajaxDataArr(1, $resultDatas, '');
 //        });
 //    }
+
+    /**
+     * 单文件上传-上传文件
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function up_file(Request $request)
+    {
+        $this->InitParams($request);
+        // $this->company_id = 1;
+        // 企业 的 个人--只能读自己的人员信息
+//        $organize_id = $this->user_id;// CommonRequest::getInt($request, 'company_id');
+//        if(!is_numeric($organize_id) || $organize_id <= 0) throws('所属企业参数有误！');
+//
+//        $userInfo = $this->getStaffInfo($organize_id);
+//        if(empty($userInfo)) throws('企业记录不存在！');
+
+        // 上传并保存文件
+        return CTAPIResourceBusiness::filePlupload($request, $this, 1);//  | 2 | 8 | 16
+    }
 
     // **************公用方法**********************开始*******************************
 

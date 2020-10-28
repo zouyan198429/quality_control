@@ -1310,7 +1310,7 @@ function reset_area_sel(area_id,level,click_obj){
 						default:
 					}
 				}
-                                layer.close(layer_index)//手动关闭
+                                layer.close(layer_index);//手动关闭
 			}
 		});
 	}

@@ -126,7 +126,7 @@ uploadComplete // 所有上传成功后执行方法 格式 aaa();  或  空白-�
                             //}
                             // save_success();
                         }
-                        layer.close(layer_index)//手动关闭
+                        layer.close(layer_index);//手动关闭
                     }
                 })
                 --}}
