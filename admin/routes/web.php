@@ -626,10 +626,12 @@ Route::get('web/logout', 'WebFront\Web\QualityControl\HomeController@logout');//
 
 Route::get('web/login_company', 'WebFront\Web\QualityControl\HomeController@login_company');// login.html 登录--为登录测试  补充资料用
 Route::get('web/login_user', 'WebFront\Web\QualityControl\HomeController@login_user');// login.html 登录--为登录测试  补充资料用
+
 // 资质认定获证机构查询
 Route::get('web/certificate', 'WebFront\Web\QualityControl\Certificate\CertificateScheduleController@index');// 查询
 Route::get('web/certificate/index', 'WebFront\Web\QualityControl\Certificate\CertificateScheduleController@index');// 查询
 //Route::get('web/certificate/list', 'WebFront\Web\QualityControl\Certificate\CertificateScheduleController@list');// 企业列表
+
 
 //  上面的另一种路由方式
 Route::get('jigou', 'WebFront\Web\QualityControl\Certificate\CertificateScheduleController@index');// 查询
@@ -655,6 +657,22 @@ Route::get('web/certificate/info/{id}', 'WebFront\Web\QualityControl\Certificate
 Route::get('jigou/list/{city_id}_{industry_id}_{pagesize}_{page}', 'WebFront\Web\QualityControl\Certificate\CertificateScheduleController@company');
 
 Route::get('jigou/info/{id}', 'WebFront\Web\QualityControl\Certificate\CertificateScheduleController@info');// 企业资质认定详情列表
+
+// 陕西省市场监督管理局 market
+// 陕西省检验机构信息管理平台
+
+// 企业列表
+   // 城市id  city_id
+   // 行业id  industry_id
+// field   检验机构名称  统一社会信用代码或组织机构代码   证书号
+// keyword
+// 每页数量  pagesize
+// 当前页号 page
+//total
+//?field=&keyword=
+//Route::get('web/market', 'WebFront\Web\QualityControl\Market\CompanyController@company');
+//Route::get('web/market/index', 'WebFront\Web\QualityControl\Market\CompanyController@company');
+Route::get('web/market/company/{pagesize}_{page}', 'WebFront\Web\QualityControl\Market\MarketController@company');
 
 
 
