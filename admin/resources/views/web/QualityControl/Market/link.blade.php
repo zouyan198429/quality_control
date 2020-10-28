@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 	<head>
-        <title>检验检测机构信息查询_陕西省质量认证认可协会_陕西质量认证咨询中心_检验检测能力</title>
-        <meta name="keywords" content="检验检测机构信息查询,陕西省质量认证认可协会,陕西质量认证咨询中心,检验检测能力" />
-        <meta name="description" content="检验检测机构信息查询,陕西省质量认证认可协会,陕西质量认证咨询中心,检验检测能力" />
+        <title>检验检测机构信息查询_陕西省市场监督管理局_陕西省检验检测机构信息管理平台_检验检测能力</title>
+        <meta name="keywords" content="检验检测机构信息查询,陕西省市场监督管理局,陕西省检验检测机构信息管理平台,检验检测能力" />
+        <meta name="description" content="检验检测机构信息查询,陕西省市场监督管理局,陕西省检验检测机构信息管理平台,检验检测能力" />
         @include('web.QualityControl.Market.layout_public.pagehead')
 	</head>
 	<body>
