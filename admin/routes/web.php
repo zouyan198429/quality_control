@@ -661,6 +661,11 @@ Route::get('jigou/info/{id}', 'WebFront\Web\QualityControl\Certificate\Certifica
 // 陕西省市场监督管理局 market
 // 陕西省检验机构信息管理平台
 
+// 资质认定获证机构查询
+Route::get('web/market', 'WebFront\Web\QualityControl\Market\MarketController@index');// 查询
+Route::get('web/market/index', 'WebFront\Web\QualityControl\Market\MarketController@index');// 查询
+//Route::get('web/market/list', 'WebFront\Web\QualityControl\Market\MarketController@list');// 企业列表
+
 // 企业列表
    // 城市id  city_id
    // 行业id  industry_id
@@ -670,11 +675,38 @@ Route::get('jigou/info/{id}', 'WebFront\Web\QualityControl\Certificate\Certifica
 // 当前页号 page
 //total
 //?field=&keyword=
-//Route::get('web/market', 'WebFront\Web\QualityControl\Market\CompanyController@company');
-//Route::get('web/market/index', 'WebFront\Web\QualityControl\Market\CompanyController@company');
-Route::get('web/market/company/{pagesize}_{page}', 'WebFront\Web\QualityControl\Market\MarketController@company');
+//Route::get('web/market', 'WebFront\Web\QualityControl\Market\MarketController@company');
+//Route::get('web/market/index', 'WebFront\Web\QualityControl\Market\MarketController@company');
+Route::get('web/market/company', 'WebFront\Web\QualityControl\Market\MarketController@company');
+Route::get('web/market/company/{city_id}_{industry_id}_{pagesize}_{page}', 'WebFront\Web\QualityControl\Market\MarketController@company');
 
 
+Route::get('web/market/company/info/{id}', 'WebFront\Web\QualityControl\Market\MarketController@info');// 机构信息详情
+
+Route::get('web/market/link', 'WebFront\Web\QualityControl\Market\MarketController@link');// 相关链接
+
+Route::get('web/market/down_file', 'WebFront\Web\QualityControl\Market\MarketController@down_file');// 下载文件
+
+
+// 企业能力附表-最新
+Route::get('web/market/company_new_schedule', 'WebFront\Web\QualityControl\Market\CompanyNewScheduleController@index');// 列表
+
+// 监督检查信息管理
+// Route::get('web/market/company_supervise', 'WebFront\Web\QualityControl\Market\CompanySuperviseController@index');// 列表
+
+Route::get('web/market/company_supervise/info/{id}', 'WebFront\Web\QualityControl\Market\CompanySuperviseController@info');// 添加
+
+// 机构自我声明
+Route::get('web/market/company_statement', 'WebFront\Web\QualityControl\Market\CompanyStatementController@index');// 列表
+
+// 机构处罚
+Route::get('web/market/company_punish', 'WebFront\Web\QualityControl\Market\CompanyPunishController@index');// 列表
+
+// 通知公告
+Route::get('web/market/platform_notices', 'WebFront\Web\QualityControl\Market\PlatformNoticesController@index');// 列表
+
+// 表格下载
+Route::get('web/market/platform_down_files', 'WebFront\Web\QualityControl\Market\PlatformDownFilesController@index');// 列表
 
 // 首页
 //Route::get('web/test', 'WebFront\Web\QualityControl\IndexController@test');// 测试

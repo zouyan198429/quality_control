@@ -7,6 +7,7 @@ use App\Business\Controller\API\QualityControl\CTAPICitysBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIIndustryBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
 use App\Http\Controllers\WorksController;
+use App\Services\File\DownFile;
 use App\Services\Request\CommonRequest;
 use App\Services\Tool;
 use Illuminate\Http\Request;
@@ -31,10 +32,10 @@ class MarketController extends BasicController
 //            $this->InitParams($request);
 //            // $reDataArr = $this->reDataArr;
 //            $reDataArr = array_merge($reDataArr, $this->reDataArr);
-//            return view('web.QualityControl.CertificateSchedule.index', $reDataArr);
+//            return view('web.QualityControl.Market.index', $reDataArr);
 //
 //        }, $this->errMethod, $reDataArr, $this->errorView);
-        return $this->exeDoPublicFun($request, 1, 1, 'web.QualityControl.CertificateSchedule.index', false
+        return $this->exeDoPublicFun($request, 1, 1, 'web.QualityControl.Market.index', false
             , 'doListPage', [], function (&$reDataArr) use ($request){
 
             });
@@ -49,12 +50,26 @@ class MarketController extends BasicController
      */
 //    public function list(Request $request)
 //    {
-//        return $this->exeDoPublicFun($request, 1, 1, 'web.QualityControl.CertificateSchedule.list', false
+//        return $this->exeDoPublicFun($request, 1, 1, 'web.QualityControl.Market.list', false
 //            , 'doListPage', [], function (&$reDataArr) use ($request){
 //
 //            });
 //    }
 
+    /**
+     * 首页
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function link(Request $request)
+    {
+        return $this->exeDoPublicFun($request, 0, 1, 'web.QualityControl.Market.link', false
+            , '', [], function (&$reDataArr) use ($request){
+
+            });
+    }
     /**
      *  列表页--企业的
      * ?field=&keyword=
@@ -64,7 +79,7 @@ class MarketController extends BasicController
      */
     public function company(Request $request, $city_id = 0, $industry_id = 0, $pagesize = 20, $page = 1)
     {
-        return $this->exeDoPublicFun($request, 0, 8, 'web.QualityControl.CertificateSchedule.company', false
+        return $this->exeDoPublicFun($request, 0, 8, 'web.QualityControl.Market.company', false
             , '', [], function (&$reDataArr) use ($request, &$city_id, &$industry_id, &$pagesize, &$page){
 
             $qkey = CommonRequest::getInt($request, 'qkey');// 查询表的类型 1 企业表查询  2 能力范围表查询 4 按证书号查询
@@ -86,8 +101,8 @@ class MarketController extends BasicController
                 'industry_id' => $industry_id,
                 'pagesize' => $pagesize,
                 'page' => $page,
-                // 'url_model' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/web/certificate/company/' . $pathParamStr,
-                'url_model' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/jigou/list/' . $pathParamStr,
+                'url_model' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/web/market/company/' . $pathParamStr,
+                // 'url_model' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/jigou/list/' . $pathParamStr,
                 'admin_type' => 2,
                 'is_perfect' => 2,
                 'open_status' => 2,
@@ -135,7 +150,10 @@ class MarketController extends BasicController
                         'where' => [['admin_type', 2], ['is_perfect', 2], ['open_status', 2], ['account_status', 1]],
                         'whereIn' =>  ['id' => $companyIds],
                     ];
-                    $extParams = ['useQueryParams' => false];
+                    $extParams = [
+                        'useQueryParams' => false,
+                        'relationFormatConfigs'=> CTAPIStaffBusiness::getRelationConfigs($request, $this, ['extend_info'], []),
+                    ];
                     $company_list = CTAPIStaffBusiness::getList($request, $this, 1, $queryParams, [], $extParams)['result']['data_list'] ?? [];
                 }
                 $reDataArr['company_list'] = $company_list;
@@ -143,7 +161,7 @@ class MarketController extends BasicController
             }else{
                 $extParams = [
                     // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-                    // 'relationFormatConfigs'=> CTAPIStaffBusiness::getRelationConfigs($request, $this, ['industry_info', 'city_info'], []),// , 'extend_info'
+                     'relationFormatConfigs'=> CTAPIStaffBusiness::getRelationConfigs($request, $this, ['extend_info'], []),// , 'extend_info' ,'industry_info', 'city_info'
                 ];
                 $company_arr = CTAPIStaffBusiness::getList($request, $this, 2 + 8, [], [], $extParams)['result'] ?? [];
                 $reDataArr['company_list'] = $company_arr['data_list'] ?? [];
@@ -151,15 +169,15 @@ class MarketController extends BasicController
             }
 
             // 获得最新更新企业
-            $company_update_list = CTAPIStaffBusiness::getFVFormatList( $request,  $this, 2, 20
-                ,  ['admin_type' => 2], false,[]
-                , [
-                    'sqlParams' => [
-                        'where' => [['is_perfect', 2], ['open_status', 2], ['account_status', 1]],
-                        'orderBy' => ['updated_at' => 'desc', 'id' => 'desc']
-                    ]
-                ]);
-            $reDataArr['company_update_list'] = $company_update_list;
+//            $company_update_list = CTAPIStaffBusiness::getFVFormatList( $request,  $this, 2, 20
+//                ,  ['admin_type' => 2], false,[]
+//                , [
+//                    'sqlParams' => [
+//                        'where' => [['is_perfect', 2], ['open_status', 2], ['account_status', 1]],
+//                        'orderBy' => ['updated_at' => 'desc', 'id' => 'desc']
+//                    ]
+//                ]);
+//            $reDataArr['company_update_list'] = $company_update_list;
             $reDataArr['key_str'] = implode(',', $keyArr);
 
         });
@@ -183,10 +201,10 @@ class MarketController extends BasicController
 ////            $reDataArr['province_kv'] = CTAPICertificateScheduleBusiness::getCityByPid($request, $this,  0);
 ////            $reDataArr['province_kv'] = CTAPICertificateScheduleBusiness::getChildListKeyVal($request, $this, 0, 1 + 0, 0);
 ////            $reDataArr['province_id'] = 0;
-////            return view('web.QualityControl.CertificateSchedule.select', $reDataArr);
+////            return view('web.QualityControl.Market.select', $reDataArr);
 ////
 ////        }, $this->errMethod, $reDataArr, $this->errorView);
-//        return $this->exeDoPublicFun($request, 2048, 1, 'web.QualityControl.CertificateSchedule.select', true
+//        return $this->exeDoPublicFun($request, 2048, 1, 'web.QualityControl.Market.select', true
 //            , 'doListPage', [], function (&$reDataArr) use ($request){
 //
 //            });
@@ -209,12 +227,12 @@ class MarketController extends BasicController
 ////            $this->InitParams($request);
 ////            // $reDataArr = $this->reDataArr;
 ////            $reDataArr = array_merge($reDataArr, $this->reDataArr);
-////            return view('web.QualityControl.CertificateSchedule.add', $reDataArr);
+////            return view('web.QualityControl.Market.add', $reDataArr);
 ////
 ////        }, $this->errMethod, $reDataArr, $this->errorView);
 //
 //        $pageNum = ($id > 0) ? 64 : 16;
-//        return $this->exeDoPublicFun($request, $pageNum, 1,'web.QualityControl.CertificateSchedule.add', true
+//        return $this->exeDoPublicFun($request, $pageNum, 1,'web.QualityControl.Market.add', true
 //            , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
 //
 //            });
@@ -230,25 +248,25 @@ class MarketController extends BasicController
      */
     public function info(Request $request,$id = 0)
     {
-        return $this->exeDoPublicFun($request, 17179869184, 1,'web.QualityControl.CertificateSchedule.info', false
+        return $this->exeDoPublicFun($request, 17179869184, 1,'web.QualityControl.Market.info', false
             , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
 
             });
     }
 
     /**
-     * @OA\Get(
+     * @ OA\Get(
      *     path="/api/web/quality_control/certificate_schedule/ajax_info",
      *     tags={"质量认证-资质认定"},
      *     summary="资质认定--详情",
      *     description="根据单个id,查询详情记录......",
-     *     operationId="adminQualityControlCertificateScheduleAjax_info",
+     *     operationId="adminQualityControlMarketAjax_info",
      *     deprecated=false,
-     *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_certificate_schedule_id_required"),
-     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_info_certificate_schedule"),
-     *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
-     *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
+     *     @ OA\Parameter(ref="#/components/parameters/Accept"),
+     *     @ OA\Parameter(ref="#/components/parameters/Schema_QualityControl_certificate_schedule_id_required"),
+     *     @ OA\Response(response=200,ref="#/components/responses/Response_QualityControl_info_certificate_schedule"),
+     *     @ OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
+     *     @ OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
      *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_certificate_schedule"}
@@ -276,18 +294,18 @@ class MarketController extends BasicController
 //    }
 
     /**
-     * @OA\Post(
+     * @ OA\Post(
      *     path="/api/web/quality_control/certificate_schedule/ajax_save",
      *     tags={"质量认证-资质认定"},
      *     summary="资质认定--新加/修改",
      *     description="根据单个id,新加/修改记录(id>0:修改；id=0:新加)......",
-     *     operationId="adminQualityControlCertificateScheduleAjax_save",
+     *     operationId="adminQualityControlMarketAjax_save",
      *     deprecated=false,
-     *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_certificate_schedule_id_required"),
-     *     @OA\Response(response=200,ref="#/components/responses/common_Response_modify"),
-     *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
-     *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
+     *     @ OA\Parameter(ref="#/components/parameters/Accept"),
+     *     @ OA\Parameter(ref="#/components/parameters/Schema_QualityControl_certificate_schedule_id_required"),
+     *     @ OA\Response(response=200,ref="#/components/responses/common_Response_modify"),
+     *     @ OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
+     *     @ OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
      *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_certificate_schedule"}
@@ -378,18 +396,18 @@ class MarketController extends BasicController
 //    }
 
     /**
-     * @OA\Get(
+     * @ OA\Get(
      *     path="/api/web/quality_control/certificate_schedule/ajax_alist",
      *     tags={"质量认证-资质认定"},
      *     summary="资质认定--列表",
      *     description="资质认定--列表......",
-     *     operationId="adminQualityControlCertificateScheduleAjax_alist",
+     *     operationId="adminQualityControlMarketAjax_alist",
      *     deprecated=false,
-     *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_certificate_schedule_id_optional"),
-     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_list_certificate_schedule"),
-     *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
-     *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
+     *     @ OA\Parameter(ref="#/components/parameters/Accept"),
+     *     @ OA\Parameter(ref="#/components/parameters/Schema_QualityControl_certificate_schedule_id_optional"),
+     *     @ OA\Response(response=200,ref="#/components/responses/Response_QualityControl_list_certificate_schedule"),
+     *     @ OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
+     *     @ OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
      *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_certificate_schedule"}
@@ -474,18 +492,18 @@ class MarketController extends BasicController
 
 
     /**
-     * @OA\Post(
+     * @ OA\Post(
      *     path="/api/web/quality_control/certificate_schedule/ajax_del",
      *     tags={"质量认证-资质认定"},
      *     summary="资质认定--删除",
      *     description="根据单个id,删除记录......",
-     *     operationId="adminQualityControlCertificateScheduleAjax_del",
+     *     operationId="adminQualityControlMarketAjax_del",
      *     deprecated=false,
-     *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_certificate_schedule_id_required"),
-     *     @OA\Response(response=200,ref="#/components/responses/common_Response_del"),
-     *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
-     *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
+     *     @ OA\Parameter(ref="#/components/parameters/Accept"),
+     *     @ OA\Parameter(ref="#/components/parameters/Schema_QualityControl_certificate_schedule_id_required"),
+     *     @ OA\Response(response=200,ref="#/components/responses/common_Response_del"),
+     *     @ OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
+     *     @ OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
      *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_certificate_schedule"}
@@ -621,47 +639,47 @@ class MarketController extends BasicController
 //        $reDataArr['info'] = $info;
 //        $reDataArr['company_hidden'] = $company_hidden;// =1 : 隐藏企业选择
         // 获得企业总数
-        $company_count = CTAPIStaffBusiness::getFVFormatList( $request,  $this, 8, 1
-            ,  ['admin_type' => 2], false,[], ['sqlParams' => ['where' => [['is_perfect', 2], ['open_status', 2], ['account_status', 1]]]]);
-
-        $reDataArr['company_count'] = $company_count;
-        // 获得最新注册企业
-        $company_new_list = CTAPIStaffBusiness::getFVFormatList( $request,  $this, 2, 9
-            ,  ['admin_type' => 2], false,[]
-            , [
-                'sqlParams' => [
-                    'where' => [['is_perfect', 2], ['open_status', 2], ['account_status', 1]],
-                    'orderBy' => CTAPIStaffBusiness::$orderBy
-                ]
-            ]);
-        foreach($company_new_list as $k => $v){
-            $company_new_list[$k]['created_at_fmt'] = judgeDate($v['created_at'],'Y-m-d');
-        }
-        $reDataArr['company_new_list'] = $company_new_list;
-        // 获得最新更新企业
-        $company_update_list = CTAPIStaffBusiness::getFVFormatList( $request,  $this, 2, 9
-            ,  ['admin_type' => 2], false,[]
-            , [
-                'sqlParams' => [
-                    'where' => [['is_perfect', 2], ['open_status', 2], ['account_status', 1]],
-                    'orderBy' => ['updated_at' => 'desc', 'id' => 'desc']
-                ]
-            ]);
-        foreach($company_update_list as $k => $v){
-            $company_update_list[$k]['updated_at_fmt'] = judgeDate($v['updated_at'],'Y-m-d');
-        }
-        $reDataArr['company_update_list'] = $company_update_list;
-        // 行业及企业数量
-
-        $industry_list = CTAPIIndustryBusiness::exeDBBusinessMethodCT($request, $this, '',  'getCompanyNumGroup', [], 1, 1);
-        $reDataArr['industry_list'] = $industry_list;
-        // 地区分布及企业数量
-        $city_list = CTAPICitysBusiness::exeDBBusinessMethodCT($request, $this, '',  'getCompanyNumGroup', [], 1, 1);
-        $reDataArr['city_list'] = $city_list;
-
-        $reDataArr['rang_f_type'] = 0;
-        $reDataArr['field'] = '';
-        $reDataArr['qkey'] = 0;
+//        $company_count = CTAPIStaffBusiness::getFVFormatList( $request,  $this, 8, 1
+//            ,  ['admin_type' => 2], false,[], ['sqlParams' => ['where' => [['is_perfect', 2], ['open_status', 2], ['account_status', 1]]]]);
+//
+//        $reDataArr['company_count'] = $company_count;
+//        // 获得最新注册企业
+//        $company_new_list = CTAPIStaffBusiness::getFVFormatList( $request,  $this, 2, 9
+//            ,  ['admin_type' => 2], false,[]
+//            , [
+//                'sqlParams' => [
+//                    'where' => [['is_perfect', 2], ['open_status', 2], ['account_status', 1]],
+//                    'orderBy' => CTAPIStaffBusiness::$orderBy
+//                ]
+//            ]);
+//        foreach($company_new_list as $k => $v){
+//            $company_new_list[$k]['created_at_fmt'] = judgeDate($v['created_at'],'Y-m-d');
+//        }
+//        $reDataArr['company_new_list'] = $company_new_list;
+//        // 获得最新更新企业
+//        $company_update_list = CTAPIStaffBusiness::getFVFormatList( $request,  $this, 2, 9
+//            ,  ['admin_type' => 2], false,[]
+//            , [
+//                'sqlParams' => [
+//                    'where' => [['is_perfect', 2], ['open_status', 2], ['account_status', 1]],
+//                    'orderBy' => ['updated_at' => 'desc', 'id' => 'desc']
+//                ]
+//            ]);
+//        foreach($company_update_list as $k => $v){
+//            $company_update_list[$k]['updated_at_fmt'] = judgeDate($v['updated_at'],'Y-m-d');
+//        }
+//        $reDataArr['company_update_list'] = $company_update_list;
+//        // 行业及企业数量
+//
+//        $industry_list = CTAPIIndustryBusiness::exeDBBusinessMethodCT($request, $this, '',  'getCompanyNumGroup', [], 1, 1);
+//        $reDataArr['industry_list'] = $industry_list;
+//        // 地区分布及企业数量
+//        $city_list = CTAPICitysBusiness::exeDBBusinessMethodCT($request, $this, '',  'getCompanyNumGroup', [], 1, 1);
+//        $reDataArr['city_list'] = $city_list;
+//
+//        $reDataArr['rang_f_type'] = 0;
+//        $reDataArr['field'] = '';
+//        $reDataArr['qkey'] = 0;
 
     }
 
@@ -688,7 +706,7 @@ class MarketController extends BasicController
         // $user_info = $this->user_info;
         $id = $extendParams['params']['id'] ?? 0;
 
-//        // 拥有者类型1平台2企业4个人
+        // 拥有者类型1平台2企业4个人
 //        $reDataArr['adminType'] =  AbilityJoin::$adminTypeArr;
 //        $reDataArr['defaultAdminType'] = -1;// 列表页默认状态
         $info = [
@@ -713,4 +731,24 @@ class MarketController extends BasicController
 
     }
     // **************公用重写方法********************结束*********************************
+
+    /**
+     * 下载文件
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function down_file(Request $request)
+    {
+//        $this->InitParams($request);
+        // $this->source = 2;
+//        $reDataArr = $this->reDataArr;
+        // 下载二维码文件
+        $publicPath = Tool::getPath('public');
+        $fileName = CommonRequest::get($request, 'resource_url');// '/CLodopPrint_Setup_for_Win32NT.exe';
+        $save_file_name = CommonRequest::get($request, 'save_file_name');// 下载时保存的文件名 [可以不用加文件扩展名，不加会自动加上]--可以为空：用源文件的名称
+        $res = DownFile::downFilePath(2, $publicPath . $fileName, 1024, $save_file_name);
+        if(is_string($res)) echo $res;
+    }
 }

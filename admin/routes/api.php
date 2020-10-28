@@ -724,6 +724,28 @@ $api->version('v1', function ($api) {
         $api->post('web/upload', 'WebFront\Web\QualityControl\UploadController@index');
         $api->post('web/upload/ajax_del', 'WebFront\Web\QualityControl\UploadController@ajax_del');// 根据id删除文件
 
+        // 陕西省市场监督管理局 market
+        // 陕西省检验机构信息管理平台
+
+        // 企业能力附表-最新
+        $api->any('web/market/company_new_schedule/ajax_alist', 'WebFront\Web\QualityControl\Market\CompanyNewScheduleController@ajax_alist');//ajax获得列表数据
+
+        // 监督检查信息管理
+        $api->any('web/market/company_supervise/ajax_alist', 'WebFront\Web\QualityControl\Market\CompanySuperviseController@ajax_alist');//ajax获得列表数据
+
+        // 机构自我声明
+        $api->any('web/market/company_statement/ajax_alist', 'WebFront\Web\QualityControl\Market\CompanyStatementController@ajax_alist');//ajax获得列表数据
+
+        // 机构处罚
+        $api->any('web/market/company_punish/ajax_alist', 'WebFront\Web\QualityControl\Market\CompanyPunishController@ajax_alist');//ajax获得列表数据
+
+        // 通知公告
+        $api->any('web/market/platform_notices/ajax_alist', 'WebFront\Web\QualityControl\Market\PlatformNoticesController@ajax_alist');//ajax获得列表数据
+
+        // 表格下载
+        $api->any('web/market/platform_down_files/ajax_alist', 'WebFront\Web\QualityControl\Market\PlatformDownFilesController@ajax_alist');//ajax获得列表数据
+
+
 //        Route::middleware('auth:api')->get('/user', function (Request $request) {
 //            return $request->user();
 //        });
