@@ -56,7 +56,7 @@ var otheraction = {
             operateText = "修改";
         }
         tishi = '上传' + tishi;// operateText + tishi;
-        layeriframe(weburl,tishi,950,600,IFRAME_MODIFY_CLOSE_OPERATE);
+        layeriframe(weburl,tishi,950,580,IFRAME_MODIFY_CLOSE_OPERATE);
         return false;
     }
 };

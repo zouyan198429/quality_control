@@ -106,7 +106,7 @@ var otheraction = {
         // var weburl = SHOW_URL + id;
         // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
         var tishi = "公布结果-" + ability_name;//"添加/修改供应商";
-        layeriframe(weburl,tishi,950,600,IFRAME_MODIFY_CLOSE_OPERATE);
+        layeriframe(weburl,tishi,950,580,IFRAME_MODIFY_CLOSE_OPERATE);
         return false;
     }
 };

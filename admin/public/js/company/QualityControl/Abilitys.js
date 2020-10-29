@@ -128,7 +128,7 @@ function joinPage(){
     // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
     var tishi = "";//"添加/修改供应商";
     tishi = operateText + tishi;
-    layeriframe(weburl,tishi,950,600,IFRAME_MODIFY_CLOSE_OPERATE);
+    layeriframe(weburl,tishi,950,580,IFRAME_MODIFY_CLOSE_OPERATE);
     return false;
 }
 

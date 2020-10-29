@@ -99,7 +99,7 @@ var otheraction = {
         // var weburl = SHOW_URL + id;
         // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
         var tishi = company_name + "-能力附表";
-        layeriframe(weburl,tishi,980,650,SHOW_CLOSE_OPERATE);
+        layeriframe(weburl,tishi,980,580,SHOW_CLOSE_OPERATE);
         return false;
     },
     staff_num : function(id, company_name){// 查看员工
@@ -116,7 +116,7 @@ var otheraction = {
         // var weburl = SHOW_URL + id;
         // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
         var tishi = company_name + "-员工管理";
-        layeriframe(weburl,tishi,1050,700,5);
+        layeriframe(weburl,tishi,1050,580,5);
         return false;
     },
     certificate_schedule_num : function(id, company_name){// 查看能力范围
@@ -133,7 +133,7 @@ var otheraction = {
         // var weburl = SHOW_URL + id;
         // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
         var tishi = company_name + "-能力范围管理";
-        layeriframe(weburl,tishi,1050,700,5);
+        layeriframe(weburl,tishi,1050,580,5);
         return false;
     },
     company_statement_num : function(id, company_name){// 查看机构自我声明
@@ -150,7 +150,7 @@ var otheraction = {
         // var weburl = SHOW_URL + id;
         // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
         var tishi = company_name + "-机构自我声明管理";
-        layeriframe(weburl,tishi,1050,700,5);
+        layeriframe(weburl,tishi,1050,580,5);
         return false;
     },
     company_punish_num : function(id, company_name){// 查看机构处罚
@@ -167,7 +167,7 @@ var otheraction = {
         // var weburl = SHOW_URL + id;
         // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
         var tishi = company_name + "-机构处罚管理";
-        layeriframe(weburl,tishi,1050,700,5);
+        layeriframe(weburl,tishi,1050,580,5);
         return false;
     },
     company_content : function(id, company_name){// 查看或修改企业简介
@@ -184,7 +184,7 @@ var otheraction = {
         // var weburl = SHOW_URL + id;
         // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
         var tishi = company_name + "-企业简介";
-        layeriframe(weburl,tishi,1050,700,5);
+        layeriframe(weburl,tishi,1050,580,5);
         return false;
     },
     company_supervise : function(id, company_name){// 查看或修改企业简介
@@ -201,7 +201,7 @@ var otheraction = {
         // var weburl = SHOW_URL + id;
         // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
         var tishi = company_name + "-监督检查信息";
-        layeriframe(weburl,tishi,1050,700,5);
+        layeriframe(weburl,tishi,1050,580,5);
         return false;
     },
     grade_config : function(id, company_name){// 查看或修改企业简介
@@ -218,7 +218,7 @@ var otheraction = {
         // var weburl = SHOW_URL + id;
         // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
         var tishi = company_name + "-会员等级配置";
-        layeriframe(weburl,tishi,1050,700,5);
+        layeriframe(weburl,tishi,1050,580,5);
         return false;
     }
 

@@ -37,7 +37,7 @@ var otheraction = {
         // var weburl = SHOW_URL + id;
         // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
         var tishi = "数据上报--" + ability_name;
-        layeriframe(weburl,tishi,950,600,IFRAME_MODIFY_CLOSE_OPERATE);
+        layeriframe(weburl,tishi,950,580,IFRAME_MODIFY_CLOSE_OPERATE);
         return false;
     },
     sampleResultInfo:function(id, ability_name, retry_no){// 数据上报 id : 报名项目表的id  ability_name:项目名称
@@ -53,7 +53,7 @@ var otheraction = {
         // var weburl = SHOW_URL + id;
         // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
         var tishi = "数据上报--" + ability_name;
-        layeriframe(weburl,tishi,950,600,IFRAME_MODIFY_CLOSE_OPERATE);
+        layeriframe(weburl,tishi,950,580,IFRAME_MODIFY_CLOSE_OPERATE);
         return false;
     }
 };

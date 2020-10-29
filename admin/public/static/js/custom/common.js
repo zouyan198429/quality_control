@@ -1671,7 +1671,7 @@ function resolve_baidu_template(template_id,json_data,html_id){
 //iframe弹出
 //iframe的url
 //iframe的宽[数字]
-//iframe的高[数字]
+//iframe的高[数字] // 建议最商设置为580-小屏笔记本才能显示下
 //tishi 标题
 //operate_num关闭时的操作0不做任何操作1刷新当前页面
 //                          2刷新当前列表页面--[适合更新操作-不更新总数]
@@ -1680,7 +1680,7 @@ function resolve_baidu_template(template_id,json_data,html_id){
 //                         4刷新当前页面--当前页操作5刷新当前列表页面--当前页操作[适合更新操作-不更新总数]
 //                                                  6刷新当前列表页面--自己页面操作时[适合新加操作-更新总数]
 //sure_close_tishi 关闭窗口提示文字
-function layeriframe(weburl,tishi,heightnum,widthnum,operate_num,sure_close_tishi, doFun){
+function layeriframe(weburl,tishi,widthnum,heightnum,operate_num,sure_close_tishi, doFun){
 	 layer.open({
 		type: 2,
 		//shade: [0.5, '#000'],
@@ -1690,7 +1690,7 @@ function layeriframe(weburl,tishi,heightnum,widthnum,operate_num,sure_close_tish
 		maxmin: true,
 		//iframe: {src : weburl},
                 content: weburl,
-		area: [heightnum+'px' , widthnum+'px'],
+		area: [widthnum+'px' , heightnum+'px'],// 宽，高
                 //offset: ['0px', '0px'],
 		//close: function(index){
                 cancel: function(index){

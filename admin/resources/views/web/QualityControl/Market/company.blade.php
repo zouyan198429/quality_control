@@ -34,21 +34,21 @@
 							</tr>
 						</thead>
                         @foreach ($company_list as $k => $v)
-						<tr> 
+						<tr>
 							<td class="com-name">
                                 {{ $v['company_name'] ?? '' }}
 							</td>
 							<td class="content-info">
 								{{ $v['company_certificate_no'] ?? '' }}
 							</td>
-							<td>								
- 								 <!-- <p>公司地址：<span>{{ $v['addr'] ?? '' }}</span></p> 
- 								<p>联系人：<span>{{ $v['company_contact_name'] ?? '' }}</span></p> 
- 								<p>联系电话：<span>{{ $v['company_contact_mobile'] ?? '' }}/{{ $v['company_contact_tel'] ?? '' }}</span></p>  --> 
+							<td>
+ 								 <!-- <p>公司地址：<span>{{ $v['addr'] ?? '' }}</span></p>
+ 								<p>联系人：<span>{{ $v['company_contact_name'] ?? '' }}</span></p>
+ 								<p>联系电话：<span>{{ $v['company_contact_mobile'] ?? '' }}/{{ $v['company_contact_tel'] ?? '' }}</span></p>  -->
                                 <a href="javascript:void(0);" onclick="otheraction.browseInfo('{{ $v["id"] ?? "0" }}','{{ $v["company_name"] ?? "" }}')" alt="机构信息" > <img src="{{asset('quality/Market/images/details12.png')}}" alt="" /> </a>
 							</td>
 							<td>
-                                <a href="javascript:void(0);" onclick="otheraction.schedule('{{ $v["id"] ?? "0" }}','{{ $v["company_name"] ?? "" }}')" alt="能力附表"> <img src="{{asset('quality/Market/images/details12.png')}}" alt="" /> </a> 
+                                <a href="javascript:void(0);" onclick="otheraction.schedule('{{ $v["id"] ?? "0" }}','{{ $v["company_name"] ?? "" }}')" alt="能力附表"> <img src="{{asset('quality/Market/images/details12.png')}}" alt="" /> </a>
 								<!-- ({{ $v['extend_info']['schedule_num'] ?? '0' }}) -->
 							</td>
 							<td>
@@ -62,7 +62,7 @@
 							<td>
                                 <a href="javascript:void(0);" onclick="otheraction.company_punish_num('{{ $v["id"] ?? "0" }}','{{ $v["company_name"] ?? "" }}')" alt="行政处罚信息"> <img src="{{asset('quality/Market/images/details12.png')}}" alt="" /> </a>
 								<!-- ({{ $v['extend_info']['punish_num'] ?? '0' }}) -->
-							</td> 
+							</td>
 						</tr>
                         @endforeach
 
@@ -76,16 +76,16 @@
 
 				</div>
 
- 
 
- 
+
+
 
 				<div class="c"></div>
 
 			</div>
 		</div>
 
-		<div class="c"></div> 
+		<div class="c"></div>
         @include('web.QualityControl.Market.layout_public.footer')
 	</body>
 </html>
@@ -116,4 +116,4 @@
 
 <script src="{{ asset('/js/web/QualityControl/Market/search.js') }}?1"  type="text/javascript"></script>
 
-<script src="{{ asset('/js/web/QualityControl/Market/company.js') }}?1"  type="text/javascript"></script>
+<script src="{{ asset('/js/web/QualityControl/Market/company.js') }}?2"  type="text/javascript"></script>
