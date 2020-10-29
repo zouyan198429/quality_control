@@ -58,7 +58,7 @@ var otheraction = {
         // var weburl = SHOW_URL + id;
         // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
         var tishi = company_name;// + "-机构处罚管理";
-        layeriframe(weburl,tishi,1050,580,SHOW_CLOSE_OPERATE);
+        layeriframe(weburl,tishi,1050,500,SHOW_CLOSE_OPERATE);
         return false;
     },
     company_supervise : function(id, company_name){// 查看或修改企业简介
@@ -75,7 +75,7 @@ var otheraction = {
         // var weburl = SHOW_URL + id;
         // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
         var tishi = company_name; + "-监督检查信息";
-        layeriframe(weburl,tishi,1050,580,SHOW_CLOSE_OPERATE);
+        layeriframe(weburl,tishi,1050,500,SHOW_CLOSE_OPERATE);
         return false;
     }
 };

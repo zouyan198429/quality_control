@@ -349,8 +349,8 @@ function browseResource(resource_id, type, obj, $key){
     var resource_url_format = obj.data('resource_url_format');
     var file_name = obj.data('resource_name');
     // var tishi = '查看-' + file_name;
-    // layeriframe(resource_url_format,tishi,850,500,0);
-    commonaction.browse_file(resource_url_format, file_name,850,500, 0);
+    // layeriframe(resource_url_format,tishi,850,400,0);
+    commonaction.browse_file(resource_url_format, file_name,850,400, 0);
     return false;
 }
 

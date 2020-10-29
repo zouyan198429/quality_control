@@ -56,7 +56,7 @@ $(function(){
     $(document).on("click",".reg_agree_info",function(){
 
         var tishi = '注册服务协议';
-        layeriframe(REG_AGREE_URL,tishi,950,580,0);
+        layeriframe(REG_AGREE_URL,tishi,950,510,0);
     });
     $(document).on("click",".company_is_legal_persion",function(){
         toggle_legal_persion();

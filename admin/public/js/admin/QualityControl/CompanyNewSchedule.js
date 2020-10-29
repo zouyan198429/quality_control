@@ -83,7 +83,7 @@ var otheraction = {
             operateText = "修改";
         }
         tishi = '上传' + tishi;// operateText + tishi;
-        layeriframe(weburl,tishi,950,580,IFRAME_MODIFY_CLOSE_OPERATE);
+        layeriframe(weburl,tishi,950,510,IFRAME_MODIFY_CLOSE_OPERATE);
         return false;
     },
     down_file:function(resource_url, save_file_name){//下载网页打印机驱动

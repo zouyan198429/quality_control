@@ -175,7 +175,7 @@ var otheraction = {
         // var weburl = SHOW_URL + id;
         // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
         var tishi = "导入";
-        layeriframe(weburl,tishi,950,580,IFRAME_MODIFY_CLOSE_OPERATE);
+        layeriframe(weburl,tishi,950,510,IFRAME_MODIFY_CLOSE_OPERATE);
         return false;
     }
 };

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 	<head>
-        <title>检验检测机构信息查询_{{ $key_str ?? '' }}市场监督管理局_陕西{{ $key_str ?? '' }}市场监督管理局第{{ $page ?? '' }}页_检验检测能力</title>
-        <meta name="keywords" content="检验检测机构信息查询,{{ $key_str ?? '' }}市场监督管理局,陕西{{ $key_str ?? '' }}市场监督管理局第{{ $page ?? '' }}页,检验检测能力" />
-        <meta name="description" content="检验检测机构信息查询,{{ $key_str ?? '' }}市场监督管理局,陕西{{ $key_str ?? '' }}市场监督管理局第{{ $page ?? '' }}页,检验检测能力" />
+        <title>陕西省市场监督管理局_陕西省检验检测机构信息查询_{{ $key_str ?? '' }}市场监督管理局_陕西{{ $key_str ?? '' }}市场监督管理局第{{ $page ?? '' }}页_检验检测能力</title>
+        <meta name="keywords" content="陕西省市场监督管理局,陕西省检验检测机构信息查询,{{ $key_str ?? '' }}市场监督管理局,陕西{{ $key_str ?? '' }}市场监督管理局第{{ $page ?? '' }}页,检验检测能力" />
+        <meta name="description" content="陕西省市场监督管理局,陕西省检验检测机构信息查询,{{ $key_str ?? '' }}市场监督管理局,陕西{{ $key_str ?? '' }}市场监督管理局第{{ $page ?? '' }}页,检验检测能力" />
         @include('web.QualityControl.Market.layout_public.pagehead')
         <link href="{{asset('static/css/bootstrap.css')}}" rel="stylesheet" type="text/css" />
 	</head>

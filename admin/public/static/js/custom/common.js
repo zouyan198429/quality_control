@@ -176,14 +176,14 @@ var commonaction = {
     // 浏览文件
     // $file_url  文件http路径  http://www.baidu.com/aa.txt
     // file_name  文件名称
-    browse_file:function(file_url, file_name, heightnum, widthnum, operate_num){
-        heightnum = heightnum || 850;
-        widthnum = widthnum || 500;
+    browse_file:function(file_url, file_name, widthnum, heightnum, operate_num){
+        widthnum = widthnum || 850;
+        heightnum = heightnum || 510;
         if(typeof(operate_num) != 'number'){
             operate_num =  0;
         }
         var tishi = '浏览-' + file_name;
-        layeriframe(file_url,tishi,heightnum,widthnum,operate_num);
+        layeriframe(file_url,tishi,widthnum,heightnum,operate_num);
     },
     // 根据上传文件的 下标配置，返回所有的 上传文件扩展名限 数组对象 FILE_MIME_TYPES 中的  mime_types 集合
     // fileTypeKeys 下标配置   如 ['pic','pdf',...]
