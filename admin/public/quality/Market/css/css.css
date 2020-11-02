@@ -61,6 +61,9 @@ body {
 		line-height: 32px; 
 		width: 100%;
 		margin-top:50px;
+		position: fixed;
+		left:0;
+		bottom: 0;
 }
 
 
@@ -81,7 +84,7 @@ body {
 .slideTxtBox .hd { height:30px; line-height:30px;  position:relative; }
 .slideTxtBox .hd ul{  text-align: center;  }
 .slideTxtBox .hd ul li{  display: inline-block;  cursor:pointer;   margin:0 5px;
- padding:0 10px;  position: relative;  }
+ padding:0 10px;  position: relative;  font-size: 16px; }
 .slideTxtBox .hd ul li.on{ height:30px; background: #a3bde2;  }
 .slideTxtBox .bd ul{ padding:0;  zoom:1;  }
 .slideTxtBox .bd li{ height:24px; line-height:24px;   }
@@ -102,15 +105,15 @@ button.searchbtn {
 	    display: inline-block;
 	    vertical-align: middle;
 	    padding: 0px 18px;
-	    height: 40x;
-	    line-height: 40px;
-	    font-size: 14px;
+	    height: 38px;
+	    line-height: 34px;
+	    font-size: 16px;
 	    color: #FFFFFF;
 	    cursor: pointer;
 	    text-align: center;
-	    border: 1px solid #0060CD;
+	    border: 1px solid #2267B4;
 	    border-radius:0 4px 4px 0;
-	    background-color: #0060CD;
+	    background-color: #2267B4;
 	    transition: opacity 0.2s ease-in-out 0s;
 	    margin: 3px 7px 3px 0;
 }
@@ -355,12 +358,13 @@ border-radius: 33px; }
 	border-bottom:1px solid #dedede ;
 	position: relative; 
 	text-align: center;
+	line-height: 32px;
 }
 .comlist th {
 	border:1px solid #d4d4d3;
 	color: #058;
 	line-height: 28px;
-	    padding: 5px 10px;
+	    padding: 5px 3px;
 	text-align: center;
 }
  
