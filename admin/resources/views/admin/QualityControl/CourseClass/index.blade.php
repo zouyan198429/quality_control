@@ -22,17 +22,23 @@
     <div class="tabbox" >
       <a href="javascript:void(0);" class="on" onclick="action.iframeModify(0)">添加培训班</a>
     </div>
-    <form onsubmit="return false;" class="form-horizontal" style="display: none;" role="form" method="post" id="search_frm" action="#">
+    <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
 
-        {{--<select class="wmini" name="province_id">--}}
-          {{--<option value="">全部</option>--}}
-          {{--@foreach ($province_kv as $k=>$txt)--}}
-            {{--<option value="{{ $k }}"  @if(isset($province_id) && $province_id == $k) selected @endif >{{ $txt }}</option>--}}
-          {{--@endforeach--}}
-        {{--</select>--}}
+          <select class="wmini" name="city_id" style="width: 80px;">
+              <option value="">城市</option>
+              @foreach ($citys_kv as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultCity) && $defaultCity == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
+          <select class="wmini" name="class_status" style="width: 80px;">
+              <option value="">班级状态</option>
+              @foreach ($classStatus as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultClassStatus) && $defaultClassStatus == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
         <select style="width:80px; height:28px;" name="field">
-          <option value="type_name">培训班</option>
+          <option value="class_name">培训班名称</option>
         </select>
         <input type="text" value=""    name="keyword"  placeholder="请输入关键字"/>
         <button class="btn btn-normal search_frm">搜索</button>
@@ -54,10 +60,12 @@
 {{--        <col width="50">--}}
 {{--        <col width="60">--}}
         <col>
-        <col width="90">
         <col>
         <col>
-        <col width="100">
+        <col>
+        <col>
+        <col>
+        <col>
         <col width="140">
     </colgroup>
     <thead>
@@ -70,10 +78,12 @@
 {{--      </th>--}}
 {{--      <th>ID</th>--}}
       <th>培训班名称</th>
-      <th>名称简写</th>
+      <th>开班城市</th>
+      <th>备注</th>
+        <th>班级人数</th>
+      <th>班级状态</th>
       <th>创建时间</th>
-      <th>更新时间</th>
-      <th>排序[降序]</th>
+        <th>更新时间</th>
       <th>操作</th>
     </tr>
     </thead>

@@ -20,24 +20,37 @@
         <input type="hidden" name="id" value="{{ $info['id'] ?? 0 }}"/>
         <table class="table1">
             <tr>
-                <th>培训班名称<span class="must">*</span></th>
+                <th>班级名称<span class="must">*</span></th>
                 <td>
-                    <input type="text" class="inp wnormal"  name="course_class_name" value="{{ $info['course_class_name'] ?? '' }}" placeholder="请输入培训班名称"/>
+                    <input type="text" class="inp wnormal"  name="class_name" value="{{ $info['class_name'] ?? '' }}" placeholder="请输入班级名称"/>
                 </td>
             </tr>
             <tr>
-                <th>名称简写<span class="must">*</span></th>
+                <th>开班城市<span class="must">*</span></th>
                 <td>
-                    <input type="text" class="inp wnormal"  name="simple_name" value="{{ $info['simple_name'] ?? '' }}" placeholder="请输入名称简写"/>
+                    <select class="wnormal" name="city_id" style="width: 100px;">
+                        <option value="">请选择城市</option>
+                        @foreach ($citys_kv as $k=>$txt)
+                            <option value="{{ $k }}"  @if(isset($defaultCity) && $defaultCity == $k) selected @endif >{{ $txt }}</option>
+                        @endforeach
+                    </select>
                 </td>
             </tr>
             <tr>
-                <th>排序[降序]<span class="must">*</span></th>
+                <th>备注<span class="must"></span></th>
                 <td>
-                    <input type="text" class="inp wnormal"  name="sort_num" value="{{ $info['sort_num'] ?? '' }}" placeholder="请输入排序"  onkeyup="isnum(this) " onafterpaste="isnum(this)"  />
-                </td>
-            </tr>
+                    <textarea name="remarks" placeholder="请输入备注" class="layui-textarea">{{ replace_enter_char($info['remarks'] ?? '',2) }}</textarea>
 
+                </td>
+            </tr>
+            <tr>
+                <th>状态<span class="must">*</span></th>
+                <td>
+                    @foreach ($classStatus as $k=>$txt)
+                        <label><input type="radio"  name="class_status"  value="{{ $k }}"  @if(isset($defaultClassStatus) && $defaultClassStatus == $k) checked="checked"  @endif />{{ $txt }} </label>
+                    @endforeach
+                </td>
+            </tr>
             <tr>
                 <th> </th>
                 <td><button class="btn btn-l wnormal"  id="submitBtn" >提交</button></td>
@@ -55,6 +68,6 @@
     var SAVE_URL = "{{ url('api/admin/course_class/ajax_save') }}";// ajax保存记录地址
     var LIST_URL = "{{url('admin/course_class')}}";//保存成功后跳转到的地址
 </script>
-<script src="{{ asset('/js/admin/QualityControl/CourseClass_edit.js') }}"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/CourseClass_edit.js') }}?1"  type="text/javascript"></script>
 </body>
 </html>

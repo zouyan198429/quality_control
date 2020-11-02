@@ -74,6 +74,27 @@ class CourseClass extends BasePublicModel
      */
     protected $table = 'course_class';
 
+    // 班级状态1待开班2开班中4已作废8已结业
+    public static $classStatusArr = [
+        '1' => '待开班',
+        '2' => '开班中',
+        '4' => '已作废',
+        '8' => '已结业',
+    ];
+
+    // 表里没有的字段
+    protected $appends = ['class_status_text'];
+
+    /**
+     * 获取状态文字
+     *
+     * @return string
+     */
+    public function getClassStatusTextAttribute()
+    {
+        return static::$classStatusArr[$this->class_status] ?? '';
+    }
+
     /**
      * 获取报名学员-二维
      */

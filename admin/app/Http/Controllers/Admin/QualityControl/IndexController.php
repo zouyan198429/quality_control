@@ -15,6 +15,7 @@ use App\Models\QualityControl\Staff;
 use App\Services\Captcha\CaptchaCode;
 use App\Services\DB\CommonDB;
 use App\Services\File\DownFile;
+use App\Services\Request\API\HttpRequest;
 use App\Services\Request\CommonRequest;
 use App\Services\SessionCustom\SessionCustom;
 use App\Services\Tool;
@@ -27,6 +28,39 @@ class IndexController extends BasicController
     public $controller_id =0;// 功能小模块[控制器]id - controller_id  历史表 、正在进行表 与原表相同
 
     public function test(Request $request){
+//        pr(strlen('脂a1'));
+        $aaa = "脂11a酸组成（十四碳以下脂肪酸、豆蔻酸、棕榈酸、棕榈一烯酸、十七烷酸、十七碳一烯酸、硬脂酸、油酸、亚油酸、亚麻酸、花生酸、花生一烯酸、花生二烯酸、山嵛酸、芥酸、二十二碳二烯酸、木焦油酸、二十四碳一烯酸、饱和酸）";
+        $bb = Tool::sub_str($aaa, 2);// mb_substr($aaa,0,3,'utf-8');
+        pr(($bb));
+//        $url = "http://113.140.67.203:1284/jgjbqk_SearchList.action";
+//        // $DownFile = DownFile::curlGetFileContents($url);
+//        $requestData = [
+//            'pageSize' => 80000,
+//            'Banb' => 0,
+//        ];
+//        $result = HttpRequest::sendHttpRequest($url, [], $requestData, 'POST');
+//
+//        pr($result);
+        // 能力附表
+//        $url = "http://113.140.67.203:1284/jgjbqk_getFujian.action";// ?sqid=1298&type=1";
+//        // $DownFile = DownFile::curlGetFileContents($url);
+//        $requestData = [
+//            'sortField' => 'id',
+//            'sortOrder' => 'esc',
+//            'pageIndex' => 0,
+//            'pageSize' => 10,
+//            'sqid' => 1298,
+//            'type' => 1,
+//        ];
+//        $result = HttpRequest::sendHttpRequest($url, [], $requestData, 'POST');
+//        pr($result);
+        // 文件保存
+        // $fileUrl = 'https://pics1.baidu.com/feed/4ec2d5628535e5dd14c41cc0f11425e8cf1b621b.jpeg?token=d1d67a7e1a7de030a93d8d69ca310e87';
+        // $files_names = 'aaa.jpeg';
+//        $fileUrl = 'http://113.140.67.203:1284/jsp/LookFj.jsp?id=3788';
+//        $files_names = 'e3b8d4d1-c2da-461d-9a9d-474aefc1d2f7.pdf';
+//        $returnSave = DownFile::getUrlFileToLocal($fileUrl, 0,2, '', $files_names);
+//        pr($returnSave);
 
 //        $dateTime =  date('Y-m-d H:i:s');
 //        $aaa = Tool::addMinusDate($dateTime, ['+30 day'], 'Y-m-d H:i:s', 1, '时间');

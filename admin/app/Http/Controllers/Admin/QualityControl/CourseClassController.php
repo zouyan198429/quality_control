@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Admin\QualityControl;
 
+use App\Business\Controller\API\QualityControl\CTAPICitysBusiness;
 use App\Business\Controller\API\QualityControl\CTAPICourseClassBusiness;
 use App\Http\Controllers\WorksController;
+use App\Models\QualityControl\CourseClass;
 use App\Services\Request\CommonRequest;
 use App\Services\Tool;
 use Illuminate\Http\Request;
@@ -167,14 +169,17 @@ class CourseClassController extends BasicController
             , '', [], function (&$reDataArr) use ($request){
                 $id = CommonRequest::getInt($request, 'id');
                 // CommonRequest::judgeEmptyParams($request, 'id', $id);
-                $industry_name = CommonRequest::get($request, 'industry_name');
-                $simple_name = CommonRequest::get($request, 'simple_name');
-                $sort_num = CommonRequest::getInt($request, 'sort_num');
+                $class_name = CommonRequest::get($request, 'class_name');
+                $city_id = CommonRequest::getInt($request, 'city_id');
+                $remarks = CommonRequest::get($request, 'remarks');
+                $class_status = CommonRequest::getInt($request, 'class_status');
+
 
                 $saveData = [
-                    'industry_name' => $industry_name,
-                    'simple_name' => $simple_name,
-                    'sort_num' => $sort_num,
+                    'class_name' => $class_name,
+                    'city_id' => $city_id,
+                    'remarks' => replace_enter_char($remarks, 1),
+                    'class_status' => $class_status,
                 ];
 
 //        if($id <= 0) {// 新加;要加入的特别字段
@@ -219,7 +224,13 @@ class CourseClassController extends BasicController
 //        $this->InitParams($request);
 //        return  CTAPICourseClassBusiness::getList($request, $this, 2 + 4);
         return $this->exeDoPublicFun($request, 4, 4,'', true, '', [], function (&$reDataArr) use ($request){
-            return  CTAPICourseClassBusiness::getList($request, $this, 2 + 4);
+
+            $handleKeyConfigArr = ['city_info'];
+            $extParams = [
+                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                'relationFormatConfigs'=> CTAPICourseClassBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
+            ];
+            return  CTAPICourseClassBusiness::getList($request, $this, 2 + 4, [], [], $extParams);
         });
     }
 
@@ -310,7 +321,10 @@ class CourseClassController extends BasicController
         Tool::formatOneArrVals($tem_id, [null, ''], ',', 1 | 2 | 4 | 8);
         $pageNum = (is_array($tem_id) && count($tem_id) > 1 ) ? 1024 : 512;
         return $this->exeDoPublicFun($request, $pageNum, 4,'', true, '', [], function (&$reDataArr) use ($request){
-            return CTAPICourseClassBusiness::delAjax($request, $this);
+            $organize_id = 0;// CommonRequest::getInt($request, 'company_id');// 可有此参数
+            return CTAPICourseClassBusiness::delCustomizeAjax($request,  $this, $organize_id, [], '');
+            // return CTAPICourseClassBusiness::delAjax($request, $this);
+
         });
     }
 
@@ -412,6 +426,14 @@ class CourseClassController extends BasicController
 //        $reDataArr['adminType'] =  AbilityJoin::$adminTypeArr;
 //        $reDataArr['defaultAdminType'] = -1;// 列表页默认状态
 
+        // 获得城市KV值
+        $reDataArr['citys_kv'] = CTAPICitysBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'city_name']);
+        $reDataArr['defaultCity'] = -1;// 默认
+
+        // 班级状态1待开班2开班中4已作废8已结业
+        $reDataArr['classStatus'] =  CourseClass::$classStatusArr;
+        $reDataArr['defaultClassStatus'] = -1;// 列表页默认状态
+
     }
 
     /**
@@ -452,6 +474,15 @@ class CourseClassController extends BasicController
             $info = CTAPICourseClassBusiness::getInfoData($request, $this, $id, [], '', []);
         }
         // $reDataArr = array_merge($reDataArr, $resultDatas);
+
+        // 获得城市KV值
+        $reDataArr['citys_kv'] = CTAPICitysBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'city_name']);
+        $reDataArr['defaultCity'] = $info['city_id'] ?? -1;// 默认
+
+        // 班级状态1待开班2开班中4已作废8已结业
+        $reDataArr['classStatus'] =  CourseClass::$classStatusArr;
+        $reDataArr['defaultClassStatus'] = $info['class_status'] ?? -1;// 列表页默认状态
+
         $reDataArr['info'] = $info;
         $reDataArr['operate'] = $operate;
 

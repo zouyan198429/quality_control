@@ -87,21 +87,31 @@ function ajax_form(){
     //     return false;
     // }
 
-    var industry_name = $('input[name=industry_name]').val();
-    if(!judge_validate(4,'行业名称',industry_name,true,'length',1,20)){
+    var class_name = $('input[name=class_name]').val();
+    if(!judge_validate(4,'班级名称',class_name,true,'length',1,20)){
         return false;
     }
 
-    var simple_name = $('input[name=simple_name]').val();
-    if(!judge_validate(4,'名称简写',simple_name,true,'length',1,20)){
+    var city_id = $('select[name=city_id]').val();
+    var judge_seled = judge_validate(1,'开班城市',city_id,true,'digit','','');
+    if(judge_seled != ''){
+        layer_alert("请选择开班城市",3,0);
+        //err_alert('<font color="#000000">' + judge_seled + '</font>');
         return false;
     }
 
-    var sort_num = $('input[name=sort_num]').val();
-    if(!judge_validate(4,'排序',sort_num,false,'digit','','')){
+    var remarks = $('textarea[name=remarks]').val();
+    if(!judge_validate(4,'备注',remarks,false,'length',2,1000)){
         return false;
     }
 
+    var class_status = $('input[name=class_status]:checked').val() || '';
+    var judge_seled = judge_validate(1,'状态',class_status,true,'custom',/^[1248]$/,"");
+    if(judge_seled != ''){
+        layer_alert("请选择状态",3,0);
+        //err_alert('<font color="#000000">' + judge_seled + '</font>');
+        return false;
+    }
 
     // 验证通过
     SUBMIT_FORM = false;//标记为已经提交过

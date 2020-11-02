@@ -83,6 +83,11 @@ class CTAPICourseClassBusiness extends BasicPublicCTAPIBusiness
 //                , ['admin_type' => 'admin_type', 'staff_id' => 'id']
 //                , 1, 2
 //                ,'','', [], ['where' => [['admin_type', 2]]], '', []),
+            // 获得 行业名称
+            'city_info' => CTAPICitysBusiness::getTableRelationConfigInfo($request, $controller
+                , ['city_id' => 'id']
+                , 1, 2
+                ,'','', [], [], '', []),
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }
@@ -129,8 +134,8 @@ class CTAPICourseClassBusiness extends BasicPublicCTAPIBusiness
         $city_id = CommonRequest::getInt($request, 'city_id');
         if($city_id > 0 )  array_push($queryParams['where'], ['city_id', '=', $city_id]);
 
-//        $status = CommonRequest::get($request, 'status');
-//        if(strlen($status) > 0 && $status != 0)  Tool::appendParamQuery($queryParams, $status, 'status', [0, '0', ''], ',', false);
+        $class_status = CommonRequest::get($request, 'class_status');
+        if(strlen($class_status) > 0 && $class_status != 0)  Tool::appendParamQuery($queryParams, $class_status, 'class_status', [0, '0', ''], ',', false);
 
 //        $ids = CommonRequest::get($request, 'ids');
 //        if(strlen($ids) > 0 && $ids != 0)  Tool::appendParamQuery($queryParams, $ids, 'id', [0, '0', ''], ',', false);

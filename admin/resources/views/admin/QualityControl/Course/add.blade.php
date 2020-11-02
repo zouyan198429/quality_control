@@ -88,7 +88,7 @@
                 <th>上架状态<span class="must">*</span></th>
                 <td>
                     @foreach ($statusOnline as $k=>$txt)
-                        <label><input type="radio"  name="status_online"  value="{{ $k }}"  @if(isset($defaultStatusOnline) && $defaultStatusOnline == $k) checked="checked"  @endif />{{ $txt }} </label>
+                        <label><input type="radio"  name="status_online"  value="{{ $k }}"  @if(isset($defaultClassStatus) && $defaultClassStatus == $k) checked="checked"  @endif />{{ $txt }} </label>
                     @endforeach
                 </td>
             </tr>

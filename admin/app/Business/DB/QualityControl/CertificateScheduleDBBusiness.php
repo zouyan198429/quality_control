@@ -125,19 +125,29 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
                 $saveData['certificate_id'] = $certificateObj->id;// $certificate_id;
             }
             if(isset($saveData['category_name'])){
-                $saveData['category_name_id'] = CertificateNamesDBBusiness::getNameId(trim($saveData['category_name']), $operate_staff_id, $operate_staff_id_history);
+                $tem_category_name = trim($saveData['category_name']);
+                if(strlen($tem_category_name) > 100) $tem_category_name = mb_substr($tem_category_name,0,100,'utf-8');
+                $saveData['category_name_id'] = CertificateNamesDBBusiness::getNameId($tem_category_name, $operate_staff_id, $operate_staff_id_history);
             }
             if(isset($saveData['project_name'])){
-                $saveData['project_name_id'] = CertificateNamesDBBusiness::getNameId(trim($saveData['project_name']), $operate_staff_id, $operate_staff_id_history);
+                $tem_project_name = trim($saveData['project_name']);
+                if(strlen($tem_project_name) > 100) $tem_project_name = mb_substr($tem_project_name,0,100,'utf-8');
+                $saveData['project_name_id'] = CertificateNamesDBBusiness::getNameId($tem_project_name, $operate_staff_id, $operate_staff_id_history);
             }
             if(isset($saveData['three_name'])){
-                $saveData['three_name_id'] = CertificateNamesDBBusiness::getNameId(trim($saveData['three_name']), $operate_staff_id, $operate_staff_id_history);
+                $tem_three_name = trim($saveData['three_name']);
+                if(strlen($tem_three_name) > 100) $tem_three_name = mb_substr($tem_three_name,0,100,'utf-8');
+                $saveData['three_name_id'] = CertificateNamesDBBusiness::getNameId($tem_three_name, $operate_staff_id, $operate_staff_id_history);
             }
             if(isset($saveData['four_name'])){
-                $saveData['four_name_id'] = CertificateNamesDBBusiness::getNameId(trim($saveData['four_name']), $operate_staff_id, $operate_staff_id_history);
+                $tem_four_name = trim($saveData['four_name']);
+                if(strlen($tem_four_name) > 100) $tem_four_name = mb_substr($tem_four_name,0,100,'utf-8');
+                $saveData['four_name_id'] = CertificateNamesDBBusiness::getNameId($tem_four_name, $operate_staff_id, $operate_staff_id_history);
             }
             if(isset($saveData['param_name'])){
-                $saveData['param_name_id'] = CertificateNamesDBBusiness::getNameId(trim($saveData['param_name']), $operate_staff_id, $operate_staff_id_history);
+                $tem_param_name = trim($saveData['param_name']);
+                if(strlen($tem_param_name) > 100) $tem_param_name = mb_substr($tem_param_name,0,100,'utf-8');
+                $saveData['param_name_id'] = CertificateNamesDBBusiness::getNameId($tem_param_name, $operate_staff_id, $operate_staff_id_history);
             }
 
             // 新加或修改
