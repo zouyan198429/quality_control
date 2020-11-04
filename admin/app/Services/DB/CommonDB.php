@@ -184,9 +184,11 @@ class CommonDB
                     /*[
                             ['status', '=', '1'],
                             ['subscribed', '<>', '1'],
+                            ['id', '&' , '16=16'],
                         ]
                     */
                     // Where 子句
+                    // ->where('id', '&', '16=16')
                     // ->where('votes', '=', 100)
                     // ->where('votes', 100)
                     /* ->where([

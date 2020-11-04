@@ -260,6 +260,63 @@ class AbilityJoinItemsResultsController extends BasicController
         return ajaxDataArr(1, $resultDatas, '');
     }
 
+
+    /**
+     * ajax保存数据--已领样，未上传数据的--可以手动直接判断为不满意
+     *
+     * @param int $id
+     * @param int $ability_id
+     * @return Response
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_save_dissatisfied(Request $request, $ability_id = 0)
+    {
+        $this->InitParams($request);
+        $id = CommonRequest::getInt($request, 'id');// 报名id
+        // CommonRequest::judgeEmptyParams($request, 'id', $id);
+        //$type_name = CommonRequest::get($request, 'type_name');
+        //$sort_num = CommonRequest::getInt($request, 'sort_num');
+
+        if(!is_numeric($id) || $id <= 0){
+            throws('参数[id]有误！');
+        }
+
+        $reDataArr['ability_id'] = $ability_id;
+
+        $abilityInfo = $this->getAbilityInfo($ability_id);
+        $reDataArr['info'] = $abilityInfo;
+
+        // 获得报名信息
+        $extParams = [
+            // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+            'relationFormatConfigs'=> CTAPIAbilityJoinItemsResultsBusiness::getRelationConfigs($request, $this, ['join_items_samples_list'], []),// , 'join_items'
+        ];
+
+        $info = CTAPIAbilityJoinItemsResultsBusiness::getInfoData($request, $this, $id, [], '', $extParams);
+        if(empty($info)) throws('记录不存在！');
+        $status = $info['status'] ?? '';
+        if(!in_array($status, [1,2])) throws('不可进行不满意[未传]操作！');
+
+        $result_status = $info['result_status'] ?? '';
+        if($result_status != 1)  throws('非待判定状态，不可进行不满意[未传]操作！');
+
+        $submit_status = $info['submit_status'] ?? '';
+        if($submit_status != 1)  throws('非未传，不可进行不满意[未传]操作！');
+
+        $is_sample = $info['is_sample'] ?? '';
+        if($is_sample != 2)  throws('非已取样，不可进行不满意[未传]操作！');
+
+        $saveData = [
+            'result_status' => 8,// 不满意
+        ];
+        $extParams = [
+            'judgeDataKey' => 'replace',// 数据验证的下标
+            'methodName' => 'judgeResultById'
+        ];
+        $resultDatas = CTAPIAbilityJoinItemsResultsBusiness::replaceById($request, $this, $saveData, $id, $extParams, true);
+        return ajaxDataArr(1, $resultDatas, '');
+    }
+
     /**
      * 添加--判定
      *

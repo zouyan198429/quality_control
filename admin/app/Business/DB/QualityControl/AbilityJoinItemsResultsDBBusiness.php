@@ -244,8 +244,8 @@ class AbilityJoinItemsResultsDBBusiness extends BasePublicDBBusiness
         $status = $info['status'] ?? 0;// 状态1已报名  2已取样  4已传数据   8已判定 16已完成
         $info_result_status = $info['result_status'] ?? 0;// 验证结果1待判定  2满意、4有问题、8不满意   16满意【补测满意】
 
-        // 人员操作的
-        if($operate_staff_id > 0 && ($status != 4 || $info_result_status != 1)) throws('非已传数据状态，不可进行此操作！');
+        // 人员操作的  $status != 4 ||
+        if($operate_staff_id > 0 && ( !in_array($status, [1,2,4]) || $info_result_status != 1) ) throws('非已传数据状态，不可进行此操作！');
         // 脚本跑的
         if($operate_staff_id <= 0 && ( !in_array($status, [2])|| $info_result_status != 1 )) throws('非已传数据状态，不可进行此操作！');
         $retry_no = $info['retry_no'] ?? 0;

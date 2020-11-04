@@ -131,7 +131,7 @@ class CTAPICertificateBusiness extends BasicPublicCTAPIBusiness
 
         // 方式一  --- 自己拼接
         // $type_id = CommonRequest::get($request, 'type_id');
-        // if(is_numeric($type_id) )  array_push($queryParams['where'], ['type_id', '=', $type_id]);
+        // if(is_numeric($type_id) )   Tool::appendCondition($queryParams, 'type_id',  $type_id);//  array_push($queryParams['where'], ['type_id', '=', $type_id]);
 
         $company_id = CommonRequest::getInt($request, 'company_id');
         if($company_id > 0 )  array_push($queryParams['where'], ['company_id', '=', $company_id]);

@@ -629,7 +629,7 @@ class BasicCTAPIBusiness extends APIOperate
 
         // 方式一  --- 自己拼接
         // $type_id = CommonRequest::get($request, 'type_id');
-        // if(is_numeric($type_id) )  array_push($queryParams['where'], ['type_id', '=', $type_id]);
+        // if(is_numeric($type_id) )  Tool::appendCondition($queryParams, 'type_id',  $type_id);// array_push($queryParams['where'], ['type_id', '=', $type_id]);
 
         // 方式二 --- 单个拼接--封装
         // static::joinParamQuery($request, $controller, $queryParams, 'class_id', 'class_id', true, [0, '0', ''], ',', false);

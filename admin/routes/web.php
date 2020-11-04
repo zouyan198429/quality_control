@@ -333,6 +333,13 @@ Route::get('admin/course_log/add/{id}', 'Admin\QualityControl\CourseLogControlle
 Route::get('admin/course_log/export', 'Admin\QualityControl\CourseLogController@export');// 导出
 Route::get('admin/course_log/import_template', 'Admin\QualityControl\CourseLogController@import_template');// 导入模版
 
+// 收款帐号配置
+Route::get('admin/order_pay_config', 'Admin\QualityControl\OrderPayConfigController@index');// 列表
+Route::get('admin/order_pay_config/add/{id}', 'Admin\QualityControl\OrderPayConfigController@add');// 添加
+// Route::get('admin/order_pay_config/select', 'Admin\QualityControl\OrderPayConfigController@select');// 选择-弹窗
+Route::get('admin/order_pay_config/export', 'Admin\QualityControl\OrderPayConfigController@export');// 导出
+Route::get('admin/order_pay_config/import_template', 'Admin\QualityControl\OrderPayConfigController@import_template');// 导入模版
+
 // 企业到期配置
 Route::get('admin/company_expire', 'Admin\QualityControl\CompanyExpireController@index');// 列表
 Route::get('admin/company_expire/add/{id}', 'Admin\QualityControl\CompanyExpireController@add');// 添加

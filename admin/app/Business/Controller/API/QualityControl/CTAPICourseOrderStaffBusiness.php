@@ -147,6 +147,15 @@ class CTAPICourseOrderStaffBusiness extends BasicPublicCTAPIBusiness
         $class_id = CommonRequest::getInt($request, 'class_id');
         if($class_id > 0 )  array_push($queryParams['where'], ['class_id', '=', $class_id]);
 
+        $class_company_id = CommonRequest::getInt($request, 'class_company_id');
+        if($class_company_id > 0 ) Tool::appendCondition($queryParams, 'class_company_id',  $class_company_id);
+
+        $order_no = CommonRequest::get($request, 'order_no');
+        if(strlen($order_no) > 0 ) Tool::appendCondition($queryParams, 'order_no',  $order_no);
+
+        $pay_status = CommonRequest::get($request, 'pay_status');
+        if(strlen($pay_status) > 0 && $pay_status != 0)  Tool::appendParamQuery($queryParams, $pay_status, 'pay_status', [0, '0', ''], ',', false);
+
 
         $join_class_status = CommonRequest::get($request, 'join_class_status');
         if(strlen($join_class_status) > 0 && $join_class_status != 0)  Tool::appendParamQuery($queryParams, $join_class_status, 'join_class_status', [0, '0', ''], ',', false);

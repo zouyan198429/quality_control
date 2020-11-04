@@ -166,6 +166,8 @@
 
       var IFRAME_SAMPLE_RESULT_INFO_URL = "{{url('admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items/sample_result_info/')}}/";//显示页面地址前缀 + id / + retry_no
 
+      var SAVE_DISSATISFIED_URL = "{{ url('api/admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items_results/ajax_save_dissatisfied') }}";// 已领样，未上传数据的--可以手动直接判断为不满意
+
       var SELECT_COMPANY_URL = "{{url('admin/company/select')}}";// 选择所属企业
 
       // 列表数据每隔指定时间就去执行一次刷新【如果表有更新时】--定时执行
@@ -174,6 +176,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/AbilitysAdmin/AbilityJoinItemsResults.js') }}?20"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/AbilitysAdmin/AbilityJoinItemsResults.js') }}?22"  type="text/javascript"></script>
 </body>
 </html>

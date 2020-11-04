@@ -116,20 +116,22 @@ $api->version('v1', function ($api) {
         // 能力验证管理
 
         // 能力验证--报名管理--参加单位
-        $api->any('expert/abilitys_admin/{ability_id}/ability_join_items/ajax_alist', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@ajax_alist');//ajax获得列表数据
-//        $api->post('expert/abilitys_admin/{ability_id}/ability_join_items/ajax_del', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@ajax_del');// 删除
-//        $api->post('expert/abilitys_admin/{ability_id}/ability_join_items/ajax_save', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@ajax_save');// 新加/修改
-//        $api->post('expert/abilitys_admin/{ability_id}/ability_join_items/ajax_get_child', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
-//        $api->post('expert/abilitys_admin/{ability_id}/ability_join_items/ajax_get_areachild', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
-//        $api->post('expert/abilitys_admin/{ability_id}/ability_join_items/ajax_import_staff','Admin\QualityControl\Abilitys\AbilityJoinItemsController@ajax_import'); // 导入员工
+        $api->any('expert/abilitys_admin/{ability_id}/ability_join_items/ajax_alist', 'Expert\QualityControl\Abilitys\AbilityJoinItemsController@ajax_alist');//ajax获得列表数据
+//        $api->post('expert/abilitys_admin/{ability_id}/ability_join_items/ajax_del', 'Expert\QualityControl\Abilitys\AbilityJoinItemsController@ajax_del');// 删除
+//        $api->post('expert/abilitys_admin/{ability_id}/ability_join_items/ajax_save', 'Expert\QualityControl\Abilitys\AbilityJoinItemsController@ajax_save');// 新加/修改
+//        $api->post('expert/abilitys_admin/{ability_id}/ability_join_items/ajax_get_child', 'Expert\QualityControl\Abilitys\AbilityJoinItemsController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+//        $api->post('expert/abilitys_admin/{ability_id}/ability_join_items/ajax_get_areachild', 'Expert\QualityControl\Abilitys\AbilityJoinItemsController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+//        $api->post('expert/abilitys_admin/{ability_id}/ability_join_items/ajax_import_staff','Expert\QualityControl\Abilitys\AbilityJoinItemsController@ajax_import'); // 导入员工
 
-//        $api->post('expert/abilitys_admin/{ability_id}/ability_join_items/import', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@import');// 导入excel
-//        $api->post('expert/abilitys_admin/{ability_id}/ability_join_items/ajax_get_ids', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+//        $api->post('expert/abilitys_admin/{ability_id}/ability_join_items/import', 'Expert\QualityControl\Abilitys\AbilityJoinItemsController@import');// 导入excel
+//        $api->post('expert/abilitys_admin/{ability_id}/ability_join_items/ajax_get_ids', 'Expert\QualityControl\Abilitys\AbilityJoinItemsController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
         // 能力验证结果--报名管理--参加单位
-        $api->any('expert/abilitys_admin/{ability_id}/ability_join_items_results/ajax_alist', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@ajax_alist');//ajax获得列表数据
-        $api->any('expert/abilitys_admin/{ability_id}/ability_join_items_results/ajax_save', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@ajax_save');// 新加/修改
-        $api->any('expert/abilitys_admin/{ability_id}/ability_join_items_results/ajax_save_sample', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@ajax_save_sample');// 新加/修改--取样
+        $api->any('expert/abilitys_admin/{ability_id}/ability_join_items_results/ajax_alist', 'Expert\QualityControl\Abilitys\AbilityJoinItemsResultsController@ajax_alist');//ajax获得列表数据
+        $api->any('expert/abilitys_admin/{ability_id}/ability_join_items_results/ajax_save', 'Expert\QualityControl\Abilitys\AbilityJoinItemsResultsController@ajax_save');// 新加/修改
+        $api->any('expert/abilitys_admin/{ability_id}/ability_join_items_results/ajax_save_sample', 'Expert\QualityControl\Abilitys\AbilityJoinItemsResultsController@ajax_save_sample');// 新加/修改--取样
+
+        $api->any('expert/abilitys_admin/{ability_id}/ability_join_items_results/ajax_save_dissatisfied', 'Expert\QualityControl\Abilitys\AbilityJoinItemsResultsController@ajax_save_dissatisfied');// 已领样，未上传数据的--可以手动直接判断为不满意
         //****************************************************************************
 
         // ------后台
@@ -281,6 +283,17 @@ $api->version('v1', function ($api) {
 
         $api->post('admin/course_log/import', 'Admin\QualityControl\CourseLogController@import');// 导入excel
         $api->post('admin/course_log/ajax_get_ids', 'Admin\QualityControl\CourseLogController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        // 收款帐号配置
+        $api->any('admin/order_pay_config/ajax_alist', 'Admin\QualityControl\OrderPayConfigController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/order_pay_config/ajax_del', 'Admin\QualityControl\OrderPayConfigController@ajax_del');// 删除
+        $api->post('admin/order_pay_config/ajax_save', 'Admin\QualityControl\OrderPayConfigController@ajax_save');// 新加/修改
+        $api->post('admin/order_pay_config/ajax_get_child', 'Admin\QualityControl\OrderPayConfigController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/order_pay_config/ajax_get_areachild', 'Admin\QualityControl\OrderPayConfigController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/order_pay_config/ajax_import_staff','Admin\QualityControl\OrderPayConfigController@ajax_import'); // 导入员工
+
+        $api->post('admin/order_pay_config/import', 'Admin\QualityControl\OrderPayConfigController@import');// 导入excel
+        $api->post('admin/order_pay_config/ajax_get_ids', 'Admin\QualityControl\OrderPayConfigController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
         // 企业到期配置
         $api->any('admin/company_expire/ajax_alist', 'Admin\QualityControl\CompanyExpireController@ajax_alist');//ajax获得列表数据
@@ -442,6 +455,8 @@ $api->version('v1', function ($api) {
         $api->any('admin/abilitys_admin/{ability_id}/ability_join_items_results/ajax_alist', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@ajax_alist');//ajax获得列表数据
         $api->any('admin/abilitys_admin/{ability_id}/ability_join_items_results/ajax_save', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@ajax_save');// 新加/修改
         $api->any('admin/abilitys_admin/{ability_id}/ability_join_items_results/ajax_save_sample', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@ajax_save_sample');// 新加/修改--取样
+
+        $api->any('admin/abilitys_admin/{ability_id}/ability_join_items_results/ajax_save_dissatisfied', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@ajax_save_dissatisfied');// 已领样，未上传数据的--可以手动直接判断为不满意
         //****************************************************************************
 
         // 能力验证--报名管理

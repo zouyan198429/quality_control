@@ -135,6 +135,9 @@ class CTAPICourseLogBusiness extends BasicPublicCTAPIBusiness
         $class_id = CommonRequest::getInt($request, 'class_id');
         if($class_id > 0 )  array_push($queryParams['where'], ['class_id', '=', $class_id]);
 
+        $class_company_id = CommonRequest::getInt($request, 'class_company_id');
+        if($class_company_id > 0 ) Tool::appendCondition($queryParams, 'class_company_id',  $class_company_id);
+
         $course_staff_id = CommonRequest::getInt($request, 'course_staff_id');
         if($course_staff_id > 0 )  array_push($queryParams['where'], ['course_staff_id', '=', $course_staff_id]);
 

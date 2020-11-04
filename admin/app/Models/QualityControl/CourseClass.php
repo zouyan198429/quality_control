@@ -82,8 +82,15 @@ class CourseClass extends BasePublicModel
         '8' => '已结业',
     ];
 
+    // 支付方式(1现金、2微信支付、4支付宝)
+    public static $payMethodArr = [
+        '1' => '现金',
+        '2' => '微信',
+        '4' => '支付宝',
+    ];
+
     // 表里没有的字段
-    protected $appends = ['class_status_text'];
+    protected $appends = ['class_status_text', 'pay_method_text'];
 
     /**
      * 获取状态文字
@@ -96,6 +103,24 @@ class CourseClass extends BasePublicModel
     }
 
     /**
+     * 获取支付方式文字
+     *
+     * @return string
+     */
+    public function getPayMethodTextAttribute()
+    {
+        $return_arr = [];
+        $pay_method = $this->pay_method;
+        if($pay_method <= 0 ) return '';
+        foreach(static::$payMethodArr as $k => $v){
+            if(($k & $pay_method) == $k)  array_push($return_arr, $v);
+        }
+        return implode('、', $return_arr);
+
+        // return static::$payMethodArr[$this->pay_method] ?? '';
+    }
+
+    /**
      * 获取报名学员-二维
      */
     public function courseOrderStaff()
@@ -104,10 +129,27 @@ class CourseClass extends BasePublicModel
     }
 
     /**
+     * 获取培训班企业-二维
+     */
+    public function courseClassCompany()
+    {
+        return $this->hasMany('App\Models\QualityControl\CourseClassCompany', 'class_id', 'id');
+    }
+
+    /**
      * 获取面授操作日志-二维
      */
     public function courseLog()
     {
         return $this->hasMany('App\Models\QualityControl\CourseLog', 'class_id', 'id');
+    }
+
+
+    /**
+     * 获取收款帐号配置---一维
+     */
+    public function orderPayConfig()
+    {
+        return $this->hasOne('App\Models\QualityControl\OrderPayConfig', 'pay_config_id', 'id');
     }
 }

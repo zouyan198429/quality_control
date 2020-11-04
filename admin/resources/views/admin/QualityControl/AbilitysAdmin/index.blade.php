@@ -126,19 +126,19 @@
               <li data-name="user" class="layui-nav-item">
                   <a  lay-href="{{ url('admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items_results') }}?retry_no=0&operate_num=1" lay-tips="参加单位" lay-direction="2">
                       <i class="layui-icon layui-icon-component"></i>
-                      <cite>参加单位</cite>
+                      <cite>初测单位</cite>
                   </a>
               </li>
               <li data-name="user" class="layui-nav-item">
                   <a  lay-href="{{ url('admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items_results') }}?retry_no=0&submit_status=2&operate_num=2" lay-tips="上传数据" lay-direction="2">
                       <i class="layui-icon layui-icon-component"></i>
-                      <cite>上传数据</cite>
+                      <cite>初测数据</cite>
                   </a>
               </li>
               <li data-name="user" class="layui-nav-item">
                   <a  lay-href="{{ url('admin/abilitys_admin/' . ($ability_id ?? 0)  . '/ability_join_items_results') }}?retry_no=1&operate_num=3" lay-tips="未合格单位" lay-direction="2">
                       <i class="layui-icon layui-icon-component"></i>
-                      <cite>未合格单位</cite>
+                      <cite>补测单位</cite>
                   </a>
               </li>
               <li data-name="user" class="layui-nav-item">

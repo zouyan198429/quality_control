@@ -324,6 +324,35 @@
                       </dd>
                   </dl>
               </li>
+
+{{--              <li data-name="set" class="layui-nav-item">--}}
+{{--                  <a href="javascript:;" lay-tips="开票管理" lay-direction="2">--}}
+{{--                      <i class="layui-icon layui-icon-set"></i>--}}
+{{--                      <cite>开票管理</cite>--}}
+{{--                  </a>--}}
+{{--                  <dl class="layui-nav-child">--}}
+{{--                      <dd class="layui-nav-itemed">--}}
+{{--                          <a href="javascript:;">订单管理</a>--}}
+{{--                          <dl class="layui-nav-child">--}}
+{{--                              <dd>--}}
+{{--                                  <a lay-href="{{ url('admin/orders') }}">订单管理</a>--}}
+{{--                              </dd>--}}
+{{--                              <dd>--}}
+{{--                                  <a lay-href="{{ url('admin/order_pay') }}">在线支付明细【对帐】</a>--}}
+{{--                              </dd>--}}
+{{--                              <dd>--}}
+{{--                                  <a lay-href="{{ url('admin/order_flow') }}">财务明细[流水帐]</a>--}}
+{{--                              </dd>--}}
+{{--                          </dl>--}}
+{{--                      </dd>--}}
+{{--                      <dd class="layui-nav-itemed">--}}
+{{--                          <a href="javascript:;">收款设置</a>--}}
+{{--                          <dl class="layui-nav-child">--}}
+{{--                              <dd><a lay-href="{{ url('admin/order_pay_config') }}">收款帐号列表</a></dd>--}}
+{{--                          </dl>--}}
+{{--                      </dd>--}}
+{{--                  </dl>--}}
+{{--              </li>--}}
               <!-- <li data-name="user" class="layui-nav-item">
                   <a href="javascript:;" lay-tips="开票管理" lay-direction="2">
                       <i class="layui-icon layui-icon-component"></i>

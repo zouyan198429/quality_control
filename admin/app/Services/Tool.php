@@ -4171,6 +4171,36 @@ class Tool
     }
 
     /**
+     * @param array $queryParams 已有的查询条件数组
+     * @param string $fieldName 字段名
+     * @param string / array $paramVals 操作值  ; 注意 ['id', '&' , '16=16']  字段 'id'， 操作符 &  ，值  都有：'16=16'  有之一：'16>=0'
+     * @param string $operateStr 操作符 = > <  & <> 等，可以为空
+     * @param string $whereKey 条件关键字  如 where[默认] whereIn
+     * @param int $conditionType 条件类型 1 类where[默认] 2 类 whereIn
+     * @param boolean $hasInIsMerge $conditionType = 2 且 值是数组时：如果In条件有值时  true:合并；false:用新值--覆盖 --默认
+     *
+     */
+    public static function appendCondition(&$queryParams, $fieldName, $paramVals, $operateStr = '', $whereKey = 'where', $conditionType = 1, $hasInIsMerge = false){
+        if($conditionType == 1){// if (strpos($paramVals, ',') === false) { // 单条--类似于 where的格式的
+            // array_push($queryParams['where'], ['id', $paramVals]);
+            // 不存在where条件，则先创建一个空的where条件，好push内容到数组
+            if(!isset($queryParams[$whereKey])) $queryParams[$whereKey] = [];
+            if($operateStr == ''){
+                array_push($queryParams[$whereKey], [$fieldName, $paramVals]);
+            }else{
+                array_push($queryParams[$whereKey], [$fieldName, $operateStr, $paramVals]);
+            }
+        } else {// 类似于 whereIn 这样的
+            // $queryParams['whereIn']['id'] = explode(',', $paramVals);
+            // 合并
+            if($hasInIsMerge && isset($queryParams[$whereKey][$fieldName]) && !empty($queryParams[$whereKey][$fieldName]) && is_array($queryParams[$whereKey][$fieldName])){
+                $paramVals = array_values(array_merge($queryParams[$whereKey][$fieldName], $paramVals));
+            }
+            $queryParams[$whereKey][$fieldName] = $paramVals;
+        }
+    }
+
+    /**
      * 判断当前要操作的数据，是当前登录用户可以操作的
      * @param int $own_user_type 当前用户类型1平台2企业4个人
      * @param int $own_company_id 当前操作者的  所属平台 id -- -1: 忽略【不判断】
@@ -4531,15 +4561,16 @@ class Tool
 
     /**
      *
-     * 中英混合的字符串截取
+     * 中英混合的字符串截取--返回的时指定的字符的个数【不是位长度】
      * @param 待截取字符串 $sourcestr
      * @param 截取长度 $cutlength
      */
-    public static function sub_str($sourcestr, $cutlength) {
+    public static function subStr($sourcestr, $cutlength) {
         $returnstr = '';//待返回字符串
         $i = 0;
         $n = 0;
         $str_length = strlen ( $sourcestr ); //字符串的字节数
+        if($str_length <= $cutlength) return $sourcestr;
         while ( ($n < $cutlength) and ($i <= $str_length) ) {
             $temp_str = substr ( $sourcestr, $i, 1 );
             $ascnum = Ord ( $temp_str ); //得到字符串中第$i位字符的ascii码
@@ -4562,7 +4593,7 @@ class Tool
             } else {//其他情况下，半角标点符号，
                 $returnstr = $returnstr . substr ( $sourcestr, $i, 1 );
                 $i = $i + 1;
-                $n = $n + 0.5;
+                $n = $n + 1;// 0.5;
             }
         }
         return $returnstr;

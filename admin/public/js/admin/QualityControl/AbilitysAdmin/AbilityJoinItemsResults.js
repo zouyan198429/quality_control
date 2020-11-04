@@ -91,8 +91,87 @@ var otheraction = {
         tishi = operateText + tishi;
         layeriframe(weburl,tishi,950,510,IFRAME_MODIFY_CLOSE_OPERATE);
         return false;
+    },
+    dissatisfied : function(id){// 已领样，未上传数据的--可以手动直接判断为不满意
+        dissatisfied(id);
+        return false;
     }
 };
+// 已领样，未上传数据的--可以手动直接判断为不满意
+function dissatisfied(id) {
+    var index_query = layer.confirm('确定不满意【已传】当前选择记录？', {
+        btn: ['确定','取消'] //按钮
+    }, function(){
+        var operateText = '不满意【已传】';
+        other_operate_ajax('dissatisfied', id, operateText, {});
+        layer.close(index_query);
+    }, function(){
+    });
+}
+
+//操作
+// params 其它参数对象  {}
+function other_operate_ajax(operate_type, id, operate_txt, params){
+    params = params || {};
+    if(operate_type == '' || id == ''){
+        err_alert('请选择需要操作的数据');
+        return false;
+    }
+    operate_txt = operate_txt || "";
+    var data = params;// {};
+    var ajax_url = "";
+    var reset_total = true;// 是否重新从数据库获取总页数 true:重新获取,false不重新获取  ---ok
+    switch(operate_type)
+    {
+        case 'dissatisfied':// 已领样，未上传数据的--可以手动直接判断为不满意
+            // operate_txt = "开启";
+            // data = {'id':id, 'activity_id': CURRENT_ACTIVITY_ID};
+            // 合并对象
+            objAppendProps(data, {'id':id}, true);
+            ajax_url = SAVE_DISSATISFIED_URL;// /pms/Supplier/ajax_del?operate_type=1
+            reset_total = true;
+            break;
+        // case 'batch_open'://批量开启
+        //     // operate_txt = "批量开启";
+        //     // data = {'id':id, 'activity_id': CURRENT_ACTIVITY_ID};
+        //     // 合并对象
+        //     objAppendProps(data, {'id':id}, true);
+        //     reset_total = false;
+        //     ajax_url = OPEN_OPERATE_URL;// "/pms/Supplier/ajax_del?operate_type=2";
+        //     break;
+        default:
+            break;
+    }
+    console.log('ajax_url:',ajax_url);
+    console.log('data:',data);
+    var layer_index = layer.load();//layer.msg('加载中', {icon: 16});
+    $.ajax({
+        'type' : 'POST',
+        'url' : ajax_url,//'/pms/Supplier/ajax_del',
+        'headers':get_ajax_headers({}, ADMIN_AJAX_TYPE_NUM),
+        'data' : data,
+        'dataType' : 'json',
+        'success' : function(ret){
+            console.log('ret:',ret);
+            if(!ret.apistatus){//失败
+                //alert('失败');
+                // countdown_alert(ret.errorMsg,0,5);
+                layer_alert(ret.errorMsg,3,0);
+            }else{//成功
+                var msg = ret.errorMsg;
+                if(msg === ""){
+                    msg = operate_txt+"成功";
+                }
+                // countdown_alert(msg,1,5);
+                layer_alert(msg,1,0);
+                // reset_list(true, true);
+                console.log(LIST_FUNCTION_NAME);
+                eval( LIST_FUNCTION_NAME + '(' + true +', ' + true +', ' + reset_total + ', 2)');
+            }
+            layer.close(layer_index);//手动关闭
+        }
+    });
+}
 
 // 初始化，来决定*是显示还是隐藏
 function popSelectInit(){
@@ -208,6 +287,11 @@ function addCompany(company_id, company_name){
     document.write("                <%if( (item.status == 1 || item.status == 2) ){%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"otheraction.getSample(<%=item.id%>)\">");
     document.write("                    <i class=\"ace-icon fa fa-eyedropper bigger-60\"> 取样<\/i>");
+    document.write("                <\/a>");
+    document.write("                <%}%>");
+    document.write("                <%if( item.status == 2 && item.result_status == 1 && item.submit_status == 1 && item.is_sample == 2){%>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.dissatisfied(<%=item.id%>)\">");
+    document.write("                    <i class=\"ace-icon fa fa-pencil bigger-60\"> 不满意[未传]<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
     // document.write("                <%if( false){%>");

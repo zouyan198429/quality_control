@@ -30,7 +30,7 @@ class IndexController extends BasicController
     public function test(Request $request){
 //        pr(strlen('脂a1'));
         $aaa = "脂11a酸组成（十四碳以下脂肪酸、豆蔻酸、棕榈酸、棕榈一烯酸、十七烷酸、十七碳一烯酸、硬脂酸、油酸、亚油酸、亚麻酸、花生酸、花生一烯酸、花生二烯酸、山嵛酸、芥酸、二十二碳二烯酸、木焦油酸、二十四碳一烯酸、饱和酸）";
-        $bb = Tool::sub_str($aaa, 2);// mb_substr($aaa,0,3,'utf-8');
+        $bb = Tool::subStr($aaa, 3);// mb_substr($aaa,0,3,'utf-8');
         pr(($bb));
 //        $url = "http://113.140.67.203:1284/jgjbqk_SearchList.action";
 //        // $DownFile = DownFile::curlGetFileContents($url);

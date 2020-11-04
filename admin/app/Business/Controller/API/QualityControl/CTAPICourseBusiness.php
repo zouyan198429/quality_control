@@ -142,6 +142,12 @@ class CTAPICourseBusiness extends BasicPublicCTAPIBusiness
         $status_online = CommonRequest::get($request, 'status_online');
         if(strlen($status_online) > 0 && $status_online != 0)  Tool::appendParamQuery($queryParams, $status_online, 'status_online', [0, '0', ''], ',', false);
 
+        $pay_config_id = CommonRequest::get($request, 'pay_config_id');
+        if(strlen($pay_config_id) > 0 && $pay_config_id != 0)  Tool::appendParamQuery($queryParams, $pay_config_id, 'pay_config_id', [0, '0', ''], ',', false);
+
+        $pay_method = CommonRequest::get($request, 'pay_method');
+        if(strlen($pay_method) > 0 && $pay_method != 0)  Tool::appendCondition($queryParams, 'pay_method',  $pay_method . '=' . $pay_method, '&');
+
 //        $ids = CommonRequest::get($request, 'ids');
 //        if(strlen($ids) > 0 && $ids != 0)  Tool::appendParamQuery($queryParams, $ids, 'id', [0, '0', ''], ',', false);
 

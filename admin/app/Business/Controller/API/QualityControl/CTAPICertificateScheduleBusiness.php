@@ -136,7 +136,7 @@ class CTAPICertificateScheduleBusiness extends BasicPublicCTAPIBusiness
 
         // 方式一  --- 自己拼接
         // $type_id = CommonRequest::get($request, 'type_id');
-        // if(is_numeric($type_id) )  array_push($queryParams['where'], ['type_id', '=', $type_id]);
+        // if(is_numeric($type_id) )   Tool::appendCondition($queryParams, 'type_id',  $type_id);//  array_push($queryParams['where'], ['type_id', '=', $type_id]);
 
         $certificate_id = CommonRequest::getInt($request, 'certificate_id');
         if($certificate_id > 0 )  array_push($queryParams['where'], ['certificate_id', '=', $certificate_id]);

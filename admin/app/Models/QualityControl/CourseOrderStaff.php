@@ -81,8 +81,17 @@ class CourseOrderStaff extends BasePublicModel
         '4' => '已分班',
     ];
 
+    //  缴费状态(1待缴费、2部分缴费、4已缴费、8部分退费、16已退费 )
+    public static $payStatusArr = [
+        '1' => '待缴费',
+        '2' => '部分缴费',
+        '4' => '已缴费',
+        '8' => '部分退费',
+        '16' => '已退费',
+    ];
+
     // 表里没有的字段
-    protected $appends = ['join_class_status_text'];
+    protected $appends = ['join_class_status_text', 'pay_status_text'];
 
     /**
      * 获取分班状态文字
@@ -92,6 +101,16 @@ class CourseOrderStaff extends BasePublicModel
     public function getJoinClassStatusTextAttribute()
     {
         return static::$joinClassStatusArr[$this->join_class_status] ?? '';
+    }
+
+    /**
+     * 获取缴费状态文字
+     *
+     * @return string
+     */
+    public function getPayStatusTextAttribute()
+    {
+        return static::$payStatusArr[$this->pay_status] ?? '';
     }
 
     /**
@@ -116,5 +135,21 @@ class CourseOrderStaff extends BasePublicModel
     public function courseClass()
     {
         return $this->belongsTo('App\Models\QualityControl\CourseClass', 'class_id', 'id');
+    }
+
+    /**
+     * 获取培训班企业一维
+     */
+    public function courseClassCompany()
+    {
+        return $this->belongsTo('App\Models\QualityControl\CourseClassCompany', 'class_company_id', 'id');
+    }
+
+    /**
+     * 获取收款订单-一维
+     */
+    public function orders()
+    {
+        return $this->belongsTo('App\Models\QualityControl\Orders', 'order_no', 'order_no');
     }
 }
