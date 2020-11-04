@@ -35,6 +35,7 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
 
 
         $certificate_info = [];
+        $certificate_company_info = [];// 企业表保存
         // CMA证书号
         $certificate_no = [];
         $has_certificate_no = false;// 是否有 false:没有 ； true:有
@@ -46,6 +47,13 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
                 'ratify_date' => $saveData['ratify_date'] ?? '',
                 'valid_date' => $saveData['valid_date'] ?? '',
                 'addr' => $saveData['addr'] ?? '',
+            ];
+            $certificate_company_info = [
+                'id' => $saveData['company_id'],
+                'company_certificate_no' => $certificate_no,
+                'ratify_date' => $saveData['ratify_date'] ?? '',
+                'valid_date' => $saveData['valid_date'] ?? '',
+                'laboratory_addr' => $saveData['addr'] ?? '',
             ];
         }
         // 修改时 需要强制更新员工数量
@@ -85,7 +93,7 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
         //*********************************************************
         $isModify = false;
         CommonDB::doTransactionFun(function() use(&$saveData, &$company_id, &$id, &$operate_staff_id, &$modifAddOprate, &$operate_staff_id_history, &$modelObj, &$isModify
-            , &$certificate_info, &$certificate_no, &$has_certificate_no
+            , &$certificate_info, &$certificate_company_info, &$certificate_no, &$has_certificate_no
             , &$forceCompanyNum, &$force_company_num, &$companyNumIds, &$isBatchOperate, &$isBatchOperateVal ){
 
 
@@ -113,7 +121,7 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
             // 有证书
             if($has_certificate_no){
                 $certificate_info = array_merge($certificate_info, ['operate_staff_id' => $operate_staff_id, 'operate_staff_id_history' => $operate_staff_id_history]);
-
+                $certificate_company_info = array_merge($certificate_company_info, ['operate_staff_id' => $operate_staff_id, 'operate_staff_id_history' => $operate_staff_id_history]);
                 // $certificate_id = CertificateDBBusiness::replaceById($certificate_info, $company_id, $operate_id, $operate_staff_id, $modifAddOprate);
 
                 $certificateObj = null ;
@@ -123,6 +131,16 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
                 ];
                 CertificateDBBusiness::updateOrCreate($certificateObj, $searchConditon, $certificate_info);
                 $saveData['certificate_id'] = $certificateObj->id;// $certificate_id;
+
+                // 更新企业表信息
+                $companyObj = null ;
+//                $searchConditon = [
+//                    'id' => $certificate_company_info['id'],
+//                    // 'certificate_no' => $certificate_info['certificate_no'],// 一个企业只能有一个证书，所以去掉这个字段
+//                ];
+//                StaffDBBusiness::updateOrCreate($companyObj, $searchConditon, $certificate_company_info);
+                StaffDBBusiness::saveById($certificate_company_info, $certificate_company_info['id'],$companyObj);
+
             }
             if(isset($saveData['category_name'])){
                 $tem_category_name = trim($saveData['category_name']);
