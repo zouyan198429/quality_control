@@ -102,7 +102,7 @@ class CompanyNewScheduleController extends BasicController
                 'relationFormatConfigs'=> CTAPICompanyScheduleBusiness::getRelationConfigs($request, $this, ['company_info', 'resource_list', 'resource_pdf_list'], []),
             ];
             $result = CTAPICompanyScheduleBusiness::getList($request, $this, 2 + 4, [], $relations, $extParams);
-           $dataList = $result['result']['data_list'] ?? [];
+           $dataList = [];// $result['result']['data_list'] ?? [];
             foreach($dataList as $k => &$v){
                 $v['created_at_fmt'] = judgeDate($v['created_at'],'Y-m-d');
             }

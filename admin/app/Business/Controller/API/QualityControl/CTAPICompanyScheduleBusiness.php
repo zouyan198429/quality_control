@@ -147,6 +147,9 @@ class CTAPICompanyScheduleBusiness extends BasicPublicCTAPIBusiness
         $resource_id = CommonRequest::getInt($request, 'resource_id');
         if(is_numeric($resource_id) && $resource_id > 0)  array_push($queryParams['where'], ['resource_id', '=', $resource_id]);
 
+        $is_import = CommonRequest::get($request, 'is_import');
+        if(is_numeric($is_import) && $is_import >= 0)  array_push($queryParams['where'], ['is_import', '=', $is_import]);
+
         // 方法最下面
         // 注意重写方法中，如果不是特殊的like，同样需要调起此默认like方法--特殊的写自己特殊的方法
         static::joinListParamsLike($request, $controller, $queryParams, $notLog);

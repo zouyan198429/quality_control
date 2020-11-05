@@ -135,6 +135,41 @@ class DownFile{
         return static::$MIME_TYPE[$key];
     }
 
+    /**
+     * 获得本地文件的 mime类型
+     * @param $filename 本地方件的全路径 '/usr/local/php/etc/php.ini'
+     */
+    public static function getLocalFileMIME($filename){
+        $returnMIME = [];
+        // $filename = '/usr/local/php/etc/php.ini';
+        $finfo = finfo_open(FILEINFO_MIME);
+        $mimetype = finfo_file($finfo, $filename);// text/plain; charset=utf-8
+        $temArr = explode(';', $mimetype);
+        $temCount = count($temArr);
+        for($i = 0; $i < $temCount - 1; $i++){
+            array_push($returnMIME, $temArr[$i]);
+        }
+        finfo_close($finfo);
+        // pr($mimetype);
+        if(empty($returnMIME)) array_push($returnMIME, 'application/octet-stream');
+        return implode(';', $returnMIME);
+    }
+
+    /**
+     * 获得本地文件的 大小
+     * @param $filename 本地方件的全路径 '/usr/local/php/etc/php.ini'
+     */
+    public static function getLocalFileSize($filename){
+        return filesize($filename); // 13443
+    }
+
+    /**
+     * 获得本地文件的 护展名
+     * @param $filename 本地方件的全路径 '/usr/local/php/etc/php.ini' 或 有扩展的 字符串  etc/php.ini
+     */
+    public static function getLocalFileExt($filename){
+        return strtolower(pathinfo($filename,PATHINFO_EXTENSION));// ini
+    }
 
     /**
      * 根据文件扩展名，返回对应的Content-Type参数的值,默认或没有则返回 application/octet-stream（ 二进制流，未知的文件类型）

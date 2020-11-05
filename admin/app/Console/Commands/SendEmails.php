@@ -11,14 +11,14 @@ class SendEmails extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'email:send {user}';// 'command:name';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Send drip e-mails to a user';// 'Command description';
 
     /**
      * Create a new command instance.
@@ -38,5 +38,8 @@ class SendEmails extends Command
     public function handle()
     {
         //
+        $user = $this->argument('user');
+        // echo 'user=' . $user;
+        $this->info('Display this on the screen' . $user);
     }
 }

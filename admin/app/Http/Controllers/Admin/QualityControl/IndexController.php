@@ -27,11 +27,55 @@ class IndexController extends BasicController
 {
     public $controller_id =0;// 功能小模块[控制器]id - controller_id  历史表 、正在进行表 与原表相同
 
+    public function HttpRequestApi($url, $params = [], $urlParams = [], $type = 'POST', $options = [])
+    {
+        // $this->line('url=' . $url);
+        $result = HttpRequest::sendHttpRequest($url, $params, $urlParams, $type, $options);
+
+        $resultData = json_decode($result, true);
+//        $code = $resultData['code'] ?? 0;
+//        $msg = $resultData['msg'] ?? '返回数据错误!';
+//        $data = $resultData['data'] ?? [];
+//        if ($code == 0){
+//            throws($msg);
+//        }
+//
+//        return $data;
+        return $resultData;
+    }
+
     public function test(Request $request){
-//        pr(strlen('脂a1'));
-        $aaa = "脂11a酸组成（十四碳以下脂肪酸、豆蔻酸、棕榈酸、棕榈一烯酸、十七烷酸、十七碳一烯酸、硬脂酸、油酸、亚油酸、亚麻酸、花生酸、花生一烯酸、花生二烯酸、山嵛酸、芥酸、二十二碳二烯酸、木焦油酸、二十四碳一烯酸、饱和酸）";
-        $bb = Tool::subStr($aaa, 3);// mb_substr($aaa,0,3,'utf-8');
-        pr(($bb));
+
+        // 能力附表
+        $url = "http://113.140.67.203:1284/jgjbqk_getFujian.action";// ?sqid=1298&type=1";
+        // $DownFile = DownFile::curlGetFileContents($url);
+        $requestData = [
+            'sortField' => 'id',
+            'sortOrder' => 'esc',
+            'pageIndex' => 0,
+            'pageSize' => 10,
+            'sqid' => 1298,
+            'type' => 1,
+        ];
+        $result = $this->HttpRequestApi($url, [], $requestData, 'POST');
+        pr($result);
+
+        // 获得所有的企业信息
+        // $market_id = '1332';
+        // sortField=id&sortOrder=desc&pageIndex=0&pageSize=100
+        // $url = "http://113.140.67.203:1283/jgfujian_getJgFuJianMap1.action?sqid=" . $market_id;// . 'sortField=id&sortOrder=desc&pageIndex=0&pageSize=100';
+        $url = 'http://113.140.67.203:1283/jgfujian_getJgFuJianMap1.action?sqid=1330';
+        // $DownFile = DownFile::curlGetFileContents($url);
+        $requestData = [
+//            // 'sqid' => $market_id,
+            'sortField' => 'id',
+            'sortOrder' => 'esc',
+            'pageIndex' => 0,
+            'pageSize' => 100,
+        ];
+        $result = $this->HttpRequestApi($url, [], $requestData, 'POST', );
+        $total = $result['total'] ?? 0;// 总数量
+        pr($result);
 //        $url = "http://113.140.67.203:1284/jgjbqk_SearchList.action";
 //        // $DownFile = DownFile::curlGetFileContents($url);
 //        $requestData = [
@@ -61,7 +105,29 @@ class IndexController extends BasicController
 //        $files_names = 'e3b8d4d1-c2da-461d-9a9d-474aefc1d2f7.pdf';
 //        $returnSave = DownFile::getUrlFileToLocal($fileUrl, 0,2, '', $files_names);
 //        pr($returnSave);
+//        $fileName = '2020年4月法人变更自我声明';// '能力附表';
+//        $filePath = '2020-4-26/8c980322-5e92-40c4-ae9c-9f756e7fe4cd.pdf';// '2020-4-22/e3b8d4d1-c2da-461d-9a9d-474aefc1d2f7.xls';
+//        $fileUrl = 'http://113.140.67.203:1283/jsp/Jyjc/ZzxxDown.jsp?fileName=' . $fileName . '&filePath=' . $filePath;
+//
+//        $filename = '/usr/local/php/etc/php.ini';
+//        $mimetype = DownFile::getLocalFileMIME($filename);
+//        $file_size = DownFile::getLocalFileSize($filename);
+//
+//        $suffix = DownFile::getLocalFileExt($filename);// strtolower(pathinfo($filename,PATHINFO_EXTENSION));
+////        $finfo = finfo_open(FILEINFO_MIME);
+////        $mimetype = finfo_file($finfo,$filename);// text/plain; charset=utf-8
+////        finfo_close($finfo);
+//        pr($suffix);
 
+
+//        $fi = new finfo(FILEINFO_MIME_TYPE);
+//        $mime_type = $fi->file($filePath);
+//        echo $mime_type; // image/jpeg
+//        die;
+
+//        $files_names = '';// '8c980322-5e92-40c4-ae9c-9f756e7fe4cd.pdf';
+//        $returnSave = DownFile::getUrlFileToLocal($fileUrl, 0,2, '', $files_names);
+//        pr($returnSave);
 //        $dateTime =  date('Y-m-d H:i:s');
 //        $aaa = Tool::addMinusDate($dateTime, ['+30 day'], 'Y-m-d H:i:s', 1, '时间');
 //        pr($aaa);
