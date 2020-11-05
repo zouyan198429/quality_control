@@ -72,11 +72,10 @@ class GetMarketCompanys extends Command
 
             // 开始处理数据
             $addFiels = [];
-            // $bar = $this->output->createProgressBar(count($data));
-            // $bar->start();
-            $k = 0;
+             $bar = $this->output->createProgressBar(count($data));
+             $bar->start();
+            // $k = 0;
             foreach ($data as $info) {
-                $k++;
                 $addFiels = [];// 每一次清空文件
                 /**
                  * {
@@ -93,9 +92,11 @@ class GetMarketCompanys extends Command
                 }
                  */
                 $market_id = $info['id'];
+                $this->line('market_id=' . $market_id);
                 // 根据id，获得企业信息
                 $companyInfo = StaffDBBusiness::getDBFVFormatList(4, 1, ['market_id' => $market_id, 'admin_type' => 2], false, [], []);
-                 if(!empty($companyInfo)){// 企业信息不存在，才处理
+                 if(empty($companyInfo)){// 企业信息不存在，才处理
+                    // $k++;
 
 
                      CommonDB::doTransactionFun(function() use( &$info, &$market_id, &$addFiels){
@@ -118,10 +119,10 @@ class GetMarketCompanys extends Command
                      });
 
                 }
-                // $bar->advance();
-                 if($k >= 1) break;
+                 $bar->advance();
+                 // if($k >= 1) break;
             }
-            // $bar->finish();
+             $bar->finish();
             $this->info('获取数据完成！');
         } catch ( \Exception $e) {
             // throws($e->getMessage());
@@ -238,7 +239,12 @@ class GetMarketCompanys extends Command
                         break;
                     }
                 }
+
+                $companyInfoExtend['is_import'] = 1;
                 $companyInfoExtend['city_id'] = $city_id;
+                $this->line('laboratory_addr=' . $laboratory_addr);
+                $this->line('company_name=' . $company_name);
+                $this->line('city_id=' . $city_id);
 
                 $companyInfoData = array_merge($companyInfoData, $companyInfoExtend);
             }
@@ -261,13 +267,14 @@ class GetMarketCompanys extends Command
     public function saveFiles($market_id, $company_id, &$addFiels, $isAddNew){
         // $addFiels = [];
         // 获得所有的企业信息
-        $url = "http://113.140.67.203:1283/jgfujian_getJgFuJianMap1.action?sqid=" . $market_id;
+        $url = "http://113.140.67.203:1283/jgfujian_getJgFuJianMap1.action";// ?sqid=" . $market_id;
         // $DownFile = DownFile::curlGetFileContents($url);
         $requestData = [
             'sortField' => 'id',
             'sortOrder' => 'desc',
             'pageIndex' => 0,
             'pageSize' => 100,
+            'sqid' => $market_id,
         ];
         $result = $this->HttpRequestApi($url, [], $requestData, 'POST');
         $total = $result['total'] ?? 0;// 总数量
@@ -295,7 +302,10 @@ class GetMarketCompanys extends Command
                 $file_path = $info['filePath'];
                 $file_czr = $info['czr'];
                 $file_type = $info['type'];
-                $file_czdate = $info['czDate'];
+                $file_czdate = $info['czDate'];// "2020-11-04T16:53:27"
+                $file_czdate = str_replace('T', ' ', $file_czdate);
+                $this->line('file_czdate=' . $file_czdate);
+                $file_czdate = judgeDate($file_czdate,"Y-m-d H:i:s");
 
                 $files_name_txt = basename($file_path);// 8c980322-5e92-40c4-ae9c-9f756e7fe4cd.pdf
                 $suffix = DownFile::getLocalFileExt($file_path);// strtolower(pathinfo($file_path,PATHINFO_EXTENSION));
@@ -303,6 +313,9 @@ class GetMarketCompanys extends Command
                 $fileArr = $this->saveFile($file_title, $file_path);
                 $files_names = $fileArr['files_names'];// /resource/company/0/down/2020/11/04/8c980322-5e92-40c4-ae9c-9f756e7fe4cd.pdf
                 $full_names = $fileArr['full_names'];// /srv/www/quality_control/quality_control/admin/public/resource/company/0/down/2020/11/04/8c980322-5e92-40c4-ae9c-9f756e7fe4cd.pdf
+
+                $this->line('files_names=' . $files_names);
+                $this->line('full_names=' . $full_names);
                 array_push($addFiels, ['resource_url' => $files_names]);
                 $file_size = filesize($full_names);
                 $mime_type = DownFile::getLocalFileMIME($full_names);
@@ -311,6 +324,7 @@ class GetMarketCompanys extends Command
                 $resourceConfig = UploadFile::getResourceConfig($suffix);
                 // if(empty($resourceConfig)) throws('请选择正确的文件！');
                 $resourceType = $resourceConfig['resource_type'] ?? 0;
+                $this->line('resource_type=' . $resourceType);
 
                 $saveData =[
                     'resource_name' => $files_name_txt,
@@ -324,11 +338,19 @@ class GetMarketCompanys extends Command
                     'ower_id' => $company_id,
                     'resource_note' => '',
                 ];
+
+                if($file_czdate !== false){
+                    $saveData['created_at'] = $file_czdate;
+                    $saveData['updated_at'] = $file_czdate;
+                }
+
                 $resource_id = 0;
                 ResourceDBBusiness::replaceById($saveData, $company_id, $resource_id, 0, 0);
+                $this->line('resource_id=' . $resource_id);
                 if($resource_id > 0){
                     $resource_ids = ',' . $resource_id . ',';
                     $resourceIdArr = [$resource_id];
+                    $this->line('file_type=' . $file_type);
                     switch ($file_type)
                     {
                         case 1:// 能力附表
@@ -346,19 +368,27 @@ class GetMarketCompanys extends Command
                                 $saveData = array_merge($saveData, [
                                     'type_id' => 0,
                                     'resource_id_pdf' => $resourceIdArr[0] ?? 0,// pdf资源的id
-                                    'resource_ids_pdf' => $resourceIdArr,// pdf资源id串(逗号分隔-未尾逗号结束)
+                                    'resource_ids_pdf' => $resource_ids,// pdf资源id串(逗号分隔-未尾逗号结束)
                                 ]);
                             }else{
                                 $saveData = array_merge($saveData, [
                                     'type_id' => 0,
                                     'resource_id' => $resourceIdArr[0] ?? 0,// pdf资源的id
-                                    'resource_ids' => $resourceIdArr,// pdf资源id串(逗号分隔-未尾逗号结束)
+                                    'resource_ids' => $resource_ids,// pdf资源id串(逗号分隔-未尾逗号结束)
                                 ]);
                             }
                             if(!$isAddNew) $saveData['is_import'] = 1;
+
+                            if($file_czdate !== false){
+                                $saveData['created_at'] = $file_czdate;
+                                $saveData['updated_at'] = $file_czdate;
+                            }
+
                             $record_id = 0;
+                            $this->line('saveData record_id=' . json_encode($saveData));
                             CompanyScheduleDBBusiness::replaceByIdNew($saveData, $company_id, $record_id, 0, 0);
 
+                            $this->line('CompanySchedule record_id=' . $record_id);
                             break;
                         case 2:// 机构自我声明管理
 
@@ -369,8 +399,15 @@ class GetMarketCompanys extends Command
                                 'resource_ids' => $resource_ids,// 资源id串(逗号分隔-未尾逗号结束)
                                 'resourceIds' => $resourceIdArr,// 此下标为资源关系
                             ];
+                            if($file_czdate !== false){
+                                $saveData['created_at'] = $file_czdate;
+                                $saveData['updated_at'] = $file_czdate;
+                            }
+
                             $record_id = 0;
                             CompanyStatementDBBusiness::replaceById($saveData, $company_id, $record_id, 0, 0);
+
+                            $this->line('CompanyStatement record_id=' . $record_id);
                             break;
                         case 5:// 机构处罚管理
                             $saveData = [
@@ -380,8 +417,16 @@ class GetMarketCompanys extends Command
                                 'resource_ids' => $resource_ids,// 资源id串(逗号分隔-未尾逗号结束)
                                 'resourceIds' => $resourceIdArr,// 此下标为资源关系
                             ];
+
+                            if($file_czdate !== false){
+                                $saveData['created_at'] = $file_czdate;
+                                $saveData['updated_at'] = $file_czdate;
+                            }
+
                             $record_id = 0;
                             CompanyPunishDBBusiness::replaceById($saveData, $company_id, $record_id, 0, 0);
+
+                            $this->line('CompanyPunish record_id=' . $record_id);
                             break;
                         default:
                             break;
@@ -429,7 +474,7 @@ class GetMarketCompanys extends Command
 //            'pageSize' => 100,
         ];
         $result = $this->HttpRequestApi($url, [], $requestData, 'GET');
-        $content = $result[0]['CZR'] ?? '';// 内容
+        $content = $result[0]['MEMO'] ?? '';// 内容
         if(empty($content)) return false;
 
         $superviseInfo = CompanySuperviseDBBusiness::getDBFVFormatList(4, 1, [

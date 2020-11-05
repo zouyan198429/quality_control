@@ -27,24 +27,24 @@ class IndexController extends BasicController
 {
     public $controller_id =0;// 功能小模块[控制器]id - controller_id  历史表 、正在进行表 与原表相同
 
-    public function HttpRequestApi($url, $params = [], $urlParams = [], $type = 'POST', $options = [])
-    {
-        // $this->line('url=' . $url);
-        $result = HttpRequest::sendHttpRequest($url, $params, $urlParams, $type, $options);
-
-        $resultData = json_decode($result, true);
-//        $code = $resultData['code'] ?? 0;
-//        $msg = $resultData['msg'] ?? '返回数据错误!';
-//        $data = $resultData['data'] ?? [];
-//        if ($code == 0){
-//            throws($msg);
-//        }
-//
-//        return $data;
-        return $resultData;
-    }
 
     public function test(Request $request){
+
+        // 获得所有的企业信息
+//        $market_id= 1332;
+//        $url = "http://113.140.67.203:1283/jgjbqk_getJbqkList.action?id=" . $market_id;
+//        // $DownFile = DownFile::curlGetFileContents($url);
+//        $requestData = [
+////            'sortField' => 'id',
+////            'sortOrder' => 'desc',
+////            'pageIndex' => 0,
+////            'pageSize' => 100,
+//        ];
+//        $result = $this->HttpRequestApi($url, [], $requestData, 'GET');
+//        $content = $result[0]['CZR'] ?? '';// 内容
+//        vd(empty($content));
+//        // if(empty($content)) return false;
+//        pr($result);
 
         // 能力附表
 //        $url = "http://113.140.67.203:1284/jgjbqk_getFujian.action";// ?sqid=1298&type=1";
@@ -64,19 +64,19 @@ class IndexController extends BasicController
         // $market_id = '1332';
         // sortField=id&sortOrder=desc&pageIndex=0&pageSize=100
         // $url = "http://113.140.67.203:1283/jgfujian_getJgFuJianMap1.action?sqid=" . $market_id;// . 'sortField=id&sortOrder=desc&pageIndex=0&pageSize=100';
-        $url = 'http://113.140.67.203:1283/jgfujian_getJgFuJianMap1.action';// ?sqid=1330';
-        // $DownFile = DownFile::curlGetFileContents($url);
-        $requestData = [
-//            // 'sqid' => $market_id,
-            'sortField' => 'id',
-            'sortOrder' => 'desc',
-            'pageIndex' => 0,
-            'pageSize' => 100,
-            'sqid' => 1330,
-        ];
-        $result = $this->HttpRequestApi($url, [], $requestData, 'POST');
-        $total = $result['total'] ?? 0;// 总数量
-        pr($result);
+//        $url = 'http://113.140.67.203:1283/jgfujian_getJgFuJianMap1.action';// ?sqid=1330';
+//        // $DownFile = DownFile::curlGetFileContents($url);
+//        $requestData = [
+////            // 'sqid' => $market_id,
+//            'sortField' => 'id',
+//            'sortOrder' => 'desc',
+//            'pageIndex' => 0,
+//            'pageSize' => 100,
+//            'sqid' => 1330,
+//        ];
+//        $result = $this->HttpRequestApi($url, [], $requestData, 'POST');
+//        $total = $result['total'] ?? 0;// 总数量
+//        pr($result);
 //        $url = "http://113.140.67.203:1284/jgjbqk_SearchList.action";
 //        // $DownFile = DownFile::curlGetFileContents($url);
 //        $requestData = [
