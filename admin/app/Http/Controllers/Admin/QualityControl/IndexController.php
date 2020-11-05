@@ -47,33 +47,34 @@ class IndexController extends BasicController
     public function test(Request $request){
 
         // 能力附表
-        $url = "http://113.140.67.203:1284/jgjbqk_getFujian.action";// ?sqid=1298&type=1";
-        // $DownFile = DownFile::curlGetFileContents($url);
-        $requestData = [
-            'sortField' => 'id',
-            'sortOrder' => 'esc',
-            'pageIndex' => 0,
-            'pageSize' => 10,
-            'sqid' => 1298,
-            'type' => 1,
-        ];
-        $result = $this->HttpRequestApi($url, [], $requestData, 'POST');
-        pr($result);
+//        $url = "http://113.140.67.203:1284/jgjbqk_getFujian.action";// ?sqid=1298&type=1";
+//        // $DownFile = DownFile::curlGetFileContents($url);
+//        $requestData = [
+//            'sortField' => 'id',
+//            'sortOrder' => 'esc',
+//            'pageIndex' => 0,
+//            'pageSize' => 10,
+//            'sqid' => 1298,
+//            'type' => 1,
+//        ];
+//        $result = $this->HttpRequestApi($url, [], $requestData, 'POST');
+//        pr($result);
 
         // 获得所有的企业信息
         // $market_id = '1332';
         // sortField=id&sortOrder=desc&pageIndex=0&pageSize=100
         // $url = "http://113.140.67.203:1283/jgfujian_getJgFuJianMap1.action?sqid=" . $market_id;// . 'sortField=id&sortOrder=desc&pageIndex=0&pageSize=100';
-        $url = 'http://113.140.67.203:1283/jgfujian_getJgFuJianMap1.action?sqid=1330';
+        $url = 'http://113.140.67.203:1283/jgfujian_getJgFuJianMap1.action';// ?sqid=1330';
         // $DownFile = DownFile::curlGetFileContents($url);
         $requestData = [
 //            // 'sqid' => $market_id,
             'sortField' => 'id',
-            'sortOrder' => 'esc',
+            'sortOrder' => 'desc',
             'pageIndex' => 0,
             'pageSize' => 100,
+            'sqid' => 1330,
         ];
-        $result = $this->HttpRequestApi($url, [], $requestData, 'POST', );
+        $result = $this->HttpRequestApi($url, [], $requestData, 'POST');
         $total = $result['total'] ?? 0;// 总数量
         pr($result);
 //        $url = "http://113.140.67.203:1284/jgjbqk_SearchList.action";
