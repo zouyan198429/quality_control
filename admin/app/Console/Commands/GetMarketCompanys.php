@@ -72,6 +72,7 @@ class GetMarketCompanys extends Command
 
             // 开始处理数据
             $addFiels = [];
+            $errCompanyArr = [];// 企业名称已存在的错误，直接先记录，最后显示一下，人工来排查
              $bar = $this->output->createProgressBar(count($data));
              $bar->start();
             // $k = 0;
@@ -92,37 +93,53 @@ class GetMarketCompanys extends Command
                 }
                  */
                 $market_id = $info['id'];
+                $company_name = $info['JGMC'];
                 $this->line('market_id=' . $market_id);
-                // 根据id，获得企业信息
-                $companyInfo = StaffDBBusiness::getDBFVFormatList(4, 1, ['market_id' => $market_id, 'admin_type' => 2], false, [], []);
-                 if(empty($companyInfo)){// 企业信息不存在，才处理
-                    // $k++;
+                try{
+
+                    // 根据id，获得企业信息
+                    $companyInfo = StaffDBBusiness::getDBFVFormatList(4, 1, ['market_id' => $market_id, 'admin_type' => 2], false, [], []);
+                     if(empty($companyInfo)){// 企业信息不存在，才处理
+                        // $k++;
 
 
-                     CommonDB::doTransactionFun(function() use( &$info, &$market_id, &$addFiels){
+                         CommonDB::doTransactionFun(function() use( &$info, &$market_id, &$addFiels){
 
-                         $company_id = 0;// 企业 id
-                         $isAddNew = false;// 企业是否是新加 true:新加 ； false:已存在
-                         // 新加或修改企业信息
-                         $this->saveCompany($info, $company_id, $isAddNew);
-                         if($company_id > 0){
-                             $this->line('company_id=' . $company_id);
-                             // 获取文件并保存
-                             $this->saveFiles($market_id, $company_id, $addFiels, $isAddNew);
-                             // 监督检查信息管理
-                             $this->saveSupervise($market_id, $company_id);
-                         }else{
+                             $company_id = 0;// 企业 id
+                             $isAddNew = false;// 企业是否是新加 true:新加 ； false:已存在
+                             // 新加或修改企业信息
+                             $this->saveCompany($info, $company_id, $isAddNew);
+                             if($company_id > 0){
+                                 $this->line('company_id=' . $company_id);
+                                 // 获取文件并保存
+                                 $this->saveFiles($market_id, $company_id, $addFiels, $isAddNew);
+                                 // 监督检查信息管理
+                                 $this->saveSupervise($market_id, $company_id);
+                             }else{
 
-                             $this->error('company_id=' . $company_id);
-                         }
+                                 $this->error('company_id=' . $company_id);
+                             }
 
-                     });
+                         });
 
+                    }
+                } catch ( \Exception $e) {
+                    // throws($e->getMessage());
+                    $errStr = $e->getMessage();
+                    $this->error($errStr);
+                    if($errStr != '单位名称已存在！'){
+                        $this->error('有错误，停止运行！');
+                        break;
+                    }
+                    array_push($errCompanyArr, $company_name);
+
+                }finally {
+                    $bar->advance();
                 }
-                 $bar->advance();
                  // if($k >= 1) break;
             }
              $bar->finish();
+            if(!empty($errCompanyArr)) $this->error('企业名称已存在的错误：' . json_encode($errCompanyArr));
             $this->info('获取数据完成！');
         } catch ( \Exception $e) {
             // throws($e->getMessage());
@@ -130,6 +147,7 @@ class GetMarketCompanys extends Command
             // 删除发生错误时，上传的文件 TODO
             if(!empty($addFiels)){
                 Tool::resourceDelFile($addFiels);
+                $this->error('保存出错，删除文件' . json_encode($addFiels));
             }
         }
 
