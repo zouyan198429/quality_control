@@ -172,6 +172,11 @@ class GetMarketCompanys extends Command
         $market_id = $info['id'];
         $company_name = $info['JGMC'];
         $company_certificate_no = $info['ZZRDZSBH'];
+        if(strpos($company_certificate_no, '、') !== false){// 存在--- 162721110151、172721110020、（2017）（陕）质监认字002号, 陕西省特种设备检验检测研究院
+            $noTemArr = explode($company_certificate_no, '、');
+            $company_certificate_no = $noTemArr[0] ?? '';
+            $info['ZZRDZSBH'] = $company_certificate_no;
+        }
 
         // 通过企业名称及证书号，获得企业信息
         // 'company_name' => $company_name,
