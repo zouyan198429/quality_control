@@ -341,7 +341,7 @@ class GetMarketCompanys extends Command
                 $files_name_txt = basename($file_path);// 8c980322-5e92-40c4-ae9c-9f756e7fe4cd.pdf
                 $suffix = DownFile::getLocalFileExt($file_path);// strtolower(pathinfo($file_path,PATHINFO_EXTENSION));
                 // 文件保存
-                $fileArr = $this->saveFile($file_title, $file_path);
+                $fileArr = $this->saveFile($file_title, $file_path, $company_id);
                 $files_names = $fileArr['files_names'];// /resource/company/0/down/2020/11/04/8c980322-5e92-40c4-ae9c-9f756e7fe4cd.pdf
                 $full_names = $fileArr['full_names'];// /srv/www/quality_control/quality_control/admin/public/resource/company/0/down/2020/11/04/8c980322-5e92-40c4-ae9c-9f756e7fe4cd.pdf
 
@@ -484,13 +484,13 @@ class GetMarketCompanys extends Command
     [web_url] => http://qualitycontrol.admin.cunwo.net/resource/company/0/down/2020/11/04/8c980322-5e92-40c4-ae9c-9f756e7fe4cd.pdf
     [full_names] => /srv/www/quality_control/quality_control/admin/public/resource/company/0/down/2020/11/04/8c980322-5e92-40c4-ae9c-9f756e7fe4cd.pdf
      */
-    public function saveFile($fileName, $filePath){
+    public function saveFile($fileName, $filePath, $company_id){
         // $fileName = '2020年4月法人变更自我声明';// '能力附表';
         // $filePath = '2020-4-26/8c980322-5e92-40c4-ae9c-9f756e7fe4cd.pdf';// '2020-4-22/e3b8d4d1-c2da-461d-9a9d-474aefc1d2f7.xls';
         $fileUrl = 'http://113.140.67.203:1283/jsp/Jyjc/ZzxxDown.jsp?fileName=' . $fileName . '&filePath=' . $filePath;
         // $files_names = '8c980322-5e92-40c4-ae9c-9f756e7fe4cd.pdf';
         $files_names = basename($filePath);// 8c980322-5e92-40c4-ae9c-9f756e7fe4cd.pdf
-        return DownFile::getUrlFileToLocal($fileUrl, 0,2, '', $files_names);
+        return DownFile::getUrlFileToLocal($fileUrl, $company_id,2, '', $files_names);
     }
     // 监督检查信息管理
     public function saveSupervise($market_id, $company_id){
