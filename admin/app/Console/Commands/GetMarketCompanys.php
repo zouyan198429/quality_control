@@ -73,6 +73,7 @@ class GetMarketCompanys extends Command
             // 开始处理数据
             $addFiels = [];
             $errCompanyArr = [];// 企业名称已存在的错误，直接先记录，最后显示一下，人工来排查
+            $errUserExistArr = [];// 用户名已存在的错误，直接先记录，最后显示一下，人工来排查
              $bar = $this->output->createProgressBar(count($data));
              $bar->start();
             // $k = 0;
@@ -127,11 +128,13 @@ class GetMarketCompanys extends Command
                     // throws($e->getMessage());
                     $errStr = $e->getMessage();
                     $this->error($errStr);
-                    if($errStr != '单位名称已存在！'){
+                    if($errStr != '单位名称已存在！' && $errStr != '用户名已存在！'){
                         $this->error('有错误，停止运行！');
                         break;
                     }
-                    array_push($errCompanyArr, $company_name);
+                    if($errStr == '单位名称已存在！') array_push($errCompanyArr, $company_name);
+                    if($errStr == '用户名已存在！') array_push($errUserExistArr, $company_name);
+
 
                 }finally {
                     $bar->advance();
@@ -140,6 +143,7 @@ class GetMarketCompanys extends Command
             }
              $bar->finish();
             if(!empty($errCompanyArr)) $this->error('企业名称已存在的错误：' . json_encode($errCompanyArr));
+            if(!empty($errCompanyArr)) $this->error('用户名已存在的错误：' . json_encode($errUserExistArr));
             $this->info('获取数据完成！');
         } catch ( \Exception $e) {
             // throws($e->getMessage());
