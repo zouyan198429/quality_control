@@ -131,11 +131,17 @@ class GetMarketCompanys extends Command
                     $this->error($errStr);
                     if($errStr != '单位名称已存在！' && $errStr != '用户名已存在！'){
                         $this->error('有错误，停止运行！');
+                        throws($errStr);
                         break;
                     }
                     if($errStr == '单位名称已存在！') array_push($errCompanyArr, $company_name);
                     if($errStr == '用户名已存在！') array_push($errUserExistArr, $company_name);
-
+                    // 删除发生错误时，上传的文件 TODO
+                    if(!empty($addFiels)){
+                        Tool::resourceDelFile($addFiels);
+                        $this->error('保存出错，删除文件' . json_encode($addFiels));
+                        $addFiels = [];
+                    }
 
                 }finally {
                     $bar->advance();
@@ -143,8 +149,6 @@ class GetMarketCompanys extends Command
                  // if($k >= 1) break;
             }
              $bar->finish();
-            if(!empty($errCompanyArr)) $this->error('企业名称已存在的错误：' . json_encode($errCompanyArr));
-            if(!empty($errCompanyArr)) $this->error('用户名已存在的错误：' . json_encode($errUserExistArr));
             $this->info('获取数据完成！');
         } catch ( \Exception $e) {
             // throws($e->getMessage());
@@ -153,7 +157,11 @@ class GetMarketCompanys extends Command
             if(!empty($addFiels)){
                 Tool::resourceDelFile($addFiels);
                 $this->error('保存出错，删除文件' . json_encode($addFiels));
+                $addFiels = [];
             }
+        }finally {
+            if(!empty($errCompanyArr)) $this->error('企业名称已存在的错误：' . json_encode($errCompanyArr));
+            if(!empty($errCompanyArr)) $this->error('用户名已存在的错误：' . json_encode($errUserExistArr));
         }
 
 
