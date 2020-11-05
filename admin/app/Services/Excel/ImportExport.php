@@ -111,19 +111,22 @@ class ImportExport
                 // 抬头处理
                 // 抬头方式一
                 if($headRowNum > 0 && $headRowNum >= $startRow && $headRowNum <= $rowEnd   && count($headColKey)<=0 && count($headArr) > 0){
+                   // $temArr = [];
                     for($col = 1; $col<= $highestColumnIndex; $col++){  // 获得每一列
                         $temVal = $worksheet->getCellByColumnAndRow($col, $headRowNum)->getValue();
+                       // array_push($temArr, $temVal);
                         if(!empty($temVal))  $temVal = trim($temVal);
                         if(isset($headArr[$temVal])){
                             $headColKey[$col] = $headArr[$temVal];
                             unset($headArr[$temVal]);
                         }
                     }
+                    // throws(json_encode($temArr));
                     if(count($headArr) > 0) {
                         // 从内存中清除工作簿
                         $spreadsheet->disconnectWorksheets();
                         unset($spreadsheet);
-                        throws('没有数据列[' . implode('、', $headArr) .']');
+                        throws( '第' . $sheetUbound .' 行，没有数据列[' . implode('、', $headArr) .']');
                     }
                 }
 

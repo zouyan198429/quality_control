@@ -50,7 +50,8 @@ class BasicController extends \App\Http\Controllers\WebFront\BasicController
             throws('非法访问！');
         }
 
-        if($userInfo['is_perfect'] == 1 ) {
+        // 未完善资料的或 从 陕西省市场监督管理局 抓取的新用户 需要完善资料
+        if($userInfo['is_perfect'] == 1 || $userInfo['is_import'] == 1) {
             // 待补充资料
             if(!isAjax()){
                 throws('待补充企业资料', '1001');

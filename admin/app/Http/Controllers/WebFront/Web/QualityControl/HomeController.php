@@ -553,6 +553,12 @@ class HomeController extends BasicRegController
             }
             $saveData['admin_password'] = $admin_password;
         }
+
+        // 如果是从 陕西省市场监督管理局 抓取的新用户，完善资料后，改为已完善资料
+        $is_import = $this->user_info['is_import'] ?? 0;
+        if($is_import == 1){
+            $saveData['is_import'] = 2;
+        }
         // 超级帐户 不可 冻结
 //        if(isset($userInfo['issuper']) && $userInfo['issuper'] != 1){
 //            $saveData['account_status'] = $account_status;

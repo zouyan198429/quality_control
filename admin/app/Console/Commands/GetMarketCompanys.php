@@ -77,7 +77,8 @@ class GetMarketCompanys extends Command
             $errUserExistArr = [];// 用户名已存在的错误，直接先记录，最后显示一下，人工来排查
              $bar = $this->output->createProgressBar(count($data));
              $bar->start();
-            // $k = 0;
+             $k = 0;
+             $testOpen = false;// 是事测试， true:测试 false 非测试
             foreach ($data as $info) {
                 $addFiels = [];// 每一次清空文件
                 /**
@@ -102,7 +103,7 @@ class GetMarketCompanys extends Command
                     // 根据id，获得企业信息
                     $companyInfo = StaffDBBusiness::getDBFVFormatList(4, 1, ['market_id' => $market_id, 'admin_type' => 2], false, [], []);
                      if(empty($companyInfo)){// 企业信息不存在，才处理
-                        // $k++;
+                         $k++;
 
 
                          CommonDB::doTransactionFun(function() use( &$info, &$market_id, &$addFiels){
@@ -146,7 +147,7 @@ class GetMarketCompanys extends Command
                 }finally {
                     $bar->advance();
                 }
-                 // if($k >= 1) break;
+                  if($testOpen && $k >= 3) break;
             }
              $bar->finish();
             $this->info('获取数据完成！');
@@ -244,6 +245,7 @@ class GetMarketCompanys extends Command
             ];
             if($company_id > 0) {// 我们有企业信息
                 $isAddNew = false;// 已存在
+                $companyInfoExtend['is_import'] = 4;
                 // 如果我们是空数据，则以他们的为主
                 $tem_company_contact_name = $companyInfo['company_contact_name'] ?? '';
                 $tem_company_contact_mobile = $companyInfo['company_contact_mobile'] ?? '';

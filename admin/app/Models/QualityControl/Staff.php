@@ -217,10 +217,18 @@ class Staff extends BasePublicModel
         '2' => '有续期',
     ];
 
+    // 有记录官网新导入的 0 普通的【我们系统就有的】； 1 官网抓取的，【我们系统没有的】需要人工判断的；2 官网抓取的【我们系统没有的】已首次登陆并完善资料;4我们系统有的，但是也抓取过文件的
+    public static $isImportArr = [
+        '0' => '源生用户',
+        '1' => '省局用户',
+        '2' => '省局用户【已初登录】',
+        '4' => '混合用户',
+    ];
+
     // 表里没有的字段
     protected $appends = ['is_perfect_text', 'admin_type_text', 'issuper_text', 'open_status_text', 'account_status_text', 'sex_text', 'company_is_legal_persion_text'
         , 'company_type_text', 'company_prop_text', 'company_peoples_num_text', 'company_grade_text', 'role_num_text', 'role_status_text', 'sign_status_text'
-        , 'sign_is_food_text', 'company_grade_continue_text'];
+        , 'sign_is_food_text', 'company_grade_continue_text', 'is_import_text'];
 
     /**
      * 获取用户的是否完善资料文字
@@ -340,6 +348,16 @@ class Staff extends BasePublicModel
     public function getCompanyGradeContinueTextAttribute()
     {
         return static::$companyGradeContinueArr[$this->company_grade_continue] ?? '';
+    }
+
+    /**
+     * 获取用户的类型文字
+     *
+     * @return string
+     */
+    public function getIsImportTextAttribute()
+    {
+        return static::$isImportArr[$this->is_import] ?? '';
     }
 
     /**
