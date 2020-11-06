@@ -59,7 +59,7 @@
     <!-- 弹出层-->
     <script src="{{ asset('/static/js/custom/layer/layer.js') }}"></script>
     <!-- 公共方法-->
-    <script src="{{ asset('/static/js/custom/common.js') }}"></script>
+    <script src="{{ asset('/static/js/custom/common.js') }}?1"></script>
     <!-- ajax翻页方法-->
     <script src="{{ asset('/static/js/custom/ajaxpage.js') }}"></script>
     <!-- 新加入 end-->

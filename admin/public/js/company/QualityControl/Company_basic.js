@@ -262,7 +262,9 @@ function ajax_form(){
             if(status == 1){
                 layer.close(layer_index);//手动关闭
                 clearInterval(intervalId);
-                ajax_save(id);
+                if(commonaction.isUploadSuccess(uploader)){// 都上传成功
+                    ajax_save(id);
+                }
             }
         },1000);
     }else{

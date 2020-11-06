@@ -52,7 +52,7 @@
     <!-- 弹出层-->
     <script src="{{ asset('/static/js/layer/layer.js') }}"></script>
     <!-- 公共方法-->
-    <script src="{{ asset('/static/js/common.js') }}"></script>
+    <script src="{{ asset('/static/js/common.js') }}?1"></script>
     <!-- ajax翻页方法-->
     <script src="{{ asset('/static/js/ajaxpage.js') }}"></script>
     <!-- 新加入 end-->
