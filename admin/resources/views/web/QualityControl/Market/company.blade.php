@@ -2,6 +2,7 @@
 <html>
 	<head>
         <title>陕西省市场监督管理局_陕西省检验检测机构信息查询_{{ $key_str ?? '' }}市场监督管理局_陕西{{ $key_str ?? '' }}市场监督管理局第{{ $page ?? '' }}页_检验检测能力</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
         <meta name="keywords" content="陕西省市场监督管理局,陕西省检验检测机构信息查询,{{ $key_str ?? '' }}市场监督管理局,陕西{{ $key_str ?? '' }}市场监督管理局第{{ $page ?? '' }}页,检验检测能力" />
         <meta name="description" content="陕西省市场监督管理局,陕西省检验检测机构信息查询,{{ $key_str ?? '' }}市场监督管理局,陕西{{ $key_str ?? '' }}市场监督管理局第{{ $page ?? '' }}页,检验检测能力" />
         @include('web.QualityControl.Market.layout_public.pagehead')
@@ -27,7 +28,7 @@
 								<th style="width:750px;">机构名称</th>
 								<th>资质认定证书编号</th>
 								<th>机构信息</th>
-								<th>能力附表</th>
+								<th>资质认定证书附表</th>
 								<th>自我声明公告	</th>
 								<th>监督检查信息	</th>
 								<th>行政处罚信息</th>
@@ -48,20 +49,22 @@
                                 <a href="javascript:void(0);" onclick="otheraction.browseInfo('{{ $v["id"] ?? "0" }}','{{ $v["company_name"] ?? "" }}')" alt="机构信息" > <img src="{{asset('quality/Market/images/details12.png')}}" alt="" /> </a>
 							</td>
 							<td>
-                                <a href="javascript:void(0);" onclick="otheraction.schedule('{{ $v["id"] ?? "0" }}','{{ $v["company_name"] ?? "" }}')" alt="能力附表"> <img src="{{asset('quality/Market/images/details12.png')}}" alt="" /> </a>
+                                <a href="javascript:void(0);" onclick="otheraction.schedule('{{ $v["id"] ?? "0" }}','{{ $v["company_name"] ?? "" }}')" alt="资质认定证书附表">
+									<img src="{{asset('quality/Market/images/details12.png')}}" alt="" /> 
+								</a>
 								<!-- ({{ $v['extend_info']['schedule_num'] ?? '0' }}) -->
 							</td>
 							<td>
                                 <a href="javascript:void(0);" onclick="otheraction.company_statement_num('{{ $v["id"] ?? "0" }}','{{ $v["company_name"] ?? "" }}')" alt="自我声明公告"> <img src="{{asset('quality/Market/images/details12.png')}}" alt="" /> </a>
-								<!-- ({{ $v['extend_info']['statement_num'] ?? '0' }}) -->
+								({{ $v['extend_info']['statement_num'] ?? '0' }})<!--  -->
 							</td>
 							<td>
                                 <a href="javascript:void(0);" onclick="otheraction.company_supervise('{{ $v["id"] ?? "0" }}','{{ $v["company_name"] ?? "" }}')" alt="监督检查信息"> <img src="{{asset('quality/Market/images/details12.png')}}" alt="" /> </a>
-								<!-- ({{ $v['extend_info']['supervise_num'] ?? '0' }}) -->
+								({{ $v['extend_info']['supervise_num'] ?? '0' }})<!--  -->
 							</td>
 							<td>
                                 <a href="javascript:void(0);" onclick="otheraction.company_punish_num('{{ $v["id"] ?? "0" }}','{{ $v["company_name"] ?? "" }}')" alt="行政处罚信息"> <img src="{{asset('quality/Market/images/details12.png')}}" alt="" /> </a>
-								<!-- ({{ $v['extend_info']['punish_num'] ?? '0' }}) -->
+								({{ $v['extend_info']['punish_num'] ?? '0' }})<!--  -->
 							</td>
 						</tr>
                         @endforeach
@@ -100,7 +103,7 @@
     // 机构信息-查看
     var COMPANY_INFO_URL = "{{url('web/market/company/info')}}/";//显示页面地址前缀 + id
 
-    var SCHEDULE_SHOW_URL = "{{ url('web/market/company_new_schedule')}}";// "{ { url('admin/company_new_schedule/show')}}/";//查看企业能力附表
+    var SCHEDULE_SHOW_URL = "{{url('jigou/info')}}/";// “{{ url('web/market/company_new_schedule')}}";// "{ { url('admin/company_new_schedule/show')}}/";//查看企业能力附表
 
     var COMPANY_SUPERVISE_EDIT_URL = "{{ url('web/market/company_supervise/info/0') }}"; // 监督检查信息修改/添加url
 
@@ -116,4 +119,4 @@
 
 <script src="{{ asset('/js/web/QualityControl/Market/search.js') }}?1"  type="text/javascript"></script>
 
-<script src="{{ asset('/js/web/QualityControl/Market/company.js') }}?2"  type="text/javascript"></script>
+<script src="{{ asset('/js/web/QualityControl/Market/company.js') }}?3"  type="text/javascript"></script>

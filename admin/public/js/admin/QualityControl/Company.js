@@ -329,10 +329,10 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
     document.write("            <td><%=item.city_name%><\/td>");
     document.write("            <td><%=item.company_name%><\/td>");
     document.write("            <td><%=item.industry_name%><hr/><%=item.company_grade_text%><\/td>");
-    document.write("            <td><%=item.extend_info.staff_num%><\/td>");
+    //document.write("            <td><%=item.extend_info.staff_num%><\/td>");
     document.write("            <td><%=item.company_certificate_no%><\/td>");
-    document.write("            <td><%=item.company_contact_name%><\/td>");
-    document.write("            <td><%=item.company_contact_mobile%><\/td>");
+    document.write("            <td><%=item.company_contact_name%><hr/><%=item.company_contact_mobile%> <\/td>");
+    //document.write("            <td><%=item.company_contact_mobile%><\/td>");
     document.write("            <td><%=item.is_perfect_text%><hr/><%=item.company_grade_continue_text%><\/td>");
     document.write("            <td><%=item.open_status_text%><\/td>");
     document.write("            <td><%=item.account_status_text%><\/td>");

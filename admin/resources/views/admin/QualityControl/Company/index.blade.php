@@ -158,16 +158,14 @@
         <col width="60">
         <col width="60">
         <col>
-        <col>
-        <col width="50">
-        <col>
-        <col width="80">
-        <col width="105">
+        <col> 
+        <col width="115">
+        <col width="105"> 
         <col width="80">
         <col width="75">
         <col width="50">
         <col width="90">
-        <col width="200">
+        <col width="300">
     </colgroup>
     <thead>
     <tr>
@@ -181,10 +179,10 @@
       <th>城市</th>
         <th>单位名称</th>
         <th>行业<hr/>会员类型</th>
-        <th>员工</th>
+        <!-- <th>员工</th> -->
         <th>证书编号</th>
-        <th>联系人</th>
-        <th>联系人手机</th>
+        <th>联系人<hr/>手机</th>
+        <!-- <th>联系人</th> -->
         <th>完善资料<hr/>续期配置</th>
         <th>审核</th>
         <th>状态</th>
@@ -253,6 +251,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/Company.js') }}?22"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/Company.js') }}?244"  type="text/javascript"></script>
 </body>
 </html>

@@ -14,9 +14,26 @@
 </head>
 <body>
 
-<div class="mm">
-  <div class="mmhead" id="mywork">
 
+
+<div class="mm" style="margin:0">
+	
+	<div>
+		<div class="com-name">
+					 {{ $info['company_name'] ?? '' }}
+		</div>
+		<div class="content-info">
+			<p>机构名称：<span>{{ $info['company_certificate_no'] ?? '' }}</span></p>
+			<p>CMA证书编号：<span>{{ $info['company_certificate_no'] ?? '' }}</span></p>
+			<p>发证日期：<span><!-- {{ $info['certificate_detail']['valid_date'] ?? '' }} --></span></p>
+			<p>证书有效期：<span> {{ $info['certificate_detail']['valid_date'] ?? '' }}</span></p> 	
+			<p>联系地址：<span> {{ $info['certificate_detail']['valid_date'] ?? '' }}</span></p> 	
+		</div>
+		<div class="c"></div>
+	</div>
+	
+	
+  <div class="mmhead" id="mywork">
     @include('common.pageParams')
     <form onsubmit="return false;" class="form-horizontal" style="display: none;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
@@ -36,53 +53,47 @@
       </div>
     </form>
   </div>
-  <div class="table-header">
-
-
-
-{{--    <button class="btn btn-success  btn-xs export_excel"  onclick="action.batchExportExcel(this)" >导出[按条件]</button>--}}
-{{--    <button class="btn btn-success  btn-xs export_excel"  onclick="action.exportExcel(this)" >导出[勾选]</button>--}}
-	{{--<button class="btn btn-danger  btn-xs batch_del"  onclick="action.batchDel(this)">批量删除</button>--}}
-{{--    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcel(this)">导入机构自我声明</button>--}}
-{{--    <div style="display:none;" ><input type="file" class="import_file img_input"></div>--}}{{--导入file对象--}}
-  </div>
+   <h3>◆ 自我声明公告</h3>
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
-    <colgroup>
-{{--        <col width="50">--}}
-{{--        <col width="60">--}}
-{{--        <col>--}}
+    <colgroup> 
         <col>
         <col>
-        <col width="95">
-{{--        <col width="95">--}}
-{{--        <col width="140">--}}
+        <col width="95"> 
     </colgroup>
     <thead>
-    <tr>
-{{--      <th>--}}
-{{--        <label class="pos-rel">--}}
-{{--          <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>--}}
-{{--          <!-- <span class="lbl">全选</span> -->--}}
-{{--        </label>--}}
-{{--      </th>--}}
-{{--      <th>ID</th>--}}
-{{--      <th>所属企业</th>--}}
-      <th>文件名</th>
-        <th>文件</th>
-{{--      <th>创建时间</th>--}}
-        <th>上传日期</th>
-{{--      <th></th>--}}
-{{--      <th>操作</th>--}}
+    <tr> 
+		<th>文件名</th>         
+        <th>上传日期</th>		 
+        <th>操作</th> 
     </tr>
     </thead>
     <tbody id="data_list">
     </tbody>
   </table>
+  
   <div class="mmfoot">
     <div class="mmfleft"></div>
     <div class="pagination">
     </div>
   </div>
+  
+    <h3>◆ 机构能力附表</h3>
+	<table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="nlfb-table">
+	  <colgroup> 
+	      <col>
+	      <col>
+	      <col width="95"> 
+	  </colgroup>
+	  <thead>
+	  <tr> 
+		<th>文件名</th>         
+	    <th>上传日期</th>		 
+	    <th>操作</th> 
+	  </tr>
+	  </thead>
+	  <tbody id="data_list">
+	  </tbody>
+	</table>
 
 </div>
 
@@ -123,6 +134,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/web/QualityControl/Market/CompanyStatement.js') }}?5"  type="text/javascript"></script>
+  <script src="{{ asset('js/web/QualityControl/Market/CompanyStatement.js') }}?425"  type="text/javascript"></script>
 </body>
 </html>

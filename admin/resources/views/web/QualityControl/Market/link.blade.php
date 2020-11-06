@@ -2,6 +2,7 @@
 <html>
 	<head>
         <title>陕西省市场监督管理局_陕西省检验检测机构信息查询_陕西省检验检测机构信息管理平台_检验检测能力</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
         <meta name="keywords" content="陕西省市场监督管理局,陕西省检验检测机构信息查询,陕西省检验检测机构信息管理平台,检验检测能力" />
         <meta name="description" content="陕西省市场监督管理局,陕西省检验检测机构信息查询,陕西省检验检测机构信息管理平台,检验检测能力" />
 

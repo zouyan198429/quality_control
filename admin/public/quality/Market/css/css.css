@@ -37,8 +37,7 @@ body {
 .foot-i {
 	position: fixed;
 	    bottom: 20px;
-	    width: 100%;
-	    min-width: 840px;
+	    width: 100%; 
 	    height: 14px;
 	    color: #fff;
 	    font-size: 12px;
@@ -122,31 +121,31 @@ button.searchbtn {
 
 .nav {
 	width: 100%;
-	    height: 39px;
-	    background: url(../images/nav.png) repeat-x;
-		overflow: hidden;
+	min-height: 40px;
+	background:#2267B4;
+	overflow: hidden;		
+	border-top:1px solid #215FA7;
+	border-bottom:1px solid #215FA7;
 }
 .nav ul {
     height: auto;
     position: absolute;
     list-style: none;
 	margin-left:5%;
-	width: 80%;
+	width: 90%;
 }
 
 .nav1 {
     width: 100%;
 }
 .li1  {
-	width: 100px;
-    height: 38px;
+	padding:0 10px;
+    min-height: 38px;
     line-height: 38px;
     text-align: center;
     position: relative;
     float: left;
     display: inline;
-    background: url(../images/nav_kh.png) no-repeat;
-
 }
 .nav ul a {
     font-family: '微软雅黑';
@@ -219,6 +218,7 @@ a.butStyle {
 	cursor: pointer; 
 	display: inline-block;
 	margin-right: 12px;
+	margin-bottom: 2px;
 }
 
 
@@ -541,4 +541,31 @@ border-radius: 33px; }
 }
 input.form-control {
 	display: inline;
+}
+
+
+@media screen and (max-device-width: 400px) {
+	.header {
+		height: auto;
+		padding:15px 0;
+		background: #F1F8FD;
+	}
+	.logo {
+		width: 100%;
+		margin:0;
+		height: auto;
+	}
+	.logo img {
+		width: 100%;
+	}
+	.nav ul {
+		width: 100%;
+	}
+	.li1 {
+		padding:0 5px;
+	}
+	.slideTxtBox .hd ul li {
+		font-size: 14px;
+		padding:0 5px;
+	}
 }

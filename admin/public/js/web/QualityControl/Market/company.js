@@ -11,20 +11,23 @@ var otheraction = {
         return false;
     },
     schedule : function(id, company_name){// 查看能力附表
+	
         //获得表单各name的值
         // var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
         // console.log(SCHEDULE_SHOW_URL);
         // console.log(data);
         // var url_params = get_url_param(data);// parent.get_url_param(data);
         // var weburl = SCHEDULE_SHOW_URL + id + '?' + url_params;
-        var weburl = SCHEDULE_SHOW_URL + '?company_id=' + id ;// + '&' + url_params;
+        // var weburl = SCHEDULE_SHOW_URL + '?company_id=' + id ;// + '&' + url_params;
+		var weburl = SCHEDULE_SHOW_URL + '' + id ;
         console.log(weburl);
+		goOpenUrl(weburl);
         // go(SHOW_URL + id);
         // location.href='/pms/Supplier/show?supplier_id='+id;
         // var weburl = SHOW_URL + id;
         // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
-        var tishi = company_name;//  + "-能力附表";
-        layeriframe(weburl,tishi,980,500,SHOW_CLOSE_OPERATE);
+        // var tishi = company_name;//  + "-能力附表";
+        // layeriframe(weburl,tishi,980,500,SHOW_CLOSE_OPERATE);
         return false;
     },
     company_statement_num : function(id, company_name){// 查看机构自我声明

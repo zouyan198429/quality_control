@@ -35,9 +35,10 @@
 							</div>
 							<div class="content-info">
 								<p>CMA证书编号：<span>{{ $v['company_certificate_no'] ?? '' }}</span></p>
-								<p>公司地址：<span>{{ $v['addr'] ?? '' }}</span></p>
+								<p>证书有效期：<span> {{ $v['certificate_detail']['valid_date'] ?? '' }}</span></p>
 								<p>联系人：<span>{{ $v['company_contact_name'] ?? '' }}</span></p>
 								<p>联系电话：<span>{{ $v['company_contact_mobile'] ?? '' }}/{{ $v['company_contact_tel'] ?? '' }}</span></p>
+								<p style="width: 80%;">联系地址：<span>{{ $v['addr'] ?? '' }}</span></p>
 							</div>
 							<div class="c"></div>
 						</li>

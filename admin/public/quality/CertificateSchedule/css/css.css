@@ -33,10 +33,9 @@
 
 
 .search {
-	min-height: 360px;
-	background: #003488 url(../images/searchbg.jpg) repeat center top;
+	min-height: 200px;
+	background: #003488 url(../images/searchbg.jpg) repeat center bottom;
 	color: #fff;
-
 }
 .search h1 { 
 	padding-top:40px;
@@ -357,13 +356,14 @@ border-radius: 33px; }
 /* detail */
 
 .details-header {
-	min-height: 240px;
-	background: #003488 url(../images/searchbg.jpg) repeat center top;
+	min-height: 210px;
+	background: #003488 url(../images/searchbg.jpg) repeat center bottom;
 	color: #fff;
-	padding-top:30px;
+	padding-top:20px;
 }
 .details-header .wrap {
 	position: relative;
+	width: 80%;
 }
 .details-header .com-logo {
 	position: absolute;
@@ -380,13 +380,11 @@ border-radius: 33px; }
 	margin-top: 10px;
 }
 .details-header .com-name {
-	font-size: 28px;
-	padding-bottom: 20px;
-	padding-left:170px;
+	font-size: 24px;
+	padding-bottom: 20px; 
 	margin-top:20px;
 }
-.details-header .content-info {
-	padding-left:170px;
+.details-header .content-info { 
 }
 
 .details-header .content-info  p {
@@ -413,7 +411,21 @@ border-radius: 33px; }
 }
 
 
-
+.ssnav {
+	width: 100%;
+	border-bottom: 1px solid #f1f2f4; 
+	 background-color: #f1f3f5; 
+	 padding-top:2px;
+}
+.inner {
+	width: 80%;
+	margin:0 auto;
+}
+.inner a {
+	display: inline-block;
+	padding: 0 15px;
+	line-height: 44px;
+}
 .zhengshu {
 	width: 420px;
 	height: 260px;
@@ -432,13 +444,11 @@ border-radius: 33px; }
 	left:20px;
 	top:20px;
 }
-.qianziren {
-	width: 740px;
-	height: 260px;
-	background-color: #fff;
-	margin-top:-40px;
-	float: right;
-
+.qianziren { 
+	width: 80%;
+	margin:20px auto;
+	min-height: 260px;
+	background-color: #fff; 
 }
 .qz-man {
 	width:50%;
