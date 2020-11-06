@@ -293,10 +293,12 @@ function ajax_form(){
         var intervalId = setInterval(function(){
             var status = uploader.getState();
             console.log('获取上传队列状态代码',uploader.getState());
-            if(status == 1){
+            if(status == 1 ){
                 layer.close(layer_index);//手动关闭
                 clearInterval(intervalId);
-                ajax_save(id);
+                if(commonaction.isUploadSuccess(uploader)){// 都上传成功
+                    ajax_save(id);
+                }
             }
         },1000);
     }else{
@@ -304,7 +306,12 @@ function ajax_form(){
     }
 
 }
+
+
 function ajax_save(id) {
+
+    console.log('====正在进行测试====');
+    return false;
     // 验证通过
     SUBMIT_FORM = false;//标记为已经提交过
     var data = $("#addForm").serialize();

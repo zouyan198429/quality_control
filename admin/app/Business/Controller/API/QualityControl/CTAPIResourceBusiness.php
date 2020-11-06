@@ -4,6 +4,7 @@ namespace App\Business\Controller\API\QualityControl;
 
 use App\Services\DBRelation\RelationDB;
 use App\Services\Excel\ImportExport;
+use App\Services\File\DownFile;
 use App\Services\Request\API\HttpRequest;
 use App\Services\Tool;
 use App\Services\Upload\UploadFile;
@@ -307,6 +308,11 @@ class CTAPIResourceBusiness extends BasicPublicCTAPIBusiness
                 Log::info('上传文件日志-文件后缀',[$ext]);// 文件后缀 ["jpg"]
 
                 if(empty($ext)) $ext = $extFirst;
+                // 修复是二进制文件的问题
+                if(empty($ext) || $ext = 'bin' ){
+                    $ext = DownFile::getLocalFileExt($name);
+                    Log::info('上传文件日志-二进制文件后缀',[$ext]);// 文件后缀 ["jpg"]
+                }
 
                 // 根据扩展名，重新获得文件的操作类型
                 $resourceConfig = UploadFile::getResourceConfig($ext);

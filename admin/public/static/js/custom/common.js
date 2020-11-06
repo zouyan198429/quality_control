@@ -238,6 +238,34 @@ var commonaction = {
         }
         console.log('==reObj=', reObj);
         return reObj;
+    },
+    // 判断上传对象中的所有文件是否都上传成功
+    // uploader 上传对象
+    // true:没有要上传的文件或都已经上传成功  ； false:还有没有上传成功的
+    isUploadSuccess:function(uploader){
+        var objfiles = uploader.getFiles();
+        var filesCount = objfiles.length;
+        console.log('上传中的文件', objfiles);
+        console.log('上传中的文件的数量', filesCount);
+        // for(var f in objfiles) {
+        //     var tfObj = objfiles[f];
+        if(filesCount <= 0){
+            return true;
+        }
+        for(var f = 0; f < objfiles.length; f++) {
+            var tfObj = objfiles[f];
+            console.log('文件' + f + ' 的状态 ', tfObj.status);
+            // 1 文件队列还没有开始上传，或者上传已暂停或已上传完成。
+            // 2 文件队列正在上传中。
+            // 4 文件上传失败。
+            // 5 文件已上传到服务器。
+            var status = tfObj.status;
+            if(status != 5){
+                return false;
+            }
+
+        }
+        return true;
     }
 };
 
