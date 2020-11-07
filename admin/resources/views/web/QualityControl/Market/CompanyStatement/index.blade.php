@@ -17,22 +17,22 @@
 
 
 <div class="mm" style="margin:0">
-	
+
 	<div>
-		<div class="com-name">
-					 {{ $info['company_name'] ?? '' }}
-		</div>
+{{--		<div class="com-name">--}}
+{{--					 {{ $info['company_name'] ?? '' }}--}}
+{{--		</div>--}}
 		<div class="content-info">
-			<p>机构名称：<span>{{ $info['company_certificate_no'] ?? '' }}</span></p>
+			<p>机构名称：<span>{{ $info['company_name'] ?? '' }}</span></p>
 			<p>CMA证书编号：<span>{{ $info['company_certificate_no'] ?? '' }}</span></p>
-			<p>发证日期：<span><!-- {{ $info['certificate_detail']['valid_date'] ?? '' }} --></span></p>
-			<p>证书有效期：<span> {{ $info['certificate_detail']['valid_date'] ?? '' }}</span></p> 	
-			<p>联系地址：<span> {{ $info['certificate_detail']['valid_date'] ?? '' }}</span></p> 	
+			<p>发证日期：<span>{{ $info['ratify_date'] ?? '' }}</span></p>
+			<p>证书有效期：<span> {{ $info['valid_date'] ?? '' }}</span></p>
+			<p>联系地址：<span> {{ $info['laboratory_addr'] ?? '' }}</span></p>
 		</div>
 		<div class="c"></div>
 	</div>
-	
-	
+
+
   <div class="mmhead" id="mywork">
     @include('common.pageParams')
     <form onsubmit="return false;" class="form-horizontal" style="display: none;" role="form" method="post" id="search_frm" action="#">
@@ -55,43 +55,43 @@
   </div>
    <h3>◆ 自我声明公告</h3>
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
-    <colgroup> 
+    <colgroup>
         <col>
-        <col>
-        <col width="95"> 
+        <col width="200">
+        <col width="400">
     </colgroup>
     <thead>
-    <tr> 
-		<th>文件名</th>         
-        <th>上传日期</th>		 
-        <th>操作</th> 
+    <tr>
+		<th>文件名</th>
+        <th>上传日期</th>
+        <th>操作</th>
     </tr>
     </thead>
     <tbody id="data_list">
     </tbody>
   </table>
-  
+
   <div class="mmfoot">
     <div class="mmfleft"></div>
     <div class="pagination">
     </div>
   </div>
-  
+
     <h3>◆ 机构能力附表</h3>
 	<table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="nlfb-table">
-	  <colgroup> 
+	  <colgroup>
 	      <col>
-	      <col>
-	      <col width="95"> 
+	      <col width="200">
+	      <col width="400">
 	  </colgroup>
 	  <thead>
-	  <tr> 
-		<th>文件名</th>         
-	    <th>上传日期</th>		 
-	    <th>操作</th> 
+	  <tr>
+		<th>文件名</th>
+	    <th>上传日期</th>
+	    <th>操作</th>
 	  </tr>
 	  </thead>
-	  <tbody id="data_list">
+	  <tbody id="schedule_data_list">
 	  </tbody>
 	</table>
 
@@ -132,8 +132,12 @@
       // var IFRAME_TAG_KEY = "";// "QualityControl\\CTAPIStaff";// 获得模型表更新时间的关键标签，可为空：不获取
       // var IFRAME_TAG_TIMEOUT = 60000;// 获得模型表更新时间运行间隔 1000:1秒 ；可以不要此变量：默认一分钟
 
+      var  SCHEDULE_LIST_DATA = @json($schedule_list ?? []);
+      var SCHEDULE_TABLE_ID = 'schedule_data_list';
+      var SCHEDULE_BAIDU_TELPLETE = 'baidu_template_data_list_schedule';
+
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/web/QualityControl/Market/CompanyStatement.js') }}?425"  type="text/javascript"></script>
+  <script src="{{ asset('js/web/QualityControl/Market/CompanyStatement.js') }}?439"  type="text/javascript"></script>
 </body>
 </html>

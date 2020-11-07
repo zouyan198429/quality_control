@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\WebFront\Web\QualityControl\Market;
 
+use App\Business\Controller\API\QualityControl\CTAPICompanyScheduleBusiness;
 use App\Business\Controller\API\QualityControl\CTAPICompanyStatementBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIResourceBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
@@ -128,10 +129,25 @@ class CompanyStatementController extends BasicController
             if(empty($companyInfo)) throws('企业信息不存在！');
             $info['company_id'] = $company_id;
             $info['user_company_name'] = $companyInfo['company_name'] ?? '';
+            $info = array_merge($companyInfo, $info);
             $company_hidden = 1;
         }
         $reDataArr['info'] = $info;
         $reDataArr['company_hidden'] = $company_hidden;// =1 : 隐藏企业选择
+
+        // 获得企业的能力附表数据
+
+        $extParams = [
+            // 'handleKeyArr' => ['company', 'siteResources'],//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+            'relationFormatConfigs'=> CTAPICompanyScheduleBusiness::getRelationConfigs($request, $this, ['company_info', 'resource_list', 'resource_pdf_list'], []),
+        ];
+        $result = CTAPICompanyScheduleBusiness::getList($request, $this, 1, [], [], $extParams);
+        $dataList = $result['result']['data_list'] ?? [];
+        foreach($dataList as $k => &$v){
+            $v['created_at_fmt'] = judgeDate($v['created_at'],'Y-m-d');
+        }
+        // $result['result']['data_list'] = $dataList;
+        $reDataArr['schedule_list'] = $dataList;
 
     }
 

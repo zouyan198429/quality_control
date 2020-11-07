@@ -130,6 +130,11 @@ class MarketController extends BasicController
             }
             if($field != '' && $keyword != '') array_push($keyArr, $keyword);
 
+            $extParamsCompany = [
+                'sqlParams'=> [
+                    'orderBy' => ['id' => 'asc']
+                ]
+            ];
             if($qkey == 2){
 
                 $queryParams = [
@@ -150,19 +155,19 @@ class MarketController extends BasicController
                         'where' => [['admin_type', 2], ['is_perfect', 2], ['open_status', 2], ['account_status', 1]],
                         'whereIn' =>  ['id' => $companyIds],
                     ];
-                    $extParams = [
+                    $extParams = array_merge($extParamsCompany,[
                         'useQueryParams' => false,
                         'relationFormatConfigs'=> CTAPIStaffBusiness::getRelationConfigs($request, $this, ['extend_info'], []),
-                    ];
+                    ]);
                     $company_list = CTAPIStaffBusiness::getList($request, $this, 1, $queryParams, [], $extParams)['result']['data_list'] ?? [];
                 }
                 $reDataArr['company_list'] = $company_list;
                 $reDataArr['pageInfoLink'] = $company_arr['pageInfoLink'] ?? '';
             }else{
-                $extParams = [
+                $extParams = array_merge($extParamsCompany,[
                     // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                      'relationFormatConfigs'=> CTAPIStaffBusiness::getRelationConfigs($request, $this, ['extend_info'], []),// , 'extend_info' ,'industry_info', 'city_info'
-                ];
+                ]);
                 $company_arr = CTAPIStaffBusiness::getList($request, $this, 2 + 8, [], [], $extParams)['result'] ?? [];
                 $reDataArr['company_list'] = $company_arr['data_list'] ?? [];
                 $reDataArr['pageInfoLink'] = $company_arr['pageInfoLink'] ?? '';

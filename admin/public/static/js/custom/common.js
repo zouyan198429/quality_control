@@ -173,7 +173,7 @@ var commonaction = {
         go(url);
         layer.close(layer_index); //手动关闭
     },
-    // 浏览文件
+    // 浏览文件-- 弹窗中
     // $file_url  文件http路径  http://www.baidu.com/aa.txt
     // file_name  文件名称
     browse_file:function(file_url, file_name, widthnum, heightnum, operate_num){
@@ -184,6 +184,11 @@ var commonaction = {
         }
         var tishi = '浏览-' + file_name;
         layeriframe(file_url,tishi,widthnum,heightnum,operate_num);
+    },
+    // 在浏览器打开页面--新窗口
+    // target 不传，默认为 '_blank'
+    browse_url:function(url, target){
+        goOpenUrl(url, target);
     },
     // 根据上传文件的 下标配置，返回所有的 上传文件扩展名限 数组对象 FILE_MIME_TYPES 中的  mime_types 集合
     // fileTypeKeys 下标配置   如 ['pic','pdf',...]

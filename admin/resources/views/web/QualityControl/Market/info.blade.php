@@ -10,7 +10,7 @@
 			.cominfo {
 				border:1px solid #333;
 				width: 90%;
-				margin:15px auto;	
+				margin:15px auto;
 				background-color: #fff;
 				border-collapse: collapse;
 			}
@@ -24,9 +24,9 @@
 			}
 		</style>
 	</head>
-	<body>  
-	
-	
+	<body>
+
+
 	<table class="cominfo">
 		<tr>
 			<th>机构名称:</th>
@@ -50,13 +50,13 @@
 		</tr>
 		<tr>
 			<th>发证日期：</th>
-			<td></td>
+			<td>{{ $info['ratify_date'] ?? '' }}</td>
 		</tr>
 		<tr>
 			<th>有效日期：</th>
-			<td></td>
+			<td>{{ $info['valid_date'] ?? '' }}</td>
 		</tr>
 	</table>
-	  
+
 	</body>
 </html>

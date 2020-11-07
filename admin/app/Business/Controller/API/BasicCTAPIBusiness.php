@@ -410,7 +410,6 @@ class BasicCTAPIBusiness extends APIOperate
             $queryParams = $defaultQueryParams;
         }
         $isExport = 0;
-
         $useSearchParams = $extParams['useQueryParams'] ?? true;// 是否用来拼接查询条件，true:用[默认];false：不用
         // 其它sql条件[覆盖式]
         $sqlParams = $extParams['sqlParams'] ?? [];

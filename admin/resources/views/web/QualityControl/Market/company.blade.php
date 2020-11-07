@@ -50,7 +50,7 @@
 							</td>
 							<td>
                                 <a href="javascript:void(0);" onclick="otheraction.schedule('{{ $v["id"] ?? "0" }}','{{ $v["company_name"] ?? "" }}')" alt="资质认定证书附表">
-									<img src="{{asset('quality/Market/images/details12.png')}}" alt="" /> 
+									<img src="{{asset('quality/Market/images/details12.png')}}" alt="" />
 								</a>
 								<!-- ({{ $v['extend_info']['schedule_num'] ?? '0' }}) -->
 							</td>
@@ -103,7 +103,7 @@
     // 机构信息-查看
     var COMPANY_INFO_URL = "{{url('web/market/company/info')}}/";//显示页面地址前缀 + id
 
-    var SCHEDULE_SHOW_URL = "{{url('jigou/info')}}/";// “{{ url('web/market/company_new_schedule')}}";// "{ { url('admin/company_new_schedule/show')}}/";//查看企业能力附表
+    var SCHEDULE_SHOW_URL = "{{url('jigou/info')}}/";// “{ { url('web/market/company_new_schedule')}}";// "{ { url('admin/company_new_schedule/show')}}/";//查看企业能力附表
 
     var COMPANY_SUPERVISE_EDIT_URL = "{{ url('web/market/company_supervise/info/0') }}"; // 监督检查信息修改/添加url
 

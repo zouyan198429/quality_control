@@ -9,6 +9,7 @@ $(function(){
 
     // window.location.href 返回 web 主机的域名，如：http://127.0.0.1:8080/testdemo/test.html?id=1&name=test
     // autoRefeshList(window.location.href, IFRAME_TAG_KEY, IFRAME_TAG_TIMEOUT);// 根据设置，自动刷新列表数据【每隔一定时间执行一次】
+    initScheduleList();// 初始化能力附表列表
 });
 
 //重载列表
@@ -49,6 +50,14 @@ var otheraction = {
         commonaction.down_file(DOWN_FILE_URL, resource_url, save_file_name);
     }
 };
+
+// 初始化能力附表列表
+function initScheduleList() {
+    console.log('==SCHEDULE_BAIDU_TELPLETE==', SCHEDULE_BAIDU_TELPLETE);
+    console.log('==SCHEDULE_LIST_DATA==', SCHEDULE_LIST_DATA);
+    console.log('==SCHEDULE_TABLE_ID==', SCHEDULE_TABLE_ID);
+    resolve_baidu_template(SCHEDULE_BAIDU_TELPLETE, {'data_list': SCHEDULE_LIST_DATA }, SCHEDULE_TABLE_ID);
+}
 
 // 初始化，来决定*是显示还是隐藏
 function popSelectInit(){
@@ -141,14 +150,13 @@ function addCompany(company_id, company_name){
     // document.write("            <td><%=item.id%><\/td>");
     // document.write("            <td><%=item.user_company_name%><\/td>");
     document.write("            <td> <a href=\"javascript:void(0);\" > <%=item.resource_name%><\/a><\/td>");
-	document.write("            <td><%=item.created_at_fmt%><\/td>");	
-    document.write("           <td>");	
+	document.write("            <td><%=item.created_at_fmt%><\/td>");
+    document.write("           <td>");
     document.write("            <%for(var j = 0; j<resource_list.length;j++){");
     document.write("                var jitem = resource_list[j];");
     document.write("                 %>");
-    document.write("               <p>"); 
-	//<%=jitem.resource_name%>
-    document.write("               <a href=\"javascript:void(0);\"  class=\"btn btn-mini btn-success\"    onclick=\"commonaction.browse_file('<%=jitem.resource_url_format%>','<%=jitem.resource_name%>')\">");
+    document.write("               <p><%=jitem.resource_name%>");
+    document.write("               <a href=\"javascript:void(0);\"  class=\"btn btn-mini btn-success\"    onclick=\"commonaction.browse_url('<%=jitem.resource_url_format%>')\">");
     document.write("                    <i class=\"ace-icon fa fa-eye bigger-60\"> 查看<\/i>");
     // document.write("                <img  src=\"<%=jitem.resource_url%>\"  style=\"width:100px;\">");
     document.write("              </a>");
@@ -170,6 +178,97 @@ function addCompany(company_id, company_name){
     // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.iframeModify(<%=item.id%>)\">");
     // document.write("                    <i class=\"ace-icon fa fa-pencil bigger-60\"> 编辑<\/i>");
     // document.write("                <\/a>");
+    // document.write("                <%if( can_modify){%>");
+    // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.del(<%=item.id%>)\">");
+    // document.write("                    <i class=\"ace-icon fa fa-trash-o bigger-60\"> 删除<\/i>");
+    // document.write("                <\/a>");
+    // document.write("                <%}%>");
+    // document.write("");
+    // document.write("            <\/td>");
+    document.write("        <\/tr>");
+    document.write("    <%}%>");
+    document.write("<\/script>");
+    document.write("<!-- 列表模板部分 结束-->");
+    document.write("<!-- 前端模板结束 -->");
+}).call();
+
+(function() {
+    document.write("");
+    document.write("    <!-- 前端模板部分 -->");
+    document.write("    <!-- 列表模板部分 开始  <! -- 模板中可以用HTML注释 -- >  或  <%* 这是模板自带注释格式 *%>-->");
+    document.write("    <script type=\"text\/template\"  id=\"baidu_template_data_list_schedule\">");
+    document.write("");
+    document.write("        <%for(var i = 0; i<data_list.length;i++){");
+    document.write("        var item = data_list[i];");
+    document.write("        var resource_list = item.resource_list;");
+    document.write("        var resource_pdf_list = item.resource_pdf_list;");
+    document.write("        if( item.type_id > 0 ){");
+    document.write("        resource_list = resource_pdf_list;");
+    document.write("        }");
+    //document.write("        var can_modify = false;");
+    // document.write("        if( item.issuper==0 ){");
+    document.write("        can_modify = true;");
+    //document.write("        }");
+    document.write("        %>");
+    document.write("");
+    document.write("        <tr>");
+    // document.write("            <td>");
+    // document.write("                <label class=\"pos-rel\">");
+    // document.write("                    <input  onclick=\"action.seledSingle(this)\" type=\"checkbox\" class=\"ace check_item\" <%if( false &&  !can_modify){%> disabled <%}%>  value=\"<%=item.id%>\"\/>");
+    // document.write("                  <span class=\"lbl\"><\/span>");
+    // document.write("                <\/label>");
+    // document.write("            <\/td>");
+    // document.write("            <td><%=item.id%><\/td>");
+    // // document.write("            <td><%=item.client_id%><\/td>");
+    // document.write("            <td><%=item.user_company_name%><\/td>");
+    // document.write("            <td><%=item.company_id%><\/td>");
+    document.write("            <td><%=item.type_id_text%><\/td>");
+    // document.write("           <td>");
+    // document.write("            <%for(var j = 0; j<resource_pdf_list.length;j++){");
+    // document.write("                var jitem = resource_pdf_list[j];");
+    // document.write("                 %>");
+    // document.write("               <a href=\"<%=jitem.resource_url_format%>\" target='_blank'>");
+    // document.write("                    <%=jitem.resource_name%>--查看");
+    // // document.write("                <img  src=\"<%=jitem.resource_url%>\"  style=\"width:100px;\">");
+    // document.write("              </a>");
+    // document.write("            <%}%>");
+    // document.write("           <\/td>");
+    // document.write("           <td>");
+    // document.write("            <%for(var j = 0; j<resource_list.length;j++){");
+    // document.write("                var jitem = resource_list[j];");
+    // document.write("                 %>");
+    // document.write("               <a href=\"<%=jitem.resource_url_format%>\" target='_blank'>");
+    //     document.write("                    <%=jitem.resource_name%>--查看");
+    // // document.write("                <img  src=\"<%=jitem.resource_url%>\"  style=\"width:100px;\">");
+    // document.write("              </a>");
+    // document.write("            <%}%>");
+    // document.write("           <\/td>");
+    document.write("            <td><%=item.created_at_fmt%><\/td>");
+    document.write("           <td>");
+    document.write("            <%for(var j = 0; j<resource_list.length;j++){");
+    document.write("                var jitem = resource_list[j];");
+    document.write("                 %>");
+    document.write("                    <%=jitem.resource_name%>");
+    document.write("               <a href=\"<%=jitem.resource_url_format%>\"  class=\"btn btn-mini btn-success\"   target='_blank'>");
+    document.write("                    <i class=\"ace-icon fa fa-eye bigger-60\"> 查看<\/i>");
+    // document.write("                <img  src=\"<%=jitem.resource_url%>\"  style=\"width:100px;\">");
+    document.write("              </a>");
+    // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"otheraction.down_file('<%=jitem.resource_url_old%>','<%=item.company_id%>-<%=item.user_company_name%>-<%=jitem.resource_name%>')\">");
+    // document.write("                    <i class=\"ace-icon fa fa-cloud-download bigger-60\"> 下载<\/i>");
+    // document.write("                <\/a>");
+    document.write("            <%}%>");
+    document.write("           <\/td>");
+    // document.write("            <td><%=item.updated_at%><\/td>");
+    // document.write("            <td><%=item.sort_num%><\/td>");
+    // document.write("            <td>");
+    // document.write("                <%if( false){%>");
+    // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"action.show(<%=item.id%>)\">");
+    // document.write("                    <i class=\"ace-icon  fa fa-eye  bigger-60\"> 查看<\/i>");
+    // document.write("                <\/a>");
+    // document.write("                <%}%>");
+    // // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.iframeModify(<%=item.id%>)\">");
+    // // document.write("                    <i class=\"ace-icon fa fa-pencil bigger-60\"> 编辑<\/i>");
+    // // document.write("                <\/a>");
     // document.write("                <%if( can_modify){%>");
     // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.del(<%=item.id%>)\">");
     // document.write("                    <i class=\"ace-icon fa fa-trash-o bigger-60\"> 删除<\/i>");
