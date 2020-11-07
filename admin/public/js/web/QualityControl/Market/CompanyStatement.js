@@ -251,9 +251,9 @@ function addCompany(company_id, company_name){
     document.write("            <%for(var j = 0; j<resource_list.length;j++){");
     document.write("                var jitem = resource_list[j];");
     document.write("                 %>");
-    document.write("                <%if( resource_list.length > 1){%>");
+    // document.write("                <%if( resource_list.length > 1){%>");
     document.write("                 <p>   <%=jitem.resource_name%>");
-    document.write("                <%}%>");
+    // document.write("                <%}%>");
     document.write("               <a href=\"<%=jitem.resource_url_format%>\"  class=\"btn btn-mini btn-success\"   target='_blank'>");
     document.write("                    <i class=\"ace-icon fa fa-eye bigger-60\"> 查看<\/i>");
     // document.write("                <img  src=\"<%=jitem.resource_url%>\"  style=\"width:100px;\">");
