@@ -138,6 +138,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/web/QualityControl/Market/CompanyStatement.js') }}?439"  type="text/javascript"></script>
+  <script src="{{ asset('js/web/QualityControl/Market/CompanyStatement.js') }}?442"  type="text/javascript"></script>
 </body>
 </html>
