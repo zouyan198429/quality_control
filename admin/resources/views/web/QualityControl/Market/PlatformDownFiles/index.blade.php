@@ -37,15 +37,15 @@
 
 	</div>
 </div>
- 
- 
+
+
   <div class="wrap">
 	  <div class="content">
 		<table lay-even class="layui-table table2  comlist"  lay-size="lg"  id="dynamic-table">
-			<colgroup> 
+			<colgroup>
 				<col>
 				<col>
-				<col> 
+				<col>
 			</colgroup>
 		<thead>
 		<tr>
@@ -69,7 +69,7 @@
 		</table>
 	</div>
 </div>
-  
+
   <div class="mmfoot">
     <div class="mmfleft"></div>
     <div class="pagination">
@@ -114,6 +114,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/web/QualityControl/Market/PlatformDownFiles.js') }}?5"  type="text/javascript"></script>
+  <script src="{{ asset('js/web/QualityControl/Market/PlatformDownFiles.js') }}?6"  type="text/javascript"></script>
 </body>
 </html>

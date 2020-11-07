@@ -58,7 +58,7 @@
     <colgroup>
         <col>
         <col width="200">
-        <col width="400">
+        <col width="350">
     </colgroup>
     <thead>
     <tr>
@@ -82,7 +82,7 @@
 	  <colgroup>
 	      <col>
 	      <col width="200">
-	      <col width="400">
+	      <col width="350">
 	  </colgroup>
 	  <thead>
 	  <tr>
@@ -138,6 +138,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/web/QualityControl/Market/CompanyStatement.js') }}?442"  type="text/javascript"></script>
+  <script src="{{ asset('js/web/QualityControl/Market/CompanyStatement.js') }}?443"  type="text/javascript"></script>
 </body>
 </html>

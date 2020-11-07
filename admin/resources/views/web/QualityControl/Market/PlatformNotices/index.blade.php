@@ -34,15 +34,15 @@
 		</form>
 	</div>
 </div>
- 
- 
+
+
   <div class="wrap">
 	  <div class="content">
 		  <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
-			<colgroup> 
+			<colgroup>
 				<col>
 				<col>
-				<col> 
+				<col>
 			</colgroup>
 			<thead>
 			<tr>
@@ -72,7 +72,7 @@
     <div class="pagination">
     </div>
   </div>
- 
+
 @include('web.QualityControl.Market.layout_public.footer')
   <script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>
   <script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.all.js')}}"></script>
@@ -109,6 +109,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/web/QualityControl/Market/PlatformNotices.js') }}?5"  type="text/javascript"></script>
+  <script src="{{ asset('js/web/QualityControl/Market/PlatformNotices.js') }}?6"  type="text/javascript"></script>
 </body>
 </html>

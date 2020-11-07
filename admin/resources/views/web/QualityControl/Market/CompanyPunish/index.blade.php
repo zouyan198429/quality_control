@@ -123,6 +123,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/web/QualityControl/Market/CompanyPunish.js') }}?6"  type="text/javascript"></script>
+  <script src="{{ asset('js/web/QualityControl/Market/CompanyPunish.js') }}?7"  type="text/javascript"></script>
 </body>
 </html>
