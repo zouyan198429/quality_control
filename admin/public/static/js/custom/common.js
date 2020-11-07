@@ -271,6 +271,13 @@ var commonaction = {
 
         }
         return true;
+    },
+    // 一个字符在字符串中出现的次数
+    // split()方法将字符串按查找的字符拆分为数组，通过length属性获得数组元素的个数，进行减1操作
+    strInCount:function(str, findStr){
+        console.log('==str==', str);
+        console.log('==findStr==', findStr);
+        return str.split(findStr).length - 1;
     }
 };
 
