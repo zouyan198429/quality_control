@@ -345,8 +345,8 @@ class GetMarketCompanys extends Command
                 $this->line('file_czdate=' . $file_czdate);
                 $file_czdate = judgeDate($file_czdate,"Y-m-d H:i:s");
 
-                $files_name_txt = basename($file_path);// 8c980322-5e92-40c4-ae9c-9f756e7fe4cd.pdf
                 $suffix = DownFile::getLocalFileExt($file_path);// strtolower(pathinfo($file_path,PATHINFO_EXTENSION));
+                $files_name_txt = $file_title . '.' . $suffix;// basename($file_path);// 8c980322-5e92-40c4-ae9c-9f756e7fe4cd.pdf
                 // 文件保存
                 $fileArr = $this->saveFile($file_title, $file_path, $company_id);
                 $files_names = $fileArr['files_names'];// /resource/company/0/down/2020/11/04/8c980322-5e92-40c4-ae9c-9f756e7fe4cd.pdf
