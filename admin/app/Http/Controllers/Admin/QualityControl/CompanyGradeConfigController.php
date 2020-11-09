@@ -197,7 +197,9 @@ class CompanyGradeConfigController extends BasicController
                 $end_date = CommonRequest::get($request, 'end_date');
 
                 // 判断开始结束日期
-                Tool::judgeBeginEndDate($begin_date, $end_date, 1 + 2 + 16 + 128 + 256 + 512, 1, date('Y-m-d H:i:s'), '报名时间');
+                // Tool::judgeBeginEndDate($begin_date, $end_date, 1 + 2 + 16 + 128 + 256 + 512, 1, date('Y-m-d H:i:s'), '报名时间');
+
+                Tool::judgeBeginEndDate($begin_date, $end_date, 1 + 2 + 256 + 512, 1, date('Y-m-d H:i:s'), '报名时间');
 
                 $saveData = [
                     'company_id' => $company_id,

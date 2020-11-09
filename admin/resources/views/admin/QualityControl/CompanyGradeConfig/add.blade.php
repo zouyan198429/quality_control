@@ -82,6 +82,6 @@
 
     var SELECT_COMPANY_URL = "{{url('admin/company/select')}}";// 选择所属企业
 </script>
-<script src="{{ asset('/js/admin/QualityControl/CompanyGradeConfig_edit.js') }}?8"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/CompanyGradeConfig_edit.js') }}?9"  type="text/javascript"></script>
 </body>
 </html>
