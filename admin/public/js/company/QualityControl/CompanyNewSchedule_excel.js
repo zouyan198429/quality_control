@@ -310,8 +310,8 @@ function ajax_form(){
 
 function ajax_save(id) {
 
-    console.log('====正在进行测试====');
-    return false;
+    // console.log('====正在进行测试====');
+    // return false;
     // 验证通过
     SUBMIT_FORM = false;//标记为已经提交过
     var data = $("#addForm").serialize();
