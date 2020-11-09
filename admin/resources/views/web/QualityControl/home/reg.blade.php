@@ -3,10 +3,18 @@
 <head>
     <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/css/layui.css')}}" media="all">
 
-    @include('web.QualityControl.layout_public.pagehead')
+    @if(isset($host_type) && $host_type == 2)
+        @include('web.QualityControl.layout_public_market.pagehead')
+    @else
+        @include('web.QualityControl.layout_public.pagehead')
+    @endif
 </head>
 <body  id="body-reg1"   >
-    @include('web.QualityControl.layout_public.header')
+    @if(isset($host_type) && $host_type == 2)
+        @include('web.QualityControl.layout_public_market.header')
+    @else
+        @include('web.QualityControl.layout_public.header')
+    @endif
     <div class="line-blue"></div>
     <form class="am-form" action="#"  method="post"  id="addForm">
 	<div id="main">
@@ -17,13 +25,24 @@
                 <span>  Register</span>
 			</div>
 			<div class="bd" style="width:800px; margin:0 auto;">
-                <div class="form-item">
-                    <label for="password" class="form-label">帐户类型</label>
-                    <div class="form-input">
-                        <label  for="company_type_radio"><input type="radio" id="company_type_radio" name="admin_type" value="2" title="企业帐号" checked>企业帐号</label>&nbsp;&nbsp;
-                        <label  for="user_type_radio"><input type="radio" id="user_type_radio" name="admin_type" value="4" title="个人帐号" disabled>个人帐号（暂不开放）</label>&nbsp;&nbsp;
+
+                @if(isset($host_type) && $host_type == 2)
+                    <div class="form-item" style="display: none;">
+                        <label for="password" class="form-label">帐户类型</label>
+                        <div class="form-input">
+                            <label  for="company_type_radio"><input type="radio" id="company_type_radio" name="admin_type" value="2" title="企业帐号" checked>企业帐号</label>&nbsp;&nbsp;
+                            <label  for="user_type_radio"><input type="radio" id="user_type_radio" name="admin_type" value="4" title="个人帐号" disabled>个人帐号（暂不开放）</label>&nbsp;&nbsp;
+                        </div>
                     </div>
-                </div>
+                @else
+                    <div class="form-item">
+                        <label for="password" class="form-label">帐户类型</label>
+                        <div class="form-input">
+                            <label  for="company_type_radio"><input type="radio" id="company_type_radio" name="admin_type" value="2" title="企业帐号" checked>企业帐号</label>&nbsp;&nbsp;
+                            <label  for="user_type_radio"><input type="radio" id="user_type_radio" name="admin_type" value="4" title="个人帐号" disabled>个人帐号（暂不开放）</label>&nbsp;&nbsp;
+                        </div>
+                    </div>
+                @endif
 
 				<div class="form-item company_input">
                     <label for="username" class="form-label">登录帐号</label>
@@ -106,7 +125,11 @@
 		</div>
 	</div>
     </form>
-    @include('web.QualityControl.layout_public.footer')
+    @if(isset($host_type) && $host_type == 2)
+        @include('web.QualityControl.layout_public_market.footer')
+    @else
+        @include('web.QualityControl.layout_public.footer')
+    @endif
 </body>
 </html>
 <script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>

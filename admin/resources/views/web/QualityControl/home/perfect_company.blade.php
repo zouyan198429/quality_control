@@ -2,12 +2,20 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/css/layui.css')}}" media="all">
+@if(isset($host_type) && $host_type == 2)
+    @include('web.QualityControl.layout_public_market.pagehead')
+@else
     @include('web.QualityControl.layout_public.pagehead')
+@endif
     <!-- zui css -->
     <link rel="stylesheet" href="{{asset('dist/css/zui.min.css') }}">
 </head>
 <body style=" background:#f8f8f8; ">
-    @include('web.QualityControl.layout_public.header')
+    @if(isset($host_type) && $host_type == 2)
+        @include('web.QualityControl.layout_public_market.header')
+    @else
+        @include('web.QualityControl.layout_public.header')
+    @endif
     <div class="line-blue"></div>
 	<div id="main">
 		<div class="reg" style="box-shadow:  0 0 8px #ddd">
@@ -189,7 +197,11 @@
 			<div class="c"></div>
 		</div>
 	</div>
-    @include('web.QualityControl.layout_public.footer')
+    @if(isset($host_type) && $host_type == 2)
+        @include('web.QualityControl.layout_public_market.footer')
+    @else
+        @include('web.QualityControl.layout_public.footer')
+    @endif
 </body>
 </html>
 <script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>

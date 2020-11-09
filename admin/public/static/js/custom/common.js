@@ -278,6 +278,22 @@ var commonaction = {
         console.log('==str==', str);
         console.log('==findStr==', findStr);
         return str.split(findStr).length - 1;
+    },
+    // 替换字符内的所有字符为新的字符
+    // str 原字符
+    // oldStr 要替换的字符
+    // newStr 新的字符
+    replaceAllStr:function(str, oldStr , newStr){
+        // 要替换全部匹配项，可以使用正则表达式：
+        // var str = "a<br/>b<br/>c<br/>";
+        // re = new RegExp("<br/>","g"); //定义正则表达式
+        var re = new RegExp(oldStr,"g");
+        //第一个参数是要替换掉的内容，第二个参数"g"表示替换全部（global）。
+        // var Newstr = str.replace(re, ""); //第一个参数是正则表达式。
+        var Newstr = str.replace(re, newStr);
+        //本例会将全部匹配项替换为第二个参数。能将所有的</br>换为空的
+        // alert(Newstr); //内容为：abc
+        return Newstr;
     }
 };
 

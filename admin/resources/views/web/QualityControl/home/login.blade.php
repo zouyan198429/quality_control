@@ -2,12 +2,20 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/css/layui.css')}}" media="all">
-    @include('web.QualityControl.layout_public.pagehead')
+    @if(isset($host_type) && $host_type == 2)
+        @include('web.QualityControl.layout_public_market.pagehead')
+    @else
+        @include('web.QualityControl.layout_public.pagehead')
+    @endif
 {{--  	<script type="text/javascript" src="{{asset('staticweb/js/jquery1.42.min.js')}}"></script>--}}
 {{--  	<script type="text/javascript" src="{{asset('staticweb/js/jquery.SuperSlide.2.1.1.js')}}"></script>--}}
 </head>
 <body id="body-login" >
-    @include('web.QualityControl.layout_public.header')
+    @if(isset($host_type) && $host_type == 2)
+        @include('web.QualityControl.layout_public_market.header')
+    @else
+        @include('web.QualityControl.layout_public.header')
+    @endif
     <div class="line-blue"></div>
 	<div id="main">
 		<div class="login">
@@ -21,10 +29,17 @@
 
                 <div class="layui-tab login-tag hd">
                     <input type="hidden" name="form_type" value="compnay_login" />
-                    <ul class="layui-tab-title">
-                        <li class="layui-this"  data-type="compnay_login" ><i id="i-com"></i>企业登录</li>
-                        <li data-type="user_login"><i id="i-user" ></i>个人登录</li>
-                    </ul>
+                    @if(isset($host_type) && $host_type == 2)
+                        <ul class="layui-tab-title">
+                            <li class="layui-this"  data-type="compnay_login" ><i id="i-com"></i>企业登录</li>
+{{--                            <li data-type="user_login"><i id="i-user" ></i>个人登录</li>--}}
+                        </ul>
+                    @else
+                        <ul class="layui-tab-title">
+                            <li class="layui-this"  data-type="compnay_login" ><i id="i-com"></i>企业登录</li>
+                            <li data-type="user_login"><i id="i-user" ></i>个人登录</li>
+                        </ul>
+                    @endif
                     <div class="layui-tab-content">
 
                         <div class="layui-tab-item  layui-show">
@@ -56,6 +71,9 @@
                                 </ul>
                             </div>
                         </div>
+
+                        @if(isset($host_type) && $host_type == 2)
+                        @else
                         <div class="layui-tab-item">
                             <div class="bd login-mm" style="width:360px; margin:0 auto;">
 
@@ -89,6 +107,7 @@
                             </div>
 
                         </div>
+                        @endif
                     </div>
                 </div>
 				<div class="fd tc">
@@ -103,7 +122,11 @@
 	</div>
 
 {{--		<script type="text/javascript">jQuery(".bd-right").slide();</script>--}}
-    @include('web.QualityControl.layout_public.footer')
+    @if(isset($host_type) && $host_type == 2)
+        @include('web.QualityControl.layout_public_market.footer')
+    @else
+        @include('web.QualityControl.layout_public.footer')
+    @endif
 </body>
 </html>
 

@@ -14,6 +14,8 @@ class BasicController extends WorksController
     public $siteLoginUniqueKey = 'webfront';
     public $user_type = 2 | 4;// 登录用户所属的后台类型  1平台2企业4个人
 
+    public $webHostType = 1;// 站点域名类型 1 普通的，2 陕西省市场监督管理局
+
     // 获得当前登录状态者的 是组织id
     public function initOwnOrganizeId(){
         $userInfo = $this->user_info;
@@ -120,5 +122,26 @@ class BasicController extends WorksController
 //            throws('非审核通过！');
 //        }
         return $userInfo;
+    }
+
+    // 获得当前的域名信息 如： qualitycontrol.web.cunwo.net
+    public  function getHttpHost(){
+        $server = $_SERVER;
+        $httpHost = $server['HTTP_HOST'] ?? '';
+        return $httpHost;
+    }
+
+    // 设置域名类型
+    public function setHostType(&$reDataArr){
+        $hostName = $this->getHttpHost();
+        $webHostType = 1;
+        $domains = config('public.domainsHost.search');
+        if(in_array($hostName, $domains)){
+            $webHostType = 2;
+        }
+        $reDataArr['host_type'] = $webHostType;
+        $this->webHostType = $webHostType;
+        return $webHostType;
+
     }
 }

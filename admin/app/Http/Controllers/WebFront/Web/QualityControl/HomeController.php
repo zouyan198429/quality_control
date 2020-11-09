@@ -46,6 +46,7 @@ class HomeController extends BasicRegController
             // $this->InitParams($request);
             // $reDataArr = $this->reDataArr;
             $reDataArr = array_merge($reDataArr, $this->reDataArr);
+            $this->setHostType($reDataArr);
             return view('web.QualityControl.home.login', $reDataArr);
         }, $this->errMethod, $reDataArr, $this->errorView);
     }
@@ -135,6 +136,7 @@ class HomeController extends BasicRegController
             // $this->InitParams($request);
             // $reDataArr = $this->reDataArr;
             $reDataArr = array_merge($reDataArr, $this->reDataArr);
+            $this->setHostType($reDataArr);
             return view('web.QualityControl.home.reg_agree', $reDataArr);
 
         }, $this->errMethod, $reDataArr, $this->errorView);
@@ -156,6 +158,7 @@ class HomeController extends BasicRegController
             // $this->InitParams($request);
             // $reDataArr = $this->reDataArr;
             $reDataArr = array_merge($reDataArr, $this->reDataArr);
+            $this->setHostType($reDataArr);
             return view('web.QualityControl.home.reg', $reDataArr);
         }, $this->errMethod, $reDataArr, $this->errorView);
     }
@@ -215,6 +218,7 @@ class HomeController extends BasicRegController
             // 企业--单位人数1、1-20、2、20-100、3、100-500、4、500以上
             $reDataArr['companyPeoples'] =  Staff::$companyPeoplesNumArr;
             $reDataArr['defaultCompanyPeoples'] = $info['company_peoples_num'] ?? -1;// 列表页默认状态
+            $this->setHostType($reDataArr);
             return view('web.QualityControl.home.perfect_company', $reDataArr);
         }, $this->errMethod, $reDataArr, $this->errorView);
     }
@@ -287,6 +291,7 @@ class HomeController extends BasicRegController
             $reDataArr['companyGrade'] =  Staff::$companyGradeArr;
             $reDataArr['defaultCompanyGrade'] = -1;// 列表页默认状态
 
+            $this->setHostType($reDataArr);
             return view('web.QualityControl.home.select_company', $reDataArr);
 
         }, $this->errMethod, $reDataArr, $this->errorView);
@@ -378,6 +383,7 @@ class HomeController extends BasicRegController
             $reDataArr['citys_kv'] = CTAPICitysBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'city_name']);
             $reDataArr['defaultCity'] = $info['city_id'] ?? -1;// 默认
 
+            $this->setHostType($reDataArr);
             return view('web.QualityControl.home.perfect_user', $reDataArr);
         }, $this->errMethod, $reDataArr, $this->errorView);
     }

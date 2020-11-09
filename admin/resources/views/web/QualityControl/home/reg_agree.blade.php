@@ -1,7 +1,11 @@
 <!doctype html>
 <html lang="en">
 <head>
-    @include('web.QualityControl.layout_public.pagehead')
+    @if(isset($host_type) && $host_type == 2)
+        @include('web.QualityControl.layout_public_market.pagehead')
+    @else
+        @include('web.QualityControl.layout_public.pagehead')
+    @endif
 </head>
 <body style=" background:#eee; ">
 	<div id="main">
@@ -10,7 +14,7 @@
 			<div class="hd tc" style="padding:30px 0;">
 				<h2>注册服务协议</h2>
 			</div>
-			<div class="bd" style="width:800px; margin:0 auto;">              
+			<div class="bd" style="width:800px; margin:0 auto;">
 					<p>本协会实行会员制。会员分团体会员与个人会员。 申请加入本协会的会员,必须具备下列条件：</p>
 					<p>（一）拥护本协会的章程；</p>
 					<p>（二）有自愿加入本协会的意愿；</p>
@@ -27,7 +31,7 @@
 					<p>（四）对本协会工作的批评建议权和监督权； </p>
 					<p>（五）对本协会会费收支情况提出质询的权力； </p>
 					<p>（六）入会自愿、退会自由。</p>
-			
+
                 <div class="k20"></div>
 
 			</div>
