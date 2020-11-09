@@ -24,44 +24,22 @@
             <a href="javascript:;" layadmin-event="flexible" title="侧边伸缩">
               <i class="layui-icon layui-icon-shrink-right" id="LAY_app_flexible"></i>
             </a>
-          </li>
-          {{--<li class="layui-nav-item layui-hide-xs" lay-unselect>--}}
-            {{--<a href="http://www.layui.com/admin/" target="_blank" title="前台">--}}
-              {{--<i class="layui-icon layui-icon-website"></i>--}}
-            {{--</a>--}}
-          {{--</li>--}}
+          </li> 
           <li class="layui-nav-item" lay-unselect>
             <a href="javascript:;" layadmin-event="refresh" title="刷新">
               <i class="layui-icon layui-icon-refresh-3"></i>
             </a>
           </li>
-          {{----}}
-          {{--<li class="layui-nav-item layui-hide-xs" lay-unselect>--}}
-            {{--<input type="text" placeholder="搜索..." autocomplete="off" class="layui-input layui-input-search" layadmin-event="serach" lay-action="{{ url('layui/template/search') }}?keywords=">--}}
-          {{--</li>--}}
-          {{----}}
+           
         </ul>
         <ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
 
-          {{--<li class="layui-nav-item" lay-unselect>--}}
-            {{--<a lay-href="{{ url('layui/app/message/index') }}" layadmin-event="message" lay-text="消息中心">--}}
-              {{--<i class="layui-icon layui-icon-notice"></i>  --}}
-              {{----}}
-              {{--<!-- 如果有新消息，则显示小圆点 -->--}}
-              {{--<span class="layui-badge-dot"></span>--}}
-            {{--</a>--}}
-          {{--</li>--}}
+         
           <li class="layui-nav-item layui-hide-xs" lay-unselect>
             <a href="javascript:;" layadmin-event="theme">
               <i class="layui-icon layui-icon-theme"></i>
             </a>
-          </li>
-
-          {{--<li class="layui-nav-item layui-hide-xs" lay-unselect>--}}
-            {{--<a href="javascript:;" layadmin-event="note">--}}
-              {{--<i class="layui-icon layui-icon-note"></i>--}}
-            {{--</a>--}}
-          {{--</li>--}}
+          </li> 
 
           <li class="layui-nav-item layui-hide-xs" lay-unselect>
             <a href="javascript:;" layadmin-event="fullscreen">
@@ -98,24 +76,7 @@
           </div>
 
           <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
-            {{--<li data-name="home" class="layui-nav-item layui-nav-itemed">--}}
-              {{--<a href="javascript:;" lay-tips="主页" lay-direction="2">--}}
-                {{--<i class="layui-icon layui-icon-home"></i>--}}
-                {{--<cite>主页</cite>--}}
-              {{--</a>--}}
-              {{--<dl class="layui-nav-child">--}}
-                {{--<dd data-name="console" class="layui-this">--}}
-                  {{--<a lay-href="{{ url('layui/home/console') }}">控制台</a>--}}
-                  {{--<a lay-href="{{ url('/help/index.html') }}">控制台</a>--}}
-                {{--</dd>--}}
-                {{--<dd data-name="console">--}}
-                  {{--<a lay-href="{{ url('layui/home/homepage1') }}">主页一</a>--}}
-                {{--</dd>--}}
-                {{--<dd data-name="console">--}}
-                  {{--<a lay-href="{{ url('layui/home/homepage2') }}">主页二</a>--}}
-                {{--</dd>--}}
-              {{--</dl>--}}
-            {{--</li>--}}
+             
 
               <li data-name="user" class="layui-nav-item">
                   <a href="javascript:;" lay-tips="信息审核" lay-direction="2">
@@ -142,7 +103,7 @@
                   </dl>
               </li>
             <li data-name="user" class="layui-nav-item">
-              <a href="javascript:;" lay-tips="会员管理" lay-direction="2">
+              <a href="javascript:;" lay-tips="会员管理" lay-direction="21">
                 <i class="layui-icon layui-icon-component"></i>
                 <cite>会员管理</cite>
               </a>
@@ -164,26 +125,29 @@
                     </dd>
                     <dd>
                       <a lay-href="{{ url('admin/user') }}">个人会员</a>
-                    </dd>
-{{--                    <dd>--}}
-{{--                        <a lay-href="javascript:void(01);">会员分析</a>--}}
-{{--                    </dd>--}}
-                    <dd class="layui-nav-itemed">
-                        <a href="javascript:;">会员分析</a>
-                        <dl class="layui-nav-child">
-                            <dd><a lay-href="{{ url('admin/company/grade_area') }}">会员地区分布</a></dd>
-                            <dd><a lay-href="{{ url('admin/company/grade_industry') }}">会员行业分布</a></dd>
-                            <dd><a lay-href="{{ url('admin/company') }}?record_type=2">快到期会员(所有)</a></dd>
-                            <dd><a lay-href="{{ url('admin/company') }}?record_type=2&company_grade_continue=1">快到期会员(无续期)</a></dd>
-                            <dd><a lay-href="{{ url('admin/company') }}?record_type=2&company_grade_continue=2">快到期会员(有续期)</a></dd>
-                            <dd><a lay-href="{{ url('admin/company') }}?record_type=4">已过期会员</a></dd>
-                            <dd><a lay-href="{{ url('admin/company') }}?record_type=4&company_grade_continue=1">已过期会员(无续期)</a></dd>
-                            <dd><a lay-href="{{ url('admin/company') }}?record_type=4&company_grade_continue=2">已过期会员(有续期)</a></dd>
-                        </dl>
-                    </dd>
+                    </dd> 
                 </dl>
-
             </li>
+			<li data-name="user" class="layui-nav-item">
+			    <a href="javascript:;" lay-tips="会员分析" lay-direction="22">
+			        <i class="layui-icon layui-icon-component"></i>
+			        <cite>会员分析</cite>
+			    </a>
+			    <dl class="layui-nav-child">
+			        <dd><a lay-href="{{ url('admin/company/grade_area') }}">会员地区分布</a></dd>
+			        <dd><a lay-href="{{ url('admin/company/grade_industry') }}">会员行业分布</a></dd>
+			        <dd><a lay-href="{{ url('admin/company') }}?record_type=2">快到期会员(所有)</a></dd>
+					<dd><a lay-href="{{ url('admin/company') }}?record_type=2&company_grade_continue=1">快到期会员(无续期)</a></dd>
+			        <dd><a lay-href="{{ url('admin/company') }}?record_type=2&company_grade_continue=2">快到期会员(无续期)</a></dd>
+					<dd><a lay-href="{{ url('admin/company') }}?record_type=4">已过期会员</a></dd>
+					<dd><a lay-href="{{ url('admin/company') }}?record_type=4&company_grade_continue=1">已过期会员(无续期)</a></dd>
+					<dd><a lay-href="{{ url('admin/company') }}?record_type=4&company_grade_continue=2">已过期会员(有续期)</a></dd>
+			    </dl>
+			</li>
+			
+			
+			
+			
 {{--            <li data-name="user" class="layui-nav-item">--}}
 {{--                  <a href="javascript:;" lay-tips="面授培训" lay-direction="2">--}}
 {{--                      <i class="layui-icon layui-icon-component"></i>--}}
@@ -287,7 +251,8 @@
 {{--                          <a lay-href="{{ url('admin/ability_type') }}?company_grade=4">领域管理</a>--}}
 {{--                      </dd>--}}
                   </dl>
-              </li><li data-name="user" class="layui-nav-item">
+              </li>
+			  <li data-name="user" class="layui-nav-item">
                   <a href="javascript:;" lay-tips="开票管理" lay-direction="2">
                       <i class="layui-icon layui-icon-component"></i>
                       <cite>获证机构管理</cite>
