@@ -137,9 +137,13 @@ class CompanyStatementController extends BasicController
 
         // 获得企业的能力附表数据
 
+        $mergeParams = [
+            'resource_id_pdf' => 1,// 只查询pdf文件
+        ];
+        CTAPICompanyScheduleBusiness::mergeRequest($request, $this, $mergeParams);
         $extParams = [
             // 'handleKeyArr' => ['company', 'siteResources'],//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-            'relationFormatConfigs'=> CTAPICompanyScheduleBusiness::getRelationConfigs($request, $this, ['company_info', 'resource_list', 'resource_pdf_list'], []),
+            'relationFormatConfigs'=> CTAPICompanyScheduleBusiness::getRelationConfigs($request, $this, [ 'resource_pdf_list'], []),// 'company_info', 'resource_list',
         ];
         $result = CTAPICompanyScheduleBusiness::getList($request, $this, 1, [], [], $extParams);
         $dataList = $result['result']['data_list'] ?? [];

@@ -150,7 +150,9 @@ class CTAPICompanyScheduleBusiness extends BasicPublicCTAPIBusiness
         $is_import = CommonRequest::get($request, 'is_import');
         if(is_numeric($is_import) && $is_import >= 0)  array_push($queryParams['where'], ['is_import', '=', $is_import]);
 
-        // 方法最下面
+        $resource_id_pdf = CommonRequest::get($request, 'resource_id_pdf');// > 0 =》 只查询pdf文件
+        if(is_numeric($resource_id_pdf) && $resource_id_pdf > 0) Tool::appendCondition($queryParams, 'resource_id_pdf',  0, '>');
+            // 方法最下面
         // 注意重写方法中，如果不是特殊的like，同样需要调起此默认like方法--特殊的写自己特殊的方法
         static::joinListParamsLike($request, $controller, $queryParams, $notLog);
     }
