@@ -143,7 +143,7 @@ class updateResourceName extends Command
             }
              */
 
-            $isDoed = false;
+            // $isDoed = false;
             CommonDB::doTransactionFun(function() use( &$info, &$market_id, &$isDoed){
 
                 $file_id = $info['id'];
@@ -175,7 +175,7 @@ class updateResourceName extends Command
                     $needAddFile = false;
                     $resourceList = ResourceDBBusiness::getDBFVFormatList(1, 1, ['url_frm' => $old_file_name], false, [], $extParams);
                     if(!empty($resourceList) && count($resourceList) > 1){// 数量大于1
-                        $isDoed = true;
+                        // $isDoed = true;
                         $this->error('资源内容=>' . json_encode($resourceList));
                         // ResourceDBBusiness::saveById(['resource_name' => $files_name_txt ], $resourceInfo['id']);
                         // 保存一个，其它的删除
@@ -277,7 +277,7 @@ class updateResourceName extends Command
                 }
             });
             $bar->advance();
-            if($isDoed) die('成功执行了一条数据');
+            // if($isDoed) die('成功执行了一条数据');
         }
         $bar->finish();
         $this->info('获取并保存文件完成！');
