@@ -717,7 +717,7 @@ class BaseDBBusiness extends BaseBusiness
             }else{
                 $fieldVals = $valConfig;
             }
-            $valsSeparator = $valConfig['vals'] ?? ',';
+            $valsSeparator = $valConfig['valsSeparator'] ?? ',';
             $hasInIsMerge = $valConfig['hasInIsMerge'] ?? false;
             if(!empty($excludeVals))  Tool::formatOneArrVals($fieldVals, $excludeVals);
             if( ( (is_string($fieldVals) || is_numeric($fieldVals)) && strlen($fieldVals) > 0) || (is_array($fieldVals) && !empty($fieldVals)) ) $isEmpeyVals = false;

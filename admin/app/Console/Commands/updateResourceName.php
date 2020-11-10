@@ -184,6 +184,7 @@ class updateResourceName extends Command
                             $company_id = $temInfo['ower_id'] ?? 0;
                             $resource_id = $temInfo['id'];
                             $resource_ids = ',' . $resource_id . ',';
+                            $this->error('resource_ids=>' . $resource_ids);
                             $resourceIdArr = [$resource_id];
                             if($company_id <= 0 ) continue;
                             // 是多余的，要进行删除
