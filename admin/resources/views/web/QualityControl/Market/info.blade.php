@@ -6,6 +6,9 @@
         <meta name="keywords" content="{{ $info['company_name'] ?? '' }},{{ $info['city_name'] ?? '' }}{{ $info['industry_name'] ?? '' }}检验检测能力,{{ $info['city_name'] ?? '' }}检验检测能力" />
         <meta name="description" content="{{ $info['company_name'] ?? '' }},{{ $info['city_name'] ?? '' }}{{ $info['industry_name'] ?? '' }}检验检测能力,{{ $info['city_name'] ?? '' }}检验检测能力" />
         @include('web.QualityControl.Market.layout_public.pagehead')
+{{--        @include('admin.layout_public.pagehead')--}}
+        <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/css/layui.css')}}" media="all">
+        <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/style/admin.css')}}" media="all">
 		<style>
 			.cominfo {
 				border:1px solid #333;
@@ -60,3 +63,9 @@
 
 	</body>
 </html>
+<script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>
+<script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.all.js')}}"></script>
+{{--<script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.js')}}"></script>--}}
+@include('public.dynamic_list_foot')
+{{--<script src="{{asset('js/common/list.js')}}"></script>--}}
+<script src="{{ asset('js/web/QualityControl/Market/Info.js') }}?1"  type="text/javascript"></script>

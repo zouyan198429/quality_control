@@ -1,7 +1,5 @@
-
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <title>开启头部工具栏 - 数据表格</title>
@@ -53,17 +51,17 @@
       </div>
     </form>
   </div>
-  
+
   <h3>◆ 自我声明流程</h3>
   <div style="padding:15px 0; ">
 		<p>下载相应的表格和打印 《陕西省检验检测机构资质认定自我声明公开承诺书》和《陕西省检验 检测机构资质认定自我声明确认书》,认真填写并提交市局行政审批处。</p>
-		<p>其中《承诺书》需要机构盖章，签字；行政许可事项填写机构变更的具 体事项，比如法定代表人由 XX 变为 XX，并同时提交给市局证明材料， 下面附件处写提交的证明材料，  比如法人变更提交变更前后的营业执照 （标准变更事项及取消检验检测能力事项只附清单） 
+		<p>其中《承诺书》需要机构盖章，签字；行政许可事项填写机构变更的具 体事项，比如法定代表人由 XX 变为 XX，并同时提交给市局证明材料， 下面附件处写提交的证明材料，  比如法人变更提交变更前后的营业执照 （标准变更事项及取消检验检测能力事项只附清单）
 	</p>
 		<a href="http://search.sxsrzrk.com/web/login" target="_blank" class="btn" style="margin-top:10px;">发布自我声明</a>
-	
+
 	</div>
-  
-  
+
+
    <h3>◆ 自我声明公告</h3>
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
@@ -87,7 +85,7 @@
     <div class="pagination">
     </div>
   </div>
-  
+
 
     <h3>◆ 机构能力附表</h3>
 	<table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="nlfb-table">
@@ -150,6 +148,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/web/QualityControl/Market/CompanyStatement.js') }}?448"  type="text/javascript"></script>
+  <script src="{{ asset('js/web/QualityControl/Market/CompanyStatement.js') }}?449"  type="text/javascript"></script>
 </body>
 </html>

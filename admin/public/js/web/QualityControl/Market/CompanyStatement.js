@@ -1,8 +1,47 @@
 
 var SUBMIT_FORM = true;//防止多次点击提交
 
+//获取当前窗口索引
+var PARENT_LAYER_INDEX = parent.layer.getFrameIndex(window.name);
+//让层自适应iframe
+////parent.layer.iframeAuto(PARENT_LAYER_INDEX);
+ parent.layer.full(PARENT_LAYER_INDEX);// 用这个
+//关闭iframe
+$(document).on("click",".closeIframe",function(){
+    iframeclose(PARENT_LAYER_INDEX);
+});
+//刷新父窗口列表
+// reset_total 是否重新从数据库获取总页数 true:重新获取,false不重新获取
+function parent_only_reset_list(reset_total){
+    // window.parent.reset_list(true, true, reset_total, 2);//刷新父窗口列表
+    let list_fun_name = window.parent.LIST_FUNCTION_NAME || 'reset_list';
+    eval( 'window.parent.' + list_fun_name + '(' + true +', ' + true +', ' + reset_total +', 2)');
+}
+//关闭弹窗,并刷新父窗口列表
+// reset_total 是否重新从数据库获取总页数 true:重新获取,false不重新获取
+function parent_reset_list_iframe_close(reset_total){
+    // window.parent.reset_list(true, true, reset_total, 2);//刷新父窗口列表
+    let list_fun_name = window.parent.LIST_FUNCTION_NAME || 'reset_list';
+    eval( 'window.parent.' + list_fun_name + '(' + true +', ' + true +', ' + reset_total +', 2)');
+    parent.layer.close(PARENT_LAYER_INDEX);
+}
+//关闭弹窗
+function parent_reset_list(){
+    parent.layer.close(PARENT_LAYER_INDEX);
+}
+
 $(function(){
 
+    // $('.search_frm').trigger("click");// 触发搜索事件
+    // // reset_list_self(false, false, true, 2);
+    // popSelectInit();// 初始化选择弹窗
+    //
+    // // window.location.href 返回 web 主机的域名，如：http://127.0.0.1:8080/testdemo/test.html?id=1&name=test
+    // // autoRefeshList(window.location.href, IFRAME_TAG_KEY, IFRAME_TAG_TIMEOUT);// 根据设置，自动刷新列表数据【每隔一定时间执行一次】
+    // initScheduleList();// 初始化能力附表列表
+});
+
+window.onload = function() {
     $('.search_frm').trigger("click");// 触发搜索事件
     // reset_list_self(false, false, true, 2);
     popSelectInit();// 初始化选择弹窗
@@ -10,8 +49,7 @@ $(function(){
     // window.location.href 返回 web 主机的域名，如：http://127.0.0.1:8080/testdemo/test.html?id=1&name=test
     // autoRefeshList(window.location.href, IFRAME_TAG_KEY, IFRAME_TAG_TIMEOUT);// 根据设置，自动刷新列表数据【每隔一定时间执行一次】
     initScheduleList();// 初始化能力附表列表
-});
-
+};
 //重载列表
 //is_read_page 是否读取当前页,否则为第一页 true:读取,false默认第一页
 // ajax_async ajax 同步/导步执行 //false:同步;true:异步  需要列表刷新同步时，使用自定义方法reset_list_self；异步时没有必要自定义
