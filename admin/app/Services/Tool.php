@@ -4065,6 +4065,7 @@ class Tool
         }
 
         // $isEmpeyVals = true;//  查询字段值是否都为空; true:都为空，false:有值
+        $hasValidVal = false;// 是否有拼接值 true: 有；false:没有
         foreach($fieldValParams as $field => $valConfig){
             $excludeVals = [''];// [0, '0', ''];
             $fieldVals = [];// 值
@@ -4075,12 +4076,15 @@ class Tool
             }else{
                 $fieldVals = $valConfig;
             }
-            $valsSeparator = $valConfig['vals'] ?? ',';
+            $valsSeparator = $valConfig['valsSeparator'] ?? ',';
             $hasInIsMerge = $valConfig['hasInIsMerge'] ?? false;
-            if(!empty($excludeVals))  static::formatOneArrVals($fieldVals, $excludeVals);
-            if( ( (is_string($fieldVals) || is_numeric($fieldVals)) && strlen($fieldVals) > 0) || (is_array($fieldVals) && !empty($fieldVals)) ) $isEmpeyVals = false;
-            static::appendParamQuery($queryParams, $fieldVals, $field, $excludeVals, $valsSeparator, $hasInIsMerge);
+//            if(!empty($excludeVals))  static::formatOneArrVals($fieldVals, $excludeVals, $valsSeparator);
+//            if( ( (is_string($fieldVals) || is_numeric($fieldVals)) && strlen($fieldVals) > 0) || (is_array($fieldVals) && !empty($fieldVals)) ) $isEmpeyVals = false;
+            if(static::appendParamQuery($queryParams, $fieldVals, $field, $excludeVals, $valsSeparator, $hasInIsMerge)){
+                $hasValidVal = true;
+            }
         }
+        if($hasValidVal) $isEmpeyVals = false;
         return $queryParams;
     }
 
@@ -4110,7 +4114,6 @@ class Tool
         // 空数组不处理
         $valNums = count($paramVals);
         if ($valNums <= 0 ) return false;
-
         if($valNums == 1){// if (strpos($paramVals, ',') === false) { // 单条
             // array_push($queryParams['where'], ['id', $paramVals]);
             // 不存在where条件，则先创建一个空的where条件，好push内容到数组

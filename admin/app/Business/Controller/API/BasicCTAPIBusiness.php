@@ -204,6 +204,7 @@ class BasicCTAPIBusiness extends APIOperate
     {
         $dataArr = [];
         $isEmpeyVals = true;//  查询字段值是否都为空; true:都为空，false:有值
+        $hasValidVal = false;// 是否有拼接值 true: 有；false:没有
         // 获得信息
         $queryParams = [
             'where' => [
@@ -229,11 +230,13 @@ class BasicCTAPIBusiness extends APIOperate
             }else{
                 $fieldVals = $valConfig;
             }
-            $valsSeparator = $valConfig['vals'] ?? ',';
+            $valsSeparator = $valConfig['valsSeparator'] ?? ',';
             $hasInIsMerge = $valConfig['hasInIsMerge'] ?? false;
-            if(!empty($excludeVals))  Tool::formatOneArrVals($fieldVals, $excludeVals);
-            if( ( (is_string($fieldVals) || is_numeric($fieldVals)) && strlen($fieldVals) > 0) || (is_array($fieldVals) && !empty($fieldVals)) ) $isEmpeyVals = false;
-            Tool::appendParamQuery($queryParams, $fieldVals, $field, $excludeVals, $valsSeparator, $hasInIsMerge);
+//            if(!empty($excludeVals))  Tool::formatOneArrVals($fieldVals, $excludeVals, $valsSeparator);
+//            if( ( (is_string($fieldVals) || is_numeric($fieldVals)) && strlen($fieldVals) > 0) || (is_array($fieldVals) && !empty($fieldVals)) ) $isEmpeyVals = false;
+            if(Tool::appendParamQuery($queryParams, $fieldVals, $field, $excludeVals, $valsSeparator, $hasInIsMerge)){
+                $hasValidVal = true;
+            }
         }
         if(!isset($extParams['useQueryParams'])) $extParams['useQueryParams'] = false;
 //        $extParams = [
@@ -255,7 +258,8 @@ class BasicCTAPIBusiness extends APIOperate
 
 
         // 查询字段有值  或  查询字段无值  但是  指定 强制查询时
-        if(!$isEmpeyVals || ($isEmpeyVals && $fieldEmptyQuery)){
+        // if(!$isEmpeyVals || ($isEmpeyVals && $fieldEmptyQuery)){
+        if($hasValidVal || (!$hasValidVal && $fieldEmptyQuery)){
             switch ($operate_type)
             {
                 case 1:

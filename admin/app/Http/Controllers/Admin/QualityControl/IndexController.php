@@ -9,6 +9,7 @@ use App\Business\DB\QualityControl\AbilityCodeDBBusiness;
 use App\Business\DB\QualityControl\AbilityJoinItemsDBBusiness;
 use App\Business\DB\QualityControl\AbilityJoinItemsResultsDBBusiness;
 use App\Business\DB\QualityControl\CertificateScheduleDBBusiness;
+use App\Business\DB\QualityControl\CompanyStatementDBBusiness;
 use App\Business\DB\QualityControl\StaffDBBusiness;
 use App\Http\Controllers\WorksController;
 use App\Models\QualityControl\Staff;
