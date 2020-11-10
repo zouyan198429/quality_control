@@ -217,7 +217,10 @@ class updateResourceName extends Command
                                     }
                                     break;
                                 case 2:// 机构自我声明管理
-                                    $t_KV = ['company_id' => $company_id, 'resource_ids' => $resource_ids];
+                                    $t_KV = [
+                                        'company_id' => $company_id,
+                                        'resource_ids' => ['vals' => $resource_ids, 'valsSeparator' => '!!!']
+                                    ];
                                     $t_Info = CompanyStatementDBBusiness::getDBFVFormatList(4, 1, $t_KV, false, [], []);
                                     if(!empty($t_Info)  && isset($needArr[$priKey])){
                                         // CompanyScheduleDBBusiness::saveById(['resource_name' => $files_name_txt ], $resourceInfo['id']);
@@ -236,7 +239,10 @@ class updateResourceName extends Command
 
                                     break;
                                 case 5:// 机构处罚管理
-                                    $t_KV = ['company_id' => $company_id, 'resource_ids' => $resource_ids];
+                                    $t_KV = [
+                                        'company_id' => $company_id,
+                                        'resource_ids' => ['vals' => $resource_ids, 'valsSeparator' => '!!!']
+                                    ];
                                     $t_Info = CompanyPunishDBBusiness::getDBFVFormatList(4, 1, $t_KV, false, [], []);
                                     if(!empty($t_Info) && isset($needArr[$priKey])){
                                         // CompanyScheduleDBBusiness::saveById(['resource_name' => $files_name_txt ], $resourceInfo['id']);
