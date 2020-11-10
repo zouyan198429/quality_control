@@ -203,7 +203,7 @@ class BasicCTAPIBusiness extends APIOperate
     public static function getFVFormatList(Request $request, Controller $controller, $operate_type = 1, $page_size = 1, $fieldValParams = [], $fieldEmptyQuery = false, $relations = '', $extParams = [], $notLog = 0)
     {
         $dataArr = [];
-        $isEmpeyVals = true;//  查询字段值是否都为空; true:都为空，false:有值
+        // $isEmpeyVals = true;//  查询字段值是否都为空; true:都为空，false:有值
         $hasValidVal = false;// 是否有拼接值 true: 有；false:没有
         // 获得信息
         $queryParams = [
