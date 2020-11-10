@@ -169,9 +169,14 @@ class updateResourceName extends Command
                         'orderBy' => ['id' => 'desc']
                     ]
                 ];
+                $this->line('文件名称=>' . $old_file_name);
                 if(!empty($old_file_name)){
+                    $needAddFile = false;
                     $resourceList = ResourceDBBusiness::getDBFVFormatList(1, 1, ['url_frm' => $old_file_name], false, [], $extParams);
                     if(!empty($resourceList) && count($resourceList) > 1){// 数量大于1
+
+                        $this->line('资源内容=>' . json_encode($resourceList));
+                        exit('退出');
                         // ResourceDBBusiness::saveById(['resource_name' => $files_name_txt ], $resourceInfo['id']);
                         // 保存一个，其它的删除
                         $needArr = [];
@@ -184,6 +189,7 @@ class updateResourceName extends Command
                             // 是多余的，要进行删除
                             // 获得
                             $isUpdateName = true;
+                            $priKey = $file_type . '_' . $company_id;
                             switch ($file_type)
                             {
                                 case 1:// 能力附表
@@ -195,41 +201,50 @@ class updateResourceName extends Command
                                         $t_KV['resource_id'] = $resource_id;
                                     }
                                     $t_Info = CompanyScheduleDBBusiness::getDBFVFormatList(4, 1, $t_KV, false, [], []);
-                                    if(!empty($t_Info) && isset($needArr[$company_id])){
+                                    if(!empty($t_Info) && isset($needArr[$priKey])){
                                         // CompanyScheduleDBBusiness::saveById(['resource_name' => $files_name_txt ], $resourceInfo['id']);
                                         // 删除主表记录
                                         CompanyScheduleDBBusiness::delById($company_id, $t_Info['id'], 0,  0, [], 0);
                                         $isUpdateName = false;
-                                        $this->line('删除能力附表=' . $t_Info['id']);
+                                        $this->error('删除能力附表=' . $t_Info['id']);
                                     }else if(!empty($t_Info) ){
-                                        $needArr[$company_id] = $company_id;
+                                        $needArr[$priKey] = $company_id;
+                                    }else if(empty($t_Info)){
+                                        $needAddFile = true;
+                                        $isUpdateName = false;
                                     }
                                     break;
                                 case 2:// 机构自我声明管理
                                     $t_KV = ['company_id' => $company_id, 'resource_ids' => $resource_ids];
                                     $t_Info = CompanyStatementDBBusiness::getDBFVFormatList(4, 1, $t_KV, false, [], []);
-                                    if(!empty($t_Info)  && isset($needArr[$company_id])){
+                                    if(!empty($t_Info)  && isset($needArr[$priKey])){
                                         // CompanyScheduleDBBusiness::saveById(['resource_name' => $files_name_txt ], $resourceInfo['id']);
                                         // 删除主表记录
                                         CompanyStatementDBBusiness::delById($company_id, $t_Info['id'], 0,  0, [], 0);
                                         $isUpdateName = false;
-                                        $this->line('删除机构自我声明管理=' . $t_Info['id']);
+                                        $this->error('删除机构自我声明管理=' . $t_Info['id']);
                                     }else if(!empty($t_Info) ){
-                                        $needArr[$company_id] = $company_id;
+                                        $needArr[$priKey] = $company_id;
+                                    }else if(empty($t_Info)){
+                                        $needAddFile = true;
+                                        $isUpdateName = false;
                                     }
 
                                     break;
                                 case 5:// 机构处罚管理
                                     $t_KV = ['company_id' => $company_id, 'resource_ids' => $resource_ids];
                                     $t_Info = CompanyPunishDBBusiness::getDBFVFormatList(4, 1, $t_KV, false, [], []);
-                                    if(!empty($t_Info) && isset($needArr[$company_id])){
+                                    if(!empty($t_Info) && isset($needArr[$priKey])){
                                         // CompanyScheduleDBBusiness::saveById(['resource_name' => $files_name_txt ], $resourceInfo['id']);
                                         // 删除主表记录
                                         CompanyPunishDBBusiness::delById($company_id, $t_Info['id'], 0,  0, [], 0);
                                         $isUpdateName = false;
-                                        $this->line('删除机构处罚管理=' . $t_Info['id']);
+                                        $this->error('删除机构处罚管理=' . $t_Info['id']);
                                     }else if(!empty($t_Info) ){
-                                        $needArr[$company_id] = $company_id;
+                                        $needArr[$priKey] = $company_id;
+                                    }else if(empty($t_Info)){
+                                        $needAddFile = true;
+                                        $isUpdateName = false;
                                     }
                                     break;
                                 default:
@@ -244,6 +259,8 @@ class updateResourceName extends Command
                             }
                         }
                     }
+                }else if(empty($resourceList)){
+                    $needAddFile = true;
                 }
             });
             $bar->advance();
