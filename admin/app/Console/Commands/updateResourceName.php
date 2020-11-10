@@ -160,9 +160,90 @@ class updateResourceName extends Command
                 $files_name_txt = $file_title . '.' . $suffix;// basename($file_path);// 8c980322-5e92-40c4-ae9c-9f756e7fe4cd.pdf
 
                 // 根据id，获得企业信息
-                $resourceInfo = ResourceDBBusiness::getDBFVFormatList(4, 1, ['resource_name' => $old_file_name], false, [], []);
-                if(!empty($resourceInfo)){
-                    ResourceDBBusiness::saveById(['resource_name' => $files_name_txt ], $resourceInfo['id']);
+//                $resourceInfo = ResourceDBBusiness::getDBFVFormatList(4, 1, ['url_frm' => $old_file_name], false, [], []);
+//                if(!empty($resourceInfo)){
+//                    ResourceDBBusiness::saveById(['resource_name' => $files_name_txt ], $resourceInfo['id']);
+//                }
+                $extParams = [
+                    'sqlParams' => [
+                        'orderBy' => ['id' => 'desc']
+                    ]
+                ];
+                if(!empty($old_file_name)){
+                    $resourceList = ResourceDBBusiness::getDBFVFormatList(1, 1, ['url_frm' => $old_file_name], false, [], $extParams);
+                    if(!empty($resourceList) && count($resourceList) > 1){// 数量大于1
+                        // ResourceDBBusiness::saveById(['resource_name' => $files_name_txt ], $resourceInfo['id']);
+                        // 保存一个，其它的删除
+                        $needArr = [];
+                        foreach($resourceList as $temInfo){
+                            $company_id = $temInfo['ower_id'] ?? 0;
+                            $resource_id = $temInfo['id'];
+                            $resource_ids = ',' . $resource_id . ',';
+                            $resourceIdArr = [$resource_id];
+                            if($company_id <= 0 ) continue;
+                            // 是多余的，要进行删除
+                            // 获得
+                            $isUpdateName = true;
+                            switch ($file_type)
+                            {
+                                case 1:// 能力附表
+                                    $t_KV = ['company_id' => $company_id];
+                                    if($suffix == 'pdf'){
+                                        $t_KV['resource_id_pdf'] = $resource_id;
+
+                                    }else{
+                                        $t_KV['resource_id'] = $resource_id;
+                                    }
+                                    $t_Info = CompanyScheduleDBBusiness::getDBFVFormatList(4, 1, $t_KV, false, [], []);
+                                    if(!empty($t_Info) && isset($needArr[$company_id])){
+                                        // CompanyScheduleDBBusiness::saveById(['resource_name' => $files_name_txt ], $resourceInfo['id']);
+                                        // 删除主表记录
+                                        CompanyScheduleDBBusiness::delById($company_id, $t_Info['id'], 0,  0, [], 0);
+                                        $isUpdateName = false;
+                                        $this->line('删除能力附表=' . $t_Info['id']);
+                                    }else if(!empty($t_Info) ){
+                                        $needArr[$company_id] = $company_id;
+                                    }
+                                    break;
+                                case 2:// 机构自我声明管理
+                                    $t_KV = ['company_id' => $company_id, 'resource_ids' => $resource_ids];
+                                    $t_Info = CompanyStatementDBBusiness::getDBFVFormatList(4, 1, $t_KV, false, [], []);
+                                    if(!empty($t_Info)  && isset($needArr[$company_id])){
+                                        // CompanyScheduleDBBusiness::saveById(['resource_name' => $files_name_txt ], $resourceInfo['id']);
+                                        // 删除主表记录
+                                        CompanyStatementDBBusiness::delById($company_id, $t_Info['id'], 0,  0, [], 0);
+                                        $isUpdateName = false;
+                                        $this->line('删除机构自我声明管理=' . $t_Info['id']);
+                                    }else if(!empty($t_Info) ){
+                                        $needArr[$company_id] = $company_id;
+                                    }
+
+                                    break;
+                                case 5:// 机构处罚管理
+                                    $t_KV = ['company_id' => $company_id, 'resource_ids' => $resource_ids];
+                                    $t_Info = CompanyPunishDBBusiness::getDBFVFormatList(4, 1, $t_KV, false, [], []);
+                                    if(!empty($t_Info) && isset($needArr[$company_id])){
+                                        // CompanyScheduleDBBusiness::saveById(['resource_name' => $files_name_txt ], $resourceInfo['id']);
+                                        // 删除主表记录
+                                        CompanyPunishDBBusiness::delById($company_id, $t_Info['id'], 0,  0, [], 0);
+                                        $isUpdateName = false;
+                                        $this->line('删除机构处罚管理=' . $t_Info['id']);
+                                    }else if(!empty($t_Info) ){
+                                        $needArr[$company_id] = $company_id;
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }
+                            if($isUpdateName){// 是要保留的最新的一个文件，修改文件名称
+                                if($temInfo['resource_name'] == $temInfo['url_frm']){
+                                    ResourceDBBusiness::saveById(['resource_name' => $files_name_txt ], $temInfo['id']);
+                                    $this->line('修改文件名称' . $temInfo['resource_name'] . '=>' . $files_name_txt);
+                                }
+
+                            }
+                        }
+                    }
                 }
             });
             $bar->advance();

@@ -197,10 +197,11 @@ class CompanyPunishDBBusiness extends BasePublicDBBusiness
      *  [
      *       'organize_id' => 3,操作的企业id 可以为0：不指定具体的企业
      *  ]
+     * @param  int $doOperate 执行的操作 0 不删除 1 删除源图片[默认]
      * @return  int 记录id值
      * @author zouyan(305463219@qq.com)
      */
-    public static function delById($company_id, $id, $operate_staff_id = 0, $modifAddOprate = 0, $extendParams = []){
+    public static function delById($company_id, $id, $operate_staff_id = 0, $modifAddOprate = 0, $extendParams = [], $doOperate = 1){
         $organize_id = $extendParams['organize_id'] ?? 0;// 操作的企业id 可以为0：不指定具体的企业
 
         if(strlen($id) <= 0){
@@ -240,9 +241,9 @@ class CompanyPunishDBBusiness extends BasePublicDBBusiness
 //            throws($e->getMessage());
 //            // throws($e->getMessage());
 //        }
-        CommonDB::doTransactionFun(function() use( &$id, &$organize_id, &$organizeIds){
+        CommonDB::doTransactionFun(function() use( &$id, &$organize_id, &$organizeIds, &$doOperate){
             // 删除资源及文件
-            ResourceDBBusiness::delResourceByIds(static::thisObj(), $id, 32);
+            ResourceDBBusiness::delResourceByIds(static::thisObj(), $id, 32, $doOperate);
 
             // 删除主记录
 //            $delQueryParams = [

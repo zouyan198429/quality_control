@@ -279,10 +279,11 @@ class CompanyScheduleDBBusiness extends BasePublicDBBusiness
      * @param int $operate_staff_id 操作人id
      * @param int $modifAddOprate 修改时是否加操作人，1:加;0:不加[默认]
      * @param array $extendParams 其它参数--扩展用参数
+     * @param  int $doOperate 执行的操作 0 不删除 1 删除源图片[默认]
      * @return  int 记录id值
      * @author zouyan(305463219@qq.com)
      */
-    public static function delById($company_id, $id, $operate_staff_id = 0, $modifAddOprate = 0, $extendParams = []){
+    public static function delById($company_id, $id, $operate_staff_id = 0, $modifAddOprate = 0, $extendParams = [], $doOperate = 1){
 
 //        DB::beginTransaction();
 //        try {
@@ -292,7 +293,7 @@ class CompanyScheduleDBBusiness extends BasePublicDBBusiness
 ////            throws('操作失败；信息[' . $e->getMessage() . ']');
 //            throws($e->getMessage());
 //        }
-        return CommonDB::doTransactionFun(function() use(&$company_id, &$id, &$operate_staff_id, &$modifAddOprate, &$extendParams){
+        return CommonDB::doTransactionFun(function() use(&$company_id, &$id, &$operate_staff_id, &$modifAddOprate, &$extendParams, &$doOperate){
             if(strlen($id) <= 0){
                 throws('操作记录标识不能为空！');
             }
@@ -329,7 +330,8 @@ class CompanyScheduleDBBusiness extends BasePublicDBBusiness
             $queryParams = Tool::getParamQuery(['column_type' => 3, 'column_id' => $id], ['sqlParams' =>['select' =>['resource_url' ]]], []);
             $resourceList = Tool::objectToArray(ResourceDBBusiness::getList($queryParams,[]));
             // 删除图片文件
-            Tool::resourceDelFile($resourceList);
+            if(($doOperate & 1) == 1) Tool::resourceDelFile($resourceList);
+
             // 删除图片表
             ResourceDBBusiness::del($queryParams);
             // 删除记录
