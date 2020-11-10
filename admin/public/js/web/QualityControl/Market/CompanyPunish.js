@@ -31,6 +31,10 @@ function parent_reset_list(){
 }
 $(function(){
 
+    setTimeout(function () {
+        console.log('==restore');
+        parent.layer.restore(PARENT_LAYER_INDEX);// 还原 后触发的回调
+    },500);
     $('.search_frm').trigger("click");// 触发搜索事件
     // reset_list_self(false, false, true, 2);
     popSelectInit();// 初始化选择弹窗

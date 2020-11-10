@@ -6,6 +6,7 @@ var PARENT_LAYER_INDEX = parent.layer.getFrameIndex(window.name);
 //让层自适应iframe
 ////parent.layer.iframeAuto(PARENT_LAYER_INDEX);
 parent.layer.full(PARENT_LAYER_INDEX);// 用这个
+// parent.layer.restore(PARENT_LAYER_INDEX);// 还原 后触发的回调
 //关闭iframe
 $(document).on("click",".closeIframe",function(){
     iframeclose(PARENT_LAYER_INDEX);
@@ -29,3 +30,10 @@ function parent_reset_list_iframe_close(reset_total){
 function parent_reset_list(){
     parent.layer.close(PARENT_LAYER_INDEX);
 }
+
+$(function(){
+    setTimeout(function () {
+        console.log('==restore');
+        parent.layer.restore(PARENT_LAYER_INDEX);// 还原 后触发的回调
+    },500);
+});

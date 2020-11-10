@@ -29,3 +29,9 @@ function parent_reset_list_iframe_close(reset_total){
 function parent_reset_list(){
     parent.layer.close(PARENT_LAYER_INDEX);
 }
+$(function(){
+    setTimeout(function () {
+        console.log('==restore');
+        parent.layer.restore(PARENT_LAYER_INDEX);// 还原 后触发的回调
+    },500);
+});
