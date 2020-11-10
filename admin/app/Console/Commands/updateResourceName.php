@@ -143,7 +143,8 @@ class updateResourceName extends Command
             }
              */
 
-            CommonDB::doTransactionFun(function() use( &$info, &$market_id){
+            $isDoed = false;
+            CommonDB::doTransactionFun(function() use( &$info, &$market_id, &$isDoed){
 
                 $file_id = $info['id'];
                 $file_title = $info['fileTitle'];
@@ -174,9 +175,8 @@ class updateResourceName extends Command
                     $needAddFile = false;
                     $resourceList = ResourceDBBusiness::getDBFVFormatList(1, 1, ['url_frm' => $old_file_name], false, [], $extParams);
                     if(!empty($resourceList) && count($resourceList) > 1){// 数量大于1
-
-                        $this->line('资源内容=>' . json_encode($resourceList));
-                        exit('退出');
+                        $isDoed = true;
+                        $this->error('资源内容=>' . json_encode($resourceList));
                         // ResourceDBBusiness::saveById(['resource_name' => $files_name_txt ], $resourceInfo['id']);
                         // 保存一个，其它的删除
                         $needArr = [];
@@ -209,9 +209,11 @@ class updateResourceName extends Command
                                         $this->error('删除能力附表=' . $t_Info['id']);
                                     }else if(!empty($t_Info) ){
                                         $needArr[$priKey] = $company_id;
+                                        $this->error('能力附表=第一条有效数据，不删除');
                                     }else if(empty($t_Info)){
                                         $needAddFile = true;
                                         $isUpdateName = false;
+                                        $this->error('能力附表=数据为空，不进行操作');
                                     }
                                     break;
                                 case 2:// 机构自我声明管理
@@ -225,9 +227,11 @@ class updateResourceName extends Command
                                         $this->error('删除机构自我声明管理=' . $t_Info['id']);
                                     }else if(!empty($t_Info) ){
                                         $needArr[$priKey] = $company_id;
+                                        $this->error('自我声明管理=第一条有效数据，不删除');
                                     }else if(empty($t_Info)){
                                         $needAddFile = true;
                                         $isUpdateName = false;
+                                        $this->error('自我声明管理=数据为空，不进行操作');
                                     }
 
                                     break;
@@ -242,9 +246,11 @@ class updateResourceName extends Command
                                         $this->error('删除机构处罚管理=' . $t_Info['id']);
                                     }else if(!empty($t_Info) ){
                                         $needArr[$priKey] = $company_id;
+                                        $this->error('机构处罚管理=第一条有效数据，不删除');
                                     }else if(empty($t_Info)){
                                         $needAddFile = true;
                                         $isUpdateName = false;
+                                        $this->error('机构处罚管理=数据为空，不进行操作');
                                     }
                                     break;
                                 default:
@@ -264,6 +270,7 @@ class updateResourceName extends Command
                 }
             });
             $bar->advance();
+            if($isDoed) die('成功执行了一条数据');
         }
         $bar->finish();
         $this->info('获取并保存文件完成！');
