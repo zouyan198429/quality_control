@@ -5,7 +5,8 @@ var SUBMIT_FORM = true;//防止多次点击提交
 var PARENT_LAYER_INDEX = parent.layer.getFrameIndex(window.name);
 //让层自适应iframe
 ////parent.layer.iframeAuto(PARENT_LAYER_INDEX);
-parent.layer.full(PARENT_LAYER_INDEX);// 用这个
+// parent.layer.full(PARENT_LAYER_INDEX);// 用这个
+parent.layer.min(PARENT_LAYER_INDEX);// 用这个
 // parent.layer.restore(PARENT_LAYER_INDEX);// 还原 后触发的回调
 //关闭iframe
 $(document).on("click",".closeIframe",function(){
