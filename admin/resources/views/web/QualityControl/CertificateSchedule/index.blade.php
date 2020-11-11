@@ -52,7 +52,7 @@
 								<div class="com-logo">
 
 								</div>
-								<div class="name"> 
+								<div class="name">
                                    <a href="{{url('jigou/info/' . $v['id'])}}" target="_blank" >{{ $v['company_name'] ?? '' }}</a>
 								</div>
 								<div class="date">
@@ -156,5 +156,5 @@
 {{--<script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.js')}}"></script>--}}
 @include('public.dynamic_list_foot')
 
-<script src="{{ asset('/js/web/QualityControl/CertificateSchedule/search.js') }}?1"  type="text/javascript"></script>
+<script src="{{ asset('/js/web/QualityControl/CertificateSchedule/search.js') }}?2"  type="text/javascript"></script>
 

@@ -5,7 +5,7 @@ $(function(){
         let obj = $(this);
         let keyword = obj.parent().find('input[name=keyword]').val();
         console.log('keyword=', keyword);
-        if(!judge_validate(4, '证书号', keyword, true, 'length', 1, 30)){
+        if(!judge_validate(4, '证书号', keyword, false, 'length', 1, 30)){
             return false;
         }
         webURL = SEARCH_COMPANY_URL + '?qkey=4&field=company_certificate_no&keyword=' + keyword;
@@ -27,7 +27,7 @@ $(function(){
         }
         let keyword = obj.parent().find('input[name=keyword]').val();
         console.log('keyword=', keyword);
-        if(!judge_validate(4, '关键字', keyword, true, 'length', 1, 30)){
+        if(!judge_validate(4, '关键字', keyword, false, 'length', 1, 30)){
             return false;
         }
         webURL = SEARCH_COMPANY_URL + '?qkey=1&field=' + company_field +'&keyword=' + keyword;

@@ -279,12 +279,15 @@ class CompanyScheduleDBBusiness extends BasePublicDBBusiness
      * @param int $operate_staff_id 操作人id
      * @param int $modifAddOprate 修改时是否加操作人，1:加;0:不加[默认]
      * @param array $extendParams 其它参数--扩展用参数
-     * @param  int $doOperate 执行的操作 0 不删除 1 删除源图片[默认]
+     *  [
+     *       'organize_id' => 3,操作的企业id 可以为0：不指定具体的企业
+     *       'doOperate' => 1,执行的操作 0 不删除 1 删除源图片[默认]
+     *  ]
      * @return  int 记录id值
      * @author zouyan(305463219@qq.com)
      */
-    public static function delById($company_id, $id, $operate_staff_id = 0, $modifAddOprate = 0, $extendParams = [], $doOperate = 1){
-
+    public static function delById($company_id, $id, $operate_staff_id = 0, $modifAddOprate = 0, $extendParams = []){
+        $doOperate = $extendParams['doOperate'] ?? 1;
 //        DB::beginTransaction();
 //        try {
 //            DB::commit();

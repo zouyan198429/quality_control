@@ -196,13 +196,14 @@ class CompanyStatementDBBusiness extends BasePublicDBBusiness
      * @param array $extendParams 其它参数--扩展用参数
      *  [
      *       'organize_id' => 3,操作的企业id 可以为0：不指定具体的企业
+     *       'doOperate' => 1,执行的操作 0 不删除 1 删除源图片[默认]
      *  ]
-     * @param  int $doOperate 执行的操作 0 不删除 1 删除源图片[默认]
      * @return  int 记录id值
      * @author zouyan(305463219@qq.com)
      */
-    public static function delById($company_id, $id, $operate_staff_id = 0, $modifAddOprate = 0, $extendParams = [], $doOperate = 1){
+    public static function delById($company_id, $id, $operate_staff_id = 0, $modifAddOprate = 0, $extendParams = []){
         $organize_id = $extendParams['organize_id'] ?? 0;// 操作的企业id 可以为0：不指定具体的企业
+        $doOperate = $extendParams['doOperate'] ?? 1;
 
         if(strlen($id) <= 0){
             throws('操作记录标识不能为空！');

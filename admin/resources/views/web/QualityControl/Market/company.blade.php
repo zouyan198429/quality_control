@@ -117,6 +117,6 @@
 {{--<script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.js')}}"></script>--}}
 @include('public.dynamic_list_foot')
 
-<script src="{{ asset('/js/web/QualityControl/Market/search.js') }}?1"  type="text/javascript"></script>
+<script src="{{ asset('/js/web/QualityControl/Market/search.js') }}?4"  type="text/javascript"></script>
 
 <script src="{{ asset('/js/web/QualityControl/Market/company.js') }}?3"  type="text/javascript"></script>

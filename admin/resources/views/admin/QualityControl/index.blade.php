@@ -24,22 +24,22 @@
             <a href="javascript:;" layadmin-event="flexible" title="侧边伸缩">
               <i class="layui-icon layui-icon-shrink-right" id="LAY_app_flexible"></i>
             </a>
-          </li> 
+          </li>
           <li class="layui-nav-item" lay-unselect>
             <a href="javascript:;" layadmin-event="refresh" title="刷新">
               <i class="layui-icon layui-icon-refresh-3"></i>
             </a>
           </li>
-           
+
         </ul>
         <ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
 
-         
+
           <li class="layui-nav-item layui-hide-xs" lay-unselect>
             <a href="javascript:;" layadmin-event="theme">
               <i class="layui-icon layui-icon-theme"></i>
             </a>
-          </li> 
+          </li>
 
           <li class="layui-nav-item layui-hide-xs" lay-unselect>
             <a href="javascript:;" layadmin-event="fullscreen">
@@ -76,7 +76,7 @@
           </div>
 
           <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
-             
+
 
               <li data-name="user" class="layui-nav-item">
                   <a href="javascript:;" lay-tips="信息审核" lay-direction="2">
@@ -125,7 +125,7 @@
                     </dd>
                     <dd>
                       <a lay-href="{{ url('admin/user') }}">个人会员</a>
-                    </dd> 
+                    </dd>
                 </dl>
             </li>
 			<li data-name="user" class="layui-nav-item">
@@ -138,36 +138,36 @@
 			        <dd><a lay-href="{{ url('admin/company/grade_industry') }}">会员行业分布</a></dd>
 			        <dd><a lay-href="{{ url('admin/company') }}?record_type=2">快到期会员(所有)</a></dd>
 					<dd><a lay-href="{{ url('admin/company') }}?record_type=2&company_grade_continue=1">快到期会员(无续期)</a></dd>
-			        <dd><a lay-href="{{ url('admin/company') }}?record_type=2&company_grade_continue=2">快到期会员(无续期)</a></dd>
+			        <dd><a lay-href="{{ url('admin/company') }}?record_type=2&company_grade_continue=2">快到期会员(有续期)</a></dd>
 					<dd><a lay-href="{{ url('admin/company') }}?record_type=4">已过期会员</a></dd>
 					<dd><a lay-href="{{ url('admin/company') }}?record_type=4&company_grade_continue=1">已过期会员(无续期)</a></dd>
 					<dd><a lay-href="{{ url('admin/company') }}?record_type=4&company_grade_continue=2">已过期会员(有续期)</a></dd>
 			    </dl>
 			</li>
-			
-			
-			
-			
-{{--            <li data-name="user" class="layui-nav-item">--}}
-{{--                  <a href="javascript:;" lay-tips="面授培训" lay-direction="2">--}}
-{{--                      <i class="layui-icon layui-icon-component"></i>--}}
-{{--                      <cite>面授培训</cite>--}}
-{{--                  </a>--}}
-{{--                  <dl class="layui-nav-child">--}}
-{{--                      <dd>--}}
-{{--                          <a lay-href="{{ url('admin/course') }}">课程管理</a>--}}
-{{--                      </dd>--}}
-{{--                      <dd>--}}
-{{--                          <a lay-href="javascript:void(10);">报名企业</a>--}}
-{{--                      </dd>--}}
-{{--                      <dd>--}}
-{{--                          <a lay-href="javascript:void(10);">报名学员</a>--}}
-{{--                      </dd>--}}
-{{--                      <dd>--}}
-{{--                          <a lay-href="{{ url('admin/course_class') }}">培训班管理</a>--}}
-{{--                      </dd>--}}
-{{--                  </dl>--}}
-{{--              </li>--}}
+
+
+
+
+            <li data-name="user" class="layui-nav-item"  style="display: none;">
+                  <a href="javascript:;" lay-tips="面授培训" lay-direction="2">
+                      <i class="layui-icon layui-icon-component"></i>
+                      <cite>面授培训</cite>
+                  </a>
+                  <dl class="layui-nav-child">
+                      <dd>
+                          <a lay-href="{{ url('admin/course') }}">课程管理</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="javascript:void(10);">报名企业</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="javascript:void(10);">报名学员</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="{{ url('admin/course_class') }}">培训班管理</a>
+                      </dd>
+                  </dl>
+              </li>
               <!--
               <li data-name="user" class="layui-nav-item">
                   <a href="javascript:;" lay-tips="在线直播" lay-direction="2">
@@ -290,34 +290,34 @@
                   </dl>
               </li>
 
-{{--              <li data-name="set" class="layui-nav-item">--}}
-{{--                  <a href="javascript:;" lay-tips="开票管理" lay-direction="2">--}}
-{{--                      <i class="layui-icon layui-icon-set"></i>--}}
-{{--                      <cite>开票管理</cite>--}}
-{{--                  </a>--}}
-{{--                  <dl class="layui-nav-child">--}}
-{{--                      <dd class="layui-nav-itemed">--}}
-{{--                          <a href="javascript:;">订单管理</a>--}}
-{{--                          <dl class="layui-nav-child">--}}
-{{--                              <dd>--}}
-{{--                                  <a lay-href="{{ url('admin/orders') }}">订单管理</a>--}}
-{{--                              </dd>--}}
-{{--                              <dd>--}}
-{{--                                  <a lay-href="{{ url('admin/order_pay') }}">在线支付明细【对帐】</a>--}}
-{{--                              </dd>--}}
-{{--                              <dd>--}}
-{{--                                  <a lay-href="{{ url('admin/order_flow') }}">财务明细[流水帐]</a>--}}
-{{--                              </dd>--}}
-{{--                          </dl>--}}
-{{--                      </dd>--}}
-{{--                      <dd class="layui-nav-itemed">--}}
-{{--                          <a href="javascript:;">收款设置</a>--}}
-{{--                          <dl class="layui-nav-child">--}}
-{{--                              <dd><a lay-href="{{ url('admin/order_pay_config') }}">收款帐号列表</a></dd>--}}
-{{--                          </dl>--}}
-{{--                      </dd>--}}
-{{--                  </dl>--}}
-{{--              </li>--}}
+              <li data-name="set" class="layui-nav-item" style="display: none;">
+                  <a href="javascript:;" lay-tips="开票管理" lay-direction="2">
+                      <i class="layui-icon layui-icon-set"></i>
+                      <cite>开票管理</cite>
+                  </a>
+                  <dl class="layui-nav-child">
+                      <dd class="layui-nav-itemed">
+                          <a href="javascript:;">订单管理</a>
+                          <dl class="layui-nav-child">
+                              <dd>
+                                  <a lay-href="{{ url('admin/orders') }}">订单管理</a>
+                              </dd>
+                              <dd>
+                                  <a lay-href="{{ url('admin/order_pay') }}">在线支付明细【对帐】</a>
+                              </dd>
+                              <dd>
+                                  <a lay-href="{{ url('admin/order_flow') }}">财务明细[流水帐]</a>
+                              </dd>
+                          </dl>
+                      </dd>
+                      <dd class="layui-nav-itemed">
+                          <a href="javascript:;">收款设置</a>
+                          <dl class="layui-nav-child">
+                              <dd><a lay-href="{{ url('admin/order_pay_config') }}">收款帐号列表</a></dd>
+                          </dl>
+                      </dd>
+                  </dl>
+              </li>
               <!-- <li data-name="user" class="layui-nav-item">
                   <a href="javascript:;" lay-tips="开票管理" lay-direction="2">
                       <i class="layui-icon layui-icon-component"></i>

@@ -205,7 +205,7 @@ class updateResourceName extends Command
                                     if(!empty($t_Info) && isset($needArr[$priKey])){
                                         // CompanyScheduleDBBusiness::saveById(['resource_name' => $files_name_txt ], $resourceInfo['id']);
                                         // 删除主表记录
-                                        CompanyScheduleDBBusiness::delById($company_id, $t_Info['id'], 0,  0, [], 0);
+                                        CompanyScheduleDBBusiness::delById($company_id, $t_Info['id'], 0,  0, ['doOperate' => 0]);
                                         $isUpdateName = false;
                                         $this->error('删除能力附表=' . $t_Info['id']);
                                     }else if(!empty($t_Info) ){
@@ -226,7 +226,7 @@ class updateResourceName extends Command
                                     if(!empty($t_Info)  && isset($needArr[$priKey])){
                                         // CompanyScheduleDBBusiness::saveById(['resource_name' => $files_name_txt ], $resourceInfo['id']);
                                         // 删除主表记录
-                                        CompanyStatementDBBusiness::delById($company_id, $t_Info['id'], 0,  0, [], 0);
+                                        CompanyStatementDBBusiness::delById($company_id, $t_Info['id'], 0,  0, ['doOperate' => 0]);
                                         $isUpdateName = false;
                                         $this->error('删除机构自我声明管理=' . $t_Info['id']);
                                     }else if(!empty($t_Info) ){
@@ -248,7 +248,7 @@ class updateResourceName extends Command
                                     if(!empty($t_Info) && isset($needArr[$priKey])){
                                         // CompanyScheduleDBBusiness::saveById(['resource_name' => $files_name_txt ], $resourceInfo['id']);
                                         // 删除主表记录
-                                        CompanyPunishDBBusiness::delById($company_id, $t_Info['id'], 0,  0, [], 0);
+                                        CompanyPunishDBBusiness::delById($company_id, $t_Info['id'], 0,  0, ['doOperate' => 0]);
                                         $isUpdateName = false;
                                         $this->error('删除机构处罚管理=' . $t_Info['id']);
                                     }else if(!empty($t_Info) ){

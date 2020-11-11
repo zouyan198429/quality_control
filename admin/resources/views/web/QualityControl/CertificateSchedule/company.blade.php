@@ -45,7 +45,7 @@
                         @endforeach
 
 					</ul>
-                    <div class="mmfoot"><!-- 
+                    <div class="mmfoot"><!--
                         <div class="mmfleft"></div> -->
                         <div class="pagination">
                             {!! $pageInfoLink ?? ''  !!}
@@ -105,4 +105,4 @@
 {{--<script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.js')}}"></script>--}}
 @include('public.dynamic_list_foot')
 
-<script src="{{ asset('/js/web/QualityControl/CertificateSchedule/search.js') }}?1"  type="text/javascript"></script>
+<script src="{{ asset('/js/web/QualityControl/CertificateSchedule/search.js') }}?2"  type="text/javascript"></script>
