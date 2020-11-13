@@ -12,9 +12,7 @@
   <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/css/layui.css')}}" media="all">
   <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/style/admin.css')}}" media="all">
 </head>
-<body>
-
-{{--<div id="crumb"><i class="fa fa-reorder fa-fw" aria-hidden="true"></i> 我的同事</div>--}}
+<body> 
 <div class="mm">
   <div class="mmhead" id="mywork">
 
@@ -71,7 +69,7 @@
       </div>
     </form>
   </div>
-
+<!-- 
   <div class="table-header">
 {{--    { {--<button class="btn btn-danger  btn-xs batch_del"  onclick="action.batchDel(this)">批量删除</button>--} }--}}
 {{--    <button class="btn btn-success  btn-xs export_excel"  onclick="action.batchExportExcel(this)" >导出[按条件]</button>--}}
@@ -81,39 +79,30 @@
 {{--    <div style="display:none;" ><input type="file" class="import_file img_input"></div>{ {--导入file对象--} }--}}
       <button class="btn btn-success fa fa-check-circle btn-xs export_excel"  onclick="otheraction.openSelected(this, 2)" >审核通过[勾选]</button>
       <button class="btn btn-success fa fa-window-close btn-xs export_excel"  onclick="otheraction.openSelected(this, 4)" >审核不通过[勾选]</button>
-  </div>
+  </div> -->
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
-    <colgroup>
-        <col width="50">
-{{--        <col width="60">--}}
-        <col>
-{{--        <col width="90">--}}
+    <colgroup> 
+        <col> 
         <col width="90">
-        <col width="90">
-        <col width="100">
-{{--        <col width="100">--}}
-        <col width="100">
-        <col>
-        <col  width="80">
-{{--        <col width="80">--}}
-        <col width="100">
-{{--        <col width="100">--}}
+        <col width="150">  
+        <col width="100"> 
+        <col width="80"> 
+        <col width="150"> 
         <col width="140">
     </colgroup>
     <thead>
     <tr>
-      <th>
+     <!-- <th>
         <label class="pos-rel">
-          <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>
-          <!-- <span class="lbl">全选</span> -->
+          <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/> 
         </label>
-      </th>
+      </th> -->
 {{--      <th>ID</th>--}}
       <th>所属企业</th>
-        <th>会员等级[添加时]<hr/>会员等级[生效时]</th>
+        <!-- <th>会员等级[添加时]<hr/>会员等级[生效时]</th> -->
       <th>会员等级</th>
         <th>开始时间<hr/>结束时间</th>
-        <th>真实结束时间</th>
+        <!-- <th>真实结束时间</th> -->
         <th>备注说明</th>
         <th>审核状态<hr/>有效状态</th>
       <th>创建时间<hr/>更新时间</th>
@@ -168,6 +157,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/CompanyGradeConfig.js') }}?6"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/CompanyGradeConfig.js') }}?14"  type="text/javascript"></script>
 </body>
 </html>

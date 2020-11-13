@@ -12,9 +12,7 @@
     <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/css/layui.css')}}" media="all">
     <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/style/admin.css')}}" media="all">
 </head>
-<body>
-
-{{--<div id="crumb"><i class="fa fa-reorder fa-fw" aria-hidden="true"></i> {{ $operate ?? '' }}员工</div>--}}
+<body> 
 <div class="mm">
     <form class="am-form am-form-horizontal" method="post"  id="addForm">
         <input type="hidden" name="id" value="{{ $info['id'] ?? 0 }}"/>
