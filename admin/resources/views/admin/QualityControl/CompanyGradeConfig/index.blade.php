@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/css/layui.css')}}" media="all">
   <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/style/admin.css')}}" media="all">
 </head>
-<body> 
+<body>
 <div class="mm">
   <div class="mmhead" id="mywork">
 
@@ -69,7 +69,7 @@
       </div>
     </form>
   </div>
-<!-- 
+<!--
   <div class="table-header">
 {{--    { {--<button class="btn btn-danger  btn-xs batch_del"  onclick="action.batchDel(this)">批量删除</button>--} }--}}
 {{--    <button class="btn btn-success  btn-xs export_excel"  onclick="action.batchExportExcel(this)" >导出[按条件]</button>--}}
@@ -81,20 +81,20 @@
       <button class="btn btn-success fa fa-window-close btn-xs export_excel"  onclick="otheraction.openSelected(this, 4)" >审核不通过[勾选]</button>
   </div> -->
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
-    <colgroup> 
-        <col> 
+    <colgroup>
+        <col>
         <col width="90">
-        <col width="150">  
-        <col width="100"> 
-        <col width="80"> 
-        <col width="150"> 
+        <col width="150">
+        <col width="100">
+        <col width="80">
+        <col width="150">
         <col width="140">
     </colgroup>
     <thead>
     <tr>
      <!-- <th>
         <label class="pos-rel">
-          <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/> 
+          <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>
         </label>
       </th> -->
 {{--      <th>ID</th>--}}
@@ -156,7 +156,7 @@
       var OPEN_OPERATE_URL = "{{ url('api/admin/company_grade_config/ajax_open') }}";//审核操作(通过/不通过)
 
   </script>
-  <script src="{{asset('js/common/list.js')}}"></script>
+  <script src="{{asset('js/common/list.js')}}?1"></script>
   <script src="{{ asset('js/admin/QualityControl/CompanyGradeConfig.js') }}?14"  type="text/javascript"></script>
 </body>
 </html>

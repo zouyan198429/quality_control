@@ -81,7 +81,7 @@
     </div>
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
-        <col width="50"> 
+        <col width="50">
         <col>
         <col>
         <col width="75">
@@ -100,11 +100,11 @@
         <label class="pos-rel">
           <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>
         </label>
-      </th> 
+      </th>
         <th>能力验证代码</th>
         <th>单位</th>
         <th>联系人</th>
-        <th>联系人手机</th> 
+        <th>联系人手机</th>
         <th>报名时间</th>
         <th>是否取样<hr/>取样时间</th>
         <th>是否提交数据<hr/>提交数据时间</th>
@@ -163,7 +163,7 @@
       var IFRAME_TAG_TIMEOUT = 60000;// 获得模型表更新时间运行间隔 1000:1秒 ；可以不要此变量：默认一分钟
 
   </script>
-  <script src="{{asset('js/common/list.js')}}"></script>
+  <script src="{{asset('js/common/list.js')}}?1"></script>
   <script src="{{ asset('js/admin/QualityControl/AbilitysAdmin/AbilityJoinItems.js') }}?12"  type="text/javascript"></script>
 </body>
 </html>

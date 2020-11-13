@@ -234,7 +234,7 @@
 
 
   </script>
-  <script src="{{asset('js/common/list.js')}}"></script>
+  <script src="{{asset('js/common/list.js')}}?1"></script>
   <script src="{{ asset('js/admin/QualityControl/User_show.js?69') }}"  type="text/javascript"></script>
 </body>
 </html>

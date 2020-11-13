@@ -15,20 +15,30 @@ var TOTAL_ID = "total";//总记录数量[特别说明:小于0,需要从数据库
 var AJAX_ASYNC = AJAX_ASYNC || true;//ajax_async ajax 同步/导步执行 //false:同步;true:异步
 var IMPORT_EXCEL_CLASS = IMPORT_EXCEL_CLASS || "import_file";// 导入EXCEL的file的class
 
+
+//查询
+$(document).on("click",".search_frm",function(){
+    $("#"+PAGE_ID).val(1);//重归第一页
+    //获得搜索表单的值
+    append_sure_form(SURE_FRM_IDS,FRM_IDS);//把搜索表单值转换到可以查询用的表单中
+    // reset_list(false, true, true, 2);
+    console.log(LIST_FUNCTION_NAME);
+    eval( LIST_FUNCTION_NAME + '(' + false +', ' + true +', ' + true +', 2)');
+});
 $(function(){
      if(AUTO_READ_FIRST){// 自动读取第一页
          //读取第一页数据
          ajaxPageList(DYNAMIC_TABLE,DYNAMIC_PAGE_BAIDU_TEMPLATE,AJAX_URL,false,SURE_FRM_IDS,true,DYNAMIC_BAIDU_TEMPLATE,DYNAMIC_TABLE_BODY,DYNAMIC_LODING_BAIDU_TEMPLATE,DYNAMIC_BAIDU_EMPTY_TEMPLATE,PAGE_ID,PAGE_SIZE,TOTAL_ID,AJAX_ASYNC);
      }
     //查询
-    $('.search_frm').click(function(){
-        $("#"+PAGE_ID).val(1);//重归第一页
-        //获得搜索表单的值
-        append_sure_form(SURE_FRM_IDS,FRM_IDS);//把搜索表单值转换到可以查询用的表单中
-        // reset_list(false, true, true, 2);
-        console.log(LIST_FUNCTION_NAME);
-        eval( LIST_FUNCTION_NAME + '(' + false +', ' + true +', ' + true +', 2)');
-    });
+    // $('.search_frm').click(function(){
+    //     $("#"+PAGE_ID).val(1);//重归第一页
+    //     //获得搜索表单的值
+    //     append_sure_form(SURE_FRM_IDS,FRM_IDS);//把搜索表单值转换到可以查询用的表单中
+    //     // reset_list(false, true, true, 2);
+    //     console.log(LIST_FUNCTION_NAME);
+    //     eval( LIST_FUNCTION_NAME + '(' + false +', ' + true +', ' + true +', 2)');
+    // });
 
      // 单独图片上传/导入文件
      $(document).on("change","." + IMPORT_EXCEL_CLASS,function(){// change

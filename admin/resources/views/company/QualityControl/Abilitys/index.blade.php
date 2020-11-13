@@ -116,7 +116,7 @@
       var IFRAME_TAG_TIMEOUT = 60000;// 获得模型表更新时间运行间隔 1000:1秒 ；可以不要此变量：默认一分钟
 
   </script>
-  <script src="{{asset('js/common/list.js')}}"></script>
+  <script src="{{asset('js/common/list.js')}}?1"></script>
   <script src="{{ asset('js/company/QualityControl/Abilitys.js?32') }}"  type="text/javascript"></script>
 </body>
 </html>

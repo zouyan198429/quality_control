@@ -142,7 +142,7 @@
 <!-- zui js -->
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
 
-<script src="{{asset('js/common/list.js')}}"></script>
+<script src="{{asset('js/common/list.js')}}?1"></script>
   <script src="{{ asset('js/admin/QualityControl/Course.js') }}?4"  type="text/javascript"></script>
 @component('component.upfileincludejsmany')
 @endcomponent

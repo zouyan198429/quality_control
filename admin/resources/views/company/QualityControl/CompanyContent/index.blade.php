@@ -119,7 +119,7 @@
 
 
   </script>
-  <script src="{{asset('js/common/list.js')}}"></script>
+  <script src="{{asset('js/common/list.js')}}?1"></script>
   <script src="{{ asset('js/company/QualityControl/CompanyContent.js') }}?1"  type="text/javascript"></script>
 </body>
 </html>

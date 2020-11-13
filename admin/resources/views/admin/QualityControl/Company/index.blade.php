@@ -154,12 +154,12 @@
   </div>
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
-        <col width="50"> 
+        <col width="50">
         <col width="60">
         <col>
-        <col width="115"> 
         <col width="115">
-        <col width="105"> 
+        <col width="115">
+        <col width="105">
         <col width="80">
         <col width="75">
         <col width="50">
@@ -249,7 +249,7 @@
       var GRADE_CONFIG_URL = "{{ url('admin/company_grade_config')}}/";// 查看企业等级配置
 
   </script>
-  <script src="{{asset('js/common/list.js')}}"></script>
+  <script src="{{asset('js/common/list.js')}}?1"></script>
   <script src="{{ asset('js/admin/QualityControl/Company.js') }}?284"  type="text/javascript"></script>
 </body>
 </html>

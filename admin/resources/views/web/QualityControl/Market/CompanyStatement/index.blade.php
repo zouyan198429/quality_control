@@ -33,7 +33,7 @@
 
   <div class="mmhead" id="mywork">
     @include('common.pageParams')
-    <form onsubmit="return false;" class="form-horizontal" style="display: none;" role="form" method="post" id="search_frm" action="#">
+    <form onsubmit="return false;" class="form-horizontal" style="display: bock;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
 
           <input type="hidden" name="company_hidden"  value="{{ $company_hidden ?? 0 }}" />
@@ -147,7 +147,7 @@
       var SCHEDULE_BAIDU_TELPLETE = 'baidu_template_data_list_schedule';
 
   </script>
-  <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/web/QualityControl/Market/CompanyStatement.js') }}?888"  type="text/javascript"></script>
+  <script src="{{asset('js/common/list.js')}}?1"></script>
+  <script src="{{ asset('js/web/QualityControl/Market/CompanyStatement.js') }}?898"  type="text/javascript"></script>
 </body>
 </html>

@@ -133,7 +133,7 @@
       // var IFRAME_TAG_TIMEOUT = 60000;// 获得模型表更新时间运行间隔 1000:1秒 ；可以不要此变量：默认一分钟
 
   </script>
-  <script src="{{asset('js/common/list.js')}}"></script>
+  <script src="{{asset('js/common/list.js')}}?1"></script>
   <script src="{{ asset('js/web/QualityControl/Market/CompanyNewSchedule.js') }}?14"  type="text/javascript"></script>
 </body>
 </html>

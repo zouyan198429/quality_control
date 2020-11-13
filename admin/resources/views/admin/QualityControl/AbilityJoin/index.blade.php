@@ -12,11 +12,11 @@
   <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/css/layui.css')}}" media="all">
   <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/style/admin.css')}}" media="all">
 </head>
-<body> 
+<body>
 <div class="mm">
   <div class="mmhead" id="mywork">
 
-    @include('common.pageParams') 
+    @include('common.pageParams')
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
           <span>
@@ -83,7 +83,7 @@
     </div>
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
-        <col width="50"> 
+        <col width="50">
         <col>
         <col>
         <col width="75" >
@@ -199,7 +199,7 @@
       var IFRAME_TAG_TIMEOUT = 60000;// 获得模型表更新时间运行间隔 1000:1秒 ；可以不要此变量：默认一分钟
 
   </script>
-  <script src="{{asset('js/common/list.js')}}"></script>
+  <script src="{{asset('js/common/list.js')}}?1"></script>
   <script src="{{ asset('js/admin/QualityControl/AbilityJoin.js') }}?13"  type="text/javascript"></script>
 </body>
 </html>

@@ -62,7 +62,7 @@
         <col width="60">
         <col width="">
         <col width="">
-        <col width=""> 
+        <col width="">
         <col width="">
     </colgroup>
     <thead>
@@ -73,12 +73,12 @@
           <!-- <span class="lbl">全选</span> -->
         </label>
       </th>
-      <th>ID</th> 
+      <th>ID</th>
       <th>所属企业</th>
       <th>企业ID</th>
       <th>文档类型</th>
-      <th>文件</th> 
-      <th>创建时间</th> 
+      <th>文件</th>
+      <th>创建时间</th>
       <th>操作</th>
     </tr>
     </thead>
@@ -128,7 +128,7 @@
       var IFRAME_TAG_TIMEOUT = 60000;// 获得模型表更新时间运行间隔 1000:1秒 ；可以不要此变量：默认一分钟
 
   </script>
-  <script src="{{asset('js/common/list.js')}}"></script>
+  <script src="{{asset('js/common/list.js')}}?1"></script>
   <script src="{{ asset('js/admin/QualityControl/CompanyNewSchedule_list.js') }}?3"  type="text/javascript"></script>
 </body>
 </html>
