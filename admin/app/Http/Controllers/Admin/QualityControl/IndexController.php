@@ -28,6 +28,21 @@ class IndexController extends BasicController
 {
     public $controller_id =0;// 功能小模块[控制器]id - controller_id  历史表 、正在进行表 与原表相同
 
+    public function testAPI(Request $request){
+
+        /**
+         *
+         *  服务端接到这个请求：
+         *  1 先验证sign签名是否合理，证明请求参数没有被中途篡改
+         *  2 再验证timestamp是否过期，证明请求是在最近60s被发出的
+         *  3 最后验证nonce是否已经有了，证明这个请求不是60s内的重放请求
+         *
+         */
+        $params = CommonRequest::getParamsByUbound($request, 2, false, [], []);
+        $res = CommonRequest::apiJudgeSign($request, $params, 1,  '111222333');
+        if(is_string($res)) ajaxDataArr(0, null, $res);
+        return ajaxDataArr(1, $res, '');
+    }
 
     public function test(Request $request){
 

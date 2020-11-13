@@ -24,7 +24,7 @@ class CertificateSchedule extends BasePublicModel
 
 //    public static $cacheSimple = 'U';// 表名简写,为空，则使用表名
 
-    public static $cacheVersion = '';// 内容随意改[可0{空默认为0}开始自增]- 如果运行过程中，有直接对表记录进行修改，增加或修改字段名，则修改此值，使表记录的相关缓存过期。
+    public static $cacheVersion = 'V1';// 内容随意改[可0{空默认为0}开始自增]- 如果运行过程中，有直接对表记录进行修改，增加或修改字段名，则修改此值，使表记录的相关缓存过期。
     // $cacheExcludeFields 为空：则缓存所有字段值；排除字段可能是大小很大的字段，不适宜进行缓存
     public static $cacheExcludeFields = [];// 表字段中排除字段; 有值：要小心，如果想获取的字段有在排除字段中的，则不能使用缓存
 
@@ -65,7 +65,17 @@ class CertificateSchedule extends BasePublicModel
     // 4：有操作员工历史id 字段 operate_staff_id_history
     // 8：有操作日期字段 created_at timestamp
     // 16：有更新日期字段 updated_at  timestamp
-    public static $ownProperty = (2 | 4 | 8 | 16);// (1 | 2 | 4 | 8 | 16);
+    // 32: 有历史表 ***_history; 且 此表实时记录主表数据 （实时数据[不会删除]  +  历史修改过程中的数据）--全表记录【所有记录及历史】--可追溯
+    // 64: 有同步数据表 ***_doing;--业务进行表【轻量级表】，当业务进行中时，可直接操作进行表【提高数据操作的率】，
+    //                  一旦业务完成，则删除进行表中的数据，原表作为原始数据使用
+    //                  -- TODO 直接操作业务写到操作操作的底层 CommonDB 【存在就同步更新，不存在：业务已结束或不用进行表了】
+    public static $ownProperty = (1 | 2 | 4 | 8 | 16);// (1 | 2 | 4 | 8 | 16);
+    // 同步表后缀 => 同步权限 0/1:增、改  ; 2：删 （1：可做业务同步 ；1 ｜ 2 ： 操作全同步表【含删除】）
+    // 如果是空数组【没有配置】，默认为 ['doing' => 1]
+    public static $syncTables = [
+          'doing' => 1,
+    ];
+
 
     /**
      * 关联到模型的数据表
@@ -74,4 +84,29 @@ class CertificateSchedule extends BasePublicModel
      */
     protected $table = 'certificate_schedule';
 
+    // 来源1平台2北京永杰友信【最新的一次操作】
+    public static $sourceTypeArr = [
+        '1' => '平台',
+        '2' => '北京永杰友信',
+    ];
+    // 表里没有的字段
+    protected $appends = ['source_type_text'];
+
+    /**
+     * 获取来源文字
+     *
+     * @return string
+     */
+    public function getSourceTypeTextAttribute()
+    {
+        return static::$sourceTypeArr[$this->source_type] ?? '';
+    }
+
+    /**
+     * 获取历史-二维
+     */
+    public function certificateScheduleHistory()
+    {
+        return $this->hasMany('App\Models\QualityControl\CertificateScheduleHistory', 'certificate_schedule_id', 'id');
+    }
 }

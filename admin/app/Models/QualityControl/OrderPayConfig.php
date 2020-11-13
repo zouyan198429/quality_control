@@ -65,6 +65,10 @@ class OrderPayConfig extends BasePublicModel
     // 4：有操作员工历史id 字段 operate_staff_id_history
     // 8：有操作日期字段 created_at timestamp
     // 16：有更新日期字段 updated_at  timestamp
+    // 32: 有历史表 ***_history; 且 此表实时记录主表数据 （实时数据[不会删除]  +  历史修改过程中的数据）--全表记录【所有记录及历史】--可追溯
+    // 64: 有同步数据表 ***_doing;--业务进行表【轻量级表】，当业务进行中时，可直接操作进行表【提高数据操作的率】，
+    //                  一旦业务完成，则删除进行表中的数据，原表作为原始数据使用
+    //                  -- TODO 直接操作业务写到操作操作的底层 CommonDB 【存在就同步更新，不存在：业务已结束或不用进行表了】
     public static $ownProperty = (2 | 4 | 8 | 16);// (1 | 2 | 4 | 8 | 16);
 
     /**
@@ -82,12 +86,18 @@ class OrderPayConfig extends BasePublicModel
         '4' => '支付宝',
     ];
 
+    // 开启状态(1开启2关闭)
+    public static $openStatusArr = [
+        '1' => '开启',
+        '2' => '关闭',
+    ];
+
     // 暂不支持的付款方式
     public static $payMethodDisable = [4];
 
 
     // 表里没有的字段
-    protected $appends = ['pay_method_text'];
+    protected $appends = ['pay_method_text', 'open_status_text'];
 
 
     /**
@@ -106,6 +116,16 @@ class OrderPayConfig extends BasePublicModel
         }
         return implode('、', $return_arr);
         // return static::$payMethodArr[$this->pay_method] ?? '';
+    }
+
+    /**
+     * 获取开启状态文字
+     *
+     * @return string
+     */
+    public function getOpenStatusTextAttribute()
+    {
+        return static::$openStatusArr[$this->open_status] ?? '';
     }
 
     /**

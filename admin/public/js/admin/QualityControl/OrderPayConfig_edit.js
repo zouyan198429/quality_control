@@ -113,6 +113,13 @@ function ajax_form(){
         return false;
     }
 
+    var open_status = $('input[name=open_status]:checked').val() || '';
+    var judge_seled = judge_validate(1,'开启状态',open_status,true,'custom',/^[12]$/,"");
+    if(judge_seled != ''){
+        layer_alert("请选择开启状态",3,0);
+        //err_alert('<font color="#000000">' + judge_seled + '</font>');
+        return false;
+    }
 
     // 验证通过
     SUBMIT_FORM = false;//标记为已经提交过

@@ -53,7 +53,14 @@
                     <input type="text" class="inp wnormal"  name="sort_num" value="{{ $info['sort_num'] ?? '' }}" placeholder="请输入排序"  onkeyup="isnum(this) " onafterpaste="isnum(this)"  />
                 </td>
             </tr>
-
+            <tr>
+                <th>开启状态<span class="must">*</span></th>
+                <td class="sel_pay_method">
+                    @foreach ($openStatus as $k=>$txt)
+                        <label><input type="radio"  name="open_status"  value="{{ $k }}"  @if(isset($defaultOpenStatus) && $defaultOpenStatus == $k) checked="checked"  @endif />{{ $txt }} </label>
+                    @endforeach
+                </td>
+            </tr>
             <tr>
                 <th> </th>
                 <td><button class="btn btn-l wnormal"  id="submitBtn" >提交</button></td>
@@ -71,6 +78,6 @@
     var SAVE_URL = "{{ url('api/admin/order_pay_config/ajax_save') }}";// ajax保存记录地址
     var LIST_URL = "{{url('admin/order_pay_config')}}";//保存成功后跳转到的地址
 </script>
-<script src="{{ asset('/js/admin/QualityControl/OrderPayConfig_edit.js') }}?2"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/OrderPayConfig_edit.js') }}?3"  type="text/javascript"></script>
 </body>
 </html>

@@ -46,6 +46,7 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
     document.write("            <td><%=item.pay_company_name%><\/td>");
     document.write("            <td><%=item.pay_key%><\/td>");
     document.write("            <td><%=item.pay_method_text%><\/td>");
+    document.write("            <td><%=item.open_status_text%><\/td>");
     document.write("            <td><%=item.remarks%><\/td>");
     document.write("            <td><%=item.created_at%><\/td>");
     document.write("            <td><%=item.updated_at%><\/td>");

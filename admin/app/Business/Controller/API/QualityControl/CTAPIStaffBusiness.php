@@ -854,6 +854,11 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
             if(!isset($return_data['fields_merge'])) $return_data['fields_merge'] = [];
             array_push($return_data['fields_merge'], $fields_merge);
         }
+        if(($return_num & 128) == 128){// 给上一级返回下标名称 user_staff_name => '用户名称'
+            $one_field = ['key' => 'real_name', 'return_type' => 2, 'ubound_name' => 'user_staff_name', 'split' => '、'];// 获得名称
+            if(!isset($return_data['one_field'])) $return_data['one_field'] = [];
+            array_push($return_data['one_field'], $one_field);
+        }
         return $return_data;
     }
 

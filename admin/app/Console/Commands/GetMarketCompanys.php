@@ -236,7 +236,7 @@ class GetMarketCompanys extends Command
                 'admin_username' => $company_contact_mobile,
                 'admin_password' => substr($company_contact_mobile, -6, 6),
                 'is_perfect' => 2,// 是否完善资料1待完善2已完善
-                'issuper' => 1,// 是否超级帐户2否1是
+                'issuper' => 2,// 是否超级帐户2否1是
                 'open_status' => 2,// 审核状态1待审核2审核通过4审核不通过
                 'account_status' => 1,// 状态 1正常 2冻结
                 'mobile' => $company_contact_mobile,

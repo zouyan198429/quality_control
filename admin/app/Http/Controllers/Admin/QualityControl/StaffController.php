@@ -94,8 +94,10 @@ class StaffController extends BasicController
 
             }
             // 拥有者类型1平台2企业4个人
+//            $admin_type = CommonRequest::get($request, 'admin_type');
+//            if(strlen($admin_type) <= 0 ) $admin_type = -1;
             $reDataArr['adminType'] =  Staff::$adminTypeArr;
-            $reDataArr['defaultAdminType'] = -1;// 列表页默认状态
+            $reDataArr['defaultAdminType'] = -1;// $admin_type;// -1;// 列表页默认状态
 
             // 是否完善资料1待完善2已完善
             $reDataArr['isPerfect'] =  Staff::$isPerfectArr;
@@ -152,7 +154,7 @@ class StaffController extends BasicController
             $company_grade = CommonRequest::get($request, 'company_grade');
             if(strlen($company_grade) <= 0 ) $company_grade = -1;
             $reDataArr['defaultCompanyGrade'] = $company_grade;// 列表页默认状态
-            $reDataArr['company_grade'] = $company_grade;
+            // $reDataArr['company_grade'] = $company_grade;
             return view('admin.QualityControl.' . static::$VIEW_NAME . '.select', $reDataArr);
 
         }, $this->errMethod, $reDataArr, $this->errorView);
@@ -328,6 +330,7 @@ class StaffController extends BasicController
                         'open_status' => 2,// 审核状态1待审核2审核通过4审核不通过
                         'account_status' => 1// 状态 1正常 2冻结
                     ];
+                    if(!in_array(static::$ADMIN_TYPE, [2,4])) $addNewData['is_perfect'] = 2;
                     $saveData = array_merge($saveData, $addNewData);
                 }
                 $extParams = [
@@ -421,6 +424,10 @@ class StaffController extends BasicController
             if(static::$ADMIN_TYPE == 4){
                 array_push($handleKeyArr, 'company');
                 array_push($handleKeyConfigArr, 'company_info');
+            }
+            if(in_array(static::$ADMIN_TYPE, [16])){
+                $handleKeyArr = array_merge($handleKeyArr, ['extend']);
+                $handleKeyConfigArr = array_merge($handleKeyConfigArr, ['extend_info']);
             }
 
             $extParams = [

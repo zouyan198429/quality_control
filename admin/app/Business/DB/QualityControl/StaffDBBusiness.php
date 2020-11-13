@@ -142,7 +142,7 @@ class StaffDBBusiness extends BasePublicDBBusiness
             if( isset($saveData['mobile'])){
                 // 修改手机号时---必须要有 admin_type  拥有者类型1平台2老师4学生
                 $admin_type = $saveData['admin_type'] ?? '';
-                if(!is_numeric($admin_type) || !in_array($admin_type, [1,2,4,8])) throws('用户类型参数有误！');
+                if(!is_numeric($admin_type) || !in_array($admin_type, [1,2,4,8,16])) throws('用户类型参数有误！');
             }
 
             if( isset($saveData['mobile']) && static::judgeFieldExist($company_id, $id ,"mobile", $saveData['mobile'], [['admin_type', $saveData['admin_type']]],1)){
@@ -528,6 +528,43 @@ class StaffDBBusiness extends BasePublicDBBusiness
                 ];
                 $searchConditon = [
                     'admin_type' => 2,
+                    'staff_id' => $company_id,
+                ];
+                $mainObj = null;
+                StaffExtendDBBusiness::updateOrCreate($mainObj, $searchConditon, $updateFields );
+            }
+        });
+        return true;
+    }
+
+    /**
+     * 更新企业机构应用数
+     *
+     * @param int  / array $company_ids 企业id  多个时为一维数组或逗号分隔的字符串
+     * @return  mixed 员工人数
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function updateApplyNum($company_ids = 0){
+        // 没有需要处理的
+        if(!Tool::formatOneArrVals($company_ids)) return true;
+        // 更新企业的员工人数
+//        DB::beginTransaction();
+//        try {
+//            DB::commit();
+//        } catch ( \Exception $e) {
+//            DB::rollBack();
+//            throws($e->getMessage());
+//            // throws($e->getMessage());
+//        }
+        CommonDB::doTransactionFun(function() use(&$company_ids){
+
+            foreach($company_ids as $company_id){
+                $count = ApplyDBBusiness::getApplyCount($company_id);
+                $updateFields = [
+                    'apply_num' => $count,
+                ];
+                $searchConditon = [
+                    // 'admin_type' => 2,
                     'staff_id' => $company_id,
                 ];
                 $mainObj = null;

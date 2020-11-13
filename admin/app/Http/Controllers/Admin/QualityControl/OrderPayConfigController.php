@@ -171,6 +171,7 @@ class OrderPayConfigController extends BasicController
                 $pay_company_name = CommonRequest::get($request, 'pay_company_name');
                 $pay_key = CommonRequest::get($request, 'pay_key');
                 $sort_num = CommonRequest::getInt($request, 'sort_num');
+                $open_status = CommonRequest::getInt($request, 'open_status');
                 $remarks = CommonRequest::get($request, 'remarks');
                 // 标签
                 $pay_method = CommonRequest::get($request, 'pay_method');
@@ -192,6 +193,7 @@ class OrderPayConfigController extends BasicController
                     'pay_method' => $sel_pay_method,
                     'remarks' => replace_enter_char($remarks, 1),
                     'sort_num' => $sort_num,
+                    'open_status' => $open_status,
                 ];
 
 //        if($id <= 0) {// 新加;要加入的特别字段
@@ -432,6 +434,10 @@ class OrderPayConfigController extends BasicController
         // 收款开通类型(1现金、2微信支付、4支付宝)
         $reDataArr['payMethod'] =  OrderPayConfig::$payMethodArr;
         $reDataArr['defaultPayMethod'] = -1;// 列表页默认状态
+        // 开启状态(1开启2关闭)
+        $reDataArr['openStatus'] =  OrderPayConfig::$openStatusArr;
+        $reDataArr['defaultOpenStatus'] = -1;// 列表页默认状态
+
 
     }
 
@@ -477,6 +483,10 @@ class OrderPayConfigController extends BasicController
         $reDataArr['payMethod'] =  OrderPayConfig::$payMethodArr;
         $reDataArr['defaultPayMethod'] = $info['pay_method'] ?? -1;// 列表页默认状态
         $reDataArr['payMethodDisable'] = OrderPayConfig::$payMethodDisable;// 不可用的--禁用
+
+        // 开启状态(1开启2关闭)
+        $reDataArr['openStatus'] =  OrderPayConfig::$openStatusArr;
+        $reDataArr['defaultOpenStatus'] = $info['open_status'] ?? -1;// 列表页默认状态
 
         $reDataArr['info'] = $info;
         $reDataArr['operate'] = $operate;

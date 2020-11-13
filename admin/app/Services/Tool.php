@@ -2905,6 +2905,22 @@ class Tool
     }
 
     /**
+     * 获得对象的类名称
+     *  全名: App\Models\QualityControl\CertificateSchedule
+     *  最后的名称: CertificateSchedule
+     * @param  string|object  $class 对象
+     * @param  int  $nameType 返回的类型 1：返回全名  2 只返回最后的名称
+     * @return string
+     */
+    public static function getClassBaseName($class, $nameType = 1)
+    {
+        // App\Models\QualityControl\CertificateSchedule
+        $class = is_object($class) ? get_class($class) : $class;
+        if(($nameType & 1) == 1) return $class;
+        return basename(str_replace('\\', '/', $class)); // CertificateSchedule
+    }
+
+    /**
      * 获得属性
      *
      * @param object $modelObj 对象

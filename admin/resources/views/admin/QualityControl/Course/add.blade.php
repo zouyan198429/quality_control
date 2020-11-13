@@ -71,6 +71,14 @@
                 </td>
             </tr>
             <tr>
+                <th>收款帐号<span class="must">*</span></th>
+                <td>
+                    @foreach ($pay_config_kv as $k=>$txt)
+                        <label><input type="radio"  name="pay_config_id"  value="{{ $k }}"  @if(isset($defaultPayConfig) && $defaultPayConfig == $k) checked="checked"  @endif />{{ $txt }} </label>
+                    @endforeach
+                </td>
+            </tr>
+            <tr>
                 <th>收费标准(会员)<span class="must">*</span></th>
                 <td>
                     <input type="text" class="inp wnormal"  name="price_member" value="{{ $info['price_member'] ?? '' }}" placeholder="请输入收费标准(会员)"  onkeyup="numxs(this) " onafterpaste="numxs(this)" />

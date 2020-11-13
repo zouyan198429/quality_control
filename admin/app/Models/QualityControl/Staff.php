@@ -23,7 +23,7 @@ class Staff extends BasePublicModel
 
 //    public static $cacheSimple = 'U';// 表名简写,为空，则使用表名
 
-    public static $cacheVersion = 'v1';// 内容随意改[可0{空默认为0}开始自增]- 如果运行过程中，有直接对表记录进行修改，增加或修改字段名，则修改此值，使表记录的相关缓存过期。
+    public static $cacheVersion = 'v3';// 内容随意改[可0{空默认为0}开始自增]- 如果运行过程中，有直接对表记录进行修改，增加或修改字段名，则修改此值，使表记录的相关缓存过期。
     // $cacheExcludeFields 为空：则缓存所有字段值；排除字段可能是大小很大的字段，不适宜进行缓存
     public static $cacheExcludeFields = [];// 表字段中排除字段; 有值：要小心，如果想获取的字段有在排除字段中的，则不能使用缓存
 
@@ -64,6 +64,10 @@ class Staff extends BasePublicModel
     // 4：有操作员工历史id 字段 operate_staff_id_history
     // 8：有操作日期字段 created_at timestamp
     // 16：有更新日期字段 updated_at  timestamp
+    // 32: 有历史表 ***_history; 且 此表实时记录主表数据 （实时数据[不会删除]  +  历史修改过程中的数据）--全表记录【所有记录及历史】--可追溯
+    // 64: 有同步数据表 ***_doing;--业务进行表【轻量级表】，当业务进行中时，可直接操作进行表【提高数据操作的率】，
+    //                  一旦业务完成，则删除进行表中的数据，原表作为原始数据使用
+    //                  -- TODO 直接操作业务写到操作操作的底层 CommonDB 【存在就同步更新，不存在：业务已结束或不用进行表了】
     public static $ownProperty = (1 | 2 | 4 | 8 | 16);
 
     /**
@@ -104,6 +108,7 @@ class Staff extends BasePublicModel
         '2' => '企业',
         '4' => '个人',
         '8' => '数据查看人员',
+        '16' => '第三方服务商',
     ];
 
     // 是否完善资料1待完善2已完善
@@ -470,6 +475,14 @@ class Staff extends BasePublicModel
     public function companyCertificates()
     {
         return $this->hasMany('App\Models\QualityControl\CompanyCertificate', 'company_id', 'id');
+    }
+
+    /**
+     * 获取企业应用管理-二维
+     */
+    public function apply()
+    {
+        return $this->hasMany('App\Models\QualityControl\Apply', 'staff_id', 'id');
     }
 
     /**

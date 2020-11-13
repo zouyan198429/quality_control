@@ -9,7 +9,7 @@ return  [
         ],
         'admin_type' => [
             "field_name"=>'用户类型',
-            "message" => '{fieldName}{validValueIs}（1平台2老师4学生）'
+            "message" => '{fieldName}{validValueIs}（1平台2企业4个人8专家16第三方服务商）'
         ],
         'admin_username' => [
             "field_name"=>'用户名',

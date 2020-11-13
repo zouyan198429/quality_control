@@ -61,6 +61,7 @@ class AppServiceProvider extends ServiceProvider
             'company_punish'                 => 'App\Models\QualityControl\CompanyPunish',           // 32机构处罚
             'platform_notices'                 => 'App\Models\QualityControl\PlatformNotices',           // 64通知公告
             'platform_down_files'                 => 'App\Models\QualityControl\PlatformDownFiles',           // 128表格下载
+            'apply'                 => 'App\Models\QualityControl\Apply',           // 256 应用图片
         ]);
 
         DB::listen(function ($query) {

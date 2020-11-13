@@ -98,6 +98,7 @@
   </div>
 
 </div>
+<a href="javascript:void(0);" class="btn btn-success  btn-xs  on" id="testBTN">测试</a>
 
   <script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>
   <script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.all.js')}}"></script>
@@ -147,3 +148,51 @@
 @endcomponent
 </body>
 </html>
+
+<script type="text/ecmascript" src="{{asset('static/js/sha1.js')}}"></script>
+<script type="text/ecmascript" src="{{asset('static/js/md5/md5.js')}}"></script>
+<script type="text/ecmascript" src="{{asset('static/js/sign.js')}}"></script>
+<script type="text/javascript">
+
+    var TEST_URL = "{{ url('api/admin/testAPI') }}";// 测试地址
+    $(function(){
+        $(document).on("click","#testBTN",function(){
+            var obj = $(this);
+            // 测试
+            let dataParams = {'name' : '邹燕', 'age' : 25, 'sex': 1};
+            // $sign = getSignByObj(dataParams, '123456789', '111222333', 1);
+            // console.log('~~~~~~~~$sign~~~~~~~~~~~~~~~~', $sign);
+            console.log('~~~~~~~~dataParams~~~~~~~~~~~~~~~~', dataParams);
+            signTest(dataParams);
+            console.log('~~~~~~~~API后~~~~~~~~~~~~~~~~', dataParams);
+            return false;
+        });
+    });
+
+    // 签名请求测试
+    function signTest(data){
+        // var data = {'id':id};
+        console.log(TEST_URL);
+        console.log(data);
+        data['sign'] = getSignByObj(data, '123456789', '111222333', 1);
+        var layer_index = layer.load();
+        $.ajax({
+            'type' : 'POST',
+            'url' : TEST_URL,
+            'headers':get_ajax_headers({}, ADMIN_AJAX_TYPE_NUM),
+            'data' : data,
+            'dataType' : 'json',
+            'success' : function(ret){
+                console.log(ret);
+                if(!ret.apistatus){//失败
+                    //alert('失败');
+                    err_alert(ret.errorMsg);
+                }else{//成功
+                    // reset_list_self(true,false,true, 2);
+                    layer_alert('操作成功',1,0)
+                }
+                layer.close(layer_index)//手动关闭
+            }
+        })
+    }
+</script>

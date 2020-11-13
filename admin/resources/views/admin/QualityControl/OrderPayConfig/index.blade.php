@@ -25,12 +25,19 @@
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
           收款开通类型:
-        <select class="wmini" name="province_id">
-          <option value="">全部</option>
-          @foreach ($payMethod as $k=>$txt)
-            <option value="{{ $k }}"  @if(isset($defaultPayMethod) && $defaultPayMethod == $k) selected @endif >{{ $txt }}</option>
-          @endforeach
-        </select>
+          <select class="wmini" name="pay_method">
+              <option value="">全部</option>
+              @foreach ($payMethod as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultPayMethod) && $defaultPayMethod == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
+          开启状态:
+          <select class="wmini" name="open_status">
+              <option value="">全部</option>
+              @foreach ($openStatus as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultOpenStatus) && $defaultOpenStatus == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
         <select style="width:80px; height:28px;" name="field">
           <option value="pay_company_name">收款企业名称</option>
             <option value="pay_key">收款关键字</option>
@@ -60,6 +67,7 @@
         <col>
         <col>
         <col>
+        <col>
         <col width="100">
         <col width="140">
     </colgroup>
@@ -75,6 +83,7 @@
       <th>收款企业名称</th>
       <th>收款关键字</th>
         <th>收款开通类型</th>
+        <th>开启状态</th>
         <th>备注</th>
       <th>创建时间</th>
       <th>更新时间</th>
@@ -126,6 +135,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/OrderPayConfig.js') }}?2"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/OrderPayConfig.js') }}?3"  type="text/javascript"></script>
 </body>
 </html>

@@ -1382,6 +1382,20 @@ class CommonDB
         return $result;
     }
 
+
+    public static function aaa($modelObj){
+        $objName = Tool::getClassBaseName($modelObj,2);
+        throws($objName);
+        // 获得自有属性
+        $ownProperty = Tool::getAttr($modelObj, 'ownProperty', 1);
+        // 获得同步表
+        $syncTables = Tool::getAttr($modelObj, 'syncTables', 1);
+        if(empty($syncTables)) $syncTables = [['doing' => 1]];
+
+
+
+    }
+
     /**
      * 批量修改设置-- 根据主键
      *

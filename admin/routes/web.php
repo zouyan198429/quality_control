@@ -272,6 +272,13 @@ Route::get('admin/expert/add/{id}', 'Admin\QualityControl\ExpertController@add')
 Route::get('admin/expert/export', 'Admin\QualityControl\ExpertController@export');// 导出
 Route::get('admin/expert/import_template', 'Admin\QualityControl\ExpertController@import_template');// 导入模版
 
+// 第三方服务商
+Route::get('admin/third_service', 'Admin\QualityControl\ThirdServiceController@index');// 列表
+Route::get('admin/third_service/add/{id}', 'Admin\QualityControl\ThirdServiceController@add');// 添加
+Route::get('admin/third_service/select', 'Admin\QualityControl\ThirdServiceController@select');// 选择-弹窗
+Route::get('admin/third_service/export', 'Admin\QualityControl\ThirdServiceController@export');// 导出
+Route::get('admin/third_service/import_template', 'Admin\QualityControl\ThirdServiceController@import_template');// 导入模版
+
 // 企业帐号管理
 Route::get('admin/company', 'Admin\QualityControl\CompanyController@index');// 列表
 Route::get('admin/company/add/{id}', 'Admin\QualityControl\CompanyController@add');// 添加
@@ -483,6 +490,14 @@ Route::get('admin/company_new_schedule/import_template', 'Admin\QualityControl\C
 Route::get('admin/company_new_schedule/list', 'Admin\QualityControl\CompanyNewScheduleController@list');// 列表--按企业id降序
 
 Route::get('admin/company_new_schedule/down_moban', 'Admin\QualityControl\CompanyNewScheduleController@down_moban');// 下载文件模板
+
+
+// 应用管理
+Route::get('admin/apply', 'Admin\QualityControl\ApplyController@index');// 列表
+Route::get('admin/apply/add/{id}', 'Admin\QualityControl\ApplyController@add');// 添加
+// Route::get('admin/apply/select', 'Admin\QualityControl\ApplyController@select');// 选择-弹窗
+Route::get('admin/apply/export', 'Admin\QualityControl\ApplyController@export');// 导出
+Route::get('admin/apply/import_template', 'Admin\QualityControl\ApplyController@import_template');// 导入模版
 
 // 省局企业相关的
 

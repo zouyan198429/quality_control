@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\QualityControl;
 
 use App\Business\Controller\API\QualityControl\CTAPICourseBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIOrderPayConfigBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIResourceBusiness;
 use App\Http\Controllers\WorksController;
 use App\Models\QualityControl\Course;
@@ -523,6 +524,10 @@ class CourseController extends BasicController
         // 状态(1正常(报名中)  2下架)
         $reDataArr['statusOnline'] =  Course::$statusOnlineArr;
         $reDataArr['defaultStatusOnline'] = $info['status_online'] ?? -1;// 列表页默认状态
+
+        // 获得收款帐号KV值
+        $reDataArr['pay_config_kv'] = CTAPIOrderPayConfigBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'pay_company_name']);
+        $reDataArr['defaultPayConfig'] = $info['pay_config_id'] ?? -1;// 默认
 
         $reDataArr['info'] = $info;
         $reDataArr['operate'] = $operate;
