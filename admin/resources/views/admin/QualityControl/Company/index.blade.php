@@ -154,18 +154,17 @@
   </div>
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
-        <col width="50">
-        <col width="60">
+        <col width="50"> 
         <col width="60">
         <col>
-        <col> 
+        <col width="115"> 
         <col width="115">
         <col width="105"> 
         <col width="80">
         <col width="75">
         <col width="50">
         <col width="90">
-        <col width="300">
+        <col width="400">
     </colgroup>
     <thead>
     <tr>
@@ -176,7 +175,7 @@
         </label>
       </th>
       <th>ID</th>
-      <th>城市</th>
+      <!-- <th>城市</th>-->
         <th>单位名称</th>
         <th>行业<hr/>会员类型</th>
         <!-- <th>员工</th> -->
@@ -251,6 +250,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}"></script>
-  <script src="{{ asset('js/admin/QualityControl/Company.js') }}?244"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/Company.js') }}?284"  type="text/javascript"></script>
 </body>
 </html>
