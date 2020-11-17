@@ -109,7 +109,10 @@
               </a>
                 <dl class="layui-nav-child">
                     <dd>
-                        <a lay-href="{{ url('admin/company') }}?company_grade=1">非会员单位</a>
+                        <a lay-href="{{ url('admin/company') }}">所有单位</a>
+                    </dd>
+                    <dd>
+                        <a lay-href="{{ url('admin/company') }}?company_grade=1&open_status=2">非会员单位</a>
                     </dd>
                     <dd>
                         <a lay-href="{{ url('admin/company') }}?company_grade=2">会员单位</a>

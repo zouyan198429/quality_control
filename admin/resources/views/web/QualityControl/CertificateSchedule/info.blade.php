@@ -162,6 +162,7 @@
 
 										<table border="" cellspacing="" cellpadding="" class="table wb100">
 											<colgroup>
+												  <col width="50">
 												  <col width="120">
 												  <col width="120">
 												  <col width="120">
@@ -174,6 +175,7 @@
 											</colgroup>
 											<thead>
 												<tr align="center">
+													<th>ID</th>
 													<th>产品类别</th>
 													<th>检测产品</th>
 													<th>检测参数</th>
@@ -186,10 +188,12 @@
 											</thead>
 											<tbody id="data_list">
 							                <?php
+											$i = 1;
 							                $certificate_list = $info['certificate_list'] ?? [];
 							                ?>
 							                @foreach ($certificate_list as $k => $v)
 												<tr>
+													<td  align="center" class="ID">{{ $i ?? '' }}</td>
 													<td  align="center" class="category_name">{{ $v['category_name'] ?? '' }}</td>
 													<td  align="center" class="project_name">{{ $v['project_name'] ?? '' }}</td>
 													<td class="param_name">{{ $v['param_name'] ?? '' }}</td>
@@ -199,6 +203,9 @@
 													<td class="addr">{{ $v['addr'] ?? '' }}</td>
 													<td class="ratify_date">{{ $v['ratify_date'] ?? '' }}</td>
 												</tr>
+												<?php
+												$i++;
+							                ?>
 							                @endforeach
 											</tbody>
 										</table>
