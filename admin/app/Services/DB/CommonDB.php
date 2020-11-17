@@ -1370,7 +1370,12 @@ class CommonDB
             $modelObj->{$field} = $val;
         }
         // $result = $requestData->save();
+
         $result = $modelObj->save();
+
+//        foreach(static::getDoingObj($modelObj) as $v){
+//            static::saveById($v['obj'], $dataParams, $id);
+//        }
 
         // 开通缓存，则更新缓存时间信息
         if($cachePower > 0){
@@ -1380,20 +1385,6 @@ class CommonDB
         }
 
         return $result;
-    }
-
-
-    public static function aaa($modelObj){
-        $objName = Tool::getClassBaseName($modelObj,2);
-        throws($objName);
-        // 获得自有属性
-        $ownProperty = Tool::getAttr($modelObj, 'ownProperty', 1);
-        // 获得同步表
-        $syncTables = Tool::getAttr($modelObj, 'syncTables', 1);
-        if(empty($syncTables)) $syncTables = [['doing' => 1]];
-
-
-
     }
 
     /**
@@ -3173,4 +3164,85 @@ class CommonDB
         if(strlen($database_model_dir_name) > 0 ) $keyRedisPre .= $database_model_dir_name . ':';
         return $keyRedisPre;
     }
+
+    // *********同步数据表***相关操作******开始****************************************
+
+    /**
+     * 获得同步表相关的信息
+     * @param $modelObj
+     * @return array
+     *   ['obj' => '表对象', 'tModel' => '表模型的名称', 'tBack' => '加的表后缀', 'tPower' => '权限0/1:增、改  ; 2：删 （1：可做业务同步 ；1 ｜ 2 ： 操作全同步表【含删除】）']
+     */
+    public static function getDoingObj($modelObj){
+        $return = [];
+        $objName = Tool::getClassBaseName($modelObj,2);
+        // throws($objName);
+        // 获得自有属性
+        $ownProperty = Tool::getAttr($modelObj, 'ownProperty', 1);
+        // 获得同步表
+        $syncTables = Tool::getAttr($modelObj, 'syncTables', 1);
+        if(empty($syncTables)) $syncTables = ['doing' => 1];
+
+        // 如果有历史且同步表
+//        if(($ownProperty & 32) == 32){
+//            $modelAllObj = null;
+//            static::getObjByModelName($objName . ucfirst('history'), $modelAllObj);
+        //  CommonDB::getHistory($mainObj, $mId, $historyObj, $historyTable, $historySearch, $ignoreFields);
+//        }
+        if(($ownProperty & 64) == 64){
+            foreach($syncTables as $t_back => $t_power){
+                $modelDoingObj = null;
+                static::getObjByModelName($objName . ucfirst($t_back), $modelDoingObj);
+                array_push($return, ['obj' => $modelDoingObj, 'tModel' => $objName . ucfirst($t_back), 'tBack' => $t_back, 'tPower' => $t_power]);
+            }
+        }
+        return $return;
+    }
+
+    /**
+     * 对同步的表进行与主表相同的操作
+     * @param int $mainId 操作的主表记录id
+     * @param array $doingArr  getDoingObj($modelObj) 方法返回的同步表的对象相关的信息
+     * @param string $fun 需要执行的方法名
+     * @param array $params  执行方法需要传递的参数数组 ，可写参数变量
+     *                {OBJ} ： 会转换为相关同步表的 对象
+     *                {TMODEL} ： 会转换为相关同步表的 表模型的名称
+     *                {TBACK} ： 会转换为相关同步表的 加的表后缀
+     *                {TPOWER} ： 会转换为相关同步表的 权限
+     * @param int $power 需要执行的方法名 需要的权限标识  权限0/1:增、改  ; 2：删
+     * @return bool
+     */
+    public static function doDoingSync($mainId, $doingArr = [], $fun = '', $params = [], $power = 1 | 2){
+        if(empty($doingArr) || empty($fun)) return true;
+        static::doTransactionFun(function() use(&$doingArr, &$fun, &$params, &$power, &$mainId) {
+            foreach ($doingArr as $v) {
+                $temParams = $params;
+                foreach ($temParams as &$t_v) {
+                    if ($t_v == '{OBJ}') {
+                        $t_v = $v['obj'];
+                    }
+                    if ($t_v == '{TMODEL}') {
+                        $t_v = $v['tModel'];
+                    }
+                    if ($t_v == '{TBACK}') {
+                        $t_v = $v['tBack'];
+                    }
+                    if ($t_v == '{TPOWER}') {
+                        $t_v = $v['tPower'];
+                    }
+                }
+                // 有可能记录已经不存在了，怎么处理
+                $modelObjCopy = Tool::copyObject($v['obj']);
+                $infoObj = static::getInfoById($modelObjCopy, $mainId, [], '', false);
+                // 有相同的权限 且  同步表记录存在
+                if(($v['tPower'] & $power) > 0 && !empty($infoObj)){
+                    static::{$fun}(...$temParams);
+                    // static::saveById($v['obj'], $dataParams, $id);
+                }
+            }
+        });
+    }
+
+    // *********同步数据表***相关操作******结束****************************************
+
 }

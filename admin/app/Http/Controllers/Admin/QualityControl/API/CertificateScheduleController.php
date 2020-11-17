@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\QualityControl\API;
 
+use App\Business\Controller\API\QualityControl\CTAPIApplyBusiness;
 use App\Business\Controller\API\QualityControl\CTAPICertificateScheduleBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIResourceBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
@@ -9,6 +10,7 @@ use App\Http\Controllers\WorksController;
 use App\Services\Request\CommonRequest;
 use App\Services\Tool;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CertificateScheduleController extends BasicController
 {
@@ -21,23 +23,23 @@ class CertificateScheduleController extends BasicController
      * @return mixed
      * @author zouyan(305463219@qq.com)
      */
-//    public function index(Request $request)
-//    {
-////        $reDataArr = [];// 可以传给视图的全局变量数组
-////        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request){
-////            // 正常流程的代码
-////
-////            $this->InitParams($request);
-////            // $reDataArr = $this->reDataArr;
-////            $reDataArr = array_merge($reDataArr, $this->reDataArr);
-////            return view('admin.QualityControl.CertificateSchedule.index', $reDataArr);
-////
-////        }, $this->errMethod, $reDataArr, $this->errorView);
-//        return $this->exeDoPublicFun($request, 1, 1, 'admin.QualityControl.CertificateSchedule.index', false
-//                , 'doListPage', [], function (&$reDataArr) use ($request){
+    public function index(Request $request)
+    {
+//        $reDataArr = [];// 可以传给视图的全局变量数组
+//        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request){
+//            // 正常流程的代码
 //
-//        });
-//    }
+//            $this->InitParams($request);
+//            // $reDataArr = $this->reDataArr;
+//            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+//            return view('admin.QualityControl.API.CertificateSchedule.index', $reDataArr);
+//
+//        }, $this->errMethod, $reDataArr, $this->errorView);
+        return $this->exeDoPublicFun($request, 1, 1, 'admin.QualityControl.API.CertificateSchedule.index', false
+                , 'doListPage', [], function (&$reDataArr) use ($request){
+
+        });
+    }
 
     /**
      * 同事选择-弹窗
@@ -58,10 +60,10 @@ class CertificateScheduleController extends BasicController
 ////            $reDataArr['province_kv'] = CTAPICertificateScheduleBusiness::getCityByPid($request, $this,  0);
 ////            $reDataArr['province_kv'] = CTAPICertificateScheduleBusiness::getChildListKeyVal($request, $this, 0, 1 + 0, 0);
 ////            $reDataArr['province_id'] = 0;
-////            return view('admin.QualityControl.CertificateSchedule.select', $reDataArr);
+////            return view('admin.QualityControl.API.CertificateSchedule.select', $reDataArr);
 ////
 ////        }, $this->errMethod, $reDataArr, $this->errorView);
-//        return $this->exeDoPublicFun($request, 2048, 1, 'admin.QualityControl.CertificateSchedule.select', false
+//        return $this->exeDoPublicFun($request, 2048, 1, 'admin.QualityControl.API.CertificateSchedule.select', false
 //            , 'doListPage', [], function (&$reDataArr) use ($request){
 //
 //            });
@@ -75,37 +77,37 @@ class CertificateScheduleController extends BasicController
      * @return mixed
      * @author zouyan(305463219@qq.com)
      */
-//    public function add(Request $request,$id = 0)
-//    {
-////        $reDataArr = [];// 可以传给视图的全局变量数组
-////        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request, &$id){
-////            // 正常流程的代码
-////
-////            $this->InitParams($request);
-////            // $reDataArr = $this->reDataArr;
-////            $reDataArr = array_merge($reDataArr, $this->reDataArr);
-////            $info = [
-////                'id'=>$id,
-////                //   'department_id' => 0,
-////            ];
-////            $operate = "添加";
-////
-////            if ($id > 0) { // 获得详情数据
-////                $operate = "修改";
-////                $info = CTAPICertificateScheduleBusiness::getInfoData($request, $this, $id, [], '', []);
-////            }
-////            // $reDataArr = array_merge($reDataArr, $resultDatas);
-////            $reDataArr['info'] = $info;
-////            $reDataArr['operate'] = $operate;
-////            return view('admin.QualityControl.CertificateSchedule.add', $reDataArr);
-////
-////        }, $this->errMethod, $reDataArr, $this->errorView);
-//        $pageNum = ($id > 0) ? 64 : 16;
-//        return $this->exeDoPublicFun($request, $pageNum, 1,'admin.QualityControl.CertificateSchedule.add', false
-//            , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
+    public function add(Request $request,$id = 0)
+    {
+//        $reDataArr = [];// 可以传给视图的全局变量数组
+//        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request, &$id){
+//            // 正常流程的代码
 //
-//            });
-//    }
+//            $this->InitParams($request);
+//            // $reDataArr = $this->reDataArr;
+//            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+//            $info = [
+//                'id'=>$id,
+//                //   'department_id' => 0,
+//            ];
+//            $operate = "添加";
+//
+//            if ($id > 0) { // 获得详情数据
+//                $operate = "修改";
+//                $info = CTAPICertificateScheduleBusiness::getInfoData($request, $this, $id, [], '', []);
+//            }
+//            // $reDataArr = array_merge($reDataArr, $resultDatas);
+//            $reDataArr['info'] = $info;
+//            $reDataArr['operate'] = $operate;
+//            return view('admin.QualityControl.API.CertificateSchedule.add', $reDataArr);
+//
+//        }, $this->errMethod, $reDataArr, $this->errorView);
+        $pageNum = ($id > 0) ? 64 : 16;
+        return $this->exeDoPublicFun($request, $pageNum, 1,'admin.QualityControl.API.CertificateSchedule.add', true
+            , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
+
+            });
+    }
 
     /**
      * 添加--导入
@@ -115,22 +117,86 @@ class CertificateScheduleController extends BasicController
      * @return mixed
      * @author zouyan(305463219@qq.com)
      */
-//    public function add_excel(Request $request,$id = 0)
-//    {
-//        $pageNum = 0;
-//        return $this->exeDoPublicFun($request, $pageNum, 1,'admin.QualityControl.CertificateSchedule.add_excel', false
-//            , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
-//
-//            });
-//    }
+    public function add_excel(Request $request,$id = 0)
+    {
+        $pageNum = 0;
+        return $this->exeDoPublicFun($request, $pageNum, 1,'admin.QualityControl.API.CertificateSchedule.add_excel', true
+            , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
+
+            });
+    }
+
+    /**
+     * 能力范围及能力附表-新加
+     *
+     * @param Request $request
+     * @param int $id
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function add_bath_api(Request $request,$id = 0)
+    {
+        $pageNum = 0;
+        return $this->exeDoPublicFun($request, $pageNum, 1,'admin.QualityControl.API.CertificateSchedule.add_bath_api', false
+            , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
+
+            });
+    }
+    /**
+     * 企业文件信息
+     *
+     * @param Request $request
+     * @param int $id
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function add_files_api(Request $request,$id = 0)
+    {
+        $pageNum = 0;
+        return $this->exeDoPublicFun($request, $pageNum, 1,'admin.QualityControl.API.CertificateSchedule.add_files_api', false
+            , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
+
+            });
+    }
+    /**
+     * 能力范围删除或新加
+     *
+     * @param Request $request
+     * @param int $id
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function add_bath_modify_api(Request $request,$id = 0)
+    {
+        $pageNum = 0;
+        return $this->exeDoPublicFun($request, $pageNum, 1,'admin.QualityControl.API.CertificateSchedule.add_bath_modify_api', false
+            , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
+
+            });
+    }
+    /**
+     * 注册/修改企业信息
+     *
+     * @param Request $request
+     * @param int $id
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function add_modify_api(Request $request,$id = 0)
+    {
+        $pageNum = 0;
+        return $this->exeDoPublicFun($request, $pageNum, 1,'admin.QualityControl.API.CertificateSchedule.add_modify_api', false
+            , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
+            });
+    }
 
     /**
      * @OA\Get(
-     *     path="/api/admin/certificate_schedule/ajax_info",
+     *     path="/api/admin/API/certificate_schedule/ajax_info",
      *     tags={"大后台-系统设置-证书能力范围"},
      *     summary="证书能力范围--详情",
      *     description="根据单个id,查询详情记录......",
-     *     operationId="adminQualityControlCertificateScheduleAjax_info",
+     *     operationId="adminQualityControlAPICertificateScheduleAjax_info",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
      *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_certificate_schedule_id_required"),
@@ -158,18 +224,18 @@ class CertificateScheduleController extends BasicController
 
         $id = CommonRequest::getInt($request, 'id');
         if(!is_numeric($id) || $id <= 0) return ajaxDataArr(0, null, '参数[id]有误！');
-        return $this->exeDoPublicFun($request, 128, 2,'', false, 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
+        return $this->exeDoPublicFun($request, 128, 2,'', true, 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
 
         });
     }
 
     /**
      * @OA\Post(
-     *     path="/api/admin/certificate_schedule/ajax_save",
+     *     path="/api/admin/API/certificate_schedule/ajax_save",
      *     tags={"大后台-系统设置-证书能力范围"},
      *     summary="证书能力范围--新加/修改",
      *     description="根据单个id,新加/修改记录(id>0:修改；id=0:新加)......",
-     *     operationId="adminQualityControlCertificateScheduleAjax_save",
+     *     operationId="adminQualityControlAPICertificateScheduleAjax_save",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
      *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_certificate_schedule_id_required"),
@@ -194,7 +260,7 @@ class CertificateScheduleController extends BasicController
 
         $id = CommonRequest::getInt($request, 'id');
         $pageNum = ($id > 0) ? 256 : 32;
-        return $this->exeDoPublicFun($request, $pageNum, 4,'', false
+        return $this->exeDoPublicFun($request, $pageNum, 4,'', true
             , '', [], function (&$reDataArr) use ($request){
                 $id = CommonRequest::getInt($request, 'id');
                 // CommonRequest::judgeEmptyParams($request, 'id', $id);
@@ -261,7 +327,7 @@ class CertificateScheduleController extends BasicController
 
         $id = CommonRequest::getInt($request, 'id');
         $pageNum = 0;
-        return $this->exeDoPublicFun($request, $pageNum, 4,'', false
+        return $this->exeDoPublicFun($request, $pageNum, 4,'', true
             , '', [], function (&$reDataArr) use ($request){
 
                 $id = CommonRequest::getInt($request, 'id');
@@ -328,12 +394,99 @@ class CertificateScheduleController extends BasicController
     }
 
     /**
+     * ajax保存数据--批量保存
+     *
+     * @param int $id
+     * @return Response
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_bath_save(Request $request)
+    {
+//        $this->InitParams($request);
+
+        $id = CommonRequest::getInt($request, 'id');
+        $pageNum = 0;
+        return $this->exeDoPublicFun($request, $pageNum, 4,'', true
+            , '', [], function (&$reDataArr) use ($request){
+
+                $staff_id = CTAPICertificateScheduleBusiness::bathSaveRequest($request, $this, 1);
+                return ajaxDataArr(1, ['company_id' => $staff_id], '');
+
+            });
+    }
+
+    /**
+     * ajax保存数据--能力范围删除或新加保存
+     *
+     * @param int $id
+     * @return Response
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_bath_modify(Request $request)
+    {
+//        $this->InitParams($request);
+
+        $id = CommonRequest::getInt($request, 'id');
+        $pageNum = 0;
+        return $this->exeDoPublicFun($request, $pageNum, 4,'', true
+            , '', [], function (&$reDataArr) use ($request){
+
+                $staff_id = CTAPICertificateScheduleBusiness::bathModifyRequest($request, $this, 1);
+                return ajaxDataArr(1, ['company_id' => $staff_id], '');
+
+            });
+    }
+
+    /**
+     * ajax保存数据--注册/修改企业信息接口保存
+     *
+     * @param int $id
+     * @return Response
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_company_save(Request $request)
+    {
+//        $this->InitParams($request);
+
+        $id = CommonRequest::getInt($request, 'id');
+        $pageNum = 0;
+        return $this->exeDoPublicFun($request, $pageNum, 4,'', true
+            , '', [], function (&$reDataArr) use ($request){
+
+                $staff_id = CTAPICertificateScheduleBusiness::companySaveRequest($request, $this, 1);
+                return ajaxDataArr(1, ['company_id' => $staff_id], '');
+
+            });
+    }
+
+    /**
+     * ajax保存数据--远程文件数据接口
+     *
+     * @param int $id
+     * @return Response
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_files_save(Request $request)
+    {
+//        $this->InitParams($request);
+
+        $id = CommonRequest::getInt($request, 'id');
+        $pageNum = 0;
+        return $this->exeDoPublicFun($request, $pageNum, 4,'', true
+            , '', [], function (&$reDataArr) use ($request){
+                    $staff_id = CTAPICertificateScheduleBusiness::filesSaveRequest($request, $this, 1);
+                    return ajaxDataArr(1, ['company_id' => $staff_id], '');
+            });
+
+    }
+
+    /**
      * @OA\Get(
-     *     path="/api/admin/certificate_schedule/ajax_alist",
+     *     path="/api/admin/API/certificate_schedule/ajax_alist",
      *     tags={"大后台-系统设置-证书能力范围"},
      *     summary="证书能力范围--列表",
      *     description="证书能力范围--列表......",
-     *     operationId="adminQualityControlCertificateScheduleAjax_alist",
+     *     operationId="adminQualityControlAPICertificateScheduleAjax_alist",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
      *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_certificate_schedule_id_optional"),
@@ -394,19 +547,19 @@ class CertificateScheduleController extends BasicController
      * @return mixed
      * @author zouyan(305463219@qq.com)
      */
-//    public function export(Request $request){
-////        $this->InitParams($request);
-////        CTAPICertificateScheduleBusiness::getList($request, $this, 1 + 0);
-//        return $this->exeDoPublicFun($request, 4096, 8,'', false, '', [], function (&$reDataArr) use ($request){
-//
-//            $handleKeyConfigArr = ['company_info','certificate_info'];
-//            $extParams = [
-//                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-//                'relationFormatConfigs'=> CTAPICertificateScheduleBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
-//            ];
-//            return  CTAPICertificateScheduleBusiness::getList($request, $this, 2 + 4, [], [], $extParams);
-//        });
-//    }
+    public function export(Request $request){
+//        $this->InitParams($request);
+//        CTAPICertificateScheduleBusiness::getList($request, $this, 1 + 0);
+        return $this->exeDoPublicFun($request, 4096, 8,'', true, '', [], function (&$reDataArr) use ($request){
+
+            $handleKeyConfigArr = ['company_info','certificate_info'];
+            $extParams = [
+                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                'relationFormatConfigs'=> CTAPICertificateScheduleBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
+            ];
+            return  CTAPICertificateScheduleBusiness::getList($request, $this, 2 + 4, [], [], $extParams);
+        });
+    }
 
 
     /**
@@ -416,22 +569,22 @@ class CertificateScheduleController extends BasicController
      * @return mixed
      * @author zouyan(305463219@qq.com)
      */
-//    public function import_template(Request $request){
-////        $this->InitParams($request);
-////        CTAPICertificateScheduleBusiness::importTemplate($request, $this);
-//        return $this->exeDoPublicFun($request, 16384, 8,'', false, '', [], function (&$reDataArr) use ($request){
-//            CTAPICertificateScheduleBusiness::importTemplate($request, $this);
-//        });
-//    }
+    public function import_template(Request $request){
+//        $this->InitParams($request);
+//        CTAPICertificateScheduleBusiness::importTemplate($request, $this);
+        return $this->exeDoPublicFun($request, 16384, 8,'', true, '', [], function (&$reDataArr) use ($request){
+            CTAPICertificateScheduleBusiness::importTemplate($request, $this);
+        });
+    }
 
 
     /**
      * @OA\Post(
-     *     path="/api/admin/certificate_schedule/ajax_del",
+     *     path="/api/admin/API/certificate_schedule/ajax_del",
      *     tags={"大后台-系统设置-证书能力范围"},
      *     summary="证书能力范围--删除",
      *     description="根据单个id,删除记录......",
-     *     operationId="adminQualityControlCertificateScheduleAjax_del",
+     *     operationId="adminQualityControlAPICertificateScheduleAjax_del",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
      *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_certificate_schedule_id_required"),
@@ -457,7 +610,7 @@ class CertificateScheduleController extends BasicController
         $tem_id = CommonRequest::get($request, 'id');
         Tool::formatOneArrVals($tem_id, [null, ''], ',', 1 | 2 | 4 | 8);
         $pageNum = (is_array($tem_id) && count($tem_id) > 1 ) ? 1024 : 512;
-        return $this->exeDoPublicFun($request, $pageNum, 4,'', false, '', [], function (&$reDataArr) use ($request){
+        return $this->exeDoPublicFun($request, $pageNum, 4,'', true, '', [], function (&$reDataArr) use ($request){
             $organize_id = CommonRequest::getInt($request, 'company_id');// 可有此参数
             return CTAPICertificateScheduleBusiness::delDatasAjax($request, $this, $organize_id);
 //            return CTAPICertificateScheduleBusiness::delAjax($request, $this);
@@ -479,7 +632,7 @@ class CertificateScheduleController extends BasicController
 //        // $childKV = CTAPICertificateScheduleBusiness::getChildListKeyVal($request, $this, $parent_id, 1 + 0);
 //
 //        return  ajaxDataArr(1, $childKV, '');;
-//        return $this->exeDoPublicFun($request, 8589934592, 4,'', false, '', [], function (&$reDataArr) use ($request){
+//        return $this->exeDoPublicFun($request, 8589934592, 4,'', true, '', [], function (&$reDataArr) use ($request){
 //            $parent_id = CommonRequest::getInt($request, 'parent_id');
 //            // 获得一级城市信息一维数组[$k=>$v]
 //            $childKV = CTAPIRrrDdddBusiness::getCityByPid($request, $this, $parent_id);
@@ -497,7 +650,7 @@ class CertificateScheduleController extends BasicController
 //        $resultDatas = CTAPICertificateScheduleBusiness::importByFile($request, $this, $fileName);
 //        return ajaxDataArr(1, $resultDatas, '');
 ///
-//        return $this->exeDoPublicFun($request, 32768, 4,'', false, '', [], function (&$reDataArr) use ($request){
+//        return $this->exeDoPublicFun($request, 32768, 4,'', true, '', [], function (&$reDataArr) use ($request){
 //            $fileName = 'staffs.xlsx';
 //            $resultDatas = CTAPIRrrDdddBusiness::importByFile($request, $this, $fileName);
 //            return ajaxDataArr(1, $resultDatas, '');
@@ -521,7 +674,7 @@ class CertificateScheduleController extends BasicController
 //        $fileName = Tool::getPath('public') . '/' . $result['result']['filePath'];
 //        $resultDatas = CTAPICertificateScheduleBusiness::importByFile($request, $this, $fileName);
 //        return ajaxDataArr(1, $resultDatas, '');
-//        return $this->exeDoPublicFun($request, 32768, 4,'', false, '', [], function (&$reDataArr) use ($request){
+//        return $this->exeDoPublicFun($request, 32768, 4,'', true, '', [], function (&$reDataArr) use ($request){
 //            // 上传并保存文件
 //            $result = Resource::fileSingleUpload($request, $this, 1);
 //            if($result['apistatus'] == 0) return $result;
@@ -539,20 +692,20 @@ class CertificateScheduleController extends BasicController
      * @return mixed
      * @author zouyan(305463219@qq.com)
      */
-//    public function up_excel(Request $request)
-//    {
-//        $this->InitParams($request);
-//        // $this->company_id = 1;
-//        // 企业 的 个人--只能读自己的人员信息
-////        $organize_id = $this->user_id;// CommonRequest::getInt($request, 'company_id');
-////        if(!is_numeric($organize_id) || $organize_id <= 0) throws('所属企业参数有误！');
-////
-////        $userInfo = $this->getStaffInfo($organize_id);
-////        if(empty($userInfo)) throws('企业记录不存在！');
+    public function up_excel(Request $request)
+    {
+        $this->InitParams($request);
+        // $this->company_id = 1;
+        // 企业 的 个人--只能读自己的人员信息
+//        $organize_id = $this->user_id;// CommonRequest::getInt($request, 'company_id');
+//        if(!is_numeric($organize_id) || $organize_id <= 0) throws('所属企业参数有误！');
 //
-//        // 上传并保存文件
-//        return CTAPIResourceBusiness::filePlupload($request, $this, 2);
-//    }
+//        $userInfo = $this->getStaffInfo($organize_id);
+//        if(empty($userInfo)) throws('企业记录不存在！');
+
+        // 上传并保存文件
+        return CTAPIResourceBusiness::filePlupload($request, $this, 2);
+    }
 
     // **************公用方法**********************开始*******************************
 

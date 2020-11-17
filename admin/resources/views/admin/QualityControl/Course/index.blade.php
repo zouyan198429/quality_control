@@ -159,7 +159,7 @@
         $(document).on("click","#testBTN",function(){
             var obj = $(this);
             // 测试
-            let dataParams = {'name' : '邹燕', 'age' : 25, 'sex': 1};
+            let dataParams = {'name' : '小明', 'age' : 25, 'sex': 1};
             // $sign = getSignByObj(dataParams, '123456789', '111222333', 1);
             // console.log('~~~~~~~~$sign~~~~~~~~~~~~~~~~', $sign);
             console.log('~~~~~~~~dataParams~~~~~~~~~~~~~~~~', dataParams);

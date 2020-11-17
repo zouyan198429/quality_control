@@ -2742,7 +2742,7 @@ class Tool
                 $firstErr = $errArr['firstErr'] ?? '';
                 $errMsg = $errArr['errMsg'] ?? [];
                 $varErrMsg = $errArr['varErrMsg'] ?? [];
-                if($errDo == 1 && is_array($errMsg) && count($errMsg) <= 0) throws(implode('<br/>', $errMsg));
+                if($errDo == 1 && is_array($errMsg) && count($errMsg) > 0) throws(implode('<br/>', $errMsg));
                 return $errArr;
             }
             // 可能是 false 或 null ：代表没有错
@@ -3902,12 +3902,14 @@ class Tool
      * @author zouyan(305463219@qq.com)
      */
     public static function getDoTime($doFun){
-        $startTime = microtime(true);// 当前 Unix 时间戳的微秒数
+        // 1605638542.7082  精确到微秒的以秒为单位的当前时间
+        $startTime = microtime(true);// 当前 Unix 时间戳的微秒数 参数设置为 TRUE，则返回浮点数，表示自 Unix 纪元起精确到微秒的以秒为单位的当前时间。
 
         if(is_callable($doFun)){
             $doFun();
         }
-        $endTime = microtime(true);// 当前 Unix 时间戳的微秒数
+        // 1605638542.7082  精确到微秒的以秒为单位的当前时间
+        $endTime = microtime(true);// 当前 Unix 时间戳的微秒数 参数设置为 TRUE，则返回浮点数，表示自 Unix 纪元起精确到微秒的以秒为单位的当前时间。
         $doTime = $endTime - $startTime ;
         return $doTime;
     }

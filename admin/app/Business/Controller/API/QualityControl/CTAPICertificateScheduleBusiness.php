@@ -344,4 +344,479 @@ class CTAPICertificateScheduleBusiness extends BasicPublicCTAPIBusiness
 //        return HttpRequest::HttpRequestApi($url, $requestData, [], 'POST');
     }
 
+    /**
+     * 批量文件保存接口
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  int 数据所属企业的id
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function filesSaveRequest(Request $request, Controller $controller, $notLog = 0){
+
+        // $id = CommonRequest::getInt($request, 'id');
+        // CommonRequest::judgeEmptyParams($request, 'id', $id);
+//                $company_id = CommonRequest::getInt($request, 'company_id');
+        $company_info = [];
+
+        $company_name = CommonRequest::get($request, 'company_name');
+        $company_info['company_name'] = $company_name;
+
+        $certificate_no = CommonRequest::get($request, 'certificate_no');
+        $company_info['company_certificate_no'] = $certificate_no;
+
+        // 企业数据验证
+        static::companyDataJudge( $request,  $controller, $company_info, $notLog);
+
+        $file_json = CommonRequest::get($request, 'file_json');// 文件信息
+        if (isNotJson($file_json)) {
+            throws('文件信息不是有效的json格式！');
+        }
+        $fileArr = json_decode($file_json , true);
+         if(!is_array($fileArr) || empty($fileArr))  throws('文件信息不能为空！');
+
+        // 验证每一项
+        $errArr = [];
+
+        // 文件数据验证
+        static::fileDataJudge($request, $controller, $fileArr, $errArr, $notLog );
+
+        // 有错误信息
+        if(!empty($errArr) ) throws(implode(';', $errArr));
+
+         // throws('接口数据通过验证');
+
+        // 保存数据
+        // 调用新加或修改接口
+        $company_id = $controller->company_id;
+        $user_id = $controller->user_id;
+        $modifAddOprate = true;
+        $apiParams = [
+            'saveData' => [
+                'company_info' => $company_info,
+//                    [
+//                        'company_name' => $company_name,// 机构名称
+//                        'company_certificate_no' => $certificate_no,// CMA证书号(资质认定编号)
+//                    ],
+                'file_list' => $fileArr,
+            ],
+            'company_id' => $company_id,
+            'operate_staff_id' => $user_id,
+            'modifAddOprate' => ($modifAddOprate == true) ? 1 : 0 ,// 0,
+        ];
+        // throws(json_encode($apiParams));
+        $methodName = 'bathSaveFiles';
+
+        return static::exeDBBusinessMethodCT($request, $controller, '',  $methodName, $apiParams, $company_id, $notLog);
+
+    }
+
+    /**
+     * 批量保存接口
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  int 数据所属企业的id
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function bathSaveRequest(Request $request, Controller $controller, $notLog = 0){
+
+        // $id = CommonRequest::getInt($request, 'id');
+        // CommonRequest::judgeEmptyParams($request, 'id', $id);
+//                $company_id = CommonRequest::getInt($request, 'company_id');
+        $company_info = [];
+
+        $company_name = CommonRequest::get($request, 'company_name');
+        $company_info['company_name'] = $company_name;
+
+        $certificate_no = CommonRequest::get($request, 'certificate_no');
+        $company_info['company_certificate_no'] = $certificate_no;
+
+        $ratify_date = CommonRequest::get($request, 'ratify_date');
+        $company_info['ratify_date'] = $ratify_date;
+
+        $valid_date = CommonRequest::get($request, 'valid_date');
+        $company_info['valid_date'] = $valid_date;
+
+        $addr = CommonRequest::get($request, 'addr');
+        $company_info['laboratory_addr'] = $addr;
+
+        $contact_name = CommonRequest::get($request, 'contact_name');
+        $company_info['company_contact_name'] = $contact_name;
+
+        $contact_mobile = CommonRequest::get($request, 'contact_mobile');
+        $company_info['company_contact_mobile'] = $contact_mobile;
+
+        // 企业数据验证
+        static::companyDataJudge( $request,  $controller, $company_info, $notLog);
+
+        $file_json = CommonRequest::get($request, 'file_json');// 文件信息
+        if (isNotJson($file_json)) {
+            throws('文件信息不是有效的json格式！');
+        }
+        $fileArr = json_decode($file_json , true);
+        // if(!is_array($fileArr) || empty($fileArr))  throws('文件信息不能为空！');
+
+
+        $schedule_json = CommonRequest::get($request, 'schedule_json');// 能力范围
+        if (isNotJson($schedule_json)) {
+            throws('能力范围不是有效的json格式！');
+        }
+        $scheduleArr = json_decode($schedule_json , true);
+        if(!is_array($scheduleArr) || empty($scheduleArr))  throws('能力范围不能为空！');
+        // 验证每一项
+        $errArr = [];
+
+        // 文件数据验证
+        static::fileDataJudge($request, $controller, $fileArr, $errArr, $notLog );
+        // 能力范围数据验证
+        static::scheduleDataJudge($request, $controller, $scheduleArr, $errArr, $notLog );
+
+        // 有错误信息
+        if(!empty($errArr) ) throws(implode(';', $errArr));
+
+        // throws('接口数据通过验证');
+
+        // 保存数据
+        // 调用新加或修改接口
+        $company_id = $controller->company_id;
+        $user_id = $controller->user_id;
+        $modifAddOprate = true;
+        $apiParams = [
+            'saveData' => [
+                'company_info' => $company_info,
+//                    [
+//                        'company_name' => $company_name,// 机构名称
+//                        'company_certificate_no' => $certificate_no,// CMA证书号(资质认定编号)
+//                        'ratify_date' => $ratify_date,// 发证日期 格式 2020-11-06
+//                        'valid_date' => $valid_date,// 证书有效日期 格式 2020-11-06
+//                        'laboratory_addr' => $addr,// 实验室地址
+//                        'company_contact_name' => $contact_name,// 联系人
+//                        'company_contact_mobile' => $contact_mobile,// 联系人手机或电话
+//                    ],
+                'file_list' => $fileArr,
+                'schedule_list' => $scheduleArr,
+            ],
+            'company_id' => $company_id,
+            'operate_staff_id' => $user_id,
+            'modifAddOprate' => ($modifAddOprate == true) ? 1 : 0 ,// 0,
+        ];
+        // throws(json_encode($apiParams));
+        $methodName = 'bathSaveDatas';
+
+        return static::exeDBBusinessMethodCT($request, $controller, '',  $methodName, $apiParams, $company_id, $notLog);
+
+    }
+
+    /**
+     * 能力范围删除或新加接口
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  int 数据所属企业的id
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function bathModifyRequest(Request $request, Controller $controller, $notLog = 0){
+
+        // $id = CommonRequest::getInt($request, 'id');
+        // CommonRequest::judgeEmptyParams($request, 'id', $id);
+//                $company_id = CommonRequest::getInt($request, 'company_id');
+        $company_info = [];
+
+        $company_name = CommonRequest::get($request, 'company_name');
+        $company_info['company_name'] = $company_name;
+
+        $certificate_no = CommonRequest::get($request, 'certificate_no');
+        $company_info['company_certificate_no'] = $certificate_no;
+
+        // 企业数据验证
+        static::companyDataJudge( $request,  $controller, $company_info, $notLog);
+
+        $schedule_del_json = CommonRequest::get($request, 'schedule_del_json');// 能力范围
+        if (isNotJson($schedule_del_json)) {
+            throws('删除能力范围不是有效的json格式！');
+        }
+        $scheduleDelArr = json_decode($schedule_del_json , true);
+        // if(!is_array($scheduleDelArr) || empty($scheduleDelArr))  throws('能力范围不能为空！');
+
+        $schedule_add_json = CommonRequest::get($request, 'schedule_add_json');// 能力范围
+        if (isNotJson($schedule_add_json)) {
+            throws('新加能力范围不是有效的json格式！');
+        }
+        $scheduleAddArr = json_decode($schedule_add_json , true);
+        // if(!is_array($scheduleAddArr) || empty($scheduleAddArr))  throws('能力范围不能为空！');
+
+         if(!is_array($scheduleAddArr) || !is_array($scheduleDelArr) || (empty($scheduleDelArr) && empty($scheduleAddArr)))  throws('删除或新加的能力范围必须至少操作一项！');
+
+        // 验证每一项
+        $errArr = [];
+
+        // 能力范围数据验证
+        static::scheduleDataJudge($request, $controller, $scheduleDelArr, $errArr, $notLog );
+        static::scheduleDataJudge($request, $controller, $scheduleAddArr, $errArr, $notLog );
+
+        // 有错误信息
+        if(!empty($errArr) ) throws(implode(';', $errArr));
+
+        // throws('接口数据通过验证');
+
+        // 保存数据
+        // 调用新加或修改接口
+        $company_id = $controller->company_id;
+        $user_id = $controller->user_id;
+        $modifAddOprate = true;
+        $apiParams = [
+            'saveData' => [
+                'company_info' => $company_info,
+//                    [
+//                        'company_name' => $company_name,// 机构名称
+//                        'company_certificate_no' => $certificate_no,// CMA证书号(资质认定编号)
+//                    ],
+                'schedule_del_list' => $scheduleDelArr,
+                'schedule_add_list' => $scheduleAddArr,
+            ],
+            'company_id' => $company_id,
+            'operate_staff_id' => $user_id,
+            'modifAddOprate' => ($modifAddOprate == true) ? 1 : 0 ,// 0,
+        ];
+        // throws(json_encode($apiParams));
+        $methodName = 'bathModifyDatas';
+
+        return static::exeDBBusinessMethodCT($request, $controller, '',  $methodName, $apiParams, $company_id, $notLog);
+
+    }
+
+
+    /**
+     * 注册/修改企业信息接口
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  int 数据所属企业的id
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function companySaveRequest(Request $request, Controller $controller, $notLog = 0){
+
+        // $id = CommonRequest::getInt($request, 'id');
+        // CommonRequest::judgeEmptyParams($request, 'id', $id);
+//                $company_id = CommonRequest::getInt($request, 'company_id');
+        $company_info = [];
+
+        $company_name = CommonRequest::get($request, 'company_name');
+        $company_info['company_name'] = $company_name;
+
+        $certificate_no = CommonRequest::get($request, 'certificate_no');
+        $company_info['company_certificate_no'] = $certificate_no;
+
+        $ratify_date = CommonRequest::get($request, 'ratify_date');
+        $company_info['ratify_date'] = $ratify_date;
+
+        $valid_date = CommonRequest::get($request, 'valid_date');
+        $company_info['valid_date'] = $valid_date;
+
+        $addr = CommonRequest::get($request, 'addr');
+        $company_info['laboratory_addr'] = $addr;
+
+        $contact_name = CommonRequest::get($request, 'contact_name');
+        $company_info['company_contact_name'] = $contact_name;
+
+        $contact_mobile = CommonRequest::get($request, 'contact_mobile');
+        $company_info['company_contact_mobile'] = $contact_mobile;
+
+        // 企业数据验证
+        static::companyDataJudge( $request,  $controller, $company_info, $notLog);
+
+        // throws('接口数据通过验证');
+
+        // 保存数据
+        // 调用新加或修改接口
+        $company_id = $controller->company_id;
+        $user_id = $controller->user_id;
+        $modifAddOprate = true;
+        $apiParams = [
+            'saveData' => [
+                'company_info' => $company_info,
+//                    [
+//                        'company_name' => $company_name,// 机构名称
+//                        'company_certificate_no' => $certificate_no,// CMA证书号(资质认定编号)
+//                        'ratify_date' => $ratify_date,// 发证日期 格式 2020-11-06
+//                        'valid_date' => $valid_date,// 证书有效日期 格式 2020-11-06
+//                        'laboratory_addr' => $addr,// 实验室地址
+//                        'company_contact_name' => $contact_name,// 联系人
+//                        'company_contact_mobile' => $contact_mobile,// 联系人手机或电话
+//                    ],
+            ],
+            'company_id' => $company_id,
+            'operate_staff_id' => $user_id,
+            'modifAddOprate' => ($modifAddOprate == true) ? 1 : 0 ,// 0,
+        ];
+        // throws(json_encode($apiParams));
+        $methodName = 'saveCompany';
+
+        return static::exeDBBusinessMethodCT($request, $controller, '',  $methodName, $apiParams, $company_id, $notLog);
+
+    }
+
+    // **************验证信息************开始******************************
+    /**
+     * 企业数据验证
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $company_info 文件数据数组 一维数组
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function companyDataJudge(Request $request, Controller $controller, &$company_info, $notLog = 0){
+
+        $valiDateParam = [];
+        if(isset($company_info['company_name'])) array_push($valiDateParam, ["var_name" => "company_name" ,"input"=> $company_info['company_name'],"require"=>"true"
+            ,"validator"=>"length","min"=>"1","max"=>"100","message"=>'机构名称长度为1~ 100个字符']);
+
+        if(isset($company_info['company_certificate_no'])) array_push($valiDateParam, ["var_name" => "certificate_no" ,"input"=> $company_info['company_certificate_no'],"require"=>"true"
+            ,"validator"=>"length","min"=>"1","max"=>"30","message"=>'CMA证书号长度为1~ 30个字符']);
+
+        if(isset($company_info['ratify_date'])) array_push($valiDateParam, ["var_name" => "ratify_date" ,"input"=> $company_info['ratify_date'],"require"=>"true"
+            ,"validator"=>"datatime","message"=>'发证日期格式有误！格式：2020-09-19']);
+
+        if(isset($company_info['valid_date'])) array_push($valiDateParam, ["var_name" => "valid_date" ,"input"=> $company_info['valid_date'],"require"=>"true"
+            ,"validator"=>"datatime","message"=>'有效日期格式有误！格式：2020-09-19']);
+
+        if(isset($company_info['laboratory_addr'])) array_push($valiDateParam, ["var_name" => "addr" ,"input"=> $company_info['laboratory_addr'],"require"=>"true"
+            ,"validator"=>"length","min"=>"1","max"=>"200","message"=>'机构名称长度为1~ 200个字符']);
+
+        if(isset($company_info['company_contact_name'])) array_push($valiDateParam, ["var_name" => "contact_name" ,"input"=> $company_info['company_contact_name'],"require"=>"true"
+            ,"validator"=>"length","min"=>"1","max"=>"30","message"=>'联系人长度为1~ 30个字符']);
+
+        if(isset($company_info['company_contact_mobile'])) array_push($valiDateParam, ["var_name" => "contact_mobile" ,"input"=> $company_info['company_contact_mobile'],"require"=>"true"
+            ,"validator"=>"length","min"=>"1","max"=>"30","message"=>'手机或电话长度为1~ 30个字符']);
+
+        Tool::dataValid($valiDateParam, 1);
+
+        // 判断开始结束日期
+        if(isset($company_info['ratify_date']) && isset($company_info['valid_date'])){
+            Tool::judgeBeginEndDate($company_info['ratify_date'], $company_info['valid_date'], 1 + 2 + 256 + 512, 1, date('Y-m-d'), '有效起止日期');
+        }
+    }
+
+    /**
+     * 文件数据验证
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $fileArr 文件数据数组 二维数组
+     * @param array $errArr 错误信息数组 一维数组
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function fileDataJudge(Request $request, Controller $controller, &$fileArr, &$errArr, $notLog = 0 ){
+
+        foreach($fileArr as $k => &$v){
+            $preStr = '文件信息第' . $k . '项:';
+            $temErrArr = [];
+            $t_file_title = $v['file_title'] ?? '';
+            $t_file_url = $v['file_url'] ?? '';
+            $t_file_type = $v['file_type'] ?? 0;
+            if(!isset($v['file_title']) || empty($v['file_title'])){
+                array_push($temErrArr, '文件名称不存在或不能为空！');
+            }
+            if(!isset($v['file_url']) || empty($v['file_url'])){
+                array_push($temErrArr, '文件网络读取地址不存在或不能为空！');
+            }
+            if(!isset($v['file_type']) || empty($v['file_type']) || !in_array($v['file_type'], [1,2,5])){
+                array_push($temErrArr, '文件类型必须是【1：能力附表 ; 2：机构自我声明 ;5：机构处罚】！');
+            }
+
+            if(!empty($temErrArr)){
+                array_unshift($temErrArr, $preStr);
+                array_push($errArr, implode(';', $temErrArr));
+            }
+        }
+    }
+
+    /**
+     * 能力范围数据验证
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $scheduleArr 能力范围数据数组 二维数组
+     * @param array $errArr 错误信息数组 一维数组
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function scheduleDataJudge(Request $request, Controller $controller, &$scheduleArr, &$errArr, $notLog = 0 ){
+
+        foreach($scheduleArr as $k => &$v){
+            $preStr = '能力范围第' . $k . '项:';
+            $temErrArr = [];
+            $t_category_name = $v['category_name'] ?? '';// 类别[第一级]
+            $t_project_name = $v['project_name'] ?? '';//  产品[第二级]
+            $t_three_name = $v['three_name'] ?? '';// 第三级
+            $t_four_name = $v['four_name'] ?? '';// 第四级
+            $t_param_name = $v['param_name'] ?? '';// 项目[第五级]
+            $t_method_name = $v['method_name'] ?? '';// 标准（方法）名称
+            $t_limit_range = $v['limit_range'] ?? '';// 限制范围
+            $t_explain_text = $v['explain_text'] ?? '';// 说明
+            // 判断是否依次填写
+            $isEmpty = false;
+            $isOrder = true;// 是否依次填写
+
+            // if($isOrder && $isEmpty && !empty($t_category_name)) $isOrder = false;
+            if($isOrder && empty($t_category_name)) $isEmpty = true;
+
+            if($isOrder && $isEmpty && !empty($t_project_name)) $isOrder = false;
+            if($isOrder && empty($t_project_name)) $isEmpty = true;
+
+            if($isOrder && $isEmpty && !empty($t_three_name)) $isOrder = false;
+            if($isOrder && empty($t_three_name)) $isEmpty = true;
+
+            if($isOrder && $isEmpty && !empty($t_four_name)) $isOrder = false;
+            if($isOrder && empty($t_four_name)) $isEmpty = true;
+
+            if($isOrder && $isEmpty && !empty($t_param_name)) $isOrder = false;
+            if($isOrder && empty($t_param_name)) $isEmpty = true;
+
+            if(!$isOrder) array_push($temErrArr, '请依次填写各分类，不要跳跃！');
+
+            //  大于二级的，最后一级优先填到 项目[第五级] ；剩下的再依次填three_name  第三级；four_name  第四级
+
+            if(!empty($t_three_name)){// 第三级不为空
+                if(!empty($t_four_name)){// 第四级不为空
+                    if(!empty($t_param_name)){// 第五级不为空
+
+                    }else{// 第五级为空
+                        $v['param_name'] = $t_four_name;
+                        $t_four_name = '';
+                        $v['four_name'] = $t_four_name;
+                    }
+                }else{// 第四级为空
+                    $v['param_name'] = $t_three_name;
+                    $t_three_name = '';
+                    $v['three_name'] = $t_three_name;
+                }
+            }
+            if(!isset($v['category_name']) || empty($v['category_name'])){
+                array_push($temErrArr, '类别[第一级]不存在或不能为空！');
+            }
+            // 验证长度
+            if(strlen($t_category_name) < 1 || strlen($t_category_name) > 150) array_push($temErrArr, '类别[第一级]长度为1~ 150个字符！');
+            if(strlen($t_project_name) < 1 || strlen($t_project_name) > 150) array_push($temErrArr, '产品[第二级]长度为1~ 150个字符！');
+            if(strlen($t_three_name) < 0 || strlen($t_three_name) > 150) array_push($temErrArr, '第三级长度为0~ 150个字符！');
+            if(strlen($t_four_name) < 0 || strlen($t_four_name) > 150) array_push($temErrArr, '第四级长度为0~ 150个字符！');
+            if(strlen($t_param_name) < 0 || strlen($t_param_name) > 500) array_push($temErrArr, '项目[第五级]长度为0~ 500个字符！');
+            if(strlen($t_method_name) < 0 || strlen($t_method_name) > 3500) array_push($temErrArr, '标准（方法）名称长度为0~ 3500个字符！');
+            if(strlen($t_limit_range) < 0 || strlen($t_limit_range) > 1500) array_push($temErrArr, '限制范围长度为0~ 1500个字符！');
+            if(strlen($t_explain_text) < 0 || strlen($t_explain_text) > 1000) array_push($temErrArr, '说明长度为0~ 1000个字符！');
+
+            if(!empty($temErrArr)){
+                array_unshift($temErrArr, $preStr);
+                array_push($errArr, implode(';', $temErrArr));
+            }
+        }
+    }
+    // **************验证信息************结束******************************
 }

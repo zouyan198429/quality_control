@@ -514,6 +514,9 @@ class DownFile{
                 static::saveUrlFileToLocal($url, $full_names, $errDo, $buffer);
                 break;
         }
+        // 修改文件权限
+        // @chmod($full_names, 0777);
+        chmodFile($full_names);
         return [
             'publicPath' => $sysAbsDir,// public目录(系统的) 绝对路径 /srv/www/work/work.0101jz.com/public
             'savePath' => $filePath,// 文件目录 '/resource/company/1/images/2019/10/04/'

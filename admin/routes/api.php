@@ -605,19 +605,39 @@ $api->version('v1', function ($api) {
 
         // 证书-能力范围
         $api->any('market/certificate_schedule/list', 'Admin\QualityControl\API\CertificateScheduleController@ajax_alist');//ajax获得列表数据
-        $api->post('market/certificate_schedule/del', 'Admin\QualityControl\API\CertificateScheduleController@ajax_del');// 删除
-        $api->any('market/certificate_schedule/save', 'Admin\QualityControl\API\CertificateScheduleController@ajax_save');// 新加/修改
+//        $api->post('market/certificate_schedule/del', 'Admin\QualityControl\API\CertificateScheduleController@ajax_del');// 删除
+//        $api->any('market/certificate_schedule/save', 'Admin\QualityControl\API\CertificateScheduleController@ajax_save');// 新加/修改
         $api->any('market/certificate_schedule/info', 'Admin\QualityControl\API\CertificateScheduleController@ajax_info');// 详情
-//        $api->post('market/certificate_schedule/ajax_get_child', 'Admin\QualityControl\CertificateScheduleController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
-//        $api->post('market/certificate_schedule/ajax_get_areachild', 'Admin\QualityControl\CertificateScheduleController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
-//        $api->post('market/certificate_schedule/ajax_import_staff','Admin\QualityControl\CertificateScheduleController@ajax_import'); // 导入员工
+        $api->post('market/certificate_schedule/ajax_get_child', 'Admin\QualityControl\API\CertificateScheduleController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('market/certificate_schedule/ajax_get_areachild', 'Admin\QualityControl\API\CertificateScheduleController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('market/certificate_schedule/ajax_import_staff','Admin\QualityControl\API\CertificateScheduleController@ajax_import'); // 导入员工
 
-//        $api->post('market/certificate_schedule/import', 'Admin\QualityControl\CertificateScheduleController@import');// 导入excel
-//        $api->post('market/certificate_schedule/ajax_get_ids', 'Admin\QualityControl\CertificateScheduleController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+        $api->post('market/certificate_schedule/import', 'Admin\QualityControl\API\CertificateScheduleController@import');// 导入excel
+        $api->post('market/certificate_schedule/ajax_get_ids', 'Admin\QualityControl\API\CertificateScheduleController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
-//        $api->post('market/certificate_schedule/up_excel', 'Admin\QualityControl\CertificateScheduleController@up_excel');// 上传excel地址
-//        $api->post('market/certificate_schedule/ajax_excel_save', 'Admin\QualityControl\CertificateScheduleController@ajax_excel_save');// 上传excel--导入保存
+        $api->post('market/certificate_schedule/up_excel', 'Admin\QualityControl\API\CertificateScheduleController@up_excel');// 上传excel地址
+        $api->post('market/certificate_schedule/ajax_excel_save', 'Admin\QualityControl\API\CertificateScheduleController@ajax_excel_save');// 上传excel--导入保存
 
+        $api->post('market/certificate_schedule/bath_save', 'Admin\QualityControl\API\CertificateScheduleController@ajax_bath_save');// 批量保存
+        $api->post('market/certificate_schedule/files_save', 'Admin\QualityControl\API\CertificateScheduleController@ajax_files_save');// 文件接口保存
+        $api->post('market/certificate_schedule/company_modify', 'Admin\QualityControl\API\CertificateScheduleController@ajax_company_save');// 注册/修改企业信息接口保存
+        $api->post('market/certificate_schedule/bath_modify', 'Admin\QualityControl\API\CertificateScheduleController@ajax_bath_modify');// 能力范围删除或新加-修改接口保存
+
+        // 证书-能力范围-页面调用
+        $api->any('admin/API/certificate_schedule/ajax_alist', 'Admin\QualityControl\API\CertificateScheduleController@ajax_alist');//ajax获得列表数据
+//        $api->post('admin/API/certificate_schedule/ajax_del', 'Admin\QualityControl\API\CertificateScheduleController@ajax_del');// 删除
+//        $api->any('admin/API/certificate_schedule/ajax_save', 'Admin\QualityControl\API\CertificateScheduleController@ajax_save');// 新加/修改
+        $api->any('admin/API/certificate_schedule/ajax_info', 'Admin\QualityControl\API\CertificateScheduleController@ajax_info');// 详情
+        $api->post('admin/API/certificate_schedule/ajax_get_child', 'Admin\QualityControl\API\CertificateScheduleController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/API/certificate_schedule/ajax_get_areachild', 'Admin\QualityControl\API\CertificateScheduleController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/API/certificate_schedule/ajax_import_staff','Admin\QualityControl\API\CertificateScheduleController@ajax_import'); // 导入员工
+
+        $api->post('admin/API/certificate_schedule/import', 'Admin\QualityControl\API\CertificateScheduleController@import');// 导入excel
+        $api->post('admin/API/certificate_schedule/ajax_get_ids', 'Admin\QualityControl\API\CertificateScheduleController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        $api->post('admin/API/certificate_schedule/up_excel', 'Admin\QualityControl\API\CertificateScheduleController@up_excel');// 上传excel地址
+        $api->post('admin/API/certificate_schedule/ajax_excel_save', 'Admin\QualityControl\API\CertificateScheduleController@ajax_excel_save');// 上传excel--导入保存
+        $api->post('admin/API/certificate_schedule/ajax_bath_save', 'Admin\QualityControl\API\CertificateScheduleController@ajax_bath_save');// 批量保存
 
         // 企业后台 company
         // 验证码 -- ok

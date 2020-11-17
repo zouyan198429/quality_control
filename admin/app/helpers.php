@@ -564,6 +564,18 @@ function showPageLink($url_model, $page_tag = '{page}', $totalpg = 0, $pg = 1, $
 }
 
 /**
+ * 修改文件权限 ---用这个
+ *
+ * @param string $full_names 要修改文件权限的文件 全路径  如 /data/public/resource/company/1/images/2019/10/04/20191003121326d710d554edce12a1.png'
+ * @param  $mode 权限 需要注意一点，权限值最好使用八进制表示，即“0”开头，而且一定不要加引号。
+ * @return boolean
+ */
+function chmodFile($full_names, $mode = 0777) {
+    // 修改文件权限
+    @chmod($full_names, $mode);
+}
+
+/**
  * 循环创建目录 ---用这个
  *
  * @param string $dir 待创建的目录
@@ -571,11 +583,12 @@ function showPageLink($url_model, $page_tag = '{page}', $totalpg = 0, $pg = 1, $
  * @return boolean
  */
 function makeDir($dir, $mode = 0777) {
-    if (is_dir($dir) || @mkdir($dir, $mode))
+    // mkdir ($filePath,0777,true);
+    if (is_dir($dir) || (@mkdir($dir, $mode) && @chmod($dir, $mode) ))
         return true;
     if (!makeDir(dirname($dir), $mode))
         return false;
-    return @mkdir($dir, $mode);
+    return (@mkdir($dir, $mode) && @chmod($dir, $mode) );
 }
 
 /**

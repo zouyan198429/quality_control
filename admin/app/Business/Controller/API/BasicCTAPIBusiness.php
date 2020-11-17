@@ -83,7 +83,7 @@ class BasicCTAPIBusiness extends APIOperate
      *
      * @param Request $request 请求信息
      * @param Controller $controller 控制对象
-     * @param int  $orderType 要保存或修改的数组 1 订单号 2 退款订单 3 支付跑腿费  4 追加跑腿费 5 冲值  6 提现 7 压金或保证金 8 邀请码
+     * @param int  $orderType 要保存或修改的数组 1 订单号 2 退款订单 3 支付跑腿费  4 追加跑腿费 5 冲值  6 提现 7 压金或保证金 8 邀请码  9 API接口日志
      * @return  int
      * @author zouyan(305463219@qq.com)
      */
@@ -134,6 +134,15 @@ class BasicCTAPIBusiness extends APIOperate
                 $needNum = 1 + 2 + 8;
                 $dataFormat = 's';
                 break;
+            case 9:// 9 API接口日志
+                // $prefix = '';
+                $userIdBack = str_pad(substr($user_id, -2), 2, '0', STR_PAD_LEFT);
+                $midFix = $userIdBack;
+                $length = 4;
+                $needNum = 1 + 2 + 8;
+                $dataFormat = 's';
+                break;
+
             default:
         }
         $fixParams = [

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\WebFront\User\QualityControl;
 use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
 use App\Http\Controllers\WorksController;
 use App\Services\Tool;
+use Illuminate\Http\Request;
 
 class BasicController extends \App\Http\Controllers\WebFront\BasicController
 {
@@ -32,7 +33,7 @@ class BasicController extends \App\Http\Controllers\WebFront\BasicController
     // 获取
     //  -  $siteLoginUniqueKey 指定就使用指定的，没有，则使用设置的 每一种登录项的唯一标识【大后台：adimn; 企业：company;用户：user】,每一种后台控制器父类，修改成自己的唯一值
     //
-    public function getUserInfo($siteLoginUniqueKey = ''){
+    public function getUserInfo(Request $request, $siteLoginUniqueKey = ''){
         if(empty($siteLoginUniqueKey)) $siteLoginUniqueKey = $this->siteLoginUniqueKey;
         $staff_id = Tool::getSession($this->redisKey, $this->save_session,
             config('public.sessionKey') . $siteLoginUniqueKey, config('public.sessionRedisTye'));

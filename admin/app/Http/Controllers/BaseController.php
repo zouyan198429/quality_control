@@ -1,6 +1,9 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Business\Controller\API\QualityControl\CTAPIApiLogBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIApplyBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
 use App\ModelsVerify\QualityControl\industry;
 use App\Services\Request\API\Sites\APIRunBuyRequest;
 use App\Services\Request\CommonRequest;
@@ -9,6 +12,7 @@ use Dingo\Api\Routing\Helpers;
 use Illuminate\Http\Request;
 use OpenApi\Annotations as OA;
 use phpseclib\Math\BigInteger;
+use Illuminate\Support\Facades\Log;
 
 class BaseController extends Controller
 {
@@ -49,7 +53,7 @@ class BaseController extends Controller
     //缓存
     public $cache_sel = 1 + 2;//是否强制不缓存 1:缓存读,读到则直接返回;2缓存数据
 
-    public $admin_type = 0;
+    public $admin_type = 0;// 当前用户的类型
     public $city_site_id = 0;
     public $city_partner_id = 0;
     public $seller_id = 0;
@@ -58,8 +62,12 @@ class BaseController extends Controller
     public $errorView = 'error';//  错误显示的视图
 
     // 权限相关的
+    public $app_key = '';// 项目(应用)键key - appid[前端传入] 32位字串
+    public $app_Info = [];// 应用详情
+    public $app_id = 0;// 项目(应用)id-[根据$app_key从数据库获得]
     public $menu_id = 0;// 项目菜单id-menu_id[前端传入]
     public $frm_fun_id = 0;// 来源功能id-- frm_fun_id [前端传入]
+    public $project_id = 0;// 项目id--后端代码分块 如大后台  企业后台  用户后台 前台
     public $controller_id = 0;// 功能小模块[控制器]id - controller_id  历史表 、正在进行表 与原表相同
     public $fun_id = 0;// 功能id fun_id
     // 基本的【固定的】
@@ -95,7 +103,7 @@ class BaseController extends Controller
     // 获取
     //  -  $siteLoginUniqueKey 指定就使用指定的，没有，则使用设置的 每一种登录项的唯一标识【大后台：adimn; 企业：company;用户：user】,每一种后台控制器父类，修改成自己的唯一值
     //
-    public function getUserInfo($siteLoginUniqueKey = ''){
+    public function getUserInfo(Request $request, $siteLoginUniqueKey = ''){
         if(empty($siteLoginUniqueKey)) $siteLoginUniqueKey = $this->siteLoginUniqueKey;
         return Tool::getSession($this->redisKey, $this->save_session,
             config('public.sessionKey') . $siteLoginUniqueKey, config('public.sessionRedisTye'));
@@ -305,8 +313,20 @@ class BaseController extends Controller
      * @author zouyan(305463219@qq.com)
      */
     public function exeDoPublicFun(Request $request, $pageNum = 1, $returnType = 1, $view = '', $hasJudgePower = true, $doFun = 'doListPage', $params = [], $exeFun = ''){
-        return $this->exePublicFun($request, ['pageNum' => $pageNum,'returnType' => $returnType, 'view' => $view
-            , 'hasJudgePower' => $hasJudgePower, 'doFun' => $doFun, 'params' => $params], $exeFun);
+        $extendParams = ['pageNum' => $pageNum,'returnType' => $returnType, 'view' => $view
+            , 'hasJudgePower' => $hasJudgePower, 'doFun' => $doFun, 'params' => $params];
+
+        // 如果是应用调用接口，则写接口调用日志
+        $appInfo = $this->getApplyInfo($request, '', 1);
+        if(!empty($appInfo)){
+            return CTAPIApiLogBusiness::exeApi($request, $this, $pageNum, function() use(&$request, &$extendParams, &$exeFun){
+
+                return $this->exePublicFun($request, $extendParams, $exeFun);
+            }, 1);
+        }else{
+            return $this->exePublicFun($request, $extendParams, $exeFun);
+        }
+
     }
 
     /**
@@ -398,13 +418,22 @@ class BaseController extends Controller
         $reDataArr = array_merge($reDataArr, $this->reDataArr);
         // 对权限进行判断
         // 参数 项目菜单id-menu_id[前端传入]、来源功能id-- frm_fun_id [前端传入]、功能小模块[控制器]id - controller_id、 功能id fun_id、  用户id --user_id
+//        $this->app_key = CommonRequest::get($request, 'appid');// 项目(应用)键key - appid[前端传入] 32位字串
+//        if(strlen($this->app_key) > 0 && ($this->app_key != 0)){
+//            $this->app_Info = $this->getApplyInfo($request, $this->app_key, 1 | 2 | 4 | 8 | 16);
+//
+//            $staffId = $this->app_Info['staff_id'] ?? 0;
+//            $this->getStaffInfoById($request, $staffId, 1 | 2 | 4 | 8 | 16 | 32, true, [$this->user_type]);
+//        }
         $this->menu_id = CommonRequest::getInt($request, 'menu_id');// 项目菜单id-menu_id[前端传入]
         $this->frm_fun_id = CommonRequest::getInt($request, 'frm_fun_id');// 来源功能id-- frm_fun_id [前端传入]
         // 获和权限
         $ower_funs = [];// 也有的页面功能权限数组--后台再处理
         $reDataArr['power'] = [// 将权限传给前端页面
+            // 'app_key' => $this->app_key, // 重要数据，不能返回给前端
             'menu_id' => $this->menu_id,
             'frm_fun_id' => $this->frm_fun_id,
+            'project_id' => $this->project_id,
             'controller_id' => $this->controller_id,
             'fun_id' => $this->fun_id,
             'ower_funs' => $ower_funs,
@@ -580,4 +609,68 @@ class BaseController extends Controller
 
     //~~~~~~~~~~~~~~~微信内浏览器支付~~获得用户openid~登录~~~~~结束~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    // 根据应用key 获得应用详情
+    // $appid 应用key
+    // $power_no 1如果应用key为空，从appid重新获取下；2判断应用key是否为空；4判断应用信息不存；8判断非审核通过状态；16判断应用API密钥值是否为空
+    // $admin_type_arr 如果判断用户类型时，可进行访问的用户类型id数组
+    public function getApplyInfo(Request $request, $appid, $power_no = 0){
+        if( ($power_no & 1) == 1 && empty($appid)) $appid = CommonRequest::get($request, 'appid');
+        if( ($power_no & 2) == 2 && empty($appid)) throws('appid参数不存在或值不能为空！');
+        // 根据appid,获得API密钥
+        $appInfo = CTAPIApplyBusiness::getFVFormatList( $request,  $this, 4, 1
+            , ['app_id' => $appid], false, [], []);
+
+        if( ($power_no & 4) == 4 && empty($appInfo))  throws('应用信息不存在，appid值不正确！请自查或联系技术人员核对！');
+        $open_status = $appInfo['open_status'] ?? 0;
+        if( ($power_no & 8) == 8 && !in_array($open_status, [2])) throws('应用非审核通过状态，不可使用！');
+        $appAecret = $appInfo['app_secret'] ?? '';
+        if( ($power_no & 16) == 16 && empty($appAecret))  throws('应用API密钥值不存在或值不能为空!');
+
+        // 有户判断不在这里判断了，在需要的地方记得调用用户的方法
+//        $staffId = $appInfo['staff_id'] ?? 0;
+//        $userInfo = $this->getStaffInfoById($request, $staffId);
+
+        return $appInfo;
+    }
+
+    // 根据用户id ，判断权限
+    // $power_no 判断 1：判断是否存在；2 判断用户类型id；4判断是否用户已冻结；8 判断审核中；16 判断审核未通过；32判断非审核通过；；；；；
+    // $delSession 是否需要删除登录session true：需要[默认] ； false:不需要
+    // $admin_type_arr 如果判断用户类型时，可进行访问的用户类型id数组
+    public function getStaffInfoById(Request $request, $staff_id = 0, $power_no = 0, $delSession = true, $admin_type_arr = []){
+        if(!is_numeric($staff_id)) throws('参数【staff_id】有误！');
+        // $userInfo = CTAPIStaffBusiness::getInfoDataBase(\request(), $this,'', $staff_id, [], '', 1);
+        $userInfo = CTAPIStaffBusiness::getFVFormatList( $request,  $this, 4, 1
+            , ['id' => $staff_id], false, [], []);
+        if(!is_array($userInfo) || empty($userInfo)) $userInfo = [];
+        // 对数据进行有效性验证
+        if( ($power_no & 1) == 1 && (empty($userInfo) || count($userInfo) <= 0)){
+            if($delSession) $this->delUserInfo();
+            throws('用户名信息不存在！');
+        }
+
+        if( ($power_no & 2) == 2 && !in_array($userInfo['admin_type'], $admin_type_arr) ){ // && $userInfo['admin_type'] != 1
+            if($delSession) $this->delUserInfo();
+            throws('非法访问！');
+        }
+
+        if( ($power_no & 4) == 4 && $userInfo['account_status'] == 2 ){
+            if($delSession) $this->delUserInfo();
+            throws('用户已冻结！');
+        }
+
+        if( ($power_no & 8) == 8 && $userInfo['open_status'] == 1 ){
+            if($delSession) $this->delUserInfo();
+            throws('审核中，请耐心等待！');
+        }
+        if( ($power_no & 16) == 16 && $userInfo['open_status'] == 4 ){
+            if($delSession) $this->delUserInfo();
+            throws('审核未通过！');
+        }
+        if( ($power_no & 32) == 32 && $userInfo['open_status'] != 2 ){
+            if($delSession) $this->delUserInfo();
+            throws('非审核通过！');
+        }
+        return $userInfo;
+    }
 }

@@ -537,6 +537,21 @@ Route::get('admin/platform_down_files/export', 'Admin\QualityControl\PlatformDow
 Route::get('admin/platform_down_files/import_template', 'Admin\QualityControl\PlatformDownFilesController@import_template');// 导入模版
 
 
+// 对外提供接口
+// 证书-能力范围
+Route::get('admin/API/certificate_schedule', 'Admin\QualityControl\API\CertificateScheduleController@index');// 列表
+Route::get('admin/API/certificate_schedule/add/{id}', 'Admin\QualityControl\API\CertificateScheduleController@add');// 添加
+// Route::get('admin/API/certificate_schedule/select', 'Admin\QualityControl\API\CertificateScheduleController@select');// 选择-弹窗
+//Route::get('admin/API/certificate_schedule/export', 'Admin\QualityControl\API\CertificateScheduleController@export');// 导出
+//Route::get('admin/API/certificate_schedule/import_template', 'Admin\QualityControl\API\CertificateScheduleController@import_template');// 导入模版
+
+//Route::get('admin/API/certificate_schedule/add_excel/{id}', 'Admin\QualityControl\API\CertificateScheduleController@add_excel');// 添加--导入
+
+Route::get('admin/API/certificate_schedule/add_bath_api/{id}', 'Admin\QualityControl\API\CertificateScheduleController@add_bath_api');// 能力范围及能力附表添加--导入
+Route::get('admin/API/certificate_schedule/add_files_api/{id}', 'Admin\QualityControl\API\CertificateScheduleController@add_files_api');// 企业文件信息
+Route::get('admin/API/certificate_schedule/add_bath_modify_api/{id}', 'Admin\QualityControl\API\CertificateScheduleController@add_bath_modify_api');// 能力范围删除或新加-修改
+Route::get('admin/API/certificate_schedule/add_modify_api/{id}', 'Admin\QualityControl\API\CertificateScheduleController@add_modify_api');// 注册/修改企业信息
+
 // 企业后台 company
 Route::get('company/login', 'WebFront\Company\QualityControl\IndexController@login');// login.html 登录
 Route::get('company/reg', 'WebFront\Company\QualityControl\IndexController@reg');// 注册

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Business\Controller\API\QualityControl\CTAPIApplyBusiness;
 use App\Services\DB\CommonDB;
 use App\Services\Request\CommonRequest;
 use App\Services\Tool;
@@ -25,7 +26,7 @@ class WorksController extends BaseController
         }
         //session_start(); // 初始化session
         //$userInfo = $_SESSION['userInfo']?? [];
-        $userInfo = $this->getUserInfo();
+        $userInfo = $this->getUserInfo($request);
         // pr($userInfo);
         if(empty($userInfo)) {
             throws('非法请求！', $this->getNotLoginErrCode());// $this->source);
@@ -35,6 +36,12 @@ class WorksController extends BaseController
 //                redirect('login');
 //            }
         }
+        // 根据获得的用户信息，初始化【设置】控制器属性
+        $this->setAttrByInfo($request, $userInfo);
+    }
+
+    // 根据获得的用户信息，初始化【设置】控制器属性
+    public function setAttrByInfo(Request $request, $userInfo = []){
         $company_id = $userInfo['id'] ?? null;//$userInfo['company_id'] ?? null;//CommonRequest::getInt($request, 'company_id');
         if(empty($company_id) || (!is_numeric($company_id))){
             throws('非法请求！', $this->getNotLoginErrCode());// $this->source);
@@ -205,5 +212,65 @@ class WorksController extends BaseController
 //        }
 //        return $proUnits;
 //    }
+
+    // 判断应用是否合法及请求是否有效
+    /**
+     * 根据应用的key，判断应用并判断当前的用户信息，并返回用户信息
+     * -- 一般为 权限 判断方法调用【来初始化数据用】 public function getUserInfo(Request $request, $siteLoginUniqueKey = '')
+     * @param Request $request
+     * @param int $power_no 权限判断 1 api请求sign签名验签
+     * @param int $staff_power_no 用户数据 的判断 判断 1：判断是否存在；2 判断用户类型id；4判断是否用户已冻结；8 判断审核中；16 判断审核未通过；32判断非审核通过；；；；；
+     * @param boolean $delSession 是否需要删除登录session true：需要[默认] ； false:不需要
+     * @param array $admin_type_arr 如果判断用户类型时，可进行访问的用户类型id数组
+     * @return array 返回用户信息
+     */
+    public function getUserInfoByAppId(Request $request, $power_no = 1, $apply_power_no = 1 | 2 | 4 | 8 | 16, $staff_power_no = 0, $delSession = true, $admin_type_arr = []){
+        $appid = CommonRequest::get($request, 'appid');
+        $this->app_key = $appid;
+        $appInfo = $this->getApplyInfo($request, $appid, $apply_power_no);
+        $this->app_Info = $appInfo;
+        $this->app_id = $appInfo['id'] ?? 0;
+        $appAecret = $appInfo['app_secret'] ?? '';
+        $staffId = $appInfo['staff_id'] ?? 0;
+        $userInfo = $this->getStaffInfoById($request, $staffId, $staff_power_no, $delSession, $admin_type_arr);
+        // 判断企业信息
+//        $userInfo = $this->getStaffInfo($staffId);
+//        if(empty($userInfo))  throws('应用所属企业信息不存在!');
+//        // 判断权限
+////        if($userInfo['admin_type'] != $this->user_type ){
+////            throws('非法访问！');
+////        }
+//        if($userInfo['account_status'] == 2 ){
+//            throws('用户已冻结！');
+//        }
+//
+//        if($userInfo['open_status'] == 1 ){
+//            throws('审核中，请耐心等待！');
+//        }
+//        if($userInfo['open_status'] == 4 ){
+//            throws('审核未通过！');
+//        }
+//        if($userInfo['open_status'] != 2 ){
+//            throws('非审核通过！');
+//        }
+        // 根据获得的用户信息，初始化【设置】控制器属性
+        $this->setAttrByInfo($request, $userInfo);
+
+        if( ($power_no & 1) == 1  ){
+            /**
+             *
+             *  服务端接到这个请求：
+             *  1 先验证sign签名是否合理，证明请求参数没有被中途篡改
+             *  2 再验证timestamp是否过期，证明请求是在最近60s被发出的
+             *  3 最后验证nonce是否已经有了，证明这个请求不是60s内的重放请求
+             *
+             */
+            $params = CommonRequest::getParamsByUbound($request, 2, false, [], []);
+            // throws(json_encode($params));
+            $res = CommonRequest::apiJudgeSign($request, $params, 1,  $appAecret);
+            // if(is_string($res)) ajaxDataArr(0, null, $res);
+        }
+        return $userInfo;
+    }
 
 }

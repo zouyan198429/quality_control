@@ -28,6 +28,10 @@ class IndexController extends BasicController
 {
     public $controller_id =0;// 功能小模块[控制器]id - controller_id  历史表 、正在进行表 与原表相同
 
+    public function getSign(){
+
+    }
+
     public function testAPI(Request $request){
 
         /**
@@ -45,6 +49,9 @@ class IndexController extends BasicController
     }
 
     public function test(Request $request){
+        pr(microtime());
+//        $actionName = request()->route()->getActionName();
+//        pr($actionName);
 
         // 获得所有的企业信息
 //        $market_id= 1332;
@@ -214,7 +221,7 @@ class IndexController extends BasicController
         pr($extParams);
             $this->InitParams($request);
         $reDataArr = $this->reDataArr;
-        //pr($this->getUserInfo());
+        //pr($this->getUserInfo($request));
         //die;
         pr($this->user_id);
         echo '1111';

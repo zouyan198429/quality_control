@@ -22,7 +22,7 @@ class IndexController extends BasicController
         pr($extParams);
             $this->InitParams($request);
         $reDataArr = $this->reDataArr;
-        //pr($this->getUserInfo());
+        //pr($this->getUserInfo($request));
         //die;
         pr($this->user_id);
         echo '1111';

@@ -279,7 +279,7 @@ class UploadFile
 
         }
         $filePath = $sysAbsDir . $savePath;
-        if(!file_exists($filePath)) makeDir($filePath);// 创建目录
+        if(!file_exists($filePath))  makeDir($filePath);// 创建目录
         return $savePath;
     }
 

@@ -1543,4 +1543,179 @@ class StaffDBBusiness extends BasePublicDBBusiness
         });
         return $modifyNum;
     }
+
+    /**
+     *  保存企业信息及证书表
+     * @param  array $info企业信息
+    //    [
+    //    'company_name' => $company_name,// 机构名称
+    //    'company_certificate_no' => $certificate_no,// CMA证书号(资质认定编号)
+    //    'ratify_date' => $ratify_date,// 发证日期 格式 2020-11-06
+    //    'valid_date' => $valid_date,// 证书有效日期 格式 2020-11-06
+    //    'laboratory_addr' => $addr,// 实验室地址
+    //    'company_contact_name' => $contact_name,// 联系人
+    //    'company_contact_mobile' => $contact_mobile,// 联系人手机或电话
+    //    ]
+     * @param int $company_id 数据所属的 企业 id 默认0
+     * @param boolean $isAddNew 企业是否是新加 true:新加 ； false:已存在[默认]
+     *
+     */
+    public static function saveCompany($info, &$company_id, &$isAddNew){
+        $company_name = $info['company_name'] ?? '';
+        $company_certificate_no = $info['company_certificate_no'] ?? '';
+
+
+        // 通过企业名称及证书号，获得企业信息
+        // 'company_name' => $company_name,
+        if(!empty($company_certificate_no)){
+
+            $extParams = [
+                'sqlParams' => [
+                    'orderBy' => ['open_status' => 'desc', 'id' => 'desc'],// 审核通过的优先拿到
+                ]
+            ];
+            $companyInfo = StaffDBBusiness::getDBFVFormatList(4, 1, [
+                'company_certificate_no' => $company_certificate_no,
+                'admin_type' => 2,
+                'open_status' => [1,2]
+            ], false, [], $extParams);
+        }
+        // 获得城市KV值
+        $cityKV = CitysDBBusiness::getKeyVals(['key' => 'id', 'val' => 'city_name']);
+        CommonDB::doTransactionFun(function() use( &$info, &$companyInfo, &$company_name, &$company_certificate_no, &$cityKV, &$company_id, &$isAddNew){
+
+            $company_id = $companyInfo['id'] ?? 0;// 企业 id
+
+            $company_contact_name = $info['company_contact_name'];
+            $company_contact_mobile = $info['company_contact_mobile'];
+            $ratify_date = $info['ratify_date'];
+            $valid_date = $info['valid_date'];
+            $laboratory_addr = $info['laboratory_addr'];
+
+            $certificate_info = [
+                // 'company_id' => $saveData['company_id'],
+                'certificate_no' => $company_certificate_no,
+                'ratify_date' => $ratify_date,
+                'valid_date' => $valid_date,
+                'addr' => $laboratory_addr,
+            ];
+            // 保存企业信息
+            $companyInfoData = [
+                // 'company_contact_name' => $company_contact_name,
+                // 'company_contact_mobile' => $company_contact_mobile,
+                // 'company_certificate_no' => $company_certificate_no,
+                'ratify_date' => $ratify_date,
+                'valid_date' => $valid_date,
+                //                             'company_name' => $company_name,
+                //                             'laboratory_addr' => $laboratory_addr,
+            ];
+            // 企业不存在时，要加入信息
+            $companyInfoExtend = [
+                'company_contact_name' => $company_contact_name,
+                'company_contact_mobile' => $company_contact_mobile,
+                'company_certificate_no' => $company_certificate_no,
+                'company_name' => $company_name,
+                'laboratory_addr' => $laboratory_addr,
+
+                'admin_type' => 2,
+                'admin_username' => $company_contact_mobile,
+                'admin_password' => substr($company_contact_mobile, -6, 6),
+                'is_perfect' => 2,// 是否完善资料1待完善2已完善
+                'issuper' => 2,// 是否超级帐户2否1是
+                'open_status' => 2,// 审核状态1待审核2审核通过4审核不通过
+                'account_status' => 1,// 状态 1正常 2冻结
+                'mobile' => $company_contact_mobile,
+                'addr' => $laboratory_addr,// 通讯地址
+                // 'city_id' => $aaaa,// 所在城市
+            ];
+            if($company_id > 0) {// 我们有企业信息
+                $isAddNew = false;// 已存在
+                $companyInfoExtend['is_import'] = 4;
+                // 如果我们是空数据，则以他们的为主
+                $tem_company_contact_name = $companyInfo['company_contact_name'] ?? '';
+                $tem_company_contact_mobile = $companyInfo['company_contact_mobile'] ?? '';
+                $tem_company_certificate_no = $companyInfo['company_certificate_no'] ?? '';
+                $tem_company_name = $companyInfo['company_name'] ?? '';
+                $tem_laboratory_addr = $companyInfo['laboratory_addr'] ?? '';
+                if (empty($tem_company_contact_name)) {//  || $tem_company_contact_name != $company_contact_name
+                    $companyInfoData['company_contact_name'] = $company_contact_name;
+                }
+                if (empty($tem_company_contact_mobile)) {//  || $tem_company_contact_mobile != $company_contact_mobile
+                    $companyInfoData['company_contact_mobile'] = $company_contact_mobile;
+                }
+                if (empty($tem_company_certificate_no)) {//  || $tem_company_certificate_no != $company_certificate_no
+                    $companyInfoData['company_certificate_no'] = $company_certificate_no;
+                }
+                if (empty($tem_company_name)) {//  || $tem_company_name != $company_name
+                    $companyInfoData['company_name'] = $company_name;
+                }
+                if (empty($tem_laboratory_addr)) {//  || $tem_laboratory_addr != $laboratory_addr
+                    $companyInfoData['laboratory_addr'] = $laboratory_addr;
+                }
+            }else{// 我们没有企业信息
+                $isAddNew = true;// 新加
+                $city_id = 0;
+                foreach($cityKV as $t_city_id => $t_city_name){
+                    // 公司名称或地址中包含到城市的
+                    if (strpos($company_name, $t_city_name) !== false || strpos($laboratory_addr, $t_city_name) !== false) {
+                        $city_id = $t_city_id;
+                        break;
+                    }
+                }
+
+                $companyInfoExtend['is_import'] = 1;
+                $companyInfoExtend['city_id'] = $city_id;
+
+                $companyInfoData = array_merge($companyInfoData, $companyInfoExtend);
+            }
+
+            StaffDBBusiness::replaceById($companyInfoData, 0, $company_id, 0, 0);
+
+            // 保存 证书表  certificate
+            $certificateObj = null ;
+            $searchConditon = [
+                'company_id' => $company_id,
+                // 'certificate_no' => $certificate_info['certificate_no'],// 一个企业只能有一个证书，所以去掉这个字段
+            ];
+            CertificateDBBusiness::updateOrCreate($certificateObj, $searchConditon, $certificate_info);
+
+        });
+    }
+
+    /**
+     *  获得企业信息及证书表
+     * @param  array $info企业信息
+    //    [
+    //    'company_name' => $company_name,// 机构名称
+    //    'company_certificate_no' => $certificate_no,// CMA证书号(资质认定编号)
+    //    ]
+     * @param int $company_id 数据所属的 企业 id 默认0
+     * @param array $companyInfo 企业信息--一维数组
+     *
+     */
+    public static function getCompany($info, &$company_id, &$companyInfo){
+        $company_name = $info['company_name'] ?? '';
+        $company_certificate_no = $info['company_certificate_no'] ?? '';
+
+
+        // 通过企业名称及证书号，获得企业信息
+        // 'company_name' => $company_name,
+        if(!empty($company_certificate_no)){
+
+            $extParams = [
+                'sqlParams' => [
+                    'orderBy' => ['open_status' => 'desc', 'id' => 'desc'],// 审核通过的优先拿到
+                ]
+            ];
+            $companyInfo = StaffDBBusiness::getDBFVFormatList(4, 1, [
+                'company_certificate_no' => $company_certificate_no,
+                'admin_type' => 2,
+                'open_status' => [1,2]
+            ], false, [], $extParams);
+            if(empty($companyInfo)) throws('企业信息不存在');
+            $company_id = $companyInfo['id'] ?? 0;// 企业 id
+        }else{
+            throws('参数CMA证书号(资质认定编号)不能为空！');
+        }
+    }
 }
