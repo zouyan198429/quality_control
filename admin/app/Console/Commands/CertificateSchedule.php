@@ -38,6 +38,9 @@ class CertificateSchedule extends Command
      */
     public function handle()
     {
+        ini_set('memory_limit', '3072M');    // 临时设置最大内存占用为 3072M 3G
+        ini_set("max_execution_time", 0);
+        set_time_limit(0);   // 设置脚本最大执行时间 为0 永不过期
         // 获得所有的记录
         $dataList = CertificateScheduleDBBusiness::getDBFVFormatList(1, 1, [], true);
         $bar = $this->output->createProgressBar(count($dataList));
