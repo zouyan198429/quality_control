@@ -605,7 +605,23 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
                 Tool::arrAppendKeys($schedule_del_list, $params);
                 foreach($schedule_del_list as $v){
                     Tool::arrClsEmpty($v);// 去除空值
-
+                    // 优先通过 五级分类来删除[查询到，只有一条数据时]
+                    $searchInfo = Tool::getArrFormatFields($v, ['certificate_no', 'category_name', 'project_name', 'three_name', 'four_name', 'param_name'], false);
+                    if(!empty($searchInfo)){
+                        $extParams = [
+//                        'sqlParams' => [
+//                            'orderBy' => ['id' => 'desc'],// 审核通过的优先拿到
+//                        ]
+                        ];
+                        $scheduleList = static::getDBFVFormatList(1, 1, $searchInfo, false, [], $extParams);
+                        if(count($scheduleList) <= 1){// 刚好最多只有一条记录
+                            foreach($scheduleList as $scheduleInfo){
+                                $schedule_id = $scheduleInfo['id'] ?? 0;// 企业 id
+                                static::delById($company_id, $schedule_id, $operate_staff_id, $modifAddOprate, ['organize_id' => $staff_id]);
+                            }
+                            continue;
+                        }
+                    }
                     // 对数据换行进行处理
                     if(isset($v['method_name']) && !empty($v['method_name'])){
                         $v['method_name'] = replace_enter_char($v['method_name'], 1);
@@ -622,7 +638,7 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
 //                            'orderBy' => ['id' => 'desc'],// 审核通过的优先拿到
 //                        ]
 //                    ];
-//                    $scheduleInfo = StaffDBBusiness::getDBFVFormatList(4, 1, $v, false, [], $extParams);
+//                    $scheduleInfo = static::getDBFVFormatList(4, 1, $v, false, [], $extParams);
 //                    if(!empty($scheduleInfo)){
 //                        $schedule_id = $scheduleInfo['id'] ?? 0;// 企业 id
 //                        static::delById($company_id, $schedule_id, $operate_staff_id, $modifAddOprate, ['organize_id' => $staff_id]);
@@ -632,7 +648,7 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
 //                            'orderBy' => ['id' => 'desc'],// 审核通过的优先拿到
 //                        ]
                     ];
-                    $scheduleList = StaffDBBusiness::getDBFVFormatList(1, 1, $v, false, [], $extParams);
+                    $scheduleList = static::getDBFVFormatList(1, 1, $v, false, [], $extParams);
                     if(!empty($scheduleList)){
                         foreach($scheduleList as $scheduleInfo){
                             $schedule_id = $scheduleInfo['id'] ?? 0;// 企业 id
