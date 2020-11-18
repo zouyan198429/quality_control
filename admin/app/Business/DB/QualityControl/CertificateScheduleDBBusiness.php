@@ -384,7 +384,7 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
         }
         $errsArr = [];// 错误数组
         // $saveArr = [];// 最终可以保存的数据
-        foreach($saveData as $k => $info) {
+        foreach($saveData as $k => &$info) {
             $recordErr = [];
             $company_id = $info['company_id'] ?? 0;
             $category_name = $info['category_name'] ?? '';// 类别
@@ -393,8 +393,20 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
             $four_name = $info['four_name'] ?? '';// 四级
             $param_name = $info['param_name'] ?? '';// 项目
             $method_name = $info['method_name'] ?? '';// 标准（方法）名称
+            if(!empty($method_name)){
+                $method_name = replace_enter_char($method_name, 1);
+                $info['method_name'] = $method_name;
+            }
             $limit_range = $info['limit_range'] ?? '';// 限制范围
+            if(!empty($limit_range)){
+                $limit_range = replace_enter_char($limit_range, 1);
+                $info['limit_range'] = $limit_range;
+            }
             $explain_text = $info['explain_text'] ?? '';// 说明
+            if(!empty($explain_text)){
+                $explain_text = replace_enter_char($explain_text, 1);
+                $info['explain_text'] = $explain_text;
+            }
             if(!is_numeric($company_id) || $company_id <= 0) array_push($recordErr, '所属企业不能为空!');
            // if(empty($category_name) && empty($project_name) && empty($param_name)) array_push($recordErr, '类别、产品、项目不能都为空!');
             if(empty($method_name)) array_push($recordErr, '标准（方法）名称不能都为空!');
