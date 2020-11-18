@@ -605,6 +605,17 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
                 Tool::arrAppendKeys($schedule_del_list, $params);
                 foreach($schedule_del_list as $v){
                     Tool::arrClsEmpty($v);// 去除空值
+
+                    // 对数据换行进行处理
+                    if(isset($v['method_name']) && !empty($v['method_name'])){
+                        $v['method_name'] = replace_enter_char($v['method_name'], 1);
+                    }
+                    if(isset($v['limit_range']) && !empty($v['limit_range'])){
+                        $v['limit_range'] = replace_enter_char($v['limit_range'], 1);
+                    }
+                    if(isset($v['explain_text']) && !empty($v['explain_text'])){
+                        $v['explain_text'] = replace_enter_char($v['explain_text'], 1);
+                    }
                     // 查询记录
 //                    $extParams = [
 //                        'sqlParams' => [
