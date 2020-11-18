@@ -197,9 +197,9 @@
 													<td  align="center" class="category_name">{{ $v['category_name'] ?? '' }}</td>
 													<td  align="center" class="project_name">{{ $v['project_name'] ?? '' }}</td>
 													<td class="param_name">{{ $v['param_name'] ?? '' }}</td>
-													<td class="method_name">{{ $v['method_name'] ?? '' }}</td>
-													<td class="limit_range">{{ $v['limit_range'] ?? '' }}</td>
-							                        <td class="explain_text">{{ $v['explain_text'] ?? '' }}</td>
+													<td class="method_name">{!! $v['method_name'] ?? '' !!}</td>
+													<td class="limit_range">{!! $v['limit_range'] ?? '' !!}</td>
+							                        <td class="explain_text">{!! $v['explain_text'] ?? '' !!}</td>
 													<td class="addr">{{ $v['addr'] ?? '' }}</td>
 													<td class="ratify_date">{{ $v['ratify_date'] ?? '' }}</td>
 												</tr>
