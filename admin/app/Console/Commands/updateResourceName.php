@@ -51,7 +51,8 @@ class updateResourceName extends Command
     public function handle()
     {
         try{
-            ini_set('memory_limit','3072M');    // 临时设置最大内存占用为 3072M 3G
+            // ini_set('memory_limit','3072M');    // 临时设置最大内存占用为 3072M 3G
+            Tool::phpInitSet();
             // 获得所有的企业信息
             $url = "http://113.140.67.203:1284/jgjbqk_SearchList.action";
             // $DownFile = DownFile::curlGetFileContents($url);

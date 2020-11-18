@@ -268,9 +268,10 @@ class CTAPIResourceBusiness extends BasicPublicCTAPIBusiness
             $operate_staff_id =  $controller->operate_staff_id;
             if(!is_numeric($operate_staff_id)) $operate_staff_id = 0;
 
-            ini_set('memory_limit','1024M');    // 临时设置最大内存占用为 3072M 3G
-            ini_set("max_execution_time", "300");
-            set_time_limit(300);   // 设置脚本最大执行时间 为0 永不过期
+//            ini_set('memory_limit','1024M');    // 临时设置最大内存占用为 3072M 3G
+//            ini_set("max_execution_time", "300");
+//            set_time_limit(300);   // 设置脚本最大执行时间 为0 永不过期
+            Tool::phpInitSet('3072M', 300);
 
             // $pro_unit_id = CommonRequest::getInt($request, 'pro_unit_id');
             $name = CommonRequest::get($request, 'name'); // 文件名称

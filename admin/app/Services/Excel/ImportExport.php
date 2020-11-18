@@ -14,7 +14,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 /**  Define a Read Filter class implementing \PhpOffice\PhpSpreadsheet\Reader\IReadFilter  */
 class ImportExport
 {
-    public static $MEMORY_LIMIT = '1024M';// 增加PHP可用的内存
+    public static $MEMORY_LIMIT = '3072M';// 增加PHP可用的内存
     /**
      * 测试
      * @return  null

@@ -403,7 +403,7 @@ class CertificateScheduleController extends BasicController
     public function ajax_bath_save(Request $request)
     {
 //        $this->InitParams($request);
-
+        Tool::phpInitSet();
         $id = CommonRequest::getInt($request, 'id');
         $pageNum = 0;
         return $this->exeDoPublicFun($request, $pageNum, 4,'', true

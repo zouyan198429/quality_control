@@ -4619,4 +4619,16 @@ class Tool
         }
         return $returnstr;
     }
+
+    /**
+     * 设置临时改变php内存及执行时间
+     * @param string $memory_limit // 临时设置最大内存占用为 3072M 3G
+     * @param int $max_execution_time // 设置脚本最大执行时间 为0 永不过期
+     *
+     */
+    public static function phpInitSet($memory_limit = '3072M', $max_execution_time = 0){
+        ini_set('memory_limit', $memory_limit);// '3072M');    // 临时设置最大内存占用为 3072M 3G
+        ini_set("max_execution_time", $max_execution_time);// 0);
+        set_time_limit($max_execution_time);// 0);   // 设置脚本最大执行时间 为0 永不过期
+    }
 }

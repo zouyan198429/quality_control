@@ -365,9 +365,10 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
      * @author zouyan(305463219@qq.com)
      */
     public static function importDatas($saveData, $company_id, $operate_staff_id = 0, $modifAddOprate = 0, $doType = 1){
-        ini_set('memory_limit','3072M');    // 临时设置最大内存占用为 3072M 3G
-        ini_set("max_execution_time", 0);
-        set_time_limit(0);   // 设置脚本最大执行时间 为0 永不过期
+//        ini_set('memory_limit','3072M');    // 临时设置最大内存占用为 3072M 3G
+//        ini_set("max_execution_time", 0);
+//        set_time_limit(0);   // 设置脚本最大执行时间 为0 永不过期
+        Tool::phpInitSet();
         $returnIds = [];
         if(empty($saveData)) return $returnIds;
         $operate_staff_id_history = config('public.operate_staff_id_history', 0);// 0;--写上，不然后面要去取，但现在的系统不用历史表
@@ -471,9 +472,10 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
      */
     public static function saveCompany($saveData, $company_id, $operate_staff_id = 0, $modifAddOprate = 0)
     {
-        ini_set('memory_limit', '3072M');    // 临时设置最大内存占用为 3072M 3G
-        ini_set("max_execution_time", 0);
-        set_time_limit(0);   // 设置脚本最大执行时间 为0 永不过期
+//        ini_set('memory_limit', '3072M');    // 临时设置最大内存占用为 3072M 3G
+//        ini_set("max_execution_time", 0);
+//        set_time_limit(0);   // 设置脚本最大执行时间 为0 永不过期
+        Tool::phpInitSet();
         $staff_id = 0;// 数据所属的企业 id
         try{
             CommonDB::doTransactionFun(function() use( &$saveData, &$company_id, &$operate_staff_id, &$modifAddOprate, &$staff_id){
@@ -517,9 +519,10 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
      */
     public static function bathSaveDatas($saveData, $company_id, $operate_staff_id = 0, $modifAddOprate = 0)
     {
-        ini_set('memory_limit', '3072M');    // 临时设置最大内存占用为 3072M 3G
-        ini_set("max_execution_time", 0);
-        set_time_limit(0);   // 设置脚本最大执行时间 为0 永不过期
+//        ini_set('memory_limit', '3072M');    // 临时设置最大内存占用为 3072M 3G
+//        ini_set("max_execution_time", 0);
+//        set_time_limit(0);   // 设置脚本最大执行时间 为0 永不过期
+        Tool::phpInitSet();
         $addFiels = [];
         $staff_id = 0;// 数据所属的企业 id
         try{
@@ -579,9 +582,10 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
      */
     public static function bathModifyDatas($saveData, $company_id, $operate_staff_id = 0, $modifAddOprate = 0)
     {
-        ini_set('memory_limit', '3072M');    // 临时设置最大内存占用为 3072M 3G
-        ini_set("max_execution_time", 0);
-        set_time_limit(0);   // 设置脚本最大执行时间 为0 永不过期
+//        ini_set('memory_limit', '3072M');    // 临时设置最大内存占用为 3072M 3G
+//        ini_set("max_execution_time", 0);
+//        set_time_limit(0);   // 设置脚本最大执行时间 为0 永不过期
+        Tool::phpInitSet();
         $staff_id = 0;// 数据所属的企业 id
         try{
             CommonDB::doTransactionFun(function() use( &$saveData, &$company_id, &$operate_staff_id, &$modifAddOprate, &$staff_id){
@@ -694,9 +698,10 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
      */
     public static function bathSaveFiles($saveData, $company_id, $operate_staff_id = 0, $modifAddOprate = 0)
     {
-        ini_set('memory_limit', '3072M');    // 临时设置最大内存占用为 3072M 3G
-        ini_set("max_execution_time", 0);
-        set_time_limit(0);   // 设置脚本最大执行时间 为0 永不过期
+//        ini_set('memory_limit', '3072M');    // 临时设置最大内存占用为 3072M 3G
+//        ini_set("max_execution_time", 0);
+//        set_time_limit(0);   // 设置脚本最大执行时间 为0 永不过期
+        Tool::phpInitSet();
         $addFiels = [];
         $staff_id = 0;// 数据所属的企业 id
         try{
