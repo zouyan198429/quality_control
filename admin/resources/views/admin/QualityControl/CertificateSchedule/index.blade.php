@@ -69,8 +69,8 @@
         <col width="95">
         <col>
         <col>
-        <col>
-        <col>
+        <col width="18%">
+        <col width="18%">
         <col width="95">
         <col width="140">
     </colgroup>
