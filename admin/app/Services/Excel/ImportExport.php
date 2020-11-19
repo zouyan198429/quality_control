@@ -82,7 +82,7 @@ class ImportExport
         $chunkFilter = new ChunkReadFilter();
         /**  Tell the Reader that we want to use the Read Filter  **/
         $reader->setReadFilter($chunkFilter);
-        $reader->setReadDataOnly(true);
+        // $reader->setReadDataOnly(true);
         $maxRow = 65536;
         if(strtolower($inputFileType) == 'xlsx') $maxRow = 1048576;
         $dataArr = [];
@@ -114,8 +114,8 @@ class ImportExport
                    // $temArr = [];
                     for($col = 1; $col<= $highestColumnIndex; $col++){  // 获得每一列
                         $temVal = $worksheet->getCellByColumnAndRow($col, $headRowNum)->getValue();
-                       // array_push($temArr, $temVal);
                         if(!empty($temVal))  $temVal = trim($temVal);
+                       // array_push($temArr, $temVal);
                         if(isset($headArr[$temVal])){
                             $headColKey[$col] = $headArr[$temVal];
                             unset($headArr[$temVal]);
@@ -134,21 +134,44 @@ class ImportExport
                     if($headRowNum > 0 && $headRowNum == $row) continue;  // 绕过抬头列
 
                     $temArr = [];
+                    $allCellEmpty = true;// 优化处理：这一列是否所有的列都是空值--自动去掉
                     if(count($headColKey) > 0){// 有指定下标
                         foreach($headColKey as $col => $key){
-                            $temVal = $worksheet->getCellByColumnAndRow($col, $row)->getValue();
+                             $temVal = $worksheet->getCellByColumnAndRow($col, $row)->getValue();
+
+                            // 注意识别日期和数字需要关闭才能起作用 ：// $reader->setReadDataOnly(TRUE); #设置为只读对象 -- 注释掉
+                            // $temVal = $worksheet->getCellByColumnAndRow($col, $row)->getFormattedValue();
+
                             if(!empty($temVal))  $temVal = trim($temVal);
+
+                            if($allCellEmpty && $temVal != '') $allCellEmpty = false;// 标记有不为空的值了
+
+                            // TODO 对日期数据进行处理--暂不处理了
+                             $cell = $worksheet->getCellByColumnAndRow($col, $row);
+                             static::formatDateVal($worksheet, $cell, $temVal, 'Y-m-d');
+
                             $temArr[$key] = $temVal;
                         }
 
                     }else{
                         for($col = 1; $col<= $highestColumnIndex; $col++){  // 获得每一列
                             $temVal = $worksheet->getCellByColumnAndRow($col, $row)->getValue();
+
+                            // 注意识别日期和数字需要关闭才能起作用 ：// $reader->setReadDataOnly(TRUE); #设置为只读对象 -- 注释掉
+                            // $temVal = $worksheet->getCellByColumnAndRow($col, $row)->getFormattedValue();
+
                             if(!empty($temVal))  $temVal = trim($temVal);
+
+                            if($allCellEmpty && $temVal != '') $allCellEmpty = false;// 标记有不为空的值了
+
+                            // TODO 对日期数据进行处理--暂不处理了
+                             $cell = $worksheet->getCellByColumnAndRow($col, $row);
+                             static::formatDateVal($worksheet, $cell, $temVal, 'Y-m-d');
+
                             array_push($temArr, $temVal);
                         }
                     }
-                    array_push($dataArr, $temArr);
+                    if(!$allCellEmpty) array_push($dataArr, $temArr);
                 }
                 // 从内存中清除工作簿
                 $spreadsheet->disconnectWorksheets();
@@ -383,6 +406,44 @@ class ImportExport
         // 从内存中清除工作簿
         $spreadsheet->disconnectWorksheets();
         unset($spreadsheet);
+    }
+
+
+
+    /**
+     * 对日期每个值进行处理(格式化)---主要是日期时间 ; 只对 'dd/mm/yyyy' 进行处理
+     * @param  object $worksheet 对象
+     * @param  object $cell 当前值的单元格对象
+     * @param  mixed $data 当前单元格的值
+     * @param  mixed $format 格式化 ；如果为空，直接返回 php的时间戳
+     * @throws \Exception
+     *
+     */
+    public static function formatDateVal($worksheet, $cell, &$data, $format = 'Y-m-d'){
+
+         // $cell = $worksheet->getCell("F2");// F2
+         // $data = $worksheet->getCell('F2')->getValue();
+        if($dataType = $cell->getDataType() == \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC) {
+
+            $coordinate = $cell->getCoordinate(); #获取单元格定位 e.g. F2
+
+            $formatCode = $worksheet->getStyle($coordinate)->getNumberFormat()->getFormatCode(); #格式代码
+
+            // 下面的处理还是有问题，数字也处理了，
+            if($formatCode !== "General") { #判断是否是日期格式
+
+                if(in_array($formatCode, ['dd/mm/yyyy', 'm/d/yyyy'])){
+                    $data = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToTimestamp($data); #将Excel表里的日期格式转换成php的时间戳
+                    if(!empty($format)) $data = date($format, $data); #转换成2016/03/03格式
+                }else{// 其它的案显示样式来
+                    // 注意识别日期和数字需要关闭才能起作用 ：// $reader->setReadDataOnly(TRUE); #设置为只读对象 -- 注释掉
+                    $data = $cell->getFormattedValue();
+                }
+            }
+
+        }
+        // 去掉前后空格
+        if(!empty($data)) $data = trim($data);
     }
 
 //    /**
