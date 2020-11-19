@@ -2894,6 +2894,347 @@ function empty_tag(tag_config_key){
 }
 
 //~~~~~~~~~~~~~~~~~~~~标签~~相关~~~开始~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+//~~~~~~~~~~~~~~~~~~~~JavaScript中unicode编码与String互转（三种方法）~~相关~~~开始~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//unicode转String
+// 1. eval("'" + str + "'");//当str中有带分号'或者"时，会报错，此时改成eval('"' + str + '"')即可
+// 2. (new Function("return '" + str + "'"))();//同上
+// 3. unescape(str.replace(/\u/g, "%u"));
+// //string转unicode（str字符的第i个）
+// 1."\\u" + str.charCodeAt(i).toString(16);
+
+//unicode2string
+// var str = "我是中国人";
+// var str_u = string2unicode(str);//\u6211\u662f\u4e2d\u56fd\u4eba
+// var str_s = unicode2string(str_u);// 我是中国人
+// function string2unicode(str){
+//     var ret ="";
+//     for(var i=0; i<str.length; i++){
+//         //var code = str.charCodeAt(i);
+//         //var code16 = code.toString(16);   　　　　
+//         //var ustr = "\\u"+code16;
+//         //ret +=ustr;
+//         ret += "\\u" + str.charCodeAt(i).toString(16);
+//     }
+//     return ret;
+// }
+
+// 样例(包含英文的String)
+// 如果String包含有英文时，转unicode编码时会产生\\u34这样子的，而JS自身的unicode转字符串不能识别这种类型不足4位的unicode嘛。
+// 此时string2unicode需要修改一下即可。
+//string转unicode
+function string2unicode(str){
+    var ret ="";
+    var ustr = "";
+
+    for(var i=0; i<str.length; i++){
+
+        var code = str.charCodeAt(i);
+        var code16 = code.toString(16);
+
+        if(code < 0xf){
+            ustr = "\\u"+"000"+code16;
+        }else if(code < 0xff){
+            ustr = "\\u"+"00"+code16;
+        }else if(code < 0xfff){
+            ustr = "\\u"+"0"+code16;
+        }else{
+            ustr = "\\u"+code16;
+        }
+        ret +=ustr;
+        //ret += "\\u" + str.charCodeAt(i).toString(16);
+    }
+    return ret;
+}
+    // var str_u = string2unicode("中国人CN");//"\u4e2d\u56fd\u4eba\u0043\u004e"
+    // var str_s = unicode2string(str_u);//中国人CN　
+//unicode转String
+function unicode2string(unicode){
+    return eval("'" + unicode + "'");
+}
+
+//~~~~~~~~~~~~~~~~~~~~JavaScript中unicode编码与String互转（三种方法）~~相关~~~结束~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+//~~~~~~~~~~~~~~~~~~~~复制内容到剪贴板（无插件，兼容所有浏览器）~~相关~~~开始~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// https://blog.csdn.net/sunnyzyq/article/details/85065022
+// HTML部分:
+// <button onclick="copyToClip(this,'内容')"> Copy </button>
+// JS部分:---主要用这个 copyToClip(this,'内容')
+/**
+ * 复制内容到粘贴板
+ * clickObj : 当前点击的对象或其它指定的对象[对象内用来放inpuut或textarea]--javascript原生对象  this 或 document.createElement("input");
+ * content : 需要复制的内容
+ * message : 复制完后的提示，不传则默认提示"复制成功"
+ */
+function copyToClip(clickObj, content, message) {
+    var hasHitObj = true; // 是否指定点击对象 true:有传入点击对象 ； false:没有传入点击对象
+    if(clickObj === null || typeof clickObj !== "object") {
+        hasHitObj = false;
+    }
+    var aux = document.createElement("input");
+    // var aux = document.createElement("textarea");
+    aux.setAttribute("value", content);
+    // ios 点击复制时屏幕下方会出现白屏抖动，仔细看是拉起键盘又瞬间收起
+    //  是只读的，就不会拉起键盘了。
+    aux.setAttribute('readonly', 'readonly');
+
+    if(!hasHitObj) {
+        document.body.appendChild(aux);
+    }else{
+        clickObj.parentElement.appendChild(aux);
+    }
+
+    // 前面加上 input.focus()就行了
+    aux.focus();
+
+    //如果是ios端
+    // 那如果是移动端 的话，就要兼容IOS，但是依然在iPhone5的10.2的系统中，依然显示复制失败，
+    // 由于用户使用率较低，兼容就做到这里，那些用户你们就自己手动复制吧。
+    // 下面的两种方法都可以进行复制，因为核心代码就那么几行，先来简单的
+    // if(isiOSDevice){
+    if(getOS() == 'ios'){
+        var obj = aux;
+        // 获取元素内容是否可编辑和是否只读
+        var editable = obj.contentEditable;
+        var readOnly = obj.readOnly;
+
+        // 将对象变成可编辑的
+        obj.contentEditable = true;
+        obj.readOnly = false;
+
+        // 创建一个Range对象，Range 对象表示文档的连续范围区域，如用户在浏览器窗口中用鼠标拖动选中的区域
+        var range = document.createRange();
+        //获取obj的内容作为选中的范围
+        range.selectNodeContents(obj);
+
+        var selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+
+        // obj.setSelectionRange(0, 999999);  //选择范围，确保全选
+        obj.setSelectionRange(0, obj.value.length);// 在ios下并没有选中全部内容，我们需要使用另一个方法来选中内容
+        //恢复原来的状态
+        obj.contentEditable = editable;
+        obj.readOnly = readOnly;
+    //如果是安卓端
+    }else{
+        aux.select();
+    }
+
+    try{
+        // document.execCommand('copy') 之前 先执行一个 document.execCommand('selectAll')就补偿全选的坑了
+        if(document.execCommand("copy","false",null)){
+            if (message == null) {
+                // alert("复制成功");
+                message = "复制成功";
+            } else{
+                // alert(message);
+            }
+
+            layerMsg(message, 1, 0.3, 2000, function () {
+            });
+        }else{
+            // alert("复制失败！请手动复制！");
+            // err_alert("复制失败！请手动复制！");
+            layerMsg("复制失败！请手动复制！", 5, 0.3, 2000, function () {
+            });
+        }
+    }catch(err){
+        // alert("复制错误！请手动复制！")
+        // err_alert("复制失败！请手动复制！");
+        layerMsg("复制失败！请手动复制！", 5, 0.3, 2000, function () {
+        });
+    }
+    if(!hasHitObj) {
+        document.body.removeChild(aux);
+    }else{
+        clickObj.parentElement.removeChild(aux);
+    }
+}
+// 下面是一个比较完整的升级版方法，和插件Clipboard.js一样，不过代码不多，就直接拿来用好了。 这个获取的不是input对象，而是需要复制的内容。
+//使用函数
+// $("#copy").on("tap",function(){
+//     var  val = $("#textAreas").val();
+//     Clipboard.copy(this,val);
+// });
+//定义函数
+window.Clipboard = (function(window, document, navigator) {
+    var textArea,
+        copy;
+
+    // 判断是不是ios端
+    function isOS() {
+        return navigator.userAgent.match(/ipad|iphone/i);
+    }
+    //创建文本元素
+    function createTextArea(clickObj, text) {
+        var hasHitObj = true; // 是否指定点击对象 true:有传入点击对象 ； false:没有传入点击对象
+        if(clickObj === null || typeof clickObj !== "object") {
+            hasHitObj = false;
+        }
+        textArea = document.createElement('textArea');
+        textArea.value = text;
+        // ios 点击复制时屏幕下方会出现白屏抖动，仔细看是拉起键盘又瞬间收起
+        //  是只读的，就不会拉起键盘了。
+        textArea.setAttribute('readonly', 'readonly');
+        if(!hasHitObj) {
+            document.body.appendChild(textArea);
+        }else{
+            clickObj.parentElement.appendChild(textArea);
+        }
+
+    }
+    //选择内容
+    function selectText() {
+        var range,
+            selection;
+
+        // 前面加上 input.focus()就行了
+        textArea.focus();
+        if (isOS()) {
+            range = document.createRange();
+            range.selectNodeContents(textArea);
+            selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            // textArea.setSelectionRange(0, 999999);
+            textArea.setSelectionRange(0, textArea.value.length);
+        } else {
+            textArea.select();
+        }
+    }
+
+//复制到剪贴板
+    function copyToClipboard(clickObj, message) {
+        var hasHitObj = true; // 是否指定点击对象 true:有传入点击对象 ； false:没有传入点击对象
+        if(clickObj === null || typeof clickObj !== "object") {
+            hasHitObj = false;
+        }
+        try{
+            if(document.execCommand("copy","false",null)){
+
+                if (message == null) {
+                    // alert("复制成功");
+                    message = "复制成功";
+                }
+                // alert("复制成功！");
+                layerMsg(message, 1, 0.3, 2000, function () {
+                });
+            }else{
+                // alert("复制失败！请手动复制！");
+                layerMsg("复制失败！请手动复制！", 5, 0.3, 2000, function () {
+                });
+            }
+        }catch(err){
+            // alert("复制错误！请手动复制！")
+            layerMsg("复制失败！请手动复制！", 5, 0.3, 2000, function () {
+            });
+        }
+        if(!hasHitObj) {
+            document.body.removeChild(textArea);
+        }else{
+            clickObj.parentElement.removeChild(textArea);
+        }
+    }
+
+    copy = function(clickObj,text, message) {
+        createTextArea(clickObj,text);
+        selectText();
+        copyToClipboard(clickObj, message);
+    };
+
+    return {
+        copy: copy
+    };
+})(window, document, navigator);
+//~~~~~~~~~~~~~~~~~~~~复制内容到剪贴板（无插件，兼容所有浏览器）~~相关~~~结束~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//~~~~~~~~~~~~~~~~~~~~获取浏览器信息(类型及系统)~~相关~~~开始~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// 各主流浏览器
+function getBrowser() {
+    var u = navigator.userAgent;
+
+    var bws = [{
+        name: 'sgssapp',
+        it: /sogousearch/i.test(u)
+    }, {
+        name: 'wechat',
+        it: /MicroMessenger/i.test(u)
+    }, {
+        name: 'weibo',
+        it: !!u.match(/Weibo/i)
+    }, {
+        name: 'uc',
+        it: !!u.match(/UCBrowser/i) || u.indexOf(' UBrowser') > -1
+    }, {
+        name: 'sogou',
+        it: u.indexOf('MetaSr') > -1 || u.indexOf('Sogou') > -1
+    }, {
+        name: 'xiaomi',
+        it: u.indexOf('MiuiBrowser') > -1
+    }, {
+        name: 'baidu',
+        it: u.indexOf('Baidu') > -1 || u.indexOf('BIDUBrowser') > -1
+    }, {
+        name: '360',
+        it: u.indexOf('360EE') > -1 || u.indexOf('360SE') > -1
+    }, {
+        name: '2345',
+        it: u.indexOf('2345Explorer') > -1
+    }, {
+        name: 'edge',
+        it: u.indexOf('Edge') > -1
+    }, {
+        name: 'ie11',
+        it: u.indexOf('Trident') > -1 && u.indexOf('rv:11.0') > -1
+    }, {
+        name: 'ie',
+        it: u.indexOf('compatible') > -1 && u.indexOf('MSIE') > -1
+    }, {
+        name: 'firefox',
+        it: u.indexOf('Firefox') > -1
+    }, {
+        name: 'safari',
+        it: u.indexOf('Safari') > -1 && u.indexOf('Chrome') === -1
+    }, {
+        name: 'qqbrowser',
+        it: u.indexOf('MQQBrowser') > -1 && u.indexOf(' QQ') === -1
+    }, {
+        name: 'qq',
+        it: u.indexOf('QQ') > -1
+    }, {
+        name: 'chrome',
+        it: u.indexOf('Chrome') > -1 || u.indexOf('CriOS') > -1
+    }, {
+        name: 'opera',
+        it: u.indexOf('Opera') > -1 || u.indexOf('OPR') > -1
+    }];
+
+    for (var i = 0; i < bws.length; i++) {
+        if (bws[i].it) {
+            return bws[i].name;
+        }
+    }
+
+    return 'other';
+}
+
+// 系统区分
+function getOS() {
+    var u = navigator.userAgent;
+    if (!!u.match(/compatible/i) || u.match(/Windows/i)) {
+        return 'windows';
+    } else if (!!u.match(/Macintosh/i) || u.match(/MacIntel/i)) {
+        return 'macOS';
+    } else if (!!u.match(/iphone/i) || u.match(/Ipad/i)) {
+        return 'ios';
+    } else if (!!u.match(/android/i)) {
+        return 'android';
+    } else {
+        return 'other';
+    }
+}
+//~~~~~~~~~~~~~~~~~~~~获取浏览器信息(类型及系统)~~相关~~~结束~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 // 自己实现一个copy，可以传入deep参数表示是否执行深复制：https://www.cnblogs.com/tracylin/p/5346314.html 也来谈一谈js的浅复制和深复制
 //util作为判断变量具体类型的辅助模块
 var util = (function(){

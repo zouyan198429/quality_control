@@ -108,6 +108,12 @@ class CTAPIApiLogContentBusiness extends BasicPublicCTAPIBusiness
 //            if(!isset($return_data['one_field'])) $return_data['one_field'] = [];
 //            array_push($return_data['one_field'], $one_field);
 //        }
+        if(($return_num & 4) == 4){// 给上一级返回 id 、 tag_name 的二维数组 . 如： content_info = [ 'request_content' => '',  'results_content' => '']
+            $many_fields = [ 'ubound_name' => 'log_content', 'fields_arr'=> ['request_content' => 'request_content', 'results_content' => 'results_content'],'reset_ubound' => 2];
+            if(!isset($return_data['many_fields'])) $return_data['many_fields'] = [];
+            array_push($return_data['many_fields'], $many_fields);
+        }
+
 
         return $return_data;
     }

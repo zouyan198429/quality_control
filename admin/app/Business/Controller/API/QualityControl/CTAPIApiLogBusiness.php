@@ -85,6 +85,16 @@ class CTAPIApiLogBusiness extends BasicPublicCTAPIBusiness
 //                , ['admin_type' => 'admin_type', 'staff_id' => 'id']
 //                , 1, 2
 //                ,'','', [], ['where' => [['admin_type', 2]]], '', []),
+            // 获得详细内容
+            'log_content' => CTAPIApiLogContentBusiness::getTableRelationConfigInfo($request, $controller
+                , ['log_no' => 'log_no']
+                , 1, 4
+                ,'','', [], [], '', []),
+            // 获得应用信息
+            'apply_info' => CTAPIApplyBusiness::getTableRelationConfigInfo($request, $controller
+                , ['app_id' => 'id']
+                , 1, 2
+                ,'','', [], [], '', []),
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }
@@ -114,7 +124,6 @@ class CTAPIApiLogBusiness extends BasicPublicCTAPIBusiness
         return $return_data;
     }
     // ****表关系***需要重写的方法**********结束***********************************
-
     /**
      * 获得列表数据时，查询条件的参数拼接--有特殊的需要自己重写此方法--每个字类都有此方法
      *

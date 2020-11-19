@@ -401,6 +401,9 @@
                   <dd>
                       <a lay-href="{{ url('admin/apply') }}">应用管理</a>
                   </dd>
+                  <dd>
+                      <a lay-href="{{ url('admin/api_log') }}">API日志</a>
+                  </dd>
                   <!-- <dd>
                       <a lay-href="javascript:void(91);">角色权限</a>
                   </dd> -->

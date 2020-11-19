@@ -499,6 +499,13 @@ Route::get('admin/apply/add/{id}', 'Admin\QualityControl\ApplyController@add');/
 Route::get('admin/apply/export', 'Admin\QualityControl\ApplyController@export');// 导出
 Route::get('admin/apply/import_template', 'Admin\QualityControl\ApplyController@import_template');// 导入模版
 
+// 接口日志
+Route::get('admin/api_log', 'Admin\QualityControl\ApiLogController@index');// 列表
+Route::get('admin/api_log/add/{id}', 'Admin\QualityControl\ApiLogController@add');// 添加
+// Route::get('admin/api_log/select', 'Admin\QualityControl\ApiLogController@select');// 选择-弹窗
+Route::get('admin/api_log/export', 'Admin\QualityControl\ApiLogController@export');// 导出
+Route::get('admin/api_log/import_template', 'Admin\QualityControl\ApiLogController@import_template');// 导入模版
+
 // 省局企业相关的
 
 // 监督检查信息管理

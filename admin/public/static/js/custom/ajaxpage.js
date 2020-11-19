@@ -228,6 +228,22 @@ function alert_modal_cancel(modal_id){
         alert_obj.modal('hide');
     }
 }
+// message - 内容 默认：'' content可传入的值是灵活多变的，不仅可以传入普通的html内容，还可以指定DOM，更可以随着type的不同而不同。
+// icon 0-6 图标 0：紫红叹号--出错警示 ；1：绿色对勾--成功；2：无图标 ；3：淡黄问号；4：灰色小锁图标；
+//               5：红色哭脸--         ； 6：绝色笑脸
+// shade 默认：0.3 即弹层外区域。默认是0.3透明度的黑色背景（'#000'）。如果你想定义别的颜色，可以shade: [0.8, '#393D49']；如果你不想显示遮罩，可以shade: 0
+// time - 自动关闭所需毫秒 默认：0  默认不会自动关闭。当你想自动关闭时，可以time: 5000，即代表5秒后自动关闭，注意单位是毫秒（1秒=1000毫秒）
+function layerMsg(message, icon, shade, time, doFun) {
+    layer.msg(message, {
+        icon: icon,// 1,
+        shade: shade,// 0.3,
+        time: time// 3000 //2秒关闭（如果不配置，默认是3秒）
+    }, function(){
+        //do something
+        doFun && doFun();
+    });
+}
+
 //error错误弹窗 -倒记时
 //参数 err_msg 错误信息
 function err_alert(err_msg){

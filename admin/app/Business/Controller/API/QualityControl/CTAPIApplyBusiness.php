@@ -109,11 +109,11 @@ class CTAPIApplyBusiness extends BasicPublicCTAPIBusiness
             $return_data['old_data'] = ['ubound_operate' => 1, 'ubound_name' => '', 'fields_arr' => [], 'ubound_keys' => [], 'ubound_type' =>1];
         }
 
-//        if(($return_num & 2) == 2){// 给上一级返回名称 company_name 下标
-//            $one_field = ['key' => 'company_name', 'return_type' => 2, 'ubound_name' => 'company_name', 'split' => '、'];// 获得名称
-//            if(!isset($return_data['one_field'])) $return_data['one_field'] = [];
-//            array_push($return_data['one_field'], $one_field);
-//        }
+        if(($return_num & 2) == 2){// 给上一级返回名称 app_name 下标
+            $one_field = ['key' => 'app_name', 'return_type' => 2, 'ubound_name' => 'app_name', 'split' => '、'];// 获得名称
+            if(!isset($return_data['one_field'])) $return_data['one_field'] = [];
+            array_push($return_data['one_field'], $one_field);
+        }
 
         return $return_data;
     }

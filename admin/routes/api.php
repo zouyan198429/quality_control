@@ -531,6 +531,17 @@ $api->version('v1', function ($api) {
 
         $api->post('admin/apply/up_file', 'Admin\QualityControl\ApplyController@up_file');// 上传文件地址
 
+        // 接口日志
+        $api->any('admin/api_log/ajax_alist', 'Admin\QualityControl\ApiLogController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/api_log/ajax_del', 'Admin\QualityControl\ApiLogController@ajax_del');// 删除
+        $api->post('admin/api_log/ajax_save', 'Admin\QualityControl\ApiLogController@ajax_save');// 新加/修改
+        $api->post('admin/api_log/ajax_get_child', 'Admin\QualityControl\ApiLogController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/api_log/ajax_get_areachild', 'Admin\QualityControl\ApiLogController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/api_log/ajax_import_staff','Admin\QualityControl\ApiLogController@ajax_import'); // 导入员工
+
+        $api->post('admin/api_log/import', 'Admin\QualityControl\ApiLogController@import');// 导入excel
+        $api->post('admin/api_log/ajax_get_ids', 'Admin\QualityControl\ApiLogController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
 
         // 省局企业相关的
 
