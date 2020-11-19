@@ -144,11 +144,11 @@ class ImportExport
 
                             if(!empty($temVal))  $temVal = trim($temVal);
 
-                            if($allCellEmpty && $temVal != '') $allCellEmpty = false;// 标记有不为空的值了
-
                             // TODO 对日期数据进行处理--暂不处理了
                              $cell = $worksheet->getCellByColumnAndRow($col, $row);
                              static::formatDateVal($worksheet, $cell, $temVal, 'Y-m-d');
+
+                            if($allCellEmpty && $temVal != '') $allCellEmpty = false;// 标记有不为空的值了
 
                             $temArr[$key] = $temVal;
                         }
@@ -162,11 +162,11 @@ class ImportExport
 
                             if(!empty($temVal))  $temVal = trim($temVal);
 
-                            if($allCellEmpty && $temVal != '') $allCellEmpty = false;// 标记有不为空的值了
-
                             // TODO 对日期数据进行处理--暂不处理了
                              $cell = $worksheet->getCellByColumnAndRow($col, $row);
                              static::formatDateVal($worksheet, $cell, $temVal, 'Y-m-d');
+
+                            if($allCellEmpty && $temVal != '') $allCellEmpty = false;// 标记有不为空的值了
 
                             array_push($temArr, $temVal);
                         }
@@ -408,12 +408,10 @@ class ImportExport
         unset($spreadsheet);
     }
 
-
-
     /**
      * 对日期每个值进行处理(格式化)---主要是日期时间 ; 只对 'dd/mm/yyyy' 进行处理
      * @param  object $worksheet 对象
-     * @param  object $cell 当前值的单元格对象
+     * @param  object $cell 当前值的单元格对象 ；注意：这个值一定要通过 ->getValue() 方法获取;
      * @param  mixed $data 当前单元格的值
      * @param  mixed $format 格式化 ；如果为空，直接返回 php的时间戳
      * @throws \Exception
