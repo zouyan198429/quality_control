@@ -906,7 +906,20 @@ class StaffDBBusiness extends BasePublicDBBusiness
         if(in_array($admin_type, [1, 2])) $organize_id = 0;
         $returnIds = [];
         if(empty($saveData)) return $returnIds;
-        $selModelObj = static::getModelObj();
+
+        // 如果是导入企业信息
+        if($admin_type == 2){// 企业信息导入
+            foreach($saveData as $company_info){
+                $staff_id = 0;// 数据所属的企业 id
+                $isAddNew = false;// 企业是否是新加 true:新加 ； false:已存在
+                // 新加或修改企业信息
+                StaffDBBusiness::saveCompany($company_info, $staff_id, $isAddNew);
+                if($staff_id > 0) array_push($returnIds, $staff_id);
+            }
+            return $returnIds;
+        }
+
+        // $selModelObj = static::getModelObj();
         // 拥有者类型1平台2企业4个人
         $adminTypeArr = Staff::$adminTypeArr;// Tool::getAttr($selModelObj, 'adminTypeArr', 1);
         // 是否完善资料1待完善2已完善

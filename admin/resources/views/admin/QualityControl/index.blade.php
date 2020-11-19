@@ -380,6 +380,23 @@
                       </dd>
                   </dl>
               </li> -->
+              <li data-name="user" class="layui-nav-item">
+                  <a href="javascript:;" lay-tips="应用接口管理" lay-direction="2">
+                      <i class="layui-icon layui-icon-user"></i>
+                      <cite>应用接口管理</cite>
+                  </a>
+                  <dl class="layui-nav-child">
+                      <dd >
+                          <a lay-href="{{ url('admin/third_service') }}">数据对接商管理</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="{{ url('admin/apply') }}">应用管理</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="{{ url('admin/api_log') }}">API日志</a>
+                      </dd>
+                  </dl>
+              </li>
             <li data-name="user" class="layui-nav-item">
               <a href="javascript:;" lay-tips="基础设置" lay-direction="2">
                 <i class="layui-icon layui-icon-user"></i>
@@ -394,15 +411,6 @@
                 </dd>
                   <dd>
                       <a lay-href="{{ url('admin/expert') }}">数据查看人员管理</a>
-                  </dd>
-                  <dd >
-                      <a lay-href="{{ url('admin/third_service') }}">数据对接商管理</a>
-                  </dd>
-                  <dd>
-                      <a lay-href="{{ url('admin/apply') }}">应用管理</a>
-                  </dd>
-                  <dd>
-                      <a lay-href="{{ url('admin/api_log') }}">API日志</a>
                   </dd>
                   <!-- <dd>
                       <a lay-href="javascript:void(91);">角色权限</a>

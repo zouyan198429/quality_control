@@ -745,9 +745,9 @@ class StaffController extends BasicController
             // $this->company_id = 1;
             // 企业 的 个人--只能读自己的人员信息
             $organize_id = 0;
-            if($this->user_type == 2 && static::$ADMIN_TYPE == 4){
+            if($this->user_type == 2 && static::$ADMIN_TYPE == 4){// 企业后台操作的- 个人信息导入
                 $organize_id = $this->own_organize_id;
-            }else if(static::$ADMIN_TYPE == 4){
+            }else if(static::$ADMIN_TYPE == 4){// 大后台操作的--个人信息导入
                 $organize_id = CommonRequest::getInt($request, 'company_id');
                 if(!is_numeric($organize_id) || $organize_id <= 0) throws('所属企业参数有误！');
             }

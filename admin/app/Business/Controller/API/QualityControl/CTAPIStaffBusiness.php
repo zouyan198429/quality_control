@@ -1195,6 +1195,9 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
         $user_id = $controller->user_id;
         $organize_id = CommonRequest::get($request, 'company_id');
         $admin_type = CommonRequest::get($request, 'admin_type');
+        if($admin_type == 2){// 企业的导入信息进行校验
+            static::companyBathDataJudge($request, $controller, $saveData, $notLog);
+        }
         // 调用批量添加接口
         // 调用新加或修改接口
         $apiParams = [
@@ -1270,7 +1273,16 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
             '冻结状态[正常|冻结]' => 'account_status',
         ];
         switch($admin_type){
-            case 2:
+            case 2:// 企业
+                $headArr = [
+                    '机构名称' => 'company_name',
+                    '机构地址' => 'laboratory_addr',
+                    '联系人' => 'company_contact_name',
+                    '联系电话' => 'company_contact_mobile',
+                    '资质认定证书编号' => 'company_certificate_no',
+                    '发证日期' => 'ratify_date',
+                    '有效日期' => 'valid_date',
+                ];
                 break;
             case 4:
                 $headArr = [
@@ -1558,6 +1570,12 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
         $sheetTitle = '系统管理员';
         switch($admin_type){
             case 2:
+                $headArr = ['company_name'=>'机构名称', 'laboratory_addr'=>'机构地址', 'company_contact_name'=>'联系人'
+                    , 'company_contact_mobile'=>'联系电话', 'company_certificate_no'=>'资质认定证书编号'
+                    , 'ratify_date'=>'发证日期', 'valid_date'=>'有效日期'
+                ];
+                $fileName = '机构导入模版';
+                $sheetTitle = '机构';
                 break;
             case 4:
                 $headArr = ['real_name'=>'姓名', 'sex'=>'性别[未知|男|女]', 'mobile'=>'手机[唯一]', 'email'=>'邮箱', 'qq_number'=>'QQ\微信'
@@ -1760,6 +1778,61 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
 
         // 重写结束
         return $returnFields;
+    }
+
+    // 企业数据验证批量验证
+    public static function companyBathDataJudge(Request $request, Controller $controller, &$company_list, $notLog = 0){
+        foreach($company_list as $k => &$info){
+            static::companyDataJudge($request, $controller, $info, '第' . ($k + 1)  . '条记录：', $notLog);
+        }
+    }
+
+    /**
+     * 企业数据验证
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $company_info 文件数据数组 一维数组
+     * @param string $err_pre 错误方字的前缀
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function companyDataJudge(Request $request, Controller $controller, &$company_info, $err_pre = '', $notLog = 0){
+
+        $valiDateParam = [];
+        if(isset($company_info['company_name'])) array_push($valiDateParam, ["var_name" => "company_name" ,"input"=> $company_info['company_name'],"require"=>"true"
+            ,"validator"=>"length","min"=>"1","max"=>"100","message"=> $err_pre . '机构名称长度为1~ 100个字符']);
+
+        if(isset($company_info['company_certificate_no'])) array_push($valiDateParam, ["var_name" => "certificate_no" ,"input"=> $company_info['company_certificate_no'],"require"=>"true"
+            ,"validator"=>"length","min"=>"1","max"=>"30","message"=>$err_pre . 'CMA证书号长度为1~ 30个字符']);
+
+        if(isset($company_info['ratify_date'])){
+            $company_info['ratify_date'] = str_replace(['/'], ['-'], $company_info['ratify_date']);
+            array_push($valiDateParam, ["var_name" => "ratify_date" ,"input"=> $company_info['ratify_date'],"require"=>"true"
+                ,"validator"=>"datatime","message"=>$err_pre . '发证日期格式有误！格式：2020-09-19']);
+        }
+
+        if(isset($company_info['valid_date'])){
+            $company_info['valid_date'] = str_replace(['/'], ['-'], $company_info['valid_date']);
+            array_push($valiDateParam, ["var_name" => "valid_date" ,"input"=> $company_info['valid_date'],"require"=>"true"
+                ,"validator"=>"datatime","message"=>$err_pre . '有效日期格式有误！格式：2020-09-19']);
+        }
+
+        if(isset($company_info['laboratory_addr'])) array_push($valiDateParam, ["var_name" => "addr" ,"input"=> $company_info['laboratory_addr'],"require"=>"true"
+            ,"validator"=>"length","min"=>"1","max"=>"200","message"=>$err_pre . '机构名称长度为1~ 200个字符']);
+
+        if(isset($company_info['company_contact_name'])) array_push($valiDateParam, ["var_name" => "contact_name" ,"input"=> $company_info['company_contact_name'],"require"=>"true"
+            ,"validator"=>"length","min"=>"1","max"=>"30","message"=>$err_pre . '联系人长度为1~ 30个字符']);
+
+        if(isset($company_info['company_contact_mobile'])) array_push($valiDateParam, ["var_name" => "contact_mobile" ,"input"=> $company_info['company_contact_mobile'],"require"=>"true"
+            ,"validator"=>"length","min"=>"1","max"=>"30","message"=>$err_pre . '手机或电话长度为1~ 30个字符']);
+
+        Tool::dataValid($valiDateParam, 1);
+
+        // 判断开始结束日期
+        if(isset($company_info['ratify_date']) && isset($company_info['valid_date'])){
+            Tool::judgeBeginEndDate($company_info['ratify_date'], $company_info['valid_date'], 1 + 2 + 256 + 512, 1, date('Y-m-d'), $err_pre . '有效起止日期');
+        }
     }
 
 }

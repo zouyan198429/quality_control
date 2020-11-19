@@ -144,6 +144,7 @@ class UploadFile
     public static function getResourceConfig($ext){
         $reResourceConfig = [];
         $resourceType = static::$resource_type;
+        // throws(json_encode($resourceType) . '-' . $ext);
         foreach($resourceType as $resourceNo => $resourceConfig){
             $extArr = $resourceConfig['ext'] ?? [];
             if(in_array($ext, $extArr)){
