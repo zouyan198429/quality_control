@@ -50,6 +50,11 @@ class CompanyController extends StaffController
                 $company_peoples_num = CommonRequest::getInt($request, 'company_peoples_num');
                 $company_industry_id = CommonRequest::getInt($request, 'company_industry_id');
                 $company_certificate_no = CommonRequest::get($request, 'company_certificate_no');
+                $ratify_date = CommonRequest::get($request, 'ratify_date');
+                $valid_date = CommonRequest::get($request, 'valid_date');
+                // 判断开始结束日期
+                Tool::judgeBeginEndDate($ratify_date, $valid_date, 1 + 2 + 256 + 512, 1, date('Y-m-d'), '有效起止日期');
+
                 $company_contact_name = CommonRequest::get($request, 'company_contact_name');
                 $company_contact_mobile = CommonRequest::get($request, 'company_contact_mobile');
                 $company_contact_tel = CommonRequest::get($request, 'company_contact_tel');
@@ -102,6 +107,8 @@ class CompanyController extends StaffController
                     'company_peoples_num' => $company_peoples_num,
                     'company_industry_id' => $company_industry_id,
                     'company_certificate_no' => $company_certificate_no,
+                    'ratify_date' => $ratify_date,
+                    'valid_date' => $valid_date,
                     'company_contact_name' => $company_contact_name,
                     'company_contact_mobile' => $company_contact_mobile,
                     'company_contact_tel' => $company_contact_tel,

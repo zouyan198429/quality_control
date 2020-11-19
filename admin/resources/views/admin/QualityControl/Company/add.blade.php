@@ -167,6 +167,14 @@
                 </td>
             </tr>
             <tr>
+                <th>资质认定证书有效起止时间<span class="must">*</span></th>
+                <td>
+                    <input type="text" class="inp wlong ratify_date" name="ratify_date" value="{{ $info['ratify_date'] ?? '' }}" placeholder="请选择批准日期" style="width: 150px;"  readonly="true"/>
+                    -
+                    <input type="text" class="inp wlong valid_date" name="valid_date" value="{{ $info['valid_date'] ?? '' }}" placeholder="请选择有效期至"  style="width: 150px;" readonly="true"/>
+                </td>
+            </tr>
+            <tr>
                 <th>联系人<span class="must">*</span></th>
                 <td>
                     <input type="text" class="inp wnormal"  name="company_contact_name" value="{{ $info['company_contact_name'] ?? '' }}" placeholder="请输入联系人"/>
@@ -227,6 +235,7 @@
         </table>
     </form>
 </div>
+<script type="text/javascript" src="{{asset('laydate/laydate.js')}}"></script>
 <script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>
 <script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.all.js')}}"></script>
 {{--<script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.js')}}"></script>--}}
@@ -235,6 +244,9 @@
 <script type="text/javascript">
     var SAVE_URL = "{{ url('api/admin/company/ajax_save') }}";// ajax保存记录地址
     var LIST_URL = "{{url('admin/company')}}";//保存成功后跳转到的地址
+
+    var BEGIN_TIME = "{{ $info['ratify_date'] ?? '' }}" ;//批准日期
+    var END_TIME = "{{ $info['valid_date'] ?? '' }}" ;//有效期至
 
     // 上传图片变量
     var FILE_UPLOAD_URL = "{{ url('api/admin/upload') }}";// 文件上传提交地址 'your/file/upload/url'
@@ -263,7 +275,7 @@
 {{--<script src="{{asset('js/baguetteBox.js/highlight.min.js')}}" async></script>--}}
 <!-- zui js -->
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
-<script src="{{ asset('/js/admin/QualityControl/Company_edit.js') }}?1"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/Company_edit.js') }}?2"  type="text/javascript"></script>
 @component('component.upfileincludejs')
 @endcomponent
 </body>

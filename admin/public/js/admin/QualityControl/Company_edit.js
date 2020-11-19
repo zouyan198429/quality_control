@@ -41,6 +41,78 @@ function initPic(){
 }
 
 $(function(){
+    //执行一个laydate实例
+    // 开始日期
+    var startConfig = {
+        elem: '.ratify_date' //指定元素
+        ,type: 'date'
+        ,value: BEGIN_TIME// '2018-08-18' //必须遵循format参数设定的格式
+        // ,min: get_now_format('Y-m-d')//'2017-1-1'
+        //,max: get_now_format()//'2017-12-31'
+        ,calendar: true//是否显示公历节日
+        ,ready: function(date){// 控件在打开时触发
+            console.log(date); //得到初始的日期时间对象：{year: 2017, month: 8, date: 18, hours: 0, minutes: 0, seconds: 0}
+        }
+        ,done: function(value, date, endDate){// 控件选择完毕后的回调
+            console.log(value); //得到日期生成的值，如：2017-08-18
+            console.log(date); //得到日期时间对象：{year: 2017, month: 8, date: 18, hours: 0, minutes: 0, seconds: 0}
+            console.log(endDate); //得结束的日期时间对象，开启范围选择（range: true）才会返回。对象成员同上。
+            //更新结束日期的最小日期
+            insEnd.config.min = {
+                year:date.year,
+                month:date.month-1, //关键
+                date: date.date,
+                hours: date.hours,
+                minutes: date.minutes,
+                seconds : date.seconds
+            };
+            //自动弹出结束日期的选择器
+            insEnd.config.elem[0].focus();
+        }
+    };
+    // 有结束时间
+    if(judge_date(END_TIME)){
+        startConfig.max = END_TIME;
+        console.log('END_TIME', END_TIME);
+        console.log('startConfig', startConfig);
+    }
+
+    var insStart = laydate.render(startConfig);
+
+    // 最晚开始日期
+    var endConfig = {
+        elem: '.valid_date' //指定元素
+        ,type: 'date'
+        ,value: END_TIME// '2018-08-18' //必须遵循format参数设定的格式
+        // ,min: get_now_format('Y-m-d')//'2017-1-1'
+        //,max: get_now_format()//'2017-12-31'
+        ,calendar: true//是否显示公历节日
+        ,ready: function(date){// 控件在打开时触发
+            console.log(date); //得到初始的日期时间对象：{year: 2017, month: 8, date: 18, hours: 0, minutes: 0, seconds: 0}
+        }
+        ,done: function(value, date, endDate){// 控件选择完毕后的回调
+            console.log(value); //得到日期生成的值，如：2017-08-18
+            console.log(date); //得到日期时间对象：{year: 2017, month: 8, date: 18, hours: 0, minutes: 0, seconds: 0}
+            console.log(endDate); //得结束的日期时间对象，开启范围选择（range: true）才会返回。对象成员同上。
+            //更新开始日期的最大日期
+            insStart.config.max = {
+                year:date.year,
+                month:date.month-1, //关键
+                date: date.date,
+                hours: date.hours,
+                minutes: date.minutes,
+                seconds : date.seconds
+            };
+        }
+    };
+    // 开始时间
+    if(judge_date(BEGIN_TIME)){
+        endConfig.min = BEGIN_TIME;
+        console.log('BEGIN_TIME', BEGIN_TIME);
+        console.log('endConfig', endConfig);
+    }
+    var insEnd = laydate.render(endConfig);
+
     //提交
     $(document).on("click","#submitBtn",function(){
         //var index_query = layer.confirm('您确定提交保存吗？', {
@@ -187,6 +259,29 @@ function ajax_form(){
     if(!judge_validate(4,'证书编号',company_certificate_no,true,'length',4,30)){
         return false;
     }
+
+    // 开始时间
+    var begin_date = $('input[name=ratify_date]').val();
+    if(!judge_validate(4,'批准日期',begin_date,true,'date','','')){
+        return false;
+    }
+
+    // 结束时间
+    var end_date = $('input[name=valid_date]').val();
+    if(!judge_validate(4,'有效期至',end_date,true,'date','','')){
+        return false;
+    }
+
+    if( end_date !== ''){
+        if(begin_date == ''){
+            layer_alert("请选择批准日期",3,0);
+            return false;
+        }
+        if( !judge_validate(4,'有效期至必须',end_date,true,'data_size',begin_date,5)){
+            return false;
+        }
+    }
+
 
     var company_contact_name = $('input[name=company_contact_name]').val();
     if(!judge_validate(4,'联系人',company_contact_name,true,'length',1,30)){

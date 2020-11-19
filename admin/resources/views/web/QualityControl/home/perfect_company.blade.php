@@ -173,6 +173,15 @@
                     </div>
                 </div>
                 <div class="form-item">
+                    <label for="text" class="form-label">资质认定证书有效起止时间 <span class="red">*</span></label>
+                    <div class="form-input">
+                        <input type="text" class="inp wlong ratify_date" name="ratify_date" value="{{ $info['ratify_date'] ?? '' }}" placeholder="请选择批准日期" style="width: 150px;"  readonly="true"/>
+                        -
+                        <input type="text" class="inp wlong valid_date" name="valid_date" value="{{ $info['valid_date'] ?? '' }}" placeholder="请选择有效期至"  style="width: 150px;" readonly="true"/>
+
+                    </div>
+                </div>
+                <div class="form-item">
                     <label for="text" class="form-label">联系人<span class="red">*</span></label>
                     <div class="form-input"><input type="text" name="company_contact_name" class="form-control" autocomplete="off" value="{{ $info['company_contact_name'] ?? '' }}"></div>
                 </div>
@@ -204,6 +213,7 @@
     @endif
 </body>
 </html>
+<script type="text/javascript" src="{{asset('laydate/laydate.js')}}"></script>
 <script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>
 <script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.all.js')}}"></script>
 {{--<script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.js')}}"></script>--}}
@@ -212,6 +222,9 @@
 <script type="text/javascript">
     var SAVE_URL = "{{ url('api/web/ajax_perfect_company') }}";// ajax保存记录地址
     var LOG_OUT_URL = "{{url('web/logout')}}";//保存成功后跳转到的地址
+
+    var BEGIN_TIME = "{{ $info['ratify_date'] ?? '' }}" ;//批准日期
+    var END_TIME = "{{ $info['valid_date'] ?? '' }}" ;//有效期至
 
     // 上传图片变量
     var FILE_UPLOAD_URL = "{{ url('api/web/upload') }}";// 文件上传提交地址 'your/file/upload/url'
@@ -243,6 +256,6 @@
 {{--<script src="{{asset('js/baguetteBox.js/highlight.min.js')}}" async></script>--}}
 <!-- zui js -->
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
-<script src="{{ asset('/js/web/QualityControl/perfect_company.js') }}?2"  type="text/javascript"></script>
+<script src="{{ asset('/js/web/QualityControl/perfect_company.js') }}?3"  type="text/javascript"></script>
 @component('component.upfileincludejs')
 @endcomponent
