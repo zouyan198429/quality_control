@@ -484,7 +484,7 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
                 $staff_id = 0;// 数据所属的企业 id
                 $isAddNew = false;// 企业是否是新加 true:新加 ； false:已存在
                 // 新加或修改企业信息
-                StaffDBBusiness::saveCompany($company_info, $staff_id, $isAddNew);
+                StaffDBBusiness::saveCompany($company_info, $staff_id, $isAddNew, true);
 
             });
         } catch ( \Exception $e) {
@@ -534,7 +534,7 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
                 $staff_id = 0;// 数据所属的企业 id
                 $isAddNew = false;// 企业是否是新加 true:新加 ； false:已存在
                 // 新加或修改企业信息
-                StaffDBBusiness::saveCompany($company_info, $staff_id, $isAddNew);
+                StaffDBBusiness::saveCompany($company_info, $staff_id, $isAddNew, false);
                 // 获取文件并保存
                 static::saveFiles($file_list, $staff_id, $addFiels, $isAddNew);
 
@@ -608,10 +608,12 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
                 ];
                 Tool::arrAppendKeys($schedule_del_list, $params);
                 foreach($schedule_del_list as $v){
-                    Tool::arrClsEmpty($v);// 去除空值
+                    // Tool::arrClsEmpty($v);// 去除空值
                     // 优先通过 五级分类来删除[查询到，只有一条数据时]
                     $searchInfo = Tool::getArrFormatFields($v, ['certificate_no', 'category_name', 'project_name', 'three_name', 'four_name', 'param_name'], false);
                     if(!empty($searchInfo)){
+                        Tool::fieldValToConfig($searchInfo, [], ['excludeVals' => [0, '0'], 'valsSeparator' => ',', 'hasInIsMerge' => true]);
+
                         $extParams = [
 //                        'sqlParams' => [
 //                            'orderBy' => ['id' => 'desc'],// 审核通过的优先拿到
@@ -652,7 +654,9 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
 //                            'orderBy' => ['id' => 'desc'],// 审核通过的优先拿到
 //                        ]
                     ];
-                    $scheduleList = static::getDBFVFormatList(1, 1, $v, false, [], $extParams);
+                    $temSearchFV = $v;
+                    Tool::fieldValToConfig($temSearchFV, [], ['excludeVals' => [0, '0'], 'valsSeparator' => ',', 'hasInIsMerge' => true]);
+                    $scheduleList = static::getDBFVFormatList(1, 1, $temSearchFV, false, [], $extParams);
                     if(!empty($scheduleList)){
                         foreach($scheduleList as $scheduleInfo){
                             $schedule_id = $scheduleInfo['id'] ?? 0;// 企业 id
@@ -663,10 +667,10 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
                 // 保存能力范围
                 $params = [
                     'company_id' => $staff_id,
-                    'certificate_no' => $company_info['company_certificate_no'],
-                    'ratify_date' => $company_info['ratify_date'],
-                    'valid_date' => $company_info['valid_date'],
-                    'addr' => $company_info['laboratory_addr'],
+                    'certificate_no' => $companyInfo['company_certificate_no'],
+                    'ratify_date' => $companyInfo['ratify_date'],
+                    'valid_date' => $companyInfo['valid_date'],
+                    'addr' => $companyInfo['laboratory_addr'],
                 ];
                 Tool::arrAppendKeys($schedule_add_list, $params);
                 static::importDatas($schedule_add_list, $staff_id, $operate_staff_id, $modifAddOprate, 2);
@@ -740,9 +744,10 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
                 ];
                 Tool::arrAppendKeys($scheduleTemSearchArr, $params);
                 foreach($scheduleTemSearchArr as $v){
-                    Tool::arrClsEmpty($v);// 去除空值
+                    // Tool::arrClsEmpty($v);// 去除空值
                     // 优先通过 五级分类来删除[查询到，只有一条数据时]
                     $searchInfo = Tool::getArrFormatFields($v, ['certificate_no', 'category_name', 'project_name', 'three_name', 'four_name', 'param_name'], false);
+                    // throws(json_encode($searchInfo));
                     if(!empty($searchInfo)){
                         Tool::fieldValToConfig($searchInfo, [], ['excludeVals' => [0, '0'], 'valsSeparator' => ',', 'hasInIsMerge' => true]);
 
@@ -786,7 +791,9 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
 //                            'orderBy' => ['id' => 'desc'],// 审核通过的优先拿到
 //                        ]
                     ];
-                    $scheduleList = static::getDBFVFormatList(1, 1, $v, false, [], $extParams);
+                    $temSearchFV = $v;
+                    Tool::fieldValToConfig($temSearchFV, [], ['excludeVals' => [0, '0'], 'valsSeparator' => ',', 'hasInIsMerge' => true]);
+                    $scheduleList = static::getDBFVFormatList(1, 1, $temSearchFV, false, [], $extParams);
                     if(!empty($scheduleList)){
                         foreach($scheduleList as $scheduleInfo){
                             $schedule_id = $scheduleInfo['id'] ?? 0;// 企业 id

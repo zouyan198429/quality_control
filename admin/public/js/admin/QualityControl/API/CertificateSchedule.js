@@ -142,6 +142,27 @@ var otheraction = {
         tishi = '上传' + tishi;// operateText + tishi;
         layeriframe(weburl,tishi,950,600,IFRAME_MODIFY_CLOSE_OPERATE);
         return false;
+    },
+    updateAPI : function(id){// 接口能力范围测试【批量】
+        //获得表单各name的值
+        var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
+        console.log(IFRAME_UPDATE_API_URL);
+        console.log(data);
+        var url_params = get_url_param(data);// parent.get_url_param(data)
+        var weburl = IFRAME_UPDATE_API_URL + id + '?' + url_params;
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = IFRAME_UPDATE_API_URL_TITLE;//"添加/修改供应商";
+        var operateText = "添加";
+        if(id > 0){
+            operateText = "修改";
+        }
+        tishi = '上传' + tishi;// operateText + tishi;
+        layeriframe(weburl,tishi,950,600,IFRAME_MODIFY_CLOSE_OPERATE);
+        return false;
     }
 };
 

@@ -65,7 +65,7 @@ app_secret:<input type="text"   name="app_secret" value="" placeholder="请输�
 @include('public.dynamic_list_foot')
 
 <script type="text/javascript">
-    var SAVE_URL = "{{ url('api/market/certificate_schedule/bath_modify') }}";// "{ { url('api/admin/API/certificate_schedule/ajax_bath_save') }}";// ajax保存记录地址
+    var SAVE_URL = "{{ url('api/market/certificate_schedule/update') }}";// "{ { url('api/admin/API/certificate_schedule/ajax_bath_save') }}";// ajax保存记录地址
     var LIST_URL = "{{url('admin/API/certificate_schedule')}}";//保存成功后跳转到的地址
 
 

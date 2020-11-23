@@ -913,7 +913,7 @@ class StaffDBBusiness extends BasePublicDBBusiness
                 $staff_id = 0;// 数据所属的企业 id
                 $isAddNew = false;// 企业是否是新加 true:新加 ； false:已存在
                 // 新加或修改企业信息
-                StaffDBBusiness::saveCompany($company_info, $staff_id, $isAddNew);
+                StaffDBBusiness::saveCompany($company_info, $staff_id, $isAddNew, false);
                 if($staff_id > 0) array_push($returnIds, $staff_id);
             }
             return $returnIds;
@@ -1573,7 +1573,7 @@ class StaffDBBusiness extends BasePublicDBBusiness
      * @param boolean $isAddNew 企业是否是新加 true:新加 ； false:已存在[默认]
      *
      */
-    public static function saveCompany($info, &$company_id, &$isAddNew){
+    public static function saveCompany($info, &$company_id, &$isAddNew, $focusUpdate = false){
         $company_name = $info['company_name'] ?? '';
         $company_certificate_no = $info['company_certificate_no'] ?? '';
 
@@ -1595,7 +1595,7 @@ class StaffDBBusiness extends BasePublicDBBusiness
         }
         // 获得城市KV值
         $cityKV = CitysDBBusiness::getKeyVals(['key' => 'id', 'val' => 'city_name']);
-        CommonDB::doTransactionFun(function() use( &$info, &$companyInfo, &$company_name, &$company_certificate_no, &$cityKV, &$company_id, &$isAddNew){
+        CommonDB::doTransactionFun(function() use( &$info, &$companyInfo, &$company_name, &$company_certificate_no, &$cityKV, &$company_id, &$isAddNew, &$focusUpdate){
 
             $company_id = $companyInfo['id'] ?? 0;// 企业 id
 
@@ -1650,19 +1650,19 @@ class StaffDBBusiness extends BasePublicDBBusiness
                 $tem_company_certificate_no = $companyInfo['company_certificate_no'] ?? '';
                 $tem_company_name = $companyInfo['company_name'] ?? '';
                 $tem_laboratory_addr = $companyInfo['laboratory_addr'] ?? '';
-                if (empty($tem_company_contact_name)) {//  || $tem_company_contact_name != $company_contact_name
+                if (empty($tem_company_contact_name) || $focusUpdate) {//  || $tem_company_contact_name != $company_contact_name
                     $companyInfoData['company_contact_name'] = $company_contact_name;
                 }
-                if (empty($tem_company_contact_mobile)) {//  || $tem_company_contact_mobile != $company_contact_mobile
+                if (empty($tem_company_contact_mobile) || $focusUpdate) {//  || $tem_company_contact_mobile != $company_contact_mobile
                     $companyInfoData['company_contact_mobile'] = $company_contact_mobile;
                 }
-                if (empty($tem_company_certificate_no)) {//  || $tem_company_certificate_no != $company_certificate_no
+                if (empty($tem_company_certificate_no) || $focusUpdate) {//  || $tem_company_certificate_no != $company_certificate_no
                     $companyInfoData['company_certificate_no'] = $company_certificate_no;
                 }
-                if (empty($tem_company_name)) {//  || $tem_company_name != $company_name
+                if (empty($tem_company_name) || $focusUpdate) {//  || $tem_company_name != $company_name
                     $companyInfoData['company_name'] = $company_name;
                 }
-                if (empty($tem_laboratory_addr)) {//  || $tem_laboratory_addr != $laboratory_addr
+                if (empty($tem_laboratory_addr) || $focusUpdate) {//  || $tem_laboratory_addr != $laboratory_addr
                     $companyInfoData['laboratory_addr'] = $laboratory_addr;
                 }
             }else{// 我们没有企业信息

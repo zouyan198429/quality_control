@@ -20,10 +20,11 @@
     @include('common.pageParams')
     <div class="tabbox" >
 {{--		<button class="btn  import_excel"  onclick="otheraction.upExcelFile(0)">导入能力附表</button>--}}
-        <button class="btn  import_excel"  onclick="otheraction.upExcelFileAPI(0)">接口能力范围测试【批量】</button>
-        <button class="btn  import_excel"  onclick="otheraction.upAddFilesAPI(0)">接口企业文件测试【批量】</button>
-        <button class="btn  import_excel"  onclick="otheraction.upBathModifyAPI(0)">接口能力范围删除或新加测试【批量】</button>
-        <button class="btn  import_excel"  onclick="otheraction.upCompanyModifyAPI(0)">接口注册/修改企业信息测试</button>
+        <button class="btn  import_excel"  onclick="otheraction.upExcelFileAPI(0)">接口2.1能力范围测试【批量】</button>
+        <button class="btn  import_excel"  onclick="otheraction.upAddFilesAPI(0)">接口2.2企业文件测试【批量】</button>
+        <button class="btn  import_excel"  onclick="otheraction.upBathModifyAPI(0)">接口2.3能力范围删除或新加测试【批量】</button>
+        <button class="btn  import_excel"  onclick="otheraction.upCompanyModifyAPI(0)">接口2.4注册/修改企业信息测试</button>
+        <button class="btn  import_excel"  onclick="otheraction.updateAPI(0)">接口2.5根据条件修改能力范围</button>
 {{--        <a href="javascript:void(0);" class="on" onclick="action.iframeModify(0)">添加能力附表</a>--}}
 {{--		<a class="import_excel"  onclick="action.importExcelTemplate(this)">导入模版[EXCEL]下载</a>--}}
     </div>
@@ -143,16 +144,19 @@
       var IFRAME_UPEXCEL_URL_TITLE = "导入证书能力范围" ;// 详情弹窗显示提示  [添加/修改] +  栏目/主题
 
       var IFRAME_BATH_API_URL = "{{url('admin/API/certificate_schedule/add_bath_api/')}}/";//添加/修改页面地址前缀 + id
-      var IFRAME_BATH_API_URL_TITLE = "API批量能力范围" ;// 详情弹窗显示提示  [添加/修改] +  栏目/主题
+      var IFRAME_BATH_API_URL_TITLE = "API2.1批量能力范围" ;// 详情弹窗显示提示  [添加/修改] +  栏目/主题
 
       var IFRAME_FILES_API_URL = "{{url('admin/API/certificate_schedule/add_files_api/')}}/";//添加/修改页面地址前缀 + id
-      var IFRAME_FILES_API_URL_TITLE = "API企业文件" ;// 详情弹窗显示提示  [添加/修改] +  栏目/主题
+      var IFRAME_FILES_API_URL_TITLE = "API2.2企业文件" ;// 详情弹窗显示提示  [添加/修改] +  栏目/主题
 
       var IFRAME_BATH_MODIFY_API_URL = "{{url('admin/API/certificate_schedule/add_bath_modify_api/')}}/";//添加/修改页面地址前缀 + id
-      var IFRAME_BATH_MODIFY_API_URL_TITLE = "API能力范围删除或新加" ;// 详情弹窗显示提示  [添加/修改] +  栏目/主题
+      var IFRAME_BATH_MODIFY_API_URL_TITLE = "API2.3能力范围删除或新加" ;// 详情弹窗显示提示  [添加/修改] +  栏目/主题
 
       var IFRAME_COMPANY_MODIFY_API_URL = "{{url('admin/API/certificate_schedule/add_modify_api/')}}/";//添加/修改页面地址前缀 + id
-      var IFRAME_COMPANY_MODIFY_API_URL_TITLE = "API注册/修改企业信息" ;// 详情弹窗显示提示  [添加/修改] +  栏目/主题
+      var IFRAME_COMPANY_MODIFY_API_URL_TITLE = "API2.4注册/修改企业信息" ;// 详情弹窗显示提示  [添加/修改] +  栏目/主题
+
+      var IFRAME_UPDATE_API_URL = "{{url('admin/API/certificate_schedule/add_update_api/')}}/";//添加/修改页面地址前缀 + id
+      var IFRAME_UPDATE_API_URL_TITLE = "API2.5根据条件修改能力范围" ;// 详情弹窗显示提示  [添加/修改] +  栏目/主题
 
       // 列表数据每隔指定时间就去执行一次刷新【如果表有更新时】--定时执行
       var IFRAME_TAG_KEY = "";// "QualityControl\\CTAPIStaff";// 获得模型表更新时间的关键标签，可为空：不获取
@@ -160,6 +164,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/API/CertificateSchedule.js') }}?6"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/API/CertificateSchedule.js') }}?8"  type="text/javascript"></script>
 </body>
 </html>

@@ -642,8 +642,10 @@ class CTAPICertificateScheduleBusiness extends BasicPublicCTAPIBusiness
         // 能力范围数据验证
         $scheduleTemSearchArr = [$scheduleSearchArr];
         static::scheduleDataJudge($request, $controller, $scheduleTemSearchArr, $errArr, $notLog );
+        $scheduleSearchArr = $scheduleTemSearchArr[0] ?? [];
         $scheduleTemArr = [$scheduleArr];
         static::scheduleDataJudge($request, $controller, $scheduleTemArr, $errArr, $notLog );
+        $scheduleArr = $scheduleTemArr[0] ?? [];
 
         // 有错误信息
         if(!empty($errArr) ) throws(implode(';', $errArr));
