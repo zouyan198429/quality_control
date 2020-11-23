@@ -633,6 +633,7 @@ $api->version('v1', function ($api) {
         $api->post('market/certificate_schedule/files_save', 'Admin\QualityControl\API\CertificateScheduleController@ajax_files_save');// 文件接口保存
         $api->post('market/certificate_schedule/company_modify', 'Admin\QualityControl\API\CertificateScheduleController@ajax_company_save');// 注册/修改企业信息接口保存
         $api->post('market/certificate_schedule/bath_modify', 'Admin\QualityControl\API\CertificateScheduleController@ajax_bath_modify');// 能力范围删除或新加-修改接口保存
+        $api->post('market/certificate_schedule/update', 'Admin\QualityControl\API\CertificateScheduleController@ajax_update');// 根据条件修改能力范围
 
         // 证书-能力范围-页面调用
         $api->any('admin/API/certificate_schedule/ajax_alist', 'Admin\QualityControl\API\CertificateScheduleController@ajax_alist');//ajax获得列表数据

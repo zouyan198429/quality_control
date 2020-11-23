@@ -66,7 +66,7 @@ app_secret:<input type="text"   name="app_secret" value="" placeholder="请输�
                 <td>
                     <textarea name="file_json" placeholder="请输入文件信息json" class="layui-textarea">{{ replace_enter_char($info['file_json'] ?? '',2) }}</textarea>
                     格式：
-                    [{"file_title": "能力附表文件名","file_url": "http://qualitycontrol.admin.cunwo.net/resource/company/45/excel/2020/11/09/202011091819227042d1f0f7cb0f39.xlsx","file_type": "1"}]
+                    [{"file_title": "能力附表文件名","file_url": "http://qualitycontrol.admin.cunwo.net/resource/company/45/excel/2020/11/09/202011091819227042d1f0f7cb0f39.xlsx","file_type": "1","schedule_type": "0"}]
                 </td>
             </tr>
             <tr>

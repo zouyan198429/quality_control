@@ -78,7 +78,7 @@ class CompanySchedule extends BasePublicModel
      */
     protected $table = 'company_schedule';
 
-    // 资源类型id1首次;2扩项;4地址变更;8标准变更;16复查;
+    // 资源类型id0excel文件；1首次;2扩项;4地址变更;8标准变更;16复查;
     public static $typeIdArr = [
         '0' => 'excel文档', // 上传pdf时，不参与下拉选择
         '1' => '首次',

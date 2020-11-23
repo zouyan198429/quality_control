@@ -678,6 +678,129 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
         return $staff_id;
     }
 
+
+    /**
+     * 根据条件修改能力范围
+     *
+     * @param array $saveData 要保存或修改的数组
+     * [
+        'company_info' => [
+            'company_name' => $company_name,// 机构名称
+            'company_certificate_no' => $certificate_no,// CMA证书号(资质认定编号)
+        ],
+        'search_json' => $scheduleArr,// [['category_name'=> '类别[第一级][必填]','project_name'=> '产品[第二级]','three_name'=> '第三级'
+        ,'four_name'=> '第四级','param_name'=> '项目[第五级]','method_name'=> '标准（方法）名称','limit_range'=> '限制范围','explain_text'=> '说明']]
+        'schedule_json' => '格式同schedule_del_list'
+    ]
+     * @param int  $company_id 企业id 第三方操作者
+     * @param int $operate_staff_id 操作人id
+     * @param int $modifAddOprate 修改时是否加操作人，1:加;0:不加[默认]
+     * @return  int 数据所属企业的id
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function updateDatas($saveData, $company_id, $operate_staff_id = 0, $modifAddOprate = 0)
+    {
+//        ini_set('memory_limit', '3072M');    // 临时设置最大内存占用为 3072M 3G
+//        ini_set("max_execution_time", 0);
+//        set_time_limit(0);   // 设置脚本最大执行时间 为0 永不过期
+        Tool::phpInitSet();
+        $staff_id = 0;// 数据所属的企业 id
+        try{
+            CommonDB::doTransactionFun(function() use( &$saveData, &$company_id, &$operate_staff_id, &$modifAddOprate, &$staff_id){
+                $company_info = $saveData['company_info'] ?? [];// 必有值
+                $schedule_search = $saveData['schedule_search'] ?? [];// 查询能力范围 必有值
+                $schedule_update = $saveData['schedule_update'] ?? [];// 更新能力范围 必有值
+
+                // 对数据换行进行处理
+                if(isset($schedule_update['method_name']) && !empty($schedule_update['method_name'])){
+                    $schedule_update['method_name'] = replace_enter_char($schedule_update['method_name'], 1);
+                }
+                if(isset($schedule_update['limit_range']) && !empty($schedule_update['limit_range'])){
+                    $schedule_update['limit_range'] = replace_enter_char($schedule_update['limit_range'], 1);
+                }
+                if(isset($schedule_update['explain_text']) && !empty($schedule_update['explain_text'])){
+                    $schedule_update['explain_text'] = replace_enter_char($schedule_update['explain_text'], 1);
+                }
+
+                $staff_id = 0;// 数据所属的企业 id
+                $isAddNew = false;// 企业是否是新加 true:新加 ； false:已存在
+                $companyInfo = [];
+                // 查询企业信息
+                StaffDBBusiness::getCompany($company_info, $staff_id, $companyInfo);
+
+                $scheduleTemSearchArr = [$schedule_search];
+
+                // 删除能力围
+                $params = [
+                    'company_id' => $staff_id,
+                    'certificate_no' => $company_info['company_certificate_no'],
+//                    'ratify_date' => $company_info['ratify_date'],
+//                    'valid_date' => $company_info['valid_date'],
+//                    'addr' => $company_info['laboratory_addr'],
+                ];
+                Tool::arrAppendKeys($scheduleTemSearchArr, $params);
+                foreach($scheduleTemSearchArr as $v){
+                    Tool::arrClsEmpty($v);// 去除空值
+                    // 优先通过 五级分类来删除[查询到，只有一条数据时]
+                    $searchInfo = Tool::getArrFormatFields($v, ['certificate_no', 'category_name', 'project_name', 'three_name', 'four_name', 'param_name'], false);
+                    if(!empty($searchInfo)){
+                        Tool::fieldValToConfig($searchInfo, [], ['excludeVals' => [0, '0'], 'valsSeparator' => ',', 'hasInIsMerge' => true]);
+
+                        $extParams = [
+//                        'sqlParams' => [
+//                            'orderBy' => ['id' => 'desc'],// 审核通过的优先拿到
+//                        ]
+                        ];
+                        $scheduleList = static::getDBFVFormatList(1, 1, $searchInfo, false, [], $extParams);
+                        if(count($scheduleList) <= 1){// 刚好最多只有一条记录
+                            foreach($scheduleList as $scheduleInfo){
+                                $schedule_id = $scheduleInfo['id'] ?? 0;// 企业 id
+                                static::saveById($schedule_update, $schedule_id);
+                            }
+                            continue;
+                        }
+                    }
+                    // 对数据换行进行处理
+                    if(isset($v['method_name']) && !empty($v['method_name'])){
+                        $v['method_name'] = replace_enter_char($v['method_name'], 1);
+                    }
+                    if(isset($v['limit_range']) && !empty($v['limit_range'])){
+                        $v['limit_range'] = replace_enter_char($v['limit_range'], 1);
+                    }
+                    if(isset($v['explain_text']) && !empty($v['explain_text'])){
+                        $v['explain_text'] = replace_enter_char($v['explain_text'], 1);
+                    }
+                    // 查询记录
+//                    $extParams = [
+//                        'sqlParams' => [
+//                            'orderBy' => ['id' => 'desc'],// 审核通过的优先拿到
+//                        ]
+//                    ];
+//                    $scheduleInfo = static::getDBFVFormatList(4, 1, $v, false, [], $extParams);
+//                    if(!empty($scheduleInfo)){
+//                        $schedule_id = $scheduleInfo['id'] ?? 0;// 企业 id
+//                        static::delById($company_id, $schedule_id, $operate_staff_id, $modifAddOprate, ['organize_id' => $staff_id]);
+//                    }
+                    $extParams = [
+//                        'sqlParams' => [
+//                            'orderBy' => ['id' => 'desc'],// 审核通过的优先拿到
+//                        ]
+                    ];
+                    $scheduleList = static::getDBFVFormatList(1, 1, $v, false, [], $extParams);
+                    if(!empty($scheduleList)){
+                        foreach($scheduleList as $scheduleInfo){
+                            $schedule_id = $scheduleInfo['id'] ?? 0;// 企业 id
+                            static::saveById($schedule_update, $schedule_id);
+                        }
+                    }
+                }
+            });
+        } catch ( \Exception $e) {
+            throws($e->getMessage(), $e->getCode());
+        }
+        return $staff_id;
+    }
+
     /**
      * 批量保存文件数据
      *
@@ -755,6 +878,7 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
                 $file_title = $info['file_title'];// 文件名称
                 $file_path = $info['file_url'];// 文件网络读取地址
                 $file_type = $info['file_type'];// 文件类型  1能力附表 ; 2 机构自我声明 ;3机构处罚
+                $schedule_type = $info['schedule_type'] ?? 0;// 如果文件类型file_type值为1能力附表时；的操作类型 0：excel文件；1：首次;2：扩项;4：地址变更;8：标准变更;16：复查;
 //                $file_czdate = $info['czDate'];// "2020-11-04T16:53:27"
 //                $file_czdate = str_replace('T', ' ', $file_czdate);
 //                $file_czdate = judgeDate($file_czdate,"Y-m-d H:i:s");
@@ -813,13 +937,13 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
                             ];
                             if($suffix == 'pdf'){
                                 $saveData = array_merge($saveData, [
-                                    'type_id' => 0,
+                                    'type_id' => $schedule_type,// 0,
                                     'resource_id_pdf' => $resourceIdArr[0] ?? 0,// pdf资源的id
                                     'resource_ids_pdf' => $resource_ids,// pdf资源id串(逗号分隔-未尾逗号结束)
                                 ]);
                             }else{
                                 $saveData = array_merge($saveData, [
-                                    'type_id' => 0,
+                                    'type_id' => $schedule_type,// 0,
                                     'resource_id' => $resourceIdArr[0] ?? 0,// pdf资源的id
                                     'resource_ids' => $resource_ids,// pdf资源id串(逗号分隔-未尾逗号结束)
                                 ]);

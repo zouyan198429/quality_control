@@ -49,7 +49,15 @@ class IndexController extends BasicController
     }
 
     public function test(Request $request){
-        pr(microtime());
+        $queryParams = [];
+        $fun_no = '';
+        Tool::appendParamQuery($queryParams, $fun_no, 'fun_no', [0, '0'], ',', false);
+        pr($queryParams);
+//        $aa = [
+//          'aa' => 'aa',
+//          'bb' => 'bb'
+//        ];
+//        pr(json_encode($aa));
 //        $actionName = request()->route()->getActionName();
 //        pr($actionName);
 

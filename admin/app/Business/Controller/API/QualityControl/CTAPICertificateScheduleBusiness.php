@@ -590,6 +590,93 @@ class CTAPICertificateScheduleBusiness extends BasicPublicCTAPIBusiness
     }
 
 
+
+    /**
+     * 根据条件修改能力范围接口
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  int 数据所属企业的id
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function UpdateRequest(Request $request, Controller $controller, $notLog = 0){
+
+        // $id = CommonRequest::getInt($request, 'id');
+        // CommonRequest::judgeEmptyParams($request, 'id', $id);
+//                $company_id = CommonRequest::getInt($request, 'company_id');
+        $company_info = [];
+
+        $company_name = CommonRequest::get($request, 'company_name');
+        $company_info['company_name'] = $company_name;
+
+        $certificate_no = CommonRequest::get($request, 'certificate_no');
+        $company_info['company_certificate_no'] = $certificate_no;
+
+        // 企业数据验证
+        CTAPIStaffBusiness::companyDataJudge( $request,  $controller, $company_info, '', $notLog);
+
+        $search_json = CommonRequest::get($request, 'search_json');// 能力范围
+        if (isNotJson($search_json)) {
+            throws('查询能力范围不是有效的json格式！');
+        }
+        $scheduleSearchArr = json_decode($search_json , true);
+         if(!is_array($scheduleSearchArr) || empty($scheduleSearchArr))  throws('查询能力范围不能为空！');
+         if(Tool::isMultiArr($scheduleSearchArr, false)){
+             throws('查询能力范围必须是一维对象！');
+         }
+
+        $schedule_json = CommonRequest::get($request, 'schedule_json');// 能力范围
+        if (isNotJson($schedule_json)) {
+            throws('更新能力范围不是有效的json格式！');
+        }
+        $scheduleArr = json_decode($schedule_json , true);
+        if(!is_array($scheduleArr) || empty($scheduleArr))  throws('更新能力范围不能为空！');
+        if(Tool::isMultiArr($scheduleArr, false)){
+            throws('更新能力范围必须是一维对象！');
+        }
+
+        // 验证每一项
+        $errArr = [];
+
+        // 能力范围数据验证
+        $scheduleTemSearchArr = [$scheduleSearchArr];
+        static::scheduleDataJudge($request, $controller, $scheduleTemSearchArr, $errArr, $notLog );
+        $scheduleTemArr = [$scheduleArr];
+        static::scheduleDataJudge($request, $controller, $scheduleTemArr, $errArr, $notLog );
+
+        // 有错误信息
+        if(!empty($errArr) ) throws(implode(';', $errArr));
+
+        // throws('接口数据通过验证');
+
+        // 保存数据
+        // 调用新加或修改接口
+        $company_id = $controller->company_id;
+        $user_id = $controller->user_id;
+        $modifAddOprate = true;
+        $apiParams = [
+            'saveData' => [
+                'company_info' => $company_info,
+//                    [
+//                        'company_name' => $company_name,// 机构名称
+//                        'company_certificate_no' => $certificate_no,// CMA证书号(资质认定编号)
+//                    ],
+                'schedule_search' => $scheduleSearchArr,
+                'schedule_update' => $scheduleArr,
+            ],
+            'company_id' => $company_id,
+            'operate_staff_id' => $user_id,
+            'modifAddOprate' => ($modifAddOprate == true) ? 1 : 0 ,// 0,
+        ];
+        // throws(json_encode($apiParams));
+        $methodName = 'updateDatas';
+
+        return static::exeDBBusinessMethodCT($request, $controller, '',  $methodName, $apiParams, $company_id, $notLog);
+
+    }
+
+
     /**
      * 注册/修改企业信息接口
      *
@@ -680,6 +767,7 @@ class CTAPICertificateScheduleBusiness extends BasicPublicCTAPIBusiness
             $t_file_title = $v['file_title'] ?? '';
             $t_file_url = $v['file_url'] ?? '';
             $t_file_type = $v['file_type'] ?? 0;
+            $t_schedule_type = $v['schedule_type'] ?? 0;
             if(!isset($v['file_title']) || empty($v['file_title'])){
                 array_push($temErrArr, '文件名称不存在或不能为空！');
             }
@@ -688,6 +776,9 @@ class CTAPICertificateScheduleBusiness extends BasicPublicCTAPIBusiness
             }
             if(!isset($v['file_type']) || empty($v['file_type']) || !in_array($v['file_type'], [1,2,5])){
                 array_push($temErrArr, '文件类型必须是【1：能力附表 ; 2：机构自我声明 ;5：机构处罚】！');
+            }
+            if(!isset($v['schedule_type']) || strlen($v['schedule_type']) <= 0 || !in_array($v['schedule_type'], [0, 1, 2, 4, 8 ,16])){
+                array_push($temErrArr, '文件操作类型必须是【0：excel文件；1：首次;2：扩项;4：地址变更;8：标准变更;16：复查;】！');
             }
 
             if(!empty($temErrArr)){

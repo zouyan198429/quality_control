@@ -558,6 +558,7 @@ Route::get('admin/API/certificate_schedule/add_bath_api/{id}', 'Admin\QualityCon
 Route::get('admin/API/certificate_schedule/add_files_api/{id}', 'Admin\QualityControl\API\CertificateScheduleController@add_files_api');// 企业文件信息
 Route::get('admin/API/certificate_schedule/add_bath_modify_api/{id}', 'Admin\QualityControl\API\CertificateScheduleController@add_bath_modify_api');// 能力范围删除或新加-修改
 Route::get('admin/API/certificate_schedule/add_modify_api/{id}', 'Admin\QualityControl\API\CertificateScheduleController@add_modify_api');// 注册/修改企业信息
+Route::get('admin/API/certificate_schedule/add_update_api/{id}', 'Admin\QualityControl\API\CertificateScheduleController@add_update_api');// 根据条件修改能力范围
 
 // 企业后台 company
 Route::get('company/login', 'WebFront\Company\QualityControl\IndexController@login');// login.html 登录

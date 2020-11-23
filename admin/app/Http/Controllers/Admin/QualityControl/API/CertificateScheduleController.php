@@ -158,6 +158,7 @@ class CertificateScheduleController extends BasicController
 
             });
     }
+
     /**
      * 能力范围删除或新加
      *
@@ -174,6 +175,24 @@ class CertificateScheduleController extends BasicController
 
             });
     }
+
+    /**
+     * 根据条件修改能力范围
+     *
+     * @param Request $request
+     * @param int $id
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function add_update_api(Request $request,$id = 0)
+    {
+        $pageNum = 0;
+        return $this->exeDoPublicFun($request, $pageNum, 1,'admin.QualityControl.API.CertificateSchedule.add_update_api', false
+            , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
+
+            });
+    }
+
     /**
      * 注册/修改企业信息
      *
@@ -432,6 +451,28 @@ class CertificateScheduleController extends BasicController
             , '', [], function (&$reDataArr) use ($request){
 
                 $staff_id = CTAPICertificateScheduleBusiness::bathModifyRequest($request, $this, 1);
+                return ajaxDataArr(1, ['company_id' => $staff_id], '');
+
+            });
+    }
+
+    /**
+     * ajax保存数据--根据条件修改能力范围
+     *
+     * @param int $id
+     * @return Response
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_update(Request $request)
+    {
+//        $this->InitParams($request);
+
+        $id = CommonRequest::getInt($request, 'id');
+        $pageNum = 0;
+        return $this->exeDoPublicFun($request, $pageNum, 4,'', true
+            , '', [], function (&$reDataArr) use ($request){
+
+                $staff_id = CTAPICertificateScheduleBusiness::UpdateRequest($request, $this, 1);
                 return ajaxDataArr(1, ['company_id' => $staff_id], '');
 
             });

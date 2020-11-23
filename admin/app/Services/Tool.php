@@ -4034,6 +4034,24 @@ class Tool
     }
 
     /**
+     * [字段名=》字段值] 的格式转为   [字段名=》['vals' => ,'excludeVals' => ,'valsSeparator' =>, 'hasInIsMerge' =>]] 的格式
+     * @param array $fieldValParams   [字段名=》字段值] 的格式
+     * @param array $fieldConfig 指定字段的格式 二维数组 [字段名=》['excludeVals' => ,'valsSeparator' =>, 'hasInIsMerge' =>]]
+     * @param array $defaultConfig 没有批定字段的格式时的默认格式 一维数组 ['excludeVals' => ,'valsSeparator' =>, 'hasInIsMerge' =>]
+     */
+    public static function fieldValToConfig(&$fieldValParams = [], $fieldConfig = [], $defaultConfig = []){
+
+        foreach($fieldValParams as $t_field => $t_val){
+            $fieldValParams[$t_field] = [
+                'vals' => $t_val,
+                'excludeVals' => $fieldConfig[$t_field]['excludeVals'] ?? $defaultConfig['excludeVals'],
+                'valsSeparator' => $fieldConfig[$t_field]['valsSeparator'] ?? $defaultConfig['valsSeparator'],
+                'hasInIsMerge' => $fieldConfig[$t_field]['hasInIsMerge'] ?? $defaultConfig['hasInIsMerge'],
+            ];
+        }
+    }
+
+    /**
      * 根据参数的名称，加入查询条件中。
      *
      * @param array $fieldValParams
@@ -4119,8 +4137,8 @@ class Tool
      * @author zouyan(305463219@qq.com)
      */
     public static function appendParamQuery(&$queryParams, &$paramVals = '', $fieldName = '', $excludeVals = [0, '0', ''], $valsSeparator = ',', $hasInIsMerge = false){
-        // 空字符不处理
-        if(is_string($paramVals) && strlen($paramVals) <= 0) return false;
+        // 空字符不处理--有为空的可能，所以放开
+        // if(is_string($paramVals) && strlen($paramVals) <= 0) return false;
         // 不是字符也不是数组不处理
         if(!is_string($paramVals) && !is_numeric($paramVals) && !is_array($paramVals)) return false;
         // 字符串，则转为数组 ；并去重

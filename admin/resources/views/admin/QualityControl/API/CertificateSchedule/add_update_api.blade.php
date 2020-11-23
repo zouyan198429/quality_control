@@ -36,11 +36,19 @@ app_secret:<input type="text"   name="app_secret" value="" placeholder="请输�
                 </td>
             </tr>
             <tr>
-                <th>文件信息json<span class="must">*</span></th>
+                <th>查询的能力范围json数据<span class="must">*</span></th>
                 <td>
-                    <textarea name="file_json" placeholder="请输入文件信息json" class="layui-textarea">{{ replace_enter_char($info['file_json'] ?? '',2) }}</textarea>
+                    <textarea name="search_json" placeholder="请输入删除的能力范围json数据" class="layui-textarea">{{ replace_enter_char($info['search_json'] ?? '',2) }}</textarea>
                     格式：
-                    [{"file_title": "能力附表文件名","file_url": "http://qualitycontrol.admin.cunwo.net/resource/company/45/excel/2020/11/09/202011091819227042d1f0f7cb0f39.xlsx","file_type": "1","schedule_type": "0"}]
+                    {"category_name": "类别1","project_name":"产品1","three_name":"第三级1","four_name":"","param_name":"","method_name":"标准（方法）名称","limit_range":"限制范围","explain_text":"说明"}
+                </td>
+            </tr>
+            <tr>
+                <th>更新能力范围json数据<span class="must">*</span></th>
+                <td>
+                    <textarea name="schedule_json" placeholder="请输入新加能力范围json数据" class="layui-textarea">{{ replace_enter_char($info['schedule_json'] ?? '',2) }}</textarea>
+                    格式：
+                    {"category_name": "类别1","project_name":"产品1","three_name":"第三级1","four_name":"","param_name":"","method_name":"标准（方法）名称","limit_range":"限制范围","explain_text":"说明"}
                 </td>
             </tr>
             <tr>
@@ -57,7 +65,7 @@ app_secret:<input type="text"   name="app_secret" value="" placeholder="请输�
 @include('public.dynamic_list_foot')
 
 <script type="text/javascript">
-    var SAVE_URL = "{{ url('api/market/certificate_schedule/files_save') }}";// "{ { url('api/admin/API/certificate_schedule/ajax_bath_save') }}";// ajax保存记录地址
+    var SAVE_URL = "{{ url('api/market/certificate_schedule/bath_modify') }}";// "{ { url('api/admin/API/certificate_schedule/ajax_bath_save') }}";// ajax保存记录地址
     var LIST_URL = "{{url('admin/API/certificate_schedule')}}";//保存成功后跳转到的地址
 
 
@@ -66,7 +74,7 @@ app_secret:<input type="text"   name="app_secret" value="" placeholder="请输�
 <script type="text/ecmascript" src="{{asset('static/js/md5/md5.js')}}"></script>
 <script type="text/ecmascript" src="{{asset('static/js/sign.js')}}"></script>
 
-<script src="{{ asset('/js/admin/QualityControl/API/CertificateSchedule_files.js') }}?6"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/API/CertificateSchedule_update.js') }}?6"  type="text/javascript"></script>
 
 </body>
 </html>
