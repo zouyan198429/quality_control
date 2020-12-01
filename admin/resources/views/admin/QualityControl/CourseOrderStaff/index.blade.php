@@ -19,61 +19,92 @@
   <div class="mmhead" id="mywork">
 
     @include('common.pageParams')
-    <div class="tabbox" >
-      <a href="javascript:void(0);" class="on" onclick="action.iframeModify(0)">添加报名学员</a>
-    </div>
-    <form onsubmit="return false;" class="form-horizontal" style="display: none;" role="form" method="post" id="search_frm" action="#">
+{{--    <div class="tabbox" >--}}
+{{--      <a href="javascript:void(0);" class="on" onclick="action.iframeModify(0)">添加报名学员</a>--}}
+{{--    </div>--}}
+    <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
-
-        {{--<select class="wmini" name="province_id">--}}
-          {{--<option value="">全部</option>--}}
-          {{--@foreach ($province_kv as $k=>$txt)--}}
-            {{--<option value="{{ $k }}"  @if(isset($province_id) && $province_id == $k) selected @endif >{{ $txt }}</option>--}}
-          {{--@endforeach--}}
-        {{--</select>--}}
-        <select style="width:80px; height:28px;" name="field">
-          <option value="type_name">报名学员</option>
-        </select>
-        <input type="text" value=""    name="keyword"  placeholder="请输入关键字"/>
+          <input type="hidden" name="company_hidden"  value="{{ $company_hidden ?? 0 }}" />
+          <span   @if (isset($company_hidden) && $company_hidden == 1 ) style="display: none;"  @endif>
+                <input type="hidden" class="select_id" name="company_id"  value="{{ $info['company_id'] ?? '' }}" />
+                <span class="select_name company_name">{{ $info['user_company_name'] ?? '' }}</span>
+                <i class="close select_close company_id_close"  onclick="clearSelect(this)" style="display: none;">×</i>
+                <button  type="button"  class="btn btn-danger  btn-xs ace-icon fa fa-plus-circle bigger-60"  onclick="otheraction.selectCompany(this)">选择企业</button>
+          </span>
+          <select class="wmini" name="course_id">
+              <option value="">所属课程</option>
+              @foreach ($course_kv as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultCourseId) && $defaultCourseId == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
+          <select class="wmini" name="pay_status">
+              <option value="">缴费状态</option>
+              @foreach ($payStatus as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultPayStatus) && $defaultPayStatus == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
+          <select class="wmini" name="join_class_status">
+              <option value="">分班状态</option>
+              @foreach ($joinClassStatus as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultJoinClassStatus) && $defaultJoinClassStatus == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
+          <select class="wmini" name="staff_status">
+              <option value="">人员状态</option>
+              @foreach ($staffStatus as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultStaffStatus) && $defaultStaffStatus == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
+{{--        <select style="width:80px; height:28px;" name="field">--}}
+{{--          <option value="type_name">报名学员</option>--}}
+{{--        </select>--}}
+{{--        <input type="text" value=""    name="keyword"  placeholder="请输入关键字"/>--}}
         <button class="btn btn-normal search_frm">搜索</button>
       </div>
     </form>
   </div>
-  {{--
-  <div class="table-header">
-    { {--<button class="btn btn-danger  btn-xs batch_del"  onclick="action.batchDel(this)">批量删除</button>--} }
-    <button class="btn btn-success  btn-xs export_excel"  onclick="action.batchExportExcel(this)" >导出[按条件]</button>
-    <button class="btn btn-success  btn-xs export_excel"  onclick="action.exportExcel(this)" >导出[勾选]</button>
-    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcelTemplate(this)">导入模版[EXCEL]</button>
-    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcel(this)">导入城市</button>
-    <div style="display:none;" ><input type="file" class="import_file img_input"></div>{ {--导入file对象--} }
-  </div>
---}}
+    <div class="table-header">
+        {{--<button class="btn btn-danger  btn-xs batch_del"  onclick="action.batchDel(this)">批量删除</button>--}}
+        <button class="btn btn-success  btn-xs export_excel"  onclick="action.batchExportExcel(this)" >导出[按条件]</button>
+        <button class="btn btn-success  btn-xs export_excel"  onclick="action.exportExcel(this)" >导出[勾选]</button>
+        {{--    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcelTemplate(this)">导入模版[EXCEL]</button>--}}
+        {{--    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcel(this)">导入城市</button>--}}
+        {{--    <div style="display:none;" ><input type="file" class="import_file img_input"></div>{ {--导入file对象--} }--}}
+        <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.frozenSelected(this, 4)" >作废[勾选]</button>
+{{--        <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.frozenSelected(this, 1)" >取消作废[勾选]</button>--}}
+    </div>
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
-{{--        <col width="50">--}}
+        <col width="50">
 {{--        <col width="60">--}}
         <col>
-        <col width="90">
-        <col>
-        <col>
-        <col width="100">
+        <col width="85">
+        <col width="160">
+
+        <col width="105">
+        <col width="120">
+        <col width="95">
+        <col width="95">
+        <col width="95">
         <col width="140">
     </colgroup>
     <thead>
     <tr>
-{{--      <th>--}}
-{{--        <label class="pos-rel">--}}
-{{--          <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>--}}
-{{--          <!-- <span class="lbl">全选</span> -->--}}
-{{--        </label>--}}
-{{--      </th>--}}
+      <th>
+        <label class="pos-rel">
+          <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>
+          <!-- <span class="lbl">全选</span> -->
+        </label>
+      </th>
 {{--      <th>ID</th>--}}
-      <th>报名学员名称</th>
-      <th>名称简写</th>
-      <th>创建时间</th>
-      <th>更新时间</th>
-      <th>排序[降序]</th>
+        <th>课程<hr/>单位</th>
+        <th>姓名<hr/>班级</th>
+        <th>手机号<hr/>身份证</th>
+        <th>联络人<hr/>联络人电话</th>
+        <th>单价<hr/>付款单号</th>
+        <th>人员状态<hr/>报名时间</th>
+        <th>缴费状态<hr/>缴费时间</th>
+        <th>分班状态<hr/>分班时间</th>
       <th>操作</th>
     </tr>
     </thead>
@@ -115,12 +146,16 @@
       var IMPORT_EXCEL_URL = "{{ url('api/admin/course_order_staff/import') }}";//导入EXCEL地址
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
 
+      var SELECT_COMPANY_URL = "{{url('admin/company/select')}}";// 选择所属企业
+
+      var STAFF_STATUS_URL = "{{ url('api/admin/course_order_staff/ajax_frozen') }}";//操作(作废/取消作废)
+
       // 列表数据每隔指定时间就去执行一次刷新【如果表有更新时】--定时执行
       var IFRAME_TAG_KEY = "";// "QualityControl\\CTAPIStaff";// 获得模型表更新时间的关键标签，可为空：不获取
       var IFRAME_TAG_TIMEOUT = 60000;// 获得模型表更新时间运行间隔 1000:1秒 ；可以不要此变量：默认一分钟
 
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/CourseOrderStaff.js') }}?1"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/CourseOrderStaff.js') }}?4"  type="text/javascript"></script>
 </body>
 </html>

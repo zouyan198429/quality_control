@@ -2083,6 +2083,7 @@ class BasicCTAPIBusiness extends APIOperate
      */
     public static function getRelationConfigs(Request $request, Controller $controller, $relationKeys = [], $extendParams = []){
         if(empty($relationKeys)) return [];
+        list($relationKeys, $relationArr) = static::getRelationParams($relationKeys);// 重新修正关系参数
         $user_info = $controller->user_info;
         $user_id = $controller->user_id;
         $user_type = $controller->user_type;
@@ -2093,7 +2094,27 @@ class BasicCTAPIBusiness extends APIOperate
 //            'company_info' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
 //                , ['admin_type' => 'admin_type', 'staff_id' => 'id']
 //                , 1, 2
-//                ,'','', [], ['where' => [['admin_type', 2]]], '', []),
+//                ,'','',
+//                CTAPIStaffBusiness::getRelationConfigs($request, $controller,
+//                    static::getUboundRelation($relationArr, 'company_info')
+//                    // ['class_name' => '', 'staff_info' => ''] -- 新格式  或 ['class_name', 'staff_info'] -- 老格式
+//                    ,
+//                    static::getUboundRelationExtendParams($extendParams, 'company_info'))
+//
+////                [
+////                    // 获得班级名称
+////                    'class_name' => CTAPICourseClassBusiness::getTableRelationConfigInfo($request, $controller
+////                        , ['class_id' => 'id']
+////                        , 1, 2
+////                        ,'','', [], [], '', []),
+////                    // 获得用户信息
+////                    'staff_info' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
+////                        , ['staff_id' => 'id']
+////                        , 1, 256
+////                        ,'','', [], [], '', []),
+////                ]
+//                ,
+//                ['where' => [['admin_type', 2]]], '', []),
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }

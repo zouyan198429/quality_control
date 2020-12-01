@@ -31,6 +31,18 @@
             <option value="{{ $k }}"  @if(isset($defaultStatusOnline) && $defaultStatusOnline == $k) selected @endif >{{ $txt }}</option>
           @endforeach
         </select>
+          <select class="wmini" name="pay_config_id" style="width: 80px;">
+              <option value="">收款帐号</option>
+              @foreach ($pay_config_kv as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultPayConfig) && $defaultPayConfig == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
+          <select class="wmini" name="pay_method" style="width: 80px;">
+              <option value="">收款方式</option>
+              @foreach ($payMethod as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultPayMethod) && $defaultPayMethod == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
         <select style="width:80px; height:28px;" name="field">
           <option value="course_name">课程名称</option>
           <option value="explain_remarks">简要概述</option>
@@ -57,13 +69,11 @@
         <col>
         <col width="90">
         <col>
-        <col>
-        <col>
-        <col>
+        <col width="120">
+        <col width="95">
+        <col width="95">
         <col width="100">
-        <col>
-        <col>
-        <col>
+        <col width="95">
         <col width="140">
     </colgroup>
     <thead>
@@ -77,14 +87,12 @@
 {{--      <th>ID</th>--}}
       <th>课程名称</th>
         <th>图片</th>
-        <th>收费标准(会员)</th>
-        <th>收费标准(非会员)</th>
-      <th>创建时间</th>
-      <th>更新时间</th>
-      <th>浏览量</th>
-        <th>报名池人数</th>
-        <th>已分班人数</th>
-        <th>上架状态</th>
+        <th>收款帐号<hr/>收款开通类型</th>
+        <th>收费标准(会员)<hr/>收费标准<br/>(非会员)</th>
+        <th>报名池人数<hr/>已分班人数</th>
+        <th>已作废人数</th>
+        <th>浏览量<hr/>上架状态</th>
+        <th>创建时间<hr/>更新时间</th>
       <th>操作</th>
     </tr>
     </thead>
@@ -98,7 +106,7 @@
   </div>
 
 </div>
-<a href="javascript:void(0);" class="btn btn-success  btn-xs  on" id="testBTN">测试</a>
+<a href="javascript:void(0);" class="btn btn-success  btn-xs  on" id="testBTN" style="display: none;">测试</a>
 
   <script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>
   <script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.all.js')}}"></script>
@@ -143,7 +151,7 @@
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
 
 <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/Course.js') }}?4"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/Course.js') }}?5"  type="text/javascript"></script>
 @component('component.upfileincludejsmany')
 @endcomponent
 </body>

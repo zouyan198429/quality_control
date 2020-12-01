@@ -73,6 +73,7 @@ class CTAPICompanyGradeConfigBusiness extends BasicPublicCTAPIBusiness
      */
     public static function getRelationConfigs(Request $request, Controller $controller, $relationKeys = [], $extendParams = []){
         if(empty($relationKeys)) return [];
+        list($relationKeys, $relationArr) = static::getRelationParams($relationKeys);// 重新修正关系参数
         $user_info = $controller->user_info;
         $user_id = $controller->user_id;
         $user_type = $controller->user_type;
@@ -83,7 +84,11 @@ class CTAPICompanyGradeConfigBusiness extends BasicPublicCTAPIBusiness
             'company_info' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
                 , ['company_id' => 'id']
                 , 1, 16
-                ,'','', [], ['where' => [['admin_type', 2]]], '', []),
+                ,'','',
+                CTAPIStaffBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'company_info'),
+                    static::getUboundRelationExtendParams($extendParams, 'company_info')),
+                ['where' => [['admin_type', 2]]], '', []),
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }

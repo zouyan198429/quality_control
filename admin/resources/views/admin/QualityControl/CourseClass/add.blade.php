@@ -44,6 +44,25 @@
                 </td>
             </tr>
             <tr>
+                <th>收款帐号<span class="must"></span></th>
+                <td>
+                    @foreach ($pay_config_kv as $k=>$txt)
+                        <label><input type="radio"  name="pay_config_id"  value="{{ $k }}"  @if(isset($defaultPayConfig) && $defaultPayConfig == $k) checked="checked"  @endif />{{ $txt }} </label>
+                    @endforeach
+                    <p>
+                        不设置，则使用课程设置收款账号信息！
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <th>收款开通类型<span class="must"></span></th>
+                <td class="sel_pay_method">
+                    @foreach ($payMethod as $k=>$txt)
+                        <label><input type="checkbox"  name="pay_method[]"  value="{{ $k }}"  @if(isset($defaultPayMethod) && $defaultPayMethod > 0 && ($defaultPayMethod & $k) == $k) checked="checked"  @endif @if(isset($info['allow_pay_method']) && ($info['allow_pay_method'] & $k) <=0 ) disabled   @endif/>{{ $txt }} </label>
+                    @endforeach
+                </td>
+            </tr>
+            <tr>
                 <th>状态<span class="must">*</span></th>
                 <td>
                     @foreach ($classStatus as $k=>$txt)
@@ -67,7 +86,9 @@
 <script type="text/javascript">
     var SAVE_URL = "{{ url('api/admin/course_class/ajax_save') }}";// ajax保存记录地址
     var LIST_URL = "{{url('admin/course_class')}}";//保存成功后跳转到的地址
+
+    var PAY_CONFIG_INFO_URL = "{{ url('api/admin/order_pay_config/ajax_info') }}";// ajax获得支付方式详情记录地址
 </script>
-<script src="{{ asset('/js/admin/QualityControl/CourseClass_edit.js') }}?1"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/CourseClass_edit.js') }}?2"  type="text/javascript"></script>
 </body>
 </html>

@@ -113,13 +113,15 @@ class CourseClass extends BasePublicModel
      */
     public function getPayMethodTextAttribute()
     {
-        $return_arr = [];
-        $pay_method = $this->pay_method;
-        if($pay_method <= 0 ) return '';
-        foreach(static::$payMethodArr as $k => $v){
-            if(($k & $pay_method) == $k)  array_push($return_arr, $v);
-        }
-        return implode('、', $return_arr);
+        OrderPayConfig::unionPayMethod($this, 'pay_method','pay_config_id');
+        return OrderPayConfig::getPayMethodText($this, 'pay_method');
+//        $return_arr = [];
+//        $pay_method = $this->pay_method;
+//        if($pay_method <= 0 ) return '';
+//        foreach(static::$payMethodArr as $k => $v){
+//            if(($k & $pay_method) == $k)  array_push($return_arr, $v);
+//        }
+//        return implode('、', $return_arr);
 
         // return static::$payMethodArr[$this->pay_method] ?? '';
     }

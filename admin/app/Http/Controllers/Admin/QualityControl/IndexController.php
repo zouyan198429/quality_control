@@ -49,10 +49,8 @@ class IndexController extends BasicController
     }
 
     public function test(Request $request){
-        $queryParams = [];
-        $fun_no = '';
-        Tool::appendParamQuery($queryParams, $fun_no, 'fun_no', [0, '0'], ',', false);
-        pr($queryParams);
+
+
 //        $aa = [
 //          'aa' => 'aa',
 //          'bb' => 'bb'

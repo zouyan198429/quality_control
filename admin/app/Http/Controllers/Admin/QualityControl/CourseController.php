@@ -7,6 +7,7 @@ use App\Business\Controller\API\QualityControl\CTAPIOrderPayConfigBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIResourceBusiness;
 use App\Http\Controllers\WorksController;
 use App\Models\QualityControl\Course;
+use App\Models\QualityControl\OrderPayConfig;
 use App\Services\Request\CommonRequest;
 use App\Services\Tool;
 use Illuminate\Http\Request;
@@ -177,6 +178,20 @@ class CourseController extends BasicController
                 $price_member = CommonRequest::get($request, 'price_member');
                 $price_general = CommonRequest::get($request, 'price_general');
                 $status_online = CommonRequest::getInt($request, 'status_online');
+                $pay_config_id = CommonRequest::getInt($request, 'pay_config_id');
+                // 开通的付款方式
+                $pay_method = CommonRequest::get($request, 'pay_method');
+                if(!is_array($pay_method) && is_string($pay_method)){// 转为数组
+                    $pay_method = explode(',',$pay_method);
+                }
+
+//                $pay_method_ids = implode(',', $pay_method);
+//                if(!empty($pay_method_ids)) $pay_method_ids = ',' . $pay_method_ids . ',';
+                $sel_pay_method = 0;
+                Tool::arrClsEmpty($pay_method);
+                foreach($pay_method as $tem_pay_method){
+                    $sel_pay_method = $sel_pay_method | $tem_pay_method;
+                }
 
                 // 图片资源
                 $resource_id = CommonRequest::get($request, 'resource_id');
@@ -195,6 +210,8 @@ class CourseController extends BasicController
 
                 $saveData = [
                     'course_name' => $course_name,
+                    'pay_config_id' => $pay_config_id,
+                    'pay_method' => $sel_pay_method,
                     'explain_remarks' => replace_enter_char($explain_remarks, 1),
                     'price_member' => $price_member,
                     'price_general' => $price_general,
@@ -251,6 +268,7 @@ class CourseController extends BasicController
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                 'relationFormatConfigs'=> CTAPICourseBusiness::getRelationConfigs($request, $this, ['resource_list'], []),
+                'infoHandleKeyArr' => ['resetPayMethod']
 
             ];
             return  CTAPICourseBusiness::getList($request, $this, 2 + 4, [], [], $extParams);
@@ -475,6 +493,16 @@ class CourseController extends BasicController
         $reDataArr['statusOnline'] =  Course::$statusOnlineArr;
         $reDataArr['defaultStatusOnline'] = -1;// 列表页默认状态
 
+        // 获得收款帐号KV值
+        $reDataArr['pay_config_kv'] = CTAPIOrderPayConfigBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'pay_company_name'], [
+            'sqlParams' => ['where' => [['open_status', 1]]]
+        ]);
+        $reDataArr['defaultPayConfig'] = -1;// 默认
+
+        // 收款开通类型(1现金、2微信支付、4支付宝)
+        $reDataArr['payMethod'] =  OrderPayConfig::$payMethodArr;
+        $reDataArr['defaultPayMethod'] = -1;// 列表页默认状态
+        // $reDataArr['payMethodDisable'] = OrderPayConfig::$payMethodDisable;// 不可用的--禁用
     }
 
     /**
@@ -515,10 +543,12 @@ class CourseController extends BasicController
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                 'relationFormatConfigs'=> CTAPICourseBusiness::getRelationConfigs($request, $this, ['resource_list', 'course_content'], []),
-
+                'infoHandleKeyArr' => ['resetPayMethod']
             ];
             $info = CTAPICourseBusiness::getInfoData($request, $this, $id, [], '', $extParams);
+
         }
+
         // $reDataArr = array_merge($reDataArr, $resultDatas);
 
         // 状态(1正常(报名中)  2下架)
@@ -526,8 +556,15 @@ class CourseController extends BasicController
         $reDataArr['defaultStatusOnline'] = $info['status_online'] ?? -1;// 列表页默认状态
 
         // 获得收款帐号KV值
-        $reDataArr['pay_config_kv'] = CTAPIOrderPayConfigBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'pay_company_name']);
+        $reDataArr['pay_config_kv'] = CTAPIOrderPayConfigBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'pay_company_name'], [
+            'sqlParams' => ['where' => [['open_status', 1]]]
+        ]);
         $reDataArr['defaultPayConfig'] = $info['pay_config_id'] ?? -1;// 默认
+
+        // 收款开通类型(1现金、2微信支付、4支付宝)
+        $reDataArr['payMethod'] =  OrderPayConfig::$payMethodArr;
+        $reDataArr['defaultPayMethod'] = $info['pay_method'] ?? -1;// 列表页默认状态
+        // $reDataArr['payMethodDisable'] = OrderPayConfig::$payMethodDisable;// 不可用的--禁用
 
         $reDataArr['info'] = $info;
         $reDataArr['operate'] = $operate;

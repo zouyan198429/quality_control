@@ -255,7 +255,7 @@ class CompanyPunishController extends BasicController
 //        return  CTAPICompanyPunishBusiness::getList($request, $this, 2 + 4);
         return $this->exeDoPublicFun($request, 4, 4,'', true, '', [], function (&$reDataArr) use ($request){
 
-            $handleKeyConfigArr = ['company_info', 'resource_list'];
+            $handleKeyConfigArr = ['company_info' => '', 'resource_list' => ''];
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                 'relationFormatConfigs'=> CTAPICompanyPunishBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
@@ -303,7 +303,7 @@ class CompanyPunishController extends BasicController
 //                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
 //                'relationFormatConfigs'=> CTAPICompanyPunishBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
 //            ];
-//            return  CTAPICompanyPunishBusiness::getList($request, $this, 2 + 4, [], [], $extParams);
+//            CTAPICompanyPunishBusiness::getList($request, $this, 1 + 0, [], [], $extParams);
 //        });
 //    }
 
@@ -539,7 +539,7 @@ class CompanyPunishController extends BasicController
 
         if ($id > 0) { // 获得详情数据
             $operate = "修改";
-            $handleKeyConfigArr = ['company_info', 'resource_list'];
+            $handleKeyConfigArr = ['company_info' => '', 'resource_list' => ''];
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                 'relationFormatConfigs'=> CTAPICompanyPunishBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),

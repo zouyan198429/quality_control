@@ -327,4 +327,113 @@ class BaseBusiness
     public static function getProjectKeyPre($keyNum = 0, $itemSplit = ':', $appendStr = ':'){
         return Tool::getProjectKey($keyNum, $itemSplit, $appendStr);
     }
+
+    // ***************表关系相关的*************开始***********************
+
+    /**
+     *
+     * 单个关系记录转为
+     * // $itemRelation = [
+     * //  'course_order_staff' => [
+     * //  'class_name' => [],
+     * //   ]
+     * @param array $returnRelation 当前层的关系对象数组
+     * @param string / array $itemRelation  当前层的关系字符
+     *   格式1 、course_order_staff.class_name
+     *   格式2 、['course_order_staff', 'class_name']
+     */
+    public static function setRelationItem(&$returnRelation, $itemRelation){
+        if(is_string($itemRelation) && strlen(trim($itemRelation)) <= 0) return ;
+        if(is_array($itemRelation) && empty($itemRelation)) return;
+        $temArr = is_string($itemRelation) ? explode('.', $itemRelation) : $itemRelation;
+        $relationVal = array_shift($temArr);
+        if(!isset($returnRelation[$relationVal])) $returnRelation[$relationVal] = [];
+        // $returnRelation[$relationVal] = [];// 不能用这个，因为后面的会覆盖前面的
+        if(!empty($temArr)) static::setRelationItem($returnRelation[$relationVal], $temArr);
+
+    }
+
+    /**
+     * 将关系字符转为关系数组
+     * @param string $relations 表关系格式
+     * // 表关系格式
+     * // 1、字符格式：'course_order_staff.class_name,course_order_staff.staff_info'
+     * // 2、数组格式：
+     * // $returnRelation = [
+     * //  'course_order_staff' => [
+     * //  'class_name' => [],
+     * //  'staff_info' => [],
+     * //   ]
+     * // ];
+     * @return array
+     */
+    public static function getRelationArr($relations){
+        // 是数组，则直接返回原数组
+        if(is_array($relations)) return $relations;
+        $returnRelation = [];
+        if(is_string($relations) && strlen($relations) <= 0) return $returnRelation;
+        $temArr = explode(',', $relations);
+        foreach($temArr as $v){
+            static::setRelationItem($returnRelation, $v);
+        }
+        return $returnRelation;
+    }
+
+    /**
+     * 解析关数参数
+     * 使用 如 list($relationKeys, $relationArr) = ::getRelationParams($relationParams)
+     * @param array / string $relationKeys
+     * 格式
+     * // 0、['course_order_staff', 'course_order_staff'] -- 旧的格式，需要做兼容
+     * // 1、字符格式：'course_order_staff.class_name,course_order_staff.staff_info' --- 需要解析成2
+     * // 2、数组格式：--最新的格式数组
+     * // $returnRelation = [
+     * //  'course_order_staff' => [
+     * //  'class_name' => [],
+     * //  'staff_info' => [],
+     * //   ]
+     * // ];
+     * @return array ['旧格式一维数组', '最新的格式数组']
+     */
+    public static function getRelationParams($relationParams = []){
+        $relationKeys = [];
+        $relationArr = [];
+        if(is_string($relationParams)) {
+            $relationArr = static::getRelationArr($relationParams);
+            if (!empty($relationArr)) $relationKeys = array_keys($relationArr);
+        }elseif(is_array($relationParams) && !empty($relationParams) && Tool::allValIsEmpty($relationParams, '')){// 数组[一维或二维]，值都为空 -- 2、数组格式
+            $relationKeys = array_keys($relationParams);
+            $relationArr = $relationParams;
+        }elseif(is_array($relationParams) && !empty($relationParams)){// 数组[一维或二维] -- 0 旧的格式，需要做兼容
+            $relationKeys = $relationParams;
+        }
+        return [$relationKeys, $relationArr];
+    }
+
+    /**
+     * 获得指定下标下的关系配置数组
+     * @param $relationArr
+     * @param string $relationUbound
+     * @return array|mixed
+     */
+    public static function  getUboundRelation($relationArr, $relationUbound = ''){
+        if(is_string($relationUbound) && strlen($relationUbound) <= 0) return [];
+        list($relationKeys, $relationArr) = static::getRelationParams($relationArr);
+        return $relationArr[$relationUbound] ?? [];
+    }
+
+    /**
+     * 获得指定下标下的扩展参数
+     * @param $extendParamsr
+     * @param string $relationUbound
+     * @return array|mixed
+     */
+    public static function getUboundRelationExtendParams($extendParamsr, $relationUbound = ''){
+        if(!is_array($extendParamsr)) return [];
+        if(is_string($relationUbound) && strlen($relationUbound) <= 0) return [];
+        return $extendParamsr[$relationUbound] ?? [];
+    }
+
+    // ***************表关系相关的*************结束***********************
+
 }

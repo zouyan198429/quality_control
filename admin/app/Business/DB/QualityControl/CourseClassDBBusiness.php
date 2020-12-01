@@ -69,7 +69,7 @@ class CourseClassDBBusiness extends BasePublicDBBusiness
 
         CommonDB::doTransactionFun(function() use( &$id, &$organize_id){
             // 删除资源及文件
-            ResourceDBBusiness::delResourceByIds(static::thisObj(), $id, 32);
+           // ResourceDBBusiness::delResourceByIds(static::thisObj(), $id, 32);
 
             // 删除主记录
 //            $delQueryParams = [

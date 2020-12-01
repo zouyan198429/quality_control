@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin\QualityControl;
 
 use App\Business\Controller\API\QualityControl\CTAPICitysBusiness;
 use App\Business\Controller\API\QualityControl\CTAPICourseClassBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIOrderPayConfigBusiness;
 use App\Http\Controllers\WorksController;
 use App\Models\QualityControl\CourseClass;
+use App\Models\QualityControl\OrderPayConfig;
 use App\Services\Request\CommonRequest;
 use App\Services\Tool;
 use Illuminate\Http\Request;
@@ -173,12 +175,27 @@ class CourseClassController extends BasicController
                 $city_id = CommonRequest::getInt($request, 'city_id');
                 $remarks = CommonRequest::get($request, 'remarks');
                 $class_status = CommonRequest::getInt($request, 'class_status');
+                $pay_config_id = CommonRequest::getInt($request, 'pay_config_id');
+                // 开通的付款方式
+                $pay_method = CommonRequest::get($request, 'pay_method');
+                if(!is_array($pay_method) && is_string($pay_method)){// 转为数组
+                    $pay_method = explode(',',$pay_method);
+                }
 
+//                $pay_method_ids = implode(',', $pay_method);
+//                if(!empty($pay_method_ids)) $pay_method_ids = ',' . $pay_method_ids . ',';
+                $sel_pay_method = 0;
+                Tool::arrClsEmpty($pay_method);
+                foreach($pay_method as $tem_pay_method){
+                    $sel_pay_method = $sel_pay_method | $tem_pay_method;
+                }
 
                 $saveData = [
                     'class_name' => $class_name,
                     'city_id' => $city_id,
                     'remarks' => replace_enter_char($remarks, 1),
+                    'pay_config_id' => $pay_config_id,
+                    'pay_method' => $sel_pay_method,
                     'class_status' => $class_status,
                 ];
 
@@ -225,10 +242,11 @@ class CourseClassController extends BasicController
 //        return  CTAPICourseClassBusiness::getList($request, $this, 2 + 4);
         return $this->exeDoPublicFun($request, 4, 4,'', true, '', [], function (&$reDataArr) use ($request){
 
-            $handleKeyConfigArr = ['city_info'];
+            $handleKeyConfigArr = ['city_info' => ''];
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                 'relationFormatConfigs'=> CTAPICourseClassBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
+                'infoHandleKeyArr' => ['resetPayMethod']
             ];
             return  CTAPICourseClassBusiness::getList($request, $this, 2 + 4, [], [], $extParams);
         });
@@ -434,6 +452,16 @@ class CourseClassController extends BasicController
         $reDataArr['classStatus'] =  CourseClass::$classStatusArr;
         $reDataArr['defaultClassStatus'] = -1;// 列表页默认状态
 
+        // 获得收款帐号KV值
+        $reDataArr['pay_config_kv'] = CTAPIOrderPayConfigBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'pay_company_name'], [
+            'sqlParams' => ['where' => [['open_status', 1]]]
+        ]);
+        $reDataArr['defaultPayConfig'] = -1;// 默认
+
+        // 收款开通类型(1现金、2微信支付、4支付宝)
+        $reDataArr['payMethod'] =  OrderPayConfig::$payMethodArr;
+        $reDataArr['defaultPayMethod'] = -1;// 列表页默认状态
+        // $reDataArr['payMethodDisable'] = OrderPayConfig::$payMethodDisable;// 不可用的--禁用
     }
 
     /**
@@ -471,7 +499,12 @@ class CourseClassController extends BasicController
 
         if ($id > 0) { // 获得详情数据
             $operate = "修改";
-            $info = CTAPICourseClassBusiness::getInfoData($request, $this, $id, [], '', []);
+            $extParams = [
+                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                'relationFormatConfigs'=> CTAPICourseClassBusiness::getRelationConfigs($request, $this, [], []),
+                'infoHandleKeyArr' => ['resetPayMethod']
+            ];
+            $info = CTAPICourseClassBusiness::getInfoData($request, $this, $id, [], '', $extParams);
         }
         // $reDataArr = array_merge($reDataArr, $resultDatas);
 
@@ -482,6 +515,18 @@ class CourseClassController extends BasicController
         // 班级状态1待开班2开班中4已作废8已结业
         $reDataArr['classStatus'] =  CourseClass::$classStatusArr;
         $reDataArr['defaultClassStatus'] = $info['class_status'] ?? -1;// 列表页默认状态
+
+        // 获得收款帐号KV值
+        $reDataArr['pay_config_kv'] = CTAPIOrderPayConfigBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'pay_company_name'], [
+            'sqlParams' => ['where' => [['open_status', 1]]]
+        ]);
+        $reDataArr['defaultPayConfig'] = $info['pay_config_id'] ?? -1;// 默认
+
+        // 收款开通类型(1现金、2微信支付、4支付宝)
+        $reDataArr['payMethod'] =  OrderPayConfig::$payMethodArr;
+        $reDataArr['defaultPayMethod'] = $info['pay_method'] ?? -1;// 列表页默认状态
+        // $reDataArr['payMethodDisable'] = OrderPayConfig::$payMethodDisable;// 不可用的--禁用
+
 
         $reDataArr['info'] = $info;
         $reDataArr['operate'] = $operate;

@@ -257,7 +257,7 @@ class CompanyContentController extends BasicController
                 'company_id' => $this->user_id,
             ];
             CTAPICompanyContentBusiness::mergeRequest($request, $this, $mergeParams);
-            $handleKeyConfigArr = ['company_info'];
+            $handleKeyConfigArr = ['company_info' => ''];
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                 'relationFormatConfigs'=> CTAPICompanyContentBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
@@ -517,7 +517,7 @@ class CompanyContentController extends BasicController
             //   'department_id' => 0,
         ];
 
-        $handleKeyConfigArr = [];// ['company_info'];
+        $handleKeyConfigArr = [];// ['company_info' => ''];
         $extParams = [
             // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
             'relationFormatConfigs'=> CTAPICompanyContentBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),

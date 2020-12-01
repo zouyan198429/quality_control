@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Admin\QualityControl;
 
+use App\Business\Controller\API\QualityControl\CTAPICourseBusiness;
 use App\Business\Controller\API\QualityControl\CTAPICourseOrderBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
 use App\Http\Controllers\WorksController;
+use App\Models\QualityControl\CourseOrder;
 use App\Services\Request\CommonRequest;
 use App\Services\Tool;
 use Illuminate\Http\Request;
@@ -73,24 +76,54 @@ class CourseOrderController extends BasicController
      * @return mixed
      * @author zouyan(305463219@qq.com)
      */
-    public function add(Request $request,$id = 0)
+//    public function add(Request $request,$id = 0)
+//    {
+////        $reDataArr = [];// 可以传给视图的全局变量数组
+////        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request, &$id){
+////            // 正常流程的代码
+////
+////            $this->InitParams($request);
+////            // $reDataArr = $this->reDataArr;
+////            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+////            return view('admin.QualityControl.CourseOrder.add', $reDataArr);
+////
+////        }, $this->errMethod, $reDataArr, $this->errorView);
+//
+//        $pageNum = ($id > 0) ? 64 : 16;
+//        return $this->exeDoPublicFun($request, $pageNum, 1,'admin.QualityControl.CourseOrder.add', true
+//            , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
+//
+//        });
+//    }
+
+    /**
+     * 详情页
+     *
+     * @param Request $request
+     * @param int $company_id
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function info(Request $request,$id = 0)
     {
-//        $reDataArr = [];// 可以传给视图的全局变量数组
-//        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request, &$id){
-//            // 正常流程的代码
-//
-//            $this->InitParams($request);
-//            // $reDataArr = $this->reDataArr;
-//            $reDataArr = array_merge($reDataArr, $this->reDataArr);
-//            return view('admin.QualityControl.CourseOrder.add', $reDataArr);
-//
-//        }, $this->errMethod, $reDataArr, $this->errorView);
-
-        $pageNum = ($id > 0) ? 64 : 16;
-        return $this->exeDoPublicFun($request, $pageNum, 1,'admin.QualityControl.CourseOrder.add', true
-            , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
-
-        });
+        return $this->exeDoPublicFun($request, 17179869184, 1,'admin.QualityControl.CourseOrder.info', false
+            , '', ['id' => $id], function (&$reDataArr) use ($request, &$id){
+                $extParams = [
+                    // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                    'relationFormatConfigs'=> CTAPICourseOrderBusiness::getRelationConfigs($request, $this,
+                        [
+                            'company_name' => '',
+                            'course_name' => '',
+                            'course_order_staff' => [
+                                'class_name' => '',
+                                'staff_info' => '',
+                            ]
+                        ], []),];
+                $info = CTAPICourseOrderBusiness::getFVFormatList( $request,  $this, 4, 1
+                    , ['id' => $id], false, [], $extParams);
+                $reDataArr['info'] = $info;
+                // pr($reDataArr);
+            });
     }
 
     /**
@@ -118,18 +151,18 @@ class CourseOrderController extends BasicController
      * @author zouyan(305463219@qq.com)
      */
     public function ajax_info(Request $request){
-        $this->InitParams($request);
-        $id = CommonRequest::getInt($request, 'id');
-        if(!is_numeric($id) || $id <=0) return ajaxDataArr(0, null, '参数[id]有误！');
-        $info = CTAPICourseOrderBusiness::getInfoData($request, $this, $id, [], '', []);
-        $resultDatas = ['info' => $info];
-        return ajaxDataArr(1, $resultDatas, '');
-
+//        $this->InitParams($request);
 //        $id = CommonRequest::getInt($request, 'id');
 //        if(!is_numeric($id) || $id <=0) return ajaxDataArr(0, null, '参数[id]有误！');
-//        return $this->exeDoPublicFun($request, 128, 2,'', true, 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
-//
-//        });
+//        $info = CTAPICourseOrderBusiness::getInfoData($request, $this, $id, [], '', []);
+//        $resultDatas = ['info' => $info];
+//        return ajaxDataArr(1, $resultDatas, '');
+
+        $id = CommonRequest::getInt($request, 'id');
+        if(!is_numeric($id) || $id <=0) return ajaxDataArr(0, null, '参数[id]有误！');
+        return $this->exeDoPublicFun($request, 128, 2,'', true, 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
+
+        });
     }
 
     /**
@@ -157,39 +190,39 @@ class CourseOrderController extends BasicController
      * @return Response
      * @author zouyan(305463219@qq.com)
      */
-    public function ajax_save(Request $request)
-    {
-//        $this->InitParams($request);
-
-        $id = CommonRequest::getInt($request, 'id');
-        $pageNum = ($id > 0) ? 256 : 32;
-        return $this->exeDoPublicFun($request, $pageNum, 4,'', true
-            , '', [], function (&$reDataArr) use ($request){
-                $id = CommonRequest::getInt($request, 'id');
-                // CommonRequest::judgeEmptyParams($request, 'id', $id);
-                $industry_name = CommonRequest::get($request, 'industry_name');
-                $simple_name = CommonRequest::get($request, 'simple_name');
-                $sort_num = CommonRequest::getInt($request, 'sort_num');
-
-                $saveData = [
-                    'industry_name' => $industry_name,
-                    'simple_name' => $simple_name,
-                    'sort_num' => $sort_num,
-                ];
-
-//        if($id <= 0) {// 新加;要加入的特别字段
-//            $addNewData = [
-//                // 'account_password' => $account_password,
-//            ];
-//            $saveData = array_merge($saveData, $addNewData);
-//        }
-                $extParams = [
-                    'judgeDataKey' => 'replace',// 数据验证的下标
-                ];
-                $resultDatas = CTAPICourseOrderBusiness::replaceById($request, $this, $saveData, $id, $extParams, true);
-                return ajaxDataArr(1, $resultDatas, '');
-        });
-    }
+//    public function ajax_save(Request $request)
+//    {
+////        $this->InitParams($request);
+//
+//        $id = CommonRequest::getInt($request, 'id');
+//        $pageNum = ($id > 0) ? 256 : 32;
+//        return $this->exeDoPublicFun($request, $pageNum, 4,'', true
+//            , '', [], function (&$reDataArr) use ($request){
+//                $id = CommonRequest::getInt($request, 'id');
+//                // CommonRequest::judgeEmptyParams($request, 'id', $id);
+//                $industry_name = CommonRequest::get($request, 'industry_name');
+//                $simple_name = CommonRequest::get($request, 'simple_name');
+//                $sort_num = CommonRequest::getInt($request, 'sort_num');
+//
+//                $saveData = [
+//                    'industry_name' => $industry_name,
+//                    'simple_name' => $simple_name,
+//                    'sort_num' => $sort_num,
+//                ];
+//
+////        if($id <= 0) {// 新加;要加入的特别字段
+////            $addNewData = [
+////                // 'account_password' => $account_password,
+////            ];
+////            $saveData = array_merge($saveData, $addNewData);
+////        }
+//                $extParams = [
+//                    'judgeDataKey' => 'replace',// 数据验证的下标
+//                ];
+//                $resultDatas = CTAPICourseOrderBusiness::replaceById($request, $this, $saveData, $id, $extParams, true);
+//                return ajaxDataArr(1, $resultDatas, '');
+//        });
+//    }
 
     /**
      * @OA\Get(
@@ -219,7 +252,17 @@ class CourseOrderController extends BasicController
 //        $this->InitParams($request);
 //        return  CTAPICourseOrderBusiness::getList($request, $this, 2 + 4);
         return $this->exeDoPublicFun($request, 4, 4,'', true, '', [], function (&$reDataArr) use ($request){
-            return  CTAPICourseOrderBusiness::getList($request, $this, 2 + 4);
+
+            $extParams = [
+                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                'relationFormatConfigs'=> CTAPICourseOrderBusiness::getRelationConfigs($request, $this,
+                    [
+                        'company_name' => '',
+                        'course_name' => '',
+                    ], []),
+
+            ];
+            return  CTAPICourseOrderBusiness::getList($request, $this, 2 + 4, [], [], $extParams);
         });
     }
 
@@ -252,13 +295,23 @@ class CourseOrderController extends BasicController
      * @return mixed
      * @author zouyan(305463219@qq.com)
      */
-//    public function export(Request $request){
+    public function export(Request $request){
 //        $this->InitParams($request);
 //        CTAPICourseOrderBusiness::getList($request, $this, 1 + 0);
-//        return $this->exeDoPublicFun($request, 4096, 8,'', true, '', [], function (&$reDataArr) use ($request){
-//            CTAPIRrrDdddBusiness::getList($request, $this, 1 + 0);
-//        });
-//    }
+        return $this->exeDoPublicFun($request, 4096, 8,'', true, '', [], function (&$reDataArr) use ($request){
+
+            $extParams = [
+                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                'relationFormatConfigs'=> CTAPICourseOrderBusiness::getRelationConfigs($request, $this,
+                    [
+                        'company_name' => '',
+                        'course_name' => '',
+                    ], []),
+
+            ];
+            CTAPICourseOrderBusiness::getList($request, $this, 1 + 0, [], [], $extParams);
+        });
+    }
 
 
     /**
@@ -301,18 +354,18 @@ class CourseOrderController extends BasicController
      * @return mixed
      * @author zouyan(305463219@qq.com)
      */
-    public function ajax_del(Request $request)
-    {
-//        $this->InitParams($request);
-//        return CTAPICourseOrderBusiness::delAjax($request, $this);
-
-        $tem_id = CommonRequest::get($request, 'id');
-        Tool::formatOneArrVals($tem_id, [null, ''], ',', 1 | 2 | 4 | 8);
-        $pageNum = (is_array($tem_id) && count($tem_id) > 1 ) ? 1024 : 512;
-        return $this->exeDoPublicFun($request, $pageNum, 4,'', true, '', [], function (&$reDataArr) use ($request){
-            return CTAPICourseOrderBusiness::delAjax($request, $this);
-        });
-    }
+//    public function ajax_del(Request $request)
+//    {
+////        $this->InitParams($request);
+////        return CTAPICourseOrderBusiness::delAjax($request, $this);
+//
+//        $tem_id = CommonRequest::get($request, 'id');
+//        Tool::formatOneArrVals($tem_id, [null, ''], ',', 1 | 2 | 4 | 8);
+//        $pageNum = (is_array($tem_id) && count($tem_id) > 1 ) ? 1024 : 512;
+//        return $this->exeDoPublicFun($request, $pageNum, 4,'', true, '', [], function (&$reDataArr) use ($request){
+//            return CTAPICourseOrderBusiness::delAjax($request, $this);
+//        });
+//    }
 
     /**
      * ajax根据部门id,小组id获得所属部门小组下的员工数组[kv一维数组]
@@ -408,9 +461,32 @@ class CourseOrderController extends BasicController
         // $user_info = $this->user_info;
         // $id = $extendParams['params']['id'];
 
-//        // 拥有者类型1平台2企业4个人
-//        $reDataArr['adminType'] =  AbilityJoin::$adminTypeArr;
-//        $reDataArr['defaultAdminType'] = -1;// 列表页默认状态
+        // 获得课程键值
+        $reDataArr['course_kv'] = CTAPICourseBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'course_name'], []);
+        $reDataArr['defaultCourseId'] = -1;// 默认
+
+        // 缴费状态(1待缴费、2部分缴费、4已缴费、8部分退费、16已退费 )
+        $reDataArr['payStatus'] =  CourseOrder::$payStatusArr;
+        $reDataArr['defaultPayStatus'] = -1;// 列表页默认状态
+
+        // 分班状态(1待分班、2部分分班、4已分班)
+        $reDataArr['joinClassStatus'] =  CourseOrder::$joinClassStatusArr;
+        $reDataArr['defaultJoinClassStatus'] = -1;// 列表页默认状态
+
+        $company_id = CommonRequest::getInt($request, 'company_id');
+        $info = [];
+
+        $company_hidden = 0;
+        if(is_numeric($company_id) && $company_id > 0){
+            // 获得企业信息
+            $companyInfo = CTAPIStaffBusiness::getInfoData($request, $this, $company_id);
+            if(empty($companyInfo)) throws('企业信息不存在！');
+            $info['company_id'] = $company_id;
+            $info['user_company_name'] = $companyInfo['company_name'] ?? '';
+            $company_hidden = 1;
+        }
+        $reDataArr['info'] = $info;
+        $reDataArr['company_hidden'] = $company_hidden;// =1 : 隐藏企业选择
 
     }
 
@@ -449,11 +525,34 @@ class CourseOrderController extends BasicController
 
         if ($id > 0) { // 获得详情数据
             $operate = "修改";
-            $info = CTAPICourseOrderBusiness::getInfoData($request, $this, $id, [], '', []);
+            $extParams = [
+                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                'relationFormatConfigs'=> CTAPICourseOrderBusiness::getRelationConfigs($request, $this,
+                    [
+                        'company_name' => '',
+                        'course_name' => '',
+                    ], []),
+            ];
+            $info = CTAPICourseOrderBusiness::getInfoData($request, $this, $id, [], '', $extParams);
         }
         // $reDataArr = array_merge($reDataArr, $resultDatas);
         $reDataArr['info'] = $info;
         $reDataArr['operate'] = $operate;
+
+        // 获得课程键值
+        $reDataArr['course_kv'] = CTAPICourseBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'course_name'], []);
+        $reDataArr['defaultCourseId'] = $info['course_id'] ?? -1;// 默认
+
+        // 缴费状态(1待缴费、2部分缴费、4已缴费、8部分退费、16已退费 )
+        $reDataArr['payStatus'] =  CourseOrder::$payStatusArr;
+        $reDataArr['defaultPayStatus'] = $info['pay_status'] ?? -1;// 列表页默认状态
+
+        // 分班状态(1待分班、2部分分班、4已分班)
+        $reDataArr['joinClassStatus'] =  CourseOrder::$joinClassStatusArr;
+        $reDataArr['defaultJoinClassStatus'] = $info['join_class_status'] ?? -1;// 列表页默认状态
+
+        $company_hidden = CommonRequest::getInt($request, 'company_hidden');
+        $reDataArr['company_hidden'] = $company_hidden;// =1 : 隐藏企业选择
 
     }
     // **************公用方法********************结束*********************************

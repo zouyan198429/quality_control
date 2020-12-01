@@ -72,6 +72,7 @@ class CTAPICertificateScheduleBusiness extends BasicPublicCTAPIBusiness
      */
     public static function getRelationConfigs(Request $request, Controller $controller, $relationKeys = [], $extendParams = []){
         if(empty($relationKeys)) return [];
+        list($relationKeys, $relationArr) = static::getRelationParams($relationKeys);// 重新修正关系参数
         $user_info = $controller->user_info;
         $user_id = $controller->user_id;
         $user_type = $controller->user_type;
@@ -82,12 +83,20 @@ class CTAPICertificateScheduleBusiness extends BasicPublicCTAPIBusiness
             'company_info' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
                 , ['company_id' => 'id']
                 , 1, 16
-                ,'','', [], ['where' => [['admin_type', 2]]], '', []),
+                ,'','',
+                CTAPIStaffBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'company_info'),
+                    static::getUboundRelationExtendParams($extendParams, 'company_info')),
+                ['where' => [['admin_type', 2]]], '', []),
             // 获得证书号
             'certificate_info' => CTAPICertificateBusiness::getTableRelationConfigInfo($request, $controller
                 , ['certificate_id' => 'id']
                 , 1, 2
-                ,'','', [], [], '', []),
+                ,'','',
+                CTAPICertificateBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'certificate_info'),
+                    static::getUboundRelationExtendParams($extendParams, 'certificate_info')),
+                [], '', []),
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }
@@ -174,6 +183,7 @@ class CTAPICertificateScheduleBusiness extends BasicPublicCTAPIBusiness
         // 注意重写方法中，如果不是特殊的like，同样需要调起此默认like方法--特殊的写自己特殊的方法
         static::joinListParamsLike($request, $controller, $queryParams, $notLog);
     }
+
     /**
      * 获得列表数据时，对查询结果进行导出操作--有特殊的需要自己重写此方法
      *

@@ -37,6 +37,18 @@
                   <option value="{{ $k }}"  @if(isset($defaultClassStatus) && $defaultClassStatus == $k) selected @endif >{{ $txt }}</option>
               @endforeach
           </select>
+          <select class="wmini" name="pay_config_id" style="width: 80px;">
+              <option value="">收款帐号</option>
+              @foreach ($pay_config_kv as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultPayConfig) && $defaultPayConfig == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
+          <select class="wmini" name="pay_method" style="width: 80px;">
+              <option value="">收款方式</option>
+              @foreach ($payMethod as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultPayMethod) && $defaultPayMethod == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
         <select style="width:80px; height:28px;" name="field">
           <option value="class_name">培训班名称</option>
         </select>
@@ -60,12 +72,14 @@
 {{--        <col width="50">--}}
 {{--        <col width="60">--}}
         <col>
+        <col width="75">
         <col>
         <col>
-        <col>
-        <col>
-        <col>
-        <col>
+        <col width="100">
+        <col width="75">
+        <col width="75">
+        <col width="95">
+        <col width="95">
         <col width="140">
     </colgroup>
     <thead>
@@ -80,6 +94,8 @@
       <th>培训班名称</th>
       <th>开班城市</th>
       <th>备注</th>
+        <th>收款帐号</th>
+        <th>收款方式</th>
         <th>班级人数</th>
       <th>班级状态</th>
       <th>创建时间</th>

@@ -10,7 +10,7 @@ var DYNAMIC_BAIDU_EMPTY_TEMPLATE = DYNAMIC_BAIDU_EMPTY_TEMPLATE || "baidu_templa
 var FRM_IDS = FRM_IDS || "search_frm";//需要读取的表单的id，多个用,号分隔
 var SURE_FRM_IDS = "search_sure_form";//确认搜索条件需要读取的表单的id，多个用,号分隔
 var PAGE_ID = "page";//当前页id
-var PAGE_SIZE = Math.ceil(parseInt($('#pagesize').val()));;//每页显示数量
+var PAGE_SIZE = Math.ceil(parseInt($('#pagesize').val()));//每页显示数量
 var TOTAL_ID = "total";//总记录数量[特别说明:小于0,需要从数据库重新获取]
 var AJAX_ASYNC = AJAX_ASYNC || true;//ajax_async ajax 同步/导步执行 //false:同步;true:异步
 var IMPORT_EXCEL_CLASS = IMPORT_EXCEL_CLASS || "import_file";// 导入EXCEL的file的class
@@ -187,6 +187,7 @@ var action = {
                 $(this).prop('checked', checkAllObj.prop('checked'));
             }
         });
+        return false;
     },
     seledSingle:function(obj) {// 单选点击
         var checkObj = $(obj);
@@ -219,7 +220,7 @@ var action = {
         checkObj.closest('#' + DYNAMIC_TABLE).find('.check_all').each(function () {
             $(this).prop('checked', allChecked);
         });
-
+        return false;
     },
     search:function(obj) {// 搜索
         var recordObj = $(obj);

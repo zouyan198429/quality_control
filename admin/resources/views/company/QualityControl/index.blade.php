@@ -86,22 +86,23 @@
           <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
 
 
-          <!--   <li data-name="user" class="layui-nav-item">
+          <li data-name="user" class="layui-nav-item">
               <a href="javascript:;" lay-tips="面授培训" lay-direction="2">
                 <i class="layui-icon layui-icon-component"></i>
                 <cite>面授培训</cite>
               </a>
                 <dl class="layui-nav-child">
                     <dd>
-                        <a lay-href="javascript:void(0);">面授培训</a>
+                        <a lay-href="{{ url('company/course') }}">面授培训</a>
                     </dd>
                 </dl>
                 <dl class="layui-nav-child">
                     <dd>
-                        <a lay-href="javascript:void(1);">我的报名</a>
+                        <a lay-href="{{ url('company/course_order') }}">我的报名</a>
                     </dd>
                 </dl>
             </li>
+              <!--
               <li data-name="user" class="layui-nav-item">
                   <a href="javascript:;" lay-tips="在线课程" lay-direction="2">
                       <i class="layui-icon layui-icon-component"></i>

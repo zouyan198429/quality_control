@@ -2,6 +2,7 @@
 //课程管理
 namespace App\Business\Controller\API\QualityControl;
 
+use App\Models\QualityControl\OrderPayConfig;
 use App\Services\DBRelation\RelationDB;
 use App\Services\Excel\ImportExport;
 use App\Services\Request\API\HttpRequest;
@@ -72,6 +73,7 @@ class CTAPICourseBusiness extends BasicPublicCTAPIBusiness
      */
     public static function getRelationConfigs(Request $request, Controller $controller, $relationKeys = [], $extendParams = []){
         if(empty($relationKeys)) return [];
+        list($relationKeys, $relationArr) = static::getRelationParams($relationKeys);// 重新修正关系参数
         $user_info = $controller->user_info;
         $user_id = $controller->user_id;
         $user_type = $controller->user_type;
@@ -82,17 +84,54 @@ class CTAPICourseBusiness extends BasicPublicCTAPIBusiness
 //            'company_info' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
 //                , ['admin_type' => 'admin_type', 'staff_id' => 'id']
 //                , 1, 2
-//                ,'','', [], ['where' => [['admin_type', 2]]], '', []),
+//                ,'','',
+//                CTAPIStaffBusiness::getRelationConfigs($request, $controller,
+//                    static::getUboundRelation($relationArr, 'company_info'),
+//                    static::getUboundRelationExtendParams($extendParams, 'company_info')),
+//                ['where' => [['admin_type', 2]]], '', []),
             // 获得详细内容
             'course_content' => CTAPICourseContentBusiness::getTableRelationConfigInfo($request, $controller
                 , ['id' => 'course_id']
                 , 1, 2
-                ,'','', [], [], '', []),
+                ,'','',
+                CTAPICourseContentBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'course_content'),
+                    static::getUboundRelationExtendParams($extendParams, 'course_content')),
+                [], '', []),
             // 获得封面图
             'resource_list' => CTAPIResourceBusiness::getTableRelationConfigInfo($request, $controller
                 , ['resource_id' => 'id']
                 , 2, 0
-                ,'','', [], [], '', ['extendConfig' => ['listHandleKeyArr' => ['format_resource'], 'infoHandleKeyArr' => ['resource_list']]]),
+                ,'','',
+                CTAPIResourceBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'resource_list'),
+                    static::getUboundRelationExtendParams($extendParams, 'resource_list')),
+                [], '', ['extendConfig' => ['listHandleKeyArr' => ['format_resource'], 'infoHandleKeyArr' => ['resource_list']]]),
+
+            // 获得报名企业报名项-- 企业报名的
+            'course_order_company' => CTAPICourseOrderBusiness::getTableRelationConfigInfo($request, $controller
+                , ['id' => 'course_id']
+                , 2, 2
+                ,'','',
+                CTAPICourseOrderBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'course_order_company'),
+                    static::getUboundRelationExtendParams($extendParams, 'course_order_company')),
+                ['where' => [
+                    ['admin_type', $user_info['admin_type']],
+                    ['company_id', $user_info['id']]
+                ]], '', ['extendConfig' => ['infoHandleKeyArr' => ['judgeJoined']]]),
+            // 获得报名学员报名项-- 学员报名的--
+            'course_order_staff' => CTAPICourseOrderStaffBusiness::getTableRelationConfigInfo($request, $controller
+                , ['id' => 'course_id']
+                , 2, 2
+                ,'','', [
+                    // 获得班级名称
+                    'class_name' => CTAPICourseClassBusiness::getTableRelationConfigInfo($request, $controller
+                        , ['class_id' => 'id']
+                        , 1, 2
+                        ,'','', [], [], '', []),
+                ]
+                , [], '', []),
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }
@@ -113,11 +152,11 @@ class CTAPICourseBusiness extends BasicPublicCTAPIBusiness
             $return_data['old_data'] = ['ubound_operate' => 1, 'ubound_name' => '', 'fields_arr' => [], 'ubound_keys' => [], 'ubound_type' =>1];
         }
 
-//        if(($return_num & 2) == 2){// 给上一级返回名称 company_name 下标
-//            $one_field = ['key' => 'company_name', 'return_type' => 2, 'ubound_name' => 'company_name', 'split' => '、'];// 获得名称
-//            if(!isset($return_data['one_field'])) $return_data['one_field'] = [];
-//            array_push($return_data['one_field'], $one_field);
-//        }
+        if(($return_num & 2) == 2){// 给上一级返回名称 company_name 下标
+            $one_field = ['key' => 'course_name', 'return_type' => 2, 'ubound_name' => 'course_name', 'split' => '、'];// 获得名称
+            if(!isset($return_data['one_field'])) $return_data['one_field'] = [];
+            array_push($return_data['one_field'], $one_field);
+        }
 
         return $return_data;
     }
@@ -156,4 +195,30 @@ class CTAPICourseBusiness extends BasicPublicCTAPIBusiness
         static::joinListParamsLike($request, $controller, $queryParams, $notLog);
     }
 
+    /**
+     * 对单条数据关系进行格式化--具体的可以重写
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $info  单条数据  --- 一维数组
+     * @param array $temDataList  关系数据  --- 一维或二维数组 -- 主要操作这个数据到  $info 的特别业务数据
+     *                              如果是二维数组：下标已经是他们关系字段的值，多个则用_分隔好的
+     * @param array $infoHandleKeyArr 其它扩展参数，// 一维数组，单条 数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+     * @param array $returnFields  新加入的字段['字段名1' => '字段名1' ]
+     * @return array  新增的字段 一维数组
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function infoRelationFormatExtend(Request $request, Controller $controller, &$info, &$temDataList, $infoHandleKeyArr, &$returnFields){
+        // if(empty($info)) return $returnFields;
+        // $returnFields[$tem_ubound_old] = $tem_ubound_old;
+        if(in_array('resetPayMethod', $infoHandleKeyArr)){
+
+            // 支付方式-实时处理
+            OrderPayConfig::unionPayMethod($info, 'pay_method','pay_config_id');
+            OrderPayConfig::getPayMethodText($info, 'pay_method');
+//            $info['resource_list'] = $resource_list;
+//            $returnFields['resource_list'] = 'resource_list';
+        }
+
+        return $returnFields;
+    }
 }

@@ -161,10 +161,10 @@
                           <a lay-href="{{ url('admin/course') }}">课程管理</a>
                       </dd>
                       <dd>
-                          <a lay-href="javascript:void(10);">报名企业</a>
+                          <a lay-href="{{ url('admin/course_order') }}">报名企业</a>
                       </dd>
                       <dd>
-                          <a lay-href="javascript:void(10);">报名学员</a>
+                          <a lay-href="{{ url('admin/course_order_staff') }}">报名学员</a>
                       </dd>
                       <dd>
                           <a lay-href="{{ url('admin/course_class') }}">培训班管理</a>

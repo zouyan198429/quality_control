@@ -268,26 +268,27 @@ $api->version('v1', function ($api) {
 
         // 报名企业(主表)
         $api->any('admin/course_order/ajax_alist', 'Admin\QualityControl\CourseOrderController@ajax_alist');//ajax获得列表数据
-        $api->post('admin/course_order/ajax_del', 'Admin\QualityControl\CourseOrderController@ajax_del');// 删除
-        $api->post('admin/course_order/ajax_save', 'Admin\QualityControl\CourseOrderController@ajax_save');// 新加/修改
-        $api->post('admin/course_order/ajax_get_child', 'Admin\QualityControl\CourseOrderController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
-        $api->post('admin/course_order/ajax_get_areachild', 'Admin\QualityControl\CourseOrderController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
-        $api->post('admin/course_order/ajax_import_staff','Admin\QualityControl\CourseOrderController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order/ajax_del', 'Admin\QualityControl\CourseOrderController@ajax_del');// 删除
+//        $api->post('admin/course_order/ajax_save', 'Admin\QualityControl\CourseOrderController@ajax_save');// 新加/修改
+//        $api->post('admin/course_order/ajax_get_child', 'Admin\QualityControl\CourseOrderController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+//        $api->post('admin/course_order/ajax_get_areachild', 'Admin\QualityControl\CourseOrderController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+//        $api->post('admin/course_order/ajax_import_staff','Admin\QualityControl\CourseOrderController@ajax_import'); // 导入员工
 
-        $api->post('admin/course_order/import', 'Admin\QualityControl\CourseOrderController@import');// 导入excel
-        $api->post('admin/course_order/ajax_get_ids', 'Admin\QualityControl\CourseOrderController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+//        $api->post('admin/course_order/import', 'Admin\QualityControl\CourseOrderController@import');// 导入excel
+//        $api->post('admin/course_order/ajax_get_ids', 'Admin\QualityControl\CourseOrderController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
         // 报名学员
         $api->any('admin/course_order_staff/ajax_alist', 'Admin\QualityControl\CourseOrderStaffController@ajax_alist');//ajax获得列表数据
-        $api->post('admin/course_order_staff/ajax_del', 'Admin\QualityControl\CourseOrderStaffController@ajax_del');// 删除
-        $api->post('admin/course_order_staff/ajax_save', 'Admin\QualityControl\CourseOrderStaffController@ajax_save');// 新加/修改
-        $api->post('admin/course_order_staff/ajax_get_child', 'Admin\QualityControl\CourseOrderStaffController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
-        $api->post('admin/course_order_staff/ajax_get_areachild', 'Admin\QualityControl\CourseOrderStaffController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
-        $api->post('admin/course_order_staff/ajax_import_staff','Admin\QualityControl\CourseOrderStaffController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_del', 'Admin\QualityControl\CourseOrderStaffController@ajax_del');// 删除
+//        $api->post('admin/course_order_staff/ajax_save', 'Admin\QualityControl\CourseOrderStaffController@ajax_save');// 新加/修改
+//        $api->post('admin/course_order_staff/ajax_get_child', 'Admin\QualityControl\CourseOrderStaffController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+//        $api->post('admin/course_order_staff/ajax_get_areachild', 'Admin\QualityControl\CourseOrderStaffController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+//        $api->post('admin/course_order_staff/ajax_import_staff','Admin\QualityControl\CourseOrderStaffController@ajax_import'); // 导入员工
+//
+//        $api->post('admin/course_order_staff/import', 'Admin\QualityControl\CourseOrderStaffController@import');// 导入excel
+//        $api->post('admin/course_order_staff/ajax_get_ids', 'Admin\QualityControl\CourseOrderStaffController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
-        $api->post('admin/course_order_staff/import', 'Admin\QualityControl\CourseOrderStaffController@import');// 导入excel
-        $api->post('admin/course_order_staff/ajax_get_ids', 'Admin\QualityControl\CourseOrderStaffController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
-
+        $api->post('admin/course_order_staff/ajax_frozen', 'Admin\QualityControl\CourseOrderStaffController@ajax_frozen');// 操作(作废/取消作废)
         // 面授操作日志
         $api->any('admin/course_log/ajax_alist', 'Admin\QualityControl\CourseLogController@ajax_alist');//ajax获得列表数据
         $api->post('admin/course_log/ajax_del', 'Admin\QualityControl\CourseLogController@ajax_del');// 删除
@@ -310,6 +311,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/order_pay_config/import', 'Admin\QualityControl\OrderPayConfigController@import');// 导入excel
         $api->post('admin/order_pay_config/ajax_get_ids', 'Admin\QualityControl\OrderPayConfigController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
+        $api->any('admin/order_pay_config/ajax_info', 'Admin\QualityControl\OrderPayConfigController@ajax_info');//ajax获得详情数据
         // 企业到期配置
         $api->any('admin/company_expire/ajax_alist', 'Admin\QualityControl\CompanyExpireController@ajax_alist');//ajax获得列表数据
         $api->post('admin/company_expire/ajax_del', 'Admin\QualityControl\CompanyExpireController@ajax_del');// 删除
@@ -764,6 +766,31 @@ $api->version('v1', function ($api) {
         $api->post('company/company_new_schedule/up_pdf', 'WebFront\Company\QualityControl\CompanyNewScheduleController@up_pdf');// 上传pdf地址
         $api->post('company/company_new_schedule/up_img', 'WebFront\Company\QualityControl\CompanyNewScheduleController@up_img');// 上传图片地址
         $api->post('company/company_new_schedule/up_excel', 'WebFront\Company\QualityControl\CompanyNewScheduleController@up_excel');// 上传excel地址
+
+        // 课程管理
+        $api->any('company/course/ajax_alist', 'WebFront\Company\QualityControl\CourseController@ajax_alist');//ajax获得列表数据
+//        $api->post('company/course/ajax_del', 'WebFront\Company\QualityControl\CourseController@ajax_del');// 删除
+//        $api->any('company/course/ajax_save', 'WebFront\Company\QualityControl\CourseController@ajax_save');// 新加/修改
+//        $api->post('company/course/ajax_get_child', 'WebFront\Company\QualityControl\CourseController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+//        $api->post('company/course/ajax_get_areachild', 'WebFront\Company\QualityControl\CourseController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+//        $api->post('company/course/ajax_import_staff','WebFront\Company\QualityControl\CourseController@ajax_import'); // 导入员工
+
+//        $api->post('company/course/import', 'WebFront\Company\QualityControl\CourseController@import');// 导入excel
+//        $api->post('company/course/ajax_get_ids', 'WebFront\Company\QualityControl\CourseController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+//
+//        $api->post('company/course/up_file', 'WebFront\Company\QualityControl\CourseController@up_file');// 上传文件地址
+        $api->any('company/course/ajax_join_save', 'WebFront\Company\QualityControl\CourseController@ajax_join_save');// 报名
+
+        // 报名企业(主表)
+        $api->any('company/course_order/ajax_alist', 'WebFront\Company\QualityControl\CourseOrderController@ajax_alist');//ajax获得列表数据
+//        $api->post('company/course_order/ajax_del', 'WebFront\Company\QualityControl\CourseOrderController@ajax_del');// 删除
+//        $api->post('company/course_order/ajax_save', 'WebFront\Company\QualityControl\CourseOrderController@ajax_save');// 新加/修改
+//        $api->post('company/course_order/ajax_get_child', 'WebFront\Company\QualityControl\CourseOrderController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+//        $api->post('company/course_order/ajax_get_areachild', 'WebFront\Company\QualityControl\CourseOrderController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+//        $api->post('company/course_order/ajax_import_staff','WebFront\Company\QualityControl\CourseOrderController@ajax_import'); // 导入员工
+
+//        $api->post('company/course_order/import', 'WebFront\Company\QualityControl\CourseOrderController@import');// 导入excel
+//        $api->post('company/course_order/ajax_get_ids', 'WebFront\Company\QualityControl\CourseOrderController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
         // 用户中心 user
         // 验证码 -- ok

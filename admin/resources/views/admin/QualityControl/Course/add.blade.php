@@ -76,6 +76,17 @@
                     @foreach ($pay_config_kv as $k=>$txt)
                         <label><input type="radio"  name="pay_config_id"  value="{{ $k }}"  @if(isset($defaultPayConfig) && $defaultPayConfig == $k) checked="checked"  @endif />{{ $txt }} </label>
                     @endforeach
+                    <p>
+                        课程必须设置收款账号信息，班级也可以再次设置，班级设置优先！
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <th>收款开通类型<span class="must">*</span></th>
+                <td class="sel_pay_method">
+                    @foreach ($payMethod as $k=>$txt)
+                        <label><input type="checkbox"  name="pay_method[]"  value="{{ $k }}"  @if(isset($defaultPayMethod) && $defaultPayMethod > 0 && ($defaultPayMethod & $k) == $k) checked="checked"  @endif @if(isset($info['allow_pay_method']) && ($info['allow_pay_method'] & $k) <=0 ) disabled   @endif/>{{ $txt }} </label>
+                    @endforeach
                 </td>
             </tr>
             <tr>
@@ -96,7 +107,7 @@
                 <th>上架状态<span class="must">*</span></th>
                 <td>
                     @foreach ($statusOnline as $k=>$txt)
-                        <label><input type="radio"  name="status_online"  value="{{ $k }}"  @if(isset($defaultClassStatus) && $defaultClassStatus == $k) checked="checked"  @endif />{{ $txt }} </label>
+                        <label><input type="radio"  name="status_online"  value="{{ $k }}"  @if(isset($defaultStatusOnline) && $defaultStatusOnline == $k) checked="checked"  @endif />{{ $txt }} </label>
                     @endforeach
                 </td>
             </tr>
@@ -116,6 +127,7 @@
     var SAVE_URL = "{{ url('api/admin/course/ajax_save') }}";// ajax保存记录地址
     var LIST_URL = "{{url('admin/course')}}";//保存成功后跳转到的地址
 
+    var PAY_CONFIG_INFO_URL = "{{ url('api/admin/order_pay_config/ajax_info') }}";// ajax获得支付方式详情记录地址
 
     // 文件上传相关的~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // var UPLOAD_COMMON_URL = "{ { url('api/admin/upload') }}";// 文件上传提交地址 'your/file/upload/url'

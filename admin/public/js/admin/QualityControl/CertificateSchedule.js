@@ -142,12 +142,12 @@ function addCompany(company_id, company_name){
     document.write("        %>");
     document.write("");
     document.write("        <tr>");
-    // document.write("            <td>");
-    // document.write("                <label class=\"pos-rel\">");
-    // document.write("                    <input  onclick=\"action.seledSingle(this)\" type=\"checkbox\" class=\"ace check_item\" <%if( false &&  !can_modify){%> disabled <%}%>  value=\"<%=item.id%>\"\/>");
-    // document.write("                  <span class=\"lbl\"><\/span>");
-    // document.write("                <\/label>");
-    // document.write("            <\/td>");
+    document.write("            <td>");
+    document.write("                <label class=\"pos-rel\">");
+    document.write("                    <input  onclick=\"action.seledSingle(this)\" type=\"checkbox\" class=\"ace check_item\" <%if( false &&  !can_modify){%> disabled <%}%>  value=\"<%=item.id%>\"\/>");
+    document.write("                  <span class=\"lbl\"><\/span>");
+    document.write("                <\/label>");
+    document.write("            <\/td>");
     // document.write("            <td><%=item.id%><\/td>");
     document.write("            <td><%=item.user_company_name%><\/td>");
     document.write("            <td><%=item.certificate_no%><hr/><%=item.addr%><\/td>");

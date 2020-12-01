@@ -72,6 +72,7 @@ class CTAPIApplyBusiness extends BasicPublicCTAPIBusiness
      */
     public static function getRelationConfigs(Request $request, Controller $controller, $relationKeys = [], $extendParams = []){
         if(empty($relationKeys)) return [];
+        list($relationKeys, $relationArr) = static::getRelationParams($relationKeys);// 重新修正关系参数
         $user_info = $controller->user_info;
         $user_id = $controller->user_id;
         $user_type = $controller->user_type;
@@ -82,12 +83,20 @@ class CTAPIApplyBusiness extends BasicPublicCTAPIBusiness
             'staff_info' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
                 , ['staff_id' => 'id']
                 , 1, 128
-                ,'','', [], [], '', []),
+                ,'','',
+                CTAPIStaffBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'staff_info'),
+                    static::getUboundRelationExtendParams($extendParams, 'staff_info')),
+                [], '', []),
             // 上传的资料信息
             'resource_list' => CTAPIResourceBusiness::getTableRelationConfigInfo($request, $controller
                 , ['id' => 'column_id']
                 , 2, 0
-                ,'','', [], ['where' => [['column_type', 256]]], ''
+                ,'','',
+                CTAPIResourceBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'resource_list'),
+                    static::getUboundRelationExtendParams($extendParams, 'resource_list')),
+                ['where' => [['column_type', 256]]], ''
                 , ['extendConfig' => ['listHandleKeyArr' => ['format_resource']]]),// , 'infoHandleKeyArr' => ['resource_list']
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);

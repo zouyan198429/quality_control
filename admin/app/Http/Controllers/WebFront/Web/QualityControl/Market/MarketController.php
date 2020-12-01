@@ -428,7 +428,7 @@ class MarketController extends BasicController
 ////        $this->InitParams($request);
 ////        return  CTAPICertificateScheduleBusiness::getList($request, $this, 2 + 4);
 //        return $this->exeDoPublicFun($request, 4, 4,'', true, '', [], function (&$reDataArr) use ($request){
-//            $handleKeyConfigArr = ['company_info','certificate_info'];
+//            $handleKeyConfigArr = ['company_info' => '','certificate_info' => ''];
 //            $extParams = [
 //                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
 //                'relationFormatConfigs'=> CTAPICertificateScheduleBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
@@ -470,7 +470,7 @@ class MarketController extends BasicController
 ////        $this->InitParams($request);
 ////        CTAPICertificateScheduleBusiness::getList($request, $this, 1 + 0);
 //        return $this->exeDoPublicFun($request, 4096, 8,'', true, '', [], function (&$reDataArr) use ($request){
-//            $handleKeyConfigArr = ['company_info','certificate_info'];
+//            $handleKeyConfigArr = ['company_info' => '','certificate_info' => ''];
 //            $extParams = [
 //                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
 //                'relationFormatConfigs'=> CTAPICertificateScheduleBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),

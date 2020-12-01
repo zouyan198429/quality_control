@@ -251,7 +251,7 @@ class PlatformNoticesController extends BasicController
 //        return  CTAPIPlatformNoticesBusiness::getList($request, $this, 2 + 4);
         return $this->exeDoPublicFun($request, 4, 4,'', true, '', [], function (&$reDataArr) use ($request){
 
-            $handleKeyConfigArr = ['company_info', 'resource_list'];
+            $handleKeyConfigArr = ['company_info' => '', 'resource_list' => ''];
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                 'relationFormatConfigs'=> CTAPIPlatformNoticesBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
@@ -299,7 +299,7 @@ class PlatformNoticesController extends BasicController
 //                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
 //                'relationFormatConfigs'=> CTAPIPlatformNoticesBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
 //            ];
-//            return  CTAPIPlatformNoticesBusiness::getList($request, $this, 2 + 4, [], [], $extParams);
+//            CTAPIPlatformNoticesBusiness::getList($request, $this, 1 + 0, [], [], $extParams);
 //        });
 //    }
 
@@ -514,7 +514,7 @@ class PlatformNoticesController extends BasicController
 
         if ($id > 0) { // 获得详情数据
             $operate = "修改";
-            $handleKeyConfigArr = ['company_info', 'resource_list'];
+            $handleKeyConfigArr = ['company_info' => '', 'resource_list'=> ''];
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                 'relationFormatConfigs'=> CTAPIPlatformNoticesBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),

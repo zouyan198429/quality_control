@@ -60,9 +60,72 @@ $(function(){
         // }, function(){
         //});
         return false;
-    })
+    });
+
+    //切换收款账号
+    $(document).on("change",'input[name=pay_config_id]',function(){
+        var pay_config_id = $(this).val();
+        console.log('==pay_config_id=', pay_config_id);
+        initPayMethodShow(pay_config_id);
+    });
 
 });
+
+// 根据支付配置id,重新组织显示收款类型
+function initPayMethodShow(pay_config_id) {
+    var data = {id:pay_config_id};
+    console.log(PAY_CONFIG_INFO_URL);
+    console.log(data);
+    var layer_index = layer.load();
+    $.ajax({
+        'type' : 'POST',
+        'url' : PAY_CONFIG_INFO_URL,
+        'headers':get_ajax_headers({}, ADMIN_AJAX_TYPE_NUM),
+        'data' : data,
+        'dataType' : 'json',
+        'success' : function(ret){
+            console.log(ret);
+            if(!ret.apistatus){//失败
+                //alert('失败');
+                err_alert(ret.errorMsg);
+            }else{//成功
+                // go(LIST_URL);
+
+                // countdown_alert("操作成功!",1,5);
+                // parent_only_reset_list(false);
+                // wait_close_popus(2,PARENT_LAYER_INDEX);
+
+                //操作成功
+                var info = ret.result.info;
+                console.log('==info==', info);
+                var open_status = info.open_status;// 是否开启
+                var pay_method = info.pay_method;// 可用的值
+                console.log('==open_status==', open_status);
+                console.log('==pay_method==', pay_method);
+                $('.sel_pay_method').find('input[name="pay_method[]"]').each(function () {
+                    var checkObj = $(this);
+                    var checkVal = checkObj.val();
+                    console.log('==checkVal==', checkVal);
+                    checkObj.prop('checked', false);
+                    if(open_status == 1 &&  ((pay_method & checkVal) == checkVal)){
+                        checkObj.prop('disabled', false);
+                    }else{
+                        checkObj.prop('disabled', true);
+                    }
+
+                });
+
+                // var supplier_id = ret.result['supplier_id'];
+                //if(SUPPLIER_ID_VAL <= 0 && judge_integerpositive(supplier_id)){
+                //    SUPPLIER_ID_VAL = supplier_id;
+                //    $('input[name="supplier_id"]').val(supplier_id);
+                //}
+                // save_success();
+            }
+            layer.close(layer_index);//手动关闭
+        }
+    });
+}
 
 // ~~~~~~~~~~~~~上传文件相关的~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -278,6 +341,20 @@ function ajax_form(){
 
     var course_content = $('textarea[name=course_content]').val();
     if(!judge_validate(4,'详细内容',course_content,true,'length',1,200000)){
+        return false;
+    }
+
+    var pay_config_id = $('input[name=pay_config_id]:checked').val() || '';
+    var judge_seled = judge_validate(1,'收款帐号',pay_config_id,true,'digit','','');
+    if(judge_seled != ''){
+        layer_alert("请选择收款帐号",3,0);
+        //err_alert('<font color="#000000">' + judge_seled + '</font>');
+        return false;
+    }
+
+    // 收款开通类型
+    if(!judge_list_checked('sel_pay_method',2)) {//没有选中的
+        layer_alert('请选择收款开通类型！',3,0);
         return false;
     }
 

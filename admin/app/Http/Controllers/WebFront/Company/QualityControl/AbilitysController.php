@@ -128,7 +128,7 @@ class AbilitysController extends BasicController
             // $handleKeyArr = ['projectStandards'];
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-                'relationFormatConfigs'=> CTAPIAbilitysBusiness::getRelationConfigs($request, $this, ['project_standards_list', 'project_submit_items_list'], []),
+                'relationFormatConfigs'=> CTAPIAbilitysBusiness::getRelationConfigs($request, $this, ['project_standards_list' => '', 'project_submit_items_list' => ''], []),
             ];
             $dataList = CTAPIAbilitysBusiness::getList($request, $this, 1, [], $relations, $extParams)['result']['data_list'] ?? [];
 
@@ -209,7 +209,7 @@ class AbilitysController extends BasicController
             // $handleKeyArr = ['projectStandards', 'projectSubmitItems'];
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-                'relationFormatConfigs'=> CTAPIAbilitysBusiness::getRelationConfigs($request, $this, ['project_standards_list', 'project_submit_items_list'], []),
+                'relationFormatConfigs'=> CTAPIAbilitysBusiness::getRelationConfigs($request, $this, ['project_standards_list' => '', 'project_submit_items_list' => ''], []),
             ];
             $info = CTAPIAbilitysBusiness::getInfoData($request, $this, $id, [], '', $extParams);
             // $reDataArr = array_merge($reDataArr, $resultDatas);
@@ -402,7 +402,7 @@ class AbilitysController extends BasicController
 //        $handleKeyArr = ['projectStandards'];
 //        $extParams = [
 //            // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-//            // 'relationFormatConfigs'=> CTAPIAbilitysBusiness::getRelationConfigs($request, $this, ['project_standards_list'], []),
+//            // 'relationFormatConfigs'=> CTAPIAbilitysBusiness::getRelationConfigs($request, $this, ['project_standards_list' => ''], []),
 //        ];
 //        $dataList = CTAPIAbilitysBusiness::getList($request, $this, 1, [], $relations, $extParams)['result']['data_list'] ?? [];
 //        // 判断是否已经过了报名时间
@@ -542,7 +542,7 @@ class AbilitysController extends BasicController
         $handleKeyArr = ['projectStandards'];
         $extParams = [
             // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-            // 'relationFormatConfigs'=> CTAPIAbilitysBusiness::getRelationConfigs($request, $this, ['project_standards_list'], []),
+            // 'relationFormatConfigs'=> CTAPIAbilitysBusiness::getRelationConfigs($request, $this, ['project_standards_list' => ''], []),
         ];
         $dataList = CTAPIAbilitysBusiness::getList($request, $this, 1, [], $relations, $extParams)['result']['data_list'] ?? [];
         // 判断是否已经过了报名时间
@@ -760,7 +760,7 @@ class AbilitysController extends BasicController
 //        // $handleKeyArr = ['projectStandards', 'projectSubmitItems', 'joined'];
 //        $extParams = [
 //            // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-//            'relationFormatConfigs'=> CTAPIAbilitysBusiness::getRelationConfigs($request, $this, ['project_standards_list', 'project_submit_items_list', 'ability_join_items_info'], []),
+//            'relationFormatConfigs'=> CTAPIAbilitysBusiness::getRelationConfigs($request, $this, ['project_standards_list' => '', 'project_submit_items_list' => '', 'ability_join_items_info' => ''], []),
 //        ];
 //        return  CTAPIAbilitysBusiness::getList($request, $this, 2 + 4, [], $relations, $extParams);
         return $this->exeDoPublicFun($request, 4, 4,'', true, '', [], function (&$reDataArr) use ($request){
@@ -775,7 +775,7 @@ class AbilitysController extends BasicController
             // $handleKeyArr = ['projectStandards', 'projectSubmitItems', 'joined'];
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-                'relationFormatConfigs'=> CTAPIAbilitysBusiness::getRelationConfigs($request, $this, ['project_standards_list', 'project_submit_items_list', 'ability_join_items_info'], []),
+                'relationFormatConfigs'=> CTAPIAbilitysBusiness::getRelationConfigs($request, $this, ['project_standards_list' => '', 'project_submit_items_list' => '', 'ability_join_items_info' => ''], []),
             ];
             return  CTAPIAbilitysBusiness::getList($request, $this, 2 + 4, [], $relations, $extParams);
         });

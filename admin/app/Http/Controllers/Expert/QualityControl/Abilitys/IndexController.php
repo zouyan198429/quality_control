@@ -62,7 +62,7 @@ class IndexController extends BasicController
                 $reDataArr['ability_id'] = $ability_id;
 
                 $abilityInfo = $this->getAbilityInfo($ability_id);
-                $relationFormatConfigs = CTAPIAbilitysBusiness::getRelationConfigs($request, $this, ['project_standards_list', 'project_submit_items_list'], []);
+                $relationFormatConfigs = CTAPIAbilitysBusiness::getRelationConfigs($request, $this, ['project_standards_list' => '', 'project_submit_items_list' => ''], []);
                 CTAPIAbilitysBusiness::formatRelationList( $request, $this, $abilityInfo, $relationFormatConfigs);
                 $reDataArr['info'] = $abilityInfo;
                 // pr($reDataArr);

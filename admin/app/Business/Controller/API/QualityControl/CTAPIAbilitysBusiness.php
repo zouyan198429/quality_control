@@ -74,6 +74,7 @@ class CTAPIAbilitysBusiness extends BasicPublicCTAPIBusiness
      */
     public static function getRelationConfigs(Request $request, Controller $controller, $relationKeys = [], $extendParams = []){
         if(empty($relationKeys)) return [];
+        list($relationKeys, $relationArr) = static::getRelationParams($relationKeys);// 重新修正关系参数
         $user_info = $controller->user_info;
         $user_id = $controller->user_id;
         $user_type = $controller->user_type;
@@ -84,18 +85,29 @@ class CTAPIAbilitysBusiness extends BasicPublicCTAPIBusiness
             'project_standards_list' => CTAPIProjectStandardsBusiness::getTableRelationConfigInfo($request, $controller
                 , ['id' => 'ability_id']
                 , 2, 4 | 8
-                ,'','', [], [], '', []),
+                ,'','',
+                CTAPIProjectStandardsBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'project_standards_list'),
+                    static::getUboundRelationExtendParams($extendParams, 'project_standards_list')),
+                [], '', []),
             // 获得验证数据项
             'project_submit_items_list' => CTAPIProjectSubmitItemsBusiness::getTableRelationConfigInfo($request, $controller
                 , ['id' => 'ability_id']
                 , 2, 4 | 8
-                ,'','', [], [], '', []),
+                ,'','',
+                CTAPIProjectSubmitItemsBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'project_submit_items_list'),
+                    static::getUboundRelationExtendParams($extendParams, 'project_submit_items_list')),
+                [], '', []),
             // 获得能力验证报名项-- 企业报名的
             'ability_join_items_info' => CTAPIAbilityJoinItemsBusiness::getTableRelationConfigInfo($request, $controller
                 , ['id' => 'ability_id']
                 , 1, 2
-                ,'','', []
-                , ['where' => [
+                ,'','',
+                CTAPIAbilityJoinItemsBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'ability_join_items_info'),
+                    static::getUboundRelationExtendParams($extendParams, 'ability_join_items_info')),
+                ['where' => [
                     ['admin_type', $user_info['admin_type']],
                     ['staff_id', $user_info['id']]
                 ]], '', ['extendConfig' => ['infoHandleKeyArr' => ['judgeJoined']]]),

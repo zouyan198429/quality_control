@@ -321,17 +321,18 @@ Route::get('admin/course_class/import_template', 'Admin\QualityControl\CourseCla
 
 // 报名企业(主表)
 Route::get('admin/course_order', 'Admin\QualityControl\CourseOrderController@index');// 列表
-Route::get('admin/course_order/add/{id}', 'Admin\QualityControl\CourseOrderController@add');// 添加
+//Route::get('admin/course_order/add/{id}', 'Admin\QualityControl\CourseOrderController@add');// 添加
+Route::get('admin/course_order/info/{id}', 'Admin\QualityControl\CourseOrderController@info');// 查看-详情
 // Route::get('admin/course_order/select', 'Admin\QualityControl\CourseOrderController@select');// 选择-弹窗
 Route::get('admin/course_order/export', 'Admin\QualityControl\CourseOrderController@export');// 导出
-Route::get('admin/course_order/import_template', 'Admin\QualityControl\CourseOrderController@import_template');// 导入模版
+// Route::get('admin/course_order/import_template', 'Admin\QualityControl\CourseOrderController@import_template');// 导入模版
 
 // 报名学员
 Route::get('admin/course_order_staff', 'Admin\QualityControl\CourseOrderStaffController@index');// 列表
-Route::get('admin/course_order_staff/add/{id}', 'Admin\QualityControl\CourseOrderStaffController@add');// 添加
+//Route::get('admin/course_order_staff/add/{id}', 'Admin\QualityControl\CourseOrderStaffController@add');// 添加
 // Route::get('admin/course_order_staff/select', 'Admin\QualityControl\CourseOrderStaffController@select');// 选择-弹窗
 Route::get('admin/course_order_staff/export', 'Admin\QualityControl\CourseOrderStaffController@export');// 导出
-Route::get('admin/course_order_staff/import_template', 'Admin\QualityControl\CourseOrderStaffController@import_template');// 导入模版
+//Route::get('admin/course_order_staff/import_template', 'Admin\QualityControl\CourseOrderStaffController@import_template');// 导入模版
 
 // 面授操作日志
 Route::get('admin/course_log', 'Admin\QualityControl\CourseLogController@index');// 列表
@@ -641,6 +642,25 @@ Route::get('company/company_new_schedule/add_excel/{id}', 'WebFront\Company\Qual
 //Route::get('company/company_new_schedule/import_template', 'WebFront\Company\QualityControl\CompanyNewScheduleController@import_template');// 导入模版
 
 Route::get('company/company_new_schedule/down_moban', 'WebFront\Company\QualityControl\CompanyNewScheduleController@down_moban');// 下载文件模板
+
+
+// 课程管理
+Route::get('company/course', 'WebFront\Company\QualityControl\CourseController@index');// 列表
+//Route::get('company/course/add/{id}', 'WebFront\Company\QualityControl\CourseController@add');// 添加
+// Route::get('company/course/select', 'WebFront\Company\QualityControl\CourseController@select');// 选择-弹窗
+//Route::get('company/course/export', 'WebFront\Company\QualityControl\CourseController@export');// 导出
+//Route::get('company/course/import_template', 'WebFront\Company\QualityControl\CourseController@import_template');// 导入模版
+Route::get('company/course/join/{id}', 'WebFront\Company\QualityControl\CourseController@join');// 报名
+
+// 报名企业(主表)
+Route::get('company/course_order', 'WebFront\Company\QualityControl\CourseOrderController@index');// 列表
+//Route::get('company/course_order/add/{id}', 'WebFront\Company\QualityControl\CourseOrderController@add');// 添加
+Route::get('company/course_order/info/{id}', 'WebFront\Company\QualityControl\CourseOrderController@info');// 查看-详情
+// Route::get('company/course_order/select', 'WebFront\Company\QualityControl\CourseOrderController@select');// 选择-弹窗
+Route::get('company/course_order/export', 'WebFront\Company\QualityControl\CourseOrderController@export');// 导出
+// Route::get('company/course_order/import_template', 'WebFront\Company\QualityControl\CourseOrderController@import_template');// 导入模版
+
+
 // 用户中心 user
 Route::get('user/login', 'WebFront\User\QualityControl\IndexController@login');// login.html 登录
 Route::get('user/reg', 'WebFront\User\QualityControl\IndexController@reg');// 注册

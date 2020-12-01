@@ -1207,6 +1207,29 @@ class Tool
     }
 
     /**
+     * 数组的所有值都为空 true:都为空 或 非数组 -- 默认，false:有值--任一下标有值
+     * @param array $arr 需要判断的数组 -- 任一维数的数组
+     * @param string $ubound 需要判断的数组下标 -- 为空，则判断所有的下标
+     * @return bool
+     */
+    public static function allValIsEmpty($arr, $ubound = ''){
+        if(!is_array($arr) || empty($arr)) return true;
+        foreach($arr as $k => $v){
+            $emptyVal = true;
+            if(is_array($v)){
+                $emptyVal = static::allValIsEmpty($v, $ubound);
+            }else{
+                // 下标为空 或 是要判断的指定下标
+                $isNeedJudge = (strlen(trim($ubound)) <= 0 || trim($k) == trim($ubound)) ? true : false;
+
+                if($isNeedJudge) $emptyVal = (strlen(trim($v)) <= 0 || is_null($v)) ? true : false;
+            }
+            if(!$emptyVal) return false; // 有值了，则直接返回
+        }
+        return true;
+    }
+
+    /**
      * 判断数组是否是二维数组
      *
      * @param array $dataList 源数据 一/二维数组
@@ -4648,5 +4671,18 @@ class Tool
         ini_set('memory_limit', $memory_limit);// '3072M');    // 临时设置最大内存占用为 3072M 3G
         ini_set("max_execution_time", $max_execution_time);// 0);
         set_time_limit($max_execution_time);// 0);   // 设置脚本最大执行时间 为0 永不过期
+    }
+
+    /**
+     * 对位运算，移除某个位操作 -- 存在则移除，不存在不移除 ，返回新的数
+     * @param $bitVal  要操作的数【位】   1 | 2 | 4;
+     * @param $removeBitVal 需要移除的数【位】 4
+     * @return int
+     */
+    public static function bitRemoveVal($bitVal, $removeBitVal){
+//        $bitVal = 1 | 2 | 4;
+//        $removeBitVal = 8;
+        $bitVal = (($bitVal & $removeBitVal ) == $removeBitVal) ? ($bitVal ^ $removeBitVal) : $bitVal;
+        return $bitVal;
     }
 }

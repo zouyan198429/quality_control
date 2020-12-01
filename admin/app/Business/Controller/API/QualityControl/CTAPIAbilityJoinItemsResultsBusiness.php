@@ -72,6 +72,7 @@ class CTAPIAbilityJoinItemsResultsBusiness extends BasicPublicCTAPIBusiness
      */
     public static function getRelationConfigs(Request $request, Controller $controller, $relationKeys = [], $extendParams = []){
         if(empty($relationKeys)) return [];
+        list($relationKeys, $relationArr) = static::getRelationParams($relationKeys);// 重新修正关系参数
         $user_info = $controller->user_info;
         $user_id = $controller->user_id;
         $user_type = $controller->user_type;
@@ -82,51 +83,86 @@ class CTAPIAbilityJoinItemsResultsBusiness extends BasicPublicCTAPIBusiness
             'company_info' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
                 , ['admin_type' => 'admin_type', 'staff_id' => 'id']
                 , 1, 2
-                ,'','', [], ['where' => [['admin_type', 2]]], '', []),
+                ,'','',
+                CTAPIStaffBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'company_info'),
+                    static::getUboundRelationExtendParams($extendParams, 'company_info')),
+                ['where' => [['admin_type', 2]]], '', []),
             // 获得企业信息
             'company_info_data' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
                 , ['admin_type' => 'admin_type', 'staff_id' => 'id']
                 , 1
                 , 1// 企业名称
                 ,'',''
-                ,[], ['where' => [['admin_type', 2]]], '', []),
+                ,
+                CTAPIStaffBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'company_info_data'),
+                    static::getUboundRelationExtendParams($extendParams, 'company_info_data')),
+                ['where' => [['admin_type', 2]]], '', []),
             // 获得项目
             'ability_info' => CTAPIAbilitysBusiness::getTableRelationConfigInfo($request, $controller
                 , ['ability_id' => 'id']
                 , 1, 1 | 2
-                ,'','', [], [], '', []),
+                ,'','',
+                CTAPIAbilitysBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'ability_info'),
+                    static::getUboundRelationExtendParams($extendParams, 'ability_info')),
+                [], '', []),
             // 下一级关系 报名项所属的项目 -- 的名称 1:1
             'ability_info_name' => CTAPIAbilitysBusiness::getTableRelationConfigInfo($request, $controller
                 , ['ability_id' => 'id']
                 , 1, 2// 项目名称  测试4
                 ,'',''
-                ,[], [], '', []),
+                ,
+                CTAPIAbilitysBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'ability_info_name'),
+                    static::getUboundRelationExtendParams($extendParams, 'ability_info_name')),
+                [], '', []),
             // 需要验证数据项 1:n
             'project_submit_items_list' => CTAPIProjectSubmitItemsBusiness::getTableRelationConfigInfo($request, $controller
                 , ['ability_id' => 'ability_id']
                 , 2, 8
-                ,'','', [], [], '', []),
+                ,'','',
+                CTAPIProjectSubmitItemsBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'project_submit_items_list'),
+                    static::getUboundRelationExtendParams($extendParams, 'project_submit_items_list')),
+                [], '', []),
             // 所用仪器 1：n
             'results_instrument_list' => CTAPIAbilityJoinItemsResultsInstrumentBusiness::getTableRelationConfigInfo($request, $controller
                 , ['ability_join_item_id' => 'ability_join_item_id', 'retry_no' => 'retry_no', 'id' => 'result_id']
                 , 2, 1
-                ,'','', [], [], '', []),
+                ,'','',
+                CTAPIAbilityJoinItemsResultsInstrumentBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'results_instrument_list'),
+                    static::getUboundRelationExtendParams($extendParams, 'results_instrument_list')),
+                [], '', []),
             // 检测标准物质 1：n
             'results_standard_list' => CTAPIAbilityJoinItemsResultsStandardBusiness::getTableRelationConfigInfo($request, $controller
                 , ['ability_join_item_id' => 'ability_join_item_id', 'retry_no' => 'retry_no', 'id' => 'result_id']
                 , 2, 1
-                ,'','', [], [], '', []),
+                ,'','',
+                CTAPIAbilityJoinItemsResultsStandardBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'results_standard_list'),
+                    static::getUboundRelationExtendParams($extendParams, 'results_standard_list')),
+                [], '', []),
             // 检测方法依据 1：n
             'results_method_list' => CTAPIAbilityJoinItemsResultsMethodBusiness::getTableRelationConfigInfo($request, $controller
                 , ['ability_join_item_id' => 'ability_join_item_id', 'retry_no' => 'retry_no', 'id' => 'result_id']
                 , 2, 1
-                ,'','', [], [], '', []),
+                ,'','',
+                CTAPIAbilityJoinItemsResultsMethodBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'results_method_list'),
+                    static::getUboundRelationExtendParams($extendParams, 'results_method_list')),
+                [], '', []),
             // 下一级关系 每一项的取样具体数据  1:n
             'join_items_samples_list' => CTAPIAbilityJoinItemsSamplesBusiness::getTableRelationConfigInfo($request, $controller
                 , ['id' => 'result_id']// , 'ability_join_item_id' => 'ability_join_item_id', 'retry_no' => 'retry_no'
                 , 2, 1// 项目名称  测试4
                 ,'',''
-                ,[], ['orderBy' => ['serial_number'=>'asc', 'id'=>'desc']], '', []),
+                ,CTAPIAbilityJoinItemsSamplesBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'join_items_samples_list'),
+                    static::getUboundRelationExtendParams($extendParams, 'join_items_samples_list')),
+                ['orderBy' => ['serial_number'=>'asc', 'id'=>'desc']], '', []),
             // 登记样品 1：n
             'items_samples_list' => CTAPIAbilityJoinItemsSamplesBusiness::getTableRelationConfigInfo($request, $controller
                 , ['ability_join_item_id' => 'ability_join_item_id', 'retry_no' => 'retry_no', 'id' => 'result_id']
@@ -148,7 +184,11 @@ class CTAPIAbilityJoinItemsResultsBusiness extends BasicPublicCTAPIBusiness
             'resource_list' => CTAPIResourceBusiness::getTableRelationConfigInfo($request, $controller
                 , ['id' => 'column_id']
                 , 2, 0
-                ,'','', [], ['where' => [['column_type', 4]]], ''
+                ,'','',
+                CTAPIResourceBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'resource_list'),
+                    static::getUboundRelationExtendParams($extendParams, 'resource_list')),
+                ['where' => [['column_type', 4]]], ''
                 , ['extendConfig' => ['listHandleKeyArr' => ['format_resource'], 'infoHandleKeyArr' => ['resource_list']]]),
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);

@@ -251,8 +251,10 @@
 
       var GRADE_CONFIG_URL = "{{ url('admin/company_grade_config')}}/";// 查看企业等级配置
 
+      var COURSE_ORDER_URL = "{{ url('admin/course_order')}}/";// 查看企业面授
+
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/Company.js') }}?284"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/Company.js') }}?287"  type="text/javascript"></script>
 </body>
 </html>

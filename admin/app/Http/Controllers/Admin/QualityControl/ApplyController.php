@@ -282,7 +282,7 @@ class ApplyController extends BasicController
 //        return  CTAPIApplyBusiness::getList($request, $this, 2 + 4);
         return $this->exeDoPublicFun($request, 4, 4,'', true, '', [], function (&$reDataArr) use ($request){
 
-            $handleKeyConfigArr = ['staff_info', 'resource_list'];
+            $handleKeyConfigArr = ['staff_info' => '', 'resource_list' => ''];
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                 'relationFormatConfigs'=> CTAPIApplyBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
@@ -330,7 +330,7 @@ class ApplyController extends BasicController
 //                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
 //                'relationFormatConfigs'=> CTAPIApplyBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
 //            ];
-//            return  CTAPIApplyBusiness::getList($request, $this, 2 + 4, [], [], $extParams);
+//            CTAPIApplyBusiness::getList($request, $this, 1 + 0, [], [], $extParams);
 //        });
 //    }
 
@@ -570,7 +570,7 @@ class ApplyController extends BasicController
 
         if ($id > 0) { // 获得详情数据
             $operate = "修改";
-            $handleKeyConfigArr = ['staff_info', 'resource_list'];
+            $handleKeyConfigArr = ['staff_info' => '', 'resource_list' => ''];
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                 'relationFormatConfigs'=> CTAPIApplyBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),

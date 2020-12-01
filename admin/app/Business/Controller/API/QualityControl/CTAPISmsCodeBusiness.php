@@ -150,6 +150,7 @@ class CTAPISmsCodeBusiness extends BasicPublicCTAPIBusiness
      */
     public static function getRelationConfigs(Request $request, Controller $controller, $relationKeys = [], $extendParams = []){
         if(empty($relationKeys)) return [];
+        list($relationKeys, $relationArr) = static::getRelationParams($relationKeys);// 重新修正关系参数
         $user_info = $controller->user_info;
         $user_id = $controller->user_id;
         $user_type = $controller->user_type;
@@ -160,7 +161,11 @@ class CTAPISmsCodeBusiness extends BasicPublicCTAPIBusiness
             'staff_info' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
                 , ['staff_id' => 'id']
                 , 1, 8 | 4
-                ,'','', [], [], '', ['extendConfig' => ['listHandleKeyArr' => ['realNameOrCompanName']]]),
+                ,'','',
+                CTAPIStaffBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'staff_info'),
+                    static::getUboundRelationExtendParams($extendParams, 'staff_info')),
+                [], '', ['extendConfig' => ['listHandleKeyArr' => ['realNameOrCompanName']]]),
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }

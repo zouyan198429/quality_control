@@ -241,6 +241,7 @@ class CTAPIAbilityJoinBusiness extends BasicPublicCTAPIBusiness
      */
     public static function getRelationConfigs(Request $request, Controller $controller, $relationKeys = [], $extendParams = []){
         if(empty($relationKeys)) return [];
+        list($relationKeys, $relationArr) = static::getRelationParams($relationKeys);// 重新修正关系参数
         $user_info = $controller->user_info;
         $user_id = $controller->user_id;
         $user_type = $controller->user_type;
@@ -252,28 +253,39 @@ class CTAPIAbilityJoinBusiness extends BasicPublicCTAPIBusiness
                 , 1
                 , 2// 企业名称
                 ,'',''
-                ,[], ['where' => [['admin_type', 2]]], '', []),
+                , CTAPIStaffBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'company_info'),
+                    static::getUboundRelationExtendParams($extendParams, 'company_info')),
+                ['where' => [['admin_type', 2]]], '', []),
             // 获得企业信息
             'company_info_data' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
                 , ['admin_type' => 'admin_type', 'staff_id' => 'id']
                 , 1
                 , 1// 企业名称
                 ,'',''
-                ,[], ['where' => [['admin_type', 2]]], '', []),
+                , CTAPIStaffBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'company_info_data'),
+                    static::getUboundRelationExtendParams($extendParams, 'company_info_data')),
+                ['where' => [['admin_type', 2]]], '', []),
             // 获得企业名称 企业--证书编号 -- 证书使用  1:1
             'company_info_certificate' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
                 , ['admin_type' => 'admin_type', 'staff_id' => 'id']
                 , 1
                 , 64// 企业名称 企业--证书编号
                 ,'',''
-                ,[], ['where' => [['admin_type', 2]]], '', []),
+                , CTAPIStaffBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'company_info_certificate'),
+                    static::getUboundRelationExtendParams($extendParams, 'company_info_certificate')),
+                ['where' => [['admin_type', 2]]], '', []),
             // 获得证书设置信息
             'ability_code_info' => CTAPIAbilityCodeBusiness::getTableRelationConfigInfo($request, $controller
                 , ['join_year' => 'number_year']
                 , 1
                 , 1// 企业名称
                 ,'',''
-                ,[], [], '', []),
+                , CTAPIAbilityCodeBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'ability_code_info'),
+                    static::getUboundRelationExtendParams($extendParams, 'ability_code_info')), [], '', []),
             // 报名项目 1:n -- 读取到报名项
             'join_items' => CTAPIAbilityJoinItemsBusiness::getTableRelationConfigInfo($request, $controller
                 , ['id' => 'ability_join_id']

@@ -119,18 +119,18 @@ class OrderPayConfigController extends BasicController
      * @author zouyan(305463219@qq.com)
      */
     public function ajax_info(Request $request){
-        $this->InitParams($request);
-        $id = CommonRequest::getInt($request, 'id');
-        if(!is_numeric($id) || $id <=0) return ajaxDataArr(0, null, '参数[id]有误！');
-        $info = CTAPIOrderPayConfigBusiness::getInfoData($request, $this, $id, [], '', []);
-        $resultDatas = ['info' => $info];
-        return ajaxDataArr(1, $resultDatas, '');
-
+//        $this->InitParams($request);
 //        $id = CommonRequest::getInt($request, 'id');
 //        if(!is_numeric($id) || $id <=0) return ajaxDataArr(0, null, '参数[id]有误！');
-//        return $this->exeDoPublicFun($request, 128, 2,'', true, 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
-//
-//        });
+//        $info = CTAPIOrderPayConfigBusiness::getInfoData($request, $this, $id, [], '', []);
+//        $resultDatas = ['info' => $info];
+//        return ajaxDataArr(1, $resultDatas, '');
+
+        $id = CommonRequest::getInt($request, 'id');
+        if(!is_numeric($id) || $id <=0) return ajaxDataArr(0, null, '参数[id]有误！');
+        return $this->exeDoPublicFun($request, 128, 2,'', true, 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
+
+        });
     }
 
     /**
@@ -173,7 +173,7 @@ class OrderPayConfigController extends BasicController
                 $sort_num = CommonRequest::getInt($request, 'sort_num');
                 $open_status = CommonRequest::getInt($request, 'open_status');
                 $remarks = CommonRequest::get($request, 'remarks');
-                // 标签
+                // 开通的付款方式
                 $pay_method = CommonRequest::get($request, 'pay_method');
                 if(!is_array($pay_method) && is_string($pay_method)){// 转为数组
                     $pay_method = explode(',',$pay_method);
@@ -182,6 +182,7 @@ class OrderPayConfigController extends BasicController
 //                $pay_method_ids = implode(',', $pay_method);
 //                if(!empty($pay_method_ids)) $pay_method_ids = ',' . $pay_method_ids . ',';
                 $sel_pay_method = 0;
+                Tool::arrClsEmpty($pay_method);
                 foreach($pay_method as $tem_pay_method){
                     $sel_pay_method = $sel_pay_method | $tem_pay_method;
                 }

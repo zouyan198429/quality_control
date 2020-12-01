@@ -56,7 +56,7 @@
 
     <button class="btn btn-success  btn-xs export_excel"  onclick="action.batchExportExcel(this)" >导出[按条件]</button>
     <button class="btn btn-success  btn-xs export_excel"  onclick="action.exportExcel(this)" >导出[勾选]</button>
-	{{--<button class="btn btn-danger  btn-xs batch_del"  onclick="action.batchDel(this)">批量删除</button>--}}
+	<button class="btn btn-danger  btn-xs batch_del"  onclick="action.batchDel(this)">批量删除</button>
 {{--    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcel(this)">导入证书能力范围</button>--}}
 {{--    <div style="display:none;" ><input type="file" class="import_file img_input"></div>--}}{{--导入file对象--}}
   </div>
@@ -76,12 +76,12 @@
     </colgroup>
     <thead>
     <tr>
-{{--      <th>--}}
-{{--        <label class="pos-rel">--}}
-{{--          <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>--}}
-{{--          <!-- <span class="lbl">全选</span> -->--}}
-{{--        </label>--}}
-{{--      </th>--}}
+      <th>
+        <label class="pos-rel">
+          <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>
+          <!-- <span class="lbl">全选</span> -->
+        </label>
+      </th>
 {{--      <th>ID</th>--}}
       <th>所属企业</th>
       <th>CMA证书号<hr/>实验室地址</th>
@@ -144,6 +144,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/CertificateSchedule.js') }}?5"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/CertificateSchedule.js') }}?6"  type="text/javascript"></script>
 </body>
 </html>

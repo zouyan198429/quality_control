@@ -72,17 +72,59 @@ class CTAPICourseOrderStaffBusiness extends BasicPublicCTAPIBusiness
      */
     public static function getRelationConfigs(Request $request, Controller $controller, $relationKeys = [], $extendParams = []){
         if(empty($relationKeys)) return [];
+        list($relationKeys, $relationArr) = static::getRelationParams($relationKeys);// 重新修正关系参数
         $user_info = $controller->user_info;
         $user_id = $controller->user_id;
         $user_type = $controller->user_type;
+
         // 关系配置
         $relationFormatConfigs = [
             // 下标 'relationConfig' => []// 下一个关系
             // 获得企业名称
-//            'company_info' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
-//                , ['admin_type' => 'admin_type', 'staff_id' => 'id']
-//                , 1, 2
-//                ,'','', [], ['where' => [['admin_type', 2]]], '', []),
+            'company_name' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
+                , ['company_id' => 'id']
+                , 1, 2
+                ,'','',
+                CTAPIStaffBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'company_name'),
+                    static::getUboundRelationExtendParams($extendParams, 'company_name')),
+                ['where' => [['admin_type', 2]]], '', []),
+            // 获得课程名称
+            'course_name' => CTAPICourseBusiness::getTableRelationConfigInfo($request, $controller
+                , ['course_id' => 'id']
+                , 1, 2
+                ,'','',
+                CTAPICourseBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'course_name'),
+                    static::getUboundRelationExtendParams($extendParams, 'course_name')),
+                [], '', []),
+            // 获得班级名称
+            'class_name' => CTAPICourseClassBusiness::getTableRelationConfigInfo($request, $controller
+                , ['class_id' => 'id']
+                , 1, 2
+                ,'','',
+                CTAPICourseClassBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'class_name'),
+                    static::getUboundRelationExtendParams($extendParams, 'class_name')),
+                [], '', []),
+            // 获得用户信息
+            'staff_info' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
+                , ['staff_id' => 'id']
+                , 1, 256
+                ,'','',
+                CTAPIStaffBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'staff_info'),
+                    static::getUboundRelationExtendParams($extendParams, 'staff_info')),
+                [], '', []),
+            // 获得报名主表信息--联系人等信息
+            'course_order_info' => CTAPICourseOrderBusiness::getTableRelationConfigInfo($request, $controller
+                , ['course_order_id' => 'id']
+                , 1, 4
+                ,'','',
+                CTAPICourseOrderBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'course_order_info'),
+                    static::getUboundRelationExtendParams($extendParams, 'course_order_info')),
+                [], '', []),
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }
@@ -153,12 +195,15 @@ class CTAPICourseOrderStaffBusiness extends BasicPublicCTAPIBusiness
         $order_no = CommonRequest::get($request, 'order_no');
         if(strlen($order_no) > 0 ) Tool::appendCondition($queryParams, 'order_no',  $order_no);
 
-        $pay_status = CommonRequest::get($request, 'pay_status');
-        if(strlen($pay_status) > 0 && $pay_status != 0)  Tool::appendParamQuery($queryParams, $pay_status, 'pay_status', [0, '0', ''], ',', false);
+        $pay_status = CommonRequest::getInt($request, 'pay_status');
+        if($pay_status > 0)  Tool::appendParamQuery($queryParams, $pay_status, 'pay_status', [0, '0', ''], ',', false);
 
 
-        $join_class_status = CommonRequest::get($request, 'join_class_status');
-        if(strlen($join_class_status) > 0 && $join_class_status != 0)  Tool::appendParamQuery($queryParams, $join_class_status, 'join_class_status', [0, '0', ''], ',', false);
+        $join_class_status = CommonRequest::getInt($request, 'join_class_status');
+        if($join_class_status > 0)  Tool::appendParamQuery($queryParams, $join_class_status, 'join_class_status', [0, '0', ''], ',', false);
+
+        $staff_status = CommonRequest::get($request, 'staff_status');
+        if($staff_status > 0)  Tool::appendParamQuery($queryParams, $staff_status, 'staff_status', [0, '0', ''], ',', false);
 
 //        $ids = CommonRequest::get($request, 'ids');
 //        if(strlen($ids) > 0 && $ids != 0)  Tool::appendParamQuery($queryParams, $ids, 'id', [0, '0', ''], ',', false);
@@ -166,6 +211,96 @@ class CTAPICourseOrderStaffBusiness extends BasicPublicCTAPIBusiness
         // 方法最下面
         // 注意重写方法中，如果不是特殊的like，同样需要调起此默认like方法--特殊的写自己特殊的方法
         static::joinListParamsLike($request, $controller, $queryParams, $notLog);
+    }
+
+
+    /**
+     * 对单条数据关系进行格式化--具体的可以重写
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $info  单条数据  --- 一维数组
+     * @param array $temDataList  关系数据  --- 一维或二维数组 -- 主要操作这个数据到  $info 的特别业务数据
+     *                              如果是二维数组：下标已经是他们关系字段的值，多个则用_分隔好的
+     * @param array $infoHandleKeyArr 其它扩展参数，// 一维数组，单条 数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+     * @param array $returnFields  新加入的字段['字段名1' => '字段名1' ]
+     * @return array  新增的字段 一维数组
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function infoRelationFormatExtend(Request $request, Controller $controller, &$info, &$temDataList, $infoHandleKeyArr, &$returnFields){
+        // if(empty($info)) return $returnFields;
+        // $returnFields[$tem_ubound_old] = $tem_ubound_old;
+
+        // 判断员工是否已经报名
+//        if(in_array('judgeJoined', $infoHandleKeyArr)){
+//            $is_joined = 0;
+//            $is_joined_text = '未报名';
+//            if(!empty($temDataList)){
+//                $is_joined = 1;
+//                $is_joined_text = '已报名';
+//            }
+//            $info['is_joined'] = $is_joined;
+//            $info['is_joined_text'] = $is_joined_text;
+//        }
+
+        return $returnFields;
+    }
+
+    /**
+     * 获得列表数据时，对查询结果进行导出操作--有特殊的需要自己重写此方法
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $queryParams 已有的查询条件数组
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  null 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function exportListData(Request $request, Controller $controller, &$data_list, $notLog = 0){
+
+        $headArr = ['course_name'=>'课程', 'company_name'=>'单位', 'company_grade_text'=>'会员等级', 'real_name'=>'姓名', 'sex_text'=>'性别', 'class_name'=>'班级'
+            , 'mobile'=>'手机号', 'id_number'=>'身份证', 'contacts'=>'联络人', 'tel'=>'联络人电话', 'price'=>'单价'
+            , 'order_no'=>'付款单号',  'staff_status_text'=>'人员状态', 'order_time'=>'报名时间', 'pay_status_text'=>'缴费状态'
+            , 'pay_time'=>'缴费时间', 'join_class_status_text'=>'分班状态',  'join_class_time'=>'分班时间'];
+//        foreach($data_list as $k => $v){
+//            if(isset($v['method_name'])) $data_list[$k]['method_name'] =replace_enter_char($v['method_name'],2);
+//            if(isset($v['limit_range'])) $data_list[$k]['limit_range'] =replace_enter_char($v['limit_range'],2);
+//            if(isset($v['explain_text'])) $data_list[$k]['explain_text'] =replace_enter_char($v['explain_text'],2);
+//
+//        }
+        ImportExport::export('','报名学员' . date('YmdHis'),$data_list,1, $headArr, 0, ['sheet_title' => '报名学员']);
+    }
+
+
+    /**
+     * 冻结/解冻批量 或 单条数据
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param int $organize_id 操作的所属企业id 可以为0：没有所属企业--企业后台，操作用户时用来限制，只能操作自己企业的用户
+     * @param string $id 记录id，多个用逗号分隔
+     * @param int $staff_status 操作 状态 1正常--取消作废操作； 4已作废--作废操作
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  int 修改的数量   //   array 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function staffStatusAjax(Request $request, Controller $controller, $organize_id = 0, $id = 0, $staff_status = 4, $notLog = 0)
+    {
+        $company_id = $controller->company_id;
+        $user_id = $controller->user_id;
+        // 调用新加或修改接口
+        $apiParams = [
+            'company_id' => $company_id,
+            'organize_id' => $organize_id,
+            'id' => $id,
+            'staff_status' => $staff_status,
+            'operate_staff_id' => $user_id,
+            'modifAddOprate' => 0,
+        ];
+        $modifyNum = static::exeDBBusinessMethodCT($request, $controller, '',  'staffStatusById', $apiParams, $company_id, $notLog);
+
+        return $modifyNum;
+        // return static::delAjaxBase($request, $controller, '', $notLog);
+
     }
 
 }

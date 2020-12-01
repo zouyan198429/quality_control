@@ -74,6 +74,7 @@ class CTAPIApiLogBusiness extends BasicPublicCTAPIBusiness
      */
     public static function getRelationConfigs(Request $request, Controller $controller, $relationKeys = [], $extendParams = []){
         if(empty($relationKeys)) return [];
+        list($relationKeys, $relationArr) = static::getRelationParams($relationKeys);// 重新修正关系参数
         $user_info = $controller->user_info;
         $user_id = $controller->user_id;
         $user_type = $controller->user_type;
@@ -84,17 +85,29 @@ class CTAPIApiLogBusiness extends BasicPublicCTAPIBusiness
 //            'company_info' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
 //                , ['admin_type' => 'admin_type', 'staff_id' => 'id']
 //                , 1, 2
-//                ,'','', [], ['where' => [['admin_type', 2]]], '', []),
+//                ,'','',
+//                CTAPIStaffBusiness::getRelationConfigs($request, $controller,
+//                    static::getUboundRelation($relationArr, 'company_info'),
+//                    static::getUboundRelationExtendParams($extendParams, 'company_info')),
+//                ['where' => [['admin_type', 2]]], '', []),
             // 获得详细内容
             'log_content' => CTAPIApiLogContentBusiness::getTableRelationConfigInfo($request, $controller
                 , ['log_no' => 'log_no']
                 , 1, 4
-                ,'','', [], [], '', []),
+                ,'','',
+                CTAPIApiLogContentBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'log_content'),
+                    static::getUboundRelationExtendParams($extendParams, 'log_content')),
+                [], '', []),
             // 获得应用信息
             'apply_info' => CTAPIApplyBusiness::getTableRelationConfigInfo($request, $controller
                 , ['app_id' => 'id']
                 , 1, 2
-                ,'','', [], [], '', []),
+                ,'','',
+                CTAPIApplyBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'apply_info'),
+                    static::getUboundRelationExtendParams($extendParams, 'apply_info')),
+                [], '', []),
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }

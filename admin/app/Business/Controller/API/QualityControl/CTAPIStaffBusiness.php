@@ -751,6 +751,7 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
      */
     public static function getRelationConfigs(Request $request, Controller $controller, $relationKeys = [], $extendParams = []){
         if(empty($relationKeys)) return [];
+        list($relationKeys, $relationArr) = static::getRelationParams($relationKeys);// 重新修正关系参数
         $user_info = $controller->user_info;
         $user_id = $controller->user_id;
         $user_type = $controller->user_type;
@@ -761,22 +762,38 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
             'industry_info' => CTAPIIndustryBusiness::getTableRelationConfigInfo($request, $controller
                 , ['company_industry_id' => 'id']
                 , 1, 2
-                ,'','', [], [], '', []),
+                ,'','',
+                CTAPIIndustryBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'industry_info'),
+                    static::getUboundRelationExtendParams($extendParams, 'industry_info')),
+                [], '', []),
             // 获得 行业名称
             'city_info' => CTAPICitysBusiness::getTableRelationConfigInfo($request, $controller
                 , ['city_id' => 'id']
                 , 1, 2
-                ,'','', [], [], '', []),
+                ,'','',
+                CTAPICitysBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'city_info'),
+                    static::getUboundRelationExtendParams($extendParams, 'city_info')),
+                [], '', []),
             // 获得 人员 扩展
             'extend_info' => CTAPIStaffExtendBusiness::getTableRelationConfigInfo($request, $controller
                 , ['id' => 'staff_id']
                 , 1, 0
-                ,'','', [], [], '', []),
+                ,'','',
+                CTAPIStaffExtendBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'extend_info'),
+                    static::getUboundRelationExtendParams($extendParams, 'extend_info')),
+                [], '', []),
             // 获得 用户所属企业  user_company_name => '企业名称'
             'company_info' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
                 , ['company_id' => 'id']
                 , 1, 16
-                ,'','', [], ['where' => [['admin_type', 2]]], '', []),
+                ,'','',
+                CTAPIStaffBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'company_info'),
+                    static::getUboundRelationExtendParams($extendParams, 'company_info')),
+                ['where' => [['admin_type', 2]]], '', []),
             // 获得 企业营业执照
             'certificate_info' => CTAPICompanyCertificateBusiness::getTableRelationConfigInfo($request, $controller
                 , ['id' => 'company_id']
@@ -791,17 +808,29 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
             'certificate_detail' => CTAPICertificateBusiness::getTableRelationConfigInfo($request, $controller
                 , ['id' => 'company_id']
                 , 1, 1
-                ,'','', [], [], '', []),
+                ,'','',
+                CTAPICertificateBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'certificate_detail'),
+                    static::getUboundRelationExtendParams($extendParams, 'certificate_detail')),
+                [], '', []),
             // 获得 企业的授权签字人--正常状态的 1:n
             'user_auth_list' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
                 , ['id' => 'company_id']
                 , 2, 1
-                ,'','', [], ['where' => [['admin_type', 4], ['role_num', '&', '8=8'], ['sign_status', 2], ['is_perfect', 2], ['account_status', 1], ['open_status', 2]]], '', []),
+                ,'','',
+                CTAPIStaffBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'user_auth_list'),
+                    static::getUboundRelationExtendParams($extendParams, 'user_auth_list')),
+                ['where' => [['admin_type', 4], ['role_num', '&', '8=8'], ['sign_status', 2], ['is_perfect', 2], ['account_status', 1], ['open_status', 2]]], '', []),
             // 获得 企业的能力范围 1:n
             'certificate_list' => CTAPICertificateScheduleBusiness::getTableRelationConfigInfo($request, $controller
                 , ['id' => 'company_id']
                 , 2, 1
-                ,'','', [], [], '', []),
+                ,'','',
+                CTAPICertificateScheduleBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'certificate_list'),
+                    static::getUboundRelationExtendParams($extendParams, 'certificate_list')),
+                [], '', []),
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }
@@ -858,6 +887,11 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
             $one_field = ['key' => 'real_name', 'return_type' => 2, 'ubound_name' => 'user_staff_name', 'split' => '、'];// 获得名称
             if(!isset($return_data['one_field'])) $return_data['one_field'] = [];
             array_push($return_data['one_field'], $one_field);
+        }
+        if(($return_num & 256) == 256){// 给上一级返回  real_name , id_number , sex, tel, mobile, email, qq_number, wechat下标
+            $fields_merge = Tool::arrEqualKeyVal(['real_name', 'id_number', 'sex', 'sex_text', 'tel', 'mobile', 'email', 'qq_number', 'wechat'],true);// 获得名称
+            if(!isset($return_data['fields_merge'])) $return_data['fields_merge'] = [];
+            array_push($return_data['fields_merge'], $fields_merge);
         }
         return $return_data;
     }

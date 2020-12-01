@@ -482,7 +482,7 @@ class CompanyNewScheduleController extends BasicController
 //        $relations = [];//  ['siteResources']
 //        $extParams = [
 //            // 'handleKeyArr' => ['company', 'siteResources'],//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-//            'relationFormatConfigs'=> CTAPICompanyScheduleBusiness::getRelationConfigs($request, $this, ['company_info', 'resource_list', 'resource_pdf_list'], []),
+//            'relationFormatConfigs'=> CTAPICompanyScheduleBusiness::getRelationConfigs($request, $this, ['company_info' => '', 'resource_list' => '', 'resource_pdf_list' => ''], []),
 //        ];
 //        return CTAPICompanyScheduleBusiness::getList($request, $this, 2 + 4, [], $relations, $extParams);
 
@@ -492,7 +492,7 @@ class CompanyNewScheduleController extends BasicController
             $extParams = [
                 'infoHandleKeyArr' => ['resource_union'],
                 // 'handleKeyArr' => ['company', 'siteResources'],//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-                'relationFormatConfigs'=> CTAPICompanyScheduleBusiness::getRelationConfigs($request, $this, ['company_info', 'resource_list', 'resource_pdf_list'], []),
+                'relationFormatConfigs'=> CTAPICompanyScheduleBusiness::getRelationConfigs($request, $this, ['company_info' => '', 'resource_list' => '', 'resource_pdf_list' => ''], []),
             ];
             return CTAPICompanyScheduleBusiness::getList($request, $this, 2 + 4, [], $relations, $extParams);
         });
@@ -510,7 +510,7 @@ class CompanyNewScheduleController extends BasicController
 //        $relations = [];//  ['siteResources']
 //        $extParams = [
 //            // 'handleKeyArr' => ['company', 'siteResources'],//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-//            'relationFormatConfigs'=> CTAPICompanyScheduleBusiness::getRelationConfigs($request, $this, ['company_info', 'resource_list', 'resource_pdf_list'], []),
+//            'relationFormatConfigs'=> CTAPICompanyScheduleBusiness::getRelationConfigs($request, $this, ['company_info' => '', 'resource_list' => '', 'resource_pdf_list' => ''], []),
 //        ];
 //        $queryParams = [
 //            'where' => [
@@ -530,7 +530,7 @@ class CompanyNewScheduleController extends BasicController
             $relations = [];//  ['siteResources']
             $extParams = [
                 // 'handleKeyArr' => ['company', 'siteResources'],//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-                'relationFormatConfigs'=> CTAPICompanyScheduleBusiness::getRelationConfigs($request, $this, ['company_info', 'resource_list', 'resource_pdf_list'], []),
+                'relationFormatConfigs'=> CTAPICompanyScheduleBusiness::getRelationConfigs($request, $this, ['company_info' => '', 'resource_list' => '', 'resource_pdf_list' => ''], []),
             ];
             $queryParams = [
                 'where' => [

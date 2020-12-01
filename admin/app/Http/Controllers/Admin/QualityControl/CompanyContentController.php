@@ -220,7 +220,7 @@ class CompanyContentController extends BasicController
 //        return  CTAPICompanyContentBusiness::getList($request, $this, 2 + 4);
         return $this->exeDoPublicFun($request, 4, 4,'', true, '', [], function (&$reDataArr) use ($request){
 
-            $handleKeyConfigArr = ['company_info'];
+            $handleKeyConfigArr = ['company_info' => ''];
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                 'relationFormatConfigs'=> CTAPICompanyContentBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
@@ -474,7 +474,7 @@ class CompanyContentController extends BasicController
             //   'department_id' => 0,
         ];
 
-        $handleKeyConfigArr = ['company_info'];
+        $handleKeyConfigArr = ['company_info' => ''];
         $extParams = [
             // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
             'relationFormatConfigs'=> CTAPICompanyContentBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
