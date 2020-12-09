@@ -64,15 +64,16 @@
     <colgroup>
 {{--        <col width="50">--}}
 {{--        <col width="60">--}}
-        <col>
+        <col width="50">
         <col width="10%">
+        <col>
         <col width="95">
         <col>
         <col>
-        <col width="30%">
+        <col width="20%">
         <col width="8%">
         <col width="95">
-        <col width="140">
+        <col width="80">
     </colgroup>
     <thead>
     <tr>
