@@ -188,6 +188,12 @@
                             </td>
                         </tr>
                         <tr>
+                            <th>实验室地址<span class="must"></span></th>
+                            <td>
+                                <input type="text" class="inp wnormal"  name="laboratory_addr" value="{{ $info['laboratory_addr'] ?? '' }}" placeholder="请输入实验室地址"/>
+                            </td>
+                        </tr>
+                        <tr>
                             <th>联系人<span class="must">*</span></th>
                             <td>
                                 <input type="text" class="inp wnormal"  name="company_contact_name" value="{{ $info['company_contact_name'] ?? '' }}" placeholder="请输入联系人"/>
@@ -266,7 +272,7 @@
 {{--<script src="{{asset('js/baguetteBox.js/highlight.min.js')}}" async></script>--}}
 <!-- zui js -->
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
-<script src="{{ asset('/js/company/QualityControl/Company_basic.js') }}?2"  type="text/javascript"></script>
+<script src="{{ asset('/js/company/QualityControl/Company_basic.js') }}?3"  type="text/javascript"></script>
 @component('component.upfileincludejs')
 @endcomponent
 </body>

@@ -18,7 +18,7 @@ class easyWechatPay
      *       'total_fee' => '', // 标价金额 Int 订单总金额，单位为分
      *       'trade_type' => '', // 交易类型  小程序取值如下：JSAPI
      *   ];
-     * @param int  $operateType 1 小程序 2 app 4 js  8   16
+     * @param int  $operateType 1 小程序 2 app 4 js  8 NATIVE  16
      * @return  mixed
      * @author zouyan(305463219@qq.com)
      */

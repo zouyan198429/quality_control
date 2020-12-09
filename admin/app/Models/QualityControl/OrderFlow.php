@@ -93,15 +93,15 @@ class OrderFlow extends BasePublicModel
     ];
 
     // 支付方式(1现金、2微信支付、4支付宝)
-    public static $payMethodArr = [
-        '1' => '现金',
-        '2' => '微信',
-        '4' => '支付宝',
-    ];
+//    public static $payMethodArr = [
+//        '1' => '现金',
+//        '2' => '微信',
+//        '4' => '支付宝',
+//    ];
 
 
     // 表里没有的字段
-    protected $appends = ['order_type_text', 'pay_method_text', 'pay_type_text'];
+    protected $appends = ['order_type_text', 'pay_type_text'];// , 'pay_method_text'
 
 
     /**
@@ -119,10 +119,10 @@ class OrderFlow extends BasePublicModel
      *
      * @return string
      */
-    public function getPayMethodTextAttribute()
-    {
-        return static::$payMethodArr[$this->pay_method] ?? '';
-    }
+//    public function getPayMethodTextAttribute()
+//    {
+//        return static::$payMethodArr[$this->pay_method] ?? '';
+//    }
 
     /**
      * 获取支付方式文字
@@ -156,5 +156,13 @@ class OrderFlow extends BasePublicModel
     public function orderPay()
     {
         return $this->belongsTo('App\Models\QualityControl\OrderPay', 'pay_order_no', 'pay_order_no');
+    }
+
+    /**
+     * 获取收款方式配置--一维
+     */
+    public function orderPayMethod()
+    {
+        return $this->belongsTo('App\Models\QualityControl\OrderPayMethod', 'pay_method', 'pay_method');
     }
 }

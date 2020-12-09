@@ -27,7 +27,7 @@ class OrderPayConfig extends BasePublicModel
 
 //    public static $cacheSimple = 'U';// 表名简写,为空，则使用表名
 
-    public static $cacheVersion = '';// 内容随意改[可0{空默认为0}开始自增]- 如果运行过程中，有直接对表记录进行修改，增加或修改字段名，则修改此值，使表记录的相关缓存过期。
+    public static $cacheVersion = 'V2';// 内容随意改[可0{空默认为0}开始自增]- 如果运行过程中，有直接对表记录进行修改，增加或修改字段名，则修改此值，使表记录的相关缓存过期。
     // $cacheExcludeFields 为空：则缓存所有字段值；排除字段可能是大小很大的字段，不适宜进行缓存
     public static $cacheExcludeFields = [];// 表字段中排除字段; 有值：要小心，如果想获取的字段有在排除字段中的，则不能使用缓存
 
@@ -83,11 +83,15 @@ class OrderPayConfig extends BasePublicModel
 
 
     // 支付方式(1现金、2微信支付、4支付宝)
-    public static $payMethodArr = [
-        '1' => '现金',
-        '2' => '微信',
-        '4' => '支付宝',
-    ];
+//    public static $payMethodArr = [
+//        '1' => '现金',
+//        '2' => '微信',
+//        '4' => '支付宝',
+//    ];
+
+    // 暂不支持的付款方式
+//    public static $payMethodDisable = [4];
+
 
     // 开启状态(1开启2关闭)
     public static $openStatusArr = [
@@ -95,12 +99,8 @@ class OrderPayConfig extends BasePublicModel
         '2' => '关闭',
     ];
 
-    // 暂不支持的付款方式
-    public static $payMethodDisable = [4];
-
-
     // 表里没有的字段
-    protected $appends = ['pay_method_text', 'open_status_text'];
+    protected $appends = ['open_status_text'];// 'pay_method_text',
 
 
     /**
@@ -108,27 +108,27 @@ class OrderPayConfig extends BasePublicModel
      *
      * @return string
      */
-    public function getPayMethodTextAttribute()
-    {
-
-        return static::getPayMethodText($this, 'pay_method');
-//        $return_arr = [];
-//        $pay_method = $this->pay_method;
+//    public function getPayMethodTextAttribute()
+//    {
 //
-//        // 去掉暂不支持 的付款方式
-//        foreach(static::$payMethodDisable as $removeBit){
-//            $pay_method = Tool::bitRemoveVal($pay_method, $removeBit);
-//        }
-//        $this->pay_method = $pay_method;
-//
-//
-//        if($pay_method <= 0 ) return '';
-//        foreach(static::$payMethodArr as $k => $v){
-//            if( (($k & $pay_method) == $k) && !in_array($k, static::$payMethodDisable) )  array_push($return_arr, $v);
-//        }
-//        return implode('、', $return_arr);
-        // return static::$payMethodArr[$this->pay_method] ?? '';
-    }
+//        return static::getPayMethodText($this, 'pay_method');
+////        $return_arr = [];
+////        $pay_method = $this->pay_method;
+////
+////        // 去掉暂不支持 的付款方式
+////        foreach(static::$payMethodDisable as $removeBit){
+////            $pay_method = Tool::bitRemoveVal($pay_method, $removeBit);
+////        }
+////        $this->pay_method = $pay_method;
+////
+////
+////        if($pay_method <= 0 ) return '';
+////        foreach(static::$payMethodArr as $k => $v){
+////            if( (($k & $pay_method) == $k) && !in_array($k, static::$payMethodDisable) )  array_push($return_arr, $v);
+////        }
+////        return implode('、', $return_arr);
+//        // return static::$payMethodArr[$this->pay_method] ?? '';
+//    }
 
     /**
      * 根据付款方式，获得付款文字
@@ -136,46 +136,46 @@ class OrderPayConfig extends BasePublicModel
      * @param string $pay_method_name 字段名称
      * @return string
      */
-    public static function getPayMethodText(&$obj, $pay_method_name = 'pay_method'){
-        if(empty($obj)) return '';
-        $return_arr = [];
-        $isObj = is_object($obj) ? true : false;
-        $pay_method = ($isObj) ? $obj->{$pay_method_name} : $obj[$pay_method_name];
-
-        // 去掉暂不支持 的付款方式
-        foreach(static::$payMethodDisable as $removeBit){
-            $pay_method = Tool::bitRemoveVal($pay_method, $removeBit);
-        }
-        if($isObj){
-            $obj->{$pay_method_name} = $pay_method;
-        }else{
-            $obj[$pay_method_name] = $pay_method;
-        }
-
-
-        if($pay_method <= 0 ) return '';
-        foreach(static::$payMethodArr as $k => $v){
-            if( (($k & $pay_method) == $k) && !in_array($k, static::$payMethodDisable) )  array_push($return_arr, $v);
-        }
-        $returnText = implode('、', $return_arr);
-        if(!$isObj){// 是数组
-            $obj[$pay_method_name . '_text'] = $returnText;
-        }
-        return $returnText;
-        // return static::$payMethodArr[$obj->{$pay_method_name}] ?? '';
-    }
+//    public static function getPayMethodText(&$obj, $pay_method_name = 'pay_method'){
+//        if(empty($obj)) return '';
+//        $return_arr = [];
+//        $isObj = is_object($obj) ? true : false;
+//        $pay_method = ($isObj) ? $obj->{$pay_method_name} : $obj[$pay_method_name];
+//
+//        // 去掉暂不支持 的付款方式
+//        foreach(static::$payMethodDisable as $removeBit){
+//            $pay_method = Tool::bitRemoveVal($pay_method, $removeBit);
+//        }
+//        if($isObj){
+//            $obj->{$pay_method_name} = $pay_method;
+//        }else{
+//            $obj[$pay_method_name] = $pay_method;
+//        }
+//
+//
+//        if($pay_method <= 0 ) return '';
+//        foreach(static::$payMethodArr as $k => $v){
+//            if( (($k & $pay_method) == $k) && !in_array($k, static::$payMethodDisable) )  array_push($return_arr, $v);
+//        }
+//        $returnText = implode('、', $return_arr);
+//        if(!$isObj){// 是数组
+//            $obj[$pay_method_name . '_text'] = $returnText;
+//        }
+//        return $returnText;
+//        // return static::$payMethodArr[$obj->{$pay_method_name}] ?? '';
+//    }
 
     /**
      * 获得所有的付款方式的值
      * @return int|mixed
      */
-    public static function getAllPayMethod(){
-        $return = 0;
-        foreach(array_keys(static::$payMethodArr) as $temPayMethod){
-            if(!in_array($temPayMethod, static::$payMethodDisable)) $return |= $temPayMethod;
-        }
-        return $return;
-    }
+//    public static function getAllPayMethod(){
+//        $return = 0;
+//        foreach(array_keys(static::$payMethodArr) as $temPayMethod){
+//            if(!in_array($temPayMethod, static::$payMethodDisable)) $return |= $temPayMethod;
+//        }
+//        return $return;
+//    }
 
     /**
      * 对象处理真正开启的支付方式--支付方式配置中有的且开启的才算开启
@@ -184,55 +184,55 @@ class OrderPayConfig extends BasePublicModel
      * @param string $pay_config_id_name 字段名称
      * @return int
      */
-    public static function unionPayMethod(&$obj, $pay_method_name = 'pay_method', $pay_config_id_name = 'pay_config_id'){
-        if(empty($obj)) return '';
-        $isObj = is_object($obj) ? true : false;
-        $pay_method = ($isObj) ? $obj->{$pay_method_name} : $obj[$pay_method_name];
-
-        //  根据收款方式，获取现在配置的可用支付方式
-        if($isObj){
-            $pay_config_id = $obj->{$pay_config_id_name} ?? 0;
-        }else{
-            $pay_config_id = $obj[$pay_config_id_name] ?? 0;
-        }
-        // 可用的支付方式
-        $allow_pay_method = static::getAllPayMethod();
-        $pay_key = '';
-        $pay_company_name = '';
-        if(is_numeric($pay_config_id) && $pay_config_id > 0){
-
-            $temInfo = OrderPayConfigDBBusiness::getDBFVFormatList(4, 1, ['id' => $pay_config_id, 'open_status' => 1]
-                , false, '', ['sqlParams' => []]);
-
-            $tem_pay_method = $temInfo['pay_method'] ?? 0;
-            // 去掉暂不支持 的付款方式
-            foreach(static::$payMethodDisable as $removeBit){
-                $tem_pay_method = Tool::bitRemoveVal($tem_pay_method, $removeBit);
-            }
-
-            $pay_method = $pay_method & $tem_pay_method;
-            // 可用的支付方式
-            $allow_pay_method = $tem_pay_method;
-            $pay_key = $temInfo['pay_key'] ?? '';
-            $pay_company_name = $temInfo['pay_company_name'] ?? '';
-            if($isObj){
-                $obj->{$pay_method_name} = $pay_method;
-            }else{
-                $obj[$pay_method_name] = $pay_method;
-            }
-
-        }
-        if($isObj){// 是对象不能进行非字段的值
-//            $obj->allow_pay_method = $allow_pay_method;
-//            $obj->pay_key = $pay_key;
-//            $obj->pay_company_name = $pay_company_name;
-        }else{
-            $obj['allow_pay_method'] = $allow_pay_method;
-            $obj['pay_key'] = $pay_key;
-            $obj['pay_company_name'] = $pay_company_name;
-        }
-        return $pay_method;
-    }
+//    public static function unionPayMethod(&$obj, $pay_method_name = 'pay_method', $pay_config_id_name = 'pay_config_id'){
+//        if(empty($obj)) return '';
+//        $isObj = is_object($obj) ? true : false;
+//        $pay_method = ($isObj) ? $obj->{$pay_method_name} : $obj[$pay_method_name];
+//
+//        //  根据收款方式，获取现在配置的可用支付方式
+//        if($isObj){
+//            $pay_config_id = $obj->{$pay_config_id_name} ?? 0;
+//        }else{
+//            $pay_config_id = $obj[$pay_config_id_name] ?? 0;
+//        }
+//        // 可用的支付方式
+//        $allow_pay_method = static::getAllPayMethod();
+//        $pay_key = '';
+//        $pay_company_name = '';
+//        if(is_numeric($pay_config_id) && $pay_config_id > 0){
+//
+//            $temInfo = OrderPayConfigDBBusiness::getDBFVFormatList(4, 1, ['id' => $pay_config_id, 'open_status' => 1]
+//                , false, '', ['sqlParams' => []]);
+//
+//            $tem_pay_method = $temInfo['pay_method'] ?? 0;
+//            // 去掉暂不支持 的付款方式
+//            foreach(static::$payMethodDisable as $removeBit){
+//                $tem_pay_method = Tool::bitRemoveVal($tem_pay_method, $removeBit);
+//            }
+//
+//            $pay_method = $pay_method & $tem_pay_method;
+//            // 可用的支付方式
+//            $allow_pay_method = $tem_pay_method;
+//            $pay_key = $temInfo['pay_key'] ?? '';
+//            $pay_company_name = $temInfo['pay_company_name'] ?? '';
+//            if($isObj){
+//                $obj->{$pay_method_name} = $pay_method;
+//            }else{
+//                $obj[$pay_method_name] = $pay_method;
+//            }
+//
+//        }
+//        if($isObj){// 是对象不能进行非字段的值
+////            $obj->allow_pay_method = $allow_pay_method;
+////            $obj->pay_key = $pay_key;
+////            $obj->pay_company_name = $pay_company_name;
+//        }else{
+//            $obj['allow_pay_method'] = $allow_pay_method;
+//            $obj['pay_key'] = $pay_key;
+//            $obj['pay_company_name'] = $pay_company_name;
+//        }
+//        return $pay_method;
+//    }
 
     /**
      * 获取开启状态文字

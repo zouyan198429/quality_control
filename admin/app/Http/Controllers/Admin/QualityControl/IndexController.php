@@ -14,6 +14,7 @@ use App\Business\DB\QualityControl\StaffDBBusiness;
 use App\Http\Controllers\WorksController;
 use App\Models\QualityControl\Staff;
 use App\Services\Captcha\CaptchaCode;
+use App\Services\Code\QRCode;
 use App\Services\DB\CommonDB;
 use App\Services\File\DownFile;
 use App\Services\Request\API\HttpRequest;
@@ -49,7 +50,8 @@ class IndexController extends BasicController
     }
 
     public function test(Request $request){
-
+            QRCode::generateQRfromGoogle("http://www.helloweba.com");
+            die;
 
 //        $aa = [
 //          'aa' => 'aa',

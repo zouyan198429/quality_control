@@ -69,7 +69,74 @@ var otheraction = {
         });
         return false;
     },
+    joinClass: function(obj){// 分班--批量
+        var recordObj = $(obj);
+        var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+        otheraction.joinClassByIds(obj, ids);
+    },
+    joinClassByIds: function(obj, ids) {
+        if( ids == ''){
+            err_alert('请选择需要操作的数据');
+            return false;
+        }
+        //获得表单各name的值
+        var weburl = JOIN_CLASS_URL + '?id='+ ids;
+            console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = '分班';//"查看供应商";
+        console.log('weburl', weburl);
+        layeriframe(weburl,tishi,700,450,0);
+        return false;
+    },
+    joinClassCancel: function(obj){// 取消分班--批量
+        var recordObj = $(obj);
+        var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+        otheraction.joinClassCancelByIds(obj, ids);
+    },
+    joinClassCancelByIds: function(obj, ids) {
+        if( ids == ''){
+            err_alert('请选择需要操作的数据');
+            return false;
+        }
+        var operateText = '取消分班';
+        var index_query = layer.confirm('确定' + operateText + '所选记录？操作后不可变更！', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            // var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+            //ajax开启数据
+            other_operate_ajax('cancel_class', ids, operateText, {});
+            layer.close(index_query);
+        }, function(){
+        });
+        return false;
+    },
+    paySelected: function(obj){// 缴费--批量
+        var recordObj = $(obj);
+        var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+        otheraction.payByIds(obj, ids);
+    },
+    payByIds: function(obj, ids) {
+        if( ids == ''){
+            err_alert('请选择需要操作的数据');
+            return false;
+        }
+        //获得表单各name的值
+        var weburl = PAY_URL + '?id='+ ids;
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = '缴费';//"查看供应商";
+        console.log('weburl', weburl);
+        layeriframe(weburl,tishi,700,450,0);
+        return false;
+    }
 };
+
 
 //操作
 // params 其它参数对象  {}
@@ -100,6 +167,12 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
             objAppendProps(data, {'id':id}, true);
             reset_total = false;
             ajax_url = STAFF_STATUS_URL;// "/pms/Supplier/ajax_del?operate_type=2";
+            break;
+        case 'cancel_class': // 取消分班
+            // 合并对象
+            objAppendProps(data, {'id':id}, true);
+            reset_total = false;
+            ajax_url = CANCEL_CLASS_URL;// "/pms/Supplier/ajax_del?operate_type=2";
             break;
         default:
             break;
@@ -237,9 +310,24 @@ function addCompany(company_id, company_name){
     document.write("                    <i class=\"ace-icon  fa fa-eye  bigger-60\"> 查看<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
-    document.write("                <%if(can_modify &&  item.staff_status == 1){%>");
+    document.write("                <%if(can_modify &&  item.staff_status == 1 &&  item.pay_status == 1 &&  item.join_class_status == 1){%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.frozen(<%=item.id%>, 4)\">");
-    document.write("                    <i class=\"ace-icon bigger-60\"> 作废<\/i>");
+    document.write("                    <i class=\"ace-icon fa fa-times bigger-60\"> 作废<\/i>");
+    document.write("                <\/a>");
+    document.write("                <%}%>");
+    document.write("                <%if(can_modify &&  item.staff_status == 1 &&  item.join_class_status == 1){%>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.joinClassByIds(this,<%=item.id%>)\">");
+    document.write("                    <i class=\"ace-icon fa fa-users bigger-60\"> 分班<\/i>");
+    document.write("                <\/a>");
+    document.write("                <%}%>");
+    document.write("                <%if(can_modify &&  item.staff_status == 1 &&  item.join_class_status == 4){%>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.joinClassCancelByIds(this,<%=item.id%>)\">");
+    document.write("                    <i class=\"ace-icon fa fa-user-times bigger-60\"> 取消分班<\/i>");
+    document.write("                <\/a>");
+    document.write("                <%}%>");
+    document.write("                <%if(can_modify &&  item.staff_status != 4 &&  item.pay_status != 4){%>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.payByIds(this,<%=item.id%>)\">");
+    document.write("                    <i class=\"ace-icon fa fa-jpy bigger-60\"> 缴费<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
     // document.write("                <%if( can_modify && item.staff_status == 4){%>");

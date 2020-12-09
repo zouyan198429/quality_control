@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Services\Request\CommonRequest;
 use App\Http\Controllers\BaseController as Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class CTAPIOrdersBusiness extends BasicPublicCTAPIBusiness
 {
@@ -158,5 +159,6 @@ class CTAPIOrdersBusiness extends BasicPublicCTAPIBusiness
         // 注意重写方法中，如果不是特殊的like，同样需要调起此默认like方法--特殊的写自己特殊的方法
         static::joinListParamsLike($request, $controller, $queryParams, $notLog);
     }
+
 
 }

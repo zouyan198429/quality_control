@@ -67,7 +67,7 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
         $certificate_info = [];
         $certificate_company_info = [];// 企业表保存
         // CMA证书号
-        $certificate_no = [];
+        $certificate_no = '';
         $has_certificate_no = false;// 是否有 false:没有 ； true:有
         if(Tool::getInfoUboundVal($saveData, 'certificate_no', $has_certificate_no, $certificate_no, 0)){
 

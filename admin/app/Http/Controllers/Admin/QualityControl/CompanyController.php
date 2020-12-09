@@ -52,6 +52,7 @@ class CompanyController extends StaffController
                 $company_certificate_no = CommonRequest::get($request, 'company_certificate_no');
                 $ratify_date = CommonRequest::get($request, 'ratify_date');
                 $valid_date = CommonRequest::get($request, 'valid_date');
+                $laboratory_addr = CommonRequest::get($request, 'laboratory_addr');
                 // 判断开始结束日期
                 Tool::judgeBeginEndDate($ratify_date, $valid_date, 1 + 2 + 256 + 512, 1, date('Y-m-d'), '有效起止日期');
 
@@ -109,6 +110,7 @@ class CompanyController extends StaffController
                     'company_certificate_no' => $company_certificate_no,
                     'ratify_date' => $ratify_date,
                     'valid_date' => $valid_date,
+                    'laboratory_addr' => $laboratory_addr,
                     'company_contact_name' => $company_contact_name,
                     'company_contact_mobile' => $company_contact_mobile,
                     'company_contact_tel' => $company_contact_tel,

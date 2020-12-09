@@ -37,7 +37,7 @@ $(function(){
         elem: '.ratify_date' //指定元素
         ,type: 'date'
         ,value: BEGIN_TIME// '2018-08-18' //必须遵循format参数设定的格式
-        ,min: get_now_format('Y-m-d')//'2017-1-1'
+        // ,min: get_now_format('Y-m-d')//'2017-1-1'
         //,max: get_now_format()//'2017-12-31'
         ,calendar: true//是否显示公历节日
         ,ready: function(date){// 控件在打开时触发
@@ -74,7 +74,7 @@ $(function(){
         elem: '.valid_date' //指定元素
         ,type: 'date'
         ,value: END_TIME// '2018-08-18' //必须遵循format参数设定的格式
-        ,min: get_now_format('Y-m-d')//'2017-1-1'
+        // ,min: get_now_format('Y-m-d')//'2017-1-1'
         //,max: get_now_format()//'2017-12-31'
         ,calendar: true//是否显示公历节日
         ,ready: function(date){// 控件在打开时触发
@@ -185,38 +185,38 @@ function ajax_form(){
         return false;
     }
 
-    var certificate_no = $('input[name=certificate_no]').val();
-    if(!judge_validate(4,'CMA证书号',certificate_no,true,'length',1,30)){
-        return false;
-    }
-
-    // 开始时间
-    var begin_date = $('input[name=ratify_date]').val();
-    if(!judge_validate(4,'批准日期',begin_date,true,'date','','')){
-        return false;
-    }
-
-    // 结束时间
-    var end_date = $('input[name=valid_date]').val();
-    if(!judge_validate(4,'有效期至',end_date,true,'date','','')){
-        return false;
-    }
-
-    if( end_date !== ''){
-        if(begin_date == ''){
-            layer_alert("请选择批准日期",3,0);
-            return false;
-        }
-        if( !judge_validate(4,'有效期至必须',end_date,true,'data_size',begin_date,5)){
-            return false;
-        }
-    }
-
-
-    var addr = $('input[name=addr]').val();
-    if(!judge_validate(4,'实验室地址',addr,true,'length',1,60)){
-        return false;
-    }
+    // var certificate_no = $('input[name=certificate_no]').val();
+    // if(!judge_validate(4,'CMA证书号',certificate_no,true,'length',1,30)){
+    //     return false;
+    // }
+    //
+    // // 开始时间
+    // var begin_date = $('input[name=ratify_date]').val();
+    // if(!judge_validate(4,'批准日期',begin_date,true,'date','','')){
+    //     return false;
+    // }
+    //
+    // // 结束时间
+    // var end_date = $('input[name=valid_date]').val();
+    // if(!judge_validate(4,'有效期至',end_date,true,'date','','')){
+    //     return false;
+    // }
+    //
+    // if( end_date !== ''){
+    //     if(begin_date == ''){
+    //         layer_alert("请选择批准日期",3,0);
+    //         return false;
+    //     }
+    //     if( !judge_validate(4,'有效期至必须',end_date,true,'data_size',begin_date,5)){
+    //         return false;
+    //     }
+    // }
+    //
+    //
+    // var addr = $('input[name=addr]').val();
+    // if(!judge_validate(4,'实验室地址',addr,true,'length',1,60)){
+    //     return false;
+    // }
 
     var category_name = $('input[name=category_name]').val();
     if(!judge_validate(4,'一级名称',category_name,false,'length',1,100)){

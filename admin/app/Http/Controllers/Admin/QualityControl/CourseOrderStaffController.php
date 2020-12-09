@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Admin\QualityControl;
 
 use App\Business\Controller\API\QualityControl\CTAPICourseBusiness;
+use App\Business\Controller\API\QualityControl\CTAPICourseClassBusiness;
 use App\Business\Controller\API\QualityControl\CTAPICourseOrderStaffBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIOrderPayMethodBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
 use App\Http\Controllers\WorksController;
 use App\Models\QualityControl\CourseOrderStaff;
+use App\Models\QualityControl\OrderPayConfig;
 use App\Services\Request\CommonRequest;
 use App\Services\Tool;
 use Illuminate\Http\Request;
@@ -95,6 +98,263 @@ class CourseOrderStaffController extends BasicController
 //
 //        });
 //    }
+
+    /**
+     * 分班
+     * 参数 id 需要参与分班的人员id, 多个用逗号,分隔或 一维id数组
+     * 参数  course_id 分配班级的班级所属课程类型
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function join_class(Request $request)
+    {
+        return $this->exeDoPublicFun($request, 0, 8, 'admin.QualityControl.CourseOrderStaff.join_class', true
+            , '', [], function (&$reDataArr) use ($request){
+                $id = CommonRequest::get($request, 'id');
+                if(is_string($id)) $id = explode(',', $id);
+                if(!is_array($id)) $id = [];
+                if(empty($id)) throws('请选择要分班的学员');
+                $info = [
+                    'id'=> implode(',', $id),
+                    //   'department_id' => 0,
+                ];
+                $course_id = CommonRequest::getInt($request, 'course_id');
+                $dataList = CTAPICourseOrderStaffBusiness::getClassStaffAndJudge($request, $this, $id, 1);
+                $reDataArr['info'] = $info;
+                $reDataArr['course_order_staff'] = $dataList;
+                // 获得可用班级信息KV
+                $extParamsQuery = [
+                    'sqlParams' => ['whereIn' => ['class_status' => [1, 2]]]
+                ];
+                if(is_numeric($course_id) && $course_id > 0){
+                    $qWhere = $extParamsQuery['sqlParams']['where'] ?? [];
+                    $extParamsQuery['sqlParams']['where'] = array_push($qWhere, ['course_id', $course_id]);
+                }
+                $reDataArr['course_class_kv'] = CTAPICourseClassBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'class_name'], $extParamsQuery);
+                $reDataArr['defaultCourseClassId'] = $info['class_id'] ?? -1;// 默认
+            });
+    }
+
+    /**
+     * ajax保存数据--分班保存
+     *
+     * @param int $id
+     * @return Response
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_join_class_save(Request $request)
+    {
+//        $this->InitParams($request);
+        $pageNum = 0;
+        return $this->exeDoPublicFun($request, $pageNum, 4,'', true
+            , '', [], function (&$reDataArr) use ($request){
+                $id = CommonRequest::get($request, 'id');
+                // CommonRequest::judgeEmptyParams($request, 'id', $id);
+                if(is_string($id)) $id = explode(',', $id);
+                if(!is_array($id)) $id = [];
+                if(empty($id)) throws('请选择要分班的学员');
+                $dataList = CTAPICourseOrderStaffBusiness::getClassStaffAndJudge($request, $this, $id, 1);
+                if(empty($dataList)) throws('请选择要分班的学员');
+
+                $class_id = CommonRequest::getInt($request, 'class_id');
+                // 获得班级信息
+                $classInfo = CTAPICourseClassBusiness::getFVFormatList( $request,  $this, 4, 1
+                    , ['id' => $class_id], false, [], []);
+                if(empty($classInfo)) throws('班级信息不存在！');
+                if(!in_array($classInfo['class_status'], [1, 2])) throws('班级非待开班或开班中状态，不能分配学员！');
+
+                $organize_id = $this->organize_id;
+                // 大后台--可以操作所有的员工；操作企业【无员工】
+                // 企业后台 -- 操作员工，只能操作自己的员工；无操作企业
+                // 个人后台--不可进行操作
+                if($this->user_type == 2) $organize_id = $this->own_organize_id;
+                $resultDatas = CTAPICourseOrderStaffBusiness::joinedClassAjax($request, $this, $organize_id, $id, $class_id, true);
+                return ajaxDataArr(1, $resultDatas, '');
+        });
+    }
+
+    /**
+     * ajax保存数据--取消分班保存
+     *
+     * @param int $id
+     * @return Response
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_cancel_class(Request $request)
+    {
+//        $this->InitParams($request);
+        $pageNum = 0;
+        return $this->exeDoPublicFun($request, $pageNum, 4,'', true
+            , '', [], function (&$reDataArr) use ($request){
+                $id = CommonRequest::get($request, 'id');
+                // CommonRequest::judgeEmptyParams($request, 'id', $id);
+                if(is_string($id)) $id = explode(',', $id);
+                if(!is_array($id)) $id = [];
+                if(empty($id)) throws('请选择要取消分班的学员');
+                $dataList = CTAPICourseOrderStaffBusiness::getClassStaffAndJudge($request, $this, $id, 2);
+                if(empty($dataList)) throws('请选择要取消分班的学员');
+
+//                $class_id = CommonRequest::getInt($request, 'class_id');
+//                // 获得班级信息
+//                $classInfo = CTAPICourseClassBusiness::getFVFormatList( $request,  $this, 4, 1
+//                    , ['id' => $class_id], false, [], []);
+//                if(empty($classInfo)) throws('班级信息不存在！');
+//                if(!in_array($classInfo['class_status'], [1, 2])) throws('班级非待开班或开班中状态，不能分配学员！');
+
+                $organize_id = $this->organize_id;
+                // 大后台--可以操作所有的员工；操作企业【无员工】
+                // 企业后台 -- 操作员工，只能操作自己的员工；无操作企业
+                // 个人后台--不可进行操作
+                if($this->user_type == 2) $organize_id = $this->own_organize_id;
+                $resultDatas = CTAPICourseOrderStaffBusiness::cancelClassAjax($request, $this, $organize_id, $id, true);
+                return ajaxDataArr(1, $resultDatas, '');
+            });
+    }
+
+    /**
+     * 缴费
+     * 参数 id 需要参与缴费的人员id, 多个用逗号,分隔或 一维id数组
+     * 参数  course_id 分配班级的班级所属课程类型--可为空
+     * 参数  class_id 所属的班级id--可为空
+     * 参数  company_id 报名用户所属的企业id-可为空
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function pay(Request $request)
+    {
+        return $this->exeDoPublicFun($request, 0, 8, 'admin.QualityControl.CourseOrderStaff.pay', true
+            , '', [], function (&$reDataArr) use ($request){
+                $id = CommonRequest::get($request, 'id');
+                if(is_string($id)) $id = explode(',', $id);
+                if(!is_array($id)) $id = [];
+                if(empty($id)) throws('请选择要缴费的学员');
+                $info = [
+                    'id'=> implode(',', $id),
+                    //   'department_id' => 0,
+                ];
+
+//                $course_id = CommonRequest::getInt($request, 'course_id');
+//                $class_id = CommonRequest::getInt($request, 'class_id');
+                $company_id = CommonRequest::getInt($request, 'company_id');// 报名用户所属的企业id
+
+                // 根据报名用户id,获得报名用户及支付信息
+                list($dataList, $pay_configs_format) = CTAPICourseOrderStaffBusiness::getPayStaffByIds($request, $this, $id, $company_id);
+                $dataPanyConfigList = Tool::arrUnderReset($dataList, 'pay_config_id', 2, '_');
+
+                // $reDataArr['course_order_staff'] = $dataList;
+                $reDataArr['pay_config_format'] = $pay_configs_format;
+                $reDataArr['config_staff_list'] = $dataPanyConfigList;
+
+                $reDataArr['info'] = $info;
+
+                // 收款开通类型(1现金、2微信支付、4支付宝)
+                $reDataArr['payMethod'] =  CTAPIOrderPayMethodBusiness::getListKV($request, $this, ['key' => 'pay_method', 'val' => 'pay_name']);
+                $reDataArr['defaultPayMethod'] = $info['pay_method'] ?? -1;// 列表页默认状态
+                // pr($reDataArr);
+            });
+    }
+
+
+    /**
+     * 缴费--生成订单保存页面
+     * 参数 id 需要参与缴费的人员id, 多个用逗号,分隔或 一维id数组
+     * 参数  course_id 分配班级的班级所属课程类型--可为空
+     * 参数  class_id 所属的班级id--可为空
+     * 参数  pay_config_id 支付配置id-可为空
+     * 参数  company_id 报名用户所属的企业id-可为空
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function pay_save(Request $request)
+    {
+        return $this->exeDoPublicFun($request, 0, 8, 'admin.QualityControl.CourseOrderStaff.pay_save', true
+            , '', [], function (&$reDataArr) use ($request){
+                $id = CommonRequest::get($request, 'id');
+                if(is_string($id)) $id = explode(',', $id);
+                if(!is_array($id)) $id = [];
+                if(empty($id)) throws('请选择要缴费的学员');
+                $info = [
+                    'id'=> implode(',', $id),
+                    //   'department_id' => 0,
+                ];
+
+//                $course_id = CommonRequest::getInt($request, 'course_id');
+//                $class_id = CommonRequest::getInt($request, 'class_id');
+                $company_id = CommonRequest::getInt($request, 'company_id');// 报名用户所属的企业id
+                $pay_config_id = CommonRequest::getInt($request, 'pay_config_id');// 支付配置id
+                $pay_method = CommonRequest::getInt($request, 'pay_method');// 选择的缴费方式
+                $reDataArr['pay_config_id'] = $pay_config_id;
+                $reDataArr['pay_method'] = $pay_method;
+
+                // 根据报名用户id,及收款账号和收款方式 获得报名用户及支付信息
+                list($payMethodInfo, $dataPanyConfigList, $pay_configs_format) = CTAPICourseOrderStaffBusiness::getMethodInfoAndStaffList($request, $this, $id, $company_id, $pay_config_id, $pay_method);
+                $reDataArr['method_info'] = $payMethodInfo;
+                $reDataArr['config_staff_list'] = $dataPanyConfigList;
+                $reDataArr['pay_config_format'] = $pay_configs_format;
+
+                $reDataArr['info'] = $info;
+                // 收款开通类型(1现金、2微信支付、4支付宝)
+                // $reDataArr['payMethod'] =  CTAPIOrderPayMethodBusiness::getListKV($request, $this, ['key' => 'pay_method', 'val' => 'pay_name']);
+                // $reDataArr['defaultPayMethod'] = $info['pay_method'] ?? -1;// 列表页默认状态
+                // pr($reDataArr);
+            });
+    }
+
+    /**
+     * ajax保存数据--缴费生成订单
+     *
+     * @param int $id
+     * @return Response
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_create_order(Request $request)
+    {
+//        $this->InitParams($request);
+        $pageNum = 0;
+        return $this->exeDoPublicFun($request, $pageNum, 4,'', true
+            , '', [], function (&$reDataArr) use ($request){
+                $id = CommonRequest::get($request, 'id');
+                if(is_string($id)) $id = explode(',', $id);
+                if(!is_array($id)) $id = [];
+                if(empty($id)) throws('请选择要缴费的学员');
+                $info = [
+                    'id'=> implode(',', $id),
+                    //   'department_id' => 0,
+                ];
+//                $course_id = CommonRequest::getInt($request, 'course_id');
+//                $class_id = CommonRequest::getInt($request, 'class_id');
+                $company_id = CommonRequest::getInt($request, 'company_id');// 报名用户所属的企业id
+                $pay_config_id = CommonRequest::getInt($request, 'pay_config_id');// 支付配置id
+                $pay_method = CommonRequest::getInt($request, 'pay_method');// 选择的缴费方式
+                $reDataArr['pay_config_id'] = $pay_config_id;
+                $reDataArr['pay_method'] = $pay_method;
+
+                // 根据报名用户id,及收款账号和收款方式 获得报名用户及支付信息
+                list($payMethodInfo, $dataPanyConfigList, $pay_configs_format) = CTAPICourseOrderStaffBusiness::getMethodInfoAndStaffList($request, $this, $id, $company_id, $pay_config_id, $pay_method);
+                $reDataArr['method_info'] = $payMethodInfo;
+                $reDataArr['config_staff_list'] = $dataPanyConfigList;
+                $reDataArr['pay_config_format'] = $pay_configs_format;
+
+                $reDataArr['info'] = $info;
+
+                $otherParams = [
+                   'payment_amount' => CommonRequest::get($request, 'payment_amount'),// 总支付金额
+                   'change_amount' => CommonRequest::get($request, 'change_amount'),// 找零金额
+                    'remarks' => CommonRequest::get($request, 'remarks'),// 订单备注
+                ];
+
+                $organize_id = $this->organize_id;
+                // 大后台--可以操作所有的员工；操作企业【无员工】
+                // 企业后台 -- 操作员工，只能操作自己的员工；无操作企业
+                // 个人后台--不可进行操作
+                if($this->user_type == 2) $organize_id = $this->own_organize_id;
+                $resultDatas = CTAPICourseOrderStaffBusiness::createOrderAjax($request, $this, $organize_id, $id, $pay_config_id, $pay_method, $otherParams,true);
+                return ajaxDataArr(1, $resultDatas, '');
+            });
+    }
 
     /**
      * @OA\Get(

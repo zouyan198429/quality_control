@@ -24,7 +24,7 @@ class Orders extends BasePublicModel
 
 //    public static $cacheSimple = 'U';// 表名简写,为空，则使用表名
 
-    public static $cacheVersion = '';// 内容随意改[可0{空默认为0}开始自增]- 如果运行过程中，有直接对表记录进行修改，增加或修改字段名，则修改此值，使表记录的相关缓存过期。
+    public static $cacheVersion = 'V1';// 内容随意改[可0{空默认为0}开始自增]- 如果运行过程中，有直接对表记录进行修改，增加或修改字段名，则修改此值，使表记录的相关缓存过期。
     // $cacheExcludeFields 为空：则缓存所有字段值；排除字段可能是大小很大的字段，不适宜进行缓存
     public static $cacheExcludeFields = [];// 表字段中排除字段; 有值：要小心，如果想获取的字段有在排除字段中的，则不能使用缓存
 
@@ -109,8 +109,16 @@ class Orders extends BasePublicModel
         '2' => '待退费',
     ];
 
+    // 付款状态1已关闭2待支付4支付失败8已付款
+//    public static $payStatusArr = [
+//        '1' => '已关闭',
+//        '2' => '待支付',
+//        '4' => '支付失败',
+//        '8' => '已付款',
+//    ];
+
     // 表里没有的字段
-    protected $appends = ['order_type_text', 'pay_method_text', 'order_status_text', 'has_refund_text'];
+    protected $appends = ['order_type_text', 'pay_method_text', 'order_status_text', 'has_refund_text'];// , 'pay_status_text'
 
 
     /**
@@ -152,6 +160,16 @@ class Orders extends BasePublicModel
     {
         return static::$hasRefundArr[$this->has_refund] ?? '';
     }
+
+    /**
+     * 获取付款状态文字
+     *
+     * @return string
+     */
+//    public function getPayStatusTextAttribute()
+//    {
+//        return static::$payStatusArr[$this->pay_status] ?? '';
+//    }
 
     /**
      * 获取报名学员-二维

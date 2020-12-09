@@ -316,6 +316,9 @@
                       <dd class="layui-nav-itemed">
                           <a href="javascript:;">收款设置</a>
                           <dl class="layui-nav-child">
+                              <dd><a lay-href="{{ url('admin/order_pay_method') }}">收款方式管理</a></dd>
+                          </dl>
+                          <dl class="layui-nav-child">
                               <dd><a lay-href="{{ url('admin/order_pay_config') }}">收款帐号列表</a></dd>
                           </dl>
                       </dd>

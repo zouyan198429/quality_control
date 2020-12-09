@@ -203,7 +203,7 @@ class CTAPICourseOrderStaffBusiness extends BasicPublicCTAPIBusiness
         if($join_class_status > 0)  Tool::appendParamQuery($queryParams, $join_class_status, 'join_class_status', [0, '0', ''], ',', false);
 
         $staff_status = CommonRequest::get($request, 'staff_status');
-        if($staff_status > 0)  Tool::appendParamQuery($queryParams, $staff_status, 'staff_status', [0, '0', ''], ',', false);
+        if(strlen($staff_status) > 0 && !in_array($staff_status, [0, -1]))  Tool::appendParamQuery($queryParams, $staff_status, 'staff_status', [0, '0', ''], ',', false);
 
 //        $ids = CommonRequest::get($request, 'ids');
 //        if(strlen($ids) > 0 && $ids != 0)  Tool::appendParamQuery($queryParams, $ids, 'id', [0, '0', ''], ',', false);
@@ -287,6 +287,16 @@ class CTAPICourseOrderStaffBusiness extends BasicPublicCTAPIBusiness
     {
         $company_id = $controller->company_id;
         $user_id = $controller->user_id;
+        // 获和记录，判断是否可以进行取消操作
+
+        $dataList = static::getFVFormatList( $request,  $controller, 1, 1
+            , ['id' => $id], false, [], []);
+        foreach($dataList as $info){
+            $tem_staff_status = $info['staff_status'];
+            $tem_pay_status = $info['pay_status'];
+            $tem_join_class_status = $info['join_class_status'];
+            if($tem_staff_status != 1 || $tem_pay_status != 1 || $tem_join_class_status != 1 ) throws('只有待缴费待分班且正常状态的人员可以进行操作');
+        }
         // 调用新加或修改接口
         $apiParams = [
             'company_id' => $company_id,
@@ -301,6 +311,276 @@ class CTAPICourseOrderStaffBusiness extends BasicPublicCTAPIBusiness
         return $modifyNum;
         // return static::delAjaxBase($request, $controller, '', $notLog);
 
+    }
+
+    /**
+     * 根据分班学员id，获得分班学员信息并判断是否可以进行分班操作
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param string $id 记录id，多个用逗号分隔
+     * @param int $operateType 操作类型 1：分班判断 【默认】； 2：取消分班判断 4：缴费判断
+     * @return  int 修改的数量   //   array 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function getClassStaffAndJudge(Request $request, Controller $controller, &$id, $operateType = 1){
+
+        // 获得学员列表信息
+        $extParams = [
+            // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+            'relationFormatConfigs'=> CTAPICourseOrderStaffBusiness::getRelationConfigs($request, $controller,
+                ['company_name' => '', 'course_name' =>'', 'class_name' =>'', 'staff_info' =>'', 'course_order_info' => ''] , []),
+
+        ];
+        $dataList = CTAPICourseOrderStaffBusiness::getFVFormatList( $request,  $controller, 1, 1
+            , ['id' => $id], false, [], $extParams);
+
+        foreach($dataList as $info){
+            $tem_staff_status = $info['staff_status'];
+            $tem_pay_status = $info['pay_status'];
+            $tem_join_class_status = $info['join_class_status'];
+            $tem_real_name = $info['real_name'];
+            $tem_mobile = $info['mobile'];
+
+            switch($operateType) {
+                case 1:// 分班判断 【默认】
+                    if($tem_join_class_status != 1 || $tem_staff_status != 1){
+                        throws('学员【' . $tem_real_name . '(' . $tem_mobile . ')'  . '】非待分班且正常状态，不可以进行此操作');
+                    }
+                    break;
+                case 2:// 取消分班判断
+                    if($tem_join_class_status != 4 || $tem_staff_status != 1){
+                        throws('学员【' . $tem_real_name . '(' . $tem_mobile . ')'  . '】非已分班且正常状态，不可以进行此操作');
+                    }
+                    break;
+                case 4:// 缴费判断
+                    if($tem_pay_status == 4 || $tem_staff_status == 4){
+                        throws('学员【' . $tem_real_name . '(' . $tem_mobile . ')'  . '】已缴费或已作废状态，不可以进行此操作');
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        return $dataList;
+    }
+
+    /**
+     * 分班操作
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param int $organize_id 操作的所属企业id 可以为0：没有所属企业--企业后台，操作用户时用来限制，只能操作自己企业的用户
+     * @param string/array $ids 数组或字符串 学员id
+     * @param int $class_id 班级id
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  int 修改的数量   //   array 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function joinedClassAjax(Request $request, Controller $controller, $organize_id = 0, $ids = 0, $class_id = 0, $notLog = 0)
+    {
+        $company_id = $controller->company_id;
+        $user_id = $controller->user_id;
+
+        // 调用新加或修改接口
+        $apiParams = [
+            'company_id' => $company_id,
+            'organize_id' => $organize_id,
+            'ids' => $ids,
+            'class_id' => $class_id,
+            'operate_staff_id' => $user_id,
+            'modifAddOprate' => 0,
+        ];
+        $modifyNum = static::exeDBBusinessMethodCT($request, $controller, '',  'joinClassById', $apiParams, $company_id, $notLog);
+
+        return $modifyNum;
+        // return static::delAjaxBase($request, $controller, '', $notLog);
+
+    }
+
+    /**
+     * 取消分班操作
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param int $organize_id 操作的所属企业id 可以为0：没有所属企业--企业后台，操作用户时用来限制，只能操作自己企业的用户
+     * @param string/array $ids 数组或字符串 学员id
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  int 修改的数量   //   array 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function cancelClassAjax(Request $request, Controller $controller, $organize_id = 0, $ids = 0, $notLog = 0)
+    {
+        $company_id = $controller->company_id;
+        $user_id = $controller->user_id;
+
+        // 调用新加或修改接口
+        $apiParams = [
+            'company_id' => $company_id,
+            'organize_id' => $organize_id,
+            'ids' => $ids,
+            'operate_staff_id' => $user_id,
+            'modifAddOprate' => 0,
+        ];
+        $modifyNum = static::exeDBBusinessMethodCT($request, $controller, '',  'cancelClassById', $apiParams, $company_id, $notLog);
+
+        return $modifyNum;
+        // return static::delAjaxBase($request, $controller, '', $notLog);
+
+    }
+
+    /**
+     * 生成订单操作
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param int $organize_id 操作的所属企业id 可以为0：没有所属企业--企业后台，操作用户时用来限制，只能操作自己企业的用户
+     * @param string/array $ids 数组或字符串 学员id
+     * @param int $pay_config_id 收款帐号配置id
+     * @param int $pay_method 收款方式id
+     * @param array $otherParams 其它参数
+     *   $otherParams = [
+     *      'payment_amount' => 0,// 总支付金额
+     *      'change_amount' => 0,// 找零金额
+     *       'remarks' => '',// 订单备注
+     *  ];
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  array
+     *  [
+     *    'order_no' =>$order_no ,
+     *    'pay_config_id' => $pay_config_id,
+     *    'pay_method' => $pay_method,
+     *    'params' => $return_params
+     *   ]
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function createOrderAjax(Request $request, Controller $controller, $organize_id = 0, $ids = 0, $pay_config_id = 0, $pay_method = 0, $otherParams = [], $notLog = 0)
+    {
+        $company_id = $controller->company_id;
+        $user_id = $controller->user_id;
+
+        // 调用新加或修改接口
+        $apiParams = [
+            'company_id' => $company_id,
+            'organize_id' => $organize_id,
+            'ids' => $ids,
+            'pay_config_id' => $pay_config_id,
+            'pay_method' => $pay_method,
+            'otherParams' => $otherParams,
+            'operate_staff_id' => $user_id,
+            'modifAddOprate' => 0,
+        ];
+        $reData = static::exeDBBusinessMethodCT($request, $controller, '',  'createOrder', $apiParams, $company_id, $notLog);
+
+        return $reData;
+        // return static::delAjaxBase($request, $controller, '', $notLog);
+
+    }
+
+    /**
+     * 根据报名用户id,获得报名用户及支付信息
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param int $id 操作的所属企业id 可以为0：没有所属企业--企业后台，操作用户时用来限制，只能操作自己企业的用户
+     * @param int $company_id 所属企业id , 没有
+     * @return  array 数组 [ '报名用户数据列表'， '用户包含的收款帐号信息-- 支付配置id为下标的二维数组']
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function getPayStaffByIds(Request $request, Controller $controller, $id, $company_id = 0){
+
+        $dataList = CTAPICourseOrderStaffBusiness::getClassStaffAndJudge($request, $controller, $id, 4);
+        // 判断人员是否可以一起缴费【同一收款帐号，就可以付费】
+        $class_ids = Tool::getArrFields($dataList, 'class_id');
+        $course_ids = Tool::getArrFields($dataList, 'course_id');
+
+        $classFormatList = CTAPICourseClassBusiness::getClassPayList($request, $controller, $class_ids);// 以班级id为下标的二维数组
+        $courseFormatList = CTAPICourseBusiness::getCoursePayList($request, $controller, $course_ids);// 以课程id为下标的二维数组
+
+        $pay_configs = [];// 课程id_班级id 为下标的 支付配置 二维数组
+        $pay_configs_format = [];// 支付配置id为下标的二维数组
+        foreach($dataList as &$t_info){
+            $tem_class_id = $t_info['class_id'];
+            $tem_course_id = $t_info['course_id'];
+            $tem_company_id = $t_info['company_id'];
+            $tem_real_name = $t_info['real_name'];
+            $tem_mobile = $t_info['mobile'];
+            $tem_pay_config = $pay_configs[$tem_course_id . '_' . $tem_class_id] ?? [];
+            if(empty($tem_pay_config)){
+                // 班级信息
+                $tem_pay_config_class = $classFormatList[$tem_class_id] ?? [];
+                $tem_pay_config_class_format = [];
+                // 有班级信息，则判断状态及是否有配置收款帐号信息
+                if(!empty($tem_pay_config_class)){
+                    $tem_class_status = $tem_pay_config_class['class_status'] ?? 0;// 班级状态1待开班2开班中4已作废8已结业
+                    $tem_class_pay_config_id = $tem_pay_config_class['pay_config_id'] ?? 0;
+                    if(in_array($tem_class_status, [4])) throws('已作废班级不可进行缴费操作');
+                    if(is_numeric($tem_class_pay_config_id) && $tem_class_pay_config_id > 0) $tem_pay_config_class_format = Tool::getArrFormatFields($tem_pay_config_class, ['pay_config_id', 'pay_method_text', 'pay_method', 'allow_pay_method', 'pay_key', 'pay_company_name'], false);
+
+                }
+                // 课程信息
+                $tem_pay_config_course = $courseFormatList[$tem_course_id] ?? [];
+                if(empty($tem_pay_config_course)) throws('学员【' . $tem_real_name . '(' . $tem_mobile . ')'  . '】课程信息不存在');
+
+                // 判断课程状态
+//                $tem_course_status_online = $tem_pay_config_course['status_online'];// 状态(1正常(报名中)  2下架)
+//                if(!in_array($tem_course_status_online, [1])) throws('课程非正常状态，不可进行缴费操作');
+
+                $tem_pay_config_course_format = Tool::getArrFormatFields($tem_pay_config_course, ['pay_config_id', 'pay_method_text', 'pay_method', 'allow_pay_method', 'pay_key', 'pay_company_name'], false);
+                $tem_pay_config = array_merge($tem_pay_config_course_format, $tem_pay_config_class_format);// 班级的优先
+                $pay_configs[$tem_course_id . '_' . $tem_class_id] = $tem_pay_config;
+                $pay_configs_format[$tem_pay_config['pay_config_id']] = $tem_pay_config;
+            }
+            if(empty($tem_pay_config)) throws('学员【' . $tem_real_name . '(' . $tem_mobile . ')'  . '】没有收款方式，不可以进行此操作');
+            $t_info = array_merge($t_info, $tem_pay_config);
+            if(is_numeric($company_id) && $company_id > 0 && $company_id != $tem_company_id) throws('学员【' . $tem_real_name . '(' . $tem_mobile . ')'  . '】不是当前所属的企业，不可以进行此操作');
+
+        }
+        return [$dataList , $pay_configs_format];
+    }
+
+    /**
+     * 选择完收款帐号及支付方式时，获得相关的数据
+     * 根据报名用户id,及收款账号和收款方式 获得报名用户及支付信息
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param int $id 操作的所属企业id 可以为0：没有所属企业--企业后台，操作用户时用来限制，只能操作自己企业的用户
+     * @param int $company_id 所属企业id , 没有
+     * @return  array 数组 [ '当前支付方式的详情-一维数组', '报名用户数据列表--收款帐号id下标的数组'， '用户包含的收款帐号信息-- 支付配置id为下标的二维数组']
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function getMethodInfoAndStaffList(Request $request, Controller $controller, $id, $company_id = 0, $pay_config_id = 0, $pay_method = 0){
+
+        if($pay_config_id <= 0 || $pay_method <= 0) throws('缴费方式信息有误');
+
+        // 获得收款方式详情
+        $extParams = [
+            // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+            'relationFormatConfigs'=> CTAPIOrderPayMethodBusiness::getRelationConfigs($request, $controller, ['resource_list'], []),
+
+        ];
+        $payMethodInfo = CTAPIOrderPayMethodBusiness::getFVFormatList( $request,  $controller, 4, 1
+            , ['pay_method' => $pay_method], false, [], $extParams);
+        if(empty($payMethodInfo)) throws('收款方式不存在');
+        if($payMethodInfo['status_online'] != 1) throws('收款方式【' . $payMethodInfo['pay_name'] . '】已关闭');
+//        $reDataArr['method_info'] = $payMethodInfo;
+
+        // 根据报名用户id,获得报名用户及支付信息
+        list($dataList, $pay_configs_format) = CTAPICourseOrderStaffBusiness::getPayStaffByIds($request, $controller, $id, $company_id);
+        $dataPanyConfigList = Tool::arrUnderReset($dataList, 'pay_config_id', 2, '_');
+
+        // $reDataArr['course_order_staff'] = $dataList;
+//        $reDataArr['pay_config_format'] = $pay_configs_format;
+//        $reDataArr['config_staff_list'] = $dataPanyConfigList;
+
+        // 判断收款账号及选择的收款方式是否正确
+        if(count($pay_configs_format) != 1) throws('收款账号信息有误');
+        $payConfigInfo = $pay_configs_format[$pay_config_id] ?? [];
+        if(empty($payConfigInfo)) throws('收款账号参数有误');
+        $pay_config_method = $payConfigInfo['pay_method'] ?? 0;
+        if(($pay_config_method & $pay_method) != $pay_method)  throws('缴费方式不可用，请重新选择或重新刷新页面再缴费');
+        return [$payMethodInfo , $dataPanyConfigList, $pay_configs_format];
     }
 
 }

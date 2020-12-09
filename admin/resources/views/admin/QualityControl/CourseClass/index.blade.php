@@ -25,6 +25,12 @@
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
 
+          <select class="wmini" name="course_id" style="width: 80px;">
+              <option value="">所属课程</option>
+              @foreach ($course_id_kv as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultCourseId) && $defaultCourseId == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
           <select class="wmini" name="city_id" style="width: 80px;">
               <option value="">城市</option>
               @foreach ($citys_kv as $k=>$txt)
@@ -73,6 +79,7 @@
 {{--        <col width="60">--}}
         <col>
         <col width="75">
+        <col width="75">
         <col>
         <col>
         <col width="100">
@@ -92,6 +99,7 @@
 {{--      </th>--}}
 {{--      <th>ID</th>--}}
       <th>培训班名称</th>
+        <th>所属课程</th>
       <th>开班城市</th>
       <th>备注</th>
         <th>收款帐号</th>
@@ -147,6 +155,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/CourseClass.js') }}?1"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/CourseClass.js') }}?3"  type="text/javascript"></script>
 </body>
 </html>

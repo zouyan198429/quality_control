@@ -138,4 +138,140 @@ class CourseOrderDBBusiness extends BasePublicDBBusiness
         return $id;
     }
 
+    /**
+     * 处理报名主表的分班状态、及缴费状态
+     *
+     * @param int  $company_id 企业id
+     * @param int $organize_id 操作的所属企业id 可以为0：没有所属企业--企业后台，操作用户时用来限制，只能操作自己企业的用户
+     * @param int $id 报名主表id
+     * @param int $operate_staff_id 操作人id
+     * @param int $modifAddOprate 修改时是否加操作人，1:加;0:不加[默认]
+     * @return  int 修改的数量   //  array 记录id值，--一维数组
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function updateClassAndPay($company_id, $organize_id = 0, $id = 0, $operate_staff_id = 0, $modifAddOprate = 0, $operate_staff_id_history = 0){
+        $modifyNum = 0;
+        // 获得订单主表
+        $orderInfo = static::getDBFVFormatList(4, 1, ['id' => $id]);
+        if(empty($orderInfo)) throws('班级[' . $id . ']信息不存在！');
+        // if(!in_array($orderInfo['company_status'], [1])) throws('班级[' . $id . ']非正常状态，不能分配学员！');
+
+        // 获得学员信息
+        $orderStaffList = CourseOrderStaffDBBusiness::getDBFVFormatList(1, 1, ['course_order_id' => $id],false);
+        // if(empty($orderStaffList)) throws('需要分配班级的学员不能为空！');
+        $join_class_status = [];// 分班状态(1待分班、2部分分班、4已分班)
+        $pay_status = [];//  缴费状态(1待缴费、2部分缴费、4已缴费、8部分退费、16已退费 )
+        foreach($orderStaffList as $info){
+            $tem_id = $info['id'];
+            $tem_staff_status = $info['staff_status'];// 人员状态1正常4已作废8已结业
+            $tem_pay_status = $info['pay_status'];//  缴费状态(1待缴费、2部分缴费、4已缴费、8部分退费、16已退费 )
+            $tem_join_class_status = $info['join_class_status'];// 分班状态(1待分班、4已分班)
+            // 只看正常的和已结业的
+            if(in_array($tem_staff_status, [4])) continue;
+            if(!in_array($tem_pay_status, $pay_status)) array_push($pay_status, $tem_pay_status);
+            if(!in_array($tem_join_class_status, $join_class_status)) array_push($join_class_status, $tem_join_class_status);
+        }
+        $new_pay_status = 1;// $orderInfo['pay_status'];
+        $new_join_class_status = 1;// $orderInfo['join_class_status'];
+        if(in_array(1, $join_class_status) && in_array(4, $join_class_status)){// 部分分班
+            $new_join_class_status = 2;
+        }else if(!in_array(1, $join_class_status) && in_array(4, $join_class_status)){// 4已分班[所有学员]
+            $new_join_class_status = 4;
+        }
+
+        if(in_array(1, $pay_status) && in_array(4, $pay_status)){// 2部分缴费
+            $new_pay_status = 2;
+        }elseif(!in_array(1, $pay_status) && in_array(4, $pay_status) && in_array(16, $pay_status)){// 部分退费
+            $new_pay_status = 8;
+        }elseif(!in_array(1, $pay_status) && in_array(4, $pay_status) && !in_array(16, $pay_status)){// 已缴费[所有]
+            $new_pay_status = 4;
+        }
+        // 没有变化
+        if($new_pay_status == $orderInfo['pay_status'] && $new_join_class_status == $orderInfo['join_class_status']) return $modifyNum;
+
+        // $ownProperty  自有属性值;
+        // $temNeedStaffIdOrHistoryId 当只有自己会用到时操作员工id和历史id时，用来判断是否需要获取 true:需要获取； false:不需要获取
+        list($ownProperty, $temNeedStaffIdOrHistoryId) = array_values(static::getNeedStaffIdOrHistoryId());
+
+        CommonDB::doTransactionFun(function() use(&$company_id, &$organize_id, &$id, &$operate_staff_id, &$modifAddOprate
+            , &$modifyNum, &$ownProperty, &$temNeedStaffIdOrHistoryId, &$operate_staff_id_history, &$orderInfo, &$orderStaffList, &$new_pay_status, &$new_join_class_status){
+
+
+            if($temNeedStaffIdOrHistoryId && $modifAddOprate){
+                $temInfo = [];
+                static::addOprate($temInfo, $operate_staff_id,$operate_staff_id_history, 1);
+            }
+
+            $update = [
+                'pay_status' => $new_pay_status,//  缴费状态(1待缴费、2部分缴费、4已缴费、8部分退费、16已退费 )
+                'join_class_status' => $new_join_class_status,// 分班状态(1待分班、2部分分班、4已分班)
+            ];
+            static::replaceById($update, $company_id, $id, $operate_staff_id, $modifAddOprate);
+            // 记录日志
+            CourseLogDBBusiness::saveCourseLog($orderInfo['course_id'], $id, 0, 0, 0,
+                '更新缴费或分班状态', $operate_staff_id, $operate_staff_id_history);
+            $modifyNum = 1;
+
+        });
+        return $modifyNum;
+
+    }
+
+    /**
+     * 订单完成支付时，对相关数据的处理--单条记录
+     *
+     * @param int  $company_id 企业id
+     * @param int  $course_order_id 报名企业记录id
+     * @param int  $orderItemNum 订单报人学员数量
+     * @param int $operate_staff_id 操作人id
+     * @param int $modifAddOprate 修改时是否加操作人，1:加;0:不加[默认]
+     * @return  null
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function finishPay($company_id, $course_order_id = 0, $orderItemNum = 0, $operate_staff_id = 0, $modifAddOprate = 0){
+
+        $courseOrderInfo = static::getInfo($course_order_id);
+        if(empty($courseOrderInfo))  throws('报名企业记录不存在！');
+        // 获得待缴费的人员数量
+        $temCourseOrderStaffNum = CourseOrderStaffDBBusiness::getDBFVFormatList(8, 1, ['course_order_id' => $course_order_id, 'pay_status' => [1,2], 'staff_status' => [1,8]]);
+        $temSave = [
+            // 'pay_status' => 2, //  缴费状态(1待缴费、2部分缴费、4已缴费、8部分退费、16已退费 )
+            'pay_date' => date('Y-m-d'),
+            'pay_time' => date('Y-m-d H:i:s'),
+        ];
+        $temPayStatus = $courseOrderInfo['pay_status'];
+        if($temPayStatus == 4) throws('不可重复缴费！');
+        if($temPayStatus == 16) throws('已退费！');
+        $temNewStatus = 2;
+        if($temCourseOrderStaffNum <= $orderItemNum){// 都缴费了
+            switch($temPayStatus){
+                case 1:// 1待缴费
+                case 2:// 2部分缴费
+                    $temNewStatus = 4;
+                    break;
+                case 8:// 8部分退费
+                    $temNewStatus = 8;
+                    break;
+                default:
+                    break;
+            }
+        }else{
+            switch($temPayStatus){
+                case 1:// 1待缴费
+                    $temNewStatus = 2;
+                    break;
+                case 2:// 2部分缴费
+                    $temNewStatus = 2;
+                    break;
+                case 8:// 8部分退费
+                    $temNewStatus = 8;
+                    break;
+                default:
+                    break;
+            }
+        }
+        $temSave['pay_status'] = $temNewStatus;
+        static::saveById($temSave, $course_order_id);
+    }
+
 }

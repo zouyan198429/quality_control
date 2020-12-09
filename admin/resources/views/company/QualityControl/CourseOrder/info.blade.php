@@ -24,6 +24,12 @@
                     {{ $info['course_name'] ?? '' }}
                 </td>
             </tr>
+            <tr>
+                <th>报名状态</th>
+                <td>
+                    {{ $info['company_status_text'] ?? '' }}
+                </td>
+            </tr>
 {{--            <tr>--}}
 {{--                <th>企业名称</th>--}}
 {{--                <td>--}}

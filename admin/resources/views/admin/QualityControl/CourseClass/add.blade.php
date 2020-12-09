@@ -20,6 +20,14 @@
         <input type="hidden" name="id" value="{{ $info['id'] ?? 0 }}"/>
         <table class="table1">
             <tr>
+                <th>所属课程<span class="must"></span></th>
+                <td>
+                    @foreach ($course_id_kv as $k=>$txt)
+                        <label><input type="radio"  name="course_id"  value="{{ $k }}"  @if(isset($defaultCourseId) && $defaultCourseId == $k) checked="checked"  @endif />{{ $txt }} </label>
+                    @endforeach
+                </td>
+            </tr>
+            <tr>
                 <th>班级名称<span class="must">*</span></th>
                 <td>
                     <input type="text" class="inp wnormal"  name="class_name" value="{{ $info['class_name'] ?? '' }}" placeholder="请输入班级名称"/>
@@ -89,6 +97,6 @@
 
     var PAY_CONFIG_INFO_URL = "{{ url('api/admin/order_pay_config/ajax_info') }}";// ajax获得支付方式详情记录地址
 </script>
-<script src="{{ asset('/js/admin/QualityControl/CourseClass_edit.js') }}?2"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/CourseClass_edit.js') }}?4"  type="text/javascript"></script>
 </body>
 </html>

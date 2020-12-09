@@ -6,6 +6,7 @@ use App\Business\Controller\API\QualityControl\CTAPICourseBusiness;
 use App\Business\Controller\API\QualityControl\CTAPICourseOrderBusiness;
 use App\Business\Controller\API\QualityControl\CTAPICourseOrderStaffBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIOrderPayConfigBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIOrderPayMethodBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIResourceBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
 use App\Http\Controllers\WorksController;
@@ -24,7 +25,7 @@ class CourseController extends BasicController
      *
      * @param Request $request
      * @return mixed
-     * @author zouyan(305463219@qq.com)
+     * @author zouyan(305463219@qq.com) 下载
      */
     public function index(Request $request)
     {
@@ -340,7 +341,8 @@ class CourseController extends BasicController
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                 'relationFormatConfigs'=> CTAPICourseBusiness::getRelationConfigs($request, $this, ['resource_list', 'course_order_company'], []),
-                'infoHandleKeyArr' => ['resetPayMethod'],
+                // 'infoHandleKeyArr' => ['resetPayMethod'],
+                'listHandleKeyArr' => ['initPayMethodText'],
                 'sqlParams' => ['where' => [['status_online', 1]]]
             ];
             return  CTAPICourseBusiness::getList($request, $this, 2 + 4, [], [], $extParams);
@@ -572,7 +574,7 @@ class CourseController extends BasicController
         $reDataArr['defaultPayConfig'] = -1;// 默认
 
         // 收款开通类型(1现金、2微信支付、4支付宝)
-        $reDataArr['payMethod'] =  OrderPayConfig::$payMethodArr;
+        $reDataArr['payMethod'] =  CTAPIOrderPayMethodBusiness::getListKV($request, $this, ['key' => 'pay_method', 'val' => 'pay_name']);
         $reDataArr['defaultPayMethod'] = -1;// 列表页默认状态
         // $reDataArr['payMethodDisable'] = OrderPayConfig::$payMethodDisable;// 不可用的--禁用
     }
@@ -615,7 +617,8 @@ class CourseController extends BasicController
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                 'relationFormatConfigs'=> CTAPICourseBusiness::getRelationConfigs($request, $this, ['resource_list', 'course_content', 'course_order_company'], []),
-                'infoHandleKeyArr' => ['resetPayMethod'],
+                // 'infoHandleKeyArr' => ['resetPayMethod'],
+                'listHandleKeyArr' => ['initPayMethodText'],
                 'sqlParams' => ['where' => [['status_online', 1]]]
             ];
             $info = CTAPICourseBusiness::getInfoData($request, $this, $id, [], '', $extParams);
@@ -635,7 +638,7 @@ class CourseController extends BasicController
         $reDataArr['defaultPayConfig'] = $info['pay_config_id'] ?? -1;// 默认
 
         // 收款开通类型(1现金、2微信支付、4支付宝)
-        $reDataArr['payMethod'] =  OrderPayConfig::$payMethodArr;
+        $reDataArr['payMethod'] =  CTAPIOrderPayMethodBusiness::getListKV($request, $this, ['key' => 'pay_method', 'val' => 'pay_name']);
         $reDataArr['defaultPayMethod'] = $info['pay_method'] ?? -1;// 列表页默认状态
         // $reDataArr['payMethodDisable'] = OrderPayConfig::$payMethodDisable;// 不可用的--禁用
 

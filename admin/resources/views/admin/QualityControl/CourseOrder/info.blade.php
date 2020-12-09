@@ -25,6 +25,12 @@
                 </td>
             </tr>
             <tr>
+                <th>报名状态</th>
+                <td>
+                    {{ $info['company_status_text'] ?? '' }}
+                </td>
+            </tr>
+            <tr>
                 <th>企业名称</th>
                 <td>
                     {{ $info['company_name'] ?? '' }}
@@ -136,7 +142,7 @@
 <script type="text/javascript">
     var SAVE_URL = "{{ url('api/admin/course_order/ajax_save') }}";// ajax保存记录地址
     var LIST_URL = "{{url('admin/course_order')}}";//保存成功后跳转到的地址
-    
+
     var DYNAMIC_TABLE = 'dynamic-table';//动态表格id
 </script>
 <script src="{{ asset('/js/admin/QualityControl/CourseOrder_info.js') }}?1"  type="text/javascript"></script>

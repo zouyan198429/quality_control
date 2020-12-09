@@ -2,6 +2,7 @@
 //培训班管理
 namespace App\Business\Controller\API\QualityControl;
 
+use App\Business\DB\QualityControl\OrderPayConfigDBBusiness;
 use App\Models\QualityControl\OrderPayConfig;
 use App\Services\DBRelation\RelationDB;
 use App\Services\Excel\ImportExport;
@@ -98,6 +99,15 @@ class CTAPICourseClassBusiness extends BasicPublicCTAPIBusiness
                     static::getUboundRelation($relationArr, 'city_info'),
                     static::getUboundRelationExtendParams($extendParams, 'city_info')),
                 [], '', []),
+            // 获得课程名称
+            'course_name' => CTAPICourseBusiness::getTableRelationConfigInfo($request, $controller
+                , ['course_id' => 'id']
+                , 1, 2
+                ,'','',
+                CTAPICourseBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'course_name'),
+                    static::getUboundRelationExtendParams($extendParams, 'course_name')),
+                [], '', []),
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }
@@ -141,6 +151,9 @@ class CTAPICourseClassBusiness extends BasicPublicCTAPIBusiness
     public static function joinListParams(Request $request, Controller $controller, &$queryParams, $notLog = 0){
         // 自己的参数查询拼接在这里-- 注意：多个id 的查询默认就已经有了，参数是 ids  多个用逗号分隔
 
+        $course_id = CommonRequest::get($request, 'course_id');
+        if(strlen($course_id) > 0 && $course_id != '-1')  Tool::appendParamQuery($queryParams, $course_id, 'course_id', [0, '0', ''], ',', false);
+
         $city_id = CommonRequest::getInt($request, 'city_id');
         if($city_id > 0 )  array_push($queryParams['where'], ['city_id', '=', $city_id]);
 
@@ -162,6 +175,33 @@ class CTAPICourseClassBusiness extends BasicPublicCTAPIBusiness
     }
 
     /**
+     * 格式化关系数据 --如果有格式化，肯定会重写---本地数据库主要用这个来格式化数据
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $main_list 关系主记录要格式化的数据
+     * @param array $data_list 需要格式化的从记录数据---二维数组(如果是一维数组，是转成二维数组后的数据)
+     * @param array $handleKeyArr 其它扩展参数，// 一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。--名称关键字，尽可能与关系名一样
+     * @param array $returnFields  新加入的字段['字段名1' => '字段名1' ]
+     * @return array  新增的字段 一维数组
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function handleRelationDataFormat(Request $request, Controller $controller, &$main_list, &$data_list, $handleKeyArr, &$returnFields = []){
+        // if(empty($data_list)) return $returnFields;
+        // 重写开始
+
+        // 组织支付方式文字【去掉非上线的支付方式】
+        if(in_array('initPayMethodText', $handleKeyArr)){
+            $disablePayMethod = [];
+            $payKVList = [];
+            OrderPayConfigDBBusiness::formatConfigPayMethodAppendMethodText($data_list, $disablePayMethod, $payKVList, $returnFields);
+        }
+
+        // 重写结束
+        return $returnFields;
+    }
+
+    /**
      * 对单条数据关系进行格式化--具体的可以重写
      * @param Request $request 请求信息
      * @param Controller $controller 控制对象
@@ -176,15 +216,43 @@ class CTAPICourseClassBusiness extends BasicPublicCTAPIBusiness
     public static function infoRelationFormatExtend(Request $request, Controller $controller, &$info, &$temDataList, $infoHandleKeyArr, &$returnFields){
         // if(empty($info)) return $returnFields;
         // $returnFields[$tem_ubound_old] = $tem_ubound_old;
-        if(in_array('resetPayMethod', $infoHandleKeyArr)){
-
-            // 支付方式-实时处理
-            OrderPayConfig::unionPayMethod($info, 'pay_method','pay_config_id');
-            OrderPayConfig::getPayMethodText($info, 'pay_method');
-//            $info['resource_list'] = $resource_list;
-//            $returnFields['resource_list'] = 'resource_list';
-        }
+//        if(in_array('resetPayMethod', $infoHandleKeyArr)){
+//
+//            // 支付方式-实时处理
+//            OrderPayConfig::unionPayMethod($info, 'pay_method','pay_config_id');
+//            OrderPayConfig::getPayMethodText($info, 'pay_method');
+////            $info['resource_list'] = $resource_list;
+////            $returnFields['resource_list'] = 'resource_list';
+//        }
 
         return $returnFields;
+    }
+
+    /**
+     * 根据班级id信息，获得班级及班级支付配置信息
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array / string $class_ids  班级id 一维数组，或 字符 --多个逗号分隔
+     * @return array  以班级id为下标的二维数组
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function getClassPayList(Request $request, Controller $controller, $class_ids = []){
+        Tool::formatOneArrVals($class_ids);// 去掉 0
+        $classFormatList = [];// 以班级id为下标的二维数组
+        if(!empty($class_ids)){
+            $handleKeyConfigArr = [];
+            $extParams = [
+                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                'relationFormatConfigs'=> CTAPICourseClassBusiness::getRelationConfigs($request, $controller, $handleKeyConfigArr, []),
+                // 'infoHandleKeyArr' => ['resetPayMethod']
+                'listHandleKeyArr' => ['initPayMethodText']
+            ];
+            $classList = CTAPICourseClassBusiness::getFVFormatList( $request,  $controller, 1, 1
+                , ['id' => $class_ids], false, [], $extParams);
+
+            $classFormatList = Tool::arrUnderReset($classList, 'id', 1, '_');
+        }
+        // pr($classFormatList);
+        return $classFormatList;
     }
 }

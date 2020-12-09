@@ -428,6 +428,148 @@ function btn_go(objThis, pageType){
     }
 }
 
+//多少秒后关闭弹窗---间隔一定的时间循环执行一个方法或函数
+//sec_num 秒数-总共执行多少秒 ； 0 -没有限止
+// each_sec_num 多少时间执行一次 毫秒--默认 1000[1秒]
+// loopFun 每次循环要执行的方法
+//        参数
+//            intervalId setInterval执行的id
+//            close_loop 对象 有 is_close 属性【可控制开关】 ：是否关闭循环 true：关闭 ;false不关闭
+//            loopedSec  记录已执行的毫秒数 [计时开始]
+//            loop_num  执行次数  1，2，3...
+// secFun 每一分钟循环要执行的方法
+//        参数
+//            intervalLoopId setInterval执行的id
+//            close_loop 对象 有 is_close 属性【可控制开关】 ：是否关闭循环 true：关闭 ;false不关闭
+//            do_sec_num  倒记的秒数 如果10秒倒计时： 9，8，7，...0
+//            do_num 执行次数  1，2，3...
+//样例 // 如：执行10秒，每一秒执行一次循环
+// loopDoingFun(10, 1000, function (intervalId, close_loop, loopedSec, loop_num) {
+//     console.log('===每次循环的方法开始==1=');
+//     console.log('=1==intervalId===', intervalId);
+//     console.log('=1==close_loop===', close_loop);
+//     console.log('=1==loopedSec===', loopedSec);
+//     console.log('=1==loop_num===', loop_num);
+//     if(loop_num >= 20) {// 执行次数关闭
+//         // clearInterval(intervalId);
+//         // close_loop.is_close = true; // -- 一般用这个控制开关
+//     }
+// }, function (intervalLoopId, close_loop, do_sec_num, do_num) {
+//     console.log('===每分钟循环的方法开始==2=');
+//     console.log('=2==intervalLoopId===', intervalLoopId);
+//     console.log('=2==close_loop===', close_loop);
+//     console.log('=2==do_sec_num===', do_sec_num);
+//     console.log('=2==do_num===', do_num);
+//     if(do_num >= 10) {// 执行次数关闭
+//         // clearInterval(intervalLoopId);
+//         // close_loop.is_close = true; // -- 一般用这个控制开关
+//     }
+// });
+function loopDoingFun(sec_num, each_sec_num, loopFun, secFun){
+    console.log('loopDoingFun begin');
+    sec_num = sec_num || 0;
+    var do_sec_num = sec_num;
+    if(judge_judge_digit(do_sec_num) === false){
+        do_sec_num = 0;
+    }
+    each_sec_num = each_sec_num || 1000;
+    var close_loop = { is_close: false};//是否关闭循环 true：关闭 ;false不关闭
+    var autoLoopDoFunObj = new Object();
+    var sec_i = 0;// 执行次数
+    autoLoopDoFunObj.eachSecFun = function(){// 每一分钟要执行的方法
+        if(close_loop.is_close === true){// 初其它地方设置为关闭了
+            clearInterval(intervalLoopId);
+        }
+        // 执行方法
+        sec_i += 1;// 执行次数
+        if(close_loop.is_close === false){
+            secFun && secFun(intervalLoopId, close_loop, do_sec_num - 1, sec_i);
+        }
+        if(sec_num > 0 && do_sec_num > 1){//是数字且大于0
+            do_sec_num--;
+        }else{//关闭弹窗
+            if(sec_num > 0){
+                close_loop.is_close = true;
+                clearInterval(intervalLoopId);
+            }
+        }
+    };
+
+    // 记时
+    // if(sec_num > 0){
+    var intervalLoopId =setInterval(autoLoopDoFunObj.eachSecFun,1000);
+    // }
+
+    // 执行的代码-多少毫秒
+    var loopedSec = 0;// 记录已执行的毫秒数
+    var loop_doed_i = 0;// 已经执行的次数
+    autoLoopDoFunObj.loopExeFun = function(){
+        // 执行方法
+        loopedSec += each_sec_num;
+        loop_doed_i += 1;
+        loopFun && loopFun(intervalId, close_loop, loopedSec, loop_doed_i);
+        if(close_loop.is_close === true){// 到时间了
+            clearInterval(intervalId);
+        }
+    };
+    var intervalId =setInterval(autoLoopDoFunObj.loopExeFun,each_sec_num);
+    console.log('loopDoingFun foot');
+}
+
+// ****************qrcode插件 显示二维码***************开始*******************
+// 注意使用需要引用js jquery.qrcode.min.js
+
+// qrcode插件 显示二维码 --  默认使用canvas方式
+// 参数：
+//    idName 显示二维码的id名称；如 ： qrcode
+//    qrContent 二维码的内容 如： "http://www.helloweba.com"
+function showCodeCanvas(idName, qrContent) {
+    $('#' + idName).qrcode(toUtf8QRCode(qrContent)); //任意字符串
+}
+
+// qrcode插件 显示二维码 --  table方式
+// 参数：
+//    idName 显示二维码的id名称；如 ： qrcode
+//    qrContent 二维码的内容 如： "http://www.helloweba.com"
+//    width 二维码的宽度 不传默认250 ；小于此值可能扫码失败
+//    height 二维码的高度 不传默认250；小于此值可能扫码失败
+function showQRCodeTable(idName, qrContent, width, height){
+    width = width || 250;
+    height = height || 250;
+    $("#" + idName).qrcode({
+        render: "table", //table方式
+        width: width, //宽度
+        height:height, //高度
+        text: toUtf8QRCode(qrContent) //任意内容
+    });
+}
+// 识别中文
+// 我们试验的时候发现不能识别中文内容的二维码，通过查找多方资料了解到，jquery-qrcode是采用charCodeAt()方式进行编码转换的。
+// 而这个方法默认会获取它的Unicode编码，如果有中文内容，在生成二维码前就要把字符串转换成UTF-8，然后再生成二维码。
+// 您可以通过以下函数来转换中文字符串：
+//
+function toUtf8QRCode(str) {
+    var out, i, len, c;
+    out = "";
+    len = str.length;
+    for(i = 0; i < len; i++) {
+        c = str.charCodeAt(i);
+        if ((c >= 0x0001) && (c <= 0x007F)) {
+            out += str.charAt(i);
+        } else if (c > 0x07FF) {
+            out += String.fromCharCode(0xE0 | ((c >> 12) & 0x0F));
+            out += String.fromCharCode(0x80 | ((c >>  6) & 0x3F));
+            out += String.fromCharCode(0x80 | ((c >>  0) & 0x3F));
+        } else {
+            out += String.fromCharCode(0xC0 | ((c >>  6) & 0x1F));
+            out += String.fromCharCode(0x80 | ((c >>  0) & 0x3F));
+        }
+    }
+    return out;
+}
+
+// ****************qrcode插件 显示二维码***************结束*******************
+
 // -----------json对象--属性相关的操作---------------------
 //是否有对象属性 ；有属性：true ;无属性:false  undefined/null:返回true -- 对 数组同样试用
 // obj 要判断的对象

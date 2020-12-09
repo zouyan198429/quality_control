@@ -62,7 +62,24 @@ class StaffDBBusiness extends BasePublicDBBusiness
 //            throws($e->getMessage());
 //            // throws($e->getMessage());
 //        }
-        return CommonDB::doTransactionFun(function() use(&$saveData, &$company_id, &$id, &$operate_staff_id, &$modifAddOprate){
+        // CMA证书号
+        $certificate_info = [];
+        $certificate_no = '';
+        $has_certificate_no = false;// 是否有 false:没有 ； true:有
+        if(isset($saveData['company_certificate_no']) && isset($saveData['ratify_date'])  && isset($saveData['valid_date']) && isset($saveData['laboratory_addr']) ){
+            if(Tool::getInfoUboundVal($saveData, 'company_certificate_no', $has_certificate_no, $certificate_no, 0)){
+
+                $certificate_info = [
+                    'company_id' => $id,
+                    'certificate_no' => $certificate_no,
+                    'ratify_date' => $saveData['ratify_date'] ?? '',
+                    'valid_date' => $saveData['valid_date'] ?? '',
+                    'addr' => $saveData['laboratory_addr'] ?? '',
+                ];
+            }
+        }
+        return CommonDB::doTransactionFun(function() use(&$saveData, &$company_id, &$id, &$operate_staff_id, &$modifAddOprate
+            , &$certificate_info, &$certificate_no, &$has_certificate_no){
 
             if(isset($saveData['real_name']) && empty($saveData['real_name'])  ){
                 throws('真实姓名不能为空！');
@@ -361,6 +378,24 @@ class StaffDBBusiness extends BasePublicDBBusiness
                 }
             }else if($forceCompanyNum && !empty($companyNumIds)){// 修改时 需要强制更新员工数量
                 static::updateStaffNum($companyNumIds);
+            }
+
+            // 有证书
+            if($has_certificate_no){
+                $certificate_info = array_merge($certificate_info, ['company_id' => $id,'operate_staff_id' => $operate_staff_id, 'operate_staff_id_history' => $operate_staff_id_history]);
+
+                $certificateObj = null ;
+                $searchConditon = [
+                    'company_id' => $certificate_info['company_id'],
+                    // 'certificate_no' => $certificate_info['certificate_no'],// 一个企业只能有一个证书，所以去掉这个字段
+                ];
+                CertificateDBBusiness::updateOrCreate($certificateObj, $searchConditon, $certificate_info);
+                $saveData['certificate_id'] = $certificateObj->id;// $certificate_id;
+
+                // 更新所属企业检验检测机构资质认定证书附表
+
+                $saveQueryParams = Tool::getParamQuery($searchConditon, [], []);
+                CertificateScheduleDBBusiness::save($certificate_info, $saveQueryParams);
             }
             // 如果是修改信息
             if($isModify){
@@ -854,6 +889,8 @@ class StaffDBBusiness extends BasePublicDBBusiness
 
                 }
             }
+            // 有报名信息，则不可进行删除操作
+
         }
 
 //        DB::beginTransaction();

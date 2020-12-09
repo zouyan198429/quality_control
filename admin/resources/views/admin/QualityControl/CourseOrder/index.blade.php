@@ -50,6 +50,12 @@
                   <option value="{{ $k }}"  @if(isset($defaultJoinClassStatus) && $defaultJoinClassStatus == $k) selected @endif >{{ $txt }}</option>
               @endforeach
           </select>
+          <select class="wmini" name="company_status">
+              <option value="">报名状态</option>
+              @foreach ($companyStatus as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultCompanyStatus) && $defaultCompanyStatus == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
         <select style="width:80px; height:28px;" name="field">
           <option value="contacts">联络人员</option>
             <option value="tel">联络人员电话</option>
@@ -93,7 +99,7 @@
         <th>课程</th>
       <th>单位</th>
       <th>报名人数<hr/>分班人数</th>
-      <th>已作废人数</th>
+      <th>已作废人数<hr/>报名状态</th>
        <th>联络人<hr/>联络人电话</th>
         <th>单价<hr/>总价</th>
         <th>缴费状态<hr/>分班状态</th>
@@ -147,6 +153,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/CourseOrder.js') }}?2"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/CourseOrder.js') }}?3"  type="text/javascript"></script>
 </body>
 </html>

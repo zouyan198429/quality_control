@@ -487,6 +487,10 @@ class CourseOrderController extends BasicController
         $reDataArr['joinClassStatus'] =  CourseOrder::$joinClassStatusArr;
         $reDataArr['defaultJoinClassStatus'] = -1;// 列表页默认状态
 
+        // 报名状态1正常4已作废8已结业
+        $reDataArr['companyStatus'] =  CourseOrder::$companyStatusArr;
+        $reDataArr['defaultCompanyStatus'] = -1;// 列表页默认状态
+
         $company_id = CommonRequest::getInt($request, 'company_id');
         $info = [];
 
@@ -555,6 +559,10 @@ class CourseOrderController extends BasicController
         // 分班状态(1待分班、2部分分班、4已分班)
         $reDataArr['joinClassStatus'] =  CourseOrder::$joinClassStatusArr;
         $reDataArr['defaultJoinClassStatus'] = $info['join_class_status'] ?? -1;// 列表页默认状态
+
+        // 报名状态1正常4已作废8已结业
+        $reDataArr['companyStatus'] =  CourseOrder::$companyStatusArr;
+        $reDataArr['defaultCompanyStatus'] = $info['company_status'] ?? -1;// 列表页默认状态
 
         $company_hidden = CommonRequest::getInt($request, 'company_hidden');
         $reDataArr['company_hidden'] = $company_hidden;// =1 : 隐藏企业选择

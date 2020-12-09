@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Admin\QualityControl;
 
 use App\Business\Controller\API\QualityControl\CTAPICitysBusiness;
+use App\Business\Controller\API\QualityControl\CTAPICourseBusiness;
 use App\Business\Controller\API\QualityControl\CTAPICourseClassBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIOrderPayConfigBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIOrderPayMethodBusiness;
+use App\Business\DB\QualityControl\OrderPayMethodDBBusiness;
 use App\Http\Controllers\WorksController;
 use App\Models\QualityControl\CourseClass;
 use App\Models\QualityControl\OrderPayConfig;
@@ -171,6 +174,7 @@ class CourseClassController extends BasicController
             , '', [], function (&$reDataArr) use ($request){
                 $id = CommonRequest::getInt($request, 'id');
                 // CommonRequest::judgeEmptyParams($request, 'id', $id);
+                $course_id = CommonRequest::getInt($request, 'course_id');
                 $class_name = CommonRequest::get($request, 'class_name');
                 $city_id = CommonRequest::getInt($request, 'city_id');
                 $remarks = CommonRequest::get($request, 'remarks');
@@ -191,6 +195,7 @@ class CourseClassController extends BasicController
                 }
 
                 $saveData = [
+                    'course_id' => $course_id,
                     'class_name' => $class_name,
                     'city_id' => $city_id,
                     'remarks' => replace_enter_char($remarks, 1),
@@ -242,11 +247,15 @@ class CourseClassController extends BasicController
 //        return  CTAPICourseClassBusiness::getList($request, $this, 2 + 4);
         return $this->exeDoPublicFun($request, 4, 4,'', true, '', [], function (&$reDataArr) use ($request){
 
-            $handleKeyConfigArr = ['city_info' => ''];
+            $handleKeyConfigArr = [
+                'city_info' => '',
+                'course_name' => '',
+            ];
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                 'relationFormatConfigs'=> CTAPICourseClassBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
-                'infoHandleKeyArr' => ['resetPayMethod']
+                // 'infoHandleKeyArr' => ['resetPayMethod']
+                'listHandleKeyArr' => ['initPayMethodText']
             ];
             return  CTAPICourseClassBusiness::getList($request, $this, 2 + 4, [], [], $extParams);
         });
@@ -452,6 +461,12 @@ class CourseClassController extends BasicController
         $reDataArr['classStatus'] =  CourseClass::$classStatusArr;
         $reDataArr['defaultClassStatus'] = -1;// 列表页默认状态
 
+        // 获得课程KV值
+        //   'sqlParams' => ['where' => [['status_online', 1]]]
+
+        $reDataArr['course_id_kv'] = CTAPICourseBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'course_name'], []);
+        $reDataArr['defaultCourseId'] = -1;// 默认
+
         // 获得收款帐号KV值
         $reDataArr['pay_config_kv'] = CTAPIOrderPayConfigBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'pay_company_name'], [
             'sqlParams' => ['where' => [['open_status', 1]]]
@@ -459,7 +474,7 @@ class CourseClassController extends BasicController
         $reDataArr['defaultPayConfig'] = -1;// 默认
 
         // 收款开通类型(1现金、2微信支付、4支付宝)
-        $reDataArr['payMethod'] =  OrderPayConfig::$payMethodArr;
+        $reDataArr['payMethod'] =  CTAPIOrderPayMethodBusiness::getListKV($request, $this, ['key' => 'pay_method', 'val' => 'pay_name']);
         $reDataArr['defaultPayMethod'] = -1;// 列表页默认状态
         // $reDataArr['payMethodDisable'] = OrderPayConfig::$payMethodDisable;// 不可用的--禁用
     }
@@ -499,10 +514,15 @@ class CourseClassController extends BasicController
 
         if ($id > 0) { // 获得详情数据
             $operate = "修改";
+            $handleKeyConfigArr = [
+                'city_info' => '',
+                'course_name' => '',
+            ];
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-                'relationFormatConfigs'=> CTAPICourseClassBusiness::getRelationConfigs($request, $this, [], []),
-                'infoHandleKeyArr' => ['resetPayMethod']
+                'relationFormatConfigs'=> CTAPICourseClassBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
+                // 'infoHandleKeyArr' => ['resetPayMethod']
+                'listHandleKeyArr' => ['initPayMethodText']
             ];
             $info = CTAPICourseClassBusiness::getInfoData($request, $this, $id, [], '', $extParams);
         }
@@ -516,6 +536,12 @@ class CourseClassController extends BasicController
         $reDataArr['classStatus'] =  CourseClass::$classStatusArr;
         $reDataArr['defaultClassStatus'] = $info['class_status'] ?? -1;// 列表页默认状态
 
+        // 获得课程KV值
+        $reDataArr['course_id_kv'] = CTAPICourseBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'course_name'], [
+            'sqlParams' => ['where' => [['status_online', 1]]]
+        ]);
+        $reDataArr['defaultCourseId'] = $info['course_id'] ?? -1;// 默认
+
         // 获得收款帐号KV值
         $reDataArr['pay_config_kv'] = CTAPIOrderPayConfigBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'pay_company_name'], [
             'sqlParams' => ['where' => [['open_status', 1]]]
@@ -523,9 +549,13 @@ class CourseClassController extends BasicController
         $reDataArr['defaultPayConfig'] = $info['pay_config_id'] ?? -1;// 默认
 
         // 收款开通类型(1现金、2微信支付、4支付宝)
-        $reDataArr['payMethod'] =  OrderPayConfig::$payMethodArr;
+        $disablePayMethod = [];
+        $payKVList = [];
+        list($payKVList, $disablePayMethod, $payMethodList, $formatPayMethodList) = OrderPayMethodDBBusiness::getPayMethodDisable($disablePayMethod, $payKVList);
+
+        $reDataArr['payMethod'] =  $payKVList;
         $reDataArr['defaultPayMethod'] = $info['pay_method'] ?? -1;// 列表页默认状态
-        // $reDataArr['payMethodDisable'] = OrderPayConfig::$payMethodDisable;// 不可用的--禁用
+        // $reDataArr['payMethodDisable'] = $disablePayMethod;// 不可用的--禁用
 
 
         $reDataArr['info'] = $info;

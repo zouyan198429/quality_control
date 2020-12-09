@@ -176,6 +176,9 @@ class CTAPICourseOrderBusiness extends BasicPublicCTAPIBusiness
         $join_class_status = CommonRequest::get($request, 'join_class_status');
         if(strlen($join_class_status) > 0 && $join_class_status != 0)  Tool::appendParamQuery($queryParams, $join_class_status, 'join_class_status', [0, '0', ''], ',', false);
 
+        $company_status = CommonRequest::get($request, 'company_status');
+        if(strlen($company_status) > 0 && !in_array($company_status, [0, -1]))  Tool::appendParamQuery($queryParams, $company_status, 'company_status', [0, '0', ''], ',', false);
+
 //        $ids = CommonRequest::get($request, 'ids');
 //        if(strlen($ids) > 0 && $ids != 0)  Tool::appendParamQuery($queryParams, $ids, 'id', [0, '0', ''], ',', false);
 
@@ -231,7 +234,8 @@ class CTAPICourseOrderBusiness extends BasicPublicCTAPIBusiness
         $extParams = [
             // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
             'relationFormatConfigs'=> CTAPICourseBusiness::getRelationConfigs($request, $controller, [], []),// 'resource_list', 'course_content', 'course_order_company'
-            'infoHandleKeyArr' => ['resetPayMethod'],
+            // 'infoHandleKeyArr' => ['resetPayMethod'],
+            'listHandleKeyArr' => ['initPayMethodText'],
             'sqlParams' => ['where' => [['status_online', 1]]]
         ];
         $info = CTAPICourseBusiness::getInfoData($request, $controller, $courseId, [], '', $extParams);
@@ -294,7 +298,8 @@ class CTAPICourseOrderBusiness extends BasicPublicCTAPIBusiness
         $extParams = [
             // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
             'relationFormatConfigs'=> CTAPICourseBusiness::getRelationConfigs($request, $controller, [], []),// 'resource_list', 'course_content', 'course_order_company'
-            'infoHandleKeyArr' => ['resetPayMethod'],
+            // 'infoHandleKeyArr' => ['resetPayMethod'],
+            'listHandleKeyArr' => ['initPayMethodText'],
             'sqlParams' => ['where' => [['status_online', 1]]]
         ];
         $info = CTAPICourseBusiness::getInfoData($request, $controller, $courseId, [], '', $extParams);
@@ -387,7 +392,7 @@ class CTAPICourseOrderBusiness extends BasicPublicCTAPIBusiness
     public static function exportListData(Request $request, Controller $controller, &$data_list, $notLog = 0){
 
         $headArr = ['course_name'=>'课程', 'company_name'=>'单位', 'company_grade_text'=>'会员等级', 'join_num'=>'报名人数', 'joined_class_num'=>'分班人数'
-            , 'contacts'=>'联络人', 'tel'=>'联络人电话', 'price'=>'单价', 'price_total'=>'总价', 'pay_status_text'=>'缴费状态'
+            , 'contacts'=>'联络人', 'tel'=>'联络人电话', 'company_status_text'=>'报名状态', 'price'=>'单价', 'price_total'=>'总价', 'pay_status_text'=>'缴费状态'
             , 'join_class_status_text'=>'分班状态',  'order_time'=>'报名时间', 'pay_time'=>'缴费时间'];
 //        foreach($data_list as $k => $v){
 //            if(isset($v['method_name'])) $data_list[$k]['method_name'] =replace_enter_char($v['method_name'],2);

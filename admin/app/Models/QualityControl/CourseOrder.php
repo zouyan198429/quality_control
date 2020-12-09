@@ -110,8 +110,15 @@ class CourseOrder extends BasePublicModel
         '4' => '已分班',
     ];
 
+    // 报名状态1正常4已作废8已结业
+    public static $companyStatusArr = [
+        '1' => '正常',
+        '4' => '已作废',
+        '8' => '已结业',
+    ];
+
     // 表里没有的字段
-    protected $appends = ['admin_type_text', 'company_grade_text', 'pay_status_text', 'join_class_status_text'];
+    protected $appends = ['admin_type_text', 'company_grade_text', 'pay_status_text', 'join_class_status_text', 'company_status_text'];
 
     /**
      * 获取用户的类型文字
@@ -153,6 +160,15 @@ class CourseOrder extends BasePublicModel
         return static::$joinClassStatusArr[$this->join_class_status] ?? '';
     }
 
+    /**
+     * 获取报名状态文字
+     *
+     * @return string
+     */
+    public function getCompanyStatusTextAttribute()
+    {
+        return static::$companyStatusArr[$this->company_status] ?? '';
+    }
 
     /**
      * 获取课程-一维

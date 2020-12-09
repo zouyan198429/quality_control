@@ -181,6 +181,12 @@
 
                     </div>
                 </div>
+                <tr>
+                    <th>实验室地址<span class="must"></span></th>
+                    <td>
+                        <input type="text" class="inp wnormal"  name="laboratory_addr" value="{{ $info['laboratory_addr'] ?? '' }}" placeholder="请输入实验室地址"/>
+                    </td>
+                </tr>
                 <div class="form-item">
                     <label for="text" class="form-label">联系人<span class="red">*</span></label>
                     <div class="form-input"><input type="text" name="company_contact_name" class="form-control" autocomplete="off" value="{{ $info['company_contact_name'] ?? '' }}"></div>
@@ -256,6 +262,6 @@
 {{--<script src="{{asset('js/baguetteBox.js/highlight.min.js')}}" async></script>--}}
 <!-- zui js -->
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
-<script src="{{ asset('/js/web/QualityControl/perfect_company.js') }}?3"  type="text/javascript"></script>
+<script src="{{ asset('/js/web/QualityControl/perfect_company.js') }}?4"  type="text/javascript"></script>
 @component('component.upfileincludejs')
 @endcomponent

@@ -151,6 +151,14 @@ function ajax_form(){
     //     return false;
     // }
 
+    var course_id = $('input[name=course_id]:checked').val() || '';
+    var judge_seled = judge_validate(1,'所属课程',course_id,true,'digit','','');
+    if(judge_seled != ''){
+        layer_alert("请选择所属课程",3,0);
+        //err_alert('<font color="#000000">' + judge_seled + '</font>');
+        return false;
+    }
+
     var class_name = $('input[name=class_name]').val();
     if(!judge_validate(4,'班级名称',class_name,true,'length',1,20)){
         return false;

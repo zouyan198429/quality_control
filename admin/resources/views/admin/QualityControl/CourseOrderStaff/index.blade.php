@@ -72,6 +72,9 @@
         {{--    <div style="display:none;" ><input type="file" class="import_file img_input"></div>{ {--导入file对象--} }--}}
         <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.frozenSelected(this, 4)" >作废[勾选]</button>
 {{--        <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.frozenSelected(this, 1)" >取消作废[勾选]</button>--}}
+        <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.joinClass(this)" >分班[勾选]</button>
+        <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.joinClassCancel(this)" >取消分班[勾选]</button>
+        <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.paySelected(this)" >缴费[勾选]</button>
     </div>
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
@@ -149,6 +152,9 @@
       var SELECT_COMPANY_URL = "{{url('admin/company/select')}}";// 选择所属企业
 
       var STAFF_STATUS_URL = "{{ url('api/admin/course_order_staff/ajax_frozen') }}";//操作(作废/取消作废)
+      var JOIN_CLASS_URL = "{{ url('admin/course_order_staff/join_class') }}";//操作(分班)
+      var CANCEL_CLASS_URL  = "{{ url('api/admin/course_order_staff/ajax_cancel_class') }}";//操作(取消分班)
+      var PAY_URL = "{{ url('admin/course_order_staff/pay') }}";//操作(缴费)
 
       // 列表数据每隔指定时间就去执行一次刷新【如果表有更新时】--定时执行
       var IFRAME_TAG_KEY = "";// "QualityControl\\CTAPIStaff";// 获得模型表更新时间的关键标签，可为空：不获取
@@ -156,6 +162,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/CourseOrderStaff.js') }}?4"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/CourseOrderStaff.js') }}?14"  type="text/javascript"></script>
 </body>
 </html>

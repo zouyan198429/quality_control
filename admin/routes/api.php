@@ -134,6 +134,24 @@ $api->version('v1', function ($api) {
         $api->any('expert/abilitys_admin/{ability_id}/ability_join_items_results/ajax_save_dissatisfied', 'Expert\QualityControl\Abilitys\AbilityJoinItemsResultsController@ajax_save_dissatisfied');// 已领样，未上传数据的--可以手动直接判断为不满意
         //****************************************************************************
 
+        // 订单支付相关的
+//        $api->any('orderPay/pay', 'WX\OrderPayController@pay');// 订单付款
+//        $api->any('orderPay/refund', 'WX\OrderPayController@refund');// 订单退款
+//        $api->any('orderPay/bond', 'WX\OrderPayController@bond');// 支付保证金
+//        $api->any('orderPay/recharge', 'WX\OrderPayController@recharge');// 充值
+
+        // 微信支付相关的
+        $api->any('pay/wechat/unifiedorderByNo', 'Pay\WeChatController@unifiedorderByNo');// 统一下单--支付
+
+        $api->any('pay/wechat/unifiedorder', 'Pay\WeChatController@unifiedorder');// 统一下单
+        $api->any('pay/wechat/wechatNotify/{pay_key}', 'Pay\WeChatController@wechatNotify');// 支付结果通知--回调
+        $api->any('pay/wechat/refundOrder', 'Pay\WeChatController@refundOrder');// 退单
+        $api->any('pay/wechat/refundNotify', 'Pay\WeChatController@refundNotify');// 退款结果通知--回调
+        $api->any('pay/wechat/sweepCodePayNotify', 'Pay\WeChatController@sweepCodePayNotify');// 扫码支付通知
+
+        $api->any('pay/wechat/operateRefundByNo', 'Pay\WeChatController@operateRefundByNo');// 退款--手动查询退单结果并操作记录
+
+        $api->any('pay/wechat/test', 'Pay\WeChatController@test');// 统一下单
         // ------后台
 
         // 验证码 -- ok
@@ -289,6 +307,9 @@ $api->version('v1', function ($api) {
 //        $api->post('admin/course_order_staff/ajax_get_ids', 'Admin\QualityControl\CourseOrderStaffController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
         $api->post('admin/course_order_staff/ajax_frozen', 'Admin\QualityControl\CourseOrderStaffController@ajax_frozen');// 操作(作废/取消作废)
+        $api->post('admin/course_order_staff/ajax_join_class_save', 'Admin\QualityControl\CourseOrderStaffController@ajax_join_class_save');// 分班
+        $api->post('admin/course_order_staff/ajax_cancel_class', 'Admin\QualityControl\CourseOrderStaffController@ajax_cancel_class');// 取消分班
+        $api->post('admin/course_order_staff/ajax_create_order', 'Admin\QualityControl\CourseOrderStaffController@ajax_create_order');// 缴费生成订单
         // 面授操作日志
         $api->any('admin/course_log/ajax_alist', 'Admin\QualityControl\CourseLogController@ajax_alist');//ajax获得列表数据
         $api->post('admin/course_log/ajax_del', 'Admin\QualityControl\CourseLogController@ajax_del');// 删除
@@ -299,6 +320,19 @@ $api->version('v1', function ($api) {
 
         $api->post('admin/course_log/import', 'Admin\QualityControl\CourseLogController@import');// 导入excel
         $api->post('admin/course_log/ajax_get_ids', 'Admin\QualityControl\CourseLogController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        //  收款方式配置
+        $api->any('admin/order_pay_method/ajax_alist', 'Admin\QualityControl\OrderPayMethodController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/order_pay_method/ajax_del', 'Admin\QualityControl\OrderPayMethodController@ajax_del');// 删除
+        $api->any('admin/order_pay_method/ajax_save', 'Admin\QualityControl\OrderPayMethodController@ajax_save');// 新加/修改
+        $api->post('admin/order_pay_method/ajax_get_child', 'Admin\QualityControl\OrderPayMethodController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/order_pay_method/ajax_get_areachild', 'Admin\QualityControl\OrderPayMethodController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/order_pay_method/ajax_import_staff','Admin\QualityControl\OrderPayMethodController@ajax_import'); // 导入员工
+
+        $api->post('admin/order_pay_method/import', 'Admin\QualityControl\OrderPayMethodController@import');// 导入excel
+        $api->post('admin/order_pay_method/ajax_get_ids', 'Admin\QualityControl\OrderPayMethodController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        $api->post('admin/order_pay_method/up_file', 'Admin\QualityControl\OrderPayMethodController@up_file');// 上传文件地址
 
         // 收款帐号配置
         $api->any('admin/order_pay_config/ajax_alist', 'Admin\QualityControl\OrderPayConfigController@ajax_alist');//ajax获得列表数据

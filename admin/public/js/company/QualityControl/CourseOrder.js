@@ -46,7 +46,7 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
     document.write("            <td><%=item.course_name%><\/td>");
     // document.write("            <td><%=item.company_name%>(<%=item.company_grade_text%>)<\/td>");
     document.write("            <td><%=item.join_num%><hr/><%=item.joined_class_num%><\/td>");
-    document.write("            <td><%=item.cancel_num%><\/td>");
+    document.write("            <td><%=item.cancel_num%><hr/><%=item.company_status_text%><\/td>");
     document.write("            <td><%=item.contacts%><hr/><%=item.tel%><\/td>");
     document.write("            <td>￥<%=item.price%><hr/>￥<%=item.price_total%><\/td>");
     document.write("            <td><%=item.pay_status_text%><hr/><%=item.join_class_status_text%><\/td>");

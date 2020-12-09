@@ -2,6 +2,7 @@
 //课程管理
 namespace App\Business\Controller\API\QualityControl;
 
+use App\Business\DB\QualityControl\OrderPayConfigDBBusiness;
 use App\Models\QualityControl\OrderPayConfig;
 use App\Services\DBRelation\RelationDB;
 use App\Services\Excel\ImportExport;
@@ -196,6 +197,33 @@ class CTAPICourseBusiness extends BasicPublicCTAPIBusiness
     }
 
     /**
+     * 格式化关系数据 --如果有格式化，肯定会重写---本地数据库主要用这个来格式化数据
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $main_list 关系主记录要格式化的数据
+     * @param array $data_list 需要格式化的从记录数据---二维数组(如果是一维数组，是转成二维数组后的数据)
+     * @param array $handleKeyArr 其它扩展参数，// 一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。--名称关键字，尽可能与关系名一样
+     * @param array $returnFields  新加入的字段['字段名1' => '字段名1' ]
+     * @return array  新增的字段 一维数组
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function handleRelationDataFormat(Request $request, Controller $controller, &$main_list, &$data_list, $handleKeyArr, &$returnFields = []){
+        // if(empty($data_list)) return $returnFields;
+        // 重写开始
+
+        // 组织支付方式文字【去掉非上线的支付方式】
+        if(in_array('initPayMethodText', $handleKeyArr)){
+            $disablePayMethod = [];
+            $payKVList = [];
+            OrderPayConfigDBBusiness::formatConfigPayMethodAppendMethodText($data_list, $disablePayMethod, $payKVList, $returnFields);
+        }
+
+        // 重写结束
+        return $returnFields;
+    }
+
+    /**
      * 对单条数据关系进行格式化--具体的可以重写
      * @param Request $request 请求信息
      * @param Controller $controller 控制对象
@@ -210,15 +238,43 @@ class CTAPICourseBusiness extends BasicPublicCTAPIBusiness
     public static function infoRelationFormatExtend(Request $request, Controller $controller, &$info, &$temDataList, $infoHandleKeyArr, &$returnFields){
         // if(empty($info)) return $returnFields;
         // $returnFields[$tem_ubound_old] = $tem_ubound_old;
-        if(in_array('resetPayMethod', $infoHandleKeyArr)){
-
-            // 支付方式-实时处理
-            OrderPayConfig::unionPayMethod($info, 'pay_method','pay_config_id');
-            OrderPayConfig::getPayMethodText($info, 'pay_method');
-//            $info['resource_list'] = $resource_list;
-//            $returnFields['resource_list'] = 'resource_list';
-        }
+//        if(in_array('resetPayMethod', $infoHandleKeyArr)){
+//
+//            // 支付方式-实时处理
+//            OrderPayConfig::unionPayMethod($info, 'pay_method','pay_config_id');
+//            OrderPayConfig::getPayMethodText($info, 'pay_method');
+////            $info['resource_list'] = $resource_list;
+////            $returnFields['resource_list'] = 'resource_list';
+//        }
 
         return $returnFields;
+    }
+
+    /**
+     * 根据课程id信息，获得课程及课程支付配置信息
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array / string $course_ids  课程id 一维数组，或 字符 --多个逗号分隔
+     * @return array  以课程id为下标的二维数组
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function getCoursePayList(Request $request, Controller $controller, $course_ids = []){
+        Tool::formatOneArrVals($course_ids);// 去掉 0
+        $courseFormatList = [];// 以课程id为下标的二维数组
+        if(!empty($course_ids)){
+            $handleKeyConfigArr = [];
+            $extParams = [
+                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                'relationFormatConfigs'=> CTAPICourseBusiness::getRelationConfigs($request, $controller, $handleKeyConfigArr, []),
+                // 'infoHandleKeyArr' => ['resetPayMethod']
+                'listHandleKeyArr' => ['initPayMethodText'],
+            ];
+            $courseList = CTAPICourseBusiness::getFVFormatList( $request,  $controller, 1, 1
+                , ['id' => $course_ids], false, [], $extParams);
+
+            $courseFormatList = Tool::arrUnderReset($courseList, 'id', 1, '_');
+        }
+        // pr($courseFormatList);
+        return $courseFormatList;
     }
 }

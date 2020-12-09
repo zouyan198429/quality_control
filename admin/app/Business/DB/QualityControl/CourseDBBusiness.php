@@ -180,4 +180,6 @@ class CourseDBBusiness extends BasePublicDBBusiness
             return $id;
         });
     }
+
+
 }

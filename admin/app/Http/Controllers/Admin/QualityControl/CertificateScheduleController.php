@@ -199,10 +199,10 @@ class CertificateScheduleController extends BasicController
                 $id = CommonRequest::getInt($request, 'id');
                 // CommonRequest::judgeEmptyParams($request, 'id', $id);
                 $company_id = CommonRequest::getInt($request, 'company_id');
-                $certificate_no = CommonRequest::get($request, 'certificate_no');
-                $addr = CommonRequest::get($request, 'addr');
-                $ratify_date = CommonRequest::get($request, 'ratify_date');
-                $valid_date = CommonRequest::get($request, 'valid_date');
+//                $certificate_no = CommonRequest::get($request, 'certificate_no');
+//                $addr = CommonRequest::get($request, 'addr');
+//                $ratify_date = CommonRequest::get($request, 'ratify_date');
+//                $valid_date = CommonRequest::get($request, 'valid_date');
                 $category_name = CommonRequest::get($request, 'category_name');
                 $project_name = CommonRequest::get($request, 'project_name');
                 $three_name = CommonRequest::get($request, 'three_name');
@@ -212,14 +212,14 @@ class CertificateScheduleController extends BasicController
                 $limit_range = CommonRequest::get($request, 'limit_range');
                 $explain_text = CommonRequest::get($request, 'explain_text');
                 // 判断开始结束日期
-                Tool::judgeBeginEndDate($ratify_date, $valid_date, 1 + 2 + 256 + 512, 1, date('Y-m-d'), '有效起止日期');
+//                Tool::judgeBeginEndDate($ratify_date, $valid_date, 1 + 2 + 256 + 512, 1, date('Y-m-d'), '有效起止日期');
 
                 $saveData = [
                     'company_id' => $company_id,
-                    'certificate_no' => $certificate_no,
-                    'ratify_date' => $ratify_date,
-                    'valid_date' => $valid_date,
-                    'addr' => $addr,
+//                    'certificate_no' => $certificate_no,
+//                    'ratify_date' => $ratify_date,
+//                    'valid_date' => $valid_date,
+//                    'addr' => $addr,
                     'category_name' => $category_name,
                     'project_name' => $project_name,
                     'three_name' => $three_name,

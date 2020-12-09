@@ -87,11 +87,11 @@ class OrderPay extends BasePublicModel
     ];
 
     // 支付方式(1现金、2微信支付、4支付宝)
-    public static $payMethodArr = [
-        '1' => '现金',
-        '2' => '微信',
-        '4' => '支付宝',
-    ];
+//    public static $payMethodArr = [
+//        '1' => '现金',
+//        '2' => '微信',
+//        '4' => '支付宝',
+//    ];
 
     // 支付类型1付款2退款
     public static $payTypeArr = [
@@ -112,15 +112,16 @@ class OrderPay extends BasePublicModel
         '2' => '已解冻',
     ];
 
-    // 审核状态1等审核2成功4失败
+    // 审核状态1已关闭2付款中4成功8失败
     public static $payStatusArr = [
-        '1' => '待审核',
-        '2' => '成功',
-        '4' => '失败',
+        '1' => '已关闭',
+        '2' => '付款中',
+        '4' => '成功',
+        '8' => '失败',
     ];
 
     // 表里没有的字段
-    protected $appends = ['order_type_text', 'pay_method_text', 'pay_type_text', 'operate_type_text', 'frozen_status_text', 'pay_status_text'];
+    protected $appends = ['order_type_text', 'pay_type_text', 'operate_type_text', 'frozen_status_text', 'pay_status_text'];// , 'pay_method_text'
 
     /**
      * 获取订单类型文字
@@ -137,10 +138,10 @@ class OrderPay extends BasePublicModel
      *
      * @return string
      */
-    public function getPayMethodTextAttribute()
-    {
-        return static::$payMethodArr[$this->pay_method] ?? '';
-    }
+//    public function getPayMethodTextAttribute()
+//    {
+//        return static::$payMethodArr[$this->pay_method] ?? '';
+//    }
 
 
     /**
@@ -205,5 +206,13 @@ class OrderPay extends BasePublicModel
     public function orders()
     {
         return $this->belongsTo('App\Models\QualityControl\Orders', 'order_no', 'order_no');
+    }
+
+    /**
+     * 获取收款方式配置--一维
+     */
+    public function orderPayMethod()
+    {
+        return $this->belongsTo('App\Models\QualityControl\OrderPayMethod', 'pay_method', 'pay_method');
     }
 }

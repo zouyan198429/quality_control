@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin\QualityControl;
 
 use App\Business\Controller\API\QualityControl\CTAPIOrderPayConfigBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIOrderPayMethodBusiness;
+use App\Business\DB\QualityControl\OrderPayMethodDBBusiness;
 use App\Http\Controllers\WorksController;
 use App\Models\QualityControl\OrderPayConfig;
 use App\Services\Request\CommonRequest;
@@ -239,7 +241,13 @@ class OrderPayConfigController extends BasicController
 //        $this->InitParams($request);
 //        return  CTAPIOrderPayConfigBusiness::getList($request, $this, 2 + 4);
         return $this->exeDoPublicFun($request, 4, 4,'', true, '', [], function (&$reDataArr) use ($request){
-            return  CTAPIOrderPayConfigBusiness::getList($request, $this, 2 + 4);
+
+            $extParams = [
+                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                'relationFormatConfigs'=> CTAPIOrderPayConfigBusiness::getRelationConfigs($request, $this, [], []),
+                'listHandleKeyArr' => ['initPayMethodText']
+            ];
+            return  CTAPIOrderPayConfigBusiness::getList($request, $this, 2 + 4, [], [], $extParams);
         });
     }
 
@@ -276,7 +284,13 @@ class OrderPayConfigController extends BasicController
 //        $this->InitParams($request);
 //        CTAPIOrderPayConfigBusiness::getList($request, $this, 1 + 0);
 //        return $this->exeDoPublicFun($request, 4096, 8,'', true, '', [], function (&$reDataArr) use ($request){
-//            CTAPIRrrDdddBusiness::getList($request, $this, 1 + 0);
+//
+//            $extParams = [
+//                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+//                'relationFormatConfigs'=> CTAPIOrderPayConfigBusiness::getRelationConfigs($request, $this, [], []),
+//                'listHandleKeyArr' => ['initPayMethodText']
+//            ];
+//            CTAPIOrderPayConfigBusiness::getList($request, $this, 1 + 0, [], [], $extParams);
 //        });
 //    }
 
@@ -433,7 +447,7 @@ class OrderPayConfigController extends BasicController
 //        $reDataArr['defaultAdminType'] = -1;// 列表页默认状态
 
         // 收款开通类型(1现金、2微信支付、4支付宝)
-        $reDataArr['payMethod'] =  OrderPayConfig::$payMethodArr;
+        $reDataArr['payMethod'] =  CTAPIOrderPayMethodBusiness::getListKV($request, $this, ['key' => 'pay_method', 'val' => 'pay_name']);
         $reDataArr['defaultPayMethod'] = -1;// 列表页默认状态
         // 开启状态(1开启2关闭)
         $reDataArr['openStatus'] =  OrderPayConfig::$openStatusArr;
@@ -477,13 +491,22 @@ class OrderPayConfigController extends BasicController
 
         if ($id > 0) { // 获得详情数据
             $operate = "修改";
-            $info = CTAPIOrderPayConfigBusiness::getInfoData($request, $this, $id, [], '', []);
+            $extParams = [
+                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                'relationFormatConfigs'=> CTAPIOrderPayConfigBusiness::getRelationConfigs($request, $this, [], []),
+                'listHandleKeyArr' => ['initPayMethodText']
+            ];
+            $info = CTAPIOrderPayConfigBusiness::getInfoData($request, $this, $id, [], '', $extParams);
         }
         // $reDataArr = array_merge($reDataArr, $resultDatas);
         // 收款开通类型(1现金、2微信支付、4支付宝)
-        $reDataArr['payMethod'] =  OrderPayConfig::$payMethodArr;
+        $disablePayMethod = [];
+        $payKVList = [];
+        list($payKVList, $disablePayMethod, $payMethodList, $formatPayMethodList) = OrderPayMethodDBBusiness::getPayMethodDisable($disablePayMethod, $payKVList);
+
+        $reDataArr['payMethod'] = $payKVList;
         $reDataArr['defaultPayMethod'] = $info['pay_method'] ?? -1;// 列表页默认状态
-        $reDataArr['payMethodDisable'] = OrderPayConfig::$payMethodDisable;// 不可用的--禁用
+        $reDataArr['payMethodDisable'] = $disablePayMethod;// 不可用的--禁用
 
         // 开启状态(1开启2关闭)
         $reDataArr['openStatus'] =  OrderPayConfig::$openStatusArr;

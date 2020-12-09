@@ -1761,7 +1761,7 @@ class BaseDBBusiness extends BaseBusiness
      *
      * @param int $company_id 企业id
      * @param int $user_id 当前用户
-     * @param int  $orderType 要保存或修改的数组 1 订单号 2 退款订单 3 支付跑腿费  4 追加跑腿费 5 冲值  6 提现 7 压金或保证金
+     * @param int  $orderType 要保存或修改的数组 1 11 14 18订单号 2 退款订单 3 支付跑腿费【支付费用】  4 追加跑腿费 5 冲值  6 提现 7 压金或保证金
      * @return  int
      * @author zouyan(305463219@qq.com)
      */
@@ -1778,7 +1778,11 @@ class BaseDBBusiness extends BaseBusiness
         $dataFormat = '';
         switch ($orderType)
         {
-            case 1:// 订单
+            case 1:// 订单--不用
+            case 11:// 面授培训
+            case 12:// 会员年费
+            case 14:
+            case 18:
                 $userIdBack = str_pad(substr($user_id, -2), 2, '0', STR_PAD_LEFT);
                 $midFix = $userIdBack;
                 $namespace = 'order' . $userIdBack;
@@ -1788,8 +1792,21 @@ class BaseDBBusiness extends BaseBusiness
 //                  [1000,1100,365 * 24 * 60 * 60]  // 缓存的秒数365 * 24 * 60 * 60
 //                ];
                 break;
+            case 3:// 3 支付跑腿费 -- 不用
+            case 31:// 面授培训
+            case 32:// 会员年费
+            case 34:
+            case 38:
+                $userIdBack = str_pad(substr($user_id, -2), 2, '0', STR_PAD_LEFT);
+                $midFix = $userIdBack;
+                $namespace = 'orderPay' . $userIdBack;
+                $length = 4;
+                $needNum = 1 + 2 + 8;
+//                $expireNums = [
+//                  [1000,1100,365 * 24 * 60 * 60]  // 缓存的秒数365 * 24 * 60 * 60
+//                ];
+                break;
             case 2:// 2 退款订单
-            case 3:// 3 支付跑腿费
             case 4:// 4 追加跑腿费
             case 5:// 5 冲值
             case 6:// 6 提现

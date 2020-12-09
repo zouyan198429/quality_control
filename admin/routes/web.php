@@ -334,12 +334,23 @@ Route::get('admin/course_order_staff', 'Admin\QualityControl\CourseOrderStaffCon
 Route::get('admin/course_order_staff/export', 'Admin\QualityControl\CourseOrderStaffController@export');// 导出
 //Route::get('admin/course_order_staff/import_template', 'Admin\QualityControl\CourseOrderStaffController@import_template');// 导入模版
 
+Route::get('admin/course_order_staff/join_class', 'Admin\QualityControl\CourseOrderStaffController@join_class');// 分班
+Route::get('admin/course_order_staff/pay', 'Admin\QualityControl\CourseOrderStaffController@pay');// 缴费
+Route::get('admin/course_order_staff/pay_save', 'Admin\QualityControl\CourseOrderStaffController@pay_save');// 缴费页面
+
 // 面授操作日志
 Route::get('admin/course_log', 'Admin\QualityControl\CourseLogController@index');// 列表
 Route::get('admin/course_log/add/{id}', 'Admin\QualityControl\CourseLogController@add');// 添加
 // Route::get('admin/course_log/select', 'Admin\QualityControl\CourseLogController@select');// 选择-弹窗
 Route::get('admin/course_log/export', 'Admin\QualityControl\CourseLogController@export');// 导出
 Route::get('admin/course_log/import_template', 'Admin\QualityControl\CourseLogController@import_template');// 导入模版
+
+//  收款方式配置
+Route::get('admin/order_pay_method', 'Admin\QualityControl\OrderPayMethodController@index');// 列表
+Route::get('admin/order_pay_method/add/{id}', 'Admin\QualityControl\OrderPayMethodController@add');// 添加
+// Route::get('admin/order_pay_method/select', 'Admin\QualityControl\OrderPayMethodController@select');// 选择-弹窗
+Route::get('admin/order_pay_method/export', 'Admin\QualityControl\OrderPayMethodController@export');// 导出
+Route::get('admin/order_pay_method/import_template', 'Admin\QualityControl\OrderPayMethodController@import_template');// 导入模版
 
 // 收款帐号配置
 Route::get('admin/order_pay_config', 'Admin\QualityControl\OrderPayConfigController@index');// 列表

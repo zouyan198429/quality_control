@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Services\Request\CommonRequest;
 use App\Http\Controllers\BaseController as Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class CTAPIOrderPayBusiness extends BasicPublicCTAPIBusiness
 {
@@ -173,5 +174,37 @@ class CTAPIOrderPayBusiness extends BasicPublicCTAPIBusiness
         // 方法最下面
         // 注意重写方法中，如果不是特殊的like，同样需要调起此默认like方法--特殊的写自己特殊的方法
         static::joinListParamsLike($request, $controller, $queryParams, $notLog);
+    }
+
+    /**
+     * 支付回调--微信
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $message 参数
+     * @param array $queryMessage
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  string 正常返回 已经处理好，不用再通知了 or  throws string :错误信息，还要再通知我
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function payWXNotify(Request $request, Controller $controller, $message = [], $queryMessage = [], $notLog = 0)
+    {
+
+        Log::info('微信支付日志 payWXNotify-->' . __FUNCTION__, [$message, $queryMessage, $notLog]);
+
+        $company_id = 0;// $controller->company_id;
+        // $user_id = $controller->user_id;
+//        if(isset($saveData['real_name']) && empty($saveData['real_name'])  ){
+//            throws('联系人不能为空！');
+//        }
+
+        // 调用新加或修改接口
+        $apiParams = [
+            'message' => $message,
+            'queryMessage' => $queryMessage,
+            // 'company_id' => $company_id,
+        ];
+        $result = static::exeDBBusinessMethodCT($request, $controller, '', 'payWXNotify', $apiParams, $company_id, $notLog);
+        return $result;
     }
 }

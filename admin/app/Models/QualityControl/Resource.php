@@ -181,6 +181,15 @@ class Resource extends BasePublicModel
         return $this->hasMany('App\Models\QualityControl\Apply', 'resource_id', 'id');
     }
 
+
+    /**
+     * 获取收款方式配置-二维
+     */
+    public function orderPayMethod()
+    {
+        return $this->hasMany('App\Models\QualityControl\OrderPayMethod', 'resource_id', 'id');
+    }
+
     /**
      * 获取机构信息管理--能力附表pdf-二维
      */
