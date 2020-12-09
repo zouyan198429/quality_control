@@ -159,7 +159,7 @@ function ajax_form(){
     }
 
     var company_credit_code = $('input[name=company_credit_code]').val();
-    if(!judge_validate(4,'统一社会信用代码',company_credit_code,true,'length',1,50)){
+    if(!judge_validate(4,'统一社会信用代码',company_credit_code,false,'length',1,50)){
         return false;
     }
 
@@ -179,7 +179,7 @@ function ajax_form(){
     }
 
     var city_id = $('select[name=city_id]').val();
-    var judge_seled = judge_validate(1,'城市',city_id,true,'digit','','');
+    var judge_seled = judge_validate(1,'城市',city_id,false,'digit','','');
     if(judge_seled != ''){
         layer_alert("请选择城市",3,0);
         //err_alert('<font color="#000000">' + judge_seled + '</font>');
@@ -187,7 +187,7 @@ function ajax_form(){
     }
 
     var company_type = $('input[name=company_type]:checked').val() || '';
-    var judge_seled = judge_validate(1,'企业类型',company_type,true,'custom',/^[12]$/,"");
+    var judge_seled = judge_validate(1,'企业类型',company_type,false,'custom',/^[12]$/,"");
     if(judge_seled != ''){
         layer_alert("请选择企业类型",3,0);
         //err_alert('<font color="#000000">' + judge_seled + '</font>');
@@ -195,7 +195,7 @@ function ajax_form(){
     }
 
     var company_prop = $('select[name=company_prop]').val();
-    var judge_seled = judge_validate(1,'企业性质',company_prop,true,'digit','','');
+    var judge_seled = judge_validate(1,'企业性质',company_prop,false,'digit','','');
     if(judge_seled != ''){
         layer_alert("请选择企业性质",3,0);
         //err_alert('<font color="#000000">' + judge_seled + '</font>');
@@ -203,7 +203,7 @@ function ajax_form(){
     }
 
     var addr = $('input[name=addr]').val();
-    if(!judge_validate(4,'通讯地址',addr,true,'length',1,100)){
+    if(!judge_validate(4,'通讯地址',addr,false,'length',1,100)){
         return false;
     }
 
@@ -218,12 +218,12 @@ function ajax_form(){
     }
 
     var email = $('input[name=email]').val();
-    if(!judge_validate(4,'企业邮箱',email,true,'email')){
+    if(!judge_validate(4,'企业邮箱',email,false,'email')){
         return false;
     }
 
     var company_legal = $('input[name=company_legal]').val();
-    if(!judge_validate(4,'法人代表',company_legal,true,'length',1,30)){
+    if(!judge_validate(4,'法人代表',company_legal,false,'length',1,30)){
         return false;
     }
 
@@ -234,13 +234,13 @@ function ajax_form(){
 
     var imgObj = $('#myUploader').closest('.resourceBlock').find(".upload_img");
 
-    if( (!judge_list_checked(imgObj,3)) && filesCount <=0 ) {//没有选中的
-        layer_alert('请选择要上传的营业执照！',3,0);
-        return false;
-    }
+    // if( (!judge_list_checked(imgObj,3)) && filesCount <=0 ) {//没有选中的
+    //     layer_alert('请选择要上传的营业执照！',3,0);
+    //     return false;
+    // }
 
     var company_peoples_num = $('select[name=company_peoples_num]').val();
-    var judge_seled = judge_validate(1,'单位人数',company_peoples_num,true,'digit','','');
+    var judge_seled = judge_validate(1,'单位人数',company_peoples_num,false,'digit','','');
     if(judge_seled != ''){
         layer_alert("请选择单位人数",3,0);
         //err_alert('<font color="#000000">' + judge_seled + '</font>');
@@ -248,7 +248,7 @@ function ajax_form(){
     }
 
     var company_industry_id = $('select[name=company_industry_id]').val();
-    var judge_seled = judge_validate(1,'所属行业',company_industry_id,true,'digit','','');
+    var judge_seled = judge_validate(1,'所属行业',company_industry_id,false,'digit','','');
     if(judge_seled != ''){
         layer_alert("请选择所属行业",3,0);
         //err_alert('<font color="#000000">' + judge_seled + '</font>');
@@ -256,19 +256,19 @@ function ajax_form(){
     }
 
     var company_certificate_no = $('input[name=company_certificate_no]').val();
-    if(!judge_validate(4,'证书编号',company_certificate_no,true,'length',4,30)){
+    if(!judge_validate(4,'证书编号',company_certificate_no,false,'length',4,30)){
         return false;
     }
 
     // 开始时间
     var begin_date = $('input[name=ratify_date]').val();
-    if(!judge_validate(4,'批准日期',begin_date,true,'date','','')){
+    if(!judge_validate(4,'批准日期',begin_date,false,'date','','')){
         return false;
     }
 
     // 结束时间
     var end_date = $('input[name=valid_date]').val();
-    if(!judge_validate(4,'有效期至',end_date,true,'date','','')){
+    if(!judge_validate(4,'有效期至',end_date,false,'date','','')){
         return false;
     }
 
@@ -277,13 +277,13 @@ function ajax_form(){
             layer_alert("请选择批准日期",3,0);
             return false;
         }
-        if( !judge_validate(4,'有效期至必须',end_date,true,'data_size',begin_date,5)){
+        if( !judge_validate(4,'有效期至必须',end_date,false,'data_size',begin_date,5)){
             return false;
         }
     }
 
     var company_contact_name = $('input[name=company_contact_name]').val();
-    if(!judge_validate(4,'联系人',company_contact_name,true,'length',1,30)){
+    if(!judge_validate(4,'联系人',company_contact_name,false,'length',1,30)){
         return false;
     }
 
@@ -293,7 +293,7 @@ function ajax_form(){
     }
 
     var company_contact_mobile = $('input[name=company_contact_mobile]').val();
-    if(!judge_validate(4,'联系人手机',company_contact_mobile,true,'mobile','','')){
+    if(!judge_validate(4,'联系人手机',company_contact_mobile,false,'mobile','','')){
         return false;
     }
 

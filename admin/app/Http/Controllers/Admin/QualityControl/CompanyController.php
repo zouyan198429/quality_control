@@ -41,7 +41,7 @@ class CompanyController extends StaffController
                 $company_legal_name = CommonRequest::get($request, 'company_legal_name');
                 $city_id = CommonRequest::getInt($request, 'city_id');
                 $company_type = CommonRequest::getInt($request, 'company_type');
-                $company_prop = CommonRequest::get($request, 'company_prop');
+                $company_prop = CommonRequest::getInt($request, 'company_prop');
                 $addr = CommonRequest::get($request, 'addr');
                 $zip_code = CommonRequest::get($request, 'zip_code');
                 $fax = CommonRequest::get($request, 'fax');
@@ -54,8 +54,9 @@ class CompanyController extends StaffController
                 $valid_date = CommonRequest::get($request, 'valid_date');
                 $laboratory_addr = CommonRequest::get($request, 'laboratory_addr');
                 // 判断开始结束日期
-                Tool::judgeBeginEndDate($ratify_date, $valid_date, 1 + 2 + 256 + 512, 1, date('Y-m-d'), '有效起止日期');
-
+                if(judgeDate($ratify_date) !== false && judgeDate($valid_date) !== false){
+                    Tool::judgeBeginEndDate($ratify_date, $valid_date, 1 + 2 + 256 + 512, 1, date('Y-m-d'), '有效起止日期');
+                }
                 $company_contact_name = CommonRequest::get($request, 'company_contact_name');
                 $company_contact_mobile = CommonRequest::get($request, 'company_contact_mobile');
                 $company_contact_tel = CommonRequest::get($request, 'company_contact_tel');
@@ -108,8 +109,6 @@ class CompanyController extends StaffController
                     'company_peoples_num' => $company_peoples_num,
                     'company_industry_id' => $company_industry_id,
                     'company_certificate_no' => $company_certificate_no,
-                    'ratify_date' => $ratify_date,
-                    'valid_date' => $valid_date,
                     'laboratory_addr' => $laboratory_addr,
                     'company_contact_name' => $company_contact_name,
                     'company_contact_mobile' => $company_contact_mobile,
@@ -119,6 +118,13 @@ class CompanyController extends StaffController
                     'resource_ids' => $resource_ids,// 图片资源id串(逗号分隔-未尾逗号结束)
                     'resourceIds' => $resource_id,// 此下标为图片资源关系
                 ];
+
+                if(judgeDate($ratify_date) !== false && judgeDate($valid_date) !== false){
+                    $saveData = array_merge($saveData,[
+                        'ratify_date' => $ratify_date,
+                        'valid_date' => $valid_date,
+                        ]);
+                }
                 if($admin_password != '' || $sure_password != ''){
                     if ($admin_password != $sure_password){
                         return ajaxDataArr(0, null, '密码和确定密码不一致！');

@@ -66,7 +66,7 @@ class StaffDBBusiness extends BasePublicDBBusiness
         $certificate_info = [];
         $certificate_no = '';
         $has_certificate_no = false;// 是否有 false:没有 ； true:有
-        if(isset($saveData['company_certificate_no']) && isset($saveData['ratify_date'])  && isset($saveData['valid_date']) && isset($saveData['laboratory_addr']) ){
+        if(isset($saveData['company_certificate_no']) && !empty($saveData['company_certificate_no']) && isset($saveData['ratify_date'])  && isset($saveData['valid_date']) && isset($saveData['laboratory_addr']) ){
             if(Tool::getInfoUboundVal($saveData, 'company_certificate_no', $has_certificate_no, $certificate_no, 0)){
 
                 $certificate_info = [

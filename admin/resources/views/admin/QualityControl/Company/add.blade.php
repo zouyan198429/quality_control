@@ -281,7 +281,7 @@
 {{--<script src="{{asset('js/baguetteBox.js/highlight.min.js')}}" async></script>--}}
 <!-- zui js -->
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
-<script src="{{ asset('/js/admin/QualityControl/Company_edit.js') }}?3"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/Company_edit.js') }}?4"  type="text/javascript"></script>
 @component('component.upfileincludejs')
 @endcomponent
 </body>
