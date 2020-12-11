@@ -34,7 +34,7 @@
 				</div>
 				<div class="content-info">
 					<p>CMA证书编号：<span>{{ $info['company_certificate_no'] ?? '' }}</span></p>
-					<p>发证日期：<span><!-- {{ $info['certificate_detail']['valid_date'] ?? '' }} --></span></p>
+					<p>发证日期：<span>{{ $info['certificate_detail']['ratify_date'] ?? '' }}</span></p>
 					<p>证书有效期：<span> {{ $info['certificate_detail']['valid_date'] ?? '' }}</span></p>
 					<div class="c"></div>
 					<p>联系人：<span>{{ $info['company_contact_name'] ?? '' }}</span></p>
