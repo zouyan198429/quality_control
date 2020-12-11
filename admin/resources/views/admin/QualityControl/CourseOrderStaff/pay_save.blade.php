@@ -45,6 +45,11 @@
                     总计：￥{{ $totalPrice ?? '' }}元；<hr/>
                     实收<input type="text" name="payment_amount" value="{{ $totalPrice ?? '' }}" placeholder="请输入实收金额" style="width: 80px;" @if (isset($pay_method) && $pay_method != 1 )  readonly="true"   @endif  onkeyup="numxs(this) " onafterpaste="numxs(this)" >元;
                     应找零<span style="color: red;"><strong class="change_amount">¥0</strong></span>元
+                    <div class="auth_code_block" style="display: none;">
+
+                        请扫条码：
+                        <input type="text" name="auth_code" value="" placeholder="" style="width: 200px; ">
+                    </div>
                     <button class="layui-btn layui-btn-sm layui-btn-normal layui-btn-radius"  id="submitBtn" >确认收款</button>
                     <hr/>
                     收款帐号：{{ $pay_company_name ?? '' }}<br/>
@@ -66,7 +71,7 @@
                         <hr/>
                     @else
                         <div class="qrcode_block" style="display:none;">
-                            收款码：<span style="color: red;"><strong class="count_down_num">60</strong></span>秒
+                            收款码：<span style="color: red;"><strong class="count_down_num"></strong></span>秒
                             <div id="qrcode"></div>
                             <hr/>
                         </div>
@@ -76,6 +81,7 @@
             </form>
     @endforeach
 </div>
+<button onclick="scanPay('1111', '555', '32323');">扫码支付测试</button>
 <script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>
 <script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.all.js')}}"></script>
 {{--<script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.js')}}"></script>--}}
@@ -91,6 +97,9 @@
     var DOWN_FILE_URL = "{{ url('admin/down_file') }}";// 下载
     var DEL_FILE_URL = "{{ url('api/admin/upload/ajax_del') }}";// 删除文件的接口地址
 
+    var AJAX_QUERY_ORDER_WX_URL = "{{ url('api/admin/order_pay/ajax_wx_query_order') }}";// ajax查询微信扫码支付是否成功地址
+
+    var WAIT_SECOND_NUM = 90;// 扫码支付等待时间
 </script>
 <link rel="stylesheet" href="{{asset('js/baguetteBox.js/baguetteBox.min.css')}}">
 <script src="{{asset('js/baguetteBox.js/baguetteBox.min.js')}}" async></script>
@@ -98,7 +107,7 @@
 <!-- zui js -->
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
 
-<script src="{{ asset('/js/admin/QualityControl/CourseOrderStaff_pay_save.js') }}?38"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/CourseOrderStaff_pay_save.js') }}?65"  type="text/javascript"></script>
 @component('component.upfileincludejsmany')
 @endcomponent
 </body>

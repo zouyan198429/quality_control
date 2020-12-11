@@ -631,6 +631,7 @@ class CourseOrderStaffDBBusiness extends BasePublicDBBusiness
      *      'payment_amount' => 0,// 总支付金额
      *      'change_amount' => 0,// 找零金额
      *       'remarks' => '',// 订单备注
+     *       'auth_code' => '',// 扫码枪扫的付款码
      *  ];
      * @param int $operate_staff_id 操作人id
      * @param int $modifAddOprate 修改时是否加操作人，1:加;0:不加[默认]
@@ -695,8 +696,16 @@ class CourseOrderStaffDBBusiness extends BasePublicDBBusiness
         $total_price_goods = $total_price - $total_price_discount;
         $payment_amount = $otherParams['payment_amount'];// 总支付金额
         $change_amount = $otherParams['change_amount'];// 找零金额
+        $auth_code = $otherParams['auth_code'];// 扫码枪扫的付款码
+        $a = 100;
+        $b = 99.91;
+        throws(bcsub($a,$b,2));
+        var_dump($a-$b);
+         throws(floatval($payment_amount - $change_amount) < 0.02);
+        throws(floatval($total_price_goods));
+        throws(floatval($payment_amount - $change_amount) < floatval($total_price_goods) ? 1: 0);
         if(!is_numeric($payment_amount) || !is_numeric($change_amount)) throws('参数：总支付金额或 找零金额 格式有误！');
-        if(($payment_amount - $change_amount) < $total_price_goods) throws('实收金额不能小于应付金额【' . $total_price_goods . '】');
+        if(floatval($payment_amount - $change_amount) < floatval($total_price_goods)) throws('实收金额不能小于应付金额【' . $total_price_goods . '】');
         $createOrder = [
             'order_type' => 1,// 订单类型1面授培训2会员年费
             'pay_config_id' => $pay_config_id,// 收款帐号配置id
@@ -718,7 +727,7 @@ class CourseOrderStaffDBBusiness extends BasePublicDBBusiness
         $operate_staff_id_history = 0;
         CommonDB::doTransactionFun(function() use(&$company_id, &$organize_id, &$ids, &$operate_staff_id, &$modifAddOprate
             , &$ownProperty, &$temNeedStaffIdOrHistoryId, &$operate_staff_id_history, &$order_no, &$createOrder
-            , &$pay_config_id, &$pay_method, &$return_params, &$orderPayConfigInfo){
+            , &$pay_config_id, &$pay_method, &$return_params, &$orderPayConfigInfo, &$auth_code){
             // 生成订单
             OrdersDBBusiness::createOrder($company_id, $createOrder, $order_no, $operate_staff_id, $modifAddOprate);
             // 修改订单号
@@ -748,15 +757,60 @@ class CourseOrderStaffDBBusiness extends BasePublicDBBusiness
 
                     ];
                     try{
-                        $result = easyWechatPay::miniProgramunify($app, $params, 4);
-                        // 从上一步得到的 $result['code_url'] 得到二维码内容：将 $result['code_url'] 生成二维码图片向用户展示即可扫码，生成工具上面自己找一下即可。 SDK 不内置
-                        $return_params['code_url'] = $result['code_url'];
-                        $return_params['pay_order_no'] = $resultPay['pay_order_no'];
+                        $result = easyWechatPay::miniProgramunifyExtend($app, $params, 8,function ($resultWX) use(&$return_params, &$resultPay){
+
+                            // 从上一步得到的 $result['code_url'] 得到二维码内容：将 $result['code_url'] 生成二维码图片向用户展示即可扫码，生成工具上面自己找一下即可。 SDK 不内置
+                            $return_params['code_url'] = $resultWX['code_url'];
+                            $return_params['pay_order_no'] = $resultPay['pay_order_no'];
+                            return $resultWX;
+                        });
                     } catch ( \Exception $e) {
                         throws('失败；信息[' . $e->getMessage() . ']');
                     }
                     break;
                 case 16:// 微信收付款码【线上--扫码枪】
+                    $resultPay = OrdersDBBusiness::createOrderPay($company_id, $createPayOrder, $order_no, $operate_staff_id, $modifAddOprate);
+                    $app = app('wechat.payment.' . $payKey);
+                    $params = [
+                        'body' => '面授课--微信收款码支付费用',
+                        'out_trade_no' => $resultPay['pay_order_no'],
+                        'total_fee' => ceil($createOrder['total_price_goods'] * 100),
+                        // 'spbill_create_ip' => '123.12.12.123', // 可选，如不传该参数，SDK 将会自动获取相应 IP 地址
+                        // 'notify_url' => 'https://pay.weixin.qq.com/wxpay/pay.action', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
+                        // 'trade_type' => 'MICROPAY', // 请对应换成你的支付方式对应的值类型
+                        // 'openid' => $openid, // 'oUpF8uMuAJO_M2pxb1Q9zNjWeS6o',
+                        'auth_code' => $auth_code, // $message['product_id'] 则为生成二维码时的产品 ID
+
+                    ];
+                    try{
+                        Tool::phpInitSet();// 可长时间执行
+                        $result = easyWechatPay::microPay($app, $params, function ($resultWX) use(&$return_params,
+                            &$order_no, &$resultPay, &$payKey){
+
+                            $return_params['openid'] = $resultWX['openid'] ?? '';
+                            $return_params['pay_order_no'] = $resultPay['pay_order_no'];
+                            // 付款成功
+                            $orderPayInfo = OrderPayDBBusiness::getDBFVFormatList(4, 1, ['pay_order_no' => $resultPay['pay_order_no']]);
+                            // 先查一下接口，再改状态这样放心
+
+                            try {
+                                OrderPayDBBusiness::payWXJudgeThirdQuery($order_no, $resultPay['pay_order_no'], $payKey, $orderPayInfo);
+                            } catch ( \Exception $e) {
+                                $errStr = $e->getMessage();
+                                $errCode = $e->getCode();
+                                if(in_array($errCode, [11])){// 已付款成功
+//                                    $returnStr = $errStr;
+//                                    return $returnStr;
+                                }else{// 没有付款成功
+                                    //                    throws('操作失败；信息[' . $e->getMessage() . ']');
+                                    throws($errStr, $errCode);
+                                }
+                            }
+                            return $resultWX;
+                        });
+                    } catch ( \Exception $e) {
+                        throws('失败；信息[' . $e->getMessage() . ']');
+                    }
                     break;
                 case 4:// 支付宝收款码【线上--网页生成】
                     break;

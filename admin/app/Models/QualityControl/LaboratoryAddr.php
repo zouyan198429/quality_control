@@ -1,9 +1,9 @@
 <?php
-// 报名学员
+// 实验室地址
 
 namespace App\Models\QualityControl;
 
-class CourseOrderStaff extends BasePublicModel
+class LaboratoryAddr extends BasePublicModel
 {
     //****************数据据缓存**相关的***开始********************************************
 //    public static $cachePre = 'cacheDB';// 缓存键最前面的关键字  cacheDb:U:{id值}_{email值}  中的 cacheDb
@@ -24,7 +24,7 @@ class CourseOrderStaff extends BasePublicModel
 
 //    public static $cacheSimple = 'U';// 表名简写,为空，则使用表名
 
-    public static $cacheVersion = 'V3';// 内容随意改[可0{空默认为0}开始自增]- 如果运行过程中，有直接对表记录进行修改，增加或修改字段名，则修改此值，使表记录的相关缓存过期。
+    public static $cacheVersion = '';// 内容随意改[可0{空默认为0}开始自增]- 如果运行过程中，有直接对表记录进行修改，增加或修改字段名，则修改此值，使表记录的相关缓存过期。
     // $cacheExcludeFields 为空：则缓存所有字段值；排除字段可能是大小很大的字段，不适宜进行缓存
     public static $cacheExcludeFields = [];// 表字段中排除字段; 有值：要小心，如果想获取的字段有在排除字段中的，则不能使用缓存
 
@@ -76,100 +76,6 @@ class CourseOrderStaff extends BasePublicModel
      *
      * @var string
      */
-    protected $table = 'course_order_staff';
+    protected $table = 'laboratory_addr';
 
-    //  分班状态(1待分班、2部分分班、4已分班)
-    public static $joinClassStatusArr = [
-        '1' => '待分班',
-//        '2' => '部分分班',
-        '4' => '已分班',
-    ];
-
-    //  缴费状态(1待缴费、2部分缴费、4已缴费、8部分退费、16已退费 )
-    public static $payStatusArr = [
-        '1' => '待缴费',
-        '2' => '部分缴费',
-        '4' => '已缴费',
-        '8' => '部分退费',
-        '16' => '已退费',
-    ];
-
-    //  人员状态1正常4已作废8已结业
-    public static $staffStatusArr = [
-        '1' => '正常',
-        '4' => '已作废',
-        '8' => '已结业',
-    ];
-    // 表里没有的字段
-    protected $appends = ['join_class_status_text', 'pay_status_text', 'staff_status_text'];
-
-    /**
-     * 获取分班状态文字
-     *
-     * @return string
-     */
-    public function getJoinClassStatusTextAttribute()
-    {
-        return static::$joinClassStatusArr[$this->join_class_status] ?? '';
-    }
-
-    /**
-     * 获取缴费状态文字
-     *
-     * @return string
-     */
-    public function getPayStatusTextAttribute()
-    {
-        return static::$payStatusArr[$this->pay_status] ?? '';
-    }
-
-    /**
-     * 获取人员状态文字
-     *
-     * @return string
-     */
-    public function getStaffStatusTextAttribute()
-    {
-        return static::$staffStatusArr[$this->staff_status] ?? '';
-    }
-
-    /**
-     * 获取面授操作日志-二维
-     */
-    public function courseLog()
-    {
-        return $this->hasMany('App\Models\QualityControl\CourseLog', 'course_staff_id', 'id');
-    }
-
-    /**
-     * 获取课程-一维
-     */
-    public function course()
-    {
-        return $this->belongsTo('App\Models\QualityControl\Course', 'course_id', 'id');
-    }
-
-    /**
-     * 获取培训班-一维
-     */
-    public function courseClass()
-    {
-        return $this->belongsTo('App\Models\QualityControl\CourseClass', 'class_id', 'id');
-    }
-
-    /**
-     * 获取培训班企业一维
-     */
-    public function courseClassCompany()
-    {
-        return $this->belongsTo('App\Models\QualityControl\CourseClassCompany', 'class_company_id', 'id');
-    }
-
-    /**
-     * 获取收款订单-一维
-     */
-    public function orders()
-    {
-        return $this->belongsTo('App\Models\QualityControl\Orders', 'order_no', 'order_no');
-    }
 }

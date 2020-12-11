@@ -315,7 +315,7 @@ class CTAPIResourceBusiness extends BasicPublicCTAPIBusiness
 
                 if(empty($ext)) $ext = $extFirst;
                 // 修复是二进制文件的问题
-                if(empty($ext) || $ext == 'bin' ){
+                if(empty($ext) ||  in_array($ext, ['bin', 'g3'])  ){// g3 ：有分片上传时，$extFirst值为g3的，
                     $ext = DownFile::getLocalFileExt($name);
                     Log::info('上传文件日志-二进制文件后缀',[$ext]);// 文件后缀 ["jpg"]
                 }

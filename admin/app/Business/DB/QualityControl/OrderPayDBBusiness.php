@@ -3,7 +3,10 @@
 namespace App\Business\DB\QualityControl;
 
 use App\Services\DB\CommonDB;
+use App\Services\pay\weixin\easyWechatPay;
 use App\Services\Tool;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 /**
  *
@@ -26,7 +29,7 @@ class OrderPayDBBusiness extends BasePublicDBBusiness
      * @param array  $extendParams 扩展字段
      * @param int $operate_staff_id 操作人id
      * @param int $modifAddOprate 修改时是否加操作人，1:加;0:不加[默认]
-     * @return  int  记录id值，--一维数组
+     * @return null 错误码 10 -- 代表记录不存在或已处理---不用处理了 ; 11：已经是成功状态
      * @author zouyan(305463219@qq.com)
      */
     public static function finishPay($company_id, $pay_order_no, $pay_no = '', $extendParams = [], $operate_staff_id = 0, $modifAddOprate = 0){
@@ -36,7 +39,9 @@ class OrderPayDBBusiness extends BasePublicDBBusiness
         if(empty($payInfo)) throws('订单支付记录不存在', 10);// return '订单支付记录不存在';// 1; //记录不存在
 
         $status = $payInfo->pay_status;// 付款状态  状态1已关闭2付款中4成功8失败
-        if(in_array($status, [1,4])) throws('已关闭或已支付成功', 10);// return '已关闭或已支付成功';//  return 1;// 已关闭或成功
+        // if(in_array($status, [1,4])) throws('已关闭或已支付成功', 10);// return '已关闭或已支付成功';//  return 1;// 已关闭或成功
+        if($status == 1) throws('已关闭', 10);
+        if($status == 4) throws('已支付成功', 11);
 
         // $ownProperty  自有属性值;
         // $temNeedStaffIdOrHistoryId 当只有自己会用到时操作员工id和历史id时，用来判断是否需要获取 true:需要获取； false:不需要获取
@@ -63,11 +68,11 @@ class OrderPayDBBusiness extends BasePublicDBBusiness
      *
      * @param int  $company_id 企业id
      * @param string  $pay_order_no 生成的支付订单号
-     * @param string  $pay_no 支付单号(第三方)
+     * @param string  $pay_no 支付单号(第三方)--失败时，有可能为空值
      * @param array  $extendParams 扩展字段
      * @param int $operate_staff_id 操作人id
      * @param int $modifAddOprate 修改时是否加操作人，1:加;0:不加[默认]
-     * @return  int  记录id值，--一维数组
+     * @return  null 错误码 10 -- 代表记录不存在或已处理---不用处理了; 11：已经是成功状态
      * @author zouyan(305463219@qq.com)
      */
     public static function failPay($company_id, $pay_order_no, $pay_no = '', $extendParams = [], $operate_staff_id = 0, $modifAddOprate = 0){
@@ -77,7 +82,9 @@ class OrderPayDBBusiness extends BasePublicDBBusiness
         if(empty($payInfo)) throws('订单支付记录不存在', 10);// return '订单支付记录不存在';// 1; //记录不存在
 
         $status = $payInfo->pay_status;// 付款状态  状态1已关闭2付款中4成功8失败
-        if(in_array($status, [1,4])) throws('已关闭或已支付成功', 10);// return '已关闭或已支付成功';//  return 1;// 已关闭或成功
+        // if(in_array($status, [1,4])) throws('已关闭或已支付成功', 10);// return '已关闭或已支付成功';//  return 1;// 已关闭或成功
+        if($status == 1) throws('已关闭', 10);
+        if($status == 4) throws('已支付成功', 11);
 
         // $ownProperty  自有属性值;
         // $temNeedStaffIdOrHistoryId 当只有自己会用到时操作员工id和历史id时，用来判断是否需要获取 true:需要获取； false:不需要获取
@@ -87,10 +94,11 @@ class OrderPayDBBusiness extends BasePublicDBBusiness
             , &$payInfo, &$ownProperty, &$temNeedStaffIdOrHistoryId, &$operate_staff_id_history){
             // 修改订单号
             $updateData = array_merge($extendParams, [
-                'pay_no' => $pay_no,
+                // 'pay_no' => $pay_no,
                 'pay_status' => 8,// 状态1已关闭2待确认4成功8失败
                 'sure_time' => date('Y-m-d H:i:s'),// 付款时间
             ]);
+            if(!empty($pay_no)) $updateData['pay_no'] = $pay_no;
             $saveQueryParams = Tool::getParamQuery(['pay_order_no' => $pay_order_no],[], []);
             static::save($updateData, $saveQueryParams);
         });
@@ -192,7 +200,7 @@ class OrderPayDBBusiness extends BasePublicDBBusiness
                         } catch ( \Exception $e) {
                             $errStr = $e->getMessage();
                             $errCode = $e->getCode();
-                            if($errCode == 10 ){
+                            if(in_array($errCode, [10,11])){
                                 $returnStr = $errStr;
                                 return $returnStr;
                             }else{
@@ -223,5 +231,135 @@ class OrderPayDBBusiness extends BasePublicDBBusiness
 //            $order->save(); // 保存订单
 
 //            return true; // 返回处理完成
+    }
+
+    /**
+     * 支付脚本或查询支付是否成功【生成付款码，用户扫码支付场景】--微信
+     *  $order_no 订单号
+     *  $pay_order_no  订单付款单号
+     *  返回值 1:支付成功  2: 支付失败 3：其它状态 或 throws 有误或 暂时没有支付结果
+     * */
+    public static function payWXJudge($order_no, $pay_order_no){
+
+        // 获取订单信息
+        $orderInfo = OrdersDBBusiness::getDBFVFormatList(4, 1, ['order_no' => $order_no]);
+        if(empty($orderInfo)) throws('订单记录不存在！');
+        // 获取订单支付信息
+        $orderPayInfo = static::getDBFVFormatList(4, 1, ['pay_order_no' => $pay_order_no]);
+        if(empty($orderPayInfo)) throws('订单支付记录不存在！');
+        $pay_status = $orderPayInfo['pay_status'];// 状态1已关闭2待确认4成功8失败
+        if(in_array($pay_status, [1, 8])) throws('订单支付已关闭或支付失败！');
+        if($pay_status == 4) return 1;// 支付成功
+        if($pay_status != 2)  throws('订单支付非待确认状态！');
+        // 调用新加或修改接口
+        $pay_config_id = $orderPayInfo['pay_config_id'];
+        $payConfigInfo = OrderPayConfigDBBusiness::getDBFVFormatList(4, 1, ['id' => $pay_config_id]);
+        if(empty($payConfigInfo)) throws('订单支付收款账号记录不存在！');
+
+        $pay_key = $payConfigInfo['pay_key'];
+        return static::payWXJudgeThirdQuery($order_no, $pay_order_no, $pay_key, $orderPayInfo);
+
+    }
+
+    /**
+     *  注意，确定是已支生成支付订单，但是还没有改变支付结果的记录才能调用此方法--会修改支付订单状态
+     * 支付脚本或查询支付是否成功【生成付款码，用户扫码支付场景】--微信
+     *  $order_no 订单号
+     *  $pay_order_no  订单付款单号
+     *   $pay_key 支付配置的key
+     *   $order_pay_info 支付单详情--一维数组
+     *  返回值 1:支付成功  2: 支付失败 3：其它状态 或 throws 有误或 暂时没有支付结果
+     * */
+    public static function payWXJudgeThirdQuery($order_no, $pay_order_no, $pay_key, $order_pay_info = []){
+        $app = app('wechat.payment.' . $pay_key);
+        return easyWechatPay::queryByOutTradeNumberExtend($app, $pay_order_no, function ($trade_state, $resultWX) use(&$order_no, &$pay_order_no,
+            &$pay_key, &$order_pay_info){
+
+            /** 交易状态
+            SUCCESS—支付成功
+            REFUND—转入退款
+            NOTPAY—未支付
+            CLOSED—已关闭
+            REVOKED—已撤销（付款码支付）
+            USERPAYING--用户支付中（付款码支付）
+            PAYERROR--支付失败(其他原因，如银行返回失败)
+            支付状态机请见下单API页面
+             */
+            // 如trade_state不为 SUCCESS，则只返回out_trade_no（必传）和attach（选传）。
+            switch($trade_state){
+                case 'SUCCESS':// SUCCESS—支付成功
+                    $transaction_id = $queryResult['transaction_id'] ?? '';// 第三方单号[有则填]
+                    static::finishPay(0, $pay_order_no, $transaction_id, [], 0, 0);
+                    return 1;
+                    break;
+                case 'REFUND':// REFUND—转入退款
+                    break;
+                case 'NOTPAY':// NOTPAY—未支付
+                case 'USERPAYING':// USERPAYING--用户支付中（付款码支付）
+                case 'CLOSED':// CLOSED—已关闭
+                    // 如果开启支付超过10分钟，则作失败处理
+                    $order_time = $order_pay_info['order_time'];
+                    $currentNow = Carbon::now()->toDateTimeString();
+                    if(Tool::diffDate($order_time, $currentNow, 1, '时间', 2) > 60 *10){
+                        static::failPay(0, $pay_order_no, 0, [], 0, 0);
+                        return 2;
+                    }
+                    break;
+                case 'REVOKED':// REVOKED—已撤销（付款码支付）
+                    break;
+                case 'PAYERROR':// PAYERROR--支付失败(其他原因，如银行返回失败)
+                    static::failPay(0, $pay_order_no, 0, [], 0, 0);
+                    return 2;
+                    break;
+                default:
+                    break;
+            }
+            return 3;
+        }, 1);
+    }
+
+    // 脚本去跑页面生成收款码，用户扫码付款的脚本--查询并修改订单状态
+    public static function autoRunWXPayResult(){
+        // 读取所有不知道付款结果的
+        $queryParams = Tool::getParamQuery(['pay_type' => 1 ,'pay_status' => 2, 'pay_method' => [2, 16]], [], []);
+        $dataList = static::getAllList($queryParams, [])->toArray();
+
+        Log::info('微信支付日志 自动脚本，生成的收款码主动请求不知道是否付款成功的订单-->' . __FUNCTION__, [$dataList]);
+        if(!empty($dataList)){
+
+            $orderNoArr = Tool::getArrFields($dataList, 'order_no');
+            $orderList = OrdersDBBusiness::getDBFVFormatList(1, 1, ['order_no' => $orderNoArr]);
+            // 按订单号格式化数据
+            $formatOrderList = Tool::arrUnderReset($orderList, 'order_no', 1, '_');
+
+            $payConfigIdsArr = Tool::getArrFields($dataList, 'pay_config_id');
+            $payConfigList = OrderPayConfigDBBusiness::getDBFVFormatList(1, 1, ['id' => $payConfigIdsArr]);
+            // 按id格式化数据
+            $formatPayConfigList = Tool::arrUnderReset($payConfigList, 'id', 1, '_');
+
+            foreach($dataList as $orderPayInfo){
+                $order_no = $orderPayInfo['order_no'];
+                $pay_order_no = $orderPayInfo['pay_order_no'];
+                try{
+                    // 获取订单信息
+                    $orderInfo = $formatOrderList[$order_no] ?? [];// OrdersDBBusiness::getDBFVFormatList(4, 1, ['order_no' => $order_no]);
+                    if(empty($orderInfo)) throws('订单记录不存在！');
+                    $pay_status = $orderPayInfo['pay_status'];// 状态1已关闭2待确认4成功8失败
+                    if(in_array($pay_status, [1, 8])) throws('订单支付已关闭或支付失败！');
+                    if($pay_status == 4) continue;// 支付成功
+                    if($pay_status != 2)  throws('订单支付非待确认状态！');
+                    // 调用新加或修改接口
+                    $pay_config_id = $orderPayInfo['pay_config_id'];
+                    $payConfigInfo = $formatPayConfigList[$pay_config_id] ?? [] ;// OrderPayConfigDBBusiness::getDBFVFormatList(4, 1, ['id' => $pay_config_id]);
+                    if(empty($payConfigInfo)) throws('订单支付收款账号记录不存在！');
+
+                    $pay_key = $payConfigInfo['pay_key'];
+                    static::payWXJudgeThirdQuery($order_no, $pay_order_no, $pay_key, $orderPayInfo);
+                } catch ( \Exception $e) {
+                    Log::info('微信支付日志 自动脚本，生成的收款码主动请求不知道是否付款成功的订单-错误->' . __FUNCTION__, [$e->getMessage(), $e->getCode()]);
+                    // throws($e->getMessage(), $e->getCode());
+                }
+            }
+        }
     }
 }

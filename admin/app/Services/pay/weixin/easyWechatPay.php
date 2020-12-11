@@ -18,7 +18,7 @@ class easyWechatPay
      *       'total_fee' => '', // 标价金额 Int 订单总金额，单位为分
      *       'trade_type' => '', // 交易类型  小程序取值如下：JSAPI
      *   ];
-     * @param int  $operateType 1 小程序 2 app 4 js  8 NATIVE  16
+     * @param int  $operateType 1 小程序 2 app 4 js  8 NATIVE  16 MICROPAY 付款码支付
      * @return  mixed
      * @author zouyan(305463219@qq.com)
      */
@@ -149,7 +149,6 @@ class easyWechatPay
         }
         */
     }
-
 
     /**
      * 根据微信订单号查询
@@ -590,4 +589,167 @@ class easyWechatPay
         $return_msg = $result['return_msg'] ?? '失败';// 返回信息 String(128)  当return_code为FAIL时返回信息为错误原因 ，例如  签名失败  参数格式校验错误
         if($return_code !== 'SUCCESS') throws($return_msg);
     }
+
+// ************ 以下是新扩展的方法*************************************************************************
+
+    /**
+     * 付款码支付
+     * @param $app  obj 当前对象
+     * @param  array  $params  参数 参考 https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_10&index=1
+     *
+     *   $params = [
+     *       'openid' => '', // 必填  用户标识
+     *      'body' => '', // 必填商品描述 String(128)
+     *       'out_trade_no' => '', // 必填 商户订单号 String(32) 商户系统内部订单号，要求32个字符内，只能是数字、大小写字母_-|*且在同一个商户号下唯一
+     *       'total_fee' => '', // 标价金额 Int 订单总金额，单位为分
+     *       'trade_type' => '', // 交易类型  小程序取值如下：JSAPI
+     *   ];
+     * @param mixed $doFun 需要统计执行视图方法 的闭包函数  function($resultWX){} ，
+     *   参数   $resultWX ：接口返回的参数
+     *   其它参数都通过 use传入函数内 如：use(&$namespace, &$expireNums)
+     * @return  mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function microPay(&$app, $params = [], $doFun = '')
+    {
+        try{
+            $unifyParams = [
+                // 'body' => '测试支付',
+                // 'out_trade_no' => '1',
+                // 'total_fee' => 1,
+                // 'spbill_create_ip' => '123.12.12.123', // 可选，如不传该参数，SDK 将会自动获取相应 IP 地址
+                // 'notify_url' => 'https://pay.weixin.qq.com/wxpay/pay.action', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
+                // 'trade_type' => 'JSAPI', // 请对应换成你的支付方式对应的值类型
+                // 'openid' => $userInfo['mini_openid'], // 'oUpF8uMuAJO_M2pxb1Q9zNjWeS6o',
+            ];
+            $unifyParams = array_merge($unifyParams, $params);
+            $apiResult = $app->pay($unifyParams);
+            Log::info('微信支付日志--下单 付款码支付  pay返回：-->' . __FUNCTION__, ['params' => $unifyParams, 'result' => $apiResult,]);
+
+            return static::apiResultDo($apiResult, function ($result) use(&$doFun){
+
+                if(is_callable($doFun)){
+                    return $doFun($result);
+                }
+            });
+        } catch ( \Exception $e) {
+            Log::info('微信支付日志 error-->' . __FUNCTION__, [$e->getMessage()]);
+            throws('' . $e->getMessage() . '', $e->getCode());
+            // return $fail($e->getMessage());
+        }
+    }
+
+    /**
+     * 统一下单  重新发起一笔支付要使用原订单号，避免重复支付；已支付过或已调用关单、撤销（请见后文的API列表）的订单号不能重新发起支付。--支付未成功的订单号，可以重新发起支付
+     * @param $app  obj 当前对象
+     * @param $params  参数 参考 https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=9_1
+     *
+     *   $params = [
+     *       'openid' => '', // 必填  用户标识
+     *      'body' => '', // 必填商品描述 String(128)
+     *       'out_trade_no' => '', // 必填 商户订单号 String(32) 商户系统内部订单号，要求32个字符内，只能是数字、大小写字母_-|*且在同一个商户号下唯一
+     *       'total_fee' => '', // 标价金额 Int 订单总金额，单位为分
+     *       'trade_type' => '', // 交易类型  小程序取值如下：JSAPI
+     *   ];
+     * @param int  $operateType 1 小程序 2 app 4 js  8 NATIVE  16 MICROPAY 付款码支付
+     * @param mixed $doFun 需要统计执行视图方法 的闭包函数  function($resultWX){} ，
+     *   参数   $resultWX ：接口返回的参数
+     *   其它参数都通过 use传入函数内 如：use(&$namespace, &$expireNums)
+     * @return  mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function miniProgramunifyExtend(&$app, $params = [], $operateType = 1, $doFun){
+
+        try{
+            $apiResult = static::miniProgramunify($app, $params, $operateType);
+            return static::apiResultDo($apiResult, function ($result) use(&$doFun){
+
+                if(is_callable($doFun)){
+                    return $doFun($result);
+                }
+            });
+        } catch ( \Exception $e) {
+            Log::info('微信支付日志 error-->' . __FUNCTION__, [$e->getMessage()]);
+            throws('' . $e->getMessage() . '', $e->getCode());
+            // return $fail($e->getMessage());
+        }
+    }
+
+    /**
+     * 根据商户订单号查询--扩展方法
+     * @param $app  obj 当前对象
+     * @param string  $out_trade_no  $queryType = 1：商户系统内部的订单号（out_trade_no）。  $queryType = 2： 第三方单号
+     * @param mixed $doFun 需要统计执行视图方法 的闭包函数  function($trade_state, $resultWX){} ，
+     *   参数   $trade_state ：交易状态
+     *   参数   $resultWX ：接口返回的参数
+     *   其它参数都通过 use传入函数内 如：use(&$namespace, &$expireNums)
+     * @param int $queryType  查询编号的类型 1： 自己系统的订单号 【默认】，2 第三方单号
+     * @return mixed   错误 throws 或 返回 $doFun 的返回值
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function queryByOutTradeNumberExtend(&$app, $out_trade_no, $doFun, $queryType = 1){
+
+        try{
+            if($queryType == 1){
+                $queryResult = static::queryByOutTradeNumber($app, $out_trade_no);// 自己的订单号查询
+            } else{
+                $queryResult = static::queryByTransactionId($app, $out_trade_no);// 第三方单号查询
+            }
+            Log::info('微信支付日志 $queryResult-->' . __FUNCTION__, [$queryResult]);
+            return static::apiResultDo($queryResult, function ($result) use(&$doFun){
+
+                /** 交易状态
+                SUCCESS—支付成功
+                REFUND—转入退款
+                NOTPAY—未支付
+                CLOSED—已关闭
+                REVOKED—已撤销（付款码支付）
+                USERPAYING--用户支付中（付款码支付）
+                PAYERROR--支付失败(其他原因，如银行返回失败)
+                支付状态机请见下单API页面
+                 */
+                $trade_state = $result['trade_state'] ?? '';// 交易状态
+                if(is_callable($doFun)){
+                    return $doFun($trade_state, $result);
+                }
+            });
+        } catch ( \Exception $e) {
+            Log::info('微信支付日志 error-->' . __FUNCTION__, [$e->getMessage()]);
+            throws('' . $e->getMessage() . '', $e->getCode());
+            // return $fail($e->getMessage());
+        }
+    }
+
+
+    /**
+     * 通用的接口返回参数判断
+     * @param array  $result 微信接口返回的数据  数组
+     * @param mixed $doFun 需要统计执行视图方法 的闭包函数  function($resultWX){} ，
+     *   参数 $resultWX ：接口返回的参数
+     *   其它参数都通过 use传入函数内 如：use(&$namespace, &$expireNums)
+     * @return mixed   错误 throws 或 返回 $doFun 的返回值
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function apiResultDo($result, $doFun){
+
+        // SUCCESS/FAIL
+        //此字段是通信标识，非交易标识，交易是否成功需要查看trade_state来判断
+        if ($result['return_code'] === 'SUCCESS') {
+            // 业务结果  SUCCESS/FAIL
+            // 当result_code为FAIL时返回错误代码，详细参见下文错误列表
+            if ($result['result_code'] === 'SUCCESS') {
+
+                if(is_callable($doFun)){
+                    return $doFun($result);
+                }
+
+            }else{
+                throws('错误代码【' . ($result['err_code'] ?? '') . '】；错误描述【' . ($result['err_code_des'] ?? '') . '】');
+            }
+        } else {// if ($result['result_code'] === 'FAIL')
+            throws($result['return_msg'] ?? '');
+        }
+    }
+
+
 }

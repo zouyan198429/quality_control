@@ -162,6 +162,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/CourseOrderStaff.js') }}?14"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/CourseOrderStaff.js') }}?15"  type="text/javascript"></script>
 </body>
 </html>

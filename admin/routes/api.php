@@ -309,7 +309,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/course_order_staff/ajax_frozen', 'Admin\QualityControl\CourseOrderStaffController@ajax_frozen');// 操作(作废/取消作废)
         $api->post('admin/course_order_staff/ajax_join_class_save', 'Admin\QualityControl\CourseOrderStaffController@ajax_join_class_save');// 分班
         $api->post('admin/course_order_staff/ajax_cancel_class', 'Admin\QualityControl\CourseOrderStaffController@ajax_cancel_class');// 取消分班
-        $api->post('admin/course_order_staff/ajax_create_order', 'Admin\QualityControl\CourseOrderStaffController@ajax_create_order');// 缴费生成订单
+        $api->any('admin/course_order_staff/ajax_create_order', 'Admin\QualityControl\CourseOrderStaffController@ajax_create_order');// 缴费生成订单
         // 面授操作日志
         $api->any('admin/course_log/ajax_alist', 'Admin\QualityControl\CourseLogController@ajax_alist');//ajax获得列表数据
         $api->post('admin/course_log/ajax_del', 'Admin\QualityControl\CourseLogController@ajax_del');// 删除
@@ -346,6 +346,20 @@ $api->version('v1', function ($api) {
         $api->post('admin/order_pay_config/ajax_get_ids', 'Admin\QualityControl\OrderPayConfigController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
         $api->any('admin/order_pay_config/ajax_info', 'Admin\QualityControl\OrderPayConfigController@ajax_info');//ajax获得详情数据
+
+        // 第三方对帐单
+        $api->any('admin/order_pay/ajax_alist', 'Admin\QualityControl\OrderPayController@ajax_alist');//ajax获得列表数据
+//        $api->post('admin/order_pay/ajax_del', 'Admin\QualityControl\OrderPayController@ajax_del');// 删除
+//        $api->post('admin/order_pay/ajax_save', 'Admin\QualityControl\OrderPayController@ajax_save');// 新加/修改
+        $api->post('admin/order_pay/ajax_get_child', 'Admin\QualityControl\OrderPayController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/order_pay/ajax_get_areachild', 'Admin\QualityControl\OrderPayController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/order_pay/ajax_import_staff','Admin\QualityControl\OrderPayController@ajax_import'); // 导入员工
+
+        $api->post('admin/order_pay/import', 'Admin\QualityControl\OrderPayController@import');// 导入excel
+        $api->post('admin/order_pay/ajax_get_ids', 'Admin\QualityControl\OrderPayController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        $api->post('admin/order_pay/ajax_wx_query_order', 'Admin\QualityControl\OrderPayController@ajax_wx_query_order');// ajax查询微信扫码支付是否成功
+
         // 企业到期配置
         $api->any('admin/company_expire/ajax_alist', 'Admin\QualityControl\CompanyExpireController@ajax_alist');//ajax获得列表数据
         $api->post('admin/company_expire/ajax_del', 'Admin\QualityControl\CompanyExpireController@ajax_del');// 删除

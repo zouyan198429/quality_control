@@ -570,6 +570,212 @@ function toUtf8QRCode(str) {
 
 // ****************qrcode插件 显示二维码***************结束*******************
 
+// ***************ajax请求***封装****开始******************************************************
+
+
+// ajax请求成功的默认执行函数
+// ret 返回的结果对象
+// paramObj 操作的参数对象
+// {
+//     apiSuccessObj: {},// 操作成功的对象-- 具体参数请看 ajaxAPIOperate 方法
+//     apiFailObj: {},// 操作失败的对象-- 具体参数请看 ajaxAPIOperate 方法
+// }
+var AJAX_SUCESS_FUNCTION = function ajaxSuccessFun(ret, paramObj) {
+
+    if(!ret.apistatus){//失败
+        var ajaxAPIFailFun = getAttrVal(paramObj, 'apiFailObj', true, {});
+        ajaxAPIFailFun.alert_icon_num = getAttrVal(ajaxAPIFailFun, 'alert_icon_num', true, 3);
+        ajaxAPIFailFun.countDownFunIcon = getAttrVal(ajaxAPIFailFun, 'countDownFunIcon', true, 5);
+        ajaxAPIOperate(ret, ajaxAPIFailFun);
+    }else{//成功
+        var ajaxAPISuccessFun = getAttrVal(paramObj, 'apiSuccessObj', true, {});
+        ajaxAPISuccessFun.alert_icon_num = getAttrVal(ajaxAPISuccessFun, 'alert_icon_num', true, 1);
+        ajaxAPISuccessFun.countDownFunIcon = getAttrVal(ajaxAPISuccessFun, 'countDownFunIcon', true, 1);
+        ajaxAPIOperate(ret, ajaxAPISuccessFun);
+    }
+}
+
+// ajax 接口请求成功或失败默认执行的方法
+// ret 返回的结果对象
+// operateObj 成功的参数对象
+// {
+//     operate_txt:'操作成功',// 操作名称--完整的句子 如 审核通过成功！ ；默认 '操作成功'
+//     operate_num: 0, // 操作的编号; 默认 0 ； 1弹出显示成功的文字及确定按钮； 2 执行刷新列表操作;
+//                     //      4 弹出倒计时的3秒的窗口，并可以指定一个执行函数; 8 其它指定的自定义函数
+//                     //      16 : 在4的基础上，指定执行函数关闭弹窗并刷新列表【-适合弹层新加和修改页】
+//     alert_icon_num : 3, // operate_num 有1 时 是成功还是失败； 0失败1成功2询问3警告 [默认]4对5错
+//     reset_total : false,// operate_num 有2 和 16 时：是否重新从数据库获取总页数 true:重新获取,false不重新获取【默认】
+//     countDownFun: '',// operate_num 有4 和 16时：倒计时后，同时要执行的函数 参数 ret ，参数二 paramObj {}；；默认 ''--不执行
+//     countDownFunParams: {},// operate_num 有4 和 16时：自定义函数的第二个参数对象 默认 {}
+//     countDownFunTime: 3000,// operate_num 有4 和 16时：倒计时；默认 3000-3秒
+//     countDownFunIcon: 1,// operate_num 有4 和 16时：0-6 图标 0：紫红叹号--出错警示 ；1：绿色对勾--成功【默认】；2：无图标 ；3：淡黄问号；4：灰色小锁图标；
+//             //  5：红色哭脸--         ； 6：绝色笑脸
+//     customizeFun: '', // operate_num 有8时：自定义的要执行的函数 参数 ret ，参数二 paramObj {}；默认 ''--不执行
+//     customizeFunParams: {},// operate_num 有8时：自定义函数的第二个参数对象 默认 {}
+// }
+function ajaxAPIOperate(ret, operateObj){
+    var operate_txt = getAttrVal(operateObj, 'operate_txt', true, '');
+    var operate_num = getAttrVal(operateObj, 'operate_num', true, 0);
+    var reset_total = getAttrVal(operateObj, 'reset_total', true, false);
+    var msg = ret.errorMsg;
+    if(msg === ""){
+        msg = operate_txt;// +"成功";
+    }
+    if(msg === ""){
+        msg = "操作成功";
+    }
+
+    // 1弹出显示成功的文字及确定按钮--成功或失败
+    if( (operate_num & 1) == 1){
+        // 0失败1成功2询问3警告4对5错
+        var alert_icon_num = getAttrVal(operateObj, 'alert_icon_num', true, 3);
+        // countdown_alert(msg,1,5);
+        layer_alert(msg,alert_icon_num,0);
+    }
+
+    // 4 弹出倒计时的3秒的窗口，并可以指定一个执行函数
+    if( (operate_num & 4) == 4 ||  (operate_num & 16) == 16){
+        var countDownFun = getAttrVal(operateObj, 'countDownFun', true, '');
+        var countDownFunParams = getAttrVal(operateObj, 'countDownFunParams', true, {});
+        var countDownFunTime = getAttrVal(operateObj, 'countDownFunTime', true, 3000);
+        var countDownFunIcon = getAttrVal(operateObj, 'countDownFunIcon', true, 1);
+        layerMsg(msg, countDownFunIcon, 0.3, countDownFunTime, function(ret){
+            countDownFun && countDownFun(ret, countDownFunParams);
+            if( (operate_num & 16) == 16){
+                parent_reset_list_iframe_close(reset_total);// 刷新并关闭  ； reset_total：是否重新获取总数量： true:重新获取,false不重新获取【默认】
+            }
+        });
+    }
+
+    // 2 执行刷新列表操作
+    if( (operate_num & 2) == 2){
+        // reset_list(true, true);
+        console.log(LIST_FUNCTION_NAME);
+        eval( LIST_FUNCTION_NAME + '(' + true +', ' + true +', ' + reset_total + ', 2)');
+    }
+
+    // 8 其它指定的自定义函数
+    if( (operate_num & 8) == 8){
+        var customizeFun = getAttrVal(operateObj, 'customizeFun', true, '');
+        var customizeFunParams = getAttrVal(operateObj, 'customizeFunParams', true, {});
+        customizeFun && customizeFun(ret, customizeFunParams);
+    }
+
+}
+
+// ajax请求的操作
+// {
+//     async: true, //false:同步;true:异步[默认]
+//     ajax_url: '',//  请求的url 默认''
+//     data: {},//  数据对象 {} 或表单序列化的字符串 $("#addForm").serialize();  格式： aa=1&b=2... ; 默认 ：｛｝
+//     ajax_type: 'POST',//  请求的类型 默认POST ;  GET
+//     headers:{},//  加入请求头的对象 默认 {}
+//     dataType: 'json',//   返回数据类型 默认'json'
+//     show_loading: true,//  请求时，是否显示遮罩 true:显示，false:不显示
+//     successFun : AJAX_SUCESS_FUNCTION,//   ajax操作成功执行的函数,默认 AJAX_SUCESS_FUNCTION ，参数  ret, paramObj； 可重新写一个方法
+//     paramObj: {},//      ajax操作成功执行的函数默认方法 ajaxSuccessFun的参数 格式如下： 或 自定义方法--则此参数自己按自己需要定义对象 {}
+//          {
+//            apiSuccessObj: {},// 操作成功的对象-- 具体参数请看 ajaxAPIOperate 方法
+//            apiFailObj: {},// 操作失败的对象-- 具体参数请看 ajaxAPIOperate 方法
+//         }
+// }
+//  示例
+// ajaxQuery({
+//     async: true, //false:同步;true:异步[默认]
+//     ajax_url: '',//  请求的url 默认''
+//     data: { order_no:order_no, pay_order_no:pay_order_no},// 数据对象 {} 或表单序列化的字符串 $("#addForm").serialize();  格式： aa=1&b=2... ; 默认 ：｛｝
+//     ajax_type: 'POST',//  请求的类型 默认POST ;  GET
+//     headers:{},//  加入请求头的对象 默认 {}
+//     dataType: 'json',//   返回数据类型 默认'json'
+//     show_loading: true,//  请求时，是否显示遮罩 true:显示，false:不显示
+//     successFun : AJAX_SUCESS_FUNCTION,//   ajax操作成功执行的函数,默认 AJAX_SUCESS_FUNCTION ，参数  ret, paramObj； 可重新写一个方法
+//     paramObj: {//      ajax操作成功执行的函数默认方法 ajaxSuccessFun的参数 格式如下： 或 自定义方法--则此参数自己按自己需要定义对象 {}
+//         apiSuccessObj: {// 操作成功的对象-- 具体参数请看 ajaxAPIOperate 方法
+//             operate_txt:'操作成功',// 操作名称--完整的句子 如 审核通过成功！ ；默认 '操作成功'
+//             operate_num: 4, // 操作的编号; 默认 0 ； 1弹出显示成功的文字及确定按钮； 2 执行刷新列表操作;
+//                             //      4 弹出倒计时的3秒的窗口，并可以指定一个执行函数; 8 其它指定的自定义函数
+//                             //      16 : 在4的基础上，指定执行函数关闭弹窗并刷新列表【-适合弹层新加和修改页】
+//             alert_icon_num : 1, // operate_num 有1 时 是成功还是失败； 0失败1成功2询问3警告 [默认]4对5错
+//             reset_total : false,// operate_num 有2 和 16 时：是否重新从数据库获取总页数 true:重新获取,false不重新获取【默认】
+//             countDownFun: '',// operate_num 有4 和 16时：倒计时后，同时要执行的函数 参数 ret ，参数二 paramObj {}；；默认 ''--不执行
+//             countDownFunParams: {},// operate_num 有4 和 16时：自定义函数的第二个参数对象 默认 {}
+//             countDownFunTime: 3000,// operate_num 有4 和 16时：倒计时；默认 3000-3秒
+//             countDownFunIcon: 1,// operate_num 有4 和 16时：0-6 图标 0：紫红叹号--出错警示 ；1：绿色对勾--成功【默认】；2：无图标 ；3：淡黄问号；4：灰色小锁图标；
+//             //  5：红色哭脸--         ； 6：绝色笑脸
+//             customizeFun: '', // operate_num 有8时：自定义的要执行的函数 参数 ret ，参数二 paramObj {}；默认 ''--不执行
+//             customizeFunParams: {}// operate_num 有8时：自定义函数的第二个参数对象 默认 {}
+//         },
+//         apiFailObj: {// 操作失败的对象-- 具体参数请看 ajaxAPIOperate 方法
+//             operate_txt:'操作失败',// 操作名称--完整的句子 如 审核通过成功！ ；默认 '操作成功'
+//             operate_num: 1, // 操作的编号; 默认 0 ； 1弹出显示成功的文字及确定按钮； 2 执行刷新列表操作;
+//                             //      4 弹出倒计时的3秒的窗口，并可以指定一个执行函数; 8 其它指定的自定义函数
+//                             //      16 : 在4的基础上，指定执行函数关闭弹窗并刷新列表【-适合弹层新加和修改页】
+//             alert_icon_num : 3, // operate_num 有1 时 是成功还是失败； 0失败1成功2询问3警告 [默认]4对5错
+//             reset_total : false,// operate_num 有2 和 16 时：是否重新从数据库获取总页数 true:重新获取,false不重新获取【默认】
+//             countDownFun: '',// operate_num 有4 和 16时：倒计时后，同时要执行的函数 参数 ret ，参数二 paramObj {}；；默认 ''--不执行
+//             countDownFunParams: {},// operate_num 有4 和 16时：自定义函数的第二个参数对象 默认 {}
+//             countDownFunTime: 3000,// operate_num 有4 和 16时：倒计时；默认 3000-3秒
+//             countDownFunIcon: 5,// operate_num 有4 和 16时：0-6 图标 0：紫红叹号--出错警示 ；1：绿色对勾--成功【默认】；2：无图标 ；3：淡黄问号；4：灰色小锁图标；
+//             //  5：红色哭脸--         ； 6：绝色笑脸
+//             customizeFun: '', // operate_num 有8时：自定义的要执行的函数 参数 ret ，参数二 paramObj {}；默认 ''--不执行
+//             customizeFunParams: {}// operate_num 有8时：自定义函数的第二个参数对象 默认 {}
+//         }
+//     }
+// });
+function ajaxQuery(ajaxObj) {
+    // if(typeof headers !== "object"){
+    //     headers = {};
+    // }
+    // console.log('===ajaxObj==:',ajaxObj);
+    consoleLogs(['===ajaxObj==:', ajaxObj]);
+    var ajax_url = getAttrVal(ajaxObj, 'ajax_url', true, '');
+    var data = getAttrVal(ajaxObj, 'data', true, {});
+    var headers = getAttrVal(ajaxObj, 'headers', true, {});
+    var show_loading = getAttrVal(ajaxObj, 'show_loading', true, true);
+    var successFun =  getAttrVal(ajaxObj, 'successFun', true, AJAX_SUCESS_FUNCTION);
+    var paramObj =  getAttrVal(ajaxObj, 'paramObj', true, {});
+    // console.log('ajax_url:',ajax_url);
+    consoleLogs(['===ajax_url==:', ajax_url]);
+    // console.log('data:',data);
+    consoleLogs(['===data==:', data]);
+    // console.log('===show_loading==:',show_loading);
+    consoleLogs(['===show_loading==:', show_loading]);
+    if(show_loading === true){
+        var layer_index = layer.load();
+    }//layer.msg('加载中', {icon: 16});
+    $.ajax({
+        'async': getAttrVal(ajaxObj, 'async', true, true),// true,//false:同步;true:异步
+        'type' : getAttrVal(ajaxObj, 'ajax_type', true, 'POST'),
+        'url' : ajax_url,//'/pms/Supplier/ajax_del',
+        'headers':get_ajax_headers(headers, ADMIN_AJAX_TYPE_NUM),
+        'data' : data,
+        'dataType' : getAttrVal(ajaxObj, 'dataType', true, 'json'),
+        'success' : function(ret){
+            // console.log('ret:');
+            // console.log(ret);
+            consoleLogs(['==ret===:', ret]);
+            successFun && successFun(ret, paramObj);
+            if(show_loading === true){
+                layer.close(layer_index);//手动关闭
+            }
+        }
+    });
+}
+
+// ***************ajax请求***封装****结束******************************************************
+// 打印日志-- 写这个方法的原因是：console.log('aaa:', obj) 这种 方式 在控制台不能展示开对象，只能显示[object:object] 的方字，所以才有了此方法
+// 格式：数组对象[] 或 非object类型 的 如： 'aaa' 或  111 或 true
+function consoleLogs(logArr) {
+    logArr = logArr || [];
+    if(typeof logArr !== 'object'){
+        logArr = [logArr];
+    }
+
+    for (var i=0 ; i< logArr.length ; i++) {
+        var temAttr = logArr[i];
+        console.log(temAttr);
+    }
+}
 // -----------json对象--属性相关的操作---------------------
 //是否有对象属性 ；有属性：true ;无属性:false  undefined/null:返回true -- 对 数组同样试用
 // obj 要判断的对象
@@ -596,7 +802,7 @@ function isHasAttrVal(obj, attr, value) {
     return false;
 }
 
-// 判断是否为空  不存在 或 '' 或 {} 或 [] 或 null 或 undefined true:为空, false:不为空  ；数字0：不判断为空,返回false
+// 判断是否为空  true:为空, false:不为空  ； 说明： 不存在 或 '' 或 {} 或 [] 或 null 或 undefined 返回 true ;  数字0：不判断为空,返回false
 function isEmpeyVal(val){
     console.log('------typeof--------', typeof val);
     //  JSON.stringify(val) == "{}"
@@ -607,6 +813,8 @@ function isEmpeyVal(val){
         // }else if(typeof val == "array") { // 没有此名称
         //     if(val.length > 0) return false;
     } else if (typeof val == "number") {
+        return false;
+    } else if (typeof val == "boolean") {
         return false;
     } else if (typeof val == "undefined") {
         return true;

@@ -359,6 +359,13 @@ Route::get('admin/order_pay_config/add/{id}', 'Admin\QualityControl\OrderPayConf
 Route::get('admin/order_pay_config/export', 'Admin\QualityControl\OrderPayConfigController@export');// 导出
 Route::get('admin/order_pay_config/import_template', 'Admin\QualityControl\OrderPayConfigController@import_template');// 导入模版
 
+// 第三方对帐单
+Route::get('admin/order_pay', 'Admin\QualityControl\OrderPayController@index');// 列表
+Route::get('admin/order_pay/add/{id}', 'Admin\QualityControl\OrderPayController@add');// 添加
+// Route::get('admin/order_pay/select', 'Admin\QualityControl\OrderPayController@select');// 选择-弹窗
+Route::get('admin/order_pay/export', 'Admin\QualityControl\OrderPayController@export');// 导出
+Route::get('admin/order_pay/import_template', 'Admin\QualityControl\OrderPayController@import_template');// 导入模版
+
 // 企业到期配置
 Route::get('admin/company_expire', 'Admin\QualityControl\CompanyExpireController@index');// 列表
 Route::get('admin/company_expire/add/{id}', 'Admin\QualityControl\CompanyExpireController@add');// 添加

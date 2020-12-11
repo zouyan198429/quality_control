@@ -329,8 +329,10 @@ class CourseOrderStaffController extends BasicController
                 $company_id = CommonRequest::getInt($request, 'company_id');// 报名用户所属的企业id
                 $pay_config_id = CommonRequest::getInt($request, 'pay_config_id');// 支付配置id
                 $pay_method = CommonRequest::getInt($request, 'pay_method');// 选择的缴费方式
+                $auth_code = CommonRequest::get($request, 'auth_code');// 扫码枪扫的付款码
                 $reDataArr['pay_config_id'] = $pay_config_id;
                 $reDataArr['pay_method'] = $pay_method;
+                // $reDataArr['auth_code'] = $auth_code;
 
                 // 根据报名用户id,及收款账号和收款方式 获得报名用户及支付信息
                 list($payMethodInfo, $dataPanyConfigList, $pay_configs_format) = CTAPICourseOrderStaffBusiness::getMethodInfoAndStaffList($request, $this, $id, $company_id, $pay_config_id, $pay_method);
@@ -344,6 +346,7 @@ class CourseOrderStaffController extends BasicController
                    'payment_amount' => CommonRequest::get($request, 'payment_amount'),// 总支付金额
                    'change_amount' => CommonRequest::get($request, 'change_amount'),// 找零金额
                     'remarks' => CommonRequest::get($request, 'remarks'),// 订单备注
+                    'auth_code' => CommonRequest::get($request, 'auth_code'),// 扫码枪扫的付款码
                 ];
 
                 $organize_id = $this->organize_id;

@@ -443,6 +443,7 @@ class CTAPICourseOrderStaffBusiness extends BasicPublicCTAPIBusiness
      *      'payment_amount' => 0,// 总支付金额
      *      'change_amount' => 0,// 找零金额
      *       'remarks' => '',// 订单备注
+     *       'auth_code' => '',// 扫码枪扫的付款码
      *  ];
      * @param int $notLog 是否需要登陆 0需要1不需要
      * @return  array

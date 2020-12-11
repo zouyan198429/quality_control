@@ -4,6 +4,7 @@ namespace App\Business\Controller\API\QualityControl;
 
 use App\Services\DBRelation\RelationDB;
 use App\Services\Excel\ImportExport;
+use App\Services\pay\weixin\easyWechatPay;
 use App\Services\Request\API\HttpRequest;
 use App\Services\SMS\LimitSMS;
 use App\Services\Tool;
@@ -207,4 +208,33 @@ class CTAPIOrderPayBusiness extends BasicPublicCTAPIBusiness
         $result = static::exeDBBusinessMethodCT($request, $controller, '', 'payWXNotify', $apiParams, $company_id, $notLog);
         return $result;
     }
+
+    /**
+     * 生成付款码后，用户扫码支付循环获取是否支付成功--微信
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param string $order_no 订单号
+     * @param string $pay_order_no 支付单号
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return   1:支付成功  2: 支付失败 3：其它状态 或 throws 有误或 暂时没有支付结果
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function payWXQuery(Request $request, Controller $controller, $order_no = '', $pay_order_no = '', $notLog = 0)
+    {
+
+        $company_id = 0;// $controller->company_id;
+        // $user_id = $controller->user_id;
+//        if(isset($saveData['real_name']) && empty($saveData['real_name'])  ){
+//            throws('联系人不能为空！');
+//        }
+        // 调用新加或修改接口
+        $apiParams = [
+            'order_no' => $order_no,
+            'pay_order_no' => $pay_order_no,
+        ];
+        $result = static::exeDBBusinessMethodCT($request, $controller, '', 'payWXJudge', $apiParams, $company_id, $notLog);
+        return $result;
+    }
+
 }

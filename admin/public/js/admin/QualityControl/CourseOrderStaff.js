@@ -132,7 +132,7 @@ var otheraction = {
         // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
         var tishi = '缴费';//"查看供应商";
         console.log('weburl', weburl);
-        layeriframe(weburl,tishi,700,450,0);
+        layeriframe(weburl,tishi,700,450,5);
         return false;
     }
 };
