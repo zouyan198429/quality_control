@@ -92,10 +92,10 @@
 {{--        <col width="75">--}}
         <col width="75">
 {{--        <col width="120">--}}
-        <col width="75">
+        <col width="100">
         <col width="110">
         <col width="75">
-        <col width="150">
+        <col width="135">
     </colgroup>
     <thead>
     <tr>
@@ -200,6 +200,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/AbilityJoin.js') }}?14"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/AbilityJoin.js') }}?15"  type="text/javascript"></script>
 </body>
 </html>
