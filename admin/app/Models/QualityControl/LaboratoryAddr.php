@@ -78,4 +78,30 @@ class LaboratoryAddr extends BasePublicModel
      */
     protected $table = 'laboratory_addr';
 
+    // 开启状态(1开启2关闭)
+    public static $openStatusArr = [
+        '1' => '开启',
+        '2' => '关闭',
+    ];
+
+    // 表里没有的字段
+    protected $appends = ['open_status_text'];
+
+    /**
+     * 获取开启状态文字
+     *
+     * @return string
+     */
+    public function getOpenStatusTextAttribute()
+    {
+        return static::$openStatusArr[$this->open_status] ?? '';
+    }
+
+    /**
+     * 获取所属企业--一维
+     */
+    public function company()
+    {
+        return $this->belongsTo('App\Models\QualityControl\Staff', 'company_id', 'id');
+    }
 }

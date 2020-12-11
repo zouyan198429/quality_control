@@ -237,6 +237,23 @@ var otheraction = {
         var tishi = company_name + "-面授报名";
         layeriframe(weburl,tishi,1050,535,5);
         return false;
+    },
+    laboratory_addr_num : function(id, company_name){// 查看机构实验室地址
+        //获得表单各name的值
+        var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
+        console.log(LABORATORY_ADDR_URL);
+        console.log(data);
+        var url_params = get_url_param(data);// parent.get_url_param(data);
+        var weburl = LABORATORY_ADDR_URL + '?company_id=' + id ;// + url_params;// + id + '?' + url_params;
+        // var weburl = STAFF_SHOW_URL + '?company_id=' + id
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = company_name + "-机构实验室地址管理";
+        layeriframe(weburl,tishi,1050,535,5);
+        return false;
     }
 
 };
@@ -393,6 +410,9 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
 	document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.staff_num(<%=item.id%>,'<%=item.company_name%>')\">");
 	document.write("                    <i class=\"ace-icon fa fa-user-circle bigger-60\">员工(<%=item.extend_info.staff_num%>)<\/i>");
 	document.write("                <\/a>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.laboratory_addr_num(<%=item.id%>,'<%=item.company_name%>')\">");
+    document.write("                    <i class=\"ace-icon fa fa-home bigger-60\">实验室地址(<%=item.extend_info.laboratory_num%>)<\/i>");
+    document.write("                <\/a>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.schedule(<%=item.id%>,'<%=item.company_name%>')\">");
     document.write("                    <i class=\"ace-icon  fa fa-cloud-download  bigger-60\">能力附表(<%=item.extend_info.schedule_num%>)<\/i>");
     document.write("                <\/a>");

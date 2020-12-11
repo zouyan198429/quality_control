@@ -253,8 +253,10 @@
 
       var COURSE_ORDER_URL = "{{ url('admin/course_order')}}/";// 查看企业面授
 
+      var LABORATORY_ADDR_URL = "{{ url('admin/laboratory_addr')}}/";// 查看机构实验室地址
+
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/Company.js') }}?288"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/Company.js') }}?289"  type="text/javascript"></script>
 </body>
 </html>

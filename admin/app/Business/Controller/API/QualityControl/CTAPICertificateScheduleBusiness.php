@@ -312,23 +312,43 @@ class CTAPICertificateScheduleBusiness extends BasicPublicCTAPIBusiness
     {
         $company_id = $controller->company_id;
 
+        $open_status = CommonRequest::getInt($request, 'open_status');// // 1首次 ;2扩项
         $company_id = CommonRequest::getInt($request, 'company_id');
         $certificate_no = CommonRequest::get($request, 'certificate_no');
         $addr = CommonRequest::get($request, 'addr');
         $ratify_date = CommonRequest::get($request, 'ratify_date');
         $valid_date = CommonRequest::get($request, 'valid_date');
-        // 判断开始结束日期
-        Tool::judgeBeginEndDate($ratify_date, $valid_date, 1 + 2 + 256 + 512, 1, date('Y-m-d'), '有效起止日期');
-
+        // 判断开始结束日期 --  // 初次或时间都填写了
+        if($open_status == 1 || ($ratify_date != '' && $valid_date != '')){
+            Tool::judgeBeginEndDate($ratify_date, $valid_date, 1 + 2 + 256 + 512, 1, date('Y-m-d'), '有效起止日期');
+        }else{
+            if($ratify_date != '' && judgeDate($ratify_date) === false ){
+                throws('批准日期不是有效的日期格式！');
+            }
+            if($valid_date != '' && judgeDate($valid_date) === false ){
+                throws('有效期止不是有效的日期格式！');
+            }
+        }
         $params = [
             'company_id' => $company_id,
             'certificate_no' => $certificate_no,
-            'ratify_date' => $ratify_date,
-            'valid_date' => $valid_date,
+            // 'ratify_date' => $ratify_date,
+            // 'valid_date' => $valid_date,
             'addr' => $addr,
         ];
+        if($ratify_date != '') $params['ratify_date'] = $ratify_date;
+        if($valid_date != '') $params['valid_date'] = $valid_date;
         foreach($saveData as $k => $v){
             $saveData[$k] = array_merge($params, $v);
+        }
+        $certificate_info = [];
+        if($open_status == 1){
+            $certificate_info = [
+                'certificate_no' => $certificate_no,
+                 'ratify_date' => $ratify_date,
+                 'valid_date' => $valid_date,
+                'addr' => $addr,
+            ];
         }
 
         // 参数
@@ -337,6 +357,9 @@ class CTAPICertificateScheduleBusiness extends BasicPublicCTAPIBusiness
             'company_id' => $company_id,
             'operate_staff_id' =>  $controller->user_id,
             'modifAddOprate' => 1,
+            'doType' => 1,
+            'open_status' => $open_status,
+            'certificate_info' => $certificate_info,
         ];
         $methodName = 'importDatas';
 //        if(isset($saveData['mini_openid']))  $methodName = 'replaceByIdWX';

@@ -67,25 +67,25 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
         $certificate_info = [];
         $certificate_company_info = [];// 企业表保存
         // CMA证书号
-        $certificate_no = '';
-        $has_certificate_no = false;// 是否有 false:没有 ； true:有
-        if(Tool::getInfoUboundVal($saveData, 'certificate_no', $has_certificate_no, $certificate_no, 0)){
-
-            $certificate_info = [
-                'company_id' => $saveData['company_id'],
-                'certificate_no' => $certificate_no,
-                'ratify_date' => $saveData['ratify_date'] ?? '',
-                'valid_date' => $saveData['valid_date'] ?? '',
-                'addr' => $saveData['addr'] ?? '',
-            ];
-            $certificate_company_info = [
-                'id' => $saveData['company_id'],
-                'company_certificate_no' => $certificate_no,
-                'ratify_date' => $saveData['ratify_date'] ?? '',
-                'valid_date' => $saveData['valid_date'] ?? '',
-                'laboratory_addr' => $saveData['addr'] ?? '',
-            ];
-        }
+//        $certificate_no = '';
+//        $has_certificate_no = false;// 是否有 false:没有 ； true:有
+//        if(Tool::getInfoUboundVal($saveData, 'certificate_no', $has_certificate_no, $certificate_no, 0)){
+//
+//            $certificate_info = [
+//                'company_id' => $saveData['company_id'],
+//                'certificate_no' => $certificate_no,
+//                'ratify_date' => $saveData['ratify_date'] ?? '',
+//                'valid_date' => $saveData['valid_date'] ?? '',
+//                'addr' => $saveData['addr'] ?? '',
+//            ];
+//            $certificate_company_info = [
+//                'id' => $saveData['company_id'],
+//                'company_certificate_no' => $certificate_no,
+//                'ratify_date' => $saveData['ratify_date'] ?? '',
+//                'valid_date' => $saveData['valid_date'] ?? '',
+//                'laboratory_addr' => $saveData['addr'] ?? '',
+//            ];
+//        }
         // 修改时 需要强制更新员工数量
         $forceCompanyNum =  false;
         $force_company_num = '';
@@ -123,7 +123,7 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
         //*********************************************************
         $isModify = false;
         CommonDB::doTransactionFun(function() use(&$saveData, &$company_id, &$id, &$operate_staff_id, &$modifAddOprate, &$operate_staff_id_history, &$modelObj, &$isModify
-            , &$certificate_info, &$certificate_company_info, &$certificate_no, &$has_certificate_no
+            , &$certificate_info, &$certificate_company_info
             , &$forceCompanyNum, &$force_company_num, &$companyNumIds, &$isBatchOperate, &$isBatchOperateVal ){
 
 
@@ -149,29 +149,29 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
                 if($temNeedStaffIdOrHistoryId) static::addOprate($saveData, $operate_staff_id,$operate_staff_id_history, 1);
             }
             // 有证书
-            if($has_certificate_no){
-                $certificate_info = array_merge($certificate_info, ['operate_staff_id' => $operate_staff_id, 'operate_staff_id_history' => $operate_staff_id_history]);
-                $certificate_company_info = array_merge($certificate_company_info, ['operate_staff_id' => $operate_staff_id, 'operate_staff_id_history' => $operate_staff_id_history]);
-                // $certificate_id = CertificateDBBusiness::replaceById($certificate_info, $company_id, $operate_id, $operate_staff_id, $modifAddOprate);
-
-                $certificateObj = null ;
-                $searchConditon = [
-                    'company_id' => $certificate_info['company_id'],
-                    // 'certificate_no' => $certificate_info['certificate_no'],// 一个企业只能有一个证书，所以去掉这个字段
-                ];
-                CertificateDBBusiness::updateOrCreate($certificateObj, $searchConditon, $certificate_info);
-                $saveData['certificate_id'] = $certificateObj->id;// $certificate_id;
-
-                // 更新企业表信息
-                $companyObj = null ;
+//            if($has_certificate_no){
+//                $certificate_info = array_merge($certificate_info, ['operate_staff_id' => $operate_staff_id, 'operate_staff_id_history' => $operate_staff_id_history]);
+//                $certificate_company_info = array_merge($certificate_company_info, ['operate_staff_id' => $operate_staff_id, 'operate_staff_id_history' => $operate_staff_id_history]);
+//                // $certificate_id = CertificateDBBusiness::replaceById($certificate_info, $company_id, $operate_id, $operate_staff_id, $modifAddOprate);
+//
+//                $certificateObj = null ;
 //                $searchConditon = [
-//                    'id' => $certificate_company_info['id'],
+//                    'company_id' => $certificate_info['company_id'],
 //                    // 'certificate_no' => $certificate_info['certificate_no'],// 一个企业只能有一个证书，所以去掉这个字段
 //                ];
-//                StaffDBBusiness::updateOrCreate($companyObj, $searchConditon, $certificate_company_info);
-                StaffDBBusiness::saveById($certificate_company_info, $certificate_company_info['id'],$companyObj);
-
-            }
+//                CertificateDBBusiness::updateOrCreate($certificateObj, $searchConditon, $certificate_info);
+//                $saveData['certificate_id'] = $certificateObj->id;// $certificate_id;
+//
+//                // 更新企业表信息
+//                $companyObj = null ;
+////                $searchConditon = [
+////                    'id' => $certificate_company_info['id'],
+////                    // 'certificate_no' => $certificate_info['certificate_no'],// 一个企业只能有一个证书，所以去掉这个字段
+////                ];
+////                StaffDBBusiness::updateOrCreate($companyObj, $searchConditon, $certificate_company_info);
+//                StaffDBBusiness::saveById($certificate_company_info, $certificate_company_info['id'],$companyObj);
+//
+//            }
             if(isset($saveData['category_name'])){
                 $tem_category_name = trim($saveData['category_name']);
                 if(strlen($tem_category_name) > 100) $tem_category_name = mb_substr($tem_category_name,0,100,'utf-8');
@@ -361,10 +361,18 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
      * @param int $operate_staff_id 操作人id
      * @param int $modifAddOprate 修改时是否加操作人，1:加;0:不加[默认]
      * @param int $doType 操作类型  1、导入【默认】 ； 2 接口调用
+     * @param int $open_status 操作类型   1首次 ;2扩项【默认】
+     * @param int $certificate_info 1首次 时的证书信息
+     *    [
+     *      'certificate_no' => $certificate_no,
+     *      'ratify_date' => $ratify_date,
+     *      'valid_date' => $valid_date,
+     *      'addr' => $addr,
+     *  ]
      * @return  array 单条数据 - 记录的id数组--一维数组
      * @author zouyan(305463219@qq.com)
      */
-    public static function importDatas($saveData, $company_id, $operate_staff_id = 0, $modifAddOprate = 0, $doType = 1){
+    public static function importDatas($saveData, $company_id, $operate_staff_id = 0, $modifAddOprate = 0, $doType = 1, $open_status = 2, $certificate_info = []){
 //        ini_set('memory_limit','3072M');    // 临时设置最大内存占用为 3072M 3G
 //        ini_set("max_execution_time", 0);
 //        set_time_limit(0);   // 设置脚本最大执行时间 为0 永不过期
@@ -385,6 +393,8 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
         }
         $errsArr = [];// 错误数组
         // $saveArr = [];// 最终可以保存的数据
+        $addrArr = [];
+        $certificateNoArr = [];
         foreach($saveData as $k => &$info) {
             $recordErr = [];
             $company_id = $info['company_id'] ?? 0;
@@ -394,6 +404,12 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
             $four_name = $info['four_name'] ?? '';// 四级
             $param_name = $info['param_name'] ?? '';// 项目
             $method_name = $info['method_name'] ?? '';// 标准（方法）名称
+            $temAddr = $info['addr'] ?? '';
+            if($temAddr != '' && !in_array($temAddr, $addrArr)) array_push($addrArr, $temAddr);
+
+            $temCertificateNo = $info['certificate_no'] ?? '';
+            if($temCertificateNo != '' && !in_array($temCertificateNo, $certificateNoArr)) array_push($certificateNoArr, $temCertificateNo);
+
             if(!empty($method_name)){
                 $method_name = replace_enter_char($method_name, 1);
                 $info['method_name'] = $method_name;
@@ -426,16 +442,72 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
         // 如果有错，则返回错误
         if(!empty($errsArr)) throws(implode('<br/>', $errsArr));
 
-        CommonDB::doTransactionFun(function() use( &$saveData, &$organize_id, &$returnIds, &$temNeedStaffIdOrHistoryId, &$operate_staff_id, &$company_id, &$modifAddOprate, &$operate_staff_id_history, &$doType){
+
+        CommonDB::doTransactionFun(function() use( &$saveData, &$organize_id, &$returnIds, &$temNeedStaffIdOrHistoryId,
+            &$operate_staff_id, &$company_id, &$modifAddOprate, &$operate_staff_id_history, &$doType,
+            &$open_status, &$certificate_info, &$addrArr, &$certificateNoArr){
+            if($open_status == 1){
+                $certificateObj = null ;
+                $searchConditon = [
+                    'company_id' => $company_id,
+                    // 'certificate_no' => $certificate_info['certificate_no'],// 一个企业只能有一个证书，所以去掉这个字段
+                ];
+                CertificateDBBusiness::updateOrCreate($certificateObj, $searchConditon, $certificate_info);
+                $certificate_id = $certificateObj->id;// $certificate_id;
+                // 同时更新企业的
+
+                // 更新企业表信息
+
+
+                $certificate_company_info = [
+                    'company_certificate_no' => $certificate_info['certificate_no'],
+                    'ratify_date' => $certificate_info['ratify_date'] ?? '',
+                    'valid_date' => $certificate_info['valid_date'] ?? '',
+                    'laboratory_addr' => $certificate_info['addr'] ?? '',
+                ];
+                $companyObj = null ;
+//                $searchConditon = [
+//                    'id' => $company_id,
+//                    // 'certificate_no' => $certificate_info['certificate_no'],// 一个企业只能有一个证书，所以去掉这个字段
+//                ];
+//                StaffDBBusiness::updateOrCreate($companyObj, $searchConditon, $certificate_company_info);
+                StaffDBBusiness::saveById($certificate_company_info, $company_id,$companyObj);
+
+            }
+
+            // 判断证书是否存在
+            foreach($certificateNoArr as $temCertificateNo){
+                $certificateInfo = CertificateDBBusiness::getDBFVFormatList(4, 1, ['company_id' => $company_id, 'certificate_no' => $temCertificateNo]);
+                if(empty($certificateInfo)) throws('证书【' .$temCertificateNo . '】信息不存在！');
+
+            }
+            // 保存地址信息
+            $addrIdArr = [];
+            foreach($addrArr as $itemAddr){
+                $addrObj = null ;
+                $searchConditon = [
+                    'company_id' => $company_id,
+                    'addr' => $itemAddr,
+                    // 'certificate_no' => $certificate_info['certificate_no'],// 一个企业只能有一个证书，所以去掉这个字段
+                ];
+                $addrInfo = $searchConditon;
+                LaboratoryAddrDBBusiness::updateOrCreate($addrObj, $searchConditon, $addrInfo);
+                $addr_id = $addrObj->id;// $certificate_id;
+                if(!is_numeric($addr_id) || $addr_id <= 0 ) throws('保存实验室地址失败！');
+                $addrIdArr[$itemAddr] = $addr_id;
+            }
+
+
             // 对数据进行修改或新加
             // throws('对数据进行修改或新加');
-            foreach($saveData as $k => $info){
+            foreach($saveData as $k => &$info){
                 $id = $info['id'] ?? 0;
                 if(isset($info['id'])) unset($info['id']);
+                $temAddr = $info['addr'] ?? '';
                 $company_id = $info['company_id'] ?? 0;
                 // 加入操作人员信息
                 if($temNeedStaffIdOrHistoryId) static::addOprate($info, $operate_staff_id,$operate_staff_id_history, 1);
-
+                $info['laboratory_id'] = $addrIdArr[$temAddr] ?? 0;
                 // 新加或更新
                 static::replaceById($info, $company_id, $id, $operate_staff_id, $modifAddOprate);
                 array_push($returnIds, $id);

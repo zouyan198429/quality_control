@@ -40,6 +40,7 @@ function initPic(){
     // baguetteBox.run('.baguetteBoxTwo');
 }
 $(function(){
+    popSelectInit();// 初始化选择弹窗
     //提交
     $(document).on("click","#submitBtn",function(){
         //var index_query = layer.confirm('您确定提交保存吗？', {

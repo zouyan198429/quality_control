@@ -50,9 +50,11 @@ class IndexController extends BasicController
     }
 
     public function test(Request $request){
-            QRCode::generateQRfromGoogle("http://www.helloweba.com");
-            die;
-
+           $aa = [
+             '中化人吴三桂' => 1,
+             '陕西省四小要夺末桂林时尚服饰陕西省四小要夺末桂林时尚服饰'  => 2,
+           ];
+           pr($aa['陕西省四小要夺末桂林时尚服饰陕西省四小要夺末桂林时尚服饰']);
 //        $aa = [
 //          'aa' => 'aa',
 //          'bb' => 'bb'

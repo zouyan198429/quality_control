@@ -270,6 +270,9 @@
                       <dd>
                           <a lay-href="{{ url('admin/certificate_import_log') }}">导入批次</a>
                       </dd>
+                      <dd>
+                          <a lay-href="{{ url('admin/laboratory_addr') }}">实验室地址</a>
+                      </dd>
                   </dl>
               </li>
               <li data-name="user" class="layui-nav-item">

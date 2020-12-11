@@ -408,6 +408,13 @@ Route::get('admin/certificate/add/{id}', 'Admin\QualityControl\CertificateContro
 Route::get('admin/certificate/export', 'Admin\QualityControl\CertificateController@export');// 导出
 Route::get('admin/certificate/import_template', 'Admin\QualityControl\CertificateController@import_template');// 导入模版
 
+// 实验室地址
+Route::get('admin/laboratory_addr', 'Admin\QualityControl\LaboratoryAddrController@index');// 列表
+Route::get('admin/laboratory_addr/add/{id}', 'Admin\QualityControl\LaboratoryAddrController@add');// 添加
+// Route::get('admin/laboratory_addr/select', 'Admin\QualityControl\LaboratoryAddrController@select');// 选择-弹窗
+Route::get('admin/laboratory_addr/export', 'Admin\QualityControl\LaboratoryAddrController@export');// 导出
+Route::get('admin/laboratory_addr/import_template', 'Admin\QualityControl\LaboratoryAddrController@import_template');// 导入模版
+
 // 证书-能力范围
 Route::get('admin/certificate_schedule', 'Admin\QualityControl\CertificateScheduleController@index');// 列表
 Route::get('admin/certificate_schedule/add/{id}', 'Admin\QualityControl\CertificateScheduleController@add');// 添加

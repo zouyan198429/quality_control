@@ -31,6 +31,15 @@
                 </td>
             </tr>
             <tr>
+                <th>操作类型<span class="must">*</span></th>
+                <td class="sel_pay_method">
+                    @foreach ($openStatus as $k=>$txt)
+                        <label><input type="radio"  name="open_status"  value="{{ $k }}"  @if(isset($defaultOpenStatus) && $defaultOpenStatus == $k) checked="checked"  @endif />{{ $txt }} </label>
+                    @endforeach
+                        <br/>首次：证书起止日期必填[会更新到证书记录]；<br/>扩项：起止日期非必填[不会更新证书记录]
+                </td>
+            </tr>
+            <tr>
                 <th>CMA证书号<span class="must">*</span></th>
                 <td>
                     <input type="text" class="inp wnormal"  name="certificate_no" value="{{ $info['certificate_no'] ?? '' }}" placeholder="请输入CMA证书号"/>

@@ -218,6 +218,14 @@ function ajax_form(){
         return false;
     }
 
+    var open_status = $('input[name=open_status]:checked').val() || '';
+    var judge_seled = judge_validate(1,'操作类型',open_status,true,'custom',/^[12]$/,"");
+    if(judge_seled != ''){
+        layer_alert("请选择操作类型",3,0);
+        //err_alert('<font color="#000000">' + judge_seled + '</font>');
+        return false;
+    }
+
     var certificate_no = $('input[name=certificate_no]').val();
     if(!judge_validate(4,'CMA证书号',certificate_no,true,'length',1,30)){
         return false;
@@ -225,25 +233,47 @@ function ajax_form(){
 
     // 开始时间
     var begin_date = $('input[name=ratify_date]').val();
-    if(!judge_validate(4,'批准日期',begin_date,true,'date','','')){
-        return false;
-    }
-
     // 结束时间
     var end_date = $('input[name=valid_date]').val();
-    if(!judge_validate(4,'有效期至',end_date,true,'date','','')){
-        return false;
+    // 初次或时间都填写了
+    if(open_status == 1 || (begin_date != '' && end_date != '')){
+
+        // 开始时间
+        // var begin_date = $('input[name=ratify_date]').val();
+        if(!judge_validate(4,'批准日期',begin_date,true,'date','','')){
+            return false;
+        }
+
+        // 结束时间
+        // var end_date = $('input[name=valid_date]').val();
+        if(!judge_validate(4,'有效期至',end_date,true,'date','','')){
+            return false;
+        }
+
+        if( end_date !== ''){
+            if(begin_date == ''){
+                layer_alert("请选择批准日期",3,0);
+                return false;
+            }
+            if( !judge_validate(4,'有效期至必须',end_date,true,'data_size',begin_date,5)){
+                return false;
+            }
+        }
+    }else{
+
+        // 开始时间
+        // var begin_date = $('input[name=ratify_date]').val();
+        if(!judge_validate(4,'批准日期',begin_date,false,'date','','')){
+            return false;
+        }
+
+        // 结束时间
+        // var end_date = $('input[name=valid_date]').val();
+        if(!judge_validate(4,'有效期至',end_date,false,'date','','')){
+            return false;
+        }
     }
 
-    if( end_date !== ''){
-        if(begin_date == ''){
-            layer_alert("请选择批准日期",3,0);
-            return false;
-        }
-        if( !judge_validate(4,'有效期至必须',end_date,true,'data_size',begin_date,5)){
-            return false;
-        }
-    }
 
 
     var addr = $('input[name=addr]').val();

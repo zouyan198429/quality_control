@@ -430,6 +430,17 @@ $api->version('v1', function ($api) {
         $api->post('admin/certificate/import', 'Admin\QualityControl\CertificateController@import');// 导入excel
         $api->post('admin/certificate/ajax_get_ids', 'Admin\QualityControl\CertificateController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
+        // 实验室地址
+        $api->any('admin/laboratory_addr/ajax_alist', 'Admin\QualityControl\LaboratoryAddrController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/laboratory_addr/ajax_del', 'Admin\QualityControl\LaboratoryAddrController@ajax_del');// 删除
+        $api->post('admin/laboratory_addr/ajax_save', 'Admin\QualityControl\LaboratoryAddrController@ajax_save');// 新加/修改
+        $api->post('admin/laboratory_addr/ajax_get_child', 'Admin\QualityControl\LaboratoryAddrController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/laboratory_addr/ajax_get_areachild', 'Admin\QualityControl\LaboratoryAddrController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/laboratory_addr/ajax_import_staff','Admin\QualityControl\LaboratoryAddrController@ajax_import'); // 导入员工
+
+        $api->post('admin/laboratory_addr/import', 'Admin\QualityControl\LaboratoryAddrController@import');// 导入excel
+        $api->post('admin/laboratory_addr/ajax_get_ids', 'Admin\QualityControl\LaboratoryAddrController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
         // 证书-能力范围
         $api->any('admin/certificate_schedule/ajax_alist', 'Admin\QualityControl\CertificateScheduleController@ajax_alist');//ajax获得列表数据
         $api->post('admin/certificate_schedule/ajax_del', 'Admin\QualityControl\CertificateScheduleController@ajax_del');// 删除

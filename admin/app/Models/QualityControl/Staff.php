@@ -551,6 +551,13 @@ class Staff extends BasePublicModel
     }
 
     /**
+     * 获取企业的实验室地址-二维
+     */
+    public function laboratoryAddr()
+    {
+        return $this->hasMany('App\Models\QualityControl\LaboratoryAddr', 'company_id', 'id');
+    }
+    /**
      * 获取企业的监督检查信息管理-二维
      */
     public function companySupervise()

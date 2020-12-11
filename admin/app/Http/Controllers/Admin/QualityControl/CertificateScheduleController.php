@@ -120,7 +120,6 @@ class CertificateScheduleController extends BasicController
         $pageNum = 0;
         return $this->exeDoPublicFun($request, $pageNum, 1,'admin.QualityControl.CertificateSchedule.add_excel', true
             , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
-
             });
     }
 
@@ -269,11 +268,21 @@ class CertificateScheduleController extends BasicController
                 $company_id = CommonRequest::getInt($request, 'company_id');
                 $certificate_no = CommonRequest::get($request, 'certificate_no');
                 $addr = CommonRequest::get($request, 'addr');
+                $open_status = CommonRequest::getInt($request, 'open_status');// 1首次 ;2扩项
+
                 $ratify_date = CommonRequest::get($request, 'ratify_date');
                 $valid_date = CommonRequest::get($request, 'valid_date');
-                // 判断开始结束日期
-                Tool::judgeBeginEndDate($ratify_date, $valid_date, 1 + 2 + 256 + 512, 1, date('Y-m-d'), '有效起止日期');
-
+                // 判断开始结束日期 --  // 初次或时间都填写了
+                if($open_status == 1 || ($ratify_date != '' && $valid_date != '')){
+                    Tool::judgeBeginEndDate($ratify_date, $valid_date, 1 + 2 + 256 + 512, 1, date('Y-m-d'), '有效起止日期');
+                }else{
+                   if($ratify_date != '' && judgeDate($ratify_date) === false ){
+                       throws('批准日期不是有效的日期格式！');
+                   }
+                    if($valid_date != '' && judgeDate($valid_date) === false ){
+                        throws('有效期止不是有效的日期格式！');
+                    }
+                }
                 // 资源
 //        $resource_id = [];
                 $resource_id = CommonRequest::get($request, 'resource_id');
@@ -294,12 +303,15 @@ class CertificateScheduleController extends BasicController
                 $resource_url = $resourceInfo['resource_url'] ?? '';
 
                 $mergeParams = [
+                    'open_status' => $open_status,
                     'company_id' => $company_id,
                     'certificate_no' => $certificate_no,
-                    'ratify_date' => $ratify_date,
-                    'valid_date' => $valid_date,
+                   // 'ratify_date' => $ratify_date,
+                   // 'valid_date' => $valid_date,
                     'addr' => $addr,
                 ];
+                if($ratify_date != '') $mergeParams['ratify_date'] = $ratify_date;
+                if($valid_date != '') $mergeParams['valid_date'] = $valid_date;
                 CTAPICertificateScheduleBusiness::mergeRequest($request, $this, $mergeParams);
 
 
@@ -641,6 +653,9 @@ class CertificateScheduleController extends BasicController
         // $reDataArr = array_merge($reDataArr, $resultDatas);
         $reDataArr['info'] = $info;
         $reDataArr['operate'] = $operate;
+
+        $reDataArr['openStatus'] = ['1' => '首次' , '2' => '扩项'];
+        $reDataArr['defaultOpenStatus'] = -1;// 列表页默认状态
 
         $company_hidden = CommonRequest::getInt($request, 'company_hidden');
         $reDataArr['company_hidden'] = $company_hidden;// =1 : 隐藏企业选择

@@ -394,8 +394,8 @@ class StaffDBBusiness extends BasePublicDBBusiness
 
                 // 更新所属企业检验检测机构资质认定证书附表
 
-                $saveQueryParams = Tool::getParamQuery($searchConditon, [], []);
-                CertificateScheduleDBBusiness::save($certificate_info, $saveQueryParams);
+//                $saveQueryParams = Tool::getParamQuery($searchConditon, [], []);
+//                CertificateScheduleDBBusiness::save($certificate_info, $saveQueryParams);
             }
             // 如果是修改信息
             if($isModify){
@@ -600,6 +600,43 @@ class StaffDBBusiness extends BasePublicDBBusiness
                 ];
                 $searchConditon = [
                     // 'admin_type' => 2,
+                    'staff_id' => $company_id,
+                ];
+                $mainObj = null;
+                StaffExtendDBBusiness::updateOrCreate($mainObj, $searchConditon, $updateFields );
+            }
+        });
+        return true;
+    }
+
+    /**
+     * 更新企业机构实验室地址数
+     *
+     * @param int  / array $company_ids 企业id  多个时为一维数组或逗号分隔的字符串
+     * @return  mixed 员工人数
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function updateLaboratoryNum($company_ids = 0){
+        // 没有需要处理的
+        if(!Tool::formatOneArrVals($company_ids)) return true;
+        // 更新企业的员工人数
+//        DB::beginTransaction();
+//        try {
+//            DB::commit();
+//        } catch ( \Exception $e) {
+//            DB::rollBack();
+//            throws($e->getMessage());
+//            // throws($e->getMessage());
+//        }
+        CommonDB::doTransactionFun(function() use(&$company_ids){
+
+            foreach($company_ids as $company_id){
+                $count = LaboratoryAddrDBBusiness::getLaboratoryAddrCount($company_id);
+                $updateFields = [
+                    'laboratory_num' => $count,
+                ];
+                $searchConditon = [
+                    'admin_type' => 2,
                     'staff_id' => $company_id,
                 ];
                 $mainObj = null;
