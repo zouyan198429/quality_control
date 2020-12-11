@@ -157,17 +157,17 @@
   </div>
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
-        <col width="50">
+        <col width="30">
         <col width="60">
-        <col>
+        <col width="10%">
+        <col width="100">
         <col width="115">
-        <col width="115">
-        <col width="105">
+        <col width="100">
         <col width="80">
-        <col width="75">
-        <col width="50">
-        <col width="90">
-        <col width="400">
+{{--        <col width="75">--}}
+        <col width="45">
+        <col width="80">
+        <col width="20%">
     </colgroup>
     <thead>
     <tr>
@@ -186,8 +186,8 @@
         <th>联系人<hr/>手机</th>
         <!-- <th>联系人</th> -->
         <th>完善资料<hr/>续期配置</th>
-        <th>审核</th>
-        <th>状态</th>
+{{--        <th></th>--}}
+        <th>审核<hr/>状态</th>
         <th>注册时间<hr/>到期时间</th>
       <th>操作</th>
     </tr>
@@ -255,6 +255,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/Company.js') }}?287"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/Company.js') }}?288"  type="text/javascript"></script>
 </body>
 </html>

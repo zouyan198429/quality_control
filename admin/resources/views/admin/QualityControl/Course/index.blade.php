@@ -68,7 +68,7 @@
 {{--        <col width="60">--}}
         <col>
         <col width="90">
-        <col>
+        <col width="15%">
         <col width="120">
         <col width="95">
         <col width="95">

@@ -80,14 +80,14 @@
         <col>
         <col width="75">
         <col width="75">
+        <col width="10%">
         <col>
-        <col>
-        <col width="100">
+        <col width="15%">
         <col width="75">
         <col width="75">
         <col width="95">
         <col width="95">
-        <col width="140">
+        <col width="15%">
     </colgroup>
     <thead>
     <tr>

@@ -351,8 +351,8 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
     document.write("            <td><%=item.company_contact_name%><hr/><%=item.company_contact_mobile%> <\/td>");
     //document.write("            <td><%=item.company_contact_mobile%><\/td>");
     document.write("            <td><%=item.is_perfect_text%><hr/><%=item.company_grade_continue_text%><\/td>");
-    document.write("            <td><%=item.open_status_text%><\/td>");
-    document.write("            <td><%=item.account_status_text%><\/td>");
+    // document.write("            <td><\/td>");
+    document.write("            <td><%=item.open_status_text%><hr/><%=item.account_status_text%><\/td>");
     document.write("            <td><%=item.created_at%><hr/><%=item.company_end_time%><\/td>");
     // document.write("            <td><%=item.lastlogintime%><\/td>");
     // document.write("            <td><%=item.created_at%><\/td>");
