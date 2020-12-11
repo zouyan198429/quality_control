@@ -439,10 +439,10 @@ function addCompany(company_id, company_name){
     document.write("            <td><%=item.contacts%><\/td>");
     document.write("            <td><%=item.mobile%><hr/><%=item.tel%><\/td>");
     document.write("            <td><%=item.join_time%><\/td>");
-    document.write("            <td><%=item.items_num%><\/td>");
-    document.write("            <td><%=item.passed_num%><\/td>");
-    document.write("            <td><%=item.status_text%>(<%=item.retry_no_text%>)<\/td>");
-    document.write("            <td><%=item.is_sample_text%><\/td>");
+    // document.write("            <td><\/td>");
+    document.write("            <td><%=item.items_num%><hr/><%=item.passed_num%><\/td>");
+    // document.write("            <td><\/td>");
+    document.write("            <td><%=item.status_text%>(<%=item.retry_no_text%>)<br/><%=item.is_sample_text%><\/td>");
     document.write("            <td><%=item.first_submit_num%><hr/><%=item.repair_submit_num%><\/td>");
     document.write("            <td><%=item.is_print_text%><hr/><%=item.is_grant_text%><\/td>");
     // document.write("            <td><%=item.created_at%><\/td>");

@@ -140,8 +140,8 @@ var otheraction = {
     document.write("            <td><%=item.join_begin_date%> - <%=item.join_end_date%><\/td>");
     //document.write("            <td><p><%=item.project_standards_text%><\/p><\/td>");
     document.write("            <td><%=item.submit_items_text%><\/td>");
-    document.write("            <td><%=item.duration_minute%>天<\/td>");
-    document.write("            <td class='status_text'><%=item.status_text%><\/td>");
+    // document.write("            <td><\/td>");
+    document.write("            <td class='status_text'><%=item.duration_minute%>天<hr><%=item.status_text%><\/td>");
     document.write("            <td><%=item.first_submit_num%><hr/><%=item.repair_submit_num%><\/td>");
     document.write("            <td><%=item.first_success_num%><hr/><%=item.repair_success_num%><\/td>");
     document.write("            <td><%=item.first_fail_num%><hr/><%=item.repair_fail_num%><\/td>");

@@ -84,14 +84,14 @@
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
         <col width="50">
-        <col>
+        <col width="115">
         <col>
         <col width="75" >
         <col width="105">
-        <col width="150">
+        <col width="95">
+{{--        <col width="75">--}}
         <col width="75">
-        <col width="75">
-        <col width="120">
+{{--        <col width="120">--}}
         <col width="75">
         <col width="110">
         <col width="75">
@@ -110,10 +110,10 @@
         <th>联系人</th>
         <th>联系人手机<hr/>联系人电话</th>
         <th>报名时间</th>
-        <th>报名项目</th>
-        <th>满意项目</th>
-        <th>状态</th>
-        <th>取样状态</th>
+{{--        <th></th>--}}
+        <th>报名项目<hr/>满意项目</th>
+{{--        <th></th>--}}
+        <th>状态<hr/>取样状态</th>
         <th>初测提交数据<hr/>补测提交数据</th>
         <th>打印证书<hr/>领取证书</th>
         <th>操作</th>
@@ -200,6 +200,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/AbilityJoin.js') }}?13"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/AbilityJoin.js') }}?14"  type="text/javascript"></script>
 </body>
 </html>

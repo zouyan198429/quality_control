@@ -55,14 +55,14 @@
         <col width="80">
         <col>
         <col>
-        <col width="">
+{{--        <col width="">--}}
         <col width="90">
         <col width="60">
         <col width="60">
         <col width="60">
         <col width="90">
         <col width="90">
-        <col width="150">
+        <col width="130">
     </colgroup>
     <thead>
     <tr>
@@ -78,8 +78,8 @@
         <th>报名起止时间</th>
         <!-- <th>方法标准</th> -->
         <th>验证数据项</th>
-        <th>提交时限</th>
-        <th>状态</th>
+{{--        <th></th>--}}
+        <th>提交时限<hr/>状态</th>
         <th>初测提交数据<hr/>补测提交数据</th>
         <th>初测满意数<hr/>补测满意数</th>
         <th>初测非满意数<hr/>补测非满意数</th>
@@ -137,6 +137,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/Abilitys.js') }}?824"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/Abilitys.js') }}?825"  type="text/javascript"></script>
 </body>
 </html>
