@@ -12,9 +12,10 @@
     <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/css/layui.css')}}" media="all">
     <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/style/admin.css')}}" media="all">
 </head>
-<body> 
+<body>
 <div class="mm">
     <form class="am-form am-form-horizontal" method="post"  id="addForm">
+        <input type="hidden" name="hidden_option"  value="{{ $hidden_option ?? 0 }}" />
         <input type="hidden" name="id" value="{{ $info['id'] ?? 0 }}"/>
         <table class="table1">
             <tr  @if (isset($company_hidden) && $company_hidden == 1 ) style="display: none;"  @endif>

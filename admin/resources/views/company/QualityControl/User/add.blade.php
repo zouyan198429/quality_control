@@ -17,9 +17,10 @@
 {{--<div id="crumb"><i class="fa fa-reorder fa-fw" aria-hidden="true"></i> {{ $operate ?? '' }}员工</div>--}}
 <div class="mm">
     <form class="am-form am-form-horizontal" method="post"  id="addForm">
+        <input type="hidden" name="hidden_option"  value="{{ $hidden_option ?? 0 }}" />
         <input type="hidden" name="id" value="{{ $info['id'] ?? 0 }}"/>
         <table class="table1">
- 
+
             <tr>
                 <th>姓名<span class="must">*</span></th>
                 <td>
@@ -39,7 +40,7 @@
                     <input type="text" class="inp wnormal"  name="email" value="{{ $info['email'] ?? '' }}" placeholder="请输入邮箱"  />
                 </td>
             </tr>
- 
+
             <tr>
                 <th>手机<span class="must">*</span></th>
                 <td>

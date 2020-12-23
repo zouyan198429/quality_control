@@ -17,6 +17,7 @@
 {{--<div id="crumb"><i class="fa fa-reorder fa-fw" aria-hidden="true"></i> {{ $operate ?? '' }}员工</div>--}}
 <div class="mm">
     <form class="am-form am-form-horizontal" method="post"  id="addForm">
+        <input type="hidden" name="hidden_option"  value="{{ $hidden_option ?? 0 }}" />
         <input type="hidden" name="id" value="{{ $info['id'] ?? 0 }}"/>
         <table class="table1">
             <tr>
@@ -50,7 +51,7 @@
                 <th>方法标准<span class="must">*</span></th>
                 <td>
                     <div class="tags_block" id="project_standards">
-                        <p class="tags_list"> 
+                        <p class="tags_list">
                         </p>
                         <input type="text" name="tag_name" value="" class="tag_name">
                         <button class="btn btn-small tag_add" type="button">添加</button>
@@ -61,7 +62,7 @@
                 <th>验证数据项<span class="must">*</span></th>
                 <td>
                     <div class="tags_block" id="submit_items">
-                        <p class="tags_list"> 
+                        <p class="tags_list">
                         </p>
                         <input type="text" name="tag_name" value="" class="tag_name">
                         <button class="btn btn-small tag_add" type="button">添加</button>

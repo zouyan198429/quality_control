@@ -21,6 +21,31 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
     reset_list(is_read_page, false, reset_total, do_num);
     // initList();
 }
+//业务逻辑部分
+var otheraction = {
+    paySelected: function(obj){// 缴费--批量
+        var recordObj = $(obj);
+        var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+        otheraction.payByIds(obj, ids);
+    },
+    payByIds: function(obj, ids) {
+        if( ids == ''){
+            err_alert('请选择需要操作的数据');
+            return false;
+        }
+        //获得表单各name的值
+        var weburl = PAY_URL + '?course_order_id='+ ids;
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = '缴费';//"查看供应商";
+        console.log('weburl', weburl);
+        layeriframe(weburl,tishi,700,450,5);
+        return false;
+    }
+};
 (function() {
     document.write("");
     document.write("    <!-- 前端模板部分 -->");
@@ -45,16 +70,22 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
     // document.write("            <td><%=item.id%><\/td>");
     document.write("            <td><%=item.course_name%><\/td>");
     // document.write("            <td><%=item.company_name%>(<%=item.company_grade_text%>)<\/td>");
-    document.write("            <td><%=item.join_num%><hr/><%=item.joined_class_num%><\/td>");
-    document.write("            <td><%=item.cancel_num%><hr/><%=item.company_status_text%><\/td>");
+    document.write("            <td><%=item.join_num%><hr/><%=item.cancel_num%><\/td>");
+    document.write("            <td><%=item.joined_class_num%><hr/><%=item.finish_num%><\/td>");
     document.write("            <td><%=item.contacts%><hr/><%=item.tel%><\/td>");
     document.write("            <td>￥<%=item.price%><hr/>￥<%=item.price_total%><\/td>");
     document.write("            <td><%=item.pay_status_text%><hr/><%=item.join_class_status_text%><\/td>");
+    document.write("            <td><%=item.company_status_text%><\/td>");
     document.write("            <td><%=item.order_time%><hr/><%=item.pay_time%><\/td>");
     document.write("            <td>");
     document.write("                <%if( true){%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"action.show(<%=item.id%>)\">");
     document.write("                    <i class=\"ace-icon  fa fa-eye  bigger-60\"> 查看<\/i>");
+    document.write("                <\/a>");
+    document.write("                <%}%>");
+    document.write("                <%if(can_modify &&  item.company_status != 4 &&  item.pay_status != 4){%>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.payByIds(this,<%=item.id%>)\">");
+    document.write("                    <i class=\"ace-icon fa fa-jpy bigger-60\"> 缴费<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
     // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.iframeModify(<%=item.id%>)\">");

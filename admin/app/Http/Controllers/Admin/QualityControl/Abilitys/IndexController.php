@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\QualityControl\Abilitys;
 
 use App\Business\Controller\API\QualityControl\CTAPIAbilitysBusiness;
+use App\Services\Request\CommonRequest;
 use Illuminate\Http\Request;
 
 class IndexController extends BasicController
@@ -93,6 +94,8 @@ class IndexController extends BasicController
      * @author zouyan(305463219@qq.com)
      */
     public function doListPage(Request $request, &$reDataArr, $extendParams = []){
+        // 需要隐藏的选项 1、2、4、8....[自己给查询的或添加页的下拉或其它输入框等编号]；靠前面的链接传过来 &hidden_option=0;
+        $hiddenOption = CommonRequest::getInt($request, 'hidden_option');
         // $pageNum = $extendParams['pageNum'] ?? 1;// 1->1 首页；2->2 列表页； 12->2048 弹窗选择页面；
         // $user_info = $this->user_info;
         // $id = $extendParams['params']['id'];
@@ -106,6 +109,7 @@ class IndexController extends BasicController
         $abilityInfo = $this->getAbilityInfo($ability_id);
         $reDataArr['info'] = $abilityInfo;
 
+        $reDataArr['hidden_option'] = $hiddenOption;
     }
 
     /**
@@ -128,6 +132,8 @@ class IndexController extends BasicController
      * @author zouyan(305463219@qq.com)
      */
     public function doInfoPage(Request $request, &$reDataArr, $extendParams = []){
+        // 需要隐藏的选项 1、2、4、8....[自己给查询的或添加页的下拉或其它输入框等编号]；靠前面的链接传过来 &hidden_option=0;
+        $hiddenOption = CommonRequest::getInt($request, 'hidden_option');
         // $pageNum = $extendParams['pageNum'] ?? 1;// 5->16 添加页； 7->64 编辑页；8->128 ajax详情； 35-> 17179869184 详情页
 //        // $user_info = $this->user_info;
 //        $id = $extendParams['params']['id'] ?? 0;
@@ -149,6 +155,7 @@ class IndexController extends BasicController
 //        $reDataArr['info'] = $info;
 //        $reDataArr['operate'] = $operate;
 
+        $reDataArr['hidden_option'] = $hiddenOption;
     }
     // **************公用方法********************结束*********************************
 

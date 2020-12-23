@@ -230,7 +230,7 @@ class AbilitysController extends BasicController
     /**
      * @OA\Get(
      *     path="/api/company/abilitys/ajax_info",
-     *     tags={"大后台-能力验证-能力验证"},
+     *     tags={"企业后台-能力验证-能力验证"},
      *     summary="能力验证--详情",
      *     description="根据单个id,查询详情记录......",
      *     operationId="companyQualityControlAbilitysAjax_info",
@@ -269,7 +269,7 @@ class AbilitysController extends BasicController
     /**
      * @OA\Post(
      *     path="/api/company/abilitys/ajax_save",
-     *     tags={"大后台-能力验证-能力验证"},
+     *     tags={"企业后台-能力验证-能力验证"},
      *     summary="能力验证--新加/修改",
      *     description="根据单个id,新加/修改记录(id>0:修改；id=0:新加)......",
      *     operationId="companyQualityControlAbilitysAjax_save",
@@ -727,7 +727,7 @@ class AbilitysController extends BasicController
     /**
      * @OA\Get(
      *     path="/api/company/abilitys/ajax_alist",
-     *     tags={"大后台-能力验证-能力验证"},
+     *     tags={"企业后台-能力验证-能力验证"},
      *     summary="能力验证--列表",
      *     description="能力验证--列表......",
      *     operationId="companyQualityControlAbilitysAjax_alist",
@@ -838,7 +838,7 @@ class AbilitysController extends BasicController
     /**
      * @OA\Post(
      *     path="/api/company/abilitys/ajax_del",
-     *     tags={"大后台-能力验证-能力验证"},
+     *     tags={"企业后台-能力验证-能力验证"},
      *     summary="能力验证--删除",
      *     description="根据单个id,删除记录......",
      *     operationId="companyQualityControlAbilitysAjax_del",
@@ -966,6 +966,8 @@ class AbilitysController extends BasicController
      * @author zouyan(305463219@qq.com)
      */
     public function doListPage(Request $request, &$reDataArr, $extendParams = []){
+        // 需要隐藏的选项 1、2、4、8....[自己给查询的或添加页的下拉或其它输入框等编号]；靠前面的链接传过来 &hidden_option=0;
+        $hiddenOption = CommonRequest::getInt($request, 'hidden_option');
         // $pageNum = $extendParams['pageNum'] ?? 1;// 1->1 首页；2->2 列表页； 12->2048 弹窗选择页面；
         // $user_info = $this->user_info;
         // $id = $extendParams['params']['id'];
@@ -974,6 +976,7 @@ class AbilitysController extends BasicController
 //        $reDataArr['adminType'] =  AbilityJoin::$adminTypeArr;
 //        $reDataArr['defaultAdminType'] = -1;// 列表页默认状态
 
+        $reDataArr['hidden_option'] = $hiddenOption;
     }
 
     /**
@@ -996,6 +999,8 @@ class AbilitysController extends BasicController
      * @author zouyan(305463219@qq.com)
      */
     public function doInfoPage(Request $request, &$reDataArr, $extendParams = []){
+        // 需要隐藏的选项 1、2、4、8....[自己给查询的或添加页的下拉或其它输入框等编号]；靠前面的链接传过来 &hidden_option=0;
+        $hiddenOption = CommonRequest::getInt($request, 'hidden_option');
         // $pageNum = $extendParams['pageNum'] ?? 1;// 5->16 添加页； 7->64 编辑页；8->128 ajax详情； 35-> 17179869184 详情页
 //        // $user_info = $this->user_info;
 //        $id = $extendParams['params']['id'] ?? 0;
@@ -1019,6 +1024,7 @@ class AbilitysController extends BasicController
 //            $reDataArr['info'] = $info;
 //            $reDataArr['operate'] = $operate;
 
+        $reDataArr['hidden_option'] = $hiddenOption;
     }
     // **************公用方法********************结束*********************************
 

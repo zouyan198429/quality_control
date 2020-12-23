@@ -25,7 +25,8 @@
 			</div>
 
             <form class="am-form am-form-horizontal" method="post"  id="addForm">
-                <input type="hidden" name="id" value="{{ $info['id'] ?? 0 }}"/>
+        <input type="hidden" name="hidden_option"  value="{{ $hidden_option ?? 0 }}" />
+        <input type="hidden" name="id" value="{{ $info['id'] ?? 0 }}"/>
 			<div class="bd" style="width:800px; margin:0 auto;">
 				<p>带 <span class="red">*</span> 为必填项</p> <br>
 				<div class="form-item">

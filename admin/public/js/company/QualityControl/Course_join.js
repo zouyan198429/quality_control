@@ -164,14 +164,19 @@ function ajax_save(id){
                 // countdown_alert("操作成功!",1,5);
                 // parent_only_reset_list(false);
                 // wait_close_popus(2,PARENT_LAYER_INDEX);
-                layer.msg('操作成功！', {
+                layer.msg('报名成功！', {
                     icon: 1,
                     shade: 0.3,
                     time: 3000 //2秒关闭（如果不配置，默认是3秒）
                 }, function(){
                     var reset_total = true; // 是否重新从数据库获取总页数 true:重新获取,false不重新获取
                     if(id > 0) reset_total = false;
-                    parent_reset_list_iframe_close(reset_total);// 刷新并关闭
+                    var courseOrderId = ret.result;
+                    consoleLogs(['-courseOrderId-', courseOrderId]);
+                    // 跳转到支付页
+                    var weburl = PAY_URL + '?course_order_id='+ courseOrderId;
+                    go(weburl);
+                    // parent_reset_list_iframe_close(reset_total);// 刷新并关闭
                     //do something
                 });
                 // var supplier_id = ret.result['supplier_id'];

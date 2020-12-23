@@ -178,7 +178,7 @@ class CourseClassController extends BasicController
                 $class_name = CommonRequest::get($request, 'class_name');
                 $city_id = CommonRequest::getInt($request, 'city_id');
                 $remarks = CommonRequest::get($request, 'remarks');
-                $class_status = CommonRequest::getInt($request, 'class_status');
+                // $class_status = CommonRequest::getInt($request, 'class_status');
                 $pay_config_id = CommonRequest::getInt($request, 'pay_config_id');
                 // 开通的付款方式
                 $pay_method = CommonRequest::get($request, 'pay_method');
@@ -201,15 +201,16 @@ class CourseClassController extends BasicController
                     'remarks' => replace_enter_char($remarks, 1),
                     'pay_config_id' => $pay_config_id,
                     'pay_method' => $sel_pay_method,
-                    'class_status' => $class_status,
+                    // 'class_status' => 1,// $class_status,
                 ];
 
-//        if($id <= 0) {// 新加;要加入的特别字段
-//            $addNewData = [
-//                // 'account_password' => $account_password,
-//            ];
-//            $saveData = array_merge($saveData, $addNewData);
-//        }
+                if($id <= 0) {// 新加;要加入的特别字段
+                    $addNewData = [
+                        // 'account_password' => $account_password,
+                        'class_status' => 1,
+                    ];
+                    $saveData = array_merge($saveData, $addNewData);
+                }
                 $extParams = [
                     'judgeDataKey' => 'replace',// 数据验证的下标
                 ];
@@ -423,6 +424,74 @@ class CourseClassController extends BasicController
 //        });
 //    }
 
+    /**
+     * 班级管理-(开班)
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_open_class(Request $request)
+    {
+        $this->InitParams($request);
+        $id = CommonRequest::get($request, 'id');// 单个id 或 逗号分隔的多个，或 多个的一维数组
+        if(is_array($id)) $id = implode(',', $id);
+        // $staff_status = CommonRequest::getInt($request, 'staff_status');// 操作类型 状态 1正常--取消作废操作； 4已作废--作废操作
+        // if(in_array($staff_status, [1]))throws('不可以进行取消作废操作！');
+        $organize_id = $this->organize_id;
+        // 大后台--可以操作所有的员工；操作企业【无员工】
+        // 企业后台 -- 操作员工，只能操作自己的员工；无操作企业
+        // 个人后台--不可进行操作
+        if($this->user_type == 2) $organize_id = $this->own_organize_id;
+        $modifyNum = CTAPICourseClassBusiness::operateStatusAjax($request, $this, $organize_id, $id, 1);
+        return ajaxDataArr(1, ['modify_num' => $modifyNum], '');
+    }
+
+    /**
+     * 班级管理-(作废)
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_cancel_class(Request $request)
+    {
+        $this->InitParams($request);
+        $id = CommonRequest::get($request, 'id');// 单个id 或 逗号分隔的多个，或 多个的一维数组
+        if(is_array($id)) $id = implode(',', $id);
+        // $staff_status = CommonRequest::getInt($request, 'staff_status');// 操作类型 状态 1正常--取消作废操作； 4已作废--作废操作
+        // if(in_array($staff_status, [1]))throws('不可以进行取消作废操作！');
+        $organize_id = $this->organize_id;
+        // 大后台--可以操作所有的员工；操作企业【无员工】
+        // 企业后台 -- 操作员工，只能操作自己的员工；无操作企业
+        // 个人后台--不可进行操作
+        if($this->user_type == 2) $organize_id = $this->own_organize_id;
+        $modifyNum = CTAPICourseClassBusiness::operateStatusAjax($request, $this, $organize_id, $id, 4);
+        return ajaxDataArr(1, ['modify_num' => $modifyNum], '');
+    }
+
+    /**
+     * 班级管理-(结业)
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_finish_class(Request $request)
+    {
+        $this->InitParams($request);
+        $id = CommonRequest::get($request, 'id');// 单个id 或 逗号分隔的多个，或 多个的一维数组
+        if(is_array($id)) $id = implode(',', $id);
+        // $staff_status = CommonRequest::getInt($request, 'staff_status');// 操作类型 状态 1正常--取消作废操作； 4已作废--作废操作
+        // if(in_array($staff_status, [1]))throws('不可以进行取消作废操作！');
+        $organize_id = $this->organize_id;
+        // 大后台--可以操作所有的员工；操作企业【无员工】
+        // 企业后台 -- 操作员工，只能操作自己的员工；无操作企业
+        // 个人后台--不可进行操作
+        if($this->user_type == 2) $organize_id = $this->own_organize_id;
+        $modifyNum = CTAPICourseClassBusiness::operateStatusAjax($request, $this, $organize_id, $id, 2);
+        return ajaxDataArr(1, ['modify_num' => $modifyNum], '');
+    }
     // **************公用方法**********************开始*******************************
 
     /**
@@ -445,6 +514,8 @@ class CourseClassController extends BasicController
      * @author zouyan(305463219@qq.com)
      */
     public function doListPage(Request $request, &$reDataArr, $extendParams = []){
+        // 需要隐藏的选项 1、2、4、8....[自己给查询的或添加页的下拉或其它输入框等编号]；靠前面的链接传过来 &hidden_option=0;
+        $hiddenOption = CommonRequest::getInt($request, 'hidden_option');
         // $pageNum = $extendParams['pageNum'] ?? 1;// 1->1 首页；2->2 列表页； 12->2048 弹窗选择页面；
         // $user_info = $this->user_info;
         // $id = $extendParams['params']['id'];
@@ -453,19 +524,22 @@ class CourseClassController extends BasicController
 //        $reDataArr['adminType'] =  AbilityJoin::$adminTypeArr;
 //        $reDataArr['defaultAdminType'] = -1;// 列表页默认状态
 
+
         // 获得城市KV值
         $reDataArr['citys_kv'] = CTAPICitysBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'city_name']);
         $reDataArr['defaultCity'] = -1;// 默认
 
         // 班级状态1待开班2开班中4已作废8已结业
+        $class_status = CommonRequest::getInt($request, 'class_status');// $hiddenOption = 4
         $reDataArr['classStatus'] =  CourseClass::$classStatusArr;
-        $reDataArr['defaultClassStatus'] = -1;// 列表页默认状态
+        $reDataArr['defaultClassStatus'] = (!is_numeric($class_status) || $class_status <= 0 ) ? -1 : $class_status;// 列表页默认状态
 
-        // 获得课程KV值
+
+        //  获得课程KV值
         //   'sqlParams' => ['where' => [['status_online', 1]]]
-
+        $course_id = CommonRequest::getInt($request, 'course_id');// $hiddenOption = 2
         $reDataArr['course_id_kv'] = CTAPICourseBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'course_name'], []);
-        $reDataArr['defaultCourseId'] = -1;// 默认
+        $reDataArr['defaultCourseId'] = (!is_numeric($course_id) || $course_id <= 0 ) ? -1 : $course_id;// 默认
 
         // 获得收款帐号KV值
         $reDataArr['pay_config_kv'] = CTAPIOrderPayConfigBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'pay_company_name'], [
@@ -476,7 +550,9 @@ class CourseClassController extends BasicController
         // 收款开通类型(1现金、2微信支付、4支付宝)
         $reDataArr['payMethod'] =  CTAPIOrderPayMethodBusiness::getListKV($request, $this, ['key' => 'pay_method', 'val' => 'pay_name']);
         $reDataArr['defaultPayMethod'] = -1;// 列表页默认状态
-        // $reDataArr['payMethodDisable'] = OrderPayConfig::$payMethodDisable;// 不可用的--禁用
+        // $reDataArr['payMethodDisable'] = OrderPayConfig::$payMethodDisable;// 不可用的--
+
+        $reDataArr['hidden_option'] = $hiddenOption;
     }
 
     /**
@@ -499,6 +575,8 @@ class CourseClassController extends BasicController
      * @author zouyan(305463219@qq.com)
      */
     public function doInfoPage(Request $request, &$reDataArr, $extendParams = []){
+        // 需要隐藏的选项 1、2、4、8....[自己给查询的或添加页的下拉或其它输入框等编号]；靠前面的链接传过来 &hidden_option=0;
+        $hiddenOption = CommonRequest::getInt($request, 'hidden_option');
         // $pageNum = $extendParams['pageNum'] ?? 1;// 5->16 添加页； 7->64 编辑页；8->128 ajax详情； 35-> 17179869184 详情页
         // $user_info = $this->user_info;
         $id = $extendParams['params']['id'] ?? 0;
@@ -533,14 +611,17 @@ class CourseClassController extends BasicController
         $reDataArr['defaultCity'] = $info['city_id'] ?? -1;// 默认
 
         // 班级状态1待开班2开班中4已作废8已结业
+        $class_status = CommonRequest::getInt($request, 'class_status');// $hiddenOption = 4
         $reDataArr['classStatus'] =  CourseClass::$classStatusArr;
-        $reDataArr['defaultClassStatus'] = $info['class_status'] ?? -1;// 列表页默认状态
+        $reDataArr['defaultClassStatus'] = $info['class_status'] ?? ((!is_numeric($class_status) || $class_status <= 0 ) ? -1 : $class_status);// 列表页默认状态
 
         // 获得课程KV值
-        $reDataArr['course_id_kv'] = CTAPICourseBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'course_name'], [
-            'sqlParams' => ['where' => [['status_online', 1]]]
-        ]);
-        $reDataArr['defaultCourseId'] = $info['course_id'] ?? -1;// 默认
+        $course_id = CommonRequest::getInt($request, 'course_id');// $hiddenOption = 2
+        $reDataArr['course_id_kv'] = CTAPICourseBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'course_name'], []);
+//        [
+//            'sqlParams' => ['where' => [['status_online', 1]]]
+//        ]
+        $reDataArr['defaultCourseId'] = $info['course_id'] ?? ((!is_numeric($course_id) || $course_id <= 0 ) ? -1 : $course_id);// 默认
 
         // 获得收款帐号KV值
         $reDataArr['pay_config_kv'] = CTAPIOrderPayConfigBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'pay_company_name'], [
@@ -561,6 +642,7 @@ class CourseClassController extends BasicController
         $reDataArr['info'] = $info;
         $reDataArr['operate'] = $operate;
 
+        $reDataArr['hidden_option'] = $hiddenOption;
     }
     // **************公用方法********************结束*********************************
 

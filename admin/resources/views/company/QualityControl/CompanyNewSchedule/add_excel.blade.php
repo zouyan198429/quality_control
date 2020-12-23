@@ -19,6 +19,7 @@
 <div class="mm">
 {{--    <p class="red" ><i class="ace-icon fa fa-info-circle  bigger-60"></i> 请上传资质认定的全部附表</p>--}}
     <form class="am-form am-form-horizontal" method="post"  id="addForm">
+        <input type="hidden" name="hidden_option"  value="{{ $hidden_option ?? 0 }}" />
         <input type="hidden" name="id" value="{{ $info['id'] ?? 0 }}"/>
         <table class="table1">
 

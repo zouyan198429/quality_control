@@ -2,6 +2,7 @@
 //报名企业(主表)
 namespace App\Business\Controller\API\QualityControl;
 
+use App\Models\QualityControl\CourseOrder;
 use App\Services\DBRelation\RelationDB;
 use App\Services\Excel\ImportExport;
 use App\Services\Request\API\HttpRequest;
@@ -98,7 +99,7 @@ class CTAPICourseOrderBusiness extends BasicPublicCTAPIBusiness
                     static::getUboundRelation($relationArr, 'course_name'),
                     static::getUboundRelationExtendParams($extendParams, 'course_name')),
                 [], '', []),
-            // 获得企业的报名人员信息
+            // 获得企业的报名人员信息--人员的单价会格式化为浮点小数
             'course_order_staff' => CTAPICourseOrderStaffBusiness::getTableRelationConfigInfo($request, $controller
                 , ['id' => 'course_order_id']
                 , 2, 2
@@ -106,7 +107,16 @@ class CTAPICourseOrderBusiness extends BasicPublicCTAPIBusiness
                 CTAPICourseOrderStaffBusiness::getRelationConfigs($request, $controller,
                     static::getUboundRelation($relationArr, 'course_order_staff'),
                     static::getUboundRelationExtendParams($extendParams, 'course_order_staff'))
-                , [], '', []),
+                , [], '', ['extendConfig' => ['listHandleKeyArr' => ['priceIntToFloat']]]),
+            // 获得企业的报名人员信息[可缴费的]--人员的单价会格式化为浮点小数
+            'course_order_staff_pay' => CTAPICourseOrderStaffBusiness::getTableRelationConfigInfo($request, $controller
+                , ['id' => 'course_order_id']
+                , 2, 2
+                ,'','',
+                CTAPICourseOrderStaffBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'course_order_staff_pay'),
+                    static::getUboundRelationExtendParams($extendParams, 'course_order_staff_pay'))
+                , ['where' => [['staff_status', '!=', 4], ['pay_status', '!=', 4]]], '', ['extendConfig' => ['listHandleKeyArr' => ['priceIntToFloat']]]),
 
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
@@ -135,6 +145,11 @@ class CTAPICourseOrderBusiness extends BasicPublicCTAPIBusiness
 //        }
         if(($return_num & 4) == 4){// 给上一级返回  company_grade_text , join_num , contacts, tel下标
             $fields_merge = Tool::arrEqualKeyVal(['company_grade_text', 'join_num', 'contacts', 'tel'],true);// 获得名称
+            if(!isset($return_data['fields_merge'])) $return_data['fields_merge'] = [];
+            array_push($return_data['fields_merge'], $fields_merge);
+        }
+        if(($return_num & 8) == 8){// 给上一级返回  company_grade_text , contacts, tel下标
+            $fields_merge = Tool::arrEqualKeyVal(['company_grade_text', 'contacts', 'tel'],true);// 获得名称
             if(!isset($return_data['fields_merge'])) $return_data['fields_merge'] = [];
             array_push($return_data['fields_merge'], $fields_merge);
         }
@@ -233,7 +248,7 @@ class CTAPICourseOrderBusiness extends BasicPublicCTAPIBusiness
         // 获得课程信息及报名的学员信息
         $extParams = [
             // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-            'relationFormatConfigs'=> CTAPICourseBusiness::getRelationConfigs($request, $controller, [], []),// 'resource_list', 'course_content', 'course_order_company'
+            'relationFormatConfigs'=> CTAPICourseBusiness::getRelationConfigs($request, $controller, [], []),// 'resource_list' => '', 'course_content' => '', 'course_order_company' => ''
             // 'infoHandleKeyArr' => ['resetPayMethod'],
             'listHandleKeyArr' => ['initPayMethodText'],
             'sqlParams' => ['where' => [['status_online', 1]]]
@@ -297,7 +312,7 @@ class CTAPICourseOrderBusiness extends BasicPublicCTAPIBusiness
         // 获得课程信息及报名的学员信息
         $extParams = [
             // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-            'relationFormatConfigs'=> CTAPICourseBusiness::getRelationConfigs($request, $controller, [], []),// 'resource_list', 'course_content', 'course_order_company'
+            'relationFormatConfigs'=> CTAPICourseBusiness::getRelationConfigs($request, $controller, [], []),// 'resource_list' => '', 'course_content' => '', 'course_order_company' => ''
             // 'infoHandleKeyArr' => ['resetPayMethod'],
             'listHandleKeyArr' => ['initPayMethodText'],
             'sqlParams' => ['where' => [['status_online', 1]]]
@@ -308,7 +323,7 @@ class CTAPICourseOrderBusiness extends BasicPublicCTAPIBusiness
         $company_grade = $controller->user_info['company_grade'];
         $price = $info['price_general'];
         if($company_grade > 1) $price = $info['price_member'];// 会员价
-        $price = Tool::formatFloatVal($price, 2, 4);
+        // $price = Tool::formatFloatVal($price, 2, 4);
 
         $join_num = count($staff_id);
 
@@ -351,7 +366,7 @@ class CTAPICourseOrderBusiness extends BasicPublicCTAPIBusiness
             'contacts' => $extendArr['contacts']  ?? '',
             'tel' => $extendArr['tel'] ?? '',
             'price' => $price,
-            'price_total' => $price * $join_num,
+            'price_total' => bcmul($price, $join_num),// $price * $join_num,
             'pay_status' => 1,
             'joined_class_num' => 0,
             'join_class_status' => 1,
@@ -378,7 +393,6 @@ class CTAPICourseOrderBusiness extends BasicPublicCTAPIBusiness
         return $resultDatas;
     }
 
-
     /**
      * 获得列表数据时，对查询结果进行导出操作--有特殊的需要自己重写此方法
      *
@@ -391,7 +405,7 @@ class CTAPICourseOrderBusiness extends BasicPublicCTAPIBusiness
      */
     public static function exportListData(Request $request, Controller $controller, &$data_list, $notLog = 0){
 
-        $headArr = ['course_name'=>'课程', 'company_name'=>'单位', 'company_grade_text'=>'会员等级', 'join_num'=>'报名人数', 'joined_class_num'=>'分班人数'
+        $headArr = ['course_name'=>'课程', 'company_name'=>'单位', 'company_grade_text'=>'会员等级', 'join_num'=>'报名人数', 'joined_class_num'=>'分班人数', 'finish_num'=>'结业人数'
             , 'contacts'=>'联络人', 'tel'=>'联络人电话', 'company_status_text'=>'报名状态', 'price'=>'单价', 'price_total'=>'总价', 'pay_status_text'=>'缴费状态'
             , 'join_class_status_text'=>'分班状态',  'order_time'=>'报名时间', 'pay_time'=>'缴费时间'];
 //        foreach($data_list as $k => $v){
@@ -401,5 +415,70 @@ class CTAPICourseOrderBusiness extends BasicPublicCTAPIBusiness
 //
 //        }
         ImportExport::export('','报名企业' . date('YmdHis'),$data_list,1, $headArr, 0, ['sheet_title' => '报名企业']);
+    }
+
+    /**
+     * 格式化关系数据 --如果有格式化，肯定会重写---本地数据库主要用这个来格式化数据
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $main_list 关系主记录要格式化的数据
+     * @param array $data_list 需要格式化的从记录数据---二维数组(如果是一维数组，是转成二维数组后的数据)
+     * @param array $handleKeyArr 其它扩展参数，// 一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。--名称关键字，尽可能与关系名一样
+     * @param array $returnFields  新加入的字段['字段名1' => '字段名1' ]
+     * @return array  新增的字段 一维数组
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function handleRelationDataFormat(Request $request, Controller $controller, &$main_list, &$data_list, $handleKeyArr, &$returnFields = []){
+        // if(empty($data_list)) return $returnFields;
+        // 重写开始
+
+        // 对外显示时，批量价格字段【整数转为小数】
+        if(in_array('priceIntToFloat', $handleKeyArr)){
+            Tool::bathPriceCutFloatInt($data_list, CourseOrder::$IntPriceFields, 2, 2);
+        }
+
+        // 重写结束
+        return $returnFields;
+    }
+
+    /**
+     * 格式化关系数据 --如果有格式化，肯定会重写---本地数据库主要用这个来格式化数据
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array/ string $course_order_id 课程企业报名表的id, 多条可以是一维数组或逗号分隔的字符
+     * @return array  需要缴费的 服名用户企业 一维数组
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function getCourseOrderStaffIdsByCourseOrderIds(Request $request, Controller $controller, $course_order_id){
+
+        if(is_string($course_order_id)) $course_order_id = explode(',', $course_order_id);
+        if(!is_array($course_order_id)) $course_order_id = [];
+        if(empty($course_order_id)) throws('请选择要缴费的企业');
+        // 获得企业报名记录
+        $extParams = [
+            // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+            'relationFormatConfigs'=> CTAPICourseOrderBusiness::getRelationConfigs($request, $controller, ['course_order_staff_pay' => '', 'company_name' => ''], []),
+            // 'infoHandleKeyArr' => ['resetPayMethod']
+            'listHandleKeyArr' => ['priceIntToFloat'],
+        ];
+        $courseOrderList = CTAPICourseOrderBusiness::getFVFormatList( $request,  $controller, 1, 1
+            , ['id' => $course_order_id], false, [], $extParams);
+        if(empty($courseOrderList)) throws('请选择需要缴费的记录！');
+        // pr($courseOrderList);
+        $orderStaffArr = [];
+        foreach($courseOrderList as $courseOrderInfo){
+            $company_name = $courseOrderInfo['company_name'] ?? '';
+            if(in_array($courseOrderInfo['company_status'], [4])) throws($company_name . '报名批次【' . $courseOrderInfo['id'] . '】已作废状态，不可进行缴费操作！');
+            if(in_array($courseOrderInfo['pay_status'], [4])) throws($company_name . '报名批次【' . $courseOrderInfo['id'] . '】已缴费状态，不可进行缴费操作！');
+            $course_order_staff = $courseOrderInfo['course_order_staff_pay'] ?? [];// 企业报名的学员
+            if(empty($course_order_staff)) throws($company_name . '报名批次【' . $courseOrderInfo['id'] . '】没有需要维修费的学员，不可进行缴费操作！');
+            $orderStaffArr = array_merge($orderStaffArr, $course_order_staff);
+        }
+        $companyIds = Tool::getArrFields($courseOrderList, 'company_id');
+        if(count($companyIds) > 1) throws('每次缴费，只能选择相同的企业，才能进行多条记录批量缴费！');
+        $id = Tool::getArrFields($orderStaffArr, 'id');
+        return $id;
     }
 }

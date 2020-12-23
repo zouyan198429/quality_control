@@ -35,6 +35,7 @@
     @include('common.pageParams')
     <form onsubmit="return false;" class="form-horizontal" style="display: bock;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
+          <input type="hidden" name="hidden_option"  value="{{ $hidden_option ?? 0 }}" />
 
           <input type="hidden" name="company_hidden"  value="{{ $company_hidden ?? 0 }}" />
           <span   @if (isset($company_hidden) && $company_hidden == 1 ) style="display: none;"  @endif>

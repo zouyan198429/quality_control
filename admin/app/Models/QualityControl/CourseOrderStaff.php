@@ -58,6 +58,8 @@ class CourseOrderStaff extends BasePublicModel
 
     //****************数据据缓存**相关的***结束********************************************
 
+     public static $IntPriceFields = ['price'];//[有则设置] 表中整型表示价格的字段数组 -- 一维数组，目的：方便统一把数据中的字段转浮点数或转整数
+
     // 自有属性
     // 0：都没有；
     // 1：有历史表 ***_history;
@@ -88,9 +90,9 @@ class CourseOrderStaff extends BasePublicModel
     //  缴费状态(1待缴费、2部分缴费、4已缴费、8部分退费、16已退费 )
     public static $payStatusArr = [
         '1' => '待缴费',
-        '2' => '部分缴费',
+        //'2' => '部分缴费',
         '4' => '已缴费',
-        '8' => '部分退费',
+        // '8' => '部分退费',
         '16' => '已退费',
     ];
 

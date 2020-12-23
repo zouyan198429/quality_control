@@ -158,6 +158,23 @@
                       </dd>
                   </dl>
               </li>
+              <li data-name="user" class="layui-nav-item" style="display: block;">
+                  <a href="javascript:;" lay-tips="订单管理" lay-direction="2">
+                      <i class="layui-icon layui-icon-component"></i>
+                      <cite>订单管理</cite>
+                  </a>
+                  <dl class="layui-nav-child">
+                      <dd>
+                          <a lay-href="{{ url('company/orders') }}">订单管理</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="{{ url('company/order_pay') }}">在线支付明细【对帐】</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="{{ url('company/order_flow') }}">财务明细[流水帐]</a>
+                      </dd>
+                  </dl>
+              </li>
               <!-- <li data-name="user" class="layui-nav-item">
                   <a href="javascript:;" lay-tips="发票管理" lay-direction="2">
                       <i class="layui-icon layui-icon-component"></i>

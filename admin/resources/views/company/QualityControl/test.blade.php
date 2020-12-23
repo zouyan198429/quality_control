@@ -36,6 +36,7 @@
 
 <div class="mm">
     <form class="am-form am-form-horizontal" method="post"  id="addForm">
+        <input type="hidden" name="hidden_option"  value="{{ $hidden_option ?? 0 }}" />
         <input type="hidden" name="id" value="{{ $info['id'] ?? 0 }}"/>
     <p class="red tip1" ><i class="ace-icon fa fa-info-circle  bigger-60"></i> 请上传资质认定的全部附表，每次上传一个文档的PDF版本。</p>
     <table class="table1">

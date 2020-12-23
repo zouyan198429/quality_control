@@ -160,7 +160,7 @@ class UserController extends BasicController
 
     /**
      * 添加
-     * 大后台: 管理员、企业 、 个人 修改
+     * 企业后台: 管理员、企业 、 个人 修改
      * 企业后台： 企业 、 个人 修改
      * 个人后台：个人 修改
      * @param Request $request
@@ -190,7 +190,7 @@ class UserController extends BasicController
     /**
      * @ OA\Get(
      *     path="/api/admin/staff/ajax_info",
-     *     tags={"大后台-系统管理-帐号管理"},
+     *     tags={"企业后台-系统管理-帐号管理"},
      *     summary="帐号管理--详情",
      *     description="根据单个id,查询详情记录......",
      *     operationId="adminQualityControlStaffAjax_info",
@@ -237,7 +237,7 @@ class UserController extends BasicController
     /**
      * @ OA\Post(
      *     path="/api/admin/staff/ajax_save",
-     *     tags={"大后台-系统管理-帐号管理"},
+     *     tags={"企业后台-系统管理-帐号管理"},
      *     summary="帐号管理--新加/修改",
      *     description="根据单个id,新加/修改记录(id>0:修改；id=0:新加)......",
      *     operationId="adminQualityControlStaffAjax_save",
@@ -398,7 +398,7 @@ class UserController extends BasicController
     /**
      * @ OA\Get(
      *     path="/api/admin/staff/ajax_alist",
-     *     tags={"大后台-系统管理-帐号管理"},
+     *     tags={"企业后台-系统管理-帐号管理"},
      *     summary="帐号管理--列表",
      *     description="帐号管理--列表......",
      *     operationId="adminQualityControlStaffAjax_alist",
@@ -557,7 +557,7 @@ class UserController extends BasicController
     /**
      * @ OA\Post(
      *     path="/api/admin/staff/ajax_del",
-     *     tags={"大后台-系统管理-帐号管理"},
+     *     tags={"企业后台-系统管理-帐号管理"},
      *     summary="帐号管理--删除",
      *     description="根据单个id,删除记录......",
      *     operationId="adminQualityControlStaffAjax_del",
@@ -597,7 +597,7 @@ class UserController extends BasicController
             // 企业删除 ---有员工的企业不能删除，需要先删除/解绑员工
             if(in_array(static::$ADMIN_TYPE, [2, 4])){
                 $organize_id = $this->organize_id;
-                // 大后台--可以删除所有的员工；删除企业【无员工】
+                // 企业后台--可以删除所有的员工；删除企业【无员工】
                 // 企业后台 -- 删除员工，只能删除自己的员工；无删除企业
                 // 个人后台--不可进行删除操作
                 if($this->user_type == 2 && static::$ADMIN_TYPE == 4) $organize_id = $this->own_organize_id;
@@ -716,7 +716,7 @@ class UserController extends BasicController
         $open_status = CommonRequest::getInt($request, 'open_status');// 操作类型 2审核通过     4审核不通过
 
         $organize_id = $this->organize_id;
-        // 大后台--可以操作所有的员工；操作企业【无员工】
+        // 企业后台--可以操作所有的员工；操作企业【无员工】
         // 企业后台 -- 操作员工，只能操作自己的员工；无操作企业
         // 个人后台--不可进行操作
         if($this->user_type == 2 && static::$ADMIN_TYPE == 4) $organize_id = $this->own_organize_id;
@@ -738,7 +738,7 @@ class UserController extends BasicController
         if(is_array($id)) $id = implode(',', $id);
         $account_status = CommonRequest::getInt($request, 'account_status');// 操作类型 状态 1正常--解冻操作； 2冻结--冻结操作
         $organize_id = $this->organize_id;
-        // 大后台--可以操作所有的员工；操作企业【无员工】
+        // 企业后台--可以操作所有的员工；操作企业【无员工】
         // 企业后台 -- 操作员工，只能操作自己的员工；无操作企业
         // 个人后台--不可进行操作
         if($this->user_type == 2 && static::$ADMIN_TYPE == 4) $organize_id = $this->own_organize_id;
@@ -804,6 +804,8 @@ class UserController extends BasicController
      * @author zouyan(305463219@qq.com)
      */
     public function doListPage(Request $request, &$reDataArr, $extendParams = []){
+        // 需要隐藏的选项 1、2、4、8....[自己给查询的或添加页的下拉或其它输入框等编号]；靠前面的链接传过来 &hidden_option=0;
+        $hiddenOption = CommonRequest::getInt($request, 'hidden_option');
         // $pageNum = $extendParams['pageNum'] ?? 1;// 1->1 首页；2->2 列表页； 12->2048 弹窗选择页面；
         // $user_info = $this->user_info;
         // $id = $extendParams['params']['id'];
@@ -892,6 +894,7 @@ class UserController extends BasicController
 //            $reDataArr['info'] = $info;
 
 
+        $reDataArr['hidden_option'] = $hiddenOption;
     }
 
     /**
@@ -914,6 +917,8 @@ class UserController extends BasicController
      * @author zouyan(305463219@qq.com)
      */
     public function doInfoPage(Request $request, &$reDataArr, $extendParams = []){
+        // 需要隐藏的选项 1、2、4、8....[自己给查询的或添加页的下拉或其它输入框等编号]；靠前面的链接传过来 &hidden_option=0;
+        $hiddenOption = CommonRequest::getInt($request, 'hidden_option');
         // $pageNum = $extendParams['pageNum'] ?? 1;// 5->16 添加页； 7->64 编辑页；8->128 ajax详情； 35-> 17179869184 详情页
 //         $user_info = $this->user_info;
         $id = $extendParams['params']['id'] ?? 0;
@@ -1017,6 +1022,7 @@ class UserController extends BasicController
         $company_hidden = CommonRequest::getInt($request, 'company_hidden');
         $reDataArr['company_hidden'] = $company_hidden;// =1 : 隐藏企业选择
 
+        $reDataArr['hidden_option'] = $hiddenOption;
     }
     // **************公用重写方法********************结束*********************************
 }

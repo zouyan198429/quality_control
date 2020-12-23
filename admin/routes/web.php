@@ -327,6 +327,16 @@ Route::get('admin/course_order/info/{id}', 'Admin\QualityControl\CourseOrderCont
 Route::get('admin/course_order/export', 'Admin\QualityControl\CourseOrderController@export');// 导出
 // Route::get('admin/course_order/import_template', 'Admin\QualityControl\CourseOrderController@import_template');// 导入模版
 
+Route::get('admin/course_order/pay', 'Admin\QualityControl\CourseOrderController@pay');// 缴费
+
+// 培训班企业管理
+Route::get('admin/course_class_company', 'Admin\QualityControl\CourseClassCompanyController@index');// 列表
+//Route::get('admin/course_class_company/add/{id}', 'Admin\QualityControl\CourseClassCompanyController@add');// 添加
+Route::get('admin/course_class_company/info/{id}', 'Admin\QualityControl\CourseClassCompanyController@info');// 查看-详情
+// Route::get('admin/course_class_company/select', 'Admin\QualityControl\CourseClassCompanyController@select');// 选择-弹窗
+Route::get('admin/course_class_company/export', 'Admin\QualityControl\CourseClassCompanyController@export');// 导出
+// Route::get('admin/course_class_company/import_template', 'Admin\QualityControl\CourseClassCompanyController@import_template');// 导入模版
+
 // 报名学员
 Route::get('admin/course_order_staff', 'Admin\QualityControl\CourseOrderStaffController@index');// 列表
 //Route::get('admin/course_order_staff/add/{id}', 'Admin\QualityControl\CourseOrderStaffController@add');// 添加
@@ -359,9 +369,26 @@ Route::get('admin/order_pay_config/add/{id}', 'Admin\QualityControl\OrderPayConf
 Route::get('admin/order_pay_config/export', 'Admin\QualityControl\OrderPayConfigController@export');// 导出
 Route::get('admin/order_pay_config/import_template', 'Admin\QualityControl\OrderPayConfigController@import_template');// 导入模版
 
+// 收款订单
+Route::get('admin/orders', 'Admin\QualityControl\OrdersController@index');// 列表
+//Route::get('admin/orders/add/{id}', 'Admin\QualityControl\OrdersController@add');// 添加
+Route::get('admin/orders/info/{id}', 'Admin\QualityControl\OrdersController@info');// 查看-详情
+// Route::get('admin/orders/select', 'Admin\QualityControl\OrdersController@select');// 选择-弹窗
+Route::get('admin/orders/export', 'Admin\QualityControl\OrdersController@export');// 导出
+// Route::get('admin/orders/import_template', 'Admin\QualityControl\OrdersController@import_template');// 导入模版
+
+// 收款订单财务流水
+Route::get('admin/order_flow', 'Admin\QualityControl\OrderFlowController@index');// 列表
+//Route::get('admin/order_flow/add/{id}', 'Admin\QualityControl\OrderFlowController@add');// 添加
+Route::get('admin/order_flow/info/{id}', 'Admin\QualityControl\OrderFlowController@info');// 查看-详情
+// Route::get('admin/order_flow/select', 'Admin\QualityControl\OrderFlowController@select');// 选择-弹窗
+Route::get('admin/order_flow/export', 'Admin\QualityControl\OrderFlowController@export');// 导出
+// Route::get('admin/order_flow/import_template', 'Admin\QualityControl\OrderFlowController@import_template');// 导入模版
+
 // 第三方对帐单
 Route::get('admin/order_pay', 'Admin\QualityControl\OrderPayController@index');// 列表
 Route::get('admin/order_pay/add/{id}', 'Admin\QualityControl\OrderPayController@add');// 添加
+Route::get('admin/order_pay/info/{id}', 'Admin\QualityControl\OrderPayController@info');// 查看-详情
 // Route::get('admin/order_pay/select', 'Admin\QualityControl\OrderPayController@select');// 选择-弹窗
 Route::get('admin/order_pay/export', 'Admin\QualityControl\OrderPayController@export');// 导出
 Route::get('admin/order_pay/import_template', 'Admin\QualityControl\OrderPayController@import_template');// 导入模版
@@ -484,6 +511,14 @@ Route::get('admin/abilitys_admin/{ability_id}/ability_join_items_results/add/{id
 Route::get('admin/abilitys_admin/{ability_id}/ability_join_items_results/export', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@export');// 导出
 Route::get('admin/abilitys_admin/{ability_id}/ability_join_items_results/get_sample/{id}', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@get_sample');// 取样
 
+//****************************************************************************
+// 课程管理
+Route::get('admin/course_admin/{course_id}', 'Admin\QualityControl\Course\IndexController@index');// 首页
+Route::get('admin/course_admin/{course_id}/basic', 'Admin\QualityControl\Course\IndexController@basic');// 基础信息
+//****************************************************************************
+// 课程班级管理
+Route::get('admin/course_class_admin/{class_id}', 'Admin\QualityControl\CourseClass\IndexController@index');// 首页
+Route::get('admin/course_class_admin/{class_id}/basic', 'Admin\QualityControl\CourseClass\IndexController@basic');// 基础信息
 //****************************************************************************
 // 能力验证--报名管理
 Route::get('admin/ability_join', 'Admin\QualityControl\AbilityJoinController@index');// 列表
@@ -684,6 +719,43 @@ Route::get('company/course_order/info/{id}', 'WebFront\Company\QualityControl\Co
 // Route::get('company/course_order/select', 'WebFront\Company\QualityControl\CourseOrderController@select');// 选择-弹窗
 Route::get('company/course_order/export', 'WebFront\Company\QualityControl\CourseOrderController@export');// 导出
 // Route::get('company/course_order/import_template', 'WebFront\Company\QualityControl\CourseOrderController@import_template');// 导入模版
+
+Route::get('company/course_order/pay', 'WebFront\Company\QualityControl\CourseOrderController@pay');// 缴费
+
+// 报名学员
+Route::get('company/course_order_staff', 'WebFront\Company\QualityControl\CourseOrderStaffController@index');// 列表
+//Route::get('company/course_order_staff/add/{id}', 'WebFront\Company\QualityControl\CourseOrderStaffController@add');// 添加
+// Route::get('company/course_order_staff/select', 'WebFront\Company\QualityControl\CourseOrderStaffController@select');// 选择-弹窗
+Route::get('company/course_order_staff/export', 'WebFront\Company\QualityControl\CourseOrderStaffController@export');// 导出
+//Route::get('company/course_order_staff/import_template', 'WebFront\Company\QualityControl\CourseOrderStaffController@import_template');// 导入模版
+
+// Route::get('company/course_order_staff/join_class', 'WebFront\Company\QualityControl\CourseOrderStaffController@join_class');// 分班
+Route::get('company/course_order_staff/pay', 'WebFront\Company\QualityControl\CourseOrderStaffController@pay');// 缴费
+Route::get('company/course_order_staff/pay_save', 'WebFront\Company\QualityControl\CourseOrderStaffController@pay_save');// 缴费页面
+
+// 收款订单
+Route::get('company/orders', 'WebFront\Company\QualityControl\OrdersController@index');// 列表
+//Route::get('company/orders/add/{id}', 'WebFront\Company\QualityControl\OrdersController@add');// 添加
+Route::get('company/orders/info/{id}', 'WebFront\Company\QualityControl\OrdersController@info');// 查看-详情
+// Route::get('company/orders/select', 'WebFront\Company\QualityControl\OrdersController@select');// 选择-弹窗
+Route::get('company/orders/export', 'WebFront\Company\QualityControl\OrdersController@export');// 导出
+// Route::get('company/orders/import_template', 'WebFront\Company\QualityControl\OrdersController@import_template');// 导入模版
+
+// 收款订单财务流水
+Route::get('company/order_flow', 'WebFront\Company\QualityControl\OrderFlowController@index');// 列表
+//Route::get('company/order_flow/add/{id}', 'WebFront\Company\QualityControl\OrderFlowController@add');// 添加
+Route::get('company/order_flow/info/{id}', 'WebFront\Company\QualityControl\OrderFlowController@info');// 查看-详情
+// Route::get('company/order_flow/select', 'WebFront\Company\QualityControl\OrderFlowController@select');// 选择-弹窗
+Route::get('company/order_flow/export', 'WebFront\Company\QualityControl\OrderFlowController@export');// 导出
+// Route::get('company/order_flow/import_template', 'WebFront\Company\QualityControl\OrderFlowController@import_template');// 导入模版
+
+// 第三方对帐单
+Route::get('company/order_pay', 'WebFront\Company\QualityControl\OrderPayController@index');// 列表
+Route::get('company/order_pay/add/{id}', 'WebFront\Company\QualityControl\OrderPayController@add');// 添加
+Route::get('company/order_pay/info/{id}', 'WebFront\Company\QualityControl\OrderPayController@info');// 查看-详情
+// Route::get('company/order_pay/select', 'WebFront\Company\QualityControl\OrderPayController@select');// 选择-弹窗
+Route::get('company/order_pay/export', 'WebFront\Company\QualityControl\OrderPayController@export');// 导出
+Route::get('company/order_pay/import_template', 'WebFront\Company\QualityControl\OrderPayController@import_template');// 导入模版
 
 
 // 用户中心 user

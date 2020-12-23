@@ -17,6 +17,54 @@ use Illuminate\Support\Facades\URL;
  */
 class Tool
 {
+    // gmp 函数
+    // 这些函数允许使用GNU MP库处理任意长度的整数。
+    // 必须将大整数指定为字符串-否则，PHP会将其强制转换为浮点数，从而导致精度下降。
+    //  ----说明：整数的用这个操作
+
+    // 绝对值  gmp_abs(); 如 gmp_abs("274982683358");
+    // + 加  gmp_add; 如 $sum = gmp_add("123456789012345", "76543210987655");
+    // 按位与  gmp_and：如 $and1 = gmp_and("0xfffffffff4", "0x4");
+    // 比较数字【比较两个数字】  gmp_binomial ; 如  ，正值 1，a > b；为零0，则 返回a = b；负值-1 a < b。 gmp_cmp("1234", "1000")
+    // 计算一个数的补码  gmp_com ；如 gmp_com("1234");
+    // / 数字除以【只要整数部分】  gmp_div_q; 参数  num1：被除数； num2： 除数 ；【可填】rounding_mode：结果舍入由定义 rounding_mode【GMP_ROUND_ZERO：结果被截断为0-默认；GMP_ROUND_PLUSINF：结果四舍五入到+infinity；GMP_ROUND_MINUSINF：结果四舍五入到-infinity】
+    // 除数并得到商和余数  gmp_div_qr; 参数同 gmp_div_q；只是返回值是一个数组：第一个值为 整数结果；第二个值为  余数  ； 如：$res = gmp_div_qr($a, "0xDEFE75");
+    // 获得除法余数  gmp_div_r  ；参数同 gmp_div_q；如：$div = gmp_div_r("105", "20"); 返回5
+    // gmp_div  gmp_div_q 的别名
+    // 精确的数字除法 gmp_divexact  快“整除”的算法。仅当事先知道可num2除时，此功能才能产生正确的结果 num1。参数 $num1 , $num2; 如 ：$div1 = gmp_divexact("10", "2");
+    // 将GMP编号导出为二进制字符串 gmp_export ；参数 num ；word_size 默认值为1。每个二进制数据块中的字节数。flags 默认值为GMP_MSW_FIRST | GMP_NATIVE_ENDIAN。如： $number = gmp_init(16705); echo gmp_export($number) . "\n";
+    // 阶乘 gmp_fact 如：$fact1 = gmp_fact(5); // 5 * 4 * 3 * 2 * 1
+    // 计算GCD 最大公约数 gmp_gcd 计算num1和的 最大公约数num2。即使输入操作数之一或全部为负，结果始终为正。  $gcd = gmp_gcd("12", "21");  是 3
+    // —创建GMP编号 gmp_init   从整数或字符串创建GMP编号; 参数  num 整数或字符串。字符串表示形式可以是十进制，十六进制或八进制。 base  基地 ； 如 $a = gmp_init(123456);
+    //      不必调用此函数即可在GMP函数中使用整数或字符串代替GMP数字（例如，使用 gmp_add（））。
+    //      如果有可能且需要进行转换，则函数参数将自动转换为GMP编号，并使用与gmp_init（）相同的规则。
+    // 将GMP编号转换为整数   gmp_intval  cho gmp_intval("2147483647") . "\n";
+    // 计算LCM  计算的最小公倍数   num1和num2
+    // 模运算  gmp_mod  $mod = gmp_mod("8", "3"); = 2
+    // * 乘以数字  gmp_mul $mul = gmp_mul("12345678", "2000");
+    // 取反数 返回数字的负值  gmp_neg   $neg1 = gmp_neg("1");
+    // 按位或  gmp_or  $or1 = gmp_or("0xfffffff2", "4");
+    // 随机数 gmp_random_bits 生成一个随机数。该数字将在0到（2 ** bits）-1之间  $rand1 = gmp_random_bits(3); // random number from 0 to 7
+    // 随机数 生成一个随机数。该数字将在min和之间 max   gmp_random_range   $rand1 = gmp_random_range(0, 100);    // random number between 0 and 100
+    // 设置RNG种子
+    // 检查数字的符号 如果num为正则返回1 ，如果num为负则返回-1 ，如果num为零则返回0。 gmp_sign
+    // 计算的平方根  gmp_sqrt
+    // 将GMP编号转换为字符串  gmp_strval
+    // - 减去num2从num1 返回的结果   gmp_sub  $sub = gmp_sub("281474976710656", "4294967296"); // 2^48 - 2^32
+
+
+    // BC数学函数--任意精度数学函数
+    //  ----说明：有小数点的用这个操作
+    // bcadd —【+】 将两个高精度数字相加   $a = '1.234';$b = '5'; echo bcadd($a, $b);     // 6  echo bcadd($a, $b, 4);  // 6.2340
+    // bccomp — 【< = >】比较两个高精度数字，返回-1, 0, 1  ； echo bccomp('1', '2') . "\n";   // -1 ； echo bccomp('1.00001', '1', 3); // 0 ；echo bccomp('1.00001', '1', 5); // 1
+    // bcdiv — 【/】将两个高精度数字相除  echo bcdiv('105', '6.55957', 3);  // 16.007
+    // bcmod — 【mod】求高精度数字余数  echo bcmod('4', '2'); // 0  ；  echo bcmod('2', '4'); // 2
+    // bcmul — 【*】将两个高精度数字相乘 echo bcmul('1.34747474747', '35', 3); // 47.161  ； echo bcmul('2', '4'); // 8
+    // bcpow — 求高精度数字乘方  echo bcpow('4.2', '3', 2); // 74.08
+    // bcpowmod — 求高精度数字乘方求模，数论里非常常用
+    // bcscale — 配置默认小数点位数，相当于就是Linux bc中的”scale=”  bcscale(3); echo bcdiv('105', '6.55957'); // 16.007  ；  相当于 echo bcdiv('105', '6.55957', 3); // 16.007
+    // bcsqrt — 求高精度数字平方根 echo bcsqrt('2', 3); // 1.414
+    // bcsub — 【-】将两个高精度数字相减 $a = '1.234'; $b = '5'; echo bcsub($a, $b);     // -3  ； echo bcsub($a, $b, 4);  // -3.7660
 
     /**
      * HTTP Protocol defined status codes
@@ -1247,6 +1295,7 @@ class Tool
 //        }
         $isMultiArr = true; // true:二维;false:一维
         if(!is_array($dataArr) || empty($dataArr)) $isMultiArr = false;// 非数组或空数组，则为一维
+        if(is_array($dataArr) && empty($dataArr)) return $isMultiArr;// 如果是空数组，则不用处理，直接返回
 
         // 优化：如果下标是0，1，2...这样的，我们只判断前面6条记录---目的是为减少判断的次数
         $judge_num = 0;
@@ -3281,7 +3330,6 @@ class Tool
      * @param int/float $num 整数或小数
      * @param int $decimalDigits 保留小数位数
      * @param int $type 类型 1 四舍五入;2不四舍五入;3向下取[正负:往小的数取];4 向上取[正负:往大的数取];
-     * @param float $sign
      * @return string
      */
     public static function formatFloat($num, $decimalDigits = 2, $type = 2){
@@ -3295,6 +3343,7 @@ class Tool
             case 1:// // 保留两位小数并且四舍五入
                 // $num = 123213.666666;
                 // sprintf("%.2f", $num);
+                $num = round($num, $decimalDigits);
                 return sprintf("%." . $decimalDigits . "f", $num);
                 break;
             case 2:// 保留两位小数并且不四舍五入
@@ -3302,9 +3351,10 @@ class Tool
                 // $num = 123213.666666;
                 // echo sprintf("%.2f",substr(sprintf("%.3f", $num), 0, -1));
                 if( $decimalDigits <  $decNum){
-                    for($i = 1; $i <= $decimalDigits; $i++){
-                        $num *= 10;
-                    }
+//                    for($i = 1; $i <= $decimalDigits; $i++){
+//                        $num *= 10;
+//                    }
+                    $num = bcmul($num, bcpow('10', $decimalDigits, 0), $decimalDigits + 2);
                     $numArr = explode('.', $num);
                     if(count($numArr) == 2){
                         $intNum = $numArr[0] ?? 0;
@@ -3316,7 +3366,8 @@ class Tool
                     }
 
                     for($i = 1; $i <= $decimalDigits; $i++){
-                        $num /= 10;
+                        // $num /= 10;
+                        $num = bcdiv($num, 10, $decimalDigits + 2);
                     }
                 }
                 return sprintf("%." . $decimalDigits . "f", $num);
@@ -3324,9 +3375,10 @@ class Tool
                 break;
             case 4:// 4 向上取
                 if( $decimalDigits <  $decNum){
-                    for($i = 1; $i <= $decimalDigits; $i++){
-                        $num *= 10;
-                    }
+//                    for($i = 1; $i <= $decimalDigits; $i++){
+//                        $num *= 10;
+//                    }
+                    $num = bcmul($num, bcpow('10', $decimalDigits, 0), $decimalDigits + 2);
                     $numArr = explode('.', $num);
                     if(count($numArr) == 2){
                         $intNum = $numArr[0] ?? 0;
@@ -3335,11 +3387,15 @@ class Tool
                         // 向上取整
                         // $num = ceil($num);
                         $num = $intNum;
-                        if( $digitNum > 0 ) $num += 1;
+                        if( $digitNum > 0 ){
+                            // $num += 1;
+                            $num = bcadd($num, 1, $decimalDigits + 2);
+                        }
                     }
 
                     for($i = 1; $i <= $decimalDigits; $i++){
-                        $num /= 10;
+                        // $num /= 10;
+                        $num = bcdiv($num, 10, $decimalDigits + 2);
                     }
                 }
                 return sprintf("%." . $decimalDigits . "f", $num);
@@ -3355,7 +3411,6 @@ class Tool
      * @param int/float $num 整数或小数
      * @param int $decimalDigits 保留小数位数
      * @param int $type 类型 1 四舍五入;2不四舍五入;3向下取[正:往小的数取;负:往大的负数取];4 向上取[正:往大的数取;负:往小的数负取];
-     * @param float $sign
      * @return string
      */
     public static function formatFloatVal($num, $decimalDigits = 2, $type = 2){
@@ -3376,34 +3431,96 @@ class Tool
                 // $num = 123213.666666;
                 // echo sprintf("%.2f",substr(sprintf("%.3f", $num), 0, -1));
                 if( $decimalDigits <  $decNum){
-                    for($i = 1; $i <= $decimalDigits; $i++){
-                        $num *= 10;
-                    }
+//                    for($i = 1; $i <= $decimalDigits; $i++){
+//                        $num *= 10;
+//                    }
+                    $num = bcmul($num, bcpow('10', $decimalDigits, 0), $decimalDigits + 2);
 
                     // 向下取整
                     $num = floor($num);
 
                     for($i = 1; $i <= $decimalDigits; $i++){
-                        $num /= 10;
+//                        $num /= 10;
+                        $num = bcdiv($num, 10, $decimalDigits + 2);
                     }
                 }
                 return sprintf("%." . $decimalDigits . "f", $num);
                 break;
             case 4:// 4 向上取
                 if( $decimalDigits <  $decNum){
-                    for($i = 1; $i <= $decimalDigits; $i++){
-                        $num *= 10;
-                    }
+//                    for($i = 1; $i <= $decimalDigits; $i++){
+//                        $num *= 10;
+//                    }
+                    $num = bcmul($num, bcpow('10', $decimalDigits, 0), $decimalDigits + 2);
                     // 向上取整
                     $num = ceil($num);
                     for($i = 1; $i <= $decimalDigits; $i++){
-                        $num /= 10;
+//                        $num /= 10;
+                        $num = bcdiv($num, 10, $decimalDigits + 2);
                     }
                 }
                 return sprintf("%." . $decimalDigits . "f", $num);
             default:
         }
         return $num;
+    }
+
+    /**
+     * 格式化整数价格保留多少位小数 如:1234.15  3向下取[正:往小的数取;负:往大的负数取];4 向上取[正:往大的数取;负:往小的数负取];
+     *
+     * @param int $num 整数[价格的整数格式]
+     * @param int $decimalDigits 保留小数位数
+     * @param int $type 类型 1 四舍五入[默认];2不四舍五入;3向下取[正:往小的数取;负:往大的负数取];4 向上取[正:往大的数取;负:往小的数负取];
+     * @param int $multiple 缩小倍数 默认 100
+     * @return string
+     */
+    public static function formatIntPriceToFloadPrice($num, $decimalDigits = 2, $type = 1, $multiple = 100){
+        // bcdiv 除 倍数 100， 多保留一位小数，--后面格式化时，才舍去
+        return static::formatFloatVal(bcdiv($num, $multiple, $decimalDigits + 1), $decimalDigits, $type);
+    }
+
+    /**
+     * 格式化小数价格为整数价格保留多少位小数 如:1234.15  3向下取[正:往小的数取;负:往大的负数取];4 向上取[正:往大的数取;负:往小的数负取];
+     *
+     * @param int/float $num 整数[价格的整数格式]
+     * @param int $decimalDigits 保留小数位数 【默认0位】--放大后的小数位数
+     * @param int $type 类型 1 四舍五入[默认];2不四舍五入;3向下取[正:往小的数取;负:往大的负数取];4 向上取[正:往大的数取;负:往小的数负取];
+     * @param int $multiple 放大倍数 默认 100
+     * @return string
+     */
+    public static function formatFloadPriceToIntPrice($num, $decimalDigits = 0, $type = 1, $multiple = 100){
+        $formatPrice = bcmul($num, $multiple, 2);// 先乘并保留2位小数
+        return static::formatFloatVal($formatPrice, $decimalDigits, $type);
+    }
+    /**
+     * 批量浮点数价格转整数 或 整数转为小数
+     *
+     * @param array $dataList 需要转换的数据--一维或二维数组
+     * @param array $priceFields 需要转换的价格字段数组
+     * @param int $operateType 操作类型 1：浮点数价格转整数 【默认】； 2 ：整数转为小数
+     * @param int $decimalDigits 保留小数位数 【默认0位】--放大后的小数位数 -- $operateType:值 为 2时，这里要用2--两位小数
+     * @param int $type 类型 1 四舍五入[默认];2不四舍五入;3向下取[正:往小的数取;负:往大的负数取];4 向上取[正:往大的数取;负:往小的数负取];
+     * @param int $multiple 放大倍数 默认 100
+     * @return array
+     */
+    public static function bathPriceCutFloatInt(&$dataList, $priceFields = [], $operateType = 1, $decimalDigits = 0, $type = 1, $multiple = 100){
+        if(empty($dataList) || empty($priceFields)) return $dataList;
+
+        $isMulti = static::isMultiArr($dataList, true);
+        foreach($dataList as $k => &$v){
+            foreach($priceFields as $tField){
+                if(isset($v[$tField]) && is_numeric($v[$tField])){
+                    if($operateType == 1){// 浮点数价格转整数
+                        $v[$tField] = static::formatFloadPriceToIntPrice($v[$tField], $decimalDigits, $type, $multiple) ;
+                    }else{// 整数转为小数
+                        $v[$tField] = static::formatIntPriceToFloadPrice($v[$tField], $decimalDigits, $type, $multiple) ;
+                    }
+                }
+            }
+        }
+        if(!$isMulti) $dataList = $dataList[0] ?? [];
+        return $dataList;
+
     }
 
     /**

@@ -58,6 +58,8 @@
     <script src="{{ asset('/static/js/custom/baiduTemplate.js') }}"></script>
     <!-- 弹出层-->
     <script src="{{ asset('/static/js/custom/layer/layer.js') }}"></script>
+    {{--1，引入第三方的js库, math.js，--}}
+    <script src="{{asset('static/js/math/8.1.0/math.min.js')}}"></script>
     <!-- 公共方法-->
     <script src="{{ asset('/static/js/custom/common.js') }}?2"></script>
     <!-- ajax翻页方法-->

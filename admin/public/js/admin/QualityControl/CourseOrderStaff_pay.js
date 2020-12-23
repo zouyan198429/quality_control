@@ -36,6 +36,7 @@ var otheraction = {
         var recordObj = $(obj);
         var trObj = recordObj.closest('tr');
         var pay_config_id = trObj.find('input[name=pay_config_id]').val();
+        var company_id = trObj.find('input[name=company_id]').val();
         var ids = trObj.find('input[name=ids]').val();
         if( ids == ''){
             err_alert('请选择需要操作的数据');
@@ -55,7 +56,7 @@ var otheraction = {
             btn: ['确定','取消'] //按钮
         }, function(){
             // var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
-            var weburl = PAY_SAVE_URL + '?id='+ ids + '&pay_config_id=' + pay_config_id + '&pay_method=' + pay_method;
+            var weburl = PAY_SAVE_URL + '?id='+ ids + '&company_id=' + company_id + '&pay_config_id=' + pay_config_id + '&pay_method=' + pay_method;
             console.log(weburl);
             var tishi = '缴费';//"查看供应商";
             console.log('weburl', weburl);

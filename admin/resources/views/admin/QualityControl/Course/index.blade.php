@@ -24,6 +24,7 @@
     </div>
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
+          <input type="hidden" name="hidden_option"  value="{{ $hidden_option ?? 0 }}" />
 
         <select class="wmini" name="status_online">
           <option value="">上架状态</option>
@@ -89,8 +90,8 @@
         <th>图片</th>
         <th>收款帐号<hr/>收款开通类型</th>
         <th>收费标准(会员)<hr/>收费标准<br/>(非会员)</th>
-        <th>报名池人数<hr/>已分班人数</th>
-        <th>已作废人数</th>
+        <th>报名池人数<hr/>已作废人数</th>
+        <th>已分班人数<hr/>已结业人数</th>
         <th>浏览量<hr/>上架状态</th>
         <th>创建时间<hr/>更新时间</th>
       <th>操作</th>
@@ -142,6 +143,7 @@
       var IFRAME_TAG_KEY = "";// "QualityControl\\CTAPIStaff";// 获得模型表更新时间的关键标签，可为空：不获取
       var IFRAME_TAG_TIMEOUT = 60000;// 获得模型表更新时间运行间隔 1000:1秒 ；可以不要此变量：默认一分钟
 
+      var COURSE_ADMIN_URL = "{{url('admin/course_admin/')}}/";//课程管理 页面地址前缀 + id
   </script>
 
 <link rel="stylesheet" href="{{asset('js/baguetteBox.js/baguetteBox.min.css')}}">
@@ -151,7 +153,7 @@
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
 
 <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/Course.js') }}?5"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/Course.js') }}?8"  type="text/javascript"></script>
 @component('component.upfileincludejsmany')
 @endcomponent
 </body>

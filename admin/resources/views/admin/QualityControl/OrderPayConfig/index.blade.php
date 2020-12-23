@@ -24,6 +24,7 @@
     </div>
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
+          <input type="hidden" name="hidden_option"  value="{{ $hidden_option ?? 0 }}" />
           收款开通类型:
           <select class="wmini" name="pay_method">
               <option value="">全部</option>

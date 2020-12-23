@@ -17,106 +17,119 @@
 {{--<div id="crumb"><i class="fa fa-reorder fa-fw" aria-hidden="true"></i> {{ $operate ?? '' }}员工</div>--}}
 <div class="mm">
     <?php
+    // 按收款方式分
     $payCount = count($pay_config_format);
     ?>
     @foreach ($pay_config_format as $pay_config_id => $pay_config)
-    <table  lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
-        <colgroup>
-            {{--                            <col width="75">--}}
-            <col>
-            <col>
-            <col width="80">
-            <col width="120">
-            <col width="85">
-        </colgroup>
-        <thead>
-        <tr>
-            {{--                            <th>--}}
-            {{--                                <label class="pos-rel">--}}
-            {{--                                    <input type="checkbox" class="ace check_all" value="" onclick="otheraction.seledAll(this)">--}}
-            {{--                                    <span>全选</span>--}}
-            {{--                                </label>--}}
-            {{--                            </th>--}}
-            <th >
-                <span>姓名</span>
-            </th>
-            <th>
-                <span>手机号<hr/>身份证</span>
-            </th>
-            <th>
-                <span>单价<hr/>人员状态</span>
-            </th>
-            <th>
-                <span> 缴费状态<hr/>支付单号</span>
-            </th>
-            <th>
-                <span> 分班状态<hr/>班级</span>
-            </th>
-        </tr>
-        </thead>
-        <tbody  id="data_list" >
-        <?php
-        $course_order_staff = $config_staff_list[$pay_config_id] ?? [];
-        $pay_method = $pay_config['pay_method'] ?? 0;
-        $allow_pay_method = $pay_config['allow_pay_method'] ?? 0;
-        $pay_company_name = $pay_config['pay_company_name'] ?? '';
-        $totalPrice = 0;
-        $staff_ids = [];
-        ?>
-        @foreach ($course_order_staff as $k => $staff_info)
-            <tr>
-                {{--                                <td >--}}
-                {{--                                    <label>--}}
-                {{--                                        <input onclick="otheraction.seledSingle(this)" type="checkbox" class="ace check_item"  name="staff_id[]"   value="{{ $staff_info['id'] ?? '' }}" @if(isset($staff_info['is_joined']) && ($staff_info['is_joined'] & 1) == 1)  disabled @endif>--}}
-                {{--                                        <span class="lbl"></span>--}}
-                {{--                                    </label>--}}
 
-                {{--                                </td>--}}
-                <td>
-                    {{ $staff_info['real_name'] ?? '' }}({{ $staff_info['sex_text'] ?? '' }})
+        <?php
+        // 再按企业 分
+        $course_order_staff = $config_staff_list[$pay_config_id] ?? [];
+        ?>
+        @foreach ($course_order_staff as $company_id => $company_course_order_staff)
+            <?php
+            $company_name = $company_kv[$company_id] ?? '';
+            ?>
+            {{ $company_name ?? '' }}：
+        <table  lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
+            <colgroup>
+                {{--                            <col width="75">--}}
+                <col>
+                <col>
+                <col width="80">
+                <col width="120">
+                <col width="85">
+            </colgroup>
+            <thead>
+            <tr>
+                {{--                            <th>--}}
+                {{--                                <label class="pos-rel">--}}
+                {{--                                    <input type="checkbox" class="ace check_all" value="" onclick="otheraction.seledAll(this)">--}}
+                {{--                                    <span>全选</span>--}}
+                {{--                                </label>--}}
+                {{--                            </th>--}}
+                <th >
+                    <span>姓名</span>
+                </th>
+                <th>
+                    <span>手机号<hr/>身份证</span>
+                </th>
+                <th>
+                    <span>单价<hr/>人员状态</span>
+                </th>
+                <th>
+                    <span> 缴费状态<hr/>支付单号</span>
+                </th>
+                <th>
+                    <span> 分班状态<hr/>班级</span>
+                </th>
+            </tr>
+            </thead>
+            <tbody  id="data_list" >
+            <?php
+            $pay_method = $pay_config['pay_method'] ?? 0;
+            $allow_pay_method = $pay_config['allow_pay_method'] ?? 0;
+            $pay_company_name = $pay_config['pay_company_name'] ?? '';
+            $totalPrice = 0;
+            $staff_ids = [];
+            ?>
+            @foreach ($company_course_order_staff as $k => $staff_info)
+                <tr>
+                    {{--                                <td >--}}
+                    {{--                                    <label>--}}
+                    {{--                                        <input onclick="otheraction.seledSingle(this)" type="checkbox" class="ace check_item"  name="staff_id[]"   value="{{ $staff_info['id'] ?? '' }}" @if(isset($staff_info['is_joined']) && ($staff_info['is_joined'] & 1) == 1)  disabled @endif>--}}
+                    {{--                                        <span class="lbl"></span>--}}
+                    {{--                                    </label>--}}
+
+                    {{--                                </td>--}}
+                    <td>
+                        {{ $staff_info['real_name'] ?? '' }}({{ $staff_info['sex_text'] ?? '' }})
+                    </td>
+                    <td>
+                        {{ $staff_info['mobile'] ?? '' }}
+                        <hr/>
+                        {{ $staff_info['id_number'] ?? '' }}
+                    </td>
+                    <td>
+                        ￥{{ $staff_info['price'] ?? '' }}
+                        <hr/>
+                        {{ $staff_info['staff_status_text'] ?? '' }}
+                    </td>
+                    <td>
+                        {{ $staff_info['pay_status_text'] ?? '' }}
+                        <hr/>
+                        {{ $staff_info['order_no'] ?? '' }}
+                    </td>
+                    <td>
+                        {{ $staff_info['join_class_status_text'] ?? '' }}
+                        <hr/>
+                        {{ $staff_info['class_name'] ?? '' }}
+                    </td>
+                </tr>
+                <?php
+                // $totalPrice += $staff_info['price'];
+                $totalPrice = bcadd($totalPrice, $staff_info['price'], 2);
+                array_push($staff_ids, $staff_info['id']);
+                ?>
+            @endforeach
+            <tr>
+                <td colspan="2" style="text-align: right;" valign="top">
+                    共<?php echo count($company_course_order_staff)?>人；总计：￥{{ $totalPrice ?? '' }}元
                 </td>
-                <td>
-                    {{ $staff_info['mobile'] ?? '' }}
-                    <hr/>
-                    {{ $staff_info['id_number'] ?? '' }}
-                </td>
-                <td>
-                    ￥{{ $staff_info['price'] ?? '' }}
-                    <hr/>
-                    {{ $staff_info['staff_status_text'] ?? '' }}
-                </td>
-                <td>
-                    {{ $staff_info['pay_status_text'] ?? '' }}
-                    <hr/>
-                    {{ $staff_info['order_no'] ?? '' }}
-                </td>
-                <td>
-                    {{ $staff_info['join_class_status_text'] ?? '' }}
-                    <hr/>
-                    {{ $staff_info['class_name'] ?? '' }}
+                <td colspan="3" style="text-align: left;">
+                    <input type="hidden" name="pay_config_id" value="{{ $pay_config_id ?? 0 }}"/>
+                    <input type="hidden" name="company_id" value="{{ $company_id ?? 0 }}"/>
+                    <input type="hidden" name="ids" value="{{ implode(',', $staff_ids) }}"/>
+                    {{ $pay_company_name ?? '' }}<br/>
+                    @foreach ($payMethod as $k=>$txt)
+                        <label><input type="radio"  name="pay_method"  value="{{ $k }}"  @if(isset($defaultPayMethod) && $defaultPayMethod > 0 && ($defaultPayMethod & $k) == $k) checked="checked"  @endif @if(isset($pay_method) && ($pay_method & $k) <=0 ) disabled   @endif/>{{ $txt }} </label><br/>
+                    @endforeach
+                    <button class="layui-btn layui-btn-normal"  onclick="otheraction.paySave(this)">收款</button>
                 </td>
             </tr>
-            <?php
-            $totalPrice += $staff_info['price'];
-            array_push($staff_ids, $staff_info['id']);
-            ?>
+            </tbody>
+        </table>
         @endforeach
-        <tr>
-            <td colspan="2" style="text-align: right;" valign="top">
-                共<?php echo count($course_order_staff)?>人；总计：￥{{ $totalPrice ?? '' }}元
-            </td>
-            <td colspan="3" style="text-align: left;">
-                <input type="hidden" name="pay_config_id" value="{{ $pay_config_id ?? 0 }}"/>
-                <input type="hidden" name="ids" value="{{ implode(',', $staff_ids) }}"/>
-                {{ $pay_company_name ?? '' }}<br/>
-                @foreach ($payMethod as $k=>$txt)
-                    <label><input type="radio"  name="pay_method"  value="{{ $k }}"  @if(isset($defaultPayMethod) && $defaultPayMethod > 0 && ($defaultPayMethod & $k) == $k) checked="checked"  @endif @if(isset($pay_method) && ($pay_method & $k) <=0 ) disabled   @endif/>{{ $txt }} </label><br/>
-                @endforeach
-                <button class="layui-btn layui-btn-normal"  onclick="otheraction.paySave(this)">收款</button>
-            </td>
-        </tr>
-        </tbody>
-    </table>
     @endforeach
 
 </div>
@@ -131,6 +144,6 @@
 
     var PAY_SAVE_URL = "{{url('admin/course_order_staff/pay_save')}}";// 收款页面
 </script>
-<script src="{{ asset('/js/admin/QualityControl/CourseOrderStaff_pay.js') }}?7"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/CourseOrderStaff_pay.js') }}?10"  type="text/javascript"></script>
 </body>
 </html>

@@ -191,13 +191,13 @@ function ajax_form(){
     //     return false;
     // }
 
-    var class_status = $('input[name=class_status]:checked').val() || '';
-    var judge_seled = judge_validate(1,'状态',class_status,true,'custom',/^[1248]$/,"");
-    if(judge_seled != ''){
-        layer_alert("请选择状态",3,0);
-        //err_alert('<font color="#000000">' + judge_seled + '</font>');
-        return false;
-    }
+    // var class_status = $('input[name=class_status]:checked').val() || '';
+    // var judge_seled = judge_validate(1,'状态',class_status,true,'custom',/^[1248]$/,"");
+    // if(judge_seled != ''){
+    //     layer_alert("请选择状态",3,0);
+    //     //err_alert('<font color="#000000">' + judge_seled + '</font>');
+    //     return false;
+    // }
 
     // 验证通过
     SUBMIT_FORM = false;//标记为已经提交过

@@ -2,6 +2,7 @@
 // 收款订单
 namespace App\Business\Controller\API\QualityControl;
 
+use App\Models\QualityControl\Orders;
 use App\Services\DBRelation\RelationDB;
 use App\Services\Excel\ImportExport;
 use App\Services\Request\API\HttpRequest;
@@ -81,14 +82,32 @@ class CTAPIOrdersBusiness extends BasicPublicCTAPIBusiness
         $relationFormatConfigs = [
             // 下标 'relationConfig' => []// 下一个关系
             // 获得企业名称
-//            'company_info' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
-//                , ['admin_type' => 'admin_type', 'staff_id' => 'id']
-//                , 1, 2
-//                ,'','',
-//                CTAPIStaffBusiness::getRelationConfigs($request, $controller,
-//                    static::getUboundRelation($relationArr, 'company_info'),
-//                    static::getUboundRelationExtendParams($extendParams, 'company_info')),
-//                ['where' => [['admin_type', 2]]], '', []),
+            'company_name' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
+                , ['company_id' => 'id']
+                , 1, 2
+                ,'','',
+                CTAPIStaffBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'company_name'),
+                    static::getUboundRelationExtendParams($extendParams, 'company_name')),
+                [], '', []),
+            // 获得收款帐号名称
+            'pay_company_name' => CTAPIOrderPayConfigBusiness::getTableRelationConfigInfo($request, $controller
+                , ['pay_config_id' => 'id']
+                , 1, 2
+                ,'','',
+                CTAPIOrderPayConfigBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'pay_company_name'),
+                    static::getUboundRelationExtendParams($extendParams, 'pay_company_name')),
+                [], '', []),
+            // 获得支付方式名称
+            'pay_name' => CTAPIOrderPayMethodBusiness::getTableRelationConfigInfo($request, $controller
+                , ['pay_method' => 'pay_method']
+                , 1, 2
+                ,'','',
+                CTAPIOrderPayMethodBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'pay_name'),
+                    static::getUboundRelationExtendParams($extendParams, 'pay_name')),
+                [], '', []),
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }
@@ -134,6 +153,9 @@ class CTAPIOrdersBusiness extends BasicPublicCTAPIBusiness
     public static function joinListParams(Request $request, Controller $controller, &$queryParams, $notLog = 0){
         // 自己的参数查询拼接在这里-- 注意：多个id 的查询默认就已经有了，参数是 ids  多个用逗号分隔
 
+        $company_id = CommonRequest::getInt($request, 'company_id');
+        if($company_id > 0 )  array_push($queryParams['where'], ['company_id', '=', $company_id]);
+
         $order_type = CommonRequest::get($request, 'order_type');
         if(strlen($order_type) > 0 && $order_type != 0)  Tool::appendParamQuery($queryParams, $order_type, 'order_type', [0, '0', ''], ',', false);
 
@@ -161,4 +183,89 @@ class CTAPIOrdersBusiness extends BasicPublicCTAPIBusiness
     }
 
 
+    /**
+     * 格式化关系数据 --如果有格式化，肯定会重写---本地数据库主要用这个来格式化数据
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $main_list 关系主记录要格式化的数据
+     * @param array $data_list 需要格式化的从记录数据---二维数组(如果是一维数组，是转成二维数组后的数据)
+     * @param array $handleKeyArr 其它扩展参数，// 一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。--名称关键字，尽可能与关系名一样
+     * @param array $returnFields  新加入的字段['字段名1' => '字段名1' ]
+     * @return array  新增的字段 一维数组
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function handleRelationDataFormat(Request $request, Controller $controller, &$main_list, &$data_list, $handleKeyArr, &$returnFields = []){
+        // if(empty($data_list)) return $returnFields;
+        // 重写开始
+
+        // 对外显示时，批量价格字段【整数转为小数】
+        if(in_array('priceIntToFloat', $handleKeyArr)){
+            Tool::bathPriceCutFloatInt($data_list, Orders::$IntPriceFields, 2, 2);
+        }
+
+        // 重写结束
+        return $returnFields;
+    }
+
+    /**
+     * 获得列表数据时，对查询结果进行导出操作--有特殊的需要自己重写此方法
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $queryParams 已有的查询条件数组
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  null 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function exportListData(Request $request, Controller $controller, &$data_list, $notLog = 0){
+
+        $headArr = ['order_no'=>'订单号', 'company_name'=>'所属企业', 'order_type_text'=>'订单类型', 'remarks'=>'订单备注'
+            , 'pay_company_name'=>'收款帐号', 'pay_name'=>'支付方式' , 'total_amount'=>'商品数量', 'total_price'=>'商品总价'
+            , 'total_price_goods'=>'应付金额', 'total_price_discount'=>'优惠金额', 'payment_amount'=>'支付金额', 'change_amount'=>'找零金额'
+            ,  'order_time'=>'下单时间', 'pay_time'=>'付款时间', 'has_refund_text'=>'退费状态', 'refund_time'=>'退费时间'
+            , 'refund_price'=>'已退金额',  'refund_price_frozen'=>'退费冻结',  'check_price'=>'实收金额',  'order_status_text'=>'订单状态'
+            ,  'sure_time'=>'确认时间',  'check_time'=>'完成时间',  'cancel_time'=>'作废时间'];
+//        foreach($data_list as $k => $v){
+//            if(isset($v['method_name'])) $data_list[$k]['method_name'] =replace_enter_char($v['method_name'],2);
+//            if(isset($v['limit_range'])) $data_list[$k]['limit_range'] =replace_enter_char($v['limit_range'],2);
+//            if(isset($v['explain_text'])) $data_list[$k]['explain_text'] =replace_enter_char($v['explain_text'],2);
+//
+//        }
+        ImportExport::export('','订单' . date('YmdHis'),$data_list,1, $headArr, 0, ['sheet_title' => '订单']);
+    }
+
+
+
+    /**
+     * 确认 批量 或 单条数据
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param int $organize_id 操作的所属企业id 可以为0：没有所属企业--企业后台，操作用户时用来限制，只能操作自己企业的用户
+     * @param string $id 记录id，多个用逗号分隔
+     * @param int $operate_type 操作类型 1确认，、2手动订单完成【对业务完成后才确认缴费的订单，进行手动完成】
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  int 修改的数量   //   array 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function operateStatusAjax(Request $request, Controller $controller, $organize_id = 0, $id = 0, $operate_type = 1, $notLog = 0)
+    {
+        $company_id = $controller->company_id;
+        $user_id = $controller->user_id;
+        // 调用新加或修改接口
+        $apiParams = [
+            'company_id' => $company_id,
+            'organize_id' => $organize_id,
+            'id' => $id,
+            'operate_type' => $operate_type,
+            'operate_staff_id' => $user_id,
+            'modifAddOprate' => 0,
+        ];
+        $modifyNum = static::exeDBBusinessMethodCT($request, $controller, '',  'operateStatusById', $apiParams, $company_id, $notLog);
+
+        return $modifyNum;
+        // return static::delAjaxBase($request, $controller, '', $notLog);
+
+    }
 }

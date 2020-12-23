@@ -4,6 +4,8 @@ namespace App\Http\Controllers\WebFront\Company\QualityControl;
 
 use App\Business\Controller\API\QualityControl\CTAPICourseBusiness;
 use App\Business\Controller\API\QualityControl\CTAPICourseOrderBusiness;
+use App\Business\Controller\API\QualityControl\CTAPICourseOrderStaffBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIOrderPayMethodBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
 use App\Http\Controllers\WorksController;
 use App\Models\QualityControl\CourseOrder;
@@ -118,10 +120,66 @@ class CourseOrderController extends BasicController
                                 'class_name' => '',
                                 'staff_info' => '',
                             ]
-                        ], []),];
+                        ], []),
+                    'listHandleKeyArr' => ['priceIntToFloat'],
+                    ];
                 $info = CTAPICourseOrderBusiness::getFVFormatList( $request,  $this, 4, 1
                     , ['id' => $id, 'company_id' => $this->user_id], false, [], $extParams);
                 $reDataArr['info'] = $info;
+                // pr($reDataArr);
+            });
+    }
+
+
+
+    /**
+     * 缴费
+     * 参数 id 需要参与缴费的人员id, 多个用逗号,分隔或 一维id数组
+     * 参数  course_id 分配班级的班级所属课程类型--可为空
+     * 参数  class_id 所属的班级id--可为空
+     * 参数  company_id 报名用户所属的企业id-可为空
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function pay(Request $request)
+    {
+        return $this->exeDoPublicFun($request, 0, 8, 'company.QualityControl.CourseOrderStaff.pay', true
+            , '', [], function (&$reDataArr) use ($request){
+                $course_order_id = CommonRequest::get($request, 'course_order_id');
+
+                $id = CTAPICourseOrderBusiness::getCourseOrderStaffIdsByCourseOrderIds($request, $this, $course_order_id);
+
+                $info = [
+                    'id'=> implode(',', $id),
+                    //   'department_id' => 0,
+                ];
+
+
+//                $course_id = CommonRequest::getInt($request, 'course_id');
+//                $class_id = CommonRequest::getInt($request, 'class_id');
+                $company_id = $this->user_id;// CommonRequest::getInt($request, 'company_id');// 报名用户所属的企业id
+
+                // 根据报名用户id,获得报名用户及支付信息
+                list($dataList, $pay_configs_format, $companyKV) = CTAPICourseOrderStaffBusiness::getPayStaffByIds($request, $this, $id, $company_id);
+                $dataPanyConfigList = Tool::arrUnderReset($dataList, 'pay_config_id', 2, '_');
+                // 再按企业分
+                foreach($dataPanyConfigList as $k => &$v){
+                    $v = Tool::arrUnderReset($v, 'company_id', 2, '_');
+                }
+                // $reDataArr['course_order_staff'] = $dataList;
+                $reDataArr['pay_config_format'] = $pay_configs_format;
+                $reDataArr['company_kv'] = $companyKV;
+                $reDataArr['config_staff_list'] = $dataPanyConfigList;
+
+                $reDataArr['info'] = $info;
+
+                // 收款开通类型(1现金、2微信支付、4支付宝)
+                $reDataArr['payMethod'] =  CTAPIOrderPayMethodBusiness::getListKV($request, $this, ['key' => 'pay_method', 'val' => 'pay_name'], [
+                    'sqlParams' => ['where' => [['pay_method', 2]]]// ['whereIn' => ['pay_method' => [2, 4]]
+                ]);
+                $reDataArr['defaultPayMethod'] = $info['pay_method'] ?? -1;// 列表页默认状态
+
                 // pr($reDataArr);
             });
     }
@@ -209,6 +267,8 @@ class CourseOrderController extends BasicController
 //                    'simple_name' => $simple_name,
 //                    'sort_num' => $sort_num,
 //                ];
+//                 // 价格转为整型
+//                Tool::bathPriceCutFloatInt($saveData, CourseOrder::$IntPriceFields, 1);
 //
 ////        if($id <= 0) {// 新加;要加入的特别字段
 ////            $addNewData = [
@@ -265,6 +325,7 @@ class CourseOrderController extends BasicController
                         'company_name' => '',
                         'course_name' => '',
                     ], []),
+                'listHandleKeyArr' => ['priceIntToFloat'],
 
             ];
             return  CTAPICourseOrderBusiness::getList($request, $this, 2 + 4, [], [], $extParams);
@@ -316,6 +377,7 @@ class CourseOrderController extends BasicController
                         'company_name' => '',
                         'course_name' => '',
                     ], []),
+                'listHandleKeyArr' => ['priceIntToFloat'],
 
             ];
             CTAPICourseOrderBusiness::getList($request, $this, 1 + 0, [], [], $extParams);
@@ -471,6 +533,8 @@ class CourseOrderController extends BasicController
      * @author zouyan(305463219@qq.com)
      */
     public function doListPage(Request $request, &$reDataArr, $extendParams = []){
+        // 需要隐藏的选项 1、2、4、8....[自己给查询的或添加页的下拉或其它输入框等编号]；靠前面的链接传过来 &hidden_option=0;
+        $hiddenOption = CommonRequest::getInt($request, 'hidden_option');
         // $pageNum = $extendParams['pageNum'] ?? 1;// 1->1 首页；2->2 列表页； 12->2048 弹窗选择页面；
         // $user_info = $this->user_info;
         // $id = $extendParams['params']['id'];
@@ -494,6 +558,7 @@ class CourseOrderController extends BasicController
         $company_id = CommonRequest::getInt($request, 'company_id');
         $info = [];
 
+        $reDataArr['hidden_option'] = $hiddenOption;
     }
 
     /**
@@ -516,6 +581,8 @@ class CourseOrderController extends BasicController
      * @author zouyan(305463219@qq.com)
      */
     public function doInfoPage(Request $request, &$reDataArr, $extendParams = []){
+        // 需要隐藏的选项 1、2、4、8....[自己给查询的或添加页的下拉或其它输入框等编号]；靠前面的链接传过来 &hidden_option=0;
+        $hiddenOption = CommonRequest::getInt($request, 'hidden_option');
         // $pageNum = $extendParams['pageNum'] ?? 1;// 5->16 添加页； 7->64 编辑页；8->128 ajax详情； 35-> 17179869184 详情页
         // $user_info = $this->user_info;
         $id = $extendParams['params']['id'] ?? 0;
@@ -538,6 +605,7 @@ class CourseOrderController extends BasicController
                         'company_name' => '',
                         'course_name' => '',
                     ], []),
+                'listHandleKeyArr' => ['priceIntToFloat'],
             ];
             $info = CTAPICourseOrderBusiness::getInfoData($request, $this, $id, [], '', $extParams);
             if(empty($info)) throws('记录不存在！');
@@ -567,6 +635,7 @@ class CourseOrderController extends BasicController
         $company_hidden = CommonRequest::getInt($request, 'company_hidden');
         $reDataArr['company_hidden'] = $company_hidden;// =1 : 隐藏企业选择
 
+        $reDataArr['hidden_option'] = $hiddenOption;
     }
     // **************公用方法********************结束*********************************
 

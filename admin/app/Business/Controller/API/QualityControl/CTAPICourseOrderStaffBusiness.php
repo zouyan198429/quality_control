@@ -2,6 +2,7 @@
 //报名学员
 namespace App\Business\Controller\API\QualityControl;
 
+use App\Models\QualityControl\CourseOrderStaff;
 use App\Services\DBRelation\RelationDB;
 use App\Services\Excel\ImportExport;
 use App\Services\Request\API\HttpRequest;
@@ -330,6 +331,7 @@ class CTAPICourseOrderStaffBusiness extends BasicPublicCTAPIBusiness
             // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
             'relationFormatConfigs'=> CTAPICourseOrderStaffBusiness::getRelationConfigs($request, $controller,
                 ['company_name' => '', 'course_name' =>'', 'class_name' =>'', 'staff_info' =>'', 'course_order_info' => ''] , []),
+            'listHandleKeyArr' => ['priceIntToFloat'],
 
         ];
         $dataList = CTAPICourseOrderStaffBusiness::getFVFormatList( $request,  $controller, 1, 1
@@ -435,16 +437,19 @@ class CTAPICourseOrderStaffBusiness extends BasicPublicCTAPIBusiness
      * @param Request $request 请求信息
      * @param Controller $controller 控制对象
      * @param int $organize_id 操作的所属企业id 可以为0：没有所属企业--企业后台，操作用户时用来限制，只能操作自己企业的用户
+     * @param int $company_id 人员所属的企业 id，可为 0--没有所属企业的人员  或用户id--无所属企业
      * @param string/array $ids 数组或字符串 学员id
      * @param int $pay_config_id 收款帐号配置id
      * @param int $pay_method 收款方式id
      * @param array $otherParams 其它参数
      *   $otherParams = [
+     *      'total_price_discount' => '0.02',// 商品下单时优惠金额
      *      'payment_amount' => 0,// 总支付金额
      *      'change_amount' => 0,// 找零金额
      *       'remarks' => '',// 订单备注
      *       'auth_code' => '',// 扫码枪扫的付款码
      *  ];
+     * @param int $operate_type 操作类型1用户操作2平台操作
      * @param int $notLog 是否需要登陆 0需要1不需要
      * @return  array
      *  [
@@ -455,19 +460,20 @@ class CTAPICourseOrderStaffBusiness extends BasicPublicCTAPIBusiness
      *   ]
      * @author zouyan(305463219@qq.com)
      */
-    public static function createOrderAjax(Request $request, Controller $controller, $organize_id = 0, $ids = 0, $pay_config_id = 0, $pay_method = 0, $otherParams = [], $notLog = 0)
+    public static function createOrderAjax(Request $request, Controller $controller, $organize_id = 0, $own_company_id = 0, $ids = 0, $pay_config_id = 0, $pay_method = 0, $otherParams = [], $operate_type = 2, $notLog = 0)
     {
-        $company_id = $controller->company_id;
+         $company_id = $controller->company_id;
         $user_id = $controller->user_id;
 
         // 调用新加或修改接口
         $apiParams = [
-            'company_id' => $company_id,
+            'company_id' => $own_company_id,
             'organize_id' => $organize_id,
             'ids' => $ids,
             'pay_config_id' => $pay_config_id,
             'pay_method' => $pay_method,
             'otherParams' => $otherParams,
+            'operate_type' => $operate_type,
             'operate_staff_id' => $user_id,
             'modifAddOprate' => 0,
         ];
@@ -485,7 +491,7 @@ class CTAPICourseOrderStaffBusiness extends BasicPublicCTAPIBusiness
      * @param Controller $controller 控制对象
      * @param int $id 操作的所属企业id 可以为0：没有所属企业--企业后台，操作用户时用来限制，只能操作自己企业的用户
      * @param int $company_id 所属企业id , 没有
-     * @return  array 数组 [ '报名用户数据列表'， '用户包含的收款帐号信息-- 支付配置id为下标的二维数组']
+     * @return  array 数组 [ '报名用户数据列表'， '用户包含的收款帐号信息-- 支付配置id为下标的二维数组', '企业id => 企业名称 键值对 --一维数组']
      * @author zouyan(305463219@qq.com)
      */
     public static function getPayStaffByIds(Request $request, Controller $controller, $id, $company_id = 0){
@@ -497,6 +503,7 @@ class CTAPICourseOrderStaffBusiness extends BasicPublicCTAPIBusiness
 
         $classFormatList = CTAPICourseClassBusiness::getClassPayList($request, $controller, $class_ids);// 以班级id为下标的二维数组
         $courseFormatList = CTAPICourseBusiness::getCoursePayList($request, $controller, $course_ids);// 以课程id为下标的二维数组
+        $companyKV = [];// 企业id => 企业名称 键值对 --一维数组
 
         $pay_configs = [];// 课程id_班级id 为下标的 支付配置 二维数组
         $pay_configs_format = [];// 支付配置id为下标的二维数组
@@ -504,8 +511,10 @@ class CTAPICourseOrderStaffBusiness extends BasicPublicCTAPIBusiness
             $tem_class_id = $t_info['class_id'];
             $tem_course_id = $t_info['course_id'];
             $tem_company_id = $t_info['company_id'];
+            $tem_company_name = $t_info['company_name'];
             $tem_real_name = $t_info['real_name'];
             $tem_mobile = $t_info['mobile'];
+            if(!isset($companyKV[$tem_company_id])) $companyKV[$tem_company_id] = $tem_company_name;
             $tem_pay_config = $pay_configs[$tem_course_id . '_' . $tem_class_id] ?? [];
             if(empty($tem_pay_config)){
                 // 班级信息
@@ -537,7 +546,7 @@ class CTAPICourseOrderStaffBusiness extends BasicPublicCTAPIBusiness
             if(is_numeric($company_id) && $company_id > 0 && $company_id != $tem_company_id) throws('学员【' . $tem_real_name . '(' . $tem_mobile . ')'  . '】不是当前所属的企业，不可以进行此操作');
 
         }
-        return [$dataList , $pay_configs_format];
+        return [$dataList , $pay_configs_format, $companyKV];
     }
 
     /**
@@ -548,7 +557,7 @@ class CTAPICourseOrderStaffBusiness extends BasicPublicCTAPIBusiness
      * @param Controller $controller 控制对象
      * @param int $id 操作的所属企业id 可以为0：没有所属企业--企业后台，操作用户时用来限制，只能操作自己企业的用户
      * @param int $company_id 所属企业id , 没有
-     * @return  array 数组 [ '当前支付方式的详情-一维数组', '报名用户数据列表--收款帐号id下标的数组'， '用户包含的收款帐号信息-- 支付配置id为下标的二维数组']
+     * @return  array 数组 [ '当前支付方式的详情-一维数组', '报名用户数据列表--收款帐号id下标的数组'， '用户包含的收款帐号信息-- 支付配置id为下标的二维数组', '企业id => 企业名称 键值对 --一维数组']
      * @author zouyan(305463219@qq.com)
      */
     public static function getMethodInfoAndStaffList(Request $request, Controller $controller, $id, $company_id = 0, $pay_config_id = 0, $pay_method = 0){
@@ -568,7 +577,7 @@ class CTAPICourseOrderStaffBusiness extends BasicPublicCTAPIBusiness
 //        $reDataArr['method_info'] = $payMethodInfo;
 
         // 根据报名用户id,获得报名用户及支付信息
-        list($dataList, $pay_configs_format) = CTAPICourseOrderStaffBusiness::getPayStaffByIds($request, $controller, $id, $company_id);
+        list($dataList, $pay_configs_format, $companyKV) = CTAPICourseOrderStaffBusiness::getPayStaffByIds($request, $controller, $id, $company_id);
         $dataPanyConfigList = Tool::arrUnderReset($dataList, 'pay_config_id', 2, '_');
 
         // $reDataArr['course_order_staff'] = $dataList;
@@ -581,7 +590,32 @@ class CTAPICourseOrderStaffBusiness extends BasicPublicCTAPIBusiness
         if(empty($payConfigInfo)) throws('收款账号参数有误');
         $pay_config_method = $payConfigInfo['pay_method'] ?? 0;
         if(($pay_config_method & $pay_method) != $pay_method)  throws('缴费方式不可用，请重新选择或重新刷新页面再缴费');
-        return [$payMethodInfo , $dataPanyConfigList, $pay_configs_format];
+        return [$payMethodInfo , $dataPanyConfigList, $pay_configs_format, $companyKV];
+    }
+
+    /**
+     * 格式化关系数据 --如果有格式化，肯定会重写---本地数据库主要用这个来格式化数据
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $main_list 关系主记录要格式化的数据
+     * @param array $data_list 需要格式化的从记录数据---二维数组(如果是一维数组，是转成二维数组后的数据)
+     * @param array $handleKeyArr 其它扩展参数，// 一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。--名称关键字，尽可能与关系名一样
+     * @param array $returnFields  新加入的字段['字段名1' => '字段名1' ]
+     * @return array  新增的字段 一维数组
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function handleRelationDataFormat(Request $request, Controller $controller, &$main_list, &$data_list, $handleKeyArr, &$returnFields = []){
+        // if(empty($data_list)) return $returnFields;
+        // 重写开始
+
+        // 对外显示时，批量价格字段【整数转为小数】
+        if(in_array('priceIntToFloat', $handleKeyArr)){
+            Tool::bathPriceCutFloatInt($data_list, CourseOrderStaff::$IntPriceFields, 2, 2);
+        }
+
+        // 重写结束
+        return $returnFields;
     }
 
 }

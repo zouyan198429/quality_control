@@ -24,6 +24,7 @@
 {{--    </div>--}}
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
+          <input type="hidden" name="hidden_option"  value="{{ $hidden_option ?? 0 }}" />
           <select class="wmini" name="course_id">
               <option value="">所属课程</option>
               @foreach ($course_kv as $k=>$txt)
@@ -64,6 +65,7 @@
         {{--    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcelTemplate(this)">导入模版[EXCEL]</button>--}}
         {{--    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcel(this)">导入城市</button>--}}
         {{--    <div style="display:none;" ><input type="file" class="import_file img_input"></div>{ {--导入file对象--} }--}}
+        <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.paySelected(this)" >缴费[勾选]</button>
     </div>
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
@@ -76,8 +78,9 @@
         <col width="105">
         <col width="95">
         <col width="100">
+        <col width="50">
         <col width="95">
-        <col width="140">
+        <col width="80">
     </colgroup>
     <thead>
     <tr>
@@ -90,11 +93,12 @@
 {{--      <th>ID</th>--}}
         <th>课程</th>
 {{--      <th>单位</th>--}}
-      <th>报名人数<hr/>分班人数</th>
-      <th>已作废人数<hr/>报名状态</th>
+      <th>报名人数<hr/>已作废人数</th>
+      <th>分班人数<hr/>结业人数</th>
        <th>联络人<hr/>联络人电话</th>
         <th>单价<hr/>总价</th>
         <th>缴费状态<hr/>分班状态</th>
+        <th>报名状态</th>
         <th>报名时间<hr/>缴费时间</th>
       <th>操作</th>
     </tr>
@@ -141,8 +145,9 @@
       var IFRAME_TAG_KEY = "";// "QualityControl\\CTAPIStaff";// 获得模型表更新时间的关键标签，可为空：不获取
       var IFRAME_TAG_TIMEOUT = 60000;// 获得模型表更新时间运行间隔 1000:1秒 ；可以不要此变量：默认一分钟
 
+      var PAY_URL = "{{ url('company/course_order/pay') }}";//操作(缴费)
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/company/QualityControl/CourseOrder.js') }}?4"  type="text/javascript"></script>
+  <script src="{{ asset('js/company/QualityControl/CourseOrder.js') }}?6"  type="text/javascript"></script>
 </body>
 </html>

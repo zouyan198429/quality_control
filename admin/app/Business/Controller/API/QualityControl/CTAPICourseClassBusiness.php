@@ -168,7 +168,7 @@ class CTAPICourseClassBusiness extends BasicPublicCTAPIBusiness
 
 //        $ids = CommonRequest::get($request, 'ids');
 //        if(strlen($ids) > 0 && $ids != 0)  Tool::appendParamQuery($queryParams, $ids, 'id', [0, '0', ''], ',', false);
-
+          //  throws(json_encode($queryParams));
         // 方法最下面
         // 注意重写方法中，如果不是特殊的like，同样需要调起此默认like方法--特殊的写自己特殊的方法
         static::joinListParamsLike($request, $controller, $queryParams, $notLog);
@@ -254,5 +254,38 @@ class CTAPICourseClassBusiness extends BasicPublicCTAPIBusiness
         }
         // pr($classFormatList);
         return $classFormatList;
+    }
+
+
+    /**
+     * 开班 、 结业、作废 批量 或 单条数据
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param int $organize_id 操作的所属企业id 可以为0：没有所属企业--企业后台，操作用户时用来限制，只能操作自己企业的用户
+     * @param string $id 记录id，多个用逗号分隔
+     * @param int $operate_type 操作类型 1开班 、 2结业、4作废
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  int 修改的数量   //   array 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function operateStatusAjax(Request $request, Controller $controller, $organize_id = 0, $id = 0, $operate_type = 1, $notLog = 0)
+    {
+        $company_id = $controller->company_id;
+        $user_id = $controller->user_id;
+        // 调用新加或修改接口
+        $apiParams = [
+            'company_id' => $company_id,
+            'organize_id' => $organize_id,
+            'id' => $id,
+            'operate_type' => $operate_type,
+            'operate_staff_id' => $user_id,
+            'modifAddOprate' => 0,
+        ];
+        $modifyNum = static::exeDBBusinessMethodCT($request, $controller, '',  'operateStatusById', $apiParams, $company_id, $notLog);
+
+        return $modifyNum;
+        // return static::delAjaxBase($request, $controller, '', $notLog);
+
     }
 }

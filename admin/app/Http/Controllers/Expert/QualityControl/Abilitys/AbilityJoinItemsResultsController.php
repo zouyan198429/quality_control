@@ -695,6 +695,8 @@ class AbilityJoinItemsResultsController extends BasicController
      * @author zouyan(305463219@qq.com)
      */
     public function doListPage(Request $request, &$reDataArr, $extendParams = []){
+        // 需要隐藏的选项 1、2、4、8....[自己给查询的或添加页的下拉或其它输入框等编号]；靠前面的链接传过来 &hidden_option=0;
+        $hiddenOption = CommonRequest::getInt($request, 'hidden_option');
         // $pageNum = $extendParams['pageNum'] ?? 1;// 1->1 首页；2->2 列表页； 12->2048 弹窗选择页面；
         // $user_info = $this->user_info;
         // $id = $extendParams['params']['id'];
@@ -738,6 +740,7 @@ class AbilityJoinItemsResultsController extends BasicController
         // 操作类型 1 参加单位 2 上传数据 3 未合格单位 4 补测数据
         $operate_num = CommonRequest::get($request, 'operate_num');
         $reDataArr['operate_num'] = $operate_num;
+        $reDataArr['hidden_option'] = $hiddenOption;
     }
 
     /**
@@ -760,6 +763,8 @@ class AbilityJoinItemsResultsController extends BasicController
      * @author zouyan(305463219@qq.com)
      */
     public function doInfoPage(Request $request, &$reDataArr, $extendParams = []){
+        // 需要隐藏的选项 1、2、4、8....[自己给查询的或添加页的下拉或其它输入框等编号]；靠前面的链接传过来 &hidden_option=0;
+        $hiddenOption = CommonRequest::getInt($request, 'hidden_option');
         // $pageNum = $extendParams['pageNum'] ?? 1;// 5->16 添加页； 7->64 编辑页；8->128 ajax详情； 35-> 17179869184 详情页
         // $user_info = $this->user_info;
         $id = $extendParams['params']['id'] ?? 0;
@@ -804,6 +809,7 @@ class AbilityJoinItemsResultsController extends BasicController
         $reDataArr['resultStatus'] = array_reverse($resultStatus, true);
         $reDataArr['defaultResultStatus'] = $info['result_status'] ?? -1;// 列表页默认
 
+        $reDataArr['hidden_option'] = $hiddenOption;
     }
     // **************公用方法********************结束*********************************
 

@@ -3,6 +3,7 @@
 namespace App\Business\Controller\API\QualityControl;
 
 use App\Business\DB\QualityControl\OrderPayConfigDBBusiness;
+use App\Models\QualityControl\Course;
 use App\Models\QualityControl\OrderPayConfig;
 use App\Services\DBRelation\RelationDB;
 use App\Services\Excel\ImportExport;
@@ -219,6 +220,11 @@ class CTAPICourseBusiness extends BasicPublicCTAPIBusiness
             OrderPayConfigDBBusiness::formatConfigPayMethodAppendMethodText($data_list, $disablePayMethod, $payKVList, $returnFields);
         }
 
+        // 对外显示时，批量价格字段【整数转为小数】
+        if(in_array('priceIntToFloat', $handleKeyArr)){
+            Tool::bathPriceCutFloatInt($data_list, Course::$IntPriceFields, 2, 2);
+        }
+
         // 重写结束
         return $returnFields;
     }
@@ -267,7 +273,7 @@ class CTAPICourseBusiness extends BasicPublicCTAPIBusiness
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                 'relationFormatConfigs'=> CTAPICourseBusiness::getRelationConfigs($request, $controller, $handleKeyConfigArr, []),
                 // 'infoHandleKeyArr' => ['resetPayMethod']
-                'listHandleKeyArr' => ['initPayMethodText'],
+                'listHandleKeyArr' => ['initPayMethodText', 'priceIntToFloat'],
             ];
             $courseList = CTAPICourseBusiness::getFVFormatList( $request,  $controller, 1, 1
                 , ['id' => $course_ids], false, [], $extParams);

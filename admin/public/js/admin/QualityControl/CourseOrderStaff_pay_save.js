@@ -53,15 +53,15 @@ $(function(){
             $('input[name=change_amount]').val(0);
             return false;
         }
-        if(payment_amount < total_price){
+        if(mathCompare(payment_amount, payment_amount) == -1){// payment_amount < total_price
             err_alert('实收金额，不能小于总金额【¥' + total_price + '】');
             $(this).val(total_price);
             $('input[name=change_amount]').val(0);
             return false;
         }
-        var change_amount = payment_amount - total_price;
-        $('input[name=change_amount]').val(number_format(change_amount, 2));
-        $('.change_amount').html(price_format(change_amount));
+        var change_amount = numberMathFormat(mathSubtract(payment_amount, total_price),2, true, 3);// payment_amount - total_price;
+        $('input[name=change_amount]').val(change_amount);
+        $('.change_amount').html('&yen;' + change_amount);
     });
 
 });
@@ -135,7 +135,7 @@ function ajax_form(){
     }
     var total_price = parseFloat($('input[name=total_price]').val());// 总金额
     var payment_amount = parseFloat($('input[name=payment_amount]').val());// 实收金额
-    if(payment_amount < total_price){
+    if(mathCompare(payment_amount, total_price) == -1){// payment_amount < total_price
         err_alert('实收金额，不能小于总金额【¥' + total_price + '】');
         return false;
     }
@@ -174,7 +174,8 @@ function ajax_save(id){
         'data' : data,
         'dataType' : 'json',
         'success' : function(ret){
-            console.log(ret);
+            // console.log(ret);
+            consoleLogs([ret]);
             if(!ret.apistatus){//失败
                 SUBMIT_FORM = true;//标记为未提交过
                 var pay_method = $('input[name=pay_method]').val();
@@ -200,7 +201,7 @@ function ajax_save(id){
                 var code_url = params['code_url'] || '';
                 var pay_order_no = params['pay_order_no'] || '';
                 if(code_url.length <= 0){
-                    paySuccessFun(ret, {order_no:order_no, pay_order_no:pay_order_no});// 支付成功
+                    paySuccessFun({result:1}, {order_no:order_no, pay_order_no:pay_order_no});// 支付成功
                 }else{
                     scanPay(code_url, order_no,  pay_order_no);// 扫码支付-- 生成收款二维码
                     SUBMIT_FORM = true;//标记为未提交过
@@ -232,7 +233,7 @@ function scanPay(code_url, order_no, pay_order_no) {
 
 }
 // 支付成功，关闭弹层，并刷新列表
-// ret 接口返回的对象
+// ret 查询订单支付接口返回的对象
 // paramObj 对象 {order_no:order_no, pay_order_no:pay_order_no}
 var paySuccessFun = function (ret, paramObj) {
     var order_no = getAttrVal(paramObj, 'order_no', true, '');

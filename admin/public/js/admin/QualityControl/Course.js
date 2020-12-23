@@ -47,6 +47,15 @@ function initPic(){
     baguetteBox.run('.baguetteBoxOne');
     // baguetteBox.run('.baguetteBoxTwo');
 }
+//业务逻辑部分
+var otheraction = {
+    admin : function(id){// 课程管理
+        var weburl = COURSE_ADMIN_URL + id ;
+        console.log(weburl);
+        goOpenUrl(weburl,'_blank');
+        return false;
+    },
+};
 (function() {
     document.write("");
     document.write("    <!-- 前端模板部分 -->");
@@ -88,8 +97,8 @@ function initPic(){
     // document.write("            <%}%>");
     // document.write("           <\/td>");
     // document.write("            <td><\/td>");
-    document.write("            <td><%=item.wait_class_num%><hr/><%=item.joined_class_num%><\/td>");
-    document.write("            <td><%=item.cancel_num%><\/td>");
+    document.write("            <td><%=item.wait_class_num%><hr/><%=item.cancel_num%><\/td>");
+    document.write("            <td><%=item.joined_class_num%><hr/><%=item.finish_num%><\/td>");
     document.write("            <td><%=item.hits%><hr/><%=item.status_online_text%><\/td>");
     document.write("            <td><%=item.created_at%><hr/><%=item.updated_at%><\/td>");
     document.write("            <td>");
@@ -98,6 +107,9 @@ function initPic(){
     document.write("                    <i class=\"ace-icon  fa fa-eye  bigger-60\"> 查看<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.admin(<%=item.id%>)\">");
+    document.write("                    <i class=\"ace-icon fa fa-pencil bigger-60\"> 管理<\/i>");
+    document.write("                <\/a>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.iframeModify(<%=item.id%>)\">");
     document.write("                    <i class=\"ace-icon fa fa-pencil bigger-60\"> 编辑<\/i>");
     document.write("                <\/a>");

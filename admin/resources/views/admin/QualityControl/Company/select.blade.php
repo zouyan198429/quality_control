@@ -22,6 +22,7 @@
 
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
+          <input type="hidden" name="hidden_option"  value="{{ $hidden_option ?? 0 }}" />
           <select class="wmini" name="city_id" style="width: 80px;">
               <option value="">城市</option>
               @foreach ($citys_kv as $k=>$txt)

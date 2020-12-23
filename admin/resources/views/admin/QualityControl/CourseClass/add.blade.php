@@ -17,9 +17,10 @@
 {{--<div id="crumb"><i class="fa fa-reorder fa-fw" aria-hidden="true"></i> {{ $operate ?? '' }}员工</div>--}}
 <div class="mm">
     <form class="am-form am-form-horizontal" method="post"  id="addForm">
+        <input type="hidden" name="hidden_option"  value="{{ $hidden_option ?? 0 }}" />
         <input type="hidden" name="id" value="{{ $info['id'] ?? 0 }}"/>
         <table class="table1">
-            <tr>
+            <tr  @if (isset($hidden_option) && (($hidden_option & 2) == 2) ) style="display: none;"  @endif>
                 <th>所属课程<span class="must"></span></th>
                 <td>
                     @foreach ($course_id_kv as $k=>$txt)
@@ -70,14 +71,14 @@
                     @endforeach
                 </td>
             </tr>
-            <tr>
-                <th>状态<span class="must">*</span></th>
-                <td>
-                    @foreach ($classStatus as $k=>$txt)
-                        <label><input type="radio"  name="class_status"  value="{{ $k }}"  @if(isset($defaultClassStatus) && $defaultClassStatus == $k) checked="checked"  @endif />{{ $txt }} </label>
-                    @endforeach
-                </td>
-            </tr>
+{{--            <tr>--}}
+{{--                <th>状态<span class="must">*</span></th>--}}
+{{--                <td>--}}
+{{--                    @foreach ($classStatus as $k=>$txt)--}}
+{{--                        <label><input type="radio"  name="class_status"  value="{{ $k }}"  @if(isset($defaultClassStatus) && $defaultClassStatus == $k) checked="checked"  @endif />{{ $txt }} </label>--}}
+{{--                    @endforeach--}}
+{{--                </td>--}}
+{{--            </tr>--}}
             <tr>
                 <th> </th>
                 <td><button class="btn btn-l wnormal"  id="submitBtn" >提交</button></td>

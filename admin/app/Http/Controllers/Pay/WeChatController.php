@@ -737,6 +737,8 @@ class WeChatController extends BasicController
      * @author zouyan(305463219@qq.com)
      */
     public function doListPage(Request $request, &$reDataArr, $extendParams = []){
+        // 需要隐藏的选项 1、2、4、8....[自己给查询的或添加页的下拉或其它输入框等编号]；靠前面的链接传过来 &hidden_option=0;
+        $hiddenOption = CommonRequest::getInt($request, 'hidden_option');
         // $pageNum = $extendParams['pageNum'] ?? 1;// 1->1 首页；2->2 列表页； 12->2048 弹窗选择页面；
         // $user_info = $this->user_info;
         // $id = $extendParams['params']['id'];
@@ -745,6 +747,7 @@ class WeChatController extends BasicController
 //        $reDataArr['adminType'] =  AbilityJoin::$adminTypeArr;
 //        $reDataArr['defaultAdminType'] = -1;// 列表页默认状态
 
+        $reDataArr['hidden_option'] = $hiddenOption;
     }
 
     /**
@@ -767,6 +770,8 @@ class WeChatController extends BasicController
      * @author zouyan(305463219@qq.com)
      */
     public function doInfoPage(Request $request, &$reDataArr, $extendParams = []){
+        // 需要隐藏的选项 1、2、4、8....[自己给查询的或添加页的下拉或其它输入框等编号]；靠前面的链接传过来 &hidden_option=0;
+        $hiddenOption = CommonRequest::getInt($request, 'hidden_option');
         // $pageNum = $extendParams['pageNum'] ?? 1;// 5->16 添加页； 7->64 编辑页；8->128 ajax详情； 35-> 17179869184 详情页
 //        // $user_info = $this->user_info;
 //        $id = $extendParams['params']['id'] ?? 0;
@@ -788,6 +793,7 @@ class WeChatController extends BasicController
 //        $reDataArr['info'] = $info;
 //        $reDataArr['operate'] = $operate;
 
+        $reDataArr['hidden_option'] = $hiddenOption;
     }
     // **************公用重写方法********************结束*********************************
 

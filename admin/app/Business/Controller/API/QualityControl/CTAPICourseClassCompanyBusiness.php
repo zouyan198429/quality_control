@@ -80,14 +80,50 @@ class CTAPICourseClassCompanyBusiness extends BasicPublicCTAPIBusiness
         $relationFormatConfigs = [
             // 下标 'relationConfig' => []// 下一个关系
             // 获得企业名称
-//            'company_info' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
-//                , ['admin_type' => 'admin_type', 'staff_id' => 'id']
-//                , 1, 2
-//                ,'','',
-//                CTAPIStaffBusiness::getRelationConfigs($request, $controller,
-//                    static::getUboundRelation($relationArr, 'company_info'),
-//                    static::getUboundRelationExtendParams($extendParams, 'company_info')),
-//                ['where' => [['admin_type', 2]]], '', []),
+            'company_name' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
+                , ['admin_type' => 'admin_type', 'company_id' => 'id']
+                , 1, 2
+                ,'','',
+                CTAPIStaffBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'company_name'),
+                    static::getUboundRelationExtendParams($extendParams, 'company_name')),
+                ['where' => [['admin_type', 2]]], '', []),
+            // 获得课程名称
+            'course_name' => CTAPICourseBusiness::getTableRelationConfigInfo($request, $controller
+                , ['course_id' => 'id']
+                , 1, 2
+                ,'','',
+                CTAPICourseBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'course_name'),
+                    static::getUboundRelationExtendParams($extendParams, 'course_name')),
+                [], '', []),
+            // 获得班级名称
+            'class_name' => CTAPICourseClassBusiness::getTableRelationConfigInfo($request, $controller
+                , ['class_id' => 'id']
+                , 1, 2
+                ,'','',
+                CTAPICourseClassBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'class_name'),
+                    static::getUboundRelationExtendParams($extendParams, 'class_name')),
+                [], '', []),
+            // 获得报名主表信息--联系人等信息
+            'course_order_info' => CTAPICourseOrderBusiness::getTableRelationConfigInfo($request, $controller
+                , ['course_order_id' => 'id']
+                , 1, 8
+                ,'','',
+                CTAPICourseOrderBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'course_order_info'),
+                    static::getUboundRelationExtendParams($extendParams, 'course_order_info')),
+                [], '', []),
+            // 获得企业的报名人员信息--人员的单价会格式化为浮点小数
+            'course_order_staff' => CTAPICourseOrderStaffBusiness::getTableRelationConfigInfo($request, $controller
+                , ['id' => 'class_company_id']
+                , 2, 2
+                ,'','',
+                CTAPICourseOrderStaffBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'course_order_staff'),
+                    static::getUboundRelationExtendParams($extendParams, 'course_order_staff'))
+                , [], '', ['extendConfig' => ['listHandleKeyArr' => ['priceIntToFloat']]]),
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }
@@ -168,6 +204,30 @@ class CTAPICourseClassCompanyBusiness extends BasicPublicCTAPIBusiness
         // 方法最下面
         // 注意重写方法中，如果不是特殊的like，同样需要调起此默认like方法--特殊的写自己特殊的方法
         static::joinListParamsLike($request, $controller, $queryParams, $notLog);
+    }
+
+
+    /**
+     * 获得列表数据时，对查询结果进行导出操作--有特殊的需要自己重写此方法
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $queryParams 已有的查询条件数组
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  null 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function exportListData(Request $request, Controller $controller, &$data_list, $notLog = 0){
+
+        $headArr = ['course_name'=>'课程', 'company_name'=>'单位', 'company_grade_text'=>'会员等级', 'course_order_id'=>'报名批次', 'class_name'=>'班级', 'join_num'=>'人数'
+            , 'contacts'=>'联络人', 'tel'=>'联络人电话', 'pay_status_text'=>'缴费状态', 'class_status_text'=>'班级状态', 'created_at'=>'分班时间'];
+//        foreach($data_list as $k => $v){
+//            if(isset($v['method_name'])) $data_list[$k]['method_name'] =replace_enter_char($v['method_name'],2);
+//            if(isset($v['limit_range'])) $data_list[$k]['limit_range'] =replace_enter_char($v['limit_range'],2);
+//            if(isset($v['explain_text'])) $data_list[$k]['explain_text'] =replace_enter_char($v['explain_text'],2);
+//
+//        }
+        ImportExport::export('','班级企业信息' . date('YmdHis'),$data_list,1, $headArr, 0, ['sheet_title' => '班级企业信息']);
     }
 
 }

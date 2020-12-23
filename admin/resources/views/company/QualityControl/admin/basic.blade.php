@@ -31,7 +31,8 @@
             </div>
             <div class="layui-card-body">
                 <form class="am-form am-form-horizontal" method="post"  id="addForm">
-                    <input type="hidden" name="id" value="{{ $info['id'] ?? 0 }}"/>
+        <input type="hidden" name="hidden_option"  value="{{ $hidden_option ?? 0 }}" />
+        <input type="hidden" name="id" value="{{ $info['id'] ?? 0 }}"/>
                     <table class="table1">
                         <tr>
                             <th>单位名称<span class="must">*</span></th>

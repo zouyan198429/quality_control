@@ -24,8 +24,8 @@
     </div>
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
-
-          <select class="wmini" name="course_id" style="width: 80px;">
+          <input type="hidden" name="hidden_option"  value="{{ $hidden_option ?? 0 }}" />
+          <select class="wmini" name="course_id" style="width: 80px; @if (isset($hidden_option) && (($hidden_option & 2) == 2) ) display: none;  @endif">
               <option value="">所属课程</option>
               @foreach ($course_id_kv as $k=>$txt)
                   <option value="{{ $k }}"  @if(isset($defaultCourseId) && $defaultCourseId == $k) selected @endif >{{ $txt }}</option>
@@ -37,7 +37,7 @@
                   <option value="{{ $k }}"  @if(isset($defaultCity) && $defaultCity == $k) selected @endif >{{ $txt }}</option>
               @endforeach
           </select>
-          <select class="wmini" name="class_status" style="width: 80px;">
+          <select class="wmini" name="class_status" style="width: 80px;@if (isset($hidden_option) && (($hidden_option & 4) == 4) ) display: none;  @endif">
               <option value="">班级状态</option>
               @foreach ($classStatus as $k=>$txt)
                   <option value="{{ $k }}"  @if(isset($defaultClassStatus) && $defaultClassStatus == $k) selected @endif >{{ $txt }}</option>
@@ -63,19 +63,20 @@
       </div>
     </form>
   </div>
-  {{--
   <div class="table-header">
-    { {--<button class="btn btn-danger  btn-xs batch_del"  onclick="action.batchDel(this)">批量删除</button>--} }
-    <button class="btn btn-success  btn-xs export_excel"  onclick="action.batchExportExcel(this)" >导出[按条件]</button>
-    <button class="btn btn-success  btn-xs export_excel"  onclick="action.exportExcel(this)" >导出[勾选]</button>
-    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcelTemplate(this)">导入模版[EXCEL]</button>
-    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcel(this)">导入城市</button>
-    <div style="display:none;" ><input type="file" class="import_file img_input"></div>{ {--导入file对象--} }
+{{--    { {--<button class="btn btn-danger  btn-xs batch_del"  onclick="action.batchDel(this)">批量删除</button>--} }--}}
+{{--    <button class="btn btn-success  btn-xs export_excel"  onclick="action.batchExportExcel(this)" >导出[按条件]</button>--}}
+{{--    <button class="btn btn-success  btn-xs export_excel"  onclick="action.exportExcel(this)" >导出[勾选]</button>--}}
+{{--    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcelTemplate(this)">导入模版[EXCEL]</button>--}}
+{{--    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcel(this)">导入城市</button>--}}
+{{--    <div style="display:none;" ><input type="file" class="import_file img_input"></div>{ {--导入file对象--} }--}}
+      <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.openClass(this)" >开班[勾选]</button>
+      <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.cancelClass(this)" >作废[勾选]</button>
+      <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.finishClass(this)" >结业[勾选]</button>
   </div>
---}}
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
-{{--        <col width="50">--}}
+        <col width="50">
 {{--        <col width="60">--}}
         <col>
         <col width="75">
@@ -84,19 +85,17 @@
         <col>
         <col width="15%">
         <col width="75">
-        <col width="75">
         <col width="95">
-        <col width="95">
-        <col width="15%">
+        <col width="12%">
     </colgroup>
     <thead>
     <tr>
-{{--      <th>--}}
-{{--        <label class="pos-rel">--}}
-{{--          <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>--}}
-{{--          <!-- <span class="lbl">全选</span> -->--}}
-{{--        </label>--}}
-{{--      </th>--}}
+      <th>
+        <label class="pos-rel">
+          <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>
+          <!-- <span class="lbl">全选</span> -->
+        </label>
+      </th>
 {{--      <th>ID</th>--}}
       <th>培训班名称</th>
         <th>所属课程</th>
@@ -104,10 +103,8 @@
       <th>备注</th>
         <th>收款帐号</th>
         <th>收款方式</th>
-        <th>班级人数</th>
-      <th>班级状态</th>
-      <th>创建时间</th>
-        <th>更新时间</th>
+      <th>班级人数<hr/>班级状态</th>
+      <th>创建时间<hr/>更新时间</th>
       <th>操作</th>
     </tr>
     </thead>
@@ -153,8 +150,13 @@
       var IFRAME_TAG_KEY = "";// "QualityControl\\CTAPIStaff";// 获得模型表更新时间的关键标签，可为空：不获取
       var IFRAME_TAG_TIMEOUT = 60000;// 获得模型表更新时间运行间隔 1000:1秒 ；可以不要此变量：默认一分钟
 
+      var COURSE_CLASS_ADMIN_URL = "{{url('admin/course_class_admin/')}}/";//班级管理 页面地址前缀 + id
+
+      var OPEN_CLASS_URL  = "{{ url('api/admin/course_class/ajax_open_class') }}";//操作(开班)
+      var CANCEL_CLASS_URL = "{{ url('api/admin/course_class/ajax_cancel_class') }}";//操作(作废)
+      var FINISH_CLASS_URL = "{{ url('api/admin/course_class/ajax_finish_class') }}";//操作(结业)
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/CourseClass.js') }}?3"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/CourseClass.js') }}?10"  type="text/javascript"></script>
 </body>
 </html>

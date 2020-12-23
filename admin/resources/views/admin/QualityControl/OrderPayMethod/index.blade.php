@@ -24,6 +24,7 @@
     </div>
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
+          <input type="hidden" name="hidden_option"  value="{{ $hidden_option ?? 0 }}" />
 
         <select class="wmini" name="status_online">
           <option value="">上架状态</option>

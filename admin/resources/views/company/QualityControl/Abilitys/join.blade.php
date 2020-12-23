@@ -19,7 +19,8 @@
         <div class="layui-row layui-card-body">
 
             <form class="am-form am-form-horizontal" method="post"  id="addForm">
-                <input type="hidden" name="ids" value="{{ $ids ?? '' }}"/>
+        <input type="hidden" name="hidden_option"  value="{{ $hidden_option ?? 0 }}" />
+        <input type="hidden" name="ids" value="{{ $ids ?? '' }}"/>
 
                 @foreach ($data_list as $k => $info)
                 <fieldset class="layui-elem-field layui-field-title">

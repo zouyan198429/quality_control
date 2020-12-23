@@ -325,11 +325,11 @@ function addCompany(company_id, company_name){
     document.write("                    <i class=\"ace-icon fa fa-user-times bigger-60\"> 取消分班<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
-    document.write("                <%if(can_modify &&  item.staff_status != 4 &&  item.pay_status != 4){%>");
-    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.payByIds(this,<%=item.id%>)\">");
-    document.write("                    <i class=\"ace-icon fa fa-jpy bigger-60\"> 缴费<\/i>");
-    document.write("                <\/a>");
-    document.write("                <%}%>");
+    // document.write("                <%if(can_modify &&  item.staff_status != 4 &&  item.pay_status != 4){%>");
+    // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.payByIds(this,<%=item.id%>)\">");
+    // document.write("                    <i class=\"ace-icon fa fa-jpy bigger-60\"> 缴费<\/i>");
+    // document.write("                <\/a>");
+    // document.write("                <%}%>");
     // document.write("                <%if( can_modify && item.staff_status == 4){%>");
     // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.frozen(<%=item.id%>, 1)\">");
     // document.write("                    <i class=\"ace-icon bigger-60\"> 取消作废<\/i>");

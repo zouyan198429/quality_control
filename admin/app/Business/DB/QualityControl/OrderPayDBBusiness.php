@@ -50,6 +50,8 @@ class OrderPayDBBusiness extends BasePublicDBBusiness
         CommonDB::doTransactionFun(function() use(&$company_id, &$pay_order_no, &$pay_no, &$extendParams, &$operate_staff_id, &$modifAddOprate
             , &$payInfo, &$ownProperty, &$temNeedStaffIdOrHistoryId, &$operate_staff_id_history){
             $order_no = $payInfo['order_no'];
+            // 收款订单财务流水
+            OrdersDBBusiness::finishPay($company_id, $order_no, $pay_order_no, $operate_staff_id, $modifAddOprate);
             // 修改订单号
             $updateData = array_merge($extendParams, [
                 'pay_no' => $pay_no,
@@ -58,7 +60,6 @@ class OrderPayDBBusiness extends BasePublicDBBusiness
             ]);
             $saveQueryParams = Tool::getParamQuery(['pay_order_no' => $pay_order_no],[], []);
             static::save($updateData, $saveQueryParams);
-            OrdersDBBusiness::finishPay($company_id, $order_no, $operate_staff_id, $modifAddOprate);
         });
 
     }
@@ -171,6 +172,7 @@ class OrderPayDBBusiness extends BasePublicDBBusiness
         $out_trade_no = trim($out_trade_no);
         if(empty($out_trade_no)) throws('参数out_trade_no不能为空!');
         $transaction_id = $message['transaction_id'] ?? '';// 第三方单号[有则填]
+        if(empty($transaction_id))  $transaction_id = $queryMessage['transaction_id'] ?? '';// 第三方单号[有则填]
         $transaction_id = trim($transaction_id);
         if(empty($transaction_id)) throws('参数transaction_id不能为空!');
         // pr($wrInfo->toArray());
@@ -286,9 +288,9 @@ class OrderPayDBBusiness extends BasePublicDBBusiness
             支付状态机请见下单API页面
              */
             // 如trade_state不为 SUCCESS，则只返回out_trade_no（必传）和attach（选传）。
+            $transaction_id = $resultWX['transaction_id'] ?? '';// 第三方单号[有则填]，---注意未支付成功不会返回此字段
             switch($trade_state){
                 case 'SUCCESS':// SUCCESS—支付成功
-                    $transaction_id = $queryResult['transaction_id'] ?? '';// 第三方单号[有则填]
                     static::finishPay(0, $pay_order_no, $transaction_id, [], 0, 0);
                     return 1;
                     break;
@@ -296,19 +298,18 @@ class OrderPayDBBusiness extends BasePublicDBBusiness
                     break;
                 case 'NOTPAY':// NOTPAY—未支付
                 case 'USERPAYING':// USERPAYING--用户支付中（付款码支付）
-                case 'CLOSED':// CLOSED—已关闭
                     // 如果开启支付超过10分钟，则作失败处理
                     $order_time = $order_pay_info['order_time'];
                     $currentNow = Carbon::now()->toDateTimeString();
                     if(Tool::diffDate($order_time, $currentNow, 1, '时间', 2) > 60 *10){
-                        static::failPay(0, $pay_order_no, 0, [], 0, 0);
+                        static::failPay(0, $pay_order_no, $transaction_id, [], 0, 0);
                         return 2;
                     }
                     break;
+                case 'CLOSED':// CLOSED—已关闭
                 case 'REVOKED':// REVOKED—已撤销（付款码支付）
-                    break;
                 case 'PAYERROR':// PAYERROR--支付失败(其他原因，如银行返回失败)
-                    static::failPay(0, $pay_order_no, 0, [], 0, 0);
+                    static::failPay(0, $pay_order_no, $transaction_id, [], 0, 0);
                     return 2;
                     break;
                 default:

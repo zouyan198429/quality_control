@@ -17,6 +17,7 @@
 {{--<div id="crumb"><i class="fa fa-reorder fa-fw" aria-hidden="true"></i> {{ $operate ?? '' }}员工</div>--}}
 <div class="mm">
     <form class="am-form am-form-horizontal" method="post"  id="addForm">
+        <input type="hidden" name="hidden_option"  value="{{ $hidden_option ?? 0 }}" />
         <input type="hidden" name="id" value="{{ $info['id'] ?? 0 }}"/>
         <table class="table1">
             <tr>
@@ -144,8 +145,10 @@
     var SAVE_URL = "{{ url('api/company/course/ajax_join_save') }}";// ajax保存记录地址
     var LIST_URL = "{{url('company/course')}}";//保存成功后跳转到的地址
 
+    var PAY_URL = "{{ url('company/course_order/pay') }}";//操作(缴费)
+
     var DYNAMIC_TABLE = 'dynamic-table';//动态表格id
 </script>
-<script src="{{ asset('/js/company/QualityControl/Course_join.js') }}?2"  type="text/javascript"></script>
+<script src="{{ asset('/js/company/QualityControl/Course_join.js') }}?3"  type="text/javascript"></script>
 </body>
 </html>

@@ -900,7 +900,310 @@ function getAttrByKeys(obj, keys){
     return reVal;
 }
 
+// **************原生封装处理***************开始***************************************************************
+/**
+ ** 加法函数，用来得到精确的加法结果
+ ** 说明：javascript的加法结果会有误差，在两个浮点数相加的时候会比较明显。这个函数返回较为精确的加法结果。
+ ** 调用：accAdd(arg1,arg2)
+ ** 返回值：arg1加上arg2的精确结果
+ **/
+function accAdd(arg1, arg2) {
+    var r1, r2, m, c;
+    try {
+        r1 = arg1.toString().split(".")[1].length;
+    } catch (e) {
+        r1 = 0;
+    }
+    try {
+        r2 = arg2.toString().split(".")[1].length;
+    } catch (e) {
+        r2 = 0;
+    }
+    c = Math.abs(r1 - r2);
+    m = Math.pow(10, Math.max(r1, r2));
+    if (c > 0) {
+        var cm = Math.pow(10, c);
+        if (r1 > r2) {
+            arg1 = Number(arg1.toString().replace(".", ""));
+            arg2 = Number(arg2.toString().replace(".", "")) * cm;
+        } else {
+            arg1 = Number(arg1.toString().replace(".", "")) * cm;
+            arg2 = Number(arg2.toString().replace(".", ""));
+        }
+    } else {
+        arg1 = Number(arg1.toString().replace(".", ""));
+        arg2 = Number(arg2.toString().replace(".", ""));
+    }
+    return (arg1 + arg2) / m;
+}
+
+//给Number类型增加一个add方法，调用起来更加方便。
+// Number.prototype.add = function (arg) {
+//     return accAdd(arg, this);
+// };
+/**
+ ** 减法函数，用来得到精确的减法结果
+ ** 说明：javascript的减法结果会有误差，在两个浮点数相减的时候会比较明显。这个函数返回较为精确的减法结果。
+ ** 调用：accSub(arg1,arg2)
+ ** 返回值：arg1加上arg2的精确结果
+ **/
+function accSub(arg1, arg2) {
+    var r1, r2, m, n;
+    try {
+        r1 = arg1.toString().split(".")[1].length;
+    } catch (e) {
+        r1 = 0;
+    }
+    try {
+        r2 = arg2.toString().split(".")[1].length;
+    } catch (e) {
+        r2 = 0;
+    }
+    m = Math.pow(10, Math.max(r1, r2)); //last modify by deeka //动态控制精度长度
+    n = r1 >= r2 ? r1 : r2;
+    return ((arg1 * m - arg2 * m) / m).toFixed(n);
+}
+
+// 给Number类型增加一个mul方法，调用起来更加方便。
+// Number.prototype.sub = function (arg) {
+//     return accMul(arg, this);
+// };
+/**
+ ** 乘法函数，用来得到精确的乘法结果
+ ** 说明：javascript的乘法结果会有误差，在两个浮点数相乘的时候会比较明显。这个函数返回较为精确的乘法结果。
+ ** 调用：accMul(arg1,arg2)
+ ** 返回值：arg1乘以 arg2的精确结果
+ **/
+function accMul(arg1, arg2) {
+    var m = 0,
+        s1 = arg1.toString(),
+        s2 = arg2.toString();
+    try {
+        m += s1.split(".")[1].length;
+    } catch (e) {}
+    try {
+        m += s2.split(".")[1].length;
+    } catch (e) {}
+    return (
+        (Number(s1.replace(".", "")) * Number(s2.replace(".", ""))) /
+        Math.pow(10, m)
+    );
+}
+
+// 给Number类型增加一个mul方法，调用起来更加方便。
+// Number.prototype.mul = function (arg) {
+//     return accMul(arg, this);
+// };
+/**
+ ** 除法函数，用来得到精确的除法结果
+ ** 说明：javascript的除法结果会有误差，在两个浮点数相除的时候会比较明显。这个函数返回较为精确的除法结果。
+ ** 调用：accDiv(arg1,arg2)
+ ** 返回值：arg1除以arg2的精确结果
+ **/
+function accDiv(arg1, arg2) {
+    var t1 = 0,
+        t2 = 0,
+        r1,
+        r2;
+    try {
+        t1 = arg1.toString().split(".")[1].length;
+    } catch (e) {}
+    try {
+        t2 = arg2.toString().split(".")[1].length;
+    } catch (e) {}
+    with (Math) {
+        r1 = Number(arg1.toString().replace(".", ""));
+        r2 = Number(arg2.toString().replace(".", ""));
+        return (r1 / r2) * pow(10, t2 - t1);
+    }
+}
+
+//给Number类型增加一个div方法，调用起来更加方便。
+// Number.prototype.div = function (arg) {
+//     return accDiv(this, arg);
+// };
+// **************原生封装处理***************结束***************************************************************
+
+//*********math 方法************************开始**********价格相关的计算主要用math*********************************************
+//  <script src="{{asset('static/js/math/8.1.0/math.min.js')}}"></script> {{--1，引入第三方的js库, math.js，--}}
+$(function(){
+    //统一配置math.js
+    mathSetConfig();
+});
+
+
+// 注：大多数math.js函数，都需要valueof()或者done()函数来真正地获取操作的值
+// 配置
+function mathSetConfig() {
+    //统一配置math.js
+    if(typeof math != "undefined"){
+        math.config({
+            number: 'BigNumber',
+            // 'number' (default),
+            precision: 20
+        });
+        consoleLogs(['设置math对象']);
+    }else{
+        consoleLogs(['没有math对象']);
+    }
+}
+// 加
+function mathAdd(num1, num2){
+    return math.format(math.chain(math.bignumber(num1)).add(math.bignumber(num2)).done());
+}
+// 减
+function mathSubtract(num1, num2){
+    return math.format(math.chain(math.bignumber(num1)).subtract(math.bignumber(num2)).done());
+}
+// 乘
+function mathMultiply(num1, num2){
+    return math.format(math.chain(math.bignumber(num1)).multiply(math.bignumber(num2)).done());
+}
+// 除
+function mathDivide(num1, num2){
+
+    return math.format(math.chain(math.bignumber(num1)).divide(math.bignumber(num2)).done());
+}
+
+// 比较大小
+// num1 > num2 : 1; num1 == num2 : 0; num1 < num2 : -1;
+// 可这样判断 if(mathCompare(0.2,1.2) == -1){ console.log('小于');}else{console.log('不小于');}
+function mathCompare(num1, num2) {
+    return math.format(math.compare(math.bignumber(num1), math.bignumber(num2)));
+}
+// 一个数【num1】的 【num2】次方 ；如：10 的2 次方 100
+function mathPow(num1, num2) {
+    return math.format(math.pow(math.bignumber(num1), math.bignumber(num2)));
+}
+
+// toFixed 的修复 , 四舍五入
+// num : 需要格式化的数
+// s: 保留小数的位数
+// needPad ： 位数不够时，小数后面是否填充0； true:填充；false:不填充【默认】
+function toMathFixed(num, s, needPad) {
+    needPad = needPad || false;
+    // var times = Math.pow(10, s);
+    var times = mathPow(10, s);
+    var des = mathAdd(mathMultiply(num, times), 0.5);
+    // des = parseInt(des, 10) / times;
+    des = mathDivide(number_format(des, 0), times);
+    if(needPad){// 填充
+        return number_format(des, s);
+    }else{// 不填充
+        return des + '';
+    }
+}
+
+// 向上或向下取整
+// num : 需要格式化的数
+// s: 保留小数的位数
+// operateType 1向下取整[默认] 、2向上取整； 四舍五入请用 上面的 toFixed 或 toMathFixed
+// needPad ： 位数不够时，小数后面是否填充0； true:填充；false:不填充【默认】
+function numMathUpDown(num, s, operateType, needPad) {
+    operateType = operateType || 1;
+    needPad = needPad || false;
+    // var times = Math.pow(10, s);
+    var times = mathPow(10, s);
+    var des = mathMultiply(num, times);
+
+    if(operateType == 2){// 向上取整
+        var _str = des.toString();
+        if(_str.indexOf('.') != -1){
+            des = mathAdd(des, 1);
+        }
+    }
+    // des = parseInt(des, 10) / times;
+    des = mathDivide(number_format(des, 0), times);
+    if(needPad){// 填充
+        return number_format(des, s);
+    }else{// 不填充
+        return des + '';
+    }
+}
+
 /* 格式化金额 */
+// price 金额
+// s: 保留小数的位数
+// needPad ： 位数不够时，小数后面是否填充0； true:填充；false:不填充【默认】
+// operateType 1向下取整、2向上取整； 3四舍五入[默认]
+function numberMathFormat(num, s, needPad, operateType){
+    operateType = operateType || 3;
+    needPad = needPad || false;
+    if(operateType == 3){
+        return toMathFixed(num, s, needPad);
+    }else{
+        return numMathUpDown(num, s, operateType, needPad);
+    }
+}
+//*********math 方法************************结束*******************************************************
+// toFixed 的修复
+// 在Firefox / Chrome中，toFixed并不会对于最后一位是5的如愿以偿的进行四舍五入。
+// 1.35.toFixed(1) // 1.4 正确
+// 1.335.toFixed(2) // 1.33  错误
+// 1.3335.toFixed(3) // 1.333 错误
+// 1.33335.toFixed(4) // 1.3334 正确
+// 1.333335.toFixed(5)  // 1.33333 错误
+// 1.3333335.toFixed(6) // 1.333333 错误
+// Firefox 和 Chrome的实现没有问题，根本原因还是计算机里浮点数精度丢失问题。
+//
+// 修复方式：
+// num : 需要格式化的数
+// s: 保留小数的位数
+// needPad ： 位数不够时，小数后面是否填充0； true:填充；false:不填充【默认】
+function toFixed(num, s, needPad) {
+    needPad = needPad || false;
+    var times = Math.pow(10, s);
+    var des = num * times + 0.5;
+    des = parseInt(des, 10) / times;
+    if(needPad){// 填充
+        return number_format(des, s);
+    }else{// 不填充
+        return des + '';
+    }
+}
+
+// 向上或向下取整
+// num : 需要格式化的数
+// s: 保留小数的位数
+// operateType 1向下取整[默认] 、2向上取整； 四舍五入请用 上面的 toFixed 或 toMathFixed
+// needPad ： 位数不够时，小数后面是否填充0； true:填充；false:不填充【默认】
+function numUpDown(num, s, operateType, needPad) {
+    operateType = operateType || 1;
+    needPad = needPad || false;
+    var times = Math.pow(10, s);
+    var des = num * times;
+
+    if(operateType == 2){// 向上取整
+        var _str = des.toString();
+        if(_str.indexOf('.') != -1){
+            des += 1;
+        }
+    }
+
+    des = parseInt(des, 10) / times;
+    if(needPad){// 填充
+        return number_format(des, s);
+    }else{// 不填充
+        return des + '';
+    }
+}
+
+/* 格式化金额 */
+// price 金额
+// s: 保留小数的位数
+// needPad ： 位数不够时，小数后面是否填充0； true:填充；false:不填充【默认】
+// operateType 1向下取整、2向上取整； 3四舍五入[默认]
+function numberFormat(num, s, needPad, operateType){
+    operateType = operateType || 3;
+    needPad = needPad || false;
+    if(operateType == 3){
+        return toFixed(num, s, needPad);
+    }else{
+        return numUpDown(num, s, operateType, needPad);
+    }
+}
+
+/* 格式化金额-向下取整--价格四舍五入不能用此方法了，可用 numberMathFormat */
 function price_format(price){
     if(typeof(PRICE_FORMAT) == 'undefined'){
         PRICE_FORMAT = '&yen;%s';
@@ -909,6 +1212,8 @@ function price_format(price){
 
     return PRICE_FORMAT.replace('%s', price);
 }
+
+// 向下取整及不足小数后面补0
 function number_format(num, ext){
     if(ext < 0){
         return num;
@@ -950,6 +1255,7 @@ function number_format(num, ext){
 
     return _str;
 }
+
 /* 火狐下取本地全路径 */
 function getFullPath(obj)
 {

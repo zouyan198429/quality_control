@@ -3,7 +3,12 @@
 namespace App\Http\Controllers\Admin\QualityControl;
 
 use App\Business\Controller\API\QualityControl\CTAPIOrderPayBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIOrderPayConfigBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIOrderPayMethodBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
 use App\Http\Controllers\WorksController;
+use App\Models\QualityControl\OrderPay;
+use App\Models\QualityControl\Orders;
 use App\Services\Request\CommonRequest;
 use App\Services\Tool;
 use Illuminate\Http\Request;
@@ -73,24 +78,53 @@ class OrderPayController extends BasicController
      * @return mixed
      * @author zouyan(305463219@qq.com)
      */
-    public function add(Request $request,$id = 0)
+//    public function add(Request $request,$id = 0)
+//    {
+////        $reDataArr = [];// 可以传给视图的全局变量数组
+////        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request, &$id){
+////            // 正常流程的代码
+////
+////            $this->InitParams($request);
+////            // $reDataArr = $this->reDataArr;
+////            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+////            return view('admin.QualityControl.OrderPay.add', $reDataArr);
+////
+////        }, $this->errMethod, $reDataArr, $this->errorView);
+//
+//        $pageNum = ($id > 0) ? 64 : 16;
+//        return $this->exeDoPublicFun($request, $pageNum, 1,'admin.QualityControl.OrderPay.add', true
+//            , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
+//
+//        });
+//    }
+
+    /**
+     * 详情页
+     *
+     * @param Request $request
+     * @param int $company_id
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function info(Request $request,$id = 0)
     {
-//        $reDataArr = [];// 可以传给视图的全局变量数组
-//        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request, &$id){
-//            // 正常流程的代码
-//
-//            $this->InitParams($request);
-//            // $reDataArr = $this->reDataArr;
-//            $reDataArr = array_merge($reDataArr, $this->reDataArr);
-//            return view('admin.QualityControl.OrderPay.add', $reDataArr);
-//
-//        }, $this->errMethod, $reDataArr, $this->errorView);
-
-        $pageNum = ($id > 0) ? 64 : 16;
-        return $this->exeDoPublicFun($request, $pageNum, 1,'admin.QualityControl.OrderPay.add', true
-            , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
-
-        });
+        return $this->exeDoPublicFun($request, 17179869184, 1,'admin.QualityControl.OrderPay.info', false
+            , '', ['id' => $id], function (&$reDataArr) use ($request, &$id){
+                $extParams = [
+                    // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                    'relationFormatConfigs'=> CTAPIOrderPayBusiness::getRelationConfigs($request, $this,
+                        [
+                            'company_name' => '',
+                            'pay_company_name' => '',
+                            'pay_name' => '',
+                        ], []),
+                    'listHandleKeyArr' => ['priceIntToFloat'],
+                ];
+                $info = CTAPIOrderPayBusiness::getFVFormatList( $request,  $this, 4, 1
+                    , ['id' => $id], false, [], $extParams);
+                $reDataArr['info'] = $info;
+                // pr($reDataArr);
+            });
     }
 
     /**
@@ -118,18 +152,18 @@ class OrderPayController extends BasicController
      * @author zouyan(305463219@qq.com)
      */
     public function ajax_info(Request $request){
-        $this->InitParams($request);
-        $id = CommonRequest::getInt($request, 'id');
-        if(!is_numeric($id) || $id <=0) return ajaxDataArr(0, null, '参数[id]有误！');
-        $info = CTAPIOrderPayBusiness::getInfoData($request, $this, $id, [], '', []);
-        $resultDatas = ['info' => $info];
-        return ajaxDataArr(1, $resultDatas, '');
-
+//        $this->InitParams($request);
 //        $id = CommonRequest::getInt($request, 'id');
 //        if(!is_numeric($id) || $id <=0) return ajaxDataArr(0, null, '参数[id]有误！');
-//        return $this->exeDoPublicFun($request, 128, 2,'', true, 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
-//
-//        });
+//        $info = CTAPIOrderPayBusiness::getInfoData($request, $this, $id, [], '', []);
+//        $resultDatas = ['info' => $info];
+//        return ajaxDataArr(1, $resultDatas, '');
+
+        $id = CommonRequest::getInt($request, 'id');
+        if(!is_numeric($id) || $id <=0) return ajaxDataArr(0, null, '参数[id]有误！');
+        return $this->exeDoPublicFun($request, 128, 2,'', true, 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
+
+        });
     }
 
     /**
@@ -176,6 +210,8 @@ class OrderPayController extends BasicController
 //                    'simple_name' => $simple_name,
 //                    'sort_num' => $sort_num,
 //                ];
+//                 // 价格转为整型
+//                Tool::bathPriceCutFloatInt($saveData, OrderPay::$IntPriceFields, 1);
 //
 ////        if($id <= 0) {// 新加;要加入的特别字段
 ////            $addNewData = [
@@ -248,7 +284,18 @@ class OrderPayController extends BasicController
 //        $this->InitParams($request);
 //        return  CTAPIOrderPayBusiness::getList($request, $this, 2 + 4);
         return $this->exeDoPublicFun($request, 4, 4,'', true, '', [], function (&$reDataArr) use ($request){
-            return  CTAPIOrderPayBusiness::getList($request, $this, 2 + 4);
+
+            $extParams = [
+                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                'relationFormatConfigs'=> CTAPIOrderPayBusiness::getRelationConfigs($request, $this,
+                    [
+                        'company_name' => '',
+                        'pay_company_name' => '',
+                        'pay_name' => '',
+                    ], []),
+                'listHandleKeyArr' => ['priceIntToFloat'],
+            ];
+            return  CTAPIOrderPayBusiness::getList($request, $this, 2 + 4, [], [], $extParams);
         });
     }
 
@@ -281,13 +328,24 @@ class OrderPayController extends BasicController
      * @return mixed
      * @author zouyan(305463219@qq.com)
      */
-//    public function export(Request $request){
+    public function export(Request $request){
 //        $this->InitParams($request);
 //        CTAPIOrderPayBusiness::getList($request, $this, 1 + 0);
-//        return $this->exeDoPublicFun($request, 4096, 8,'', true, '', [], function (&$reDataArr) use ($request){
-//            CTAPIRrrDdddBusiness::getList($request, $this, 1 + 0);
-//        });
-//    }
+        return $this->exeDoPublicFun($request, 4096, 8,'', true, '', [], function (&$reDataArr) use ($request){
+
+            $extParams = [
+                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                'relationFormatConfigs'=> CTAPIOrderPayBusiness::getRelationConfigs($request, $this,
+                    [
+                        'company_name' => '',
+                        'pay_company_name' => '',
+                        'pay_name' => '',
+                    ], []),
+                'listHandleKeyArr' => ['priceIntToFloat'],
+            ];
+            CTAPIOrderPayBusiness::getList($request, $this, 1 + 0, [], [], $extParams);
+        });
+    }
 
 
     /**
@@ -433,6 +491,8 @@ class OrderPayController extends BasicController
      * @author zouyan(305463219@qq.com)
      */
     public function doListPage(Request $request, &$reDataArr, $extendParams = []){
+        // 需要隐藏的选项 1、2、4、8....[自己给查询的或添加页的下拉或其它输入框等编号]；靠前面的链接传过来 &hidden_option=0;
+        $hiddenOption = CommonRequest::getInt($request, 'hidden_option');
         // $pageNum = $extendParams['pageNum'] ?? 1;// 1->1 首页；2->2 列表页； 12->2048 弹窗选择页面；
         // $user_info = $this->user_info;
         // $id = $extendParams['params']['id'];
@@ -441,6 +501,55 @@ class OrderPayController extends BasicController
 //        $reDataArr['adminType'] =  AbilityJoin::$adminTypeArr;
 //        $reDataArr['defaultAdminType'] = -1;// 列表页默认状态
 
+
+        // 获得收款帐号KV值
+        $pay_config_id = CommonRequest::getInt($request, 'pay_config_id');
+        $reDataArr['pay_config_kv'] = CTAPIOrderPayConfigBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'pay_company_name']);
+        $reDataArr['defaultPayConfig'] = (!is_numeric($pay_config_id) || $pay_config_id <= 0 ) ? -1 : $pay_config_id;// 默认
+
+        // 收款开通类型(1现金、2微信支付、4支付宝)
+        $pay_method = CommonRequest::getInt($request, 'pay_method');
+        $reDataArr['payMethod'] =  CTAPIOrderPayMethodBusiness::getListKV($request, $this, ['key' => 'pay_method', 'val' => 'pay_name']);
+        $reDataArr['defaultPayMethod'] = (!is_numeric($pay_method) || $pay_method <= 0 ) ? -1 : $pay_method;// 列表页默认状态
+        // $reDataArr['payMethodDisable'] = OrderPayConfig::$payMethodDisable;// 不可用的--禁用
+
+
+        // 订单类型1面授培训2会员年费
+        $order_type = CommonRequest::getInt($request, 'order_type');
+        $reDataArr['orderType'] =  OrderPay::$orderTypeArr;
+        $reDataArr['defaultOrderType'] = (!is_numeric($order_type) || $order_type <= 0 ) ? -1 : $order_type;;// 列表页默认状态
+
+        // 支付类型1付款2退款
+        $reDataArr['payType'] =  OrderPay::$payTypeArr;
+        $reDataArr['defaultPayType'] = -1;// 列表页默认状态
+
+        // 操作类型1用户操作2平台操作
+        $reDataArr['operateType'] =  OrderPay::$operateTypeArr;
+        $reDataArr['defaultOperateType'] = -1;// 列表页默认状态
+
+        // 冻结状态0不用冻结1已冻结2已解冻
+        $reDataArr['frozenStatus'] =  OrderPay::$frozenStatusArr;
+        $reDataArr['defaultFrozenStatus'] = -1;// 列表页默认状态
+
+        // 审核状态1已关闭2付款中4成功8失败
+        $reDataArr['payStatus'] =  OrderPay::$payStatusArr;
+        $reDataArr['defaultPayStatus'] = -1;// 列表页默认状态
+
+        $company_id = CommonRequest::getInt($request, 'company_id');
+        $info = [];
+
+        $company_hidden = 0;
+        if(is_numeric($company_id) && $company_id > 0){
+            // 获得企业信息
+            $companyInfo = CTAPIStaffBusiness::getInfoData($request, $this, $company_id);
+            if(empty($companyInfo)) throws('企业信息不存在！');
+            $info['company_id'] = $company_id;
+            $info['user_company_name'] = $companyInfo['company_name'] ?? '';
+            $company_hidden = 1;
+        }
+        $reDataArr['info'] = $info;
+        $reDataArr['company_hidden'] = $company_hidden;// =1 : 隐藏企业选择
+        $reDataArr['hidden_option'] = $hiddenOption;
     }
 
     /**
@@ -463,6 +572,8 @@ class OrderPayController extends BasicController
      * @author zouyan(305463219@qq.com)
      */
     public function doInfoPage(Request $request, &$reDataArr, $extendParams = []){
+        // 需要隐藏的选项 1、2、4、8....[自己给查询的或添加页的下拉或其它输入框等编号]；靠前面的链接传过来 &hidden_option=0;
+        $hiddenOption = CommonRequest::getInt($request, 'hidden_option');
         // $pageNum = $extendParams['pageNum'] ?? 1;// 5->16 添加页； 7->64 编辑页；8->128 ajax详情； 35-> 17179869184 详情页
         // $user_info = $this->user_info;
         $id = $extendParams['params']['id'] ?? 0;
@@ -478,12 +589,56 @@ class OrderPayController extends BasicController
 
         if ($id > 0) { // 获得详情数据
             $operate = "修改";
-            $info = CTAPIOrderPayBusiness::getInfoData($request, $this, $id, [], '', []);
+            $extParams = [
+                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                'relationFormatConfigs'=> CTAPIOrderPayBusiness::getRelationConfigs($request, $this,
+                    [
+                        'company_name' => '',
+                        'pay_company_name' => '',
+                        'pay_name' => '',
+                    ], []),
+                'listHandleKeyArr' => ['priceIntToFloat'],
+            ];
+            $info = CTAPIOrderPayBusiness::getInfoData($request, $this, $id, [], '', $extParams);
         }
         // $reDataArr = array_merge($reDataArr, $resultDatas);
         $reDataArr['info'] = $info;
         $reDataArr['operate'] = $operate;
 
+
+        // 获得收款帐号KV值
+        $reDataArr['pay_config_kv'] = CTAPIOrderPayConfigBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'pay_company_name']);
+        $reDataArr['defaultPayConfig'] = $info['pay_config_id'] ?? -1;// 默认
+
+        // 收款开通类型(1现金、2微信支付、4支付宝)
+        $reDataArr['payMethod'] =  CTAPIOrderPayMethodBusiness::getListKV($request, $this, ['key' => 'pay_method', 'val' => 'pay_name']);
+        $reDataArr['defaultPayMethod'] = $info['pay_method'] ?? -1;// 列表页默认状态
+
+
+        // 订单类型1面授培训2会员年费
+        $reDataArr['orderType'] =  OrderPay::$orderTypeArr;
+        $reDataArr['defaultOrderType'] = $info['order_type'] ?? -1;// 列表页默认状态
+
+        // 支付类型1付款2退款
+        $reDataArr['payType'] =  OrderPay::$payTypeArr;
+        $reDataArr['defaultPayType'] = $info['pay_type'] ?? -1;// 列表页默认状态
+
+        // 操作类型1用户操作2平台操作
+        $reDataArr['operateType'] =  OrderPay::$operateTypeArr;
+        $reDataArr['defaultOperateType'] = $info['operate_type'] ?? -1;// 列表页默认状态
+
+        // 冻结状态0不用冻结1已冻结2已解冻
+        $reDataArr['frozenStatus'] =  OrderPay::$frozenStatusArr;
+        $reDataArr['defaultFrozenStatus'] = $info['frozen_status'] ?? -1;// 列表页默认状态
+
+        // 审核状态1已关闭2付款中4成功8失败
+        $reDataArr['payStatus'] =  OrderPay::$payStatusArr;
+        $reDataArr['defaultPayStatus'] = $info['pay_status'] ?? -1;// 列表页默认状态
+
+        $company_hidden = CommonRequest::getInt($request, 'company_hidden');
+        $reDataArr['company_hidden'] = $company_hidden;// =1 : 隐藏企业选择
+
+        $reDataArr['hidden_option'] = $hiddenOption;
     }
     // **************公用方法********************结束*********************************
 

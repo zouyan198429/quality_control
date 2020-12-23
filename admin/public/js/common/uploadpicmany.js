@@ -192,6 +192,7 @@ function init_upload_many(file_upload_config_obj) {
 function initFileShow(uploadAttrObj, resourceListObj, resource_show_class, upload_baidu_tem, baidu_tem_pic_list, checkbox_name){
     var resource_no = resourceListObj.length;
     checkbox_name =  checkbox_name || 'resource_id[]';
+    console.log('===初始化图片==', resourceListObj.length);
     resourceListObj.each(function(){
         var trObj = $(this);
         var resourceShowObj = trObj.find('.'+ resource_show_class);

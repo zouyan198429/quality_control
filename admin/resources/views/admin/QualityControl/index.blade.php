@@ -151,7 +151,7 @@
 
 
 
-            <li data-name="user" class="layui-nav-item"  style="display: none;">
+            <li data-name="user" class="layui-nav-item"  style="display: block;">
                   <a href="javascript:;" lay-tips="面授培训" lay-direction="2">
                       <i class="layui-icon layui-icon-component"></i>
                       <cite>面授培训</cite>
@@ -160,15 +160,15 @@
                       <dd>
                           <a lay-href="{{ url('admin/course') }}">课程管理</a>
                       </dd>
-                      <dd>
-                          <a lay-href="{{ url('admin/course_order') }}">报名企业</a>
-                      </dd>
-                      <dd>
-                          <a lay-href="{{ url('admin/course_order_staff') }}">报名学员</a>
-                      </dd>
-                      <dd>
-                          <a lay-href="{{ url('admin/course_class') }}">培训班管理</a>
-                      </dd>
+{{--                      <dd>--}}
+{{--                          <a lay-href="{{ url('admin/course_order') }}">报名企业</a>--}}
+{{--                      </dd>--}}
+{{--                      <dd>--}}
+{{--                          <a lay-href="{{ url('admin/course_order_staff') }}">报名学员</a>--}}
+{{--                      </dd>--}}
+{{--                      <dd>--}}
+{{--                          <a lay-href="{{ url('admin/course_class') }}">培训班管理</a>--}}
+{{--                      </dd>--}}
                   </dl>
               </li>
               <!--
@@ -296,10 +296,10 @@
                   </dl>
               </li>
 
-              <li data-name="set" class="layui-nav-item" style="display: none;">
-                  <a href="javascript:;" lay-tips="开票管理" lay-direction="2">
-                      <i class="layui-icon layui-icon-set"></i>
-                      <cite>开票管理</cite>
+              <li data-name="user" class="layui-nav-item" style="display: block;">
+                  <a href="javascript:;" lay-tips="财务及订单管理" lay-direction="2">
+                      <i class="layui-icon layui-icon-component"></i>
+                      <cite>财务及订单管理</cite>
                   </a>
                   <dl class="layui-nav-child">
                       <dd class="layui-nav-itemed">

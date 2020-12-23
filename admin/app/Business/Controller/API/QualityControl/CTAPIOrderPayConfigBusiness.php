@@ -83,14 +83,32 @@ class CTAPIOrderPayConfigBusiness extends BasicPublicCTAPIBusiness
         $relationFormatConfigs = [
             // 下标 'relationConfig' => []// 下一个关系
             // 获得企业名称
-//            'company_info' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
-//                , ['admin_type' => 'admin_type', 'staff_id' => 'id']
-//                , 1, 2
-//                ,'','',
-//                CTAPIStaffBusiness::getRelationConfigs($request, $controller,
-//                    static::getUboundRelation($relationArr, 'company_info'),
-//                    static::getUboundRelationExtendParams($extendParams, 'company_info')),
-//                ['where' => [['admin_type', 2]]], '', []),
+            'company_name' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
+                , ['company_id' => 'id']
+                , 1, 2
+                ,'','',
+                CTAPIStaffBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'company_name'),
+                    static::getUboundRelationExtendParams($extendParams, 'company_name')),
+                [], '', []),
+            // 获得收款帐号名称
+            'pay_company_name' => CTAPIOrderPayConfigBusiness::getTableRelationConfigInfo($request, $controller
+                , ['pay_config_id' => 'id']
+                , 1, 2
+                ,'','',
+                CTAPIOrderPayConfigBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'pay_company_name'),
+                    static::getUboundRelationExtendParams($extendParams, 'pay_company_name')),
+                [], '', []),
+            // 获得支付方式名称
+            'pay_name' => CTAPIOrderPayMethodBusiness::getTableRelationConfigInfo($request, $controller
+                , ['pay_method' => 'id']
+                , 1, 2
+                ,'','',
+                CTAPIOrderPayMethodBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'pay_name'),
+                    static::getUboundRelationExtendParams($extendParams, 'pay_name')),
+                [], '', []),
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }
@@ -111,11 +129,11 @@ class CTAPIOrderPayConfigBusiness extends BasicPublicCTAPIBusiness
             $return_data['old_data'] = ['ubound_operate' => 1, 'ubound_name' => '', 'fields_arr' => [], 'ubound_keys' => [], 'ubound_type' =>1];
         }
 
-//        if(($return_num & 2) == 2){// 给上一级返回名称 company_name 下标
-//            $one_field = ['key' => 'company_name', 'return_type' => 2, 'ubound_name' => 'company_name', 'split' => '、'];// 获得名称
-//            if(!isset($return_data['one_field'])) $return_data['one_field'] = [];
-//            array_push($return_data['one_field'], $one_field);
-//        }
+        if(($return_num & 2) == 2){// 给上一级返回名称 pay_company_name 下标
+            $one_field = ['key' => 'pay_company_name', 'return_type' => 2, 'ubound_name' => 'pay_company_name', 'split' => '、'];// 获得名称
+            if(!isset($return_data['one_field'])) $return_data['one_field'] = [];
+            array_push($return_data['one_field'], $one_field);
+        }
 
         return $return_data;
     }

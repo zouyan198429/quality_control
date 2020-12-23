@@ -34,9 +34,11 @@
         ?>
 
             <form class="am-form am-form-horizontal" method="post"  id="addForm">
-                <div  class=" baguetteBoxOne gallery">
+        <input type="hidden" name="hidden_option"  value="{{ $hidden_option ?? 0 }}" />
+        <div  class=" baguetteBoxOne gallery">
 
                     <input type="hidden" name="pay_config_id" value="{{ $pay_config_id ?? 0 }}"/>
+                    <input type="hidden" name="company_id" value="{{ $company_id ?? 0 }}"/>
                     <input type="hidden" name="pay_method" value="{{ $pay_method ?? 0 }}"/>
                     <input type="hidden" name="id" value="{{ implode(',', $staff_ids) }}"/>
                     <input type="hidden" name="total_price" value="{{ $totalPrice ?? '' }}"/>{{--总金额--}}
@@ -81,7 +83,7 @@
             </form>
     @endforeach
 </div>
-<button onclick="scanPay('1111', '555', '32323');">扫码支付测试</button>
+{{--<button onclick="scanPay('1111', '555', '32323');">扫码支付测试</button>--}}
 <script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>
 <script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.all.js')}}"></script>
 {{--<script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.js')}}"></script>--}}
@@ -107,7 +109,7 @@
 <!-- zui js -->
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
 
-<script src="{{ asset('/js/admin/QualityControl/CourseOrderStaff_pay_save.js') }}?65"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/CourseOrderStaff_pay_save.js') }}?68"  type="text/javascript"></script>
 @component('component.upfileincludejsmany')
 @endcomponent
 </body>

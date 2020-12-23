@@ -13,7 +13,7 @@ class UploadController extends BasicController
     public $controller_id =0;// 功能小模块[控制器]id - controller_id  历史表 、正在进行表 与原表相同
 
     public $model_name = 'Resource';
-    // 大后台 admin/年/月/日/文件
+    // 企业后台 admin/年/月/日/文件
     // 企业 company/[生产单元/]年/月/日/文件
     protected $source_path = '/resource/company/';
 

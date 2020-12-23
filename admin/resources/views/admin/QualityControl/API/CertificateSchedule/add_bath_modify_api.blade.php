@@ -21,7 +21,8 @@ app_secret:<input type="text"   name="app_secret" value="" placeholder="请输�
 <hr/>
 <div class="mm">
     <form class="am-form am-form-horizontal" method="post"  id="addForm">
-{{--        <input type="hidden" name="id" value="{{ $info['id'] ?? 0 }}"/>--}}
+        <input type="hidden" name="hidden_option"  value="{{ $hidden_option ?? 0 }}" />
+        {{--        <input type="hidden" name="id" value="{{ $info['id'] ?? 0 }}"/>--}}
         <table class="table1">
             <tr>
                 <th>机构名称<span class="must">*</span></th>

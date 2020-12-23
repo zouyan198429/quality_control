@@ -217,8 +217,8 @@ class CourseOrderStaffDBBusiness extends BasePublicDBBusiness
                     }else {// 作废
                         if($join_num <= $cancel_num){// 正常->作废
                             CourseOrderDBBusiness::saveById(['company_status' => 4, 'cancel_date' => date('Y-m-d'), 'cancel_time' => date('Y-m-d H:i:s')], $temId);
-                        }elseif ( $join_num <= ($cancel_num + $joined_class_num)){// 已经有分班，如果班级都结束，则进入已结业
-                            $classCompanyList = CourseOrderDBBusiness::getDBFVFormatList(1, 1, ['course_id' => $tem_course_id, 'course_order_id' => $temId, 'class_status' => [1,2]], false);
+                        }elseif ( $join_num <= ($cancel_num + $joined_class_num)){// 已经有分班，如果班级都结束，则进入已结业 -- 不能结业，只能再班级点结业时才结业
+                            $classCompanyList = CourseClassCompanyDBBusiness::getDBFVFormatList(1, 1, ['course_id' => $tem_course_id, 'course_order_id' => $temId, 'class_status' => [1,2]], false);
                             if(empty($classCompanyList)){
                                 CourseOrderDBBusiness::saveById(['company_status' => 8, 'finish_date' => date('Y-m-d'), 'finish_time' => date('Y-m-d H:i:s')], $temId);
                             }
@@ -353,6 +353,12 @@ class CourseOrderStaffDBBusiness extends BasePublicDBBusiness
             // 修改班级状态为开班中
             if($classInfo['class_status'] == 1){
                 CourseClassDBBusiness::saveById(['class_status' => 2], $class_id);
+
+                // 修改培训班企业管理 状态为开班
+                CourseClassCompanyDBBusiness::save([
+                    'class_status' => 2,
+                ],Tool::getParamQuery(['course_id' => $course_id, 'class_id' => $class_id, 'class_status' => [1]], [], []));
+
                 // 记录日志
                 CourseLogDBBusiness::saveCourseLog($course_id, 0, $class_id, 0, 0,
                     '班级状态变更：待开班->开班中', $operate_staff_id, $operate_staff_id_history);
@@ -549,6 +555,11 @@ class CourseOrderStaffDBBusiness extends BasePublicDBBusiness
                 $classInfo = CourseClassDBBusiness::getDBFVFormatList(4, 1, ['id' => $class_id]);
                 if($classInfo['join_num'] <= 0){
                     CourseClassDBBusiness::saveById(['class_status' => 1], $class_id);
+                    // 修改培训班企业管理 状态为待开班
+                    CourseClassCompanyDBBusiness::save([
+                        'class_status' => 1,
+                    ],Tool::getParamQuery(['course_id' => $course_id, 'class_id' => $class_id, 'class_status' => [2]], [], []));
+
                     // 记录日志
                     CourseLogDBBusiness::saveCourseLog($course_id, 0, $class_id, 0, 0,
                         '班级状态变更：开班中->待开班', $operate_staff_id, $operate_staff_id_history);
@@ -620,7 +631,7 @@ class CourseOrderStaffDBBusiness extends BasePublicDBBusiness
     /**
      * 生成订单
      *
-     * @param int  $company_id 企业id
+     * @param int  $company_id 企业id 或用户id--无所属企业
      * @param int $organize_id 操作的所属企业id 可以为0：没有所属企业--企业后台，操作用户时用来限制，只能操作自己企业的用户
      * @param string/array $ids 数组或字符串 学员id -- 对应课程id 的学员id
      * @param int $pay_config_id 收款帐号配置id
@@ -628,11 +639,13 @@ class CourseOrderStaffDBBusiness extends BasePublicDBBusiness
      * @param array $otherParams 其它参数
      *
      *   $otherParams = [
+     *      'total_price_discount' => '0.02',// 商品下单时优惠金额
      *      'payment_amount' => 0,// 总支付金额
      *      'change_amount' => 0,// 找零金额
      *       'remarks' => '',// 订单备注
      *       'auth_code' => '',// 扫码枪扫的付款码
      *  ];
+     * @param int $operate_type 操作类型1用户操作2平台操作
      * @param int $operate_staff_id 操作人id
      * @param int $modifAddOprate 修改时是否加操作人，1:加;0:不加[默认]
      * @return  array
@@ -648,7 +661,7 @@ class CourseOrderStaffDBBusiness extends BasePublicDBBusiness
      *   ]
      * @author zouyan(305463219@qq.com)
      */
-    public static function createOrder($company_id, $organize_id = 0, $ids = 0, $pay_config_id = 0, $pay_method = 0, $otherParams = [], $operate_staff_id = 0, $modifAddOprate = 0){
+    public static function createOrder($company_id, $organize_id = 0, $ids = 0, $pay_config_id = 0, $pay_method = 0, $otherParams = [], $operate_type = 2, $operate_staff_id = 0, $modifAddOprate = 0){
 
         // 判断收款方式
         $orderPayMethodInfo = OrderPayMethodDBBusiness::getDBFVFormatList(4, 1, ['pay_method' => $pay_method]);
@@ -689,24 +702,22 @@ class CourseOrderStaffDBBusiness extends BasePublicDBBusiness
                 if(in_array($orderStatus, [2,4,8]) && $orderHasRefund == 1) throws('订单[' . $tem_order_no . ']已缴费，不可进行缴费操作！');
             }
             $price = $courseStaffInfo['price'] ?? 0;
-            $total_price += $price;
+            // $total_price += $price;
+            $total_price = bcadd($total_price, $price, 0);
         }
-
-        $total_price_discount = 0;// 商品下单时优惠金额
-        $total_price_goods = $total_price - $total_price_discount;
+        // 价格转为整型
+        Tool::bathPriceCutFloatInt($otherParams, ['payment_amount', 'change_amount'], 1);
+        $total_price_discount = $otherParams['total_price_discount'] ?? 0;
+        $total_price_discount = Tool::formatFloadPriceToIntPrice($total_price_discount);// 商品下单时优惠金额
+        $total_price_goods = bcsub($total_price, $total_price_discount, 0);// $total_price - $total_price_discount;
         $payment_amount = $otherParams['payment_amount'];// 总支付金额
         $change_amount = $otherParams['change_amount'];// 找零金额
         $auth_code = $otherParams['auth_code'];// 扫码枪扫的付款码
-        $a = 100;
-        $b = 99.91;
-        throws(bcsub($a,$b,2));
-        var_dump($a-$b);
-         throws(floatval($payment_amount - $change_amount) < 0.02);
-        throws(floatval($total_price_goods));
-        throws(floatval($payment_amount - $change_amount) < floatval($total_price_goods) ? 1: 0);
+
         if(!is_numeric($payment_amount) || !is_numeric($change_amount)) throws('参数：总支付金额或 找零金额 格式有误！');
-        if(floatval($payment_amount - $change_amount) < floatval($total_price_goods)) throws('实收金额不能小于应付金额【' . $total_price_goods . '】');
+        if(bcsub($payment_amount, $change_amount, 0) < $total_price_goods) throws('实收金额不能小于应付金额【' . Tool::formatIntPriceToFloadPrice($total_price_goods) . '】');
         $createOrder = [
+            'company_id' => $company_id,
             'order_type' => 1,// 订单类型1面授培训2会员年费
             'pay_config_id' => $pay_config_id,// 收款帐号配置id
             'pay_method' => $pay_method,// 支付方式(1现金、2微信支付、4支付宝)
@@ -718,7 +729,6 @@ class CourseOrderStaffDBBusiness extends BasePublicDBBusiness
             'payment_amount' => $payment_amount,// 总支付金额
             'change_amount' => $change_amount,// 找零金额
         ];
-
         $order_no = '';
         $return_params = [];// 返回的附加参数
         // $ownProperty  自有属性值;
@@ -727,7 +737,7 @@ class CourseOrderStaffDBBusiness extends BasePublicDBBusiness
         $operate_staff_id_history = 0;
         CommonDB::doTransactionFun(function() use(&$company_id, &$organize_id, &$ids, &$operate_staff_id, &$modifAddOprate
             , &$ownProperty, &$temNeedStaffIdOrHistoryId, &$operate_staff_id_history, &$order_no, &$createOrder
-            , &$pay_config_id, &$pay_method, &$return_params, &$orderPayConfigInfo, &$auth_code){
+            , &$pay_config_id, &$pay_method, &$return_params, &$orderPayConfigInfo, &$auth_code, &$operate_type){
             // 生成订单
             OrdersDBBusiness::createOrder($company_id, $createOrder, $order_no, $operate_staff_id, $modifAddOprate);
             // 修改订单号
@@ -737,6 +747,8 @@ class CourseOrderStaffDBBusiness extends BasePublicDBBusiness
             static::saveByIds($saveData, $ids);
             $payKey = $orderPayConfigInfo['pay_key'];// 'banner';
             $createPayOrder = [
+                'company_id' => $company_id,
+                'operate_type' => $operate_type,// 操作类型1用户操作2平台操作
                 'pay_no' => '',// 支付单号(第三方)
                 'pay_price' => $createOrder['total_price_goods'],// 支付费用
                 'remarks' => '',// 备注
@@ -748,7 +760,7 @@ class CourseOrderStaffDBBusiness extends BasePublicDBBusiness
                     $params = [
                         'body' => '面授课--微信收款码支付费用',
                         'out_trade_no' => $resultPay['pay_order_no'],
-                        'total_fee' => ceil($createOrder['total_price_goods'] * 100),
+                        'total_fee' => $createOrder['total_price_goods'],// ceil($createOrder['total_price_goods'] * 100),
                         // 'spbill_create_ip' => '123.12.12.123', // 可选，如不传该参数，SDK 将会自动获取相应 IP 地址
                         // 'notify_url' => 'https://pay.weixin.qq.com/wxpay/pay.action', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
                         'trade_type' => 'NATIVE', // 请对应换成你的支付方式对应的值类型
@@ -774,7 +786,7 @@ class CourseOrderStaffDBBusiness extends BasePublicDBBusiness
                     $params = [
                         'body' => '面授课--微信收款码支付费用',
                         'out_trade_no' => $resultPay['pay_order_no'],
-                        'total_fee' => ceil($createOrder['total_price_goods'] * 100),
+                        'total_fee' => $createOrder['total_price_goods'],// ceil($createOrder['total_price_goods'] * 100),
                         // 'spbill_create_ip' => '123.12.12.123', // 可选，如不传该参数，SDK 将会自动获取相应 IP 地址
                         // 'notify_url' => 'https://pay.weixin.qq.com/wxpay/pay.action', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
                         // 'trade_type' => 'MICROPAY', // 请对应换成你的支付方式对应的值类型
@@ -791,9 +803,9 @@ class CourseOrderStaffDBBusiness extends BasePublicDBBusiness
                             $return_params['pay_order_no'] = $resultPay['pay_order_no'];
                             // 付款成功
                             $orderPayInfo = OrderPayDBBusiness::getDBFVFormatList(4, 1, ['pay_order_no' => $resultPay['pay_order_no']]);
-                            // 先查一下接口，再改状态这样放心
 
                             try {
+                                // 先查一下接口，再改状态这样放心
                                 OrderPayDBBusiness::payWXJudgeThirdQuery($order_no, $resultPay['pay_order_no'], $payKey, $orderPayInfo);
                             } catch ( \Exception $e) {
                                 $errStr = $e->getMessage();
@@ -817,7 +829,7 @@ class CourseOrderStaffDBBusiness extends BasePublicDBBusiness
                 case 64:// 支付宝收付款码【线上--扫码枪】
                     break;
                 default:// 现金等直接确认收款完成的  订单完成支付 1、现金；8、微信收款码【个人-燕】；32、支付宝收款码【个人-燕】
-                    OrdersDBBusiness::finishPay($company_id, $order_no, $operate_staff_id, $modifAddOprate);
+                    OrdersDBBusiness::finishPay($company_id, $order_no, '', $operate_staff_id, $modifAddOprate);
                     break;
             }
         });

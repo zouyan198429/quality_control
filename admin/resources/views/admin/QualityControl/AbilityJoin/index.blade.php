@@ -19,6 +19,7 @@
     @include('common.pageParams')
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
+          <input type="hidden" name="hidden_option"  value="{{ $hidden_option ?? 0 }}" />
           <span>
                 <input type="hidden" class="select_id" name="company_id"  value="{{ $info['company_id'] ?? '' }}" />
                 <span class="select_name company_name">{{ $info['user_company_name'] ?? '' }}</span>

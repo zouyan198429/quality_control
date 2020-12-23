@@ -27,6 +27,10 @@ class CourseController extends BasicController
      */
     public function index(Request $request)
     {
+        // vd(bcsqrt('1000', 10));
+//         $num = 1234.550;// 123213.566666;
+//         $aaa = sprintf("%.1f", $num);
+//         vd($aaa);
 //        $reDataArr = [];// 可以传给视图的全局变量数组
 //        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request){
 //            // 正常流程的代码
@@ -223,6 +227,8 @@ class CourseController extends BasicController
                     'resource_ids' => $resource_ids,// 图片资源id串(逗号分隔-未尾逗号结束)
                     'resourceIds' => $resource_id,// 此下标为图片资源关系
                 ];
+                // 价格转为整型
+                Tool::bathPriceCutFloatInt($saveData, Course::$IntPriceFields, 1);
 
 //        if($id <= 0) {// 新加;要加入的特别字段
 //            $addNewData = [
@@ -269,9 +275,9 @@ class CourseController extends BasicController
 
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-                'relationFormatConfigs'=> CTAPICourseBusiness::getRelationConfigs($request, $this, ['resource_list'], []),
+                'relationFormatConfigs'=> CTAPICourseBusiness::getRelationConfigs($request, $this, ['resource_list' => ''], []),
                 // 'infoHandleKeyArr' => ['resetPayMethod']
-                'listHandleKeyArr' => ['initPayMethodText']
+                'listHandleKeyArr' => ['initPayMethodText', 'priceIntToFloat']
 
             ];
             return  CTAPICourseBusiness::getList($request, $this, 2 + 4, [], [], $extParams);
@@ -484,6 +490,8 @@ class CourseController extends BasicController
      * @author zouyan(305463219@qq.com)
      */
     public function doListPage(Request $request, &$reDataArr, $extendParams = []){
+        // 需要隐藏的选项 1、2、4、8....[自己给查询的或添加页的下拉或其它输入框等编号]；靠前面的链接传过来 &hidden_option=0;
+        $hiddenOption = CommonRequest::getInt($request, 'hidden_option');
         // $pageNum = $extendParams['pageNum'] ?? 1;// 1->1 首页；2->2 列表页； 12->2048 弹窗选择页面；
         // $user_info = $this->user_info;
         // $id = $extendParams['params']['id'];
@@ -506,6 +514,7 @@ class CourseController extends BasicController
         $reDataArr['payMethod'] =  CTAPIOrderPayMethodBusiness::getListKV($request, $this, ['key' => 'pay_method', 'val' => 'pay_name']);
         $reDataArr['defaultPayMethod'] = -1;// 列表页默认状态
         // $reDataArr['payMethodDisable'] = OrderPayConfig::$payMethodDisable;// 不可用的--禁用
+        $reDataArr['hidden_option'] = $hiddenOption;
     }
 
     /**
@@ -528,6 +537,8 @@ class CourseController extends BasicController
      * @author zouyan(305463219@qq.com)
      */
     public function doInfoPage(Request $request, &$reDataArr, $extendParams = []){
+        // 需要隐藏的选项 1、2、4、8....[自己给查询的或添加页的下拉或其它输入框等编号]；靠前面的链接传过来 &hidden_option=0;
+        $hiddenOption = CommonRequest::getInt($request, 'hidden_option');
         // $pageNum = $extendParams['pageNum'] ?? 1;// 5->16 添加页； 7->64 编辑页；8->128 ajax详情； 35-> 17179869184 详情页
         // $user_info = $this->user_info;
         $id = $extendParams['params']['id'] ?? 0;
@@ -545,9 +556,9 @@ class CourseController extends BasicController
             $operate = "修改";
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-                'relationFormatConfigs'=> CTAPICourseBusiness::getRelationConfigs($request, $this, ['resource_list', 'course_content'], []),
+                'relationFormatConfigs'=> CTAPICourseBusiness::getRelationConfigs($request, $this, ['resource_list' => '', 'course_content' => ''], []),
                 // 'infoHandleKeyArr' => ['resetPayMethod']
-                'listHandleKeyArr' => ['initPayMethodText']
+                'listHandleKeyArr' => ['initPayMethodText', 'priceIntToFloat']
             ];
             $info = CTAPICourseBusiness::getInfoData($request, $this, $id, [], '', $extParams);
 
@@ -577,6 +588,7 @@ class CourseController extends BasicController
         $reDataArr['info'] = $info;
         $reDataArr['operate'] = $operate;
 
+        $reDataArr['hidden_option'] = $hiddenOption;
     }
     // **************公用方法********************结束*********************************
 

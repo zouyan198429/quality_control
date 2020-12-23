@@ -119,8 +119,12 @@ class CourseOrderStaffController extends BasicController
                     'id'=> implode(',', $id),
                     //   'department_id' => 0,
                 ];
-                $course_id = CommonRequest::getInt($request, 'course_id');
+                // $course_id = CommonRequest::getInt($request, 'course_id');
                 $dataList = CTAPICourseOrderStaffBusiness::getClassStaffAndJudge($request, $this, $id, 1);
+                $courseIds = Tool::getArrFields($dataList, 'course_id');
+                if(count($courseIds) > 1) throws('只能对同一课程下的学员，不可进行分班操作！');
+                $course_id = $courseIds[0] ?? 0;
+                if(!is_numeric($course_id) || $course_id <= 0) throws('课程信息有误，不可进行分班操作！');
                 $reDataArr['info'] = $info;
                 $reDataArr['course_order_staff'] = $dataList;
                 // 获得可用班级信息KV
@@ -128,8 +132,8 @@ class CourseOrderStaffController extends BasicController
                     'sqlParams' => ['whereIn' => ['class_status' => [1, 2]]]
                 ];
                 if(is_numeric($course_id) && $course_id > 0){
-                    $qWhere = $extParamsQuery['sqlParams']['where'] ?? [];
-                    $extParamsQuery['sqlParams']['where'] = array_push($qWhere, ['course_id', $course_id]);
+                    Tool::appendParamQuery($extParamsQuery['sqlParams'], $course_id, 'course_id', [0, '0', ''], ',', false);
+
                 }
                 $reDataArr['course_class_kv'] = CTAPICourseClassBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'class_name'], $extParamsQuery);
                 $reDataArr['defaultCourseClassId'] = $info['class_id'] ?? -1;// 默认
@@ -240,11 +244,15 @@ class CourseOrderStaffController extends BasicController
                 $company_id = CommonRequest::getInt($request, 'company_id');// 报名用户所属的企业id
 
                 // 根据报名用户id,获得报名用户及支付信息
-                list($dataList, $pay_configs_format) = CTAPICourseOrderStaffBusiness::getPayStaffByIds($request, $this, $id, $company_id);
+                list($dataList, $pay_configs_format, $companyKV) = CTAPICourseOrderStaffBusiness::getPayStaffByIds($request, $this, $id, $company_id);
                 $dataPanyConfigList = Tool::arrUnderReset($dataList, 'pay_config_id', 2, '_');
-
+                // 再按企业分
+                foreach($dataPanyConfigList as $k => &$v){
+                    $v = Tool::arrUnderReset($v, 'company_id', 2, '_');
+                }
                 // $reDataArr['course_order_staff'] = $dataList;
                 $reDataArr['pay_config_format'] = $pay_configs_format;
+                $reDataArr['company_kv'] = $companyKV;
                 $reDataArr['config_staff_list'] = $dataPanyConfigList;
 
                 $reDataArr['info'] = $info;
@@ -286,13 +294,15 @@ class CourseOrderStaffController extends BasicController
                 $company_id = CommonRequest::getInt($request, 'company_id');// 报名用户所属的企业id
                 $pay_config_id = CommonRequest::getInt($request, 'pay_config_id');// 支付配置id
                 $pay_method = CommonRequest::getInt($request, 'pay_method');// 选择的缴费方式
+                $reDataArr['company_id'] = $company_id;
                 $reDataArr['pay_config_id'] = $pay_config_id;
                 $reDataArr['pay_method'] = $pay_method;
 
                 // 根据报名用户id,及收款账号和收款方式 获得报名用户及支付信息
-                list($payMethodInfo, $dataPanyConfigList, $pay_configs_format) = CTAPICourseOrderStaffBusiness::getMethodInfoAndStaffList($request, $this, $id, $company_id, $pay_config_id, $pay_method);
+                list($payMethodInfo, $dataPanyConfigList, $pay_configs_format, $companyKV) = CTAPICourseOrderStaffBusiness::getMethodInfoAndStaffList($request, $this, $id, $company_id, $pay_config_id, $pay_method);
                 $reDataArr['method_info'] = $payMethodInfo;
                 $reDataArr['config_staff_list'] = $dataPanyConfigList;
+                $reDataArr['company_kv'] = $companyKV;
                 $reDataArr['pay_config_format'] = $pay_configs_format;
 
                 $reDataArr['info'] = $info;
@@ -330,31 +340,34 @@ class CourseOrderStaffController extends BasicController
                 $pay_config_id = CommonRequest::getInt($request, 'pay_config_id');// 支付配置id
                 $pay_method = CommonRequest::getInt($request, 'pay_method');// 选择的缴费方式
                 $auth_code = CommonRequest::get($request, 'auth_code');// 扫码枪扫的付款码
+                $total_price_discount = 0;// CommonRequest::get($request, 'total_price_discount');// 商品下单时优惠金额
                 $reDataArr['pay_config_id'] = $pay_config_id;
                 $reDataArr['pay_method'] = $pay_method;
                 // $reDataArr['auth_code'] = $auth_code;
 
                 // 根据报名用户id,及收款账号和收款方式 获得报名用户及支付信息
-                list($payMethodInfo, $dataPanyConfigList, $pay_configs_format) = CTAPICourseOrderStaffBusiness::getMethodInfoAndStaffList($request, $this, $id, $company_id, $pay_config_id, $pay_method);
+                list($payMethodInfo, $dataPanyConfigList, $pay_configs_format, $companyKV) = CTAPICourseOrderStaffBusiness::getMethodInfoAndStaffList($request, $this, $id, $company_id, $pay_config_id, $pay_method);
                 $reDataArr['method_info'] = $payMethodInfo;
                 $reDataArr['config_staff_list'] = $dataPanyConfigList;
                 $reDataArr['pay_config_format'] = $pay_configs_format;
 
                 $reDataArr['info'] = $info;
 
+                if(!is_numeric($total_price_discount) || $total_price_discount < 0) $total_price_discount = 0;
                 $otherParams = [
+                   'total_price_discount' => $total_price_discount,// 商品下单时优惠金额
                    'payment_amount' => CommonRequest::get($request, 'payment_amount'),// 总支付金额
                    'change_amount' => CommonRequest::get($request, 'change_amount'),// 找零金额
                     'remarks' => CommonRequest::get($request, 'remarks'),// 订单备注
                     'auth_code' => CommonRequest::get($request, 'auth_code'),// 扫码枪扫的付款码
                 ];
-
+                $operate_type = 2;//  操作类型1用户操作2平台操作
                 $organize_id = $this->organize_id;
                 // 大后台--可以操作所有的员工；操作企业【无员工】
                 // 企业后台 -- 操作员工，只能操作自己的员工；无操作企业
                 // 个人后台--不可进行操作
                 if($this->user_type == 2) $organize_id = $this->own_organize_id;
-                $resultDatas = CTAPICourseOrderStaffBusiness::createOrderAjax($request, $this, $organize_id, $id, $pay_config_id, $pay_method, $otherParams,true);
+                $resultDatas = CTAPICourseOrderStaffBusiness::createOrderAjax($request, $this, $organize_id, $company_id, $id, $pay_config_id, $pay_method, $otherParams, $operate_type, true);
                 return ajaxDataArr(1, $resultDatas, '');
             });
     }
@@ -442,6 +455,8 @@ class CourseOrderStaffController extends BasicController
 //                    'simple_name' => $simple_name,
 //                    'sort_num' => $sort_num,
 //                ];
+//                 // 价格转为整型
+//                Tool::bathPriceCutFloatInt($saveData, CourseOrderStaff::$IntPriceFields, 1);
 //
 ////        if($id <= 0) {// 新加;要加入的特别字段
 ////            $addNewData = [
@@ -490,6 +505,7 @@ class CourseOrderStaffController extends BasicController
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                 'relationFormatConfigs'=> CTAPICourseOrderStaffBusiness::getRelationConfigs($request, $this,
                     ['company_name' => '', 'course_name' =>'', 'class_name' =>'', 'staff_info' =>'', 'course_order_info' => ''] , []),
+                'listHandleKeyArr' => ['priceIntToFloat'],
 
             ];
             return  CTAPICourseOrderStaffBusiness::getList($request, $this, 2 + 4, [], [], $extParams);
@@ -534,7 +550,7 @@ class CourseOrderStaffController extends BasicController
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                 'relationFormatConfigs'=> CTAPICourseOrderStaffBusiness::getRelationConfigs($request, $this,
                     ['company_name' => '', 'course_name' =>'', 'class_name' =>'', 'staff_info' =>'', 'course_order_info' => ''], []),
-
+                'listHandleKeyArr' => ['priceIntToFloat'],
             ];
             CTAPICourseOrderStaffBusiness::getList($request, $this, 1 + 0, [], [], $extParams);
         });
@@ -706,25 +722,31 @@ class CourseOrderStaffController extends BasicController
      * @author zouyan(305463219@qq.com)
      */
     public function doListPage(Request $request, &$reDataArr, $extendParams = []){
+        // 需要隐藏的选项 1、2、4、8....[自己给查询的或添加页的下拉或其它输入框等编号]；靠前面的链接传过来 &hidden_option=0;
+        $hiddenOption = CommonRequest::getInt($request, 'hidden_option');
         // $pageNum = $extendParams['pageNum'] ?? 1;// 1->1 首页；2->2 列表页； 12->2048 弹窗选择页面；
         // $user_info = $this->user_info;
         // $id = $extendParams['params']['id'];
 
+        $reDataArr['class_id'] = CommonRequest::getInt($request, 'class_id');
+
         // 获得课程键值
+        $course_id = CommonRequest::getInt($request, 'course_id');// $hiddenOption = 2
         $reDataArr['course_kv'] = CTAPICourseBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'course_name'], []);
-        $reDataArr['defaultCourseId'] = -1;// 默认
+        $reDataArr['defaultCourseId'] = (!is_numeric($course_id) || $course_id <= 0 ) ? -1 : $course_id;// 默认
 
         // 缴费状态(1待缴费、2部分缴费、4已缴费、8部分退费、16已退费 )
         $reDataArr['payStatus'] =  CourseOrderStaff::$payStatusArr;
-        $reDataArr['defaultPayStatus'] = $info['pay_status'] ?? -1;// 列表页默认状态
+        $reDataArr['defaultPayStatus'] = -1;// 列表页默认状态
 
         // 分班状态(1待分班、4已分班)
+        $join_class_status = CommonRequest::getInt($request, 'join_class_status');// $hiddenOption = 4
         $reDataArr['joinClassStatus'] =  CourseOrderStaff::$joinClassStatusArr;
-        $reDataArr['defaultJoinClassStatus'] = $info['join_class_status'] ?? -1;// 列表页默认状态
+        $reDataArr['defaultJoinClassStatus'] = (!is_numeric($join_class_status) || $join_class_status <= 0 ) ? -1 : $join_class_status;// 列表页默认状态
 
         // 人员状态1正常4已作废8已结业
         $reDataArr['staffStatus'] =  CourseOrderStaff::$staffStatusArr;
-        $reDataArr['defaultStaffStatus'] = $info['staff_status'] ?? -1;// 列表页默认状态
+        $reDataArr['defaultStaffStatus'] = -1;// 列表页默认状态
 
         $company_id = CommonRequest::getInt($request, 'company_id');
         $info = [];
@@ -741,6 +763,7 @@ class CourseOrderStaffController extends BasicController
         $reDataArr['info'] = $info;
         $reDataArr['company_hidden'] = $company_hidden;// =1 : 隐藏企业选择
 
+        $reDataArr['hidden_option'] = $hiddenOption;
     }
 
     /**
@@ -763,6 +786,8 @@ class CourseOrderStaffController extends BasicController
      * @author zouyan(305463219@qq.com)
      */
     public function doInfoPage(Request $request, &$reDataArr, $extendParams = []){
+        // 需要隐藏的选项 1、2、4、8....[自己给查询的或添加页的下拉或其它输入框等编号]；靠前面的链接传过来 &hidden_option=0;
+        $hiddenOption = CommonRequest::getInt($request, 'hidden_option');
         // $pageNum = $extendParams['pageNum'] ?? 1;// 5->16 添加页； 7->64 编辑页；8->128 ajax详情； 35-> 17179869184 详情页
         // $user_info = $this->user_info;
         $id = $extendParams['params']['id'] ?? 0;
@@ -782,6 +807,7 @@ class CourseOrderStaffController extends BasicController
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                 'relationFormatConfigs'=> CTAPICourseOrderStaffBusiness::getRelationConfigs($request, $this,
                     ['company_name' => '', 'course_name' =>'', 'class_name' =>'', 'staff_info' =>'', 'course_order_info' => ''], []),
+                'listHandleKeyArr' => ['priceIntToFloat'],
 
             ];
             $info = CTAPICourseOrderStaffBusiness::getInfoData($request, $this, $id, [], '', $extParams);
@@ -791,16 +817,18 @@ class CourseOrderStaffController extends BasicController
         $reDataArr['operate'] = $operate;
 
         // 获得课程键值
+        $course_id = CommonRequest::getInt($request, 'course_id');// $hiddenOption = 2
         $reDataArr['course_kv'] = CTAPICourseBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'course_name'], []);
-        $reDataArr['defaultCourseId'] = $info['course_id'] ?? -1;// 默认
+        $reDataArr['defaultCourseId'] = $info['course_id'] ?? ((!is_numeric($course_id) || $course_id <= 0 ) ? -1 : $course_id);// 默认
 
         // 缴费状态(1待缴费、2部分缴费、4已缴费、8部分退费、16已退费 )
         $reDataArr['payStatus'] =  CourseOrderStaff::$payStatusArr;
         $reDataArr['defaultPayStatus'] = $info['pay_status'] ?? -1;// 列表页默认状态
 
         // 分班状态(1待分班、4已分班)
+        $join_class_status = CommonRequest::getInt($request, 'join_class_status');// $hiddenOption = 4
         $reDataArr['joinClassStatus'] =  CourseOrderStaff::$joinClassStatusArr;
-        $reDataArr['defaultJoinClassStatus'] = $info['join_class_status'] ?? -1;// 列表页默认状态
+        $reDataArr['defaultJoinClassStatus'] = $info['join_class_status'] ?? ((!is_numeric($join_class_status) || $join_class_status <= 0 ) ? -1 : $join_class_status);// 列表页默认状态
 
         // 人员状态1正常4已作废8已结业
         $reDataArr['staffStatus'] =  CourseOrderStaff::$staffStatusArr;
@@ -809,6 +837,7 @@ class CourseOrderStaffController extends BasicController
         $company_hidden = CommonRequest::getInt($request, 'company_hidden');
         $reDataArr['company_hidden'] = $company_hidden;// =1 : 隐藏企业选择
 
+        $reDataArr['hidden_option'] = $hiddenOption;
     }
     // **************公用方法********************结束*********************************
 
