@@ -267,7 +267,7 @@ class CTAPICourseOrderBusiness extends BasicPublicCTAPIBusiness
         // 获得面授课程正在进行中的学员--非 4已作废8已结业
         $courseOrderStaff = [];
         if(!empty($staffIds)) $courseOrderStaff = CTAPICourseOrderStaffBusiness::getFVFormatList( $request,  $controller, 1, 1
-            ,  ['staff_id' => $staffIds, 'staff_status' => [1,8]], false, [], []);
+            ,  ['course_id' => $courseId,'staff_id' => $staffIds, 'staff_status' => [1,8]], false, [], []);
         //if(!empty($courseOrderStaff)){
             $courseFormatOrderStaff = Tool::arrUnderReset($courseOrderStaff, 'staff_id', 2, '_');
             foreach($staffList as $k => &$v){
