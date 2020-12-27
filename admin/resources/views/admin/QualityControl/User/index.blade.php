@@ -8,6 +8,8 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <!-- zui css -->
+    <link rel="stylesheet" href="{{asset('dist/css/zui.min.css') }}">
   @include('admin.layout_public.pagehead')
   <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/css/layui.css')}}" media="all">
   <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/style/admin.css')}}" media="all">
@@ -166,16 +168,16 @@
         <col width="50">
 {{--        <col width="50">--}}
 
-        <col width="60">
-        <col width="50">
+{{--        <col width="60">--}}
+        <col width="75">
         <col width="105">
 
         <col >
-        <col >
+        <col  width="7%">
         <!-- <col >
         <col width="75">
         <col width="75"> -->
-        <col>
+        <col  width="7%">
         <col>
         <col  width="75">
         <col width="75" >
@@ -183,7 +185,7 @@
 {{--        <col width="75">--}}
         <col width="90">
 {{--        <col width="160">--}}
-        <col width="15%">
+        <col width="12%">
     </colgroup>
     <thead>
     <tr>
@@ -195,13 +197,13 @@
 {{--        <th>ID</th>--}}
 
         <th>姓名</th>
-        <th>性别</th>
-        <th>手机号</th>
+{{--        <th>性别</th>--}}
+        <th>手机号<hr/>所属企业</th>
        <!--  <th>城市</th>
         <th>邮箱</th>
         <th>微信号</th> -->
 
-        <th>所属企业</th>
+        <th>证件照</th>
         <th>职位</th>
         <th>角色</th>
         <th>签字范围<hr/>签字审核状态</th>
@@ -213,7 +215,7 @@
       <th>操作</th>
     </tr>
     </thead>
-    <tbody id="data_list">
+    <tbody id="data_list"  class=" baguetteBoxOne gallery">
     </tbody>
   </table>
   <div class="mmfoot">
@@ -264,8 +266,19 @@
       var IFRAME_TAG_KEY = "";// "QualityControl\\CTAPIStaff";// 获得模型表更新时间的关键标签，可为空：不获取
       var IFRAME_TAG_TIMEOUT = 60000;// 获得模型表更新时间运行间隔 1000:1秒 ；可以不要此变量：默认一分钟
 
+      var DOWN_FILE_URL = "{{ url('admin/down_file') }}";// 下载
+      var DEL_FILE_URL = "{{ url('api/admin/upload/ajax_del') }}";// 删除文件的接口地址
+
   </script>
-  <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/User.js?63') }}"  type="text/javascript"></script>
+<link rel="stylesheet" href="{{asset('js/baguetteBox.js/baguetteBox.min.css')}}">
+<script src="{{asset('js/baguetteBox.js/baguetteBox.min.js')}}" async></script>
+{{--<script src="{{asset('js/baguetteBox.js/highlight.min.js')}}" async></script>--}}
+<!-- zui js -->
+<script src="{{asset('dist/js/zui.min.js') }}"></script>
+
+<script src="{{asset('js/common/list.js')}}?1"></script>
+  <script src="{{ asset('js/admin/QualityControl/User.js?66') }}"  type="text/javascript"></script>
+@component('component.upfileincludejsmany')
+@endcomponent
 </body>
 </html>

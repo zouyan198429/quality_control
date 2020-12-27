@@ -235,7 +235,14 @@ class CTAPIAbilityJoinBusiness extends BasicPublicCTAPIBusiness
      * @param Request $request 请求信息
      * @param Controller $controller 控制对象
      * @param array $relationKeys
-     * @param array $extendParams  扩展参数---可能会用
+     * @param array $extendParams  扩展参数---可能会用；需要指定的实时特别的 条件配置
+     *          格式： [
+     *                    '关系下标' => [
+     *                          'fieldValParams' => [ '字段名1' => '字段值--多个时，可以是一维数组或逗号分隔字符', ...],// 也可以时 Tool getParamQuery 方法的参数$fieldValParams的格式
+     *                          'sqlParams' => []// 与参数 $sqlDefaultParams 相同格式的条件
+     *                          '关系下标' => ... 下下级的
+     *                       ]
+     *                ]
      * @return  array 表关系配置信息
      * @author zouyan(305463219@qq.com)
      */
@@ -256,7 +263,7 @@ class CTAPIAbilityJoinBusiness extends BasicPublicCTAPIBusiness
                 , CTAPIStaffBusiness::getRelationConfigs($request, $controller,
                     static::getUboundRelation($relationArr, 'company_info'),
                     static::getUboundRelationExtendParams($extendParams, 'company_info')),
-                ['where' => [['admin_type', 2]]], '', []),
+                static::getRelationSqlParams(['where' => [['admin_type', 2]]], $extendParams, 'company_info'), '', []),
             // 获得企业信息
             'company_info_data' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
                 , ['admin_type' => 'admin_type', 'staff_id' => 'id']
@@ -266,7 +273,7 @@ class CTAPIAbilityJoinBusiness extends BasicPublicCTAPIBusiness
                 , CTAPIStaffBusiness::getRelationConfigs($request, $controller,
                     static::getUboundRelation($relationArr, 'company_info_data'),
                     static::getUboundRelationExtendParams($extendParams, 'company_info_data')),
-                ['where' => [['admin_type', 2]]], '', []),
+                static::getRelationSqlParams(['where' => [['admin_type', 2]]], $extendParams, 'company_info_data'), '', []),
             // 获得企业名称 企业--证书编号 -- 证书使用  1:1
             'company_info_certificate' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
                 , ['admin_type' => 'admin_type', 'staff_id' => 'id']
@@ -276,7 +283,7 @@ class CTAPIAbilityJoinBusiness extends BasicPublicCTAPIBusiness
                 , CTAPIStaffBusiness::getRelationConfigs($request, $controller,
                     static::getUboundRelation($relationArr, 'company_info_certificate'),
                     static::getUboundRelationExtendParams($extendParams, 'company_info_certificate')),
-                ['where' => [['admin_type', 2]]], '', []),
+                static::getRelationSqlParams(['where' => [['admin_type', 2]]], $extendParams, 'company_info_certificate'), '', []),
             // 获得证书设置信息
             'ability_code_info' => CTAPIAbilityCodeBusiness::getTableRelationConfigInfo($request, $controller
                 , ['join_year' => 'number_year']
@@ -285,7 +292,8 @@ class CTAPIAbilityJoinBusiness extends BasicPublicCTAPIBusiness
                 ,'',''
                 , CTAPIAbilityCodeBusiness::getRelationConfigs($request, $controller,
                     static::getUboundRelation($relationArr, 'ability_code_info'),
-                    static::getUboundRelationExtendParams($extendParams, 'ability_code_info')), [], '', []),
+                    static::getUboundRelationExtendParams($extendParams, 'ability_code_info')),
+                static::getRelationSqlParams([], $extendParams, 'ability_code_info'), '', []),
             // 报名项目 1:n -- 读取到报名项
             'join_items' => CTAPIAbilityJoinItemsBusiness::getTableRelationConfigInfo($request, $controller
                 , ['id' => 'ability_join_id']

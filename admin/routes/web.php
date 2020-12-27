@@ -339,7 +339,7 @@ Route::get('admin/course_class_company/export', 'Admin\QualityControl\CourseClas
 
 // 报名学员
 Route::get('admin/course_order_staff', 'Admin\QualityControl\CourseOrderStaffController@index');// 列表
-//Route::get('admin/course_order_staff/add/{id}', 'Admin\QualityControl\CourseOrderStaffController@add');// 添加
+Route::get('admin/course_order_staff/add/{id}', 'Admin\QualityControl\CourseOrderStaffController@add');// 添加
 // Route::get('admin/course_order_staff/select', 'Admin\QualityControl\CourseOrderStaffController@select');// 选择-弹窗
 Route::get('admin/course_order_staff/export', 'Admin\QualityControl\CourseOrderStaffController@export');// 导出
 //Route::get('admin/course_order_staff/import_template', 'Admin\QualityControl\CourseOrderStaffController@import_template');// 导入模版
@@ -645,7 +645,7 @@ Route::get('company/user', 'WebFront\Company\QualityControl\UserController@index
 Route::get('company/user/add/{id}', 'WebFront\Company\QualityControl\UserController@add');// 添加
 // Route::get('company/user/show/{company_id}', 'WebFront\Company\QualityControl\UserController@show');// 查看
 //Route::get('company/user/show_add/{id}', 'WebFront\Company\QualityControl\UserController@show_add');// 添加
-// Route::get('company/user/select', 'WebFront\Company\QualityControl\UserController@select');// 选择-弹窗
+Route::get('company/user/select', 'WebFront\Company\QualityControl\UserController@select');// 选择-弹窗
 Route::get('company/user/export', 'WebFront\Company\QualityControl\UserController@export');// 导出
 Route::get('company/user/import_template', 'WebFront\Company\QualityControl\UserController@import_template');// 导入模版
 Route::get('company/user/import_bath/{company_id}', 'WebFront\Company\QualityControl\UserController@import_bath');// 导入批量

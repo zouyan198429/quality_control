@@ -66,7 +66,14 @@ class CTAPICompanyStatementBusiness extends BasicPublicCTAPIBusiness
      * @param Request $request 请求信息
      * @param Controller $controller 控制对象
      * @param array $relationKeys
-     * @param array $extendParams  扩展参数---可能会用
+     * @param array $extendParams  扩展参数---可能会用；需要指定的实时特别的 条件配置
+     *          格式： [
+     *                    '关系下标' => [
+     *                          'fieldValParams' => [ '字段名1' => '字段值--多个时，可以是一维数组或逗号分隔字符', ...],// 也可以时 Tool getParamQuery 方法的参数$fieldValParams的格式
+     *                          'sqlParams' => []// 与参数 $sqlDefaultParams 相同格式的条件
+     *                          '关系下标' => ... 下下级的
+     *                       ]
+     *                ]
      * @return  array 表关系配置信息
      * @author zouyan(305463219@qq.com)
      */
@@ -87,7 +94,7 @@ class CTAPICompanyStatementBusiness extends BasicPublicCTAPIBusiness
                 CTAPIStaffBusiness::getRelationConfigs($request, $controller,
                     static::getUboundRelation($relationArr, 'company_info'),
                     static::getUboundRelationExtendParams($extendParams, 'company_info')),
-                ['where' => [['admin_type', 2]]], '', []),
+                static::getRelationSqlParams(['where' => [['admin_type', 2]]], $extendParams, 'company_info'), '', []),
             // 上传的资料信息
             'resource_list' => CTAPIResourceBusiness::getTableRelationConfigInfo($request, $controller
                 , ['id' => 'column_id']
@@ -96,7 +103,7 @@ class CTAPICompanyStatementBusiness extends BasicPublicCTAPIBusiness
                 CTAPIResourceBusiness::getRelationConfigs($request, $controller,
                     static::getUboundRelation($relationArr, 'resource_list'),
                     static::getUboundRelationExtendParams($extendParams, 'resource_list')),
-                ['where' => [['column_type', 16]]], ''
+                static::getRelationSqlParams(['where' => [['column_type', 16]]], $extendParams, 'resource_list'), ''
                 , ['extendConfig' => ['listHandleKeyArr' => ['format_resource']]]),// , 'infoHandleKeyArr' => ['resource_list']
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);

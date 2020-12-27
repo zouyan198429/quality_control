@@ -68,7 +68,14 @@ class CTAPIApiLogBusiness extends BasicPublicCTAPIBusiness
      * @param Request $request 请求信息
      * @param Controller $controller 控制对象
      * @param array $relationKeys
-     * @param array $extendParams  扩展参数---可能会用
+     * @param array $extendParams  扩展参数---可能会用；需要指定的实时特别的 条件配置
+     *          格式： [
+     *                    '关系下标' => [
+     *                          'fieldValParams' => [ '字段名1' => '字段值--多个时，可以是一维数组或逗号分隔字符', ...],// 也可以时 Tool getParamQuery 方法的参数$fieldValParams的格式
+     *                          'sqlParams' => []// 与参数 $sqlDefaultParams 相同格式的条件
+     *                          '关系下标' => ... 下下级的
+     *                       ]
+     *                ]
      * @return  array 表关系配置信息
      * @author zouyan(305463219@qq.com)
      */
@@ -89,7 +96,7 @@ class CTAPIApiLogBusiness extends BasicPublicCTAPIBusiness
 //                CTAPIStaffBusiness::getRelationConfigs($request, $controller,
 //                    static::getUboundRelation($relationArr, 'company_info'),
 //                    static::getUboundRelationExtendParams($extendParams, 'company_info')),
-//                ['where' => [['admin_type', 2]]], '', []),
+//                static::getRelationSqlParams(['where' => [['admin_type', 2]]], $extendParams, 'company_info'), '', []),
             // 获得详细内容
             'log_content' => CTAPIApiLogContentBusiness::getTableRelationConfigInfo($request, $controller
                 , ['log_no' => 'log_no']
@@ -98,7 +105,7 @@ class CTAPIApiLogBusiness extends BasicPublicCTAPIBusiness
                 CTAPIApiLogContentBusiness::getRelationConfigs($request, $controller,
                     static::getUboundRelation($relationArr, 'log_content'),
                     static::getUboundRelationExtendParams($extendParams, 'log_content')),
-                [], '', []),
+                static::getRelationSqlParams([], $extendParams, 'log_content'), '', []),
             // 获得应用信息
             'apply_info' => CTAPIApplyBusiness::getTableRelationConfigInfo($request, $controller
                 , ['app_id' => 'id']
@@ -107,7 +114,7 @@ class CTAPIApiLogBusiness extends BasicPublicCTAPIBusiness
                 CTAPIApplyBusiness::getRelationConfigs($request, $controller,
                     static::getUboundRelation($relationArr, 'apply_info'),
                     static::getUboundRelationExtendParams($extendParams, 'apply_info')),
-                [], '', []),
+                static::getRelationSqlParams([], $extendParams, 'apply_info'), '', []),
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }

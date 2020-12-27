@@ -67,7 +67,14 @@ class CTAPICourseOrderStaffBusiness extends BasicPublicCTAPIBusiness
      * @param Request $request 请求信息
      * @param Controller $controller 控制对象
      * @param array $relationKeys
-     * @param array $extendParams  扩展参数---可能会用
+     * @param array $extendParams  扩展参数---可能会用；需要指定的实时特别的 条件配置
+     *          格式： [
+     *                    '关系下标' => [
+     *                          'fieldValParams' => [ '字段名1' => '字段值--多个时，可以是一维数组或逗号分隔字符', ...],// 也可以时 Tool getParamQuery 方法的参数$fieldValParams的格式
+     *                          'sqlParams' => []// 与参数 $sqlDefaultParams 相同格式的条件
+     *                          '关系下标' => ... 下下级的
+     *                       ]
+     *                ]
      * @return  array 表关系配置信息
      * @author zouyan(305463219@qq.com)
      */
@@ -89,7 +96,7 @@ class CTAPICourseOrderStaffBusiness extends BasicPublicCTAPIBusiness
                 CTAPIStaffBusiness::getRelationConfigs($request, $controller,
                     static::getUboundRelation($relationArr, 'company_name'),
                     static::getUboundRelationExtendParams($extendParams, 'company_name')),
-                ['where' => [['admin_type', 2]]], '', []),
+                static::getRelationSqlParams(['where' => [['admin_type', 2]]], $extendParams, 'company_name'), '', []),
             // 获得课程名称
             'course_name' => CTAPICourseBusiness::getTableRelationConfigInfo($request, $controller
                 , ['course_id' => 'id']
@@ -98,7 +105,7 @@ class CTAPICourseOrderStaffBusiness extends BasicPublicCTAPIBusiness
                 CTAPICourseBusiness::getRelationConfigs($request, $controller,
                     static::getUboundRelation($relationArr, 'course_name'),
                     static::getUboundRelationExtendParams($extendParams, 'course_name')),
-                [], '', []),
+                static::getRelationSqlParams([], $extendParams, 'course_name'), '', []),
             // 获得班级名称
             'class_name' => CTAPICourseClassBusiness::getTableRelationConfigInfo($request, $controller
                 , ['class_id' => 'id']
@@ -107,8 +114,8 @@ class CTAPICourseOrderStaffBusiness extends BasicPublicCTAPIBusiness
                 CTAPICourseClassBusiness::getRelationConfigs($request, $controller,
                     static::getUboundRelation($relationArr, 'class_name'),
                     static::getUboundRelationExtendParams($extendParams, 'class_name')),
-                [], '', []),
-            // 获得用户信息
+                static::getRelationSqlParams([], $extendParams, 'class_name'), '', []),
+            // 获得用户信息 ; 注意：如果还需要证件照，则需要关系表 'resource_list' => ''
             'staff_info' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
                 , ['staff_id' => 'id']
                 , 1, 256
@@ -116,7 +123,7 @@ class CTAPICourseOrderStaffBusiness extends BasicPublicCTAPIBusiness
                 CTAPIStaffBusiness::getRelationConfigs($request, $controller,
                     static::getUboundRelation($relationArr, 'staff_info'),
                     static::getUboundRelationExtendParams($extendParams, 'staff_info')),
-                [], '', []),
+                static::getRelationSqlParams([], $extendParams, 'staff_info'), '', []),
             // 获得报名主表信息--联系人等信息
             'course_order_info' => CTAPICourseOrderBusiness::getTableRelationConfigInfo($request, $controller
                 , ['course_order_id' => 'id']
@@ -125,7 +132,7 @@ class CTAPICourseOrderStaffBusiness extends BasicPublicCTAPIBusiness
                 CTAPICourseOrderBusiness::getRelationConfigs($request, $controller,
                     static::getUboundRelation($relationArr, 'course_order_info'),
                     static::getUboundRelationExtendParams($extendParams, 'course_order_info')),
-                [], '', []),
+                static::getRelationSqlParams([], $extendParams, 'course_order_info'), '', []),
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }
@@ -330,7 +337,7 @@ class CTAPICourseOrderStaffBusiness extends BasicPublicCTAPIBusiness
         $extParams = [
             // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
             'relationFormatConfigs'=> CTAPICourseOrderStaffBusiness::getRelationConfigs($request, $controller,
-                ['company_name' => '', 'course_name' =>'', 'class_name' =>'', 'staff_info' =>'', 'course_order_info' => ''] , []),
+                ['company_name' => '', 'course_name' =>'', 'class_name' =>'', 'staff_info' => ['resource_list' => ''], 'course_order_info' => ''] , []),
             'listHandleKeyArr' => ['priceIntToFloat'],
 
         ];

@@ -200,6 +200,13 @@ function initFileShow(uploadAttrObj, resourceListObj, resource_show_class, uploa
             // return false;// break;
             return true;// continue
         }
+        var isShow = resourceShowObj.data('isShow');// 获得是否已经初始化
+        consoleLogs(['-isShow--', isShow]);
+        if(isShow == 1){
+           return true;
+        }
+
+        resourceShowObj.html('');// 先初始化为空
         var resource_list = trObj.find('.resource_list').html();
         console.log('==resource_list==', resource_list);
         var resourceObj = JSON.parse(resource_list);
@@ -229,6 +236,7 @@ function initFileShow(uploadAttrObj, resourceListObj, resource_show_class, uploa
         pic_list_json.checkbox_name = checkbox_name;
         init_upload_pic(upload_id, baidu_tem_pic_list, pic_list_json);
 
+        resourceShowObj.data('isShow', 1);// 标记已经处理
 
     });
 }

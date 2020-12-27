@@ -30,6 +30,26 @@ function parent_reset_list(){
     parent.layer.close(PARENT_LAYER_INDEX);
 }
 
+window.onload = function() {
+
+    // 初始化列表文件显示功能
+    var uploadAttrObj = {
+        down_url:DOWN_FILE_URL,
+        del_url: DEL_FILE_URL,
+        del_fun_pre:'',
+        files_type: 0,
+        icon : 'file-o',
+        operate_auth:(1 | 2)
+    };
+    var resourceListObj = $('#data_list').find('tr');
+    initFileShow(uploadAttrObj, resourceListObj, 'resource_show', 'baidu_template_upload_file_show', 'baidu_template_upload_pic', 'resource_id[]');
+    initPic();
+};
+
+function initPic(){
+    baguetteBox.run('.baguetteBoxOne');
+    // baguetteBox.run('.baguetteBoxTwo');
+}
 $(function(){
     //提交
     // $(document).on("click","#submitBtn",function(){

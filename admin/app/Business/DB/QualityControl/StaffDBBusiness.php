@@ -78,8 +78,20 @@ class StaffDBBusiness extends BasePublicDBBusiness
                 ];
             }
         }
+
+        // 是否有图片资源--个人的证件照
+        $hasResourceCardPhone = false;
+
+        $resourceIdsCardPhone = [];
+        if(Tool::getInfoUboundVal($saveData, 'resourceIdsCardPhone', $hasResourceCardPhone, $resourceIdsCardPhone, 1)){
+            // $saveData['resource_id'] = $resourceIdsCardPhone[0] ?? 0;// 第一个图片资源的id
+        }
+        // $resource_ids = $saveData['resource_ids'] ?? '';// 图片资源id串(逗号分隔-未尾逗号结束)
+        // if(isset($saveData['resource_ids']))  unset($saveData['resource_ids']);
+        // if(isset($saveData['resource_id']))  unset($saveData['resource_id']);
+
         return CommonDB::doTransactionFun(function() use(&$saveData, &$company_id, &$id, &$operate_staff_id, &$modifAddOprate
-            , &$certificate_info, &$certificate_no, &$has_certificate_no){
+            , &$certificate_info, &$certificate_no, &$has_certificate_no, &$hasResourceCardPhone, &$resourceIdsCardPhone){
 
             if(isset($saveData['real_name']) && empty($saveData['real_name'])  ){
                 throws('真实姓名不能为空！');
@@ -177,10 +189,13 @@ class StaffDBBusiness extends BasePublicDBBusiness
             if(Tool::getInfoUboundVal($saveData, 'resourceIds', $hasResource, $resourceIds, 1)){
                 // $saveData['resource_id'] = $resourceIds[0] ?? 0;// 第一个图片资源的id
             }
-            $resource_ids = $saveData['resource_ids'] ?? '';// 图片资源id串(逗号分隔-未尾逗号结束)
-            if(isset($saveData['resource_ids']))  unset($saveData['resource_ids']);
-            if(isset($saveData['resource_id']))  unset($saveData['resource_id']);
+            if($hasResource){
+                $resource_ids = $saveData['resource_ids'] ?? '';// 图片资源id串(逗号分隔-未尾逗号结束)
 
+                if(isset($saveData['resource_ids']))  unset($saveData['resource_ids']);
+                if(isset($saveData['resource_id']))  unset($saveData['resource_id']);
+
+            }
 
 
 //            // 省id历史
@@ -245,6 +260,17 @@ class StaffDBBusiness extends BasePublicDBBusiness
                 $saveBoolen = static::saveById($saveData, $id,$modelObj);
                 $resultDatas = static::getInfo($id);
                 $logCount = '修改';
+            }
+            // 同步修改图片资源关系--个人证件照
+            if($hasResourceCardPhone){
+//                static::saveResourceSync($id, $resourceIdsCardPhone, $operate_staff_id, $operate_staff_id_history, []);
+//                // 更新图片资源表
+//                if(!empty($resourceIdsCardPhone)) {
+//                    $resourceArr = ['column_type' => 1024, 'column_id' => $id];
+//                    ResourceDBBusiness::saveByIds($resourceArr, $resourceIdsCardPhone);
+//                }
+                // ResourceDBBusiness::bathResourceSync(static::thisObj(), 1024, [['id' => $id, 'resourceIds' => $resourceIdsCardPhone, 'otherData' => []]], $operate_staff_id, $operate_staff_id_history);
+                ResourceDBBusiness::resourceSync(static::thisObj(), 1024, $id, $resourceIdsCardPhone, [], $operate_staff_id, $operate_staff_id_history);
             }
             // 同步修改图片资源关系
 //            if($hasResource){
@@ -940,6 +966,8 @@ class StaffDBBusiness extends BasePublicDBBusiness
 //        }
         CommonDB::doTransactionFun(function() use(&$admin_type, &$id, &$organize_id, &$organizeIds){
 
+            // 删除资源及文件--个人证件
+            if($admin_type == 4) ResourceDBBusiness::delResourceByIds(static::thisObj(), $id, 1024);
 
             // 删除主记录
 //            $delQueryParams = [

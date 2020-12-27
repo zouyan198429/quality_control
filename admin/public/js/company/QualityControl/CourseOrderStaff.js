@@ -3,7 +3,7 @@ var SUBMIT_FORM = true;//防止多次点击提交
 
 $(function(){
 
-    $('.search_frm').trigger("click");// 触发搜索事件
+    // $('.search_frm').trigger("click");// 触发搜索事件
     // reset_list_self(false, false, true, 2);
     popSelectInit();// 初始化选择弹窗
 
@@ -19,8 +19,33 @@ $(function(){
 function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
     console.log('is_read_page', typeof(is_read_page));
     console.log('ajax_async', typeof(ajax_async));
+    var layer_index = layer.load();
     reset_list(is_read_page, false, reset_total, do_num);
+
+    // 初始化列表文件显示功能
+    var uploadAttrObj = {
+        down_url:DOWN_FILE_URL,
+        del_url: DEL_FILE_URL,
+        del_fun_pre:'',
+        files_type: 0,
+        icon : 'file-o',
+        operate_auth:(1 | 2)
+    };
+    var resourceListObj = $('#data_list').find('tr');
+    initFileShow(uploadAttrObj, resourceListObj, 'resource_show', 'baidu_template_upload_file_show', 'baidu_template_upload_pic', 'resource_id[]');
+
     // initList();
+    initPic();
+    layer.close(layer_index);//手动关闭
+}
+window.onload = function() {
+    $('.search_frm').trigger("click");// 触发搜索事件
+    // reset_list_self(false, false, true, 2);
+//     initPic();
+};
+function initPic(){
+    baguetteBox.run('.baguetteBoxOne');
+    // baguetteBox.run('.baguetteBoxTwo');
 }
 //业务逻辑部分
 var otheraction = {
@@ -296,7 +321,11 @@ function addCompany(company_id, company_name){
     document.write("                <\/label>");
     document.write("            <\/td>");
     // document.write("            <td><%=item.id%><\/td>");
-    document.write("            <td><%=item.course_name%><hr/><%=item.company_name%>(<%=item.company_grade_text%>)<\/td>");
+    document.write("            <td><%=item.course_name%><hr/><%=item.company_name%>(<%=item.company_grade_text%>)<hr/><%=item.certificate_company%><\/td>");
+    document.write("            <td>");
+    document.write("               <span class=\"resource_list\"  style=\"display: none;\"><%=JSON.stringify(item.resource_list)%></span>");
+    document.write("               <span  class=\"resource_show\"></span>");
+    document.write("            <\/td>");
     document.write("            <td><%=item.real_name%>(<%=item.sex_text%>)<hr/><%=item.class_name%><\/td>");
     document.write("            <td><%=item.mobile%><hr/><%=item.id_number%><\/td>");
     document.write("            <td><%=item.contacts%><hr/><%=item.tel%><\/td>");

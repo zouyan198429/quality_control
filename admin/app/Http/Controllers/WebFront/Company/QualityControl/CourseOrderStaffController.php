@@ -518,7 +518,7 @@ class CourseOrderStaffController extends BasicController
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                 'relationFormatConfigs'=> CTAPICourseOrderStaffBusiness::getRelationConfigs($request, $this,
-                    ['company_name' => '', 'course_name' =>'', 'class_name' =>'', 'staff_info' =>'', 'course_order_info' => ''] , []),
+                    ['company_name' => '', 'course_name' =>'', 'class_name' =>'', 'staff_info' => ['resource_list' => ''], 'course_order_info' => ''] , []),
                 'listHandleKeyArr' => ['priceIntToFloat'],
 
             ];
@@ -568,7 +568,7 @@ class CourseOrderStaffController extends BasicController
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                 'relationFormatConfigs'=> CTAPICourseOrderStaffBusiness::getRelationConfigs($request, $this,
-                    ['company_name' => '', 'course_name' =>'', 'class_name' =>'', 'staff_info' =>'', 'course_order_info' => ''], []),
+                    ['company_name' => '', 'course_name' =>'', 'class_name' =>'', 'staff_info' => ['resource_list' => ''], 'course_order_info' => ''], []),
                 'listHandleKeyArr' => ['priceIntToFloat'],
             ];
             CTAPICourseOrderStaffBusiness::getList($request, $this, 1 + 0, [], [], $extParams);
@@ -831,7 +831,7 @@ class CourseOrderStaffController extends BasicController
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                 'relationFormatConfigs'=> CTAPICourseOrderStaffBusiness::getRelationConfigs($request, $this,
-                    ['company_name' => '', 'course_name' =>'', 'class_name' =>'', 'staff_info' =>'', 'course_order_info' => ''], []),
+                    ['company_name' => '', 'course_name' =>'', 'class_name' =>'', 'staff_info' => ['resource_list' => ''], 'course_order_info' => ''], []),
                 'listHandleKeyArr' => ['priceIntToFloat'],
 
             ];

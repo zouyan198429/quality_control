@@ -63,6 +63,7 @@ class AppServiceProvider extends ServiceProvider
             'platform_down_files'                 => 'App\Models\QualityControl\PlatformDownFiles',           // 128表格下载
             'apply'                 => 'App\Models\QualityControl\Apply',           // 256 应用图片
             'order_pay_method'                 => 'App\Models\QualityControl\OrderPayMethod',           // 512 收款方式配置
+            'card_photo'                 => 'App\Models\QualityControl\Staff',           // 1024 个人证件照
         ]);
 
         DB::listen(function ($query) {

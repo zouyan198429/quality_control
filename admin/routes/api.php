@@ -249,6 +249,8 @@ $api->version('v1', function ($api) {
         $api->any('admin/user/ajax_open', 'Admin\QualityControl\UserController@ajax_open');// 审核操作(通过/不通过)
         $api->post('admin/user/ajax_frozen', 'Admin\QualityControl\UserController@ajax_frozen');// 操作(冻结/解冻)
 
+        $api->post('admin/user/up_file', 'Admin\QualityControl\UserController@up_file');// 上传文件地址
+
         // 行业[一级分类]
         $api->any('admin/industry/ajax_alist', 'Admin\QualityControl\IndustryController@ajax_alist');//ajax获得列表数据
         $api->post('admin/industry/ajax_del', 'Admin\QualityControl\IndustryController@ajax_del');// 删除
@@ -313,7 +315,7 @@ $api->version('v1', function ($api) {
         // 报名学员
         $api->any('admin/course_order_staff/ajax_alist', 'Admin\QualityControl\CourseOrderStaffController@ajax_alist');//ajax获得列表数据
 //        $api->post('admin/course_order_staff/ajax_del', 'Admin\QualityControl\CourseOrderStaffController@ajax_del');// 删除
-//        $api->post('admin/course_order_staff/ajax_save', 'Admin\QualityControl\CourseOrderStaffController@ajax_save');// 新加/修改
+        $api->post('admin/course_order_staff/ajax_save', 'Admin\QualityControl\CourseOrderStaffController@ajax_save');// 新加/修改
 //        $api->post('admin/course_order_staff/ajax_get_child', 'Admin\QualityControl\CourseOrderStaffController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
 //        $api->post('admin/course_order_staff/ajax_get_areachild', 'Admin\QualityControl\CourseOrderStaffController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
 //        $api->post('admin/course_order_staff/ajax_import_staff','Admin\QualityControl\CourseOrderStaffController@ajax_import'); // 导入员工
@@ -788,6 +790,8 @@ $api->version('v1', function ($api) {
         $api->any('company/user/ajax_open', 'WebFront\Company\QualityControl\UserController@ajax_open');// 审核操作(通过/不通过)
         $api->post('company/user/ajax_frozen', 'WebFront\Company\QualityControl\UserController@ajax_frozen');// 操作(冻结/解冻)
 
+        $api->post('company/user/up_file', 'WebFront\Company\QualityControl\UserController@up_file');// 上传文件地址
+
         // 企业内容管理
         $api->any('company/company_content/ajax_alist', 'WebFront\Company\QualityControl\CompanyContentController@ajax_alist');//ajax获得列表数据
         $api->any('company/company_content/ajax_del', 'WebFront\Company\QualityControl\CompanyContentController@ajax_del');// 删除
@@ -879,7 +883,7 @@ $api->version('v1', function ($api) {
 //
 //        $api->post('company/course/up_file', 'WebFront\Company\QualityControl\CourseController@up_file');// 上传文件地址
         $api->any('company/course/ajax_join_save', 'WebFront\Company\QualityControl\CourseController@ajax_join_save');// 报名
-
+        $api->any('company/course/ajax_add_user', 'WebFront\Company\QualityControl\CourseController@ajax_add_user');// ajax添加人员地址
         // 报名企业(主表)
         $api->any('company/course_order/ajax_alist', 'WebFront\Company\QualityControl\CourseOrderController@ajax_alist');//ajax获得列表数据
 //        $api->post('company/course_order/ajax_del', 'WebFront\Company\QualityControl\CourseOrderController@ajax_del');// 删除

@@ -118,7 +118,10 @@ class CourseOrderController extends BasicController
                             'course_name' => '',
                             'course_order_staff' => [
                                 'class_name' => '',
-                                'staff_info' => '',
+                                'staff_info' => [
+                                    'resource_list' => '',
+                                ],
+
                             ]
                         ], []),
                     'listHandleKeyArr' => ['priceIntToFloat'],

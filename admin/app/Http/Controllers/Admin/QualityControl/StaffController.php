@@ -391,6 +391,7 @@ class StaffController extends BasicController
 //        if(static::$ADMIN_TYPE == 4){
 //            array_push($handleKeyArr, 'company');
 //            array_push($handleKeyConfigArr, 'company_info');
+//            array_push($handleKeyConfigArr, 'resource_list');
 //        }
 //
 //        $extParams = [
@@ -424,6 +425,7 @@ class StaffController extends BasicController
             if(static::$ADMIN_TYPE == 4){
                 array_push($handleKeyArr, 'company');
                 array_push($handleKeyConfigArr, 'company_info');
+                array_push($handleKeyConfigArr, 'resource_list');
             }
             if(in_array(static::$ADMIN_TYPE, [16])){
                 $handleKeyArr = array_merge($handleKeyArr, ['extend']);
@@ -493,6 +495,7 @@ class StaffController extends BasicController
 //        if(static::$ADMIN_TYPE == 4){
 //            array_push($handleKeyArr, 'company');
 //            array_push($handleKeyConfigArr, 'company_info');
+//            array_push($handleKeyConfigArr, 'resource_list');
 //        }
 //
 //        $extParams = [
@@ -527,6 +530,7 @@ class StaffController extends BasicController
             if(static::$ADMIN_TYPE == 4){
                 array_push($handleKeyArr, 'company');
                 array_push($handleKeyConfigArr, 'company_info');
+                array_push($handleKeyConfigArr, 'resource_list');
             }
 
             $extParams = [
@@ -1062,6 +1066,7 @@ class StaffController extends BasicController
                 if(static::$ADMIN_TYPE == 4){
                     array_push($handleKeyArr, 'company');
                     array_push($handleKeyConfigArr, 'company_info');
+                    array_push($handleKeyConfigArr, 'resource_list');
                 }
                 $extParams = [
                     // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。

@@ -67,7 +67,14 @@ class CTAPICourseOrderBusiness extends BasicPublicCTAPIBusiness
      * @param Request $request 请求信息
      * @param Controller $controller 控制对象
      * @param array $relationKeys
-     * @param array $extendParams  扩展参数---可能会用
+     * @param array $extendParams  扩展参数---可能会用；需要指定的实时特别的 条件配置
+     *          格式： [
+     *                    '关系下标' => [
+     *                          'fieldValParams' => [ '字段名1' => '字段值--多个时，可以是一维数组或逗号分隔字符', ...],// 也可以时 Tool getParamQuery 方法的参数$fieldValParams的格式
+     *                          'sqlParams' => []// 与参数 $sqlDefaultParams 相同格式的条件
+     *                          '关系下标' => ... 下下级的
+     *                       ]
+     *                ]
      * @return  array 表关系配置信息
      * @author zouyan(305463219@qq.com)
      */
@@ -89,7 +96,7 @@ class CTAPICourseOrderBusiness extends BasicPublicCTAPIBusiness
                 CTAPIStaffBusiness::getRelationConfigs($request, $controller,
                     static::getUboundRelation($relationArr, 'company_name'),
                     static::getUboundRelationExtendParams($extendParams, 'company_name')),
-                ['where' => [['admin_type', 2]]], '', []),
+                static::getRelationSqlParams(['where' => [['admin_type', 2]]], $extendParams, 'company_name'), '', []),
             // 获得课程名称
             'course_name' => CTAPICourseBusiness::getTableRelationConfigInfo($request, $controller
                 , ['course_id' => 'id']
@@ -98,7 +105,7 @@ class CTAPICourseOrderBusiness extends BasicPublicCTAPIBusiness
                 CTAPICourseBusiness::getRelationConfigs($request, $controller,
                     static::getUboundRelation($relationArr, 'course_name'),
                     static::getUboundRelationExtendParams($extendParams, 'course_name')),
-                [], '', []),
+                static::getRelationSqlParams([], $extendParams, 'course_name'), '', []),
             // 获得企业的报名人员信息--人员的单价会格式化为浮点小数
             'course_order_staff' => CTAPICourseOrderStaffBusiness::getTableRelationConfigInfo($request, $controller
                 , ['id' => 'course_order_id']
@@ -107,7 +114,7 @@ class CTAPICourseOrderBusiness extends BasicPublicCTAPIBusiness
                 CTAPICourseOrderStaffBusiness::getRelationConfigs($request, $controller,
                     static::getUboundRelation($relationArr, 'course_order_staff'),
                     static::getUboundRelationExtendParams($extendParams, 'course_order_staff'))
-                , [], '', ['extendConfig' => ['listHandleKeyArr' => ['priceIntToFloat']]]),
+                , static::getRelationSqlParams([], $extendParams, 'course_order_staff'), '', ['extendConfig' => ['listHandleKeyArr' => ['priceIntToFloat']]]),
             // 获得企业的报名人员信息[可缴费的]--人员的单价会格式化为浮点小数
             'course_order_staff_pay' => CTAPICourseOrderStaffBusiness::getTableRelationConfigInfo($request, $controller
                 , ['id' => 'course_order_id']
@@ -116,7 +123,7 @@ class CTAPICourseOrderBusiness extends BasicPublicCTAPIBusiness
                 CTAPICourseOrderStaffBusiness::getRelationConfigs($request, $controller,
                     static::getUboundRelation($relationArr, 'course_order_staff_pay'),
                     static::getUboundRelationExtendParams($extendParams, 'course_order_staff_pay'))
-                , ['where' => [['staff_status', '!=', 4], ['pay_status', '!=', 4]]], '', ['extendConfig' => ['listHandleKeyArr' => ['priceIntToFloat']]]),
+                , static::getRelationSqlParams(['where' => [['staff_status', '!=', 4], ['pay_status', '!=', 4]]], $extendParams, 'course_order_staff_pay'), '', ['extendConfig' => ['listHandleKeyArr' => ['priceIntToFloat']]]),
 
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
@@ -240,10 +247,11 @@ class CTAPICourseOrderBusiness extends BasicPublicCTAPIBusiness
      * @param array $reDataArr  会传到前端的参数组数  ['info' => [课程详情], 'staff_list'=>[['id' => '', 'real_name' => '', 'id_number' => '', 'sex_text' => '', 'mobile' => '', 'is_joined' => '', 'is_joined_text' => '']]]
      * @param int $courseId  课程id
      * @param int $company_id  企业id
+     * @param int / string / array $user_ids 指定用户id；多个时：一维数组或逗号分隔
      * @return mixed  新增报名表的id
      * @author zouyan(305463219@qq.com)
      */
-    public static function getCourseStaff(Request $request, Controller $controller, &$reDataArr, $courseId = 0, $company_id = 0){
+    public static function getCourseStaff(Request $request, Controller $controller, &$reDataArr, $courseId = 0, $company_id = 0, $user_ids = ''){
 
         // 获得课程信息及报名的学员信息
         $extParams = [
@@ -258,11 +266,17 @@ class CTAPICourseOrderBusiness extends BasicPublicCTAPIBusiness
 
         $reDataArr['info'] = $info;
         // 获得所有的学员信息
-
+        $staffKV = ['company_id' => $company_id, 'admin_type' => 4, 'is_perfect' => 2, 'open_status' => 2, 'account_status' => 1];
+        if(!empty($user_ids)) $staffKV['id'] = $user_ids;
         $staffList = CTAPIStaffBusiness::getFVFormatList( $request,  $controller, 1, 1
-            ,  ['company_id' => $company_id, 'admin_type' => 4, 'is_perfect' => 2, 'open_status' => 2, 'account_status' => 1], false, [], []);
+            , $staffKV , false, [], []);
 
-        if(!empty($staffList)) Tool::formatTwoArrKeys($staffList, Tool::arrEqualKeyVal(['id', 'real_name', 'id_number', 'sex_text', 'mobile']), false);
+        if(!empty($staffList)) Tool::formatTwoArrKeys($staffList, Tool::arrEqualKeyVal(['id', 'real_name', 'id_number', 'sex_text', 'mobile', 'company_id', 'resource_id', 'resource_ids']), false);
+
+        $relationFormatConfigs = CTAPIStaffBusiness::getRelationConfigs($request, $controller, ['company_info' => '', 'resource_list' => ''], []);
+        CTAPIStaffBusiness::formatRelationList( $request, $controller, $staffList, $relationFormatConfigs);
+
+        // 获得所属企业的名称及证件照
         $staffIds = Tool::getArrFields($staffList, 'id');
         // 获得面授课程正在进行中的学员--非 4已作废8已结业
         $courseOrderStaff = [];
@@ -301,7 +315,7 @@ class CTAPICourseOrderBusiness extends BasicPublicCTAPIBusiness
      * @param Controller $controller 控制对象
      * @param int $courseId  课程id
      * @param array $staff_id  报名的人员id数组 -- 一维数组
-     * @param array $extendArr  其它扩展参数，// 一维数组 ['contacts' => $contacts,'tel' => $tel]
+     * @param array $extendArr  其它扩展参数，// 一维数组 ['contacts' => $contacts,'tel' => $tel, 'certificate_company' => '每个学员对应的-证书所属单位']
      * @return mixed  新增报名表的id
      * @author zouyan(305463219@qq.com)
      */
@@ -333,7 +347,7 @@ class CTAPICourseOrderBusiness extends BasicPublicCTAPIBusiness
         if($staffCount > 0) throws('人员不可重复报名同一课程！');
 
         $courseOrderStaff = [];
-        foreach($staff_id as $temStaffId){
+        foreach($staff_id as $temKey => $temStaffId){
             array_push($courseOrderStaff, [
                 'course_id' => $courseId,
                 // 'course_order_id' => '',
@@ -341,6 +355,7 @@ class CTAPICourseOrderBusiness extends BasicPublicCTAPIBusiness
                 // 'company_id_history' => '',
                 'staff_id' => $temStaffId,
                 // 'staff_id_history' => '',
+                'certificate_company' => $extendArr['certificate_company'][$temKey]  ?? '',
                 // 'class_id' => '',
                 // 'class_company_id' => '',
                 'price' => $price,

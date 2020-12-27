@@ -4192,6 +4192,35 @@ class Tool
     }
 
     /**
+     * 查询条件合并
+     * @param array $sqlDefaultParams 原来的条件--默认有的
+     *   [// 其它sql条件[拼接/覆盖式],下面是常用的，其它的也可以---查询用
+     *     // '如果有值，则替换where' --拼接
+     *     'where' => [// -- 可填 如 默认条件 'type_id' => 5  'admin_type' => $user_info['admin_type'],'staff_id' =>  $user_info['id']
+     *     ['type_id', 5],
+     *     ],
+     *     'select' => '如果有值，则替换select',// --覆盖
+     *     'orderBy' => '如果有值，则替换orderBy',//--覆盖
+     *     'whereIn' => '如果有值，则替换whereIn',// --拼接
+     *     'whereNotIn' => '如果有值，则替换whereNotIn',//  --拼接
+     *     'whereBetween' => '如果有值，则替换whereBetween',//  --拼接
+     *     'whereNotBetween' => '如果有值，则替换whereNotBetween',//  --拼接
+     *  ]
+     * @param array $mergeSqlParams  要合并的条件，格式同参数 $sqlDefaultParams
+     * @return array 合并后的 条件
+     */
+    public static function mergeSqlParams(&$sqlDefaultParams, $mergeSqlParams = []){
+        foreach($mergeSqlParams as $tKey => $tVals){
+            if(isset($sqlDefaultParams[$tKey]) && in_array($tKey, ['where',  'whereIn', 'whereNotIn', 'whereBetween', 'whereNotBetween'])){// 'select', 'orderBy',
+                $sqlDefaultParams[$tKey] = array_merge($sqlDefaultParams[$tKey], $tVals);
+            }else{
+                $sqlDefaultParams[$tKey] = $tVals;
+            }
+        }
+        return $sqlDefaultParams;
+    }
+
+    /**
      * 根据参数的名称，加入查询条件中。
      *
      * @param array $fieldValParams

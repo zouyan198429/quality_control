@@ -8,6 +8,8 @@
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <!-- zui css -->
+    <link rel="stylesheet" href="{{asset('dist/css/zui.min.css') }}">
     @include('admin.layout_public.pagehead')
     <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/css/layui.css')}}" media="all">
     <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/style/admin.css')}}" media="all">
@@ -32,6 +34,34 @@
                 <td  class="layui-input-block">
                     <label><input type="radio" name="sex" value="1" @if (isset($info['sex']) && $info['sex'] == 1 ) checked @endif>男</label>&nbsp;&nbsp;&nbsp;&nbsp;
                     <label><input type="radio" name="sex" value="2" @if (isset($info['sex']) && $info['sex'] == 2 ) checked @endif>女</label>
+                </td>
+            </tr>
+            <tr>
+                <th>证件照<span class="must"></span></th>
+                <td>
+                    <div class="alert alert-warning alert-dismissable">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <p>一次最多上传1张图片。</p>
+                    </div>
+                    <div class="row  baguetteBoxOne gallery ">
+                        <div class="col-xs-6">
+                            @component('component.upfileone.piconecode')
+                                @slot('fileList')
+                                    large
+                                @endslot
+                                @slot('upload_id')
+                                    myUploaderLarge
+                                @endslot
+                                @slot('upload_url')
+                                    {{ url('api/admin/upload') }}
+                                @endslot
+                            @endcomponent
+                            {{--
+                            <input type="file" class="form-control" value="">
+                            --}}
+                        </div>
+                    </div>
+
                 </td>
             </tr>
             <tr>
@@ -113,7 +143,32 @@
 <script type="text/javascript">
     var SAVE_URL = "{{ url('api/company/user/ajax_save') }}";// ajax保存记录地址
     var LIST_URL = "{{url('company/user')}}";//保存成功后跳转到的地址
+
+    // 文件上传相关的~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // var UPLOAD_COMMON_URL = "{ { url('api/admin/upload') }}";// 文件上传提交地址 'your/file/upload/url'
+    // var UPLOAD_WORD_URL = "{ { url('api/admin/course/up_word') }}";//上传word地址
+    var UPLOAD_LARGE_URL = "{{ url('api/company/user/up_file') }}";//上传excel地址
+    // var UPLOAD_GRID_URL = "{ { url('api/admin/course/up_pdf') }}";//上传pdf地址
+
+    var DOWN_FILE_URL = "{{ url('company/down_file') }}";// 下载网页打印机驱动
+    var DEL_FILE_URL = "{{ url('api/company/upload/ajax_del') }}";// 删除文件的接口地址
+
+    var FLASH_SWF_URL = "{{asset('dist/lib/uploader/Moxie.swf') }}";// flash 上传组件地址  默认为 lib/uploader/Moxie.swf
+    var SILVERLIGHT_XAP_URL = "{{asset('dist/lib/uploader/Moxie.xap') }}";// silverlight_xap_url silverlight 上传组件地址  默认为 lib/uploader/Moxie.xap  请确保在文件上传页面能够通过此地址访问到此文件。
+
+    // 初始化的资源信息
+    // var RESOURCE_LIST_COMMON = @ json($info['resource_list'] ?? []) ;
+    var RESOURCE_LIST_LARGE = @json($info['resource_list'] ?? []) ;
+    // var RESOURCE_LIST_GRID = @ json($info['resource_list'] ?? []) ;
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
-<script src="{{ asset('/js/company/QualityControl/User_edit.js') }}"  type="text/javascript"></script>
+<link rel="stylesheet" href="{{asset('js/baguetteBox.js/baguetteBox.min.css')}}">
+<script src="{{asset('js/baguetteBox.js/baguetteBox.min.js')}}" async></script>
+{{--<script src="{{asset('js/baguetteBox.js/highlight.min.js')}}" async></script>--}}
+<!-- zui js -->
+<script src="{{asset('dist/js/zui.min.js') }}"></script>
+<script src="{{ asset('/js/company/QualityControl/User_edit.js') }}?1"  type="text/javascript"></script>
+@component('component.upfileincludejsmany')
+@endcomponent
 </body>
 </html>

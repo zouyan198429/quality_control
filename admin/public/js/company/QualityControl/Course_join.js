@@ -5,7 +5,7 @@ var SUBMIT_FORM = true;//防止多次点击提交
 var PARENT_LAYER_INDEX = parent.layer.getFrameIndex(window.name);
 //让层自适应iframe
 ////parent.layer.iframeAuto(PARENT_LAYER_INDEX);
-// parent.layer.full(PARENT_LAYER_INDEX);// 用这个
+parent.layer.full(PARENT_LAYER_INDEX);// 用这个
 //关闭iframe
 $(document).on("click",".closeIframe",function(){
     iframeclose(PARENT_LAYER_INDEX);
@@ -31,9 +31,20 @@ function parent_reset_list(){
 }
 
 window.onload = function() {
-    var layer_index = layer.load();
-    // initPic();
-    layer.close(layer_index);//手动关闭
+
+    // 初始化列表文件显示功能
+    var uploadAttrObj = {
+        down_url:DOWN_FILE_URL,
+        del_url: DEL_FILE_URL,
+        del_fun_pre:'',
+        files_type: 0,
+        icon : 'file-o',
+        operate_auth:(1 | 2)
+    };
+    var resourceListObj = $('#resource_block');// $('#data_list').find('tr');
+    initFileShow(uploadAttrObj, resourceListObj, 'resource_show_course', 'baidu_template_upload_file_show', 'baidu_template_upload_pic', 'resource_id[]');
+
+    resetPhone();
 };
 function initPic(){
     baguetteBox.run('.baguetteBoxOne');
@@ -55,10 +66,102 @@ $(function(){
 
 });
 
+// 每次加入新的员工时，更新图片
+function resetPhone(){
+    var layer_index = layer.load();
+    // 初始化列表文件显示功能
+    var uploadAttrObj = {
+        down_url:DOWN_FILE_URL,
+        del_url: DEL_FILE_URL,
+        del_fun_pre:'',
+        files_type: 0,
+        icon : 'file-o',
+        operate_auth:(1 | 2)
+    };
+    var resourceListObj = $('.data_list').find('tr');// $('#data_list').find('tr');
+    initFileShow(uploadAttrObj, resourceListObj, 'resource_show', 'baidu_template_upload_file_show', 'baidu_template_upload_pic', 'resource_id[]');
+
+    initPic();
+    layer.close(layer_index);//手动关闭
+}
 //业务逻辑部分
 var otheraction = {
-
-    seledAll:function(obj){
+    selectUser: function(obj){// 选择员工
+        var recordObj = $(obj);
+        //获得表单各name的值
+        var weburl = SELECT_USER_URL;
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = '选择员工';//"查看供应商";
+        console.log('weburl', weburl);
+        layeriframe(weburl,tishi,950,500,0);
+        return false;
+    },
+    del : function(obj, parentTag){// 删除-员工
+        var recordObj = $(obj);
+        var index_query = layer.confirm('确定移除当前记录？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            var trObj = recordObj.closest(parentTag);// 'tr'
+            trObj.remove();
+            autoCountStaffNum();
+            layer.close(index_query);
+        }, function(){
+        });
+        return false;
+    },
+    batchDel:function(obj, parentTag, delTag) {// 批量删除--员工
+        var recordObj = $(obj);
+        var index_query = layer.confirm('确定移除选中记录？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            var hasDel = false;
+            recordObj.closest(parentTag).find('.check_item').each(function () {
+                if (!$(this).prop('disabled') && $(this).val() != '' &&  $(this).prop('checked') ) {
+                    // $(this).prop('checked', checkAllObj.prop('checked'));
+                    var trObj = $(this).closest(delTag);// 'tr'
+                    trObj.remove();
+                    hasDel = true;
+                }
+            });
+            if(!hasDel){
+                err_alert('请选择需要操作的数据');
+            }
+            autoCountStaffNum();
+            layer.close(index_query);
+        }, function(){
+        });
+        return false;
+    },
+    moveUp : function(obj, parentTag){// 上移
+        var recordObj = $(obj);
+        var current = recordObj.closest(parentTag);//获取当前<tr>  'tr'
+        var prev = current.prev();  //获取当前<tr>前一个元素
+        console.log('index', current.index());
+        if (current.index() > 0) {
+            current.insertBefore(prev); //插入到当前<tr>前一个元素前
+        }else{
+            layer_alert("已经是第一个，不能移动了。",3,0);
+        }
+        return false;
+    },
+    moveDown : function(obj, parentTag){// 下移
+        var recordObj = $(obj);
+        var current = recordObj.closest(parentTag);//获取当前<tr>'tr'
+        var next = current.next(); //获取当前<tr>后面一个元素
+        console.log('length', next.length);
+        console.log('next', next);
+        if (next.length > 0 && next) {
+            current.insertAfter(next);  //插入到当前<tr>后面一个元素后面
+        }else{
+            layer_alert("已经是最后一个，不能移动了。",3,0);
+        }
+        return false;
+    },
+    seledAll:function(obj, parentTag){
         var checkAllObj =  $(obj);
         /*
         checkAllObj.closest('#' + DYNAMIC_TABLE).find('input:checkbox').each(function(){
@@ -67,14 +170,13 @@ var otheraction = {
             }
         });
         */
-        checkAllObj.closest('#' + DYNAMIC_TABLE).find('.check_item').each(function(){
+        checkAllObj.closest(parentTag).find('.check_item').each(function(){
             if(!$(this).prop('disabled')){
                 $(this).prop('checked', checkAllObj.prop('checked'));
             }
         });
-        return false;
     },
-    seledSingle:function(obj) {// 单选点击
+    seledSingle:function(obj, parentTag) {// 单选点击
         var checkObj = $(obj);
         var allChecked = true;
         /*
@@ -86,7 +188,7 @@ var otheraction = {
             }
         });
         */
-        checkObj.closest('#' + DYNAMIC_TABLE).find('.check_item').each(function () {
+        checkObj.closest(parentTag).find('.check_item').each(function () {
             if (!$(this).prop('disabled') && $(this).val() != '' &&  !$(this).prop('checked') ) {
                 // $(this).prop('checked', checkAllObj.prop('checked'));
                 allChecked = false;
@@ -102,12 +204,164 @@ var otheraction = {
             }
         });
         */
-        checkObj.closest('#' + DYNAMIC_TABLE).find('.check_all').each(function () {
+        checkObj.closest(parentTag).find('.check_all').each(function () {
             $(this).prop('checked', allChecked);
         });
-        return false;
+
     }
+
+    // seledAll:function(obj){
+    //     var checkAllObj =  $(obj);
+    //     /*
+    //     checkAllObj.closest('#' + DYNAMIC_TABLE).find('input:checkbox').each(function(){
+    //         if(!$(this).prop('disabled')){
+    //             $(this).prop('checked', checkAllObj.prop('checked'));
+    //         }
+    //     });
+    //     */
+    //     checkAllObj.closest('#' + DYNAMIC_TABLE).find('.check_item').each(function(){
+    //         if(!$(this).prop('disabled')){
+    //             $(this).prop('checked', checkAllObj.prop('checked'));
+    //         }
+    //     });
+    //     return false;
+    // },
+    // seledSingle:function(obj) {// 单选点击
+    //     var checkObj = $(obj);
+    //     var allChecked = true;
+    //     /*
+    //      checkObj.closest('#' + DYNAMIC_TABLE).find('input:checkbox').each(function () {
+    //         if (!$(this).prop('disabled') && $(this).val() != '' &&  !$(this).prop('checked') ) {
+    //             // $(this).prop('checked', checkAllObj.prop('checked'));
+    //             allChecked = false;
+    //             return false;
+    //         }
+    //     });
+    //     */
+    //     checkObj.closest('#' + DYNAMIC_TABLE).find('.check_item').each(function () {
+    //         if (!$(this).prop('disabled') && $(this).val() != '' &&  !$(this).prop('checked') ) {
+    //             // $(this).prop('checked', checkAllObj.prop('checked'));
+    //             allChecked = false;
+    //             return false;
+    //         }
+    //     });
+    //     // 全选复选操选中/取消选中
+    //     /*
+    //     checkObj.closest('#' + DYNAMIC_TABLE).find('input:checkbox').each(function () {
+    //         if (!$(this).prop('disabled') && $(this).val() == ''  ) {
+    //             $(this).prop('checked', allChecked);
+    //             return false;
+    //         }
+    //     });
+    //     */
+    //     checkObj.closest('#' + DYNAMIC_TABLE).find('.check_all').each(function () {
+    //         $(this).prop('checked', allChecked);
+    //     });
+    //     return false;
+    // }
 };
+
+// 初始化答案列表
+// data_list 数据对象 {'data_list':[{}]}
+// type类型 1 全替换 2 追加到后面 3 返回html
+function initAnswer(class_name, data_list, type){
+    var htmlStr = resolve_baidu_template(DYNAMIC_BAIDU_TEMPLATE,data_list,'');//解析
+    if(type == 3) return htmlStr;
+    //alert(htmlStr);
+    //alert(body_data_id);
+    if(type == 1){
+        $('.'+ class_name).find('.' + DYNAMIC_TABLE_BODY).html(htmlStr);
+    }else if(type == 2){
+        $('.'+ class_name).find('.' + DYNAMIC_TABLE_BODY).append(htmlStr);
+    }
+}
+
+// 获得参考人员数量
+function autoCountStaffNum(){
+    var total = 0;
+    $('.staff_td').each(function () {
+        var departmentObj = $(this);
+        var staff_num = departmentObj.find('.data_list').find('tr').length;
+        console.log('staff_num',staff_num);
+        departmentObj.find('input[name="staff_num[]"]').val(staff_num);
+        departmentObj.find('.staff_num').html(staff_num);
+        total += parseInt(staff_num);
+    });
+    $('.subject_num').html(total);
+
+}
+
+// 获得员工id 数组
+function getSelectedStaffIds(){
+    var staff_ids = [];
+    $('.staff_td').find('.data_list').find('input[name="staff_ids[]"]').each(function () {
+        var staff_id = $(this).val();
+        staff_ids.push(staff_id);
+    });
+    console.log('staff_ids' , staff_ids);
+    return staff_ids;
+}
+
+// 取消
+// staff_id 试题id
+function removeStaff(staff_id){
+    $('.staff_td').find('.data_list').find('input[name="staff_ids[]"]').each(function () {
+
+        var tem_staff_id = $(this).val();
+        if(staff_id == tem_staff_id){
+            $(this).closest('tr').remove();
+            return ;
+        }
+    });
+    autoCountStaffNum();
+}
+
+// 增加
+// staff_id 试题id, 多个用,号分隔
+function addStaff( staff_id){
+    console.log('addStaff', staff_id);
+    if(staff_id == '') return ;
+    // 去掉已经存在的记录id
+    var selected_ids = getSelectedStaffIds();
+    var staff_id_arr = staff_id.split(",");
+    //差集
+    var diff_arr = staff_id_arr.filter(function(v){ return selected_ids.indexOf(v) == -1 });
+    staff_id = diff_arr.join(',');
+    if(staff_id == '') return ;
+    var course_id = $('input[name=id]').val();
+
+    var data = {};
+    data['course_id'] = course_id;
+    data['user_ids'] = staff_id;
+    consoleLogs([data]);
+    var layer_index = layer.load();
+    $.ajax({
+        'async': false,// true,//false:同步;true:异步
+        'type' : 'POST',
+        'url' : AJAX_USER_ADD_URL,
+        'data' : data,
+        'dataType' : 'json',
+        'success' : function(ret){
+            console.log('ret',ret);
+            if(!ret.apistatus){//失败
+                //alert('失败');
+                err_alert(ret.errorMsg);
+            }else{//成功
+                var staff_list = ret.result;
+                console.log('staff_list', staff_list);
+                var data_list = {
+                    'data_list': staff_list,
+                };
+                // 解析数据
+                initAnswer('staff_td', data_list, 2);
+                resetPhone();
+                autoCountStaffNum();
+            }
+            layer.close(layer_index)//手动关闭
+        }
+    });
+}
+
 //ajax提交表单
 function ajax_form(){
     if (!SUBMIT_FORM) return false;//false，则返回
@@ -118,7 +372,45 @@ function ajax_form(){
         return false;
     }
     // 收款开通类型
-    if(!judge_list_checked('data_list',1)) {//没有选中的
+    // if(!judge_list_checked('data_list',1)) {//没有选中的
+    //     layer_alert('请选择学员！',3,0);
+    //     return false;
+    // }
+    var staff_num = 0;
+    consoleLogs(['--tr length-', $('.data_list').find('tr').length]);
+    var staff_has_err = false;
+    $('.data_list').find('tr').each(function(){
+        var trObj = $(this);
+        var is_joined = trObj.data('is_joined');
+        consoleLogs(['--is_joined-', is_joined]);
+        var real_name = trObj.data('real_name');
+        consoleLogs(['--real_name-', real_name]);
+        var staff_ids = trObj.find("input[name='staff_ids[]']").val() || '';
+        consoleLogs(['--staff_ids-', staff_ids]);
+        var certificate_company = trObj.find("input[name='certificate_company[]']").val() || '';
+        consoleLogs(['--certificate_company-', certificate_company]);
+        var resourceObj = trObj.find("input[name='resource_id[]']");
+        if( (is_joined & 1) == 1 ){
+            staff_has_err = true;
+            layer_alert(real_name + '已报名，不可重复报名，请移除！',3,0);
+            return false;
+        }
+        if(!judge_validate(4,real_name + '-证书所属单位',certificate_company,true,'length',1,100)){
+            staff_has_err = true;
+            return false;
+        }
+        // 判断是否有证件照
+        consoleLogs(['--resourceObj.length-', resourceObj.length]);
+        if(resourceObj.length <= 0 ){
+            staff_has_err = true;
+            layer_alert(real_name + '没有证件照，不可报名，请先上传证件照！',3,0);
+            return false;
+        }
+
+        staff_num++;
+    });
+    if(staff_has_err) return false;
+    if(staff_num <= 0 ){
         layer_alert('请选择学员！',3,0);
         return false;
     }
@@ -132,7 +424,6 @@ function ajax_form(){
     if(!judge_validate(4,'联络人电话',tel,true,'length',5,30)){
         return false;
     }
-
     ajax_save(id);
 }
 
@@ -191,3 +482,63 @@ function ajax_save(id){
     });
     return false;
 }
+
+(function() {
+    document.write("<!-- 前端模板部分 -->");
+    document.write("<!-- 列表模板部分 开始  <! -- 模板中可以用HTML注释 -- >  或  <%* 这是模板自带注释格式 *%>-->");
+    document.write("<script type=\"text\/template\"  id=\"baidu_template_data_list\">");
+    document.write("    <%for(var i = 0; i<data_list.length;i++){");
+    document.write("    var item = data_list[i];");
+    document.write("    var now_staff = item.now_staff;");
+    document.write("    can_modify = true;");
+    document.write("    var can_add = true;");
+    document.write("   if( (item.is_joined & 1) == 1){  ");// 有正在进行的
+    document.write("      var can_add = false; ");
+    document.write("    } ");
+    document.write("    %>");
+    document.write("    <tr <%if( !can_add ){%> style=\"color:red;font-weight:bold;\" <%}%> data-is_joined=\"<%=item.is_joined%>\" data-real_name=\"<%=item.real_name%>\"  >");
+    document.write("        <td>");
+    document.write("            <label class=\"pos-rel\">");
+    document.write("                <input onclick=\"otheraction.seledSingle(this , \'.table2\')\" type=\"checkbox\" class=\"ace check_item\" value=\"<%=item.id%>\">");
+    document.write("                <span class=\"lbl\"><\/span>");
+    document.write("            <\/label>");
+    document.write("            <input type=\"hidden\" name=\"staff_ids[]\" value=\"<%=item.id%>\" <%if( !can_add ){%> disabled <%}%> \/>");
+    // document.write("            <input type=\"hidden\" name=\"staff_history_ids[]\" value=\"<%=item.staff_history_id%>\"\/>");
+    // document.write("            <input type=\"hidden\" name=\"department_ids[]\" value=\"<%=item.department_id%>\"\/>");
+    // document.write("            <input type=\"hidden\" name=\"department_names[]\" value=\"<%=item.department_name%>\"\/>");
+    // document.write("            <input type=\"hidden\" name=\"group_ids[]\" value=\"<%=item.group_id%>\"\/>");
+    // document.write("            <input type=\"hidden\" name=\"group_names[]\" value=\"<%=item.group_name%>\"\/>");
+    // document.write("            <input type=\"hidden\" name=\"position_ids[]\" value=\"<%=item.position_id%>\"\/>");
+    // document.write("            <input type=\"hidden\" name=\"position_names[]\" value=\"<%=item.position_name%>\"\/>");
+    document.write("        <\/td>");
+    document.write("        <td><%=item.real_name%><\/td>");
+    document.write("        <td><%=item.sex_text%><\/td>");
+    document.write("        <td><input type=\"text\" name=\"certificate_company[]\" value=\"<%=item.user_company_name%>\" placeholder=\"请输入证书所属单位\"  <%if( !can_add ){%> disabled <%}%> \/><\/td>");
+    document.write("        <td>");
+    document.write("          <span class=\"resource_list\"  style=\"display: none;\"><%=JSON.stringify(item.resource_list)%></span>");
+    document.write("          <span  class=\"resource_show\"></span>");
+    document.write("        <\/td>");
+    document.write("        <td><%=item.mobile%><\/td>");
+    document.write("        <td><%=item.id_number%><\/td>");
+    document.write("        <td><%=item.is_joined_text%><\/td>");
+    document.write("        <td>");
+    // document.write("            <%if( now_staff == 2 || now_staff == 4){%>");
+    // document.write("            <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.edit(this, \'tr\', <%=item.staff_id%>)\">");
+    // document.write("                <i class=\"ace-icon fa fa-pencil bigger-60 pink\"> 更新[员工已更新]<\/i>");
+    // document.write("            <\/a>");
+    // document.write("            <%}%>");
+    // document.write("            <%if( now_staff == 1){%>");
+    // document.write("            <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.del(this, \'tr\')\">");
+    // document.write("                <i class=\"ace-icon fa fa-trash-o bigger-60 wrong\"> 删除[员工已删]<\/i>");
+    // document.write("            <\/a>");
+    // document.write("            <%}%>");
+    document.write("            <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.del(this, \'tr\')\">");
+    document.write("                <i class=\"ace-icon fa fa-trash-o bigger-60\"> 移除<\/i>");
+    document.write("            <\/a>");
+    document.write("        <\/td>");
+    document.write("    <\/tr>");
+    document.write("    <%}%>");
+    document.write("<\/script>");
+    document.write("<!-- 列表模板部分 结束-->");
+    document.write("<!-- 前端模板结束 -->");
+}).call();

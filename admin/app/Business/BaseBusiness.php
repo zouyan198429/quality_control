@@ -434,6 +434,63 @@ class BaseBusiness
         return $extendParamsr[$relationUbound] ?? [];
     }
 
+    /**
+     * 关系表查询时，在默认条件的基础上，指定下标下的扩展参数条件
+     * @param array $sqlDefaultParams --默认就用的的条件
+     *      [// 其它sql条件[拼接/覆盖式],下面是常用的，其它的也可以---查询用
+     *          // '如果有值，则替换where' --拼接
+     *          'where' => [// -- 可填 如 默认条件 'type_id' => 5  'admin_type' => $user_info['admin_type'],'staff_id' =>  $user_info['id']
+     *          ['type_id', 5],
+     *          ],
+     *          'select' => '如果有值，则替换select',// --覆盖
+     *          'orderBy' => '如果有值，则替换orderBy',//--覆盖
+     *          'whereIn' => '如果有值，则替换whereIn',// --拼接
+     *          'whereNotIn' => '如果有值，则替换whereNotIn',//  --拼接
+     *          'whereBetween' => '如果有值，则替换whereBetween',//  --拼接
+     *          'whereNotBetween' => '如果有值，则替换whereNotBetween',//  --拼接
+     *      ]
+     * @param $extendParamsr -- 需要指定的实时特别的 条件配置
+     *          格式： [
+     *                    '关系下标' => [
+     *                          'fieldValParams' => [ '字段名1' => '字段值--多个时，可以是一维数组或逗号分隔字符', ...],// 也可以时 Tool getParamQuery 方法的参数$fieldValParams的格式
+     *                          'sqlParams' => []// 与参数 $sqlDefaultParams 相同格式的条件
+     *                       ]
+     *                ]
+     * @param string $relationUbound-- 需要指定的实时特别的 条件配置 的 '关系下标'
+     * @return array|mixed 返回同参数 $sqlDefaultParams 一样参数格式的数组
+     */
+    public static function getRelationSqlParams($sqlDefaultParams = [], $extendParamsr = [], $relationUbound = ''){
+        $relationParams = static::getUboundRelationExtendParams($extendParamsr, $relationUbound);
+        if(!is_array($relationParams) || empty($relationParams)) return $sqlDefaultParams;
+        $fieldValParams = $relationParams['fieldValParams'] ?? [];// 键值对
+//        $fieldValParams = [
+//           'ability_join_id' => [// 格式一
+//               'vals' => "字段值[可以是字符'多个逗号分隔'或一维数组] ",// -- 此种格式，必须指定此下标【值下标】
+//               'excludeVals' => "过滤掉的值 默认['']", 如果 要过滤 0 的情况 可指定为 [0, '0', ''] 或 后面单独使用 Tool::appendParamQuery 方法
+//                'valsSeparator' => ',' 如果是多值字符串，多个值的分隔符;默认逗号 ,
+//               'hasInIsMerge=>  false 如果In条件有值时  true:合并；false:用新值--覆盖 --默认
+//           ],// 格式二
+//           'id' =>  "字段值[可以是字符'多个逗号分隔'或一维数组]"
+//        ];
+        $relationSqlParams = $relationParams['sqlParams'] ?? [];
+//        [// 其它sql条件[拼接/覆盖式],下面是常用的，其它的也可以---查询用
+//           // '如果有值，则替换where' --拼接
+//           'where' => [// -- 可填 如 默认条件 'type_id' => 5  'admin_type' => $user_info['admin_type'],'staff_id' =>  $user_info['id']
+//           ['type_id', 5],
+//           ],
+//           'select' => '如果有值，则替换select',// --覆盖
+//           'orderBy' => '如果有值，则替换orderBy',//--覆盖
+//           'whereIn' => '如果有值，则替换whereIn',// --拼接
+//           'whereNotIn' => '如果有值，则替换whereNotIn',//  --拼接
+//           'whereBetween' => '如果有值，则替换whereBetween',//  --拼接
+//           'whereNotBetween' => '如果有值，则替换whereNotBetween',//  --拼接
+//        ]
+        if(empty($fieldValParams) && empty($relationSqlParams))  return $sqlDefaultParams;
+        if(is_array($relationSqlParams) && !empty($relationSqlParams)) Tool::mergeSqlParams($sqlDefaultParams, $relationSqlParams);
+        $queryParams = Tool::getParamQuery($fieldValParams, ['sqlParams' => $sqlDefaultParams], []);
+        return $queryParams;
+    }
+
     // ***************表关系相关的*************结束***********************
 
 }

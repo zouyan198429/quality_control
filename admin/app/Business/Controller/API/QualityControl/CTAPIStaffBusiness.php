@@ -745,7 +745,14 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
      * @param Request $request 请求信息
      * @param Controller $controller 控制对象
      * @param array $relationKeys
-     * @param array $extendParams  扩展参数---可能会用
+     * @param array $extendParams  扩展参数---可能会用；需要指定的实时特别的 条件配置
+     *          格式： [
+     *                    '关系下标' => [
+     *                          'fieldValParams' => [ '字段名1' => '字段值--多个时，可以是一维数组或逗号分隔字符', ...],// 也可以时 Tool getParamQuery 方法的参数$fieldValParams的格式
+     *                          'sqlParams' => []// 与参数 $sqlDefaultParams 相同格式的条件
+     *                          '关系下标' => ... 下下级的
+     *                       ]
+     *                ]
      * @return  array 表关系配置信息
      * @author zouyan(305463219@qq.com)
      */
@@ -758,6 +765,15 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
         // 关系配置
         $relationFormatConfigs = [
             // 下标 'relationConfig' => []// 下一个关系
+            // 获得个人证件照
+            'resource_list' => CTAPIResourceBusiness::getTableRelationConfigInfo($request, $controller
+                , ['resource_id' => 'id']
+                , 2, 0
+                ,'','',
+                CTAPIResourceBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'resource_list'),
+                    static::getUboundRelationExtendParams($extendParams, 'resource_list')),
+                static::getRelationSqlParams([], $extendParams, 'resource_list'), '', ['extendConfig' => ['listHandleKeyArr' => ['format_resource'], 'infoHandleKeyArr' => ['resource_list']]]),
             // 获得 行业名称
             'industry_info' => CTAPIIndustryBusiness::getTableRelationConfigInfo($request, $controller
                 , ['company_industry_id' => 'id']
@@ -766,7 +782,7 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
                 CTAPIIndustryBusiness::getRelationConfigs($request, $controller,
                     static::getUboundRelation($relationArr, 'industry_info'),
                     static::getUboundRelationExtendParams($extendParams, 'industry_info')),
-                [], '', []),
+                static::getRelationSqlParams([], $extendParams, 'industry_info'), '', []),
             // 获得 行业名称
             'city_info' => CTAPICitysBusiness::getTableRelationConfigInfo($request, $controller
                 , ['city_id' => 'id']
@@ -775,7 +791,7 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
                 CTAPICitysBusiness::getRelationConfigs($request, $controller,
                     static::getUboundRelation($relationArr, 'city_info'),
                     static::getUboundRelationExtendParams($extendParams, 'city_info')),
-                [], '', []),
+                static::getRelationSqlParams([], $extendParams, 'city_info'), '', []),
             // 获得 人员 扩展
             'extend_info' => CTAPIStaffExtendBusiness::getTableRelationConfigInfo($request, $controller
                 , ['id' => 'staff_id']
@@ -784,7 +800,7 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
                 CTAPIStaffExtendBusiness::getRelationConfigs($request, $controller,
                     static::getUboundRelation($relationArr, 'extend_info'),
                     static::getUboundRelationExtendParams($extendParams, 'extend_info')),
-                [], '', []),
+                static::getRelationSqlParams([], $extendParams, 'extend_info'), '', []),
             // 获得 用户所属企业  user_company_name => '企业名称'
             'company_info' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
                 , ['company_id' => 'id']
@@ -793,7 +809,7 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
                 CTAPIStaffBusiness::getRelationConfigs($request, $controller,
                     static::getUboundRelation($relationArr, 'company_info'),
                     static::getUboundRelationExtendParams($extendParams, 'company_info')),
-                ['where' => [['admin_type', 2]]], '', []),
+                static::getRelationSqlParams(['where' => [['admin_type', 2]]], $extendParams, 'company_info'), '', []),
             // 获得 企业营业执照
             'certificate_info' => CTAPICompanyCertificateBusiness::getTableRelationConfigInfo($request, $controller
                 , ['id' => 'company_id']
@@ -812,7 +828,7 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
                 CTAPICertificateBusiness::getRelationConfigs($request, $controller,
                     static::getUboundRelation($relationArr, 'certificate_detail'),
                     static::getUboundRelationExtendParams($extendParams, 'certificate_detail')),
-                [], '', []),
+                static::getRelationSqlParams([], $extendParams, 'certificate_detail'), '', []),
             // 获得 企业的授权签字人--正常状态的 1:n
             'user_auth_list' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
                 , ['id' => 'company_id']
@@ -821,7 +837,7 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
                 CTAPIStaffBusiness::getRelationConfigs($request, $controller,
                     static::getUboundRelation($relationArr, 'user_auth_list'),
                     static::getUboundRelationExtendParams($extendParams, 'user_auth_list')),
-                ['where' => [['admin_type', 4], ['role_num', '&', '8=8'], ['sign_status', 2], ['is_perfect', 2], ['account_status', 1], ['open_status', 2]]], '', []),
+                static::getRelationSqlParams(['where' => [['admin_type', 4], ['role_num', '&', '8=8'], ['sign_status', 2], ['is_perfect', 2], ['account_status', 1], ['open_status', 2]]], $extendParams, 'user_auth_list'), '', []),
             // 获得 企业的能力范围 1:n
             'certificate_list' => CTAPICertificateScheduleBusiness::getTableRelationConfigInfo($request, $controller
                 , ['id' => 'company_id']
@@ -830,7 +846,7 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
                 CTAPICertificateScheduleBusiness::getRelationConfigs($request, $controller,
                     static::getUboundRelation($relationArr, 'certificate_list'),
                     static::getUboundRelationExtendParams($extendParams, 'certificate_list')),
-                [], '', []),
+                static::getRelationSqlParams([], $extendParams, 'certificate_list'), '', []),
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }
@@ -888,8 +904,8 @@ class CTAPIStaffBusiness extends BasicPublicCTAPIBusiness
             if(!isset($return_data['one_field'])) $return_data['one_field'] = [];
             array_push($return_data['one_field'], $one_field);
         }
-        if(($return_num & 256) == 256){// 给上一级返回  real_name , id_number , sex, tel, mobile, email, qq_number, wechat下标
-            $fields_merge = Tool::arrEqualKeyVal(['real_name', 'id_number', 'sex', 'sex_text', 'tel', 'mobile', 'email', 'qq_number', 'wechat'],true);// 获得名称
+        if(($return_num & 256) == 256){//  给上一级返回  real_name , id_number , sex, tel, mobile, email, qq_number, wechat下标;注意需要调用户的  resource_list 关系表
+            $fields_merge = Tool::arrEqualKeyVal(['real_name', 'id_number', 'sex', 'sex_text', 'tel', 'mobile', 'email', 'qq_number', 'wechat', 'resource_list'],true);// 获得名称
             if(!isset($return_data['fields_merge'])) $return_data['fields_merge'] = [];
             array_push($return_data['fields_merge'], $fields_merge);
         }

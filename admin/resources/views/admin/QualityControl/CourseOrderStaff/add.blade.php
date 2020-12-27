@@ -21,21 +21,21 @@
         <input type="hidden" name="id" value="{{ $info['id'] ?? 0 }}"/>
         <table class="table1">
             <tr>
-                <th>报名学员名称<span class="must">*</span></th>
+                <th>课程<span class="must"></span></th>
                 <td>
-                    <input type="text" class="inp wnormal"  name="course_order_staff_name" value="{{ $info['course_order_staff_name'] ?? '' }}" placeholder="请输入报名学员名称"/>
+                    {{ $info['course_name'] ?? '' }}
                 </td>
             </tr>
             <tr>
-                <th>名称简写<span class="must">*</span></th>
+                <th>单位<span class="must"></span></th>
                 <td>
-                    <input type="text" class="inp wnormal"  name="simple_name" value="{{ $info['simple_name'] ?? '' }}" placeholder="请输入名称简写"/>
+                    {{ $info['company_name'] ?? '' }}
                 </td>
             </tr>
             <tr>
-                <th>排序[降序]<span class="must">*</span></th>
+                <th>证书所属单位<span class="must">*</span></th>
                 <td>
-                    <input type="text" class="inp wnormal"  name="sort_num" value="{{ $info['sort_num'] ?? '' }}" placeholder="请输入排序"  onkeyup="isnum(this) " onafterpaste="isnum(this)"  />
+                    <input type="text" class="inp wnormal"  name="certificate_company" value="{{ $info['certificate_company'] ?? '' }}" placeholder="请输入证书所属单位"/>
                 </td>
             </tr>
 
@@ -56,6 +56,6 @@
     var SAVE_URL = "{{ url('api/admin/course_order_staff/ajax_save') }}";// ajax保存记录地址
     var LIST_URL = "{{url('admin/course_order_staff')}}";//保存成功后跳转到的地址
 </script>
-<script src="{{ asset('/js/admin/QualityControl/CourseOrderStaff_edit.js') }}"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/CourseOrderStaff_edit.js') }}?1"  type="text/javascript"></script>
 </body>
 </html>

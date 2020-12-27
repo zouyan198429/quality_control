@@ -87,20 +87,20 @@ function ajax_form(){
     //     return false;
     // }
 
-    var industry_name = $('input[name=industry_name]').val();
-    if(!judge_validate(4,'行业名称',industry_name,true,'length',1,20)){
+    var certificate_company = $('input[name=certificate_company]').val();
+    if(!judge_validate(4,'证书所属单位',certificate_company,true,'length',1,100)){
         return false;
     }
 
-    var simple_name = $('input[name=simple_name]').val();
-    if(!judge_validate(4,'名称简写',simple_name,true,'length',1,20)){
-        return false;
-    }
-
-    var sort_num = $('input[name=sort_num]').val();
-    if(!judge_validate(4,'排序',sort_num,false,'digit','','')){
-        return false;
-    }
+    // var simple_name = $('input[name=simple_name]').val();
+    // if(!judge_validate(4,'名称简写',simple_name,true,'length',1,20)){
+    //     return false;
+    // }
+    //
+    // var sort_num = $('input[name=sort_num]').val();
+    // if(!judge_validate(4,'排序',sort_num,false,'digit','','')){
+    //     return false;
+    // }
 
 
     // 验证通过

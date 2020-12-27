@@ -69,7 +69,14 @@ class CTAPIOrderPayBusiness extends BasicPublicCTAPIBusiness
      * @param Request $request 请求信息
      * @param Controller $controller 控制对象
      * @param array $relationKeys
-     * @param array $extendParams  扩展参数---可能会用
+     * @param array $extendParams  扩展参数---可能会用；需要指定的实时特别的 条件配置
+     *          格式： [
+     *                    '关系下标' => [
+     *                          'fieldValParams' => [ '字段名1' => '字段值--多个时，可以是一维数组或逗号分隔字符', ...],// 也可以时 Tool getParamQuery 方法的参数$fieldValParams的格式
+     *                          'sqlParams' => []// 与参数 $sqlDefaultParams 相同格式的条件
+     *                          '关系下标' => ... 下下级的
+     *                       ]
+     *                ]
      * @return  array 表关系配置信息
      * @author zouyan(305463219@qq.com)
      */
@@ -90,7 +97,7 @@ class CTAPIOrderPayBusiness extends BasicPublicCTAPIBusiness
                 CTAPIStaffBusiness::getRelationConfigs($request, $controller,
                     static::getUboundRelation($relationArr, 'company_name'),
                     static::getUboundRelationExtendParams($extendParams, 'company_name')),
-                [], '', []),
+                static::getRelationSqlParams([], $extendParams, 'company_name'), '', []),
             // 获得收款帐号名称
             'pay_company_name' => CTAPIOrderPayConfigBusiness::getTableRelationConfigInfo($request, $controller
                 , ['pay_config_id' => 'id']
@@ -99,7 +106,7 @@ class CTAPIOrderPayBusiness extends BasicPublicCTAPIBusiness
                 CTAPIOrderPayConfigBusiness::getRelationConfigs($request, $controller,
                     static::getUboundRelation($relationArr, 'pay_company_name'),
                     static::getUboundRelationExtendParams($extendParams, 'pay_company_name')),
-                [], '', []),
+                static::getRelationSqlParams([], $extendParams, 'pay_company_name'), '', []),
             // 获得支付方式名称
             'pay_name' => CTAPIOrderPayMethodBusiness::getTableRelationConfigInfo($request, $controller
                 , ['pay_method' => 'pay_method']
@@ -108,7 +115,7 @@ class CTAPIOrderPayBusiness extends BasicPublicCTAPIBusiness
                 CTAPIOrderPayMethodBusiness::getRelationConfigs($request, $controller,
                     static::getUboundRelation($relationArr, 'pay_name'),
                     static::getUboundRelationExtendParams($extendParams, 'pay_name')),
-                [], '', []),
+                static::getRelationSqlParams([], $extendParams, 'pay_name'), '', []),
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }

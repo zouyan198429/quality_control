@@ -124,9 +124,25 @@ class CourseController extends BasicController
 
         $pageNum = ($id > 0) ? 64 : 16;
         return $this->exeDoPublicFun($request, $pageNum, 1,'company.QualityControl.Course.join', true
-            , '', ['id' => $id], function (&$reDataArr) use ($request, &$id){
-                CTAPICourseOrderBusiness::getCourseStaff( $request, $this, $reDataArr, $id, $company_id = $this->own_organize_id);
+            , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request, &$id){
             });
+    }
+
+    /**
+     * ajax获得添加用户
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_add_user(Request $request){
+        return $this->exeDoPublicFun($request, 0, 4,'', true, '', [], function (&$reDataArr) use ($request){
+            $courseId = CommonRequest::getInt($request, 'course_id');
+            $userIds = CommonRequest::get($request, 'user_ids');
+            CTAPICourseOrderBusiness::getCourseStaff( $request, $this, $reDataArr, $courseId, $company_id = $this->own_organize_id, $userIds);
+            $dataList = $reDataArr['staff_list'] ?? [];
+            return ajaxDataArr(1, $dataList, '');
+        });
     }
 
     /**
@@ -291,22 +307,28 @@ class CourseController extends BasicController
                 $contacts = CommonRequest::get($request, 'contacts');
                 $tel = CommonRequest::get($request, 'tel');
                 // 学员信息
-                $staff_id = CommonRequest::get($request, 'staff_id');
+                $staff_ids = CommonRequest::get($request, 'staff_ids');
                 // 如果是字符，则转为数组
-                if(is_string($staff_id) || is_numeric($staff_id)){
-                    if(strlen(trim($staff_id)) > 0){
-                        $staff_id = explode(',' ,$staff_id);
-                    }
+                if(is_string($staff_ids) || is_numeric($staff_ids)){
+                    //if(strlen(trim($staff_ids)) > 0){
+                        $staff_ids = explode(',' ,$staff_ids);
+                    //}
                 }
-                if(!is_array($staff_id)) $staff_id = [];
+                if(!is_array($staff_ids)) $staff_ids = [];
+                // 证书所属单位信息
+                $certificate_company = CommonRequest::get($request, 'certificate_company');
+                // 如果是字符，则转为数组
+                if(is_string($certificate_company) || is_numeric($certificate_company)){
+                    //if(strlen(trim($certificate_company)) > 0){
+                        $certificate_company = explode(',' ,$certificate_company);
+                   // }
+                }
+                if(!is_array($certificate_company)) $certificate_company = [];
 
-
-                // 再转为字符串
-                $staff_ids = implode(',', $staff_id);
-                if(!empty($staff_ids)) $staff_ids = ',' . $staff_ids . ',';
-                $resultDatas = CTAPICourseOrderBusiness::courseJoin($request, $this, $id, $staff_id, [
+                $resultDatas = CTAPICourseOrderBusiness::courseJoin($request, $this, $id, $staff_ids, [
                     'contacts' => $contacts,
                     'tel' => $tel,
+                    'certificate_company' => $certificate_company,
                 ]);
                 return ajaxDataArr(1, $resultDatas, '');
             });
@@ -341,9 +363,23 @@ class CourseController extends BasicController
 //        return  CTAPICourseBusiness::getList($request, $this, 2 + 4);
         return $this->exeDoPublicFun($request, 4, 4,'', true, '', [], function (&$reDataArr) use ($request){
 
+            $extendParams = [
+                'course_order_company' => [
+//                    'fieldValParams' => [
+//                        'admin_type' => $this->user_info['admin_type'],
+//                        'company_id'=> $this->user_info['id']
+//                    ],
+                    'sqlParams' => [
+                        'where' => [
+                            ['admin_type', $this->user_info['admin_type']],
+                            ['company_id', $this->user_info['id']],
+                        ]
+                    ]
+                ]
+            ];
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-                'relationFormatConfigs'=> CTAPICourseBusiness::getRelationConfigs($request, $this, ['resource_list' => '', 'course_order_company' => ''], []),
+                'relationFormatConfigs'=> CTAPICourseBusiness::getRelationConfigs($request, $this, ['resource_list' => '', 'course_order_company' => ''], $extendParams),
                 // 'infoHandleKeyArr' => ['resetPayMethod'],
                 'listHandleKeyArr' => ['initPayMethodText', 'priceIntToFloat'],
                 'sqlParams' => ['where' => [['status_online', 1]]]
@@ -622,9 +658,23 @@ class CourseController extends BasicController
 
         if ($id > 0) { // 获得详情数据
             $operate = "修改";
+            $extendParams = [
+                'course_order_company' => [
+//                    'fieldValParams' => [
+//                        'admin_type' => $this->user_info['admin_type'],
+//                        'company_id'=> $this->user_info['id']
+//                    ],
+                    'sqlParams' => [
+                        'where' => [
+                            ['admin_type', $this->user_info['admin_type']],
+                            ['company_id', $this->user_info['id']],
+                        ]
+                    ]
+                ]
+            ];
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-                'relationFormatConfigs'=> CTAPICourseBusiness::getRelationConfigs($request, $this, ['resource_list' => '', 'course_content' => '', 'course_order_company' => ''], []),
+                'relationFormatConfigs'=> CTAPICourseBusiness::getRelationConfigs($request, $this, ['resource_list' => '', 'course_content' => '', 'course_order_company' => ''], $extendParams),
                 // 'infoHandleKeyArr' => ['resetPayMethod'],
                 'listHandleKeyArr' => ['initPayMethodText', 'priceIntToFloat'],
                 'sqlParams' => ['where' => [['status_online', 1]]]
@@ -654,6 +704,7 @@ class CourseController extends BasicController
         $reDataArr['operate'] = $operate;
 
         $reDataArr['hidden_option'] = $hiddenOption;
+        // pr($reDataArr);
     }
     // **************公用方法********************结束*********************************
 

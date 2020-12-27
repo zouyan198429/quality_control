@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\QualityControl;
 
 use App\Business\Controller\API\QualityControl\CTAPICitysBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIIndustryBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIResourceBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
 use App\Http\Controllers\WorksController;
 use App\Models\QualityControl\Staff;
@@ -50,7 +51,22 @@ class UserController extends StaffController
             $admin_password = CommonRequest::get($request, 'admin_password');
             $sure_password = CommonRequest::get($request, 'sure_password');
 
-            // 角色
+            // 图片资源
+            $resource_id = CommonRequest::get($request, 'resource_id');
+            // 如果是字符，则转为数组
+            if(is_string($resource_id) || is_numeric($resource_id)){
+                if(strlen(trim($resource_id)) > 0){
+                    $resource_id = explode(',' ,$resource_id);
+                }
+            }
+            if(!is_array($resource_id)) $resource_id = [];
+
+            // 再转为字符串
+            $resource_ids = implode(',', $resource_id);
+            if(!empty($resource_ids)) $resource_ids = ',' . $resource_ids . ',';
+
+
+                // 角色
             $role_nums = CommonRequest::get($request, 'role_nums');
             // 如果是字符，则转为数组
             Tool::formatOneArrVals($role_nums, [null, ''], ',', 1 | 2 | 4 | 8);
@@ -129,6 +145,9 @@ class UserController extends StaffController
                 'sign_is_food' => $sign_is_food,
                 'sign_status' => $sign_status,
                 'role_status' => $role_status,
+                'resource_id' => $resource_id[0] ?? 0,// 第一个图片资源的id
+                'resource_ids' => $resource_ids,// 图片资源id串(逗号分隔-未尾逗号结束)
+                'resourceIdsCardPhone' => $resource_id,// 此下标为图片资源关系
             ];
             if(!empty($admin_username)) $saveData['admin_username'] = $admin_username;
             if($admin_password != '' || $sure_password != ''){
@@ -295,6 +314,28 @@ class UserController extends StaffController
             return view('admin.QualityControl.' . static::$VIEW_NAME . '.show', $reDataArr);
 
         }, $this->errMethod, $reDataArr, $this->errorView);
+    }
+
+    /**
+     * 单文件上传-上传文件
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function up_file(Request $request)
+    {
+        $this->InitParams($request);
+        // $this->company_id = 1;
+        // 企业 的 个人--只能读自己的人员信息
+//        $organize_id = $this->user_id;// CommonRequest::getInt($request, 'company_id');
+//        if(!is_numeric($organize_id) || $organize_id <= 0) throws('所属企业参数有误！');
+//
+//        $userInfo = $this->getStaffInfo($organize_id);
+//        if(empty($userInfo)) throws('企业记录不存在！');
+
+        // 上传并保存文件
+        return CTAPIResourceBusiness::filePlupload($request, $this, 1);//  | 2 | 8 | 16
     }
 
 }

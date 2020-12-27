@@ -79,25 +79,25 @@ class CourseOrderStaffController extends BasicController
      * @return mixed
      * @author zouyan(305463219@qq.com)
      */
-//    public function add(Request $request,$id = 0)
-//    {
-////        $reDataArr = [];// 可以传给视图的全局变量数组
-////        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request, &$id){
-////            // 正常流程的代码
-////
-////            $this->InitParams($request);
-////            // $reDataArr = $this->reDataArr;
-////            $reDataArr = array_merge($reDataArr, $this->reDataArr);
-////            return view('admin.QualityControl.CourseOrderStaff.add', $reDataArr);
-////
-////        }, $this->errMethod, $reDataArr, $this->errorView);
+    public function add(Request $request,$id = 0)
+    {
+//        $reDataArr = [];// 可以传给视图的全局变量数组
+//        return Tool::doViewPages($this, $request, function (&$reDataArr) use($request, &$id){
+//            // 正常流程的代码
 //
-//        $pageNum = ($id > 0) ? 64 : 16;
-//        return $this->exeDoPublicFun($request, $pageNum, 1,'admin.QualityControl.CourseOrderStaff.add', true
-//            , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
+//            $this->InitParams($request);
+//            // $reDataArr = $this->reDataArr;
+//            $reDataArr = array_merge($reDataArr, $this->reDataArr);
+//            return view('admin.QualityControl.CourseOrderStaff.add', $reDataArr);
 //
-//        });
-//    }
+//        }, $this->errMethod, $reDataArr, $this->errorView);
+
+        $pageNum = ($id > 0) ? 64 : 16;
+        return $this->exeDoPublicFun($request, $pageNum, 1,'admin.QualityControl.CourseOrderStaff.add', true
+            , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
+
+        });
+    }
 
     /**
      * 分班
@@ -436,41 +436,41 @@ class CourseOrderStaffController extends BasicController
      * @return Response
      * @author zouyan(305463219@qq.com)
      */
-//    public function ajax_save(Request $request)
-//    {
-////        $this->InitParams($request);
-//
-//        $id = CommonRequest::getInt($request, 'id');
-//        $pageNum = ($id > 0) ? 256 : 32;
-//        return $this->exeDoPublicFun($request, $pageNum, 4,'', true
-//            , '', [], function (&$reDataArr) use ($request){
-//                $id = CommonRequest::getInt($request, 'id');
-//                // CommonRequest::judgeEmptyParams($request, 'id', $id);
-//                $industry_name = CommonRequest::get($request, 'industry_name');
+    public function ajax_save(Request $request)
+    {
+//        $this->InitParams($request);
+
+        $id = CommonRequest::getInt($request, 'id');
+        $pageNum = ($id > 0) ? 256 : 32;
+        return $this->exeDoPublicFun($request, $pageNum, 4,'', true
+            , '', [], function (&$reDataArr) use ($request){
+                $id = CommonRequest::getInt($request, 'id');
+                // CommonRequest::judgeEmptyParams($request, 'id', $id);
+                $certificate_company = CommonRequest::get($request, 'certificate_company');
 //                $simple_name = CommonRequest::get($request, 'simple_name');
 //                $sort_num = CommonRequest::getInt($request, 'sort_num');
-//
-//                $saveData = [
-//                    'industry_name' => $industry_name,
+
+                $saveData = [
+                    'certificate_company' => $certificate_company,
 //                    'simple_name' => $simple_name,
 //                    'sort_num' => $sort_num,
-//                ];
-//                 // 价格转为整型
-//                Tool::bathPriceCutFloatInt($saveData, CourseOrderStaff::$IntPriceFields, 1);
-//
-////        if($id <= 0) {// 新加;要加入的特别字段
-////            $addNewData = [
-////                // 'account_password' => $account_password,
-////            ];
-////            $saveData = array_merge($saveData, $addNewData);
-////        }
-//                $extParams = [
-//                    'judgeDataKey' => 'replace',// 数据验证的下标
-//                ];
-//                $resultDatas = CTAPICourseOrderStaffBusiness::replaceById($request, $this, $saveData, $id, $extParams, true);
-//                return ajaxDataArr(1, $resultDatas, '');
-//        });
-//    }
+                ];
+                 // 价格转为整型
+                Tool::bathPriceCutFloatInt($saveData, CourseOrderStaff::$IntPriceFields, 1);
+
+//        if($id <= 0) {// 新加;要加入的特别字段
+//            $addNewData = [
+//                // 'account_password' => $account_password,
+//            ];
+//            $saveData = array_merge($saveData, $addNewData);
+//        }
+                $extParams = [
+                    'judgeDataKey' => 'replace',// 数据验证的下标
+                ];
+                $resultDatas = CTAPICourseOrderStaffBusiness::replaceById($request, $this, $saveData, $id, $extParams, true);
+                return ajaxDataArr(1, $resultDatas, '');
+        });
+    }
 
     /**
      * @OA\Get(
@@ -504,7 +504,14 @@ class CourseOrderStaffController extends BasicController
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                 'relationFormatConfigs'=> CTAPICourseOrderStaffBusiness::getRelationConfigs($request, $this,
-                    ['company_name' => '', 'course_name' =>'', 'class_name' =>'', 'staff_info' =>'', 'course_order_info' => ''] , []),
+                    [
+                        'company_name' => '',
+                        'course_name' =>'',
+                        'class_name' =>'',
+                        'staff_info' => [
+                            'resource_list' => '',
+                        ],
+                        'course_order_info' => ''] , []),
                 'listHandleKeyArr' => ['priceIntToFloat'],
 
             ];
@@ -549,7 +556,7 @@ class CourseOrderStaffController extends BasicController
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                 'relationFormatConfigs'=> CTAPICourseOrderStaffBusiness::getRelationConfigs($request, $this,
-                    ['company_name' => '', 'course_name' =>'', 'class_name' =>'', 'staff_info' =>'', 'course_order_info' => ''], []),
+                    ['company_name' => '', 'course_name' =>'', 'class_name' =>'', 'staff_info' => ['resource_list' => ''], 'course_order_info' => ''], []),
                 'listHandleKeyArr' => ['priceIntToFloat'],
             ];
             CTAPICourseOrderStaffBusiness::getList($request, $this, 1 + 0, [], [], $extParams);
@@ -806,7 +813,7 @@ class CourseOrderStaffController extends BasicController
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                 'relationFormatConfigs'=> CTAPICourseOrderStaffBusiness::getRelationConfigs($request, $this,
-                    ['company_name' => '', 'course_name' =>'', 'class_name' =>'', 'staff_info' =>'', 'course_order_info' => ''], []),
+                    ['company_name' => '', 'course_name' =>'', 'class_name' =>'', 'staff_info' => ['resource_list' => ''], 'course_order_info' => ''], []),
                 'listHandleKeyArr' => ['priceIntToFloat'],
 
             ];
@@ -838,6 +845,7 @@ class CourseOrderStaffController extends BasicController
         $reDataArr['company_hidden'] = $company_hidden;// =1 : 隐藏企业选择
 
         $reDataArr['hidden_option'] = $hiddenOption;
+        // pr($reDataArr);
     }
     // **************公用方法********************结束*********************************
 

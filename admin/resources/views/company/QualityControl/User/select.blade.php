@@ -20,9 +20,9 @@
   <div class="mmhead" id="mywork">
 
     @include('common.pageParams')
-    <div class="tabbox" >
-      <a href="javascript:void(0);" class="on" onclick="action.iframeModify(0)">添加用户</a>
-    </div>
+{{--    <div class="tabbox" >--}}
+{{--      <a href="javascript:void(0);" class="on" onclick="action.iframeModify(0)">添加用户</a>--}}
+{{--    </div>--}}
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
           <input type="hidden" name="hidden_option"  value="{{ $hidden_option ?? 0 }}" />
@@ -52,24 +52,24 @@
     </form>
   </div>
   <div class="table-header">
-    <button class="btn btn-danger  btn-xs batch_del"  onclick="action.batchDel(this)">批量删除</button>
+{{--    <button class="btn btn-danger  btn-xs batch_del"  onclick="action.batchDel(this)">批量删除</button>--}}
 {{--    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcelTemplate(this)">导入模版[EXCEL]</button>--}}
 {{--    <button class="btn btn-success  btn-xs import_excel"  onclick="otheraction.iframeImport(0)">导入</button>--}}
+      <button class="btn btn-danger  btn-xs ace-icon fa fa-plus-square bigger-60"  onclick="otheraction.addBatch(this)">选择员工(勾选)</button>
+      <button class="btn btn-danger  btn-xs ace-icon fa fa-plus-square bigger-60"  onclick="otheraction.addBatchSearch(this)">选择员工(查询条件)</button>
   </div>
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
         <col width="50">
         <col  width="75">
-        <col width="50">
         <col width="105">
         <col>
-        <col  width="7%">
         <col  width="7%">
         <col>
         <col  width="75">
         <col width="75" >
         <col width="90">
-        <col width="12%">
+        <col width="75">
     </colgroup>
     <thead>
     <tr>
@@ -80,11 +80,9 @@
         </th>
 
         <th>姓名</th>
-        <th>城市</th>
-        <th>手机号</th>
+        <th>城市<hr/>手机号</th>
         <th>证件照</th>
-        <th>职位</th>
-        <th>角色</th>
+        <th>职位<hr/>角色</th>
         <th>签字范围<hr/>签字审核状态</th>
         <th>完善资料<hr/>信息审核</th>
         <th>角色状态<hr/>冻结状态</th>
@@ -142,6 +140,10 @@
       var DOWN_FILE_URL = "{{ url('company/down_file') }}";// 下载
       var DEL_FILE_URL = "{{ url('api/company/upload/ajax_del') }}";// 删除文件的接口地址
 
+      var SELECTED_IDS = [];// 已经选中的试题id数组
+      var AJAX_SEARCH_IDS_URL = "{{ url('api/company/user/ajax_get_ids') }}";//ajax请求的url --获得查询所有记录的id字符串，多个逗号分隔
+
+
   </script>
 <link rel="stylesheet" href="{{asset('js/baguetteBox.js/baguetteBox.min.css')}}">
 <script src="{{asset('js/baguetteBox.js/baguetteBox.min.js')}}" async></script>
@@ -150,7 +152,7 @@
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
 
 <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/company/QualityControl/User.js?636') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/company/QualityControl/User_select.js?4') }}"  type="text/javascript"></script>
 @component('component.upfileincludejsmany')
 @endcomponent
 </body>
