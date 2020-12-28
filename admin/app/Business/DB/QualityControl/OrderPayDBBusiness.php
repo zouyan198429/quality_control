@@ -86,13 +86,47 @@ class OrderPayDBBusiness extends BasePublicDBBusiness
         // if(in_array($status, [1,4])) throws('已关闭或已支付成功', 10);// return '已关闭或已支付成功';//  return 1;// 已关闭或成功
         if($status == 1) throws('已关闭', 10);
         if($status == 4) throws('已支付成功', 11);
+        $pay_config_id = $payInfo->pay_config_id;
+        // 判断收款配置
+        $orderPayConfigInfo = OrderPayConfigDBBusiness::getDBFVFormatList(4, 1, ['id' => $pay_config_id]);
 
         // $ownProperty  自有属性值;
         // $temNeedStaffIdOrHistoryId 当只有自己会用到时操作员工id和历史id时，用来判断是否需要获取 true:需要获取； false:不需要获取
         list($ownProperty, $temNeedStaffIdOrHistoryId) = array_values(static::getNeedStaffIdOrHistoryId());
         $operate_staff_id_history = 0;
         CommonDB::doTransactionFun(function() use(&$company_id, &$pay_order_no, &$pay_no, &$extendParams, &$operate_staff_id, &$modifAddOprate
-            , &$payInfo, &$ownProperty, &$temNeedStaffIdOrHistoryId, &$operate_staff_id_history){
+            , &$payInfo, &$ownProperty, &$temNeedStaffIdOrHistoryId, &$operate_staff_id_history, &$orderPayConfigInfo){
+            try {
+                $pay_method = $payInfo->pay_method;
+                $pay_no = $payInfo->pay_no;
+                switch($pay_method){
+                    case 2:// 微信收款码【线上--网页生成】
+                    case 16:// 微信收付款码【线上--扫码枪】
+                        if(empty($orderPayConfigInfo)) throws('收款账号不存在');
+                        $payKey = $orderPayConfigInfo['pay_key'];// 'banner';
+                        $order_time = $payInfo->order_time;
+                        $currentNow = Carbon::now()->toDateTimeString();
+                        if(Tool::diffDate($order_time, $currentNow, 1, '时间', 2) > (60 * 5 + 2)) {
+                            // 如果是微信支付，则关闭支付订单 注意：订单生成后不能马上调用关单接口，最短调用时间间隔为5分钟。
+
+                            $app = app('wechat.payment.' . $payKey);
+                            easyWechatPay::closeByOutTradeNumberExtend($app, $pay_order_no, function ($apiResult) {
+
+                                Log::info('微信支付日志 关闭微信订单-->' . __FUNCTION__, [$apiResult]);
+                            });
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            } catch ( \Exception $e) {
+                $errStr = $e->getMessage();
+                $errCode = $e->getCode();
+                // throws($errStr, $errCode);
+                Log::info('微信支付日志 关闭微信订单失败-->' . __FUNCTION__, [$errStr, $errCode]);
+            }
+
+
             // 修改订单号
             $updateData = array_merge($extendParams, [
                 // 'pay_no' => $pay_no,
@@ -301,7 +335,7 @@ class OrderPayDBBusiness extends BasePublicDBBusiness
                     // 如果开启支付超过10分钟，则作失败处理
                     $order_time = $order_pay_info['order_time'];
                     $currentNow = Carbon::now()->toDateTimeString();
-                    if(Tool::diffDate($order_time, $currentNow, 1, '时间', 2) > 60 *10){
+                    if(Tool::diffDate($order_time, $currentNow, 1, '时间', 2) > (60 * 5 + 1)){
                         static::failPay(0, $pay_order_no, $transaction_id, [], 0, 0);
                         return 2;
                     }

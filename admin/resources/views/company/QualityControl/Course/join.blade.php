@@ -21,7 +21,7 @@
     <form class="am-form am-form-horizontal" method="post"  id="addForm" onsubmit="return false;">
         <input type="hidden" name="hidden_option"  value="{{ $hidden_option ?? 0 }}" />
         <input type="hidden" name="id" value="{{ $info['id'] ?? 0 }}"/>
-        <table class="table1  baguetteBoxOne gallery" >
+        <table class="table1" >
             <tr>
                 <th>培训名称<span class="must"></span></th>
                 <td>
@@ -86,7 +86,7 @@
                             <th>操作</th>
                         </tr>
                         </thead>
-                        <tbody class="data_list">
+                        <tbody class="data_list   baguetteBoxOne gallery" >
                         </tbody>
 
                     </table>
@@ -140,7 +140,7 @@
 {{--<script src="{{asset('js/baguetteBox.js/highlight.min.js')}}" async></script>--}}
 <!-- zui js -->
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
-<script src="{{ asset('/js/company/QualityControl/Course_join.js') }}?26"  type="text/javascript"></script>
+<script src="{{ asset('/js/company/QualityControl/Course_join.js') }}?29"  type="text/javascript"></script>
 @component('component.upfileincludejsmany')
 @endcomponent
 </body>

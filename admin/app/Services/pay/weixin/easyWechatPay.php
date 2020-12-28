@@ -722,6 +722,31 @@ class easyWechatPay
 
 
     /**
+     * 关闭订单  注意：订单生成后不能马上调用关单接口，最短调用时间间隔为5分钟。
+     * @param $app  obj 当前对象
+     * @param string  $out_trade_no 商户系统内部的订单号（out_trade_no）
+     * @param mixed $doFun 需要统计执行视图方法 的闭包函数  function($apiResult){} ，
+     * @return mixed   错误 throws 或 返回 $doFun 的返回值
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function closeByOutTradeNumberExtend(&$app, $out_trade_no = '', $doFun = ''){
+
+        try{
+            $apiResult = static::closeByOutTradeNumber($app, $out_trade_no);
+            return static::apiResultDo($apiResult, function ($result) use(&$doFun){
+
+                if(is_callable($doFun)){
+                    return $doFun($result);
+                }
+            });
+        } catch ( \Exception $e) {
+            Log::info('微信支付日志 error-->' . __FUNCTION__, [$e->getMessage()]);
+            throws('' . $e->getMessage() . '', $e->getCode());
+            // return $fail($e->getMessage());
+        }
+    }
+
+    /**
      * 通用的接口返回参数判断
      * @param array  $result 微信接口返回的数据  数组
      * @param mixed $doFun 需要统计执行视图方法 的闭包函数  function($resultWX){} ，
