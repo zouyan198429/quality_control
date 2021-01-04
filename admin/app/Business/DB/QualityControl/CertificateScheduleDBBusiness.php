@@ -478,22 +478,31 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
             // 判断证书是否存在
             foreach($certificateNoArr as $temCertificateNo){
                 $certificateInfo = CertificateDBBusiness::getDBFVFormatList(4, 1, ['company_id' => $company_id, 'certificate_no' => $temCertificateNo]);
-                if(empty($certificateInfo)) throws('证书【' .$temCertificateNo . '】信息不存在！');
+                if(empty($certificateInfo)) throws('证书【' .$temCertificateNo . '】信息不存在！请先上传证书信息！');
 
             }
             // 保存地址信息
             $addrIdArr = [];
             foreach($addrArr as $itemAddr){
-                $addrObj = null ;
-                $searchConditon = [
-                    'company_id' => $company_id,
-                    'addr' => $itemAddr,
-                    // 'certificate_no' => $certificate_info['certificate_no'],// 一个企业只能有一个证书，所以去掉这个字段
-                ];
-                $addrInfo = $searchConditon;
-                LaboratoryAddrDBBusiness::updateOrCreate($addrObj, $searchConditon, $addrInfo);
-                $addr_id = $addrObj->id;// $certificate_id;
+//                $addrObj = null ;
+//                $searchConditon = [
+//                    'company_id' => $company_id,
+//                    'addr' => $itemAddr,
+//                    // 'certificate_no' => $certificate_info['certificate_no'],// 一个企业只能有一个证书，所以去掉这个字段
+//                ];
+//                $addrInfo = LaboratoryAddrDBBusiness::getDBFVFormatList(4, 1, $searchConditon);
+//                $addr_id = $addrInfo['id'] ?? 0;
+////                $addrInfo = $searchConditon;
+////                LaboratoryAddrDBBusiness::updateOrCreate($addrObj, $searchConditon, $addrInfo);
+////                $addr_id = $addrObj->id;// $certificate_id;
+//                if(!is_numeric($addr_id) || $addr_id <= 0 || (!empty($addrInfo) && $addrInfo['open_status'] != 1)){// 没有，则新加 或 有记录，但是未开启，则开启
+//                    $searchConditon['open_status'] = 1;
+//                    LaboratoryAddrDBBusiness::replaceById($searchConditon, $company_id, $addr_id, $operate_staff_id, $modifAddOprate);
+//                }
+                $addr_id = 0;
+                LaboratoryAddrDBBusiness::createOrOpenAddr($company_id, $itemAddr, $addr_id, $operate_staff_id, $modifAddOprate);
                 if(!is_numeric($addr_id) || $addr_id <= 0 ) throws('保存实验室地址失败！');
+
                 $addrIdArr[$itemAddr] = $addr_id;
             }
 

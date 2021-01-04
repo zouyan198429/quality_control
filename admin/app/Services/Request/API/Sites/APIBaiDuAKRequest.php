@@ -1,16 +1,19 @@
 <?php
 namespace App\Services\Request\API\Sites;
 
+use App\Services\Request\API\APIBaseRequest;
 use App\Services\Request\API\APIBasicRequest;
 use App\Services\Request\API\HttpRequest;
 
 /**
  *具体业务通用接口类--请求api--公有接口
+ * //extends APIBasicRequest  第三方其它的，不用继承此类
  */
-class APIBaiDuAKRequest //extends APIBasicRequest  第三方其它的，不用继承此类
+class APIBaiDuAKRequest extends APIBaseRequest
 {
     // 配置文件 public.apiRequestOptions 下标 ：如 ['headers' => ['Accept' => "application/vnd.myapp.v1+json"]]
     public static $optionsConfigKey = 'APIBaiDuAKOptions';
+    public static $apiConfigKey = '';// 请求api的常量配置下标  配置文件 public.apiConfig 下标
     public static $request_mode = 1;// 数据请求方式， 1 通过API获得数据； 2 访问本地数据库
 
     /**

@@ -393,6 +393,14 @@ Route::get('admin/order_pay/info/{id}', 'Admin\QualityControl\OrderPayController
 Route::get('admin/order_pay/export', 'Admin\QualityControl\OrderPayController@export');// 导出
 Route::get('admin/order_pay/import_template', 'Admin\QualityControl\OrderPayController@import_template');// 导入模版
 
+// 发票配置沪友
+Route::get('admin/invoice_config_hydzfp', 'Admin\QualityControl\InvoiceConfigHydzfpController@index');// 列表
+Route::get('admin/invoice_config_hydzfp/add/{id}', 'Admin\QualityControl\InvoiceConfigHydzfpController@add');// 添加
+// Route::get('admin/invoice_config_hydzfp/select', 'Admin\QualityControl\InvoiceConfigHydzfpController@select');// 选择-弹窗
+Route::get('admin/invoice_config_hydzfp/export', 'Admin\QualityControl\InvoiceConfigHydzfpController@export');// 导出
+Route::get('admin/invoice_config_hydzfp/import_template', 'Admin\QualityControl\InvoiceConfigHydzfpController@import_template');// 导入模版
+
+Route::get('admin/invoice_config_hydzfp/test', 'Admin\QualityControl\InvoiceConfigHydzfpController@test');// 测试
 // 企业到期配置
 Route::get('admin/company_expire', 'Admin\QualityControl\CompanyExpireController@index');// 列表
 Route::get('admin/company_expire/add/{id}', 'Admin\QualityControl\CompanyExpireController@add');// 添加

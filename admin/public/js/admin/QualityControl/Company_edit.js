@@ -287,10 +287,10 @@ function ajax_form(){
         return false;
     }
 
-    var laboratory_addr = $('input[name=laboratory_addr]').val();
-    if(!judge_validate(4,'实验室地址',laboratory_addr,false,'length',1,200)){
-        return false;
-    }
+    // var laboratory_addr = $('input[name=laboratory_addr]').val();
+    // if(!judge_validate(4,'实验室地址',laboratory_addr,false,'length',1,200)){
+    //     return false;
+    // }
 
     var company_contact_mobile = $('input[name=company_contact_mobile]').val();
     if(!judge_validate(4,'联系人手机',company_contact_mobile,false,'mobile','','')){

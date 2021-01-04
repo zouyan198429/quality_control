@@ -243,4 +243,35 @@ class LaboratoryAddrDBBusiness extends BasePublicDBBusiness
         });
         return $id;
     }
+
+    /**
+     * 根据地址新加或修改[开通已关闭的]地址
+     *
+     * @param int $company_id 当前企业id
+     * @param string  $addr 地址
+     * @param int $addr_id 当前的地址id,
+     * @param int $operate_staff_id 操作人id
+     * @param int $modifAddOprate 修改时是否加操作人，1:加;0:不加[默认]
+     * @return  int 记录id值，
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function createOrOpenAddr($company_id, $addr, &$addr_id, $operate_staff_id = 0, $modifAddOprate = 0){
+
+        $addrObj = null ;
+        $searchConditon = [
+            'company_id' => $company_id,
+            'addr' => $addr,
+            // 'certificate_no' => $certificate_info['certificate_no'],// 一个企业只能有一个证书，所以去掉这个字段
+        ];
+        $addrInfo = static::getDBFVFormatList(4, 1, $searchConditon);
+        $addr_id = $addrInfo['id'] ?? 0;
+//                $addrInfo = $searchConditon;
+//                LaboratoryAddrDBBusiness::updateOrCreate($addrObj, $searchConditon, $addrInfo);
+//                $addr_id = $addrObj->id;// $certificate_id;
+        if(!is_numeric($addr_id) || $addr_id <= 0 || (!empty($addrInfo) && $addrInfo['open_status'] != 1)){// 没有，则新加 或 有记录，但是未开启，则开启
+            $searchConditon['open_status'] = 1;
+            static::replaceById($searchConditon, $company_id, $addr_id, $operate_staff_id, $modifAddOprate);
+        }
+        return $addr_id;
+    }
 }

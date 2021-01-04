@@ -66,7 +66,7 @@ class StaffDBBusiness extends BasePublicDBBusiness
         $certificate_info = [];
         $certificate_no = '';
         $has_certificate_no = false;// 是否有 false:没有 ； true:有
-        if(isset($saveData['company_certificate_no']) && !empty($saveData['company_certificate_no']) && isset($saveData['ratify_date'])  && isset($saveData['valid_date']) && isset($saveData['laboratory_addr']) ){
+        if(isset($saveData['company_certificate_no']) && !empty($saveData['company_certificate_no']) && isset($saveData['ratify_date'])  && isset($saveData['valid_date']) ){//  && isset($saveData['laboratory_addr'])
             if(Tool::getInfoUboundVal($saveData, 'company_certificate_no', $has_certificate_no, $certificate_no, 0)){
 
                 $certificate_info = [
@@ -74,8 +74,9 @@ class StaffDBBusiness extends BasePublicDBBusiness
                     'certificate_no' => $certificate_no,
                     'ratify_date' => $saveData['ratify_date'] ?? '',
                     'valid_date' => $saveData['valid_date'] ?? '',
-                    'addr' => $saveData['laboratory_addr'] ?? '',
+                    // 'addr' => $saveData['laboratory_addr'] ?? '',
                 ];
+                if(isset($saveData['laboratory_addr'])) $certificate_info['addr'] = $saveData['laboratory_addr'] ?? '';
             }
         }
 
@@ -422,6 +423,13 @@ class StaffDBBusiness extends BasePublicDBBusiness
 
 //                $saveQueryParams = Tool::getParamQuery($searchConditon, [], []);
 //                CertificateScheduleDBBusiness::save($certificate_info, $saveQueryParams);
+                // 保存企业实验室地址
+                if(isset($certificate_info['addr'])){
+                    $addr_id = 0;
+                    LaboratoryAddrDBBusiness::createOrOpenAddr($company_id, $certificate_info['addr'], $addr_id, $operate_staff_id, $modifAddOprate);
+                    if(!is_numeric($addr_id) || $addr_id <= 0 ) throws('保存实验室地址失败！');
+                }
+
             }
             // 如果是修改信息
             if($isModify){
@@ -1793,6 +1801,13 @@ class StaffDBBusiness extends BasePublicDBBusiness
                 // 'certificate_no' => $certificate_info['certificate_no'],// 一个企业只能有一个证书，所以去掉这个字段
             ];
             CertificateDBBusiness::updateOrCreate($certificateObj, $searchConditon, $certificate_info);
+
+            if(isset($info['laboratory_addr'])){
+                // 保存企业实验室地址
+                $addr_id = 0;
+                LaboratoryAddrDBBusiness::createOrOpenAddr($company_id, $info['laboratory_addr'], $addr_id, 0, 0);
+                if(!is_numeric($addr_id) || $addr_id <= 0 ) throws('保存实验室地址失败！');
+            }
 
         });
     }

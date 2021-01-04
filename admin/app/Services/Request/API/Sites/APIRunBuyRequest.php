@@ -11,6 +11,7 @@ class APIRunBuyRequest extends APIBasicRequest // 如果是自己的数据库系
 {
     //  配置文件 public.apiRequestOptions 下标 ：如 ['headers' => ['Accept' => "application/vnd.myapp.v1+json"]]
     public static $optionsConfigKey = 'APIRunBuyOptions';
+    public static $apiConfigKey = '';// 请求api的常量配置下标  配置文件 public.apiConfig 下标
     public static $request_mode = 1;// 数据请求方式， 1 通过API获得数据； 2 访问本地数据库
 
     /**

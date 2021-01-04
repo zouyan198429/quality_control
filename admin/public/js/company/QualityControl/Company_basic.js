@@ -282,10 +282,10 @@ function ajax_form(){
         }
     }
 
-    var laboratory_addr = $('input[name=laboratory_addr]').val();
-    if(!judge_validate(4,'实验室地址',laboratory_addr,false,'length',1,200)){
-        return false;
-    }
+    // var laboratory_addr = $('input[name=laboratory_addr]').val();
+    // if(!judge_validate(4,'实验室地址',laboratory_addr,false,'length',1,200)){
+    //     return false;
+    // }
 
     var company_contact_name = $('input[name=company_contact_name]').val();
     if(!judge_validate(4,'联系人',company_contact_name,true,'length',1,30)){

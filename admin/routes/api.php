@@ -402,6 +402,19 @@ $api->version('v1', function ($api) {
 
         $api->post('admin/order_pay/ajax_wx_query_order', 'Admin\QualityControl\OrderPayController@ajax_wx_query_order');// ajax查询微信扫码支付是否成功
 
+        // 发票配置沪友
+        $api->any('admin/invoice_config_hydzfp/ajax_alist', 'Admin\QualityControl\InvoiceConfigHydzfpController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/invoice_config_hydzfp/ajax_del', 'Admin\QualityControl\InvoiceConfigHydzfpController@ajax_del');// 删除
+        $api->post('admin/invoice_config_hydzfp/ajax_save', 'Admin\QualityControl\InvoiceConfigHydzfpController@ajax_save');// 新加/修改
+        $api->post('admin/invoice_config_hydzfp/ajax_get_child', 'Admin\QualityControl\InvoiceConfigHydzfpController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/invoice_config_hydzfp/ajax_get_areachild', 'Admin\QualityControl\InvoiceConfigHydzfpController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/invoice_config_hydzfp/ajax_import_staff','Admin\QualityControl\InvoiceConfigHydzfpController@ajax_import'); // 导入员工
+
+        $api->post('admin/invoice_config_hydzfp/import', 'Admin\QualityControl\InvoiceConfigHydzfpController@import');// 导入excel
+        $api->post('admin/invoice_config_hydzfp/ajax_get_ids', 'Admin\QualityControl\InvoiceConfigHydzfpController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        $api->any('admin/invoice_config_hydzfp/notify', 'Admin\QualityControl\InvoiceConfigHydzfpController@notify');// E0018-开票结果通知
+
         // 企业到期配置
         $api->any('admin/company_expire/ajax_alist', 'Admin\QualityControl\CompanyExpireController@ajax_alist');//ajax获得列表数据
         $api->post('admin/company_expire/ajax_del', 'Admin\QualityControl\CompanyExpireController@ajax_del');// 删除
