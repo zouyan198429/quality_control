@@ -85,7 +85,7 @@ class CompanyBillingConfig extends BasePublicModel
      */
     public function staff()
     {
-        return $this->belongsTo('App\Models\RunBuy\Staff', 'staff_id', 'id')->withDefault();
+        return $this->belongsTo('App\Models\QualityControl\Staff', 'staff_id', 'id')->withDefault();
     }
 
 }

@@ -256,8 +256,10 @@
 
       var LABORATORY_ADDR_URL = "{{ url('admin/laboratory_addr')}}/";// 查看机构实验室地址
 
+      var INVOICE_BUYER_ADDR_URL = "{{ url('admin/invoice_buyer')}}/";// 查看电子发票地址
+
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/Company.js') }}?289"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/Company.js') }}?291"  type="text/javascript"></script>
 </body>
 </html>

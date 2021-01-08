@@ -213,6 +213,18 @@ class CTAPICourseOrderStaffBusiness extends BasicPublicCTAPIBusiness
         $staff_status = CommonRequest::get($request, 'staff_status');
         if(strlen($staff_status) > 0 && !in_array($staff_status, [0, -1]))  Tool::appendParamQuery($queryParams, $staff_status, 'staff_status', [0, '0', ''], ',', false);
 
+        $invoice_template_id = CommonRequest::get($request, 'invoice_template_id');
+        if(strlen($invoice_template_id) > 0 && !in_array($invoice_template_id, [0, '-1']))  Tool::appendParamQuery($queryParams, $invoice_template_id, 'invoice_template_id', [0, '0', ''], ',', false);
+
+        $invoice_template_id_history = CommonRequest::get($request, 'invoice_template_id_history');
+        if(strlen($invoice_template_id_history) > 0 && !in_array($invoice_template_id_history, [0, '-1']))  Tool::appendParamQuery($queryParams, $invoice_template_id_history, 'invoice_template_id_history', [0, '0', ''], ',', false);
+
+        $invoice_project_template_id = CommonRequest::get($request, 'invoice_project_template_id');
+        if(strlen($invoice_project_template_id) > 0 && !in_array($invoice_project_template_id, [0, '-1']))  Tool::appendParamQuery($queryParams, $invoice_project_template_id, 'invoice_project_template_id', [0, '0', ''], ',', false);
+
+        $invoice_project_template_id_history = CommonRequest::get($request, 'invoice_project_template_id_history');
+        if(strlen($invoice_project_template_id_history) > 0 && !in_array($invoice_project_template_id_history, [0, '-1']))  Tool::appendParamQuery($queryParams, $invoice_project_template_id_history, 'invoice_project_template_id_history', [0, '0', ''], ',', false);
+
 //        $ids = CommonRequest::get($request, 'ids');
 //        if(strlen($ids) > 0 && $ids != 0)  Tool::appendParamQuery($queryParams, $ids, 'id', [0, '0', ''], ',', false);
 

@@ -109,6 +109,6 @@ class AbilityJoinItemsSampleResult extends BasePublicModel
      */
     public function abilityJoinItemsResultsMethod()
     {
-        return $this->hasOne('App\Models\RunBuy\AbilityJoinItemsResultsMethod', 'result_id', 'id');
+        return $this->hasOne('App\Models\QualityControl\AbilityJoinItemsResultsMethod', 'result_id', 'id');
     }
 }

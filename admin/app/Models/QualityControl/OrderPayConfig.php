@@ -247,6 +247,14 @@ class OrderPayConfig extends BasePublicModel
     }
 
     /**
+     * 获取发票配置沪友---一维
+     */
+    public function invoiceConfigHydzfp()
+    {
+        return $this->hasOne('App\Models\QualityControl\InvoiceConfigHydzfp', 'pay_config_id', 'id');
+    }
+
+    /**
      * 获取课程-二维
      */
     public function course()
@@ -284,5 +292,21 @@ class OrderPayConfig extends BasePublicModel
     public function orderFlow()
     {
         return $this->hasMany('App\Models\QualityControl\OrderFlow', 'pay_config_id', 'id');
+    }
+
+    /**
+     * 获取发票配置销售方-二维
+     */
+    public function invoiceSeller()
+    {
+        return $this->hasMany('App\Models\QualityControl\InvoiceSeller', 'pay_config_id', 'id');
+    }
+
+    /**
+     * 获取发票主表-二维
+     */
+    public function invoices()
+    {
+        return $this->hasMany('App\Models\QualityControl\Invoices', 'pay_config_id', 'id');
     }
 }

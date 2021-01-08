@@ -20,6 +20,14 @@
         <input type="hidden" name="hidden_option"  value="{{ $hidden_option ?? 0 }}" />
         <input type="hidden" name="id" value="{{ $info['id'] ?? 0 }}"/>
         <table class="table1">
+            <tr  @if (isset($hidden_option) && (($hidden_option & 2) == 2) ) style="display: none;"  @endif>
+                <th>收款帐号<span class="must">*</span></th>
+                <td>
+                    @foreach ($pay_config_kv as $k=>$txt)
+                        <label><input type="radio"  name="pay_config_id"  value="{{ $k }}"  @if(isset($defaultPayConfig) && $defaultPayConfig == $k) checked="checked"  @endif />{{ $txt }} </label>
+                    @endforeach
+                </td>
+            </tr>
             <tr>
                 <th>设备编号<span class="must"></span></th>
                 <td>
@@ -55,6 +63,6 @@
     var SAVE_URL = "{{ url('api/admin/invoice_config_hydzfp/ajax_save') }}";// ajax保存记录地址
     var LIST_URL = "{{url('admin/invoice_config_hydzfp')}}";//保存成功后跳转到的地址
 </script>
-<script src="{{ asset('/js/admin/QualityControl/InvoiceConfigHydzfp_edit.js') }}?1"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/InvoiceConfigHydzfp_edit.js') }}?2"  type="text/javascript"></script>
 </body>
 </html>

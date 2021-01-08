@@ -87,6 +87,14 @@ function ajax_form(){
     //     return false;
     // }
 
+    var pay_config_id = $('input[name=pay_config_id]:checked').val() || '';
+    var judge_seled = judge_validate(1,'收款帐号',pay_config_id,true,'digit','','');
+    if(judge_seled != ''){
+        layer_alert("请选择收款帐号",3,0);
+        //err_alert('<font color="#000000">' + judge_seled + '</font>');
+        return false;
+    }
+
     var tax_num = $('input[name=tax_num]').val();
     if(!judge_validate(4,'设备编号',tax_num,false,'length',1,50)){
         return false;

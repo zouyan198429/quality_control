@@ -30,7 +30,7 @@
 								<th>机构信息</th>
 								<th>资质认定证书附表</th>
 								<th>自我声明公告	</th>
-								<th>监督检查信息	</th>
+{{--								<th>监督检查信息	</th>--}}
 								<th>行政处罚信息</th>
 							</tr>
 						</thead>
@@ -58,10 +58,10 @@
                                 <a href="javascript:void(0);" onclick="otheraction.company_statement_num('{{ $v["id"] ?? "0" }}','{{ $v["company_name"] ?? "" }}')" alt="自我声明公告"> <img src="{{asset('quality/Market/images/details12.png')}}" alt="" /> </a>
 								({{ $v['extend_info']['statement_num'] ?? '0' }})<!--  -->
 							</td>
-							<td>
-                                <a href="javascript:void(0);" onclick="otheraction.company_supervise('{{ $v["id"] ?? "0" }}','{{ $v["company_name"] ?? "" }}')" alt="监督检查信息"> <img src="{{asset('quality/Market/images/details12.png')}}" alt="" /> </a>
-								({{ $v['extend_info']['supervise_num'] ?? '0' }})<!--  -->
-							</td>
+{{--							<td>--}}
+{{--                                <a href="javascript:void(0);" onclick="otheraction.company_supervise('{{ $v["id"] ?? "0" }}','{{ $v["company_name"] ?? "" }}')" alt="监督检查信息"> <img src="{{asset('quality/Market/images/details12.png')}}" alt="" /> </a>--}}
+{{--								({{ $v['extend_info']['supervise_num'] ?? '0' }})<!--  -->--}}
+{{--							</td>--}}
 							<td>
                                 <a href="javascript:void(0);" onclick="otheraction.company_punish_num('{{ $v["id"] ?? "0" }}','{{ $v["company_name"] ?? "" }}')" alt="行政处罚信息"> <img src="{{asset('quality/Market/images/details12.png')}}" alt="" /> </a>
 								({{ $v['extend_info']['punish_num'] ?? '0' }})<!--  -->
@@ -119,4 +119,4 @@
 
 <script src="{{ asset('/js/web/QualityControl/Market/search.js') }}?4"  type="text/javascript"></script>
 
-<script src="{{ asset('/js/web/QualityControl/Market/company.js') }}?3"  type="text/javascript"></script>
+<script src="{{ asset('/js/web/QualityControl/Market/company.js') }}?4"  type="text/javascript"></script>

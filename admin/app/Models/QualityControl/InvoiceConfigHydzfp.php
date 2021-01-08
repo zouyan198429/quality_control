@@ -78,4 +78,11 @@ class InvoiceConfigHydzfp extends BasePublicModel
      */
     protected $table = 'invoice_config_hydzfp';
 
+    /**
+     * 获取收款帐号配置--一维
+     */
+    public function orderPayConfig()
+    {
+        return $this->belongsTo('App\Models\QualityControl\OrderPayConfig', 'pay_config_id', 'id')->withDefault();
+    }
 }

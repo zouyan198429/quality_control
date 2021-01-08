@@ -254,6 +254,23 @@ var otheraction = {
         var tishi = company_name + "-机构实验室地址管理";
         layeriframe(weburl,tishi,1050,535,5);
         return false;
+    },
+    invoice_buy_addr_num : function(id, company_name){// 查看电子发票地址
+        //获得表单各name的值
+        var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
+        console.log(INVOICE_BUYER_ADDR_URL);
+        console.log(data);
+        var url_params = get_url_param(data);// parent.get_url_param(data);
+        var weburl = INVOICE_BUYER_ADDR_URL + '?hidden_option=1&company_id=' + id ;// + url_params;// + id + '?' + url_params;
+        // var weburl = STAFF_SHOW_URL + '?company_id=' + id
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = company_name + "-电子发票地址管理";
+        layeriframe(weburl,tishi,1050,535,5);
+        return false;
     }
 
 };
@@ -436,6 +453,9 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
     document.write("                <\/a>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn fa fa-book btn-mini btn-info\" onclick=\"otheraction.course_order(<%=item.id%>,'<%=item.company_name%>')\">");
     document.write("                    <i class=\"ace-icon bigger-60\">面授报名(<%=item.extend_info.face_num%>)<\/i>");
+    document.write("                <\/a>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.invoice_buy_addr_num(<%=item.id%>,'<%=item.company_name%>')\">");
+    document.write("                    <i class=\"ace-icon fa fa-vcard bigger-60\">电子发票抬头(<%=item.extend_info.invoice_addr_num%>)<\/i>");
     document.write("                <\/a>");
     document.write("");
     document.write("            <\/td>");

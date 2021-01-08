@@ -21,6 +21,45 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
     reset_list(is_read_page, false, reset_total, do_num);
     // initList();
 }
+
+//业务逻辑部分
+var otheraction = {
+
+    invoice_config_hydzfp : function(id, pay_company_name){// 查看或修改企业简介
+        //获得表单各name的值
+        var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
+        console.log(INVOICE_CONFIG_HYDZFP_EDIT_URL);
+        console.log(data);
+        var url_params = get_url_param(data);// parent.get_url_param(data);
+        var weburl = INVOICE_CONFIG_HYDZFP_EDIT_URL + '?pay_config_id=' + id + "&hidden_option=2" ;// + url_params;// + id + '?' + url_params;
+        // var weburl = STAFF_SHOW_URL + '?company_id=' + id
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = pay_company_name + "-电子发票配置【沪友】";
+        layeriframe(weburl,tishi,1050,535,5);
+        return false;
+    },
+    invoice_seller : function(id, pay_company_name){// 查看或修改企业简介
+        //获得表单各name的值
+        var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
+        console.log(INVOICE_SELLER_EDIT_URL);
+        console.log(data);
+        var url_params = get_url_param(data);// parent.get_url_param(data);
+        var weburl = INVOICE_SELLER_EDIT_URL + '?pay_config_id=' + id + "&hidden_option=2" ;// + url_params;// + id + '?' + url_params;
+        // var weburl = STAFF_SHOW_URL + '?company_id=' + id
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = pay_company_name + "-发票配置销售方";
+        layeriframe(weburl,tishi,1050,535,5);
+        return false;
+    }
+};
 (function() {
     document.write("");
     document.write("    <!-- 前端模板部分 -->");
@@ -59,6 +98,12 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
     document.write("                <%}%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.iframeModify(<%=item.id%>)\">");
     document.write("                    <i class=\"ace-icon fa fa-pencil bigger-60\"> 编辑<\/i>");
+    document.write("                <\/a>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.invoice_seller(<%=item.id%>,'<%=item.pay_company_name%>')\">");
+    document.write("                    <i class=\"ace-icon fa fa-cog bigger-60\"> 电子发票配置销售方<\/i>");
+    document.write("                <\/a>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.invoice_config_hydzfp(<%=item.id%>,'<%=item.pay_company_name%>')\">");
+    document.write("                    <i class=\"ace-icon fa fa-cog bigger-60\"> 电子发票配置[沪友]<\/i>");
     document.write("                <\/a>");
     // document.write("                <%if( can_modify){%>");
     // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.del(<%=item.id%>)\">");

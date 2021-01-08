@@ -325,6 +325,15 @@
                               <dd><a lay-href="{{ url('admin/order_pay_config') }}">收款帐号列表</a></dd>
                           </dl>
                       </dd>
+                      <dd class="layui-nav-itemed">
+                          <a href="javascript:;">电子发票设置</a>
+                          <dl class="layui-nav-child">
+                              <dd><a lay-href="{{ url('admin/invoice_template') }}">开票模板管理</a></dd>
+                          </dl>
+                          <dl class="layui-nav-child">
+                              <dd><a lay-href="{{ url('admin/invoice_project_template') }}">发票项目模板</a></dd>
+                          </dl>
+                      </dd>
                   </dl>
               </li>
               <!-- <li data-name="user" class="layui-nav-item">

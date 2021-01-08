@@ -59,7 +59,7 @@ $(function(){
         // }, function(){
         //});
         return false;
-    })
+    });
 
 });
 

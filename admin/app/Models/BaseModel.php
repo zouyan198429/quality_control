@@ -19,7 +19,7 @@ class BaseModel extends Model
     //                  -- TODO 直接操作业务写到操作操作的底层 CommonDB 【存在就同步更新，不存在：业务已结束或不用进行表了】
     public static $ownProperty = 0;
     public static $modelPath = ''; // 模型路径 名称\..\名称
-    public static $IntPriceFields = [];//[有则设置] 表中整型表示价格的字段数组 -- 一维数组，目的：方便统一把数据中的字段转浮点数或转整数
+    public static $IntPriceFields = ['sl'];//[有则设置] 表中整型表示价格的字段数组 -- 一维数组，目的：方便统一把数据中的字段转浮点数或转整数
     /**
      * The attributes that aren't mass assignable.
      * 所有属性都是可批量赋值

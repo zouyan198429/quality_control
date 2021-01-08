@@ -178,6 +178,21 @@ class CTAPIOrdersBusiness extends BasicPublicCTAPIBusiness
         $has_refund = CommonRequest::get($request, 'has_refund');
         if(strlen($has_refund) > 0 && $has_refund != -1)  Tool::appendParamQuery($queryParams, $has_refund, 'has_refund', [ ''], ',', false);
 
+        $invoice_template_id = CommonRequest::get($request, 'invoice_template_id');
+        if(strlen($invoice_template_id) > 0 && !in_array($invoice_template_id, [0, '-1']))  Tool::appendParamQuery($queryParams, $invoice_template_id, 'invoice_template_id', [0, '0', ''], ',', false);
+
+        $invoice_template_id_history = CommonRequest::get($request, 'invoice_template_id_history');
+        if(strlen($invoice_template_id_history) > 0 && !in_array($invoice_template_id_history, [0, '-1']))  Tool::appendParamQuery($queryParams, $invoice_template_id_history, 'invoice_template_id_history', [0, '0', ''], ',', false);
+
+        $invoice_result = CommonRequest::get($request, 'invoice_result');
+        if(strlen($invoice_result) > 0 && $invoice_result != 0)  Tool::appendCondition($queryParams, 'invoice_result',  $invoice_result . '=' . $invoice_result, '&');
+
+        $invoice_status = CommonRequest::get($request, 'invoice_status');
+        if(strlen($invoice_status) > 0 && !in_array($invoice_status, [0, '-1']))  Tool::appendParamQuery($queryParams, $invoice_status, 'invoice_status', [0, '0', ''], ',', false);
+
+        $upload_status = CommonRequest::get($request, 'upload_status');
+        if(strlen($upload_status) > 0 && !in_array($upload_status, [0, '-1']))  Tool::appendParamQuery($queryParams, $upload_status, 'upload_status', [0, '0', ''], ',', false);
+
 //        $status_online = CommonRequest::get($request, 'status_online');
 //        if(strlen($status_online) > 0 && $status_online != 0)  Tool::appendParamQuery($queryParams, $status_online, 'status_online', [0, '0', ''], ',', false);
 

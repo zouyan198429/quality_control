@@ -134,8 +134,10 @@
       var IFRAME_TAG_KEY = "";// "QualityControl\\CTAPIStaff";// 获得模型表更新时间的关键标签，可为空：不获取
       var IFRAME_TAG_TIMEOUT = 60000;// 获得模型表更新时间运行间隔 1000:1秒 ；可以不要此变量：默认一分钟
 
+      var INVOICE_CONFIG_HYDZFP_EDIT_URL = "{{ url('admin/invoice_config_hydzfp/add/0') }}"; // 电子发票配置沪友修改/添加url
+      var INVOICE_SELLER_EDIT_URL = "{{ url('admin/invoice_seller/add/0') }}"; // 发票配置销售方修改/添加url
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/OrderPayConfig.js') }}?3"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/OrderPayConfig.js') }}?9"  type="text/javascript"></script>
 </body>
 </html>

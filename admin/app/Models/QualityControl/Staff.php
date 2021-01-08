@@ -559,12 +559,53 @@ class Staff extends BasePublicModel
     {
         return $this->hasMany('App\Models\QualityControl\LaboratoryAddr', 'company_id', 'id');
     }
+
     /**
      * 获取企业的监督检查信息管理-二维
      */
     public function companySupervise()
     {
         return $this->hasMany('App\Models\QualityControl\CompanySupervise', 'company_id', 'id');
+    }
+
+    /**
+     * 获取收款订单-二维
+     */
+    public function orders()
+    {
+        return $this->hasMany('App\Models\QualityControl\Orders', 'company_id', 'id');
+    }
+
+    /**
+     * 获取支付订单-二维
+     */
+    public function orderPay()
+    {
+        return $this->hasMany('App\Models\QualityControl\OrderPay', 'company_id', 'id');
+    }
+
+    /**
+     * 获取收款订单财务流水-二维
+     */
+    public function orderFlow()
+    {
+        return $this->hasMany('App\Models\QualityControl\OrderFlow', 'company_id', 'id');
+    }
+
+    /**
+     * 获取发票配置购买方-二维
+     */
+    public function invoiceBuyer()
+    {
+        return $this->hasMany('App\Models\QualityControl\InvoiceBuyer', 'company_id', 'id');
+    }
+
+    /**
+     * 获取发票主表-二维
+     */
+    public function invoices()
+    {
+        return $this->hasMany('App\Models\QualityControl\Invoices', 'company_id', 'id');
     }
 
     /**
@@ -596,7 +637,7 @@ class Staff extends BasePublicModel
      */
     public function extend()
     {
-        return $this->hasOne('App\Models\RunBuy\StaffExtend', 'staff_id', 'id');
+        return $this->hasOne('App\Models\QualityControl\StaffExtend', 'staff_id', 'id');
     }
 
     /**
@@ -604,6 +645,6 @@ class Staff extends BasePublicModel
      */
     public function companyBillingConfig()
     {
-        return $this->hasOne('App\Models\RunBuy\CompanyBillingConfig', 'staff_id', 'id');
+        return $this->hasOne('App\Models\QualityControl\CompanyBillingConfig', 'staff_id', 'id');
     }
 }

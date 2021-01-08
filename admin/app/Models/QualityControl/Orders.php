@@ -119,9 +119,31 @@ class Orders extends BasePublicModel
 //        '8' => '已付款',
 //    ];
 
-    // 表里没有的字段
-    protected $appends = ['order_type_text', 'order_status_text', 'has_refund_text'];// , 'pay_status_text', 'pay_method_text'
+    // 开票结果1待开票1已开蓝票2已红冲
+    public static $invoiceResultArr = [
+        '1' => '待开票',
+        '2' => '开票中',
+        '4' => '已开票',
+    ];
 
+    // 开票状态1待开票2开票中4已开票
+    public static $invoiceStatusArr = [
+        '1' => '待开票',
+        '2' => '开票中',
+        '4' => '已开票',
+    ];
+
+    // 开票数据状态1待上传2已上传4已开票8已作废16已红冲
+    public static $uploadStatusArr = [
+        '1' => '待上传',
+        '2' => '已上传',
+        '4' => '已开票',
+        '8' => '已作废',
+        '16' => '已红冲',
+    ];
+
+    // 表里没有的字段
+    protected $appends = ['order_type_text', 'order_status_text', 'has_refund_text', 'invoice_result_text', 'invoice_status_text', 'upload_status_text'];// , 'pay_status_text', 'pay_method_text'
 
     /**
      * 获取订单类型文字
@@ -174,6 +196,43 @@ class Orders extends BasePublicModel
 //    }
 
     /**
+     * 获取开票结果文字
+     *
+     * @return string
+     */
+    public function getInvoiceResultTextAttribute()
+    {
+        $return_arr = [];
+        $invoice_result = $this->invoice_result;
+        if($invoice_result <= 0 ) return '';
+        foreach(static::$invoiceResultArr as $k => $v){
+            if(($k & $invoice_result) == $k)  array_push($return_arr, $v);
+        }
+        return implode('、', $return_arr);
+        // return static::$invoiceResultArr[$this->invoice_result] ?? '';
+    }
+
+    /**
+     * 获取开票状态文字
+     *
+     * @return string
+     */
+    public function getInvoiceStatusTextAttribute()
+    {
+        return static::$invoiceStatusArr[$this->invoice_status] ?? '';
+    }
+
+    /**
+     * 获取开票数据状态文字
+     *
+     * @return string
+     */
+    public function getUploadStatusTextAttribute()
+    {
+        return static::$uploadStatusArr[$this->upload_status] ?? '';
+    }
+
+    /**
      * 获取报名学员-二维
      */
     public function courseOrderStaff()
@@ -198,10 +257,26 @@ class Orders extends BasePublicModel
     }
 
     /**
+     * 获取发票主表-二维
+     */
+    public function invoices()
+    {
+        return $this->hasMany('App\Models\QualityControl\Invoices', 'order_no', 'order_no');
+    }
+
+    /**
      * 获取收款帐号配置---一维
      */
     public function orderPayConfig()
     {
         return $this->hasOne('App\Models\QualityControl\OrderPayConfig', 'pay_config_id', 'id');
+    }
+
+    /**
+     * 获取所属企业--一维
+     */
+    public function staff()
+    {
+        return $this->belongsTo('App\Models\QualityControl\Staff', 'company_id', 'id');
     }
 }

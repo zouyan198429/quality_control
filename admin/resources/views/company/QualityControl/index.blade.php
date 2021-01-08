@@ -165,6 +165,9 @@
                   </a>
                   <dl class="layui-nav-child">
                       <dd>
+                          <a lay-href="{{ url('company/invoice_buyer') }}">电子发票抬头</a>
+                      </dd>
+                      <dd>
                           <a lay-href="{{ url('company/orders') }}">订单管理</a>
                       </dd>
                       <dd>

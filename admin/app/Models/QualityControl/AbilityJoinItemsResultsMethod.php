@@ -85,6 +85,6 @@ class AbilityJoinItemsResultsMethod extends BasePublicModel
      */
     public function abilityJoinItemsResult()
     {
-        return $this->belongsTo('App\Models\RunBuy\AbilityJoinItemsResults', 'result_id', 'id')->withDefault();
+        return $this->belongsTo('App\Models\QualityControl\AbilityJoinItemsResults', 'result_id', 'id')->withDefault();
     }
 }

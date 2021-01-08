@@ -415,6 +415,61 @@ $api->version('v1', function ($api) {
 
         $api->any('admin/invoice_config_hydzfp/notify', 'Admin\QualityControl\InvoiceConfigHydzfpController@notify');// E0018-开票结果通知
 
+        // 发票配置销售方
+        $api->any('admin/invoice_seller/ajax_alist', 'Admin\QualityControl\InvoiceSellerController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/invoice_seller/ajax_del', 'Admin\QualityControl\InvoiceSellerController@ajax_del');// 删除
+        $api->post('admin/invoice_seller/ajax_save', 'Admin\QualityControl\InvoiceSellerController@ajax_save');// 新加/修改
+        $api->post('admin/invoice_seller/ajax_get_child', 'Admin\QualityControl\InvoiceSellerController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/invoice_seller/ajax_get_areachild', 'Admin\QualityControl\InvoiceSellerController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/invoice_seller/ajax_import_staff','Admin\QualityControl\InvoiceSellerController@ajax_import'); // 导入员工
+
+        $api->post('admin/invoice_seller/import', 'Admin\QualityControl\InvoiceSellerController@import');// 导入excel
+        $api->post('admin/invoice_seller/ajax_get_ids', 'Admin\QualityControl\InvoiceSellerController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        // 发票配置购买方
+        $api->any('admin/invoice_buyer/ajax_alist', 'Admin\QualityControl\InvoiceBuyerController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/invoice_buyer/ajax_del', 'Admin\QualityControl\InvoiceBuyerController@ajax_del');// 删除
+        $api->post('admin/invoice_buyer/ajax_save', 'Admin\QualityControl\InvoiceBuyerController@ajax_save');// 新加/修改
+        $api->post('admin/invoice_buyer/ajax_get_child', 'Admin\QualityControl\InvoiceBuyerController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/invoice_buyer/ajax_get_areachild', 'Admin\QualityControl\InvoiceBuyerController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/invoice_buyer/ajax_import_staff','Admin\QualityControl\InvoiceBuyerController@ajax_import'); // 导入员工
+
+        $api->post('admin/invoice_buyer/import', 'Admin\QualityControl\InvoiceBuyerController@import');// 导入excel
+        $api->post('admin/invoice_buyer/ajax_get_ids', 'Admin\QualityControl\InvoiceBuyerController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        // 发票开票模板
+        $api->any('admin/invoice_template/ajax_alist', 'Admin\QualityControl\InvoiceTemplateController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/invoice_template/ajax_del', 'Admin\QualityControl\InvoiceTemplateController@ajax_del');// 删除
+        $api->post('admin/invoice_template/ajax_save', 'Admin\QualityControl\InvoiceTemplateController@ajax_save');// 新加/修改
+        $api->post('admin/invoice_template/ajax_get_child', 'Admin\QualityControl\InvoiceTemplateController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/invoice_template/ajax_get_areachild', 'Admin\QualityControl\InvoiceTemplateController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/invoice_template/ajax_import_staff','Admin\QualityControl\InvoiceTemplateController@ajax_import'); // 导入员工
+
+        $api->post('admin/invoice_template/import', 'Admin\QualityControl\InvoiceTemplateController@import');// 导入excel
+        $api->post('admin/invoice_template/ajax_get_ids', 'Admin\QualityControl\InvoiceTemplateController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        // 发票商品项目模板
+        $api->any('admin/invoice_project_template/ajax_alist', 'Admin\QualityControl\InvoiceProjectTemplateController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/invoice_project_template/ajax_del', 'Admin\QualityControl\InvoiceProjectTemplateController@ajax_del');// 删除
+        $api->post('admin/invoice_project_template/ajax_save', 'Admin\QualityControl\InvoiceProjectTemplateController@ajax_save');// 新加/修改
+        $api->post('admin/invoice_project_template/ajax_get_child', 'Admin\QualityControl\InvoiceProjectTemplateController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/invoice_project_template/ajax_get_areachild', 'Admin\QualityControl\InvoiceProjectTemplateController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/invoice_project_template/ajax_import_staff','Admin\QualityControl\InvoiceProjectTemplateController@ajax_import'); // 导入员工
+
+        $api->post('admin/invoice_project_template/import', 'Admin\QualityControl\InvoiceProjectTemplateController@import');// 导入excel
+        $api->post('admin/invoice_project_template/ajax_get_ids', 'Admin\QualityControl\InvoiceProjectTemplateController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        // 发票主表
+        $api->any('admin/invoices/ajax_alist', 'Admin\QualityControl\InvoicesController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/invoices/ajax_del', 'Admin\QualityControl\InvoicesController@ajax_del');// 删除
+        $api->post('admin/invoices/ajax_save', 'Admin\QualityControl\InvoicesController@ajax_save');// 新加/修改
+        $api->post('admin/invoices/ajax_get_child', 'Admin\QualityControl\InvoicesController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/invoices/ajax_get_areachild', 'Admin\QualityControl\InvoicesController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/invoices/ajax_import_staff','Admin\QualityControl\InvoicesController@ajax_import'); // 导入员工
+
+        $api->post('admin/invoices/import', 'Admin\QualityControl\InvoicesController@import');// 导入excel
+        $api->post('admin/invoices/ajax_get_ids', 'Admin\QualityControl\InvoicesController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
         // 企业到期配置
         $api->any('admin/company_expire/ajax_alist', 'Admin\QualityControl\CompanyExpireController@ajax_alist');//ajax获得列表数据
         $api->post('admin/company_expire/ajax_del', 'Admin\QualityControl\CompanyExpireController@ajax_del');// 删除
@@ -958,6 +1013,17 @@ $api->version('v1', function ($api) {
 //        $api->post('company/order_pay/ajax_get_ids', 'WebFront\Company\QualityControl\OrderPayController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
         $api->post('company/order_pay/ajax_wx_query_order', 'WebFront\Company\QualityControl\OrderPayController@ajax_wx_query_order');// ajax查询微信扫码支付是否成功
+
+        // 发票配置购买方
+        $api->any('company/invoice_buyer/ajax_alist', 'WebFront\Company\QualityControl\InvoiceBuyerController@ajax_alist');//ajax获得列表数据
+        $api->post('company/invoice_buyer/ajax_del', 'WebFront\Company\QualityControl\InvoiceBuyerController@ajax_del');// 删除
+        $api->post('company/invoice_buyer/ajax_save', 'WebFront\Company\QualityControl\InvoiceBuyerController@ajax_save');// 新加/修改
+        $api->post('company/invoice_buyer/ajax_get_child', 'WebFront\Company\QualityControl\InvoiceBuyerController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('company/invoice_buyer/ajax_get_areachild', 'WebFront\Company\QualityControl\InvoiceBuyerController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('company/invoice_buyer/ajax_import_staff','WebFront\Company\QualityControl\InvoiceBuyerController@ajax_import'); // 导入员工
+
+        $api->post('company/invoice_buyer/import', 'WebFront\Company\QualityControl\InvoiceBuyerController@import');// 导入excel
+        $api->post('company/invoice_buyer/ajax_get_ids', 'WebFront\Company\QualityControl\InvoiceBuyerController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
         // 用户中心 user
         // 验证码 -- ok

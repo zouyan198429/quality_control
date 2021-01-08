@@ -217,4 +217,12 @@ class OrderPay extends BasePublicModel
     {
         return $this->belongsTo('App\Models\QualityControl\OrderPayMethod', 'pay_method', 'pay_method');
     }
+
+    /**
+     * 获取所属企业--一维
+     */
+    public function staff()
+    {
+        return $this->belongsTo('App\Models\QualityControl\Staff', 'company_id', 'id');
+    }
 }

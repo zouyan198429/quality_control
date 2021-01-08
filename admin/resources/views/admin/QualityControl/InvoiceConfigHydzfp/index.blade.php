@@ -22,7 +22,7 @@
     <div class="tabbox" >
       <a href="javascript:void(0);" class="on" onclick="action.iframeModify(0)">添加发票配置沪友</a>
     </div>
-    <form onsubmit="return false;" class="form-horizontal" style="display: none;" role="form" method="post" id="search_frm" action="#">
+    <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
           <input type="hidden" name="hidden_option"  value="{{ $hidden_option ?? 0 }}" />
 
@@ -32,6 +32,12 @@
             {{--<option value="{{ $k }}"  @if(isset($province_id) && $province_id == $k) selected @endif >{{ $txt }}</option>--}}
           {{--@endforeach--}}
         {{--</select>--}}
+          <select class="wmini" name="pay_config_id"  style="@if (isset($hidden_option) && (($hidden_option & 2) == 2) ) display: none; @endif">
+              <option value="">收款帐号</option>
+              @foreach ($pay_config_kv as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultPayConfig) && $defaultPayConfig == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
         <select style="width:80px; height:28px;" name="field">
           <option value="tax_num">设备编号</option>
             <option value="open_id">应用OPENID</option>
@@ -61,6 +67,7 @@
         <col>
         <col>
         <col>
+        <col>
         <col width="140">
     </colgroup>
     <thead>
@@ -72,6 +79,7 @@
 {{--        </label>--}}
 {{--      </th>--}}
 {{--      <th>ID</th>--}}
+      <th>收款帐号</th>
       <th>设备编号</th>
       <th>应用OPENID</th>
         <th>应用密匙</th>
@@ -124,6 +132,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/InvoiceConfigHydzfp.js') }}?1"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/InvoiceConfigHydzfp.js') }}?2"  type="text/javascript"></script>
 </body>
 </html>

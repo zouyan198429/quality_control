@@ -199,6 +199,12 @@ class CTAPICourseBusiness extends BasicPublicCTAPIBusiness
         $pay_method = CommonRequest::get($request, 'pay_method');
         if(strlen($pay_method) > 0 && $pay_method != 0)  Tool::appendCondition($queryParams, 'pay_method',  $pay_method . '=' . $pay_method, '&');
 
+        $invoice_template_id = CommonRequest::get($request, 'invoice_template_id');
+        if(strlen($invoice_template_id) > 0 && !in_array($invoice_template_id, [0, '-1']))  Tool::appendParamQuery($queryParams, $invoice_template_id, 'invoice_template_id', [0, '0', ''], ',', false);
+
+        $invoice_project_template_id = CommonRequest::get($request, 'invoice_project_template_id');
+        if(strlen($invoice_project_template_id) > 0 && !in_array($invoice_project_template_id, [0, '-1']))  Tool::appendParamQuery($queryParams, $invoice_project_template_id, 'invoice_project_template_id', [0, '0', ''], ',', false);
+
 //        $ids = CommonRequest::get($request, 'ids');
 //        if(strlen($ids) > 0 && $ids != 0)  Tool::appendParamQuery($queryParams, $ids, 'id', [0, '0', ''], ',', false);
 

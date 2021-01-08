@@ -401,6 +401,42 @@ Route::get('admin/invoice_config_hydzfp/export', 'Admin\QualityControl\InvoiceCo
 Route::get('admin/invoice_config_hydzfp/import_template', 'Admin\QualityControl\InvoiceConfigHydzfpController@import_template');// 导入模版
 
 Route::get('admin/invoice_config_hydzfp/test', 'Admin\QualityControl\InvoiceConfigHydzfpController@test');// 测试
+
+// 发票配置销售方
+Route::get('admin/invoice_seller', 'Admin\QualityControl\InvoiceSellerController@index');// 列表
+Route::get('admin/invoice_seller/add/{id}', 'Admin\QualityControl\InvoiceSellerController@add');// 添加
+// Route::get('admin/invoice_seller/select', 'Admin\QualityControl\InvoiceSellerController@select');// 选择-弹窗
+Route::get('admin/invoice_seller/export', 'Admin\QualityControl\InvoiceSellerController@export');// 导出
+Route::get('admin/invoice_seller/import_template', 'Admin\QualityControl\InvoiceSellerController@import_template');// 导入模版
+
+// 发票配置购买方
+Route::get('admin/invoice_buyer', 'Admin\QualityControl\InvoiceBuyerController@index');// 列表
+Route::get('admin/invoice_buyer/add/{id}', 'Admin\QualityControl\InvoiceBuyerController@add');// 添加
+// Route::get('admin/invoice_buyer/select', 'Admin\QualityControl\InvoiceBuyerController@select');// 选择-弹窗
+Route::get('admin/invoice_buyer/export', 'Admin\QualityControl\InvoiceBuyerController@export');// 导出
+Route::get('admin/invoice_buyer/import_template', 'Admin\QualityControl\InvoiceBuyerController@import_template');// 导入模版
+
+// 发票开票模板
+Route::get('admin/invoice_template', 'Admin\QualityControl\InvoiceTemplateController@index');// 列表
+Route::get('admin/invoice_template/add/{id}', 'Admin\QualityControl\InvoiceTemplateController@add');// 添加
+// Route::get('admin/invoice_template/select', 'Admin\QualityControl\InvoiceTemplateController@select');// 选择-弹窗
+Route::get('admin/invoice_template/export', 'Admin\QualityControl\InvoiceTemplateController@export');// 导出
+Route::get('admin/invoice_template/import_template', 'Admin\QualityControl\InvoiceTemplateController@import_template');// 导入模版
+
+// 发票商品项目模板
+Route::get('admin/invoice_project_template', 'Admin\QualityControl\InvoiceProjectTemplateController@index');// 列表
+Route::get('admin/invoice_project_template/add/{id}', 'Admin\QualityControl\InvoiceProjectTemplateController@add');// 添加
+// Route::get('admin/invoice_project_template/select', 'Admin\QualityControl\InvoiceProjectTemplateController@select');// 选择-弹窗
+Route::get('admin/invoice_project_template/export', 'Admin\QualityControl\InvoiceProjectTemplateController@export');// 导出
+Route::get('admin/invoice_project_template/import_template', 'Admin\QualityControl\InvoiceProjectTemplateController@import_template');// 导入模版
+
+// 发票主表
+Route::get('admin/invoices', 'Admin\QualityControl\InvoicesController@index');// 列表
+Route::get('admin/invoices/add/{id}', 'Admin\QualityControl\InvoicesController@add');// 添加
+// Route::get('admin/invoices/select', 'Admin\QualityControl\InvoicesController@select');// 选择-弹窗
+Route::get('admin/invoices/export', 'Admin\QualityControl\InvoicesController@export');// 导出
+Route::get('admin/invoices/import_template', 'Admin\QualityControl\InvoicesController@import_template');// 导入模版
+
 // 企业到期配置
 Route::get('admin/company_expire', 'Admin\QualityControl\CompanyExpireController@index');// 列表
 Route::get('admin/company_expire/add/{id}', 'Admin\QualityControl\CompanyExpireController@add');// 添加
@@ -764,6 +800,13 @@ Route::get('company/order_pay/info/{id}', 'WebFront\Company\QualityControl\Order
 // Route::get('company/order_pay/select', 'WebFront\Company\QualityControl\OrderPayController@select');// 选择-弹窗
 Route::get('company/order_pay/export', 'WebFront\Company\QualityControl\OrderPayController@export');// 导出
 Route::get('company/order_pay/import_template', 'WebFront\Company\QualityControl\OrderPayController@import_template');// 导入模版
+
+// 发票配置购买方
+Route::get('company/invoice_buyer', 'WebFront\Company\QualityControl\InvoiceBuyerController@index');// 列表
+Route::get('company/invoice_buyer/add/{id}', 'WebFront\Company\QualityControl\InvoiceBuyerController@add');// 添加
+// Route::get('company/invoice_buyer/select', 'WebFront\Company\QualityControl\InvoiceBuyerController@select');// 选择-弹窗
+Route::get('company/invoice_buyer/export', 'WebFront\Company\QualityControl\InvoiceBuyerController@export');// 导出
+Route::get('company/invoice_buyer/import_template', 'WebFront\Company\QualityControl\InvoiceBuyerController@import_template');// 导入模版
 
 
 // 用户中心 user

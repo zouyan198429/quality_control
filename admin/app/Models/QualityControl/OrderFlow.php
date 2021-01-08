@@ -137,6 +137,14 @@ class OrderFlow extends BasePublicModel
     }
 
     /**
+     * 获取发票主表-二维
+     */
+    public function invoices()
+    {
+        return $this->hasMany('App\Models\QualityControl\Invoices', 'order_no', 'order_no');
+    }
+
+    /**
      * 获取收款帐号配置---一维
      */
     public function orderPayConfig()
@@ -166,5 +174,13 @@ class OrderFlow extends BasePublicModel
     public function orderPayMethod()
     {
         return $this->belongsTo('App\Models\QualityControl\OrderPayMethod', 'pay_method', 'pay_method');
+    }
+
+    /**
+     * 获取所属企业--一维
+     */
+    public function staff()
+    {
+        return $this->belongsTo('App\Models\QualityControl\Staff', 'company_id', 'id');
     }
 }

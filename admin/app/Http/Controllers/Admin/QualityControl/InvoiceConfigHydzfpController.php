@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\QualityControl;
 
 use App\Business\Controller\API\QualityControl\CTAPIInvoiceConfigHydzfpBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIOrderPayConfigBusiness;
 use App\Http\Controllers\WorksController;
 use App\Services\Invoice\hydzfp\InvoiceHydzfp;
 use App\Services\Request\CommonRequest;
@@ -342,11 +343,13 @@ class InvoiceConfigHydzfpController extends BasicController
             , '', [], function (&$reDataArr) use ($request){
                 $id = CommonRequest::getInt($request, 'id');
                 // CommonRequest::judgeEmptyParams($request, 'id', $id);
+                $pay_config_id = CommonRequest::getInt($request, 'pay_config_id');
                 $tax_num = CommonRequest::get($request, 'tax_num');
                 $open_id = CommonRequest::get($request, 'open_id');
                 $app_secret = CommonRequest::get($request, 'app_secret');
 
                 $saveData = [
+                    'pay_config_id' => $pay_config_id,
                     'tax_num' => $tax_num,
                     'open_id' => $open_id,
                     'app_secret' => $app_secret,
@@ -394,7 +397,16 @@ class InvoiceConfigHydzfpController extends BasicController
 //        $this->InitParams($request);
 //        return  CTAPIInvoiceConfigHydzfpBusiness::getList($request, $this, 2 + 4);
         return $this->exeDoPublicFun($request, 4, 4,'', true, '', [], function (&$reDataArr) use ($request){
-            return  CTAPIInvoiceConfigHydzfpBusiness::getList($request, $this, 2 + 4);
+
+            $extParams = [
+                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                'relationFormatConfigs'=> CTAPIInvoiceConfigHydzfpBusiness::getRelationConfigs($request, $this,
+                    [
+                        'pay_company_name' => '',
+                    ], []),
+                // 'listHandleKeyArr' => ['priceIntToFloat'],
+            ];
+            return  CTAPIInvoiceConfigHydzfpBusiness::getList($request, $this, 2 + 4, [], [], $extParams);
         });
     }
 
@@ -431,7 +443,16 @@ class InvoiceConfigHydzfpController extends BasicController
 //        $this->InitParams($request);
 //        CTAPIInvoiceConfigHydzfpBusiness::getList($request, $this, 1 + 0);
 //        return $this->exeDoPublicFun($request, 4096, 8,'', true, '', [], function (&$reDataArr) use ($request){
-//            CTAPIRrrDdddBusiness::getList($request, $this, 1 + 0);
+//
+//            $extParams = [
+//                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+//                'relationFormatConfigs'=> CTAPIInvoiceConfigHydzfpBusiness::getRelationConfigs($request, $this,
+//                    [
+//                        'pay_company_name' => '',
+//                    ], []),
+//                // 'listHandleKeyArr' => ['priceIntToFloat'],
+//            ];
+//            CTAPIInvoiceConfigHydzfpBusiness::getList($request, $this, 1 + 0, [], [], $extParams);
 //        });
 //    }
 
@@ -589,6 +610,11 @@ class InvoiceConfigHydzfpController extends BasicController
 //        $reDataArr['adminType'] =  AbilityJoin::$adminTypeArr;
 //        $reDataArr['defaultAdminType'] = -1;// 列表页默认状态
 
+        // 获得收款帐号KV值
+        $pay_config_id = CommonRequest::getInt($request, 'pay_config_id');// $hiddenOption = 2
+        $reDataArr['pay_config_kv'] = CTAPIOrderPayConfigBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'pay_company_name'], []);// ['sqlParams' => ['where' => [['open_status', 1]]]]
+        $reDataArr['defaultPayConfig'] = (!is_numeric($pay_config_id) || $pay_config_id <= 0 ) ? -1 : $pay_config_id;// 默认
+
         $reDataArr['hidden_option'] = $hiddenOption;
     }
 
@@ -625,15 +651,42 @@ class InvoiceConfigHydzfpController extends BasicController
             'id'=>$id,
             //   'department_id' => 0,
         ];
+        $extParams = [
+            // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+            'relationFormatConfigs'=> CTAPIInvoiceConfigHydzfpBusiness::getRelationConfigs($request, $this,
+                [
+                    'pay_company_name' => '',
+                ], []),
+            // 'listHandleKeyArr' => ['priceIntToFloat'],
+        ];
+
+        // 如果是指定的
+        $pay_config_id = CommonRequest::getInt($request, 'pay_config_id');// $hiddenOption = 2
+        $dataInfo = [];
+        if($id <= 0 && $pay_config_id > 0){
+            // 获得记录
+            $dataInfo = CTAPIInvoiceConfigHydzfpBusiness::getFVFormatList( $request,  $this, 4, 1
+                , ['pay_config_id' => $pay_config_id], false, [], $extParams);
+            $id = $dataInfo['id'] ?? 0;
+        }
+
         $operate = "添加";
 
         if ($id > 0) { // 获得详情数据
             $operate = "修改";
-            $info = CTAPIInvoiceConfigHydzfpBusiness::getInfoData($request, $this, $id, [], '', []);
+            if(empty($contentInfo)) {
+                $info = CTAPIInvoiceConfigHydzfpBusiness::getInfoData($request, $this, $id, [], '', $extParams);
+            }else{
+                $info = $dataInfo;
+            }
         }
         // $reDataArr = array_merge($reDataArr, $resultDatas);
         $reDataArr['info'] = $info;
         $reDataArr['operate'] = $operate;
+        // 获得收款帐号KV值
+        $pay_config_id = CommonRequest::getInt($request, 'pay_config_id');// $hiddenOption = 2
+        $reDataArr['pay_config_kv'] = CTAPIOrderPayConfigBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'pay_company_name'], []);// ['sqlParams' => ['where' => [['open_status', 1]]]]
+        $reDataArr['defaultPayConfig'] = $info['pay_config_id'] ?? ((!is_numeric($pay_config_id) || $pay_config_id <= 0 ) ? -1 : $pay_config_id);// 默认
 
         $reDataArr['hidden_option'] = $hiddenOption;
     }
