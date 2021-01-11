@@ -79,7 +79,7 @@ var otheraction = {
     // document.write("                <\/label>");
     // document.write("            <\/td>");
     // document.write("            <td><%=item.id%><\/td>");
-    document.write("            <td><%=item.course_name%><\/td>");
+    document.write("            <td><%=item.course_name%><hr/><%=item.invoice_template_name%><hr/><%=item.invoice_project_template_name%><\/td>");
     document.write("            <td>");
     document.write("               <span class=\"resource_list\"  style=\"display: none;\"><%=JSON.stringify(item.resource_list)%></span>");
     document.write("               <span  class=\"resource_show\"></span>");

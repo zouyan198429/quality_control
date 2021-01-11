@@ -150,7 +150,7 @@ function addCompany(company_id, company_name){
     document.write("                <\/label>");
     document.write("            <\/td>");
     // document.write("            <td><%=item.id%><\/td>");
-    document.write("            <td><%=item.course_name%><\/td>");
+    document.write("            <td><%=item.course_name%><hr/><%=item.invoice_template_name%><\/td>");
     document.write("            <td><%=item.company_name%>(<%=item.company_grade_text%>)<\/td>");
     document.write("            <td><%=item.join_num%><hr/><%=item.cancel_num%><\/td>");
     document.write("            <td><%=item.joined_class_num%><hr/><%=item.finish_num%><\/td>");

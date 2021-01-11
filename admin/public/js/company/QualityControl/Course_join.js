@@ -424,6 +424,15 @@ function ajax_form(){
     if(!judge_validate(4,'联络人电话',tel,true,'length',5,30)){
         return false;
     }
+
+    // var invoice_buyer_id = $('input[name=invoice_buyer_id]:checked').val() || '';
+    // var judge_seled = judge_validate(1,'发票抬头',invoice_buyer_id,false,'digit',"","");
+    // if(judge_seled != ''){
+    //     layer_alert("请选择发票抬头",3,0);
+    //     //err_alert('<font color="#000000">' + judge_seled + '</font>');
+    //     return false;
+    // }
+
     ajax_save(id);
 }
 

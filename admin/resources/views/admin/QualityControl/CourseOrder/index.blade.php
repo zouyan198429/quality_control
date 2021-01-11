@@ -57,6 +57,12 @@
                   <option value="{{ $k }}"  @if(isset($defaultCompanyStatus) && $defaultCompanyStatus == $k) selected @endif >{{ $txt }}</option>
               @endforeach
           </select>
+          <select class="wmini" name="invoice_template_id" style="width: 80px;">
+              <option value="">发票开票模板</option>
+              @foreach ($invoice_template_kv as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultInvoiceTemplate) && $defaultInvoiceTemplate == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
         <select style="width:80px; height:28px;" name="field">
           <option value="contacts">联络人员</option>
             <option value="tel">联络人员电话</option>
@@ -99,7 +105,7 @@
         </label>
       </th>
 {{--      <th>ID</th>--}}
-        <th>课程</th>
+        <th>课程<hr/>发票开票模板</th>
       <th>单位</th>
       <th>报名人数<hr/>已作废人数</th>
       <th>分班人数<hr/>结业人数</th>
@@ -158,6 +164,6 @@
       var PAY_URL = "{{ url('admin/course_order/pay') }}";//操作(缴费)
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/CourseOrder.js') }}?7"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/CourseOrder.js') }}?8"  type="text/javascript"></script>
 </body>
 </html>

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin\QualityControl;
 
 use App\Business\Controller\API\QualityControl\CTAPICourseBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIInvoiceProjectTemplateBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIInvoiceTemplateBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIOrderPayConfigBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIOrderPayMethodBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIResourceBusiness;
@@ -183,6 +185,8 @@ class CourseController extends BasicController
                 $course_content = stripslashes($course_content);
                 $price_member = CommonRequest::get($request, 'price_member');
                 $price_general = CommonRequest::get($request, 'price_general');
+                $invoice_template_id = CommonRequest::getInt($request, 'invoice_template_id');
+                $invoice_project_template_id = CommonRequest::getInt($request, 'invoice_project_template_id');
                 $status_online = CommonRequest::getInt($request, 'status_online');
                 $pay_config_id = CommonRequest::getInt($request, 'pay_config_id');
                 // 开通的付款方式
@@ -221,6 +225,8 @@ class CourseController extends BasicController
                     'explain_remarks' => replace_enter_char($explain_remarks, 1),
                     'price_member' => $price_member,
                     'price_general' => $price_general,
+                    'invoice_template_id' => $invoice_template_id,
+                    'invoice_project_template_id' => $invoice_project_template_id,
                     'status_online' => $status_online,
                     'course_content' => $course_content,// 详细说明
                     'resource_id' => $resource_id[0] ?? 0,// 第一个图片资源的id
@@ -275,7 +281,7 @@ class CourseController extends BasicController
 
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-                'relationFormatConfigs'=> CTAPICourseBusiness::getRelationConfigs($request, $this, ['resource_list' => ''], []),
+                'relationFormatConfigs'=> CTAPICourseBusiness::getRelationConfigs($request, $this, ['resource_list' => '', 'invoice_template_name' => '', 'invoice_project_template_name' => ''], []),
                 // 'infoHandleKeyArr' => ['resetPayMethod']
                 'listHandleKeyArr' => ['initPayMethodText', 'priceIntToFloat']
 
@@ -510,6 +516,14 @@ class CourseController extends BasicController
         ]);
         $reDataArr['defaultPayConfig'] = -1;// 默认
 
+        // 获得发票开票模板KV值
+        $reDataArr['invoice_template_kv'] = CTAPIInvoiceTemplateBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'template_name'], []);// ['sqlParams' => ['where' => [['open_status', 1]]]]
+        $reDataArr['defaultInvoiceTemplate'] = -1;// 默认
+
+        // 获得发票商品项目模板KV值
+        $reDataArr['invoice_project_template_kv'] = CTAPIInvoiceProjectTemplateBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'template_name'], []);// ['sqlParams' => ['where' => [['open_status', 1]]]]
+        $reDataArr['defaultInvoiceProjectTemplate'] = -1;// 默认
+
         // 收款开通类型(1现金、2微信支付、4支付宝)
         $reDataArr['payMethod'] =  CTAPIOrderPayMethodBusiness::getListKV($request, $this, ['key' => 'pay_method', 'val' => 'pay_name']);
         $reDataArr['defaultPayMethod'] = -1;// 列表页默认状态
@@ -556,7 +570,7 @@ class CourseController extends BasicController
             $operate = "修改";
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-                'relationFormatConfigs'=> CTAPICourseBusiness::getRelationConfigs($request, $this, ['resource_list' => '', 'course_content' => ''], []),
+                'relationFormatConfigs'=> CTAPICourseBusiness::getRelationConfigs($request, $this, ['resource_list' => '', 'course_content' => '', 'invoice_template_name' => '', 'invoice_project_template_name' => ''], []),
                 // 'infoHandleKeyArr' => ['resetPayMethod']
                 'listHandleKeyArr' => ['initPayMethodText', 'priceIntToFloat']
             ];
@@ -575,6 +589,18 @@ class CourseController extends BasicController
             'sqlParams' => ['where' => [['open_status', 1]]]
         ]);
         $reDataArr['defaultPayConfig'] = $info['pay_config_id'] ?? -1;// 默认
+
+        // 获得发票开票模板KV值
+        $reDataArr['invoice_template_kv'] = CTAPIInvoiceTemplateBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'template_name'], [
+            'sqlParams' => ['where' => [['open_status', 1]]]
+        ]);
+        $reDataArr['defaultInvoiceTemplate'] = $info['invoice_template_id'] ?? -1;// 默认
+
+        // 获得发票商品项目模板KV值
+        $reDataArr['invoice_project_template_kv'] = CTAPIInvoiceProjectTemplateBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'template_name'], [
+            'sqlParams' => ['where' => [['open_status', 1]]]
+        ]);
+        $reDataArr['defaultInvoiceProjectTemplate'] = $info['invoice_project_template_id'] ?? -1;// 默认
 
         // 收款开通类型(1现金、2微信支付、4支付宝)
         $disablePayMethod = [];

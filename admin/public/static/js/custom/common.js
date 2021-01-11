@@ -1297,6 +1297,122 @@ function trim(str) {
     return (str + '').replace(/(\s+)$/g, '').replace(/^\s+/g, '');
 }
 
+// 那么让我解释为什么我更喜欢这个解决方案... 如果您使用相同名称的多重输入，则所有值都将存储在数组中，但如果不是，则该值将直接存储为JSON中索引的值...
+// 这与Danilo Colasso的答案不同返回的JSON仅基于数组值... 因此，如果您有一个带有textarea命名内容和多个作者的表单，此函数将返回给您：
+// {
+//     content : 'This is The Content',
+//         authors :
+//     [
+//         0: 'me',
+//     1: 'you',
+//     2: 'him',
+// ]
+// }
+// //The way to use it :
+// $('#myForm').submit(function(){
+//     var datas = formToJSON(this);
+//     return false;
+// });
+// 表单数据转为 ｛'字段名'：'字段值', '字段名'：['字段值1', '字段值2'], ... ｝
+// 参数 f 表单对象 this
+// 参数 fd 对象  $(f).serializeArray(); 的值  [{name: "LastName", value: "Gates"},{name: "open_status", value: "1"},{name: "role_nums[]", value: "1"},{name: "role_nums[]", value: "2"}]
+// frmType 格式： 1 [默认]: 有多个值时，值转为数组；2：有多个值时，值转为分隔符分隔的值; 4: 2
+// splitStr 分隔符，默认,逗号
+// 返回 对象{'表单字段名'：'表单字段的值',...};注意：值可以是 '字符'或 数组 ['值1','值2'] 或 '字符：值1 分隔符 值2'
+function formToJSON(f, frmType, splitStr) {
+    var fd = $(f).serializeArray();// 格式为： [{name: "LastName", value: "Gates"},{name: "open_status", value: "1"},{name: "role_nums[]", value: "1"},{name: "role_nums[]", value: "2"}]
+    return formObjToObj(fd, frmType, splitStr)
+}
+
+// 参数 fd 对象  $(f).serializeArray(); 的值  [{name: "LastName", value: "Gates"},{name: "open_status", value: "1"},{name: "role_nums[]", value: "1"},{name: "role_nums[]", value: "2"}]
+// frmType 格式： 1 [默认]: 有多个值时，值转为数组；2：有多个值时，值转为分隔符分隔的值
+// splitStr 分隔符，默认,逗号
+// 返回 对象{'表单字段名'：'表单字段的值',...};注意：值可以是 '字符'或 数组 ['值1','值2'] 或 '字符：值1 分隔符 值2'
+function formObjToObj(fd, frmType, splitStr) {
+    frmType = frmType || 1;
+    splitStr = splitStr || ',';
+    var d = {};
+    $(fd).each(function() {
+        if (d[this.name] !== undefined){
+            objAppExistNameVal(d, this.name, this.value, frmType, splitStr);
+            // var val = this.value;
+            // var oldVal = d[this.name];
+            // switch(frmType)
+            // {
+            //     case 2://有多个值时，值转为分隔符分隔的值
+            //         d[this.name] = oldVal + splitStr + val;
+            //         break;
+            //     case 1:// 1 [默认]: 有多个值时，值转为数组
+            //     default:
+            //         if (!Array.isArray(d[this.name])) {
+            //             d[this.name] = [d[this.name]];
+            //         }
+            //         d[this.name].push(this.value);
+            //         break;
+            // }
+
+        }else{
+            d[this.name] = this.value;
+        }
+    });
+    return d;
+}
+// 对加对已经存在的下标的新值进行追加处理
+// obj 当前对象
+// fieldName 当前对象下标名称， 注意：下标在对象中已存在
+// val 新的值
+// frmType 格式： 1 [默认]: 有多个值时，值转为数组；2：有多个值时，值转为分隔符分隔的值
+// splitStr 分隔符，默认,逗号
+// 返回 对象新加一个值 ； 格式： 数组 ['值1','值2'] 或 '字符：值1 分隔符 值2'
+function objAppExistNameVal(obj, fieldName, val, frmType, splitStr) {
+    frmType = frmType || 1;
+    splitStr = splitStr || ',';
+    var oldVal = obj[fieldName] || '';
+    switch(frmType)
+    {
+        case 2://有多个值时，值转为分隔符分隔的值
+            obj[fieldName] = oldVal + splitStr + val;
+            break;
+        case 1:// 1 [默认]: 有多个值时，值转为数组
+        default:
+            if (!Array.isArray(obj[fieldName])) {
+                obj[fieldName] = [obj[fieldName]];
+            }
+            obj[fieldName].push(val);
+            break;
+    }
+}
+
+
+// 表单 $("#addForm").serialize(); 值如下
+// hidden_option=0&id=123&real_name=会员企业&sex=1&email=305463219%40qq.com&mobile=15855686962&qq_number=&id_number=&position_name=&city_id=1
+// &addr=&role_nums[]=1&role_nums[]=2&role_nums[]=4&sign_range=
+// str 原字符串 如上面的 ..=aaa&..=
+// frmType 格式： 1 [默认]: 有多个值时，值转为数组；2：有多个值时，值转为分隔符分隔的值
+// bigStr 大分隔符，默认 &
+// smallStr 小隔符，默认 =
+// splitStr 分隔符，默认,逗号
+// 返回 对象{'表单字段名'：'表单字段的值',...};注意：值可以是 '字符'或 数组 ['值1','值2'] 或 '字符：值1 分隔符 值2'
+function paramsToObj(str, frmType, bigStr, smallStr, splitStr) {
+    bigStr = bigStr || '&';
+    smallStr = smallStr || '=';
+    frmType = frmType || 1;
+    splitStr = splitStr || ',';
+
+    var obj = [];
+    var bigArr = str.split(bigStr);
+    for (var i = 0 ; i < bigArr.length ; i++) {
+        var temStr = bigArr[i];
+        var smallArr = temStr.split(smallStr);
+        var fieldName = smallArr[0];
+        var fieldVal = smallArr[1];
+        var temObj = {"name": fieldName, "value": fieldVal};
+        obj.push(temObj);
+    }
+    console.log(obj);
+    return formObjToObj(obj, frmType, splitStr)
+}
+
 //获得表单各name的值[只能是input]
 //frm_ids 需要读取的表单的id，多个用,号分隔
 //返回值不为空的表单的json对象
@@ -2392,7 +2508,9 @@ function resolve_baidu_template(template_id,json_data,html_id){
 //                         4刷新当前页面--当前页操作5刷新当前列表页面--当前页操作[适合更新操作-不更新总数]
 //                                                  6刷新当前列表页面--自己页面操作时[适合新加操作-更新总数]
 //sure_close_tishi 关闭窗口提示文字
-function layeriframe(weburl,tishi,widthnum,heightnum,operate_num,sure_close_tishi, doFun){
+// operate_type 操作类型 1：询问再执行[默认]； 2：不询问直接执行
+function layeriframe(weburl, tishi, widthnum, heightnum, operate_num, sure_close_tishi, doFun, operate_type){
+    operate_type = operate_type || 1;
 	 layer.open({
 		type: 2,
 		//shade: [0.5, '#000'],
@@ -2422,79 +2540,165 @@ function layeriframe(weburl,tishi,widthnum,heightnum,operate_num,sure_close_tish
 //				}
 //				layer.close(index);
 //			});
-                        var index_query = layer.confirm(close_tishi, {
-                            btn: ['确定','取消'] //按钮
-                        }, function(){
-                            layer.close(index_query);
-                            let list_fun_name = '';
-                            switch (operate_num){
-                                    case 0:
-                                        break;
-                                    case 1:
-                                          //刷新当前页面-父页操作时
-                                          parent.location.reload();
-                                          break;
-                                    case 2:
-                                        //刷新当前列表页面-父页操作时--[适合更新操作-不更新总数]
-                                        list_fun_name = window.parent.LIST_FUNCTION_NAME || 'reset_list';
-                                        eval( 'parent.' + list_fun_name + '(' + true +', ' + true +', ' + false +', 2)');
-                                        // parent.reset_list(true, true, false, 2);
-                                        break;
-                                    case 22:
-                                        //刷新当前列表页面-父页操作时--[适合新加操作-更新总数]
-                                        list_fun_name = window.parent.LIST_FUNCTION_NAME || 'reset_list';
-                                        eval( 'parent.' + list_fun_name + '(' + true +', ' + true +', ' + true +', 2)');
-                                        // parent.reset_list(true, true, false, 2);
-                                        break;
-                                    case 3:// 执行回调函数
-                                        doFun && doFun();
-                                        break;
-                                    case 4:
-                                        //刷新当前页面-自己页面
-                                        location.reload();
-                                        break;
-                                    case 5:
-                                        //刷新当前列表页面-自己页面操作时[适合更新操作-不更新总数]
-                                        list_fun_name = LIST_FUNCTION_NAME || 'reset_list';
-                                        eval( '' + list_fun_name + '(' + true +', ' + true +', ' + false +', 2)');
-                                        // parent.reset_list(true, true, false, 2);
-                                        break;
-                                    case 6:
-                                        //刷新当前列表页面-自己页面操作时[适合新加操作-更新总数]
-                                        list_fun_name = LIST_FUNCTION_NAME || 'reset_list';
-                                        eval( '' + list_fun_name + '(' + true +', ' + true +', ' + true +', 2)');
-                                        // parent.reset_list(true, true, false, 2);
-                                        break;
-                                    default:
-                            }
-                            layer.close(index);
-                        }, function(){
-                        });
-                        return false;
+                    switch (operate_type){
+                        case 2:// 不询问直接执行
+                            layeriframeDo(index, operate_num, doFun);// 执行具体代码
+                            break;
+                        case 1:// 1：询问再执行
+                        //break;
+                        default:
+                            var index_query = layer.confirm(close_tishi, {
+                                btn: ['确定','取消'] //按钮
+                            }, function(){
+                                layer.close(index_query);
+                                layeriframeDo(index, operate_num, doFun);// 执行具体代码
+                                // let list_fun_name = '';
+                                // switch (operate_num){
+                                //         case 0:
+                                //             break;
+                                //         case 1:
+                                //               //刷新当前页面-父页操作时
+                                //               parent.location.reload();
+                                //               break;
+                                //         case 2:
+                                //             //刷新当前列表页面-父页操作时--[适合更新操作-不更新总数]
+                                //             list_fun_name = window.parent.LIST_FUNCTION_NAME || 'reset_list';
+                                //             eval( 'parent.' + list_fun_name + '(' + true +', ' + true +', ' + false +', 2)');
+                                //             // parent.reset_list(true, true, false, 2);
+                                //             break;
+                                //         case 22:
+                                //             //刷新当前列表页面-父页操作时--[适合新加操作-更新总数]
+                                //             list_fun_name = window.parent.LIST_FUNCTION_NAME || 'reset_list';
+                                //             eval( 'parent.' + list_fun_name + '(' + true +', ' + true +', ' + true +', 2)');
+                                //             // parent.reset_list(true, true, false, 2);
+                                //             break;
+                                //         case 3:// 执行回调函数
+                                //             doFun && doFun();
+                                //             break;
+                                //         case 4:
+                                //             //刷新当前页面-自己页面
+                                //             location.reload();
+                                //             break;
+                                //         case 5:
+                                //             //刷新当前列表页面-自己页面操作时[适合更新操作-不更新总数]
+                                //             list_fun_name = LIST_FUNCTION_NAME || 'reset_list';
+                                //             eval( '' + list_fun_name + '(' + true +', ' + true +', ' + false +', 2)');
+                                //             // parent.reset_list(true, true, false, 2);
+                                //             break;
+                                //         case 6:
+                                //             //刷新当前列表页面-自己页面操作时[适合新加操作-更新总数]
+                                //             list_fun_name = LIST_FUNCTION_NAME || 'reset_list';
+                                //             eval( '' + list_fun_name + '(' + true +', ' + true +', ' + true +', 2)');
+                                //             // parent.reset_list(true, true, false, 2);
+                                //             break;
+                                //         default:
+                                // }
+                                // layer.close(index);
+                            }, function(){
+                            });
+                    }
+                    return false;
 		}
 	});
 }
+// 上面的 layeriframe方法的执行体
+// 参数也查看上面的方法
+function layeriframeDo(index, operate_num, doFun) {
+
+    let list_fun_name = '';
+    switch (operate_num){
+        case 0:
+            break;
+        case 1:
+            //刷新当前页面-父页操作时
+            parent.location.reload();
+            break;
+        case 2:
+            //刷新当前列表页面-父页操作时--[适合更新操作-不更新总数]
+            list_fun_name = window.parent.LIST_FUNCTION_NAME || 'reset_list';
+            eval( 'parent.' + list_fun_name + '(' + true +', ' + true +', ' + false +', 2)');
+            // parent.reset_list(true, true, false, 2);
+            break;
+        case 22:
+            //刷新当前列表页面-父页操作时--[适合新加操作-更新总数]
+            list_fun_name = window.parent.LIST_FUNCTION_NAME || 'reset_list';
+            eval( 'parent.' + list_fun_name + '(' + true +', ' + true +', ' + true +', 2)');
+            // parent.reset_list(true, true, false, 2);
+            break;
+        case 3:// 执行回调函数
+            doFun && doFun();
+            break;
+        case 4:
+            //刷新当前页面-自己页面
+            location.reload();
+            break;
+        case 5:
+            //刷新当前列表页面-自己页面操作时[适合更新操作-不更新总数]
+            list_fun_name = LIST_FUNCTION_NAME || 'reset_list';
+            eval( '' + list_fun_name + '(' + true +', ' + true +', ' + false +', 2)');
+            // parent.reset_list(true, true, false, 2);
+            break;
+        case 6:
+            //刷新当前列表页面-自己页面操作时[适合新加操作-更新总数]
+            list_fun_name = LIST_FUNCTION_NAME || 'reset_list';
+            eval( '' + list_fun_name + '(' + true +', ' + true +', ' + true +', 2)');
+            // parent.reset_list(true, true, false, 2);
+            break;
+        default:
+    }
+    layer.close(index);
+}
+
 //iframe中的关闭按钮
 //index 父窗口layer对象
 //operate_num关闭时的操作0不做任何操作1刷新当前页面
 //sure_close_tishi 关闭窗口提示文字
-function iframeclose(index,operate_num,sure_close_tishi){
+// operate_type 操作类型 1：询问再执行[默认]； 2：不询问直接执行
+function iframeclose(index, operate_num,sure_close_tishi, operate_type){
     var close_tishi = sure_close_tishi || '确定关闭吗？';
+    operate_type = operate_type || 1;
     //parent.layer.msg('您将标记"' + $('#name').val() + '"成功传送给了父窗口' , 1);
-	var index1 = parent.layer.confirm(close_tishi, function(){
-		//关闭成功
-		parent.layer.close(index1);
-		switch (operate_num){
-			case 0:
-			  break;
-			case 1:
-			  //刷新当前页面
-			  parent.location.reload();
-			  break;
-			default:
-		}
-		parent.layer.close(index);
-	});
+    switch (operate_type){
+        case 2:// 不询问直接执行
+            iframecloseDo(index, operate_num);// 执行具体代码
+            break;
+        case 1:// 1：询问再执行
+            //break;
+        default:
+            var index1 = parent.layer.confirm(close_tishi, function(){
+                //关闭成功
+                parent.layer.close(index1);
+                iframecloseDo(index, operate_num);// 执行具体代码
+                // switch (operate_num){
+                //     case 0:
+                //         break;
+                //     case 1:
+                //         //刷新当前页面
+                //         parent.location.reload();
+                //         break;
+                //     default:
+                // }
+                // parent.layer.close(index);
+            });
+
+    }
+}
+
+// iframeclose 上面方法的执行体代码
+//index 父窗口layer对象
+//operate_num关闭时的操作0不做任何操作1刷新当前页面
+function iframecloseDo(index, operate_num){
+
+    switch (operate_num){
+        case 0:
+            break;
+        case 1:
+            //刷新当前页面
+            parent.location.reload();
+            break;
+        default:
+    }
+    parent.layer.close(index);
 }
 
 //多少秒后关闭弹窗

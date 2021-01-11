@@ -115,6 +115,24 @@ class CTAPIOrdersBusiness extends BasicPublicCTAPIBusiness
                     static::getUboundRelation($relationArr, 'pay_name'),
                     static::getUboundRelationExtendParams($extendParams, 'pay_name')),
                 static::getRelationSqlParams([], $extendParams, 'pay_name'), '', []),
+            // 获得发票开票模板名称
+            'invoice_template_name' => CTAPIInvoiceTemplateBusiness::getTableRelationConfigInfo($request, $controller
+                , ['invoice_template_id' => 'id']
+                , 1, 2
+                ,'','',
+                CTAPIInvoiceTemplateBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'invoice_template_name'),
+                    static::getUboundRelationExtendParams($extendParams, 'invoice_template_name')),
+                static::getRelationSqlParams([], $extendParams, 'invoice_template_name'), '', []),// 'where' => [['admin_type', 2]]
+            // 获得发票企业抬头名称
+            'invoice_buyer_name' => CTAPIInvoiceBuyerBusiness::getTableRelationConfigInfo($request, $controller
+                , ['invoice_buyer_id' => 'id']
+                , 1, 2
+                ,'','',
+                CTAPIInvoiceTemplateBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'invoice_buyer_name'),
+                    static::getUboundRelationExtendParams($extendParams, 'invoice_buyer_name')),
+                static::getRelationSqlParams([], $extendParams, 'invoice_buyer_name'), '', []),// 'where' => [['admin_type', 2]]
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }
@@ -177,6 +195,12 @@ class CTAPIOrdersBusiness extends BasicPublicCTAPIBusiness
 
         $has_refund = CommonRequest::get($request, 'has_refund');
         if(strlen($has_refund) > 0 && $has_refund != -1)  Tool::appendParamQuery($queryParams, $has_refund, 'has_refund', [ ''], ',', false);
+
+        $invoice_buyer_id = CommonRequest::get($request, 'invoice_buyer_id');
+        if(strlen($invoice_buyer_id) > 0 && !in_array($invoice_buyer_id, [0, '-1']))  Tool::appendParamQuery($queryParams, $invoice_buyer_id, 'invoice_buyer_id', [0, '0', ''], ',', false);
+
+        $invoice_buyer_id_history = CommonRequest::get($request, 'invoice_buyer_id_history');
+        if(strlen($invoice_buyer_id_history) > 0 && !in_array($invoice_buyer_id_history, [0, '-1']))  Tool::appendParamQuery($queryParams, $invoice_buyer_id_history, 'invoice_buyer_id_history', [0, '0', ''], ',', false);
 
         $invoice_template_id = CommonRequest::get($request, 'invoice_template_id');
         if(strlen($invoice_template_id) > 0 && !in_array($invoice_template_id, [0, '-1']))  Tool::appendParamQuery($queryParams, $invoice_template_id, 'invoice_template_id', [0, '0', ''], ',', false);
@@ -265,7 +289,7 @@ class CTAPIOrdersBusiness extends BasicPublicCTAPIBusiness
      * @param Request $request 请求信息
      * @param Controller $controller 控制对象
      * @param int $organize_id 操作的所属企业id 可以为0：没有所属企业--企业后台，操作用户时用来限制，只能操作自己企业的用户
-     * @param string $id 记录id，多个用逗号分隔
+     * @param string $id 记录id，多个用逗号分隔 或是 一维数组
      * @param int $operate_type 操作类型 1确认，、2手动订单完成【对业务完成后才确认缴费的订单，进行手动完成】
      * @param int $notLog 是否需要登陆 0需要1不需要
      * @return  int 修改的数量   //   array 列表数据
@@ -289,5 +313,129 @@ class CTAPIOrdersBusiness extends BasicPublicCTAPIBusiness
         return $modifyNum;
         // return static::delAjaxBase($request, $controller, '', $notLog);
 
+    }
+
+    /**
+     * 开电子发票--蓝票
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param int $organize_id 操作的所属企业id
+     * @param string $id 记录id，多个用逗号分隔
+     * @param int $operate_staff_id 操作人id
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  int 修改的数量   //   array 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function operateInvoiceBlueAjax(Request $request, Controller $controller, $organize_id = 0, $id = 0, $invoice_buyer_id = 0, $notLog = 0)
+    {
+        $company_id = $controller->company_id;
+        $user_id = $controller->user_id;
+
+        $buyerInfo = CTAPIInvoiceBuyerBusiness::getFVFormatList( $request,  $controller, 4, 1
+            , ['id' => $invoice_buyer_id], false, [], []);
+        if(empty($buyerInfo)) throws('请选择发票抬头');
+        if($company_id != $buyerInfo['company_id'])  throws('您没有操作此记录的权限！');
+        if(!in_array($buyerInfo['open_status'], [1]))  throws('发票抬头未启用，请开启或选择其它抬头！');
+
+        // 调用新加或修改接口
+        $apiParams = [
+            'company_id' => $company_id,
+            'organize_id' => $organize_id,
+            'id' => $id,
+            'invoice_buyer_id' => $invoice_buyer_id,
+            'operate_staff_id' => $user_id,
+            'modifAddOprate' => 0,
+        ];
+        $result = static::exeDBBusinessMethodCT($request, $controller, '',  'operateInvoiceBlueById', $apiParams, $company_id, $notLog);
+
+        return $result;
+
+    }
+
+    /**
+     * 根据订单id，获得订单信息并判断是否可以进行分班操作
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param string $id 记录id，多个用逗号分隔
+     * @param int $operateType 操作类型 1：电子发票[蓝票] 【默认】；2：电子发票[红票]
+     * @return array 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function getOrdersAndJudge(Request $request, Controller $controller, &$id, $operateType = 1){
+        // 获得订单列表信息
+        $extParams = [
+            // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+            'relationFormatConfigs'=> static::getRelationConfigs($request, $controller,
+                [
+                    'company_name' => '',
+                    'pay_company_name' => '',
+                    'pay_name' => '',
+                    'invoice_template_name' => '',
+                    'invoice_buyer_name' => '',
+                ] , []),
+            'listHandleKeyArr' => ['priceIntToFloat'],
+
+        ];
+        $dataList = static::getFVFormatList( $request,  $controller, 1, 1
+            , ['id' => $id], false, [], $extParams);
+        foreach($dataList as $info){
+
+            $tem_order_status = $info['order_status'];// 状态1待支付2待确认4已确认8订单完成【服务完成】16取消[系统取消]32取消[用户取消]
+            $tem_invoice_result = $info['invoice_result'];// 开票结果1待开票1已开蓝票2已红冲
+            $tem_invoice_status = $info['invoice_status'];// 开票状态1待开票2开票中4已开票【冲红后重新走流程】
+            $tem_upload_status = $info['upload_status'];// 开票数据状态1待上传2已上传4已开票8已作废[不用]16已红冲[不用]
+            $tem_order_no = $info['order_no'];
+
+            switch($operateType) {
+                case 1:// 电子发票[蓝票]判断 【默认】
+                    if(! (($tem_order_status & (2 | 4 | 8)) > 0 && $tem_invoice_status == 1 )){
+                        throws('订单【' . $tem_order_no . '】非可开电子发票状态，不可以进行此操作');
+                    }
+                    break;
+                case 2:// 电子发票[红票]
+                    if(! $tem_invoice_status == 4 ){
+                        throws('订单【' . $tem_order_no . '】非已开发票状态，不可以进行此操作');
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        return $dataList;
+    }
+
+    /**
+     * 根据订单id,获得电子发票信息
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param int $id 操作的所属企业id 可以为0：没有所属企业--企业后台，操作用户时用来限制，只能操作自己企业的用户
+     * @param int $company_id 所属企业id , 没有
+     * @param int $operateType 操作类型 1：电子发票[蓝票] 【默认】；2：电子发票[红票]
+     * @return  array 数组 [ '订单数据列表'， '企业id', '企业名称']
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function getInvoiceByIds(Request $request, Controller $controller, $id, $company_id = 0, $operateType = 1){
+        $dataList = static::getOrdersAndJudge($request, $controller, $id, $operateType);
+        // 判断订单所属企业【同一企业，就可以开电子发票】
+        $companyIds = Tool::getArrFields($dataList, 'company_id');
+        if(count($companyIds) > 1){
+            throws('不同的企业，不可以一起进行开票！请分别开票！');
+        }
+        $companyNames = Tool::getArrFields($dataList, 'company_name');
+        if(is_numeric($company_id) && $company_id > 0 && !in_array($company_id, $companyIds)){
+            throws('您没有操作此记录的权限！');
+        }
+        $payConfigIds = Tool::getArrFields($dataList, 'pay_config_id');
+        if(count($payConfigIds) > 1){
+            throws('不同的收款帐号，不可以一起进行开票！请分别开票！');
+        }
+        $invoiceTemplateIds = Tool::getArrFields($dataList, 'invoice_template_id');
+        if(count($invoiceTemplateIds) > 1){
+            throws('不同的【发票开票模板】，不可以一起进行开票！请分别开票！');
+        }
+        return [$dataList, $companyIds[0] ?? 0, $companyNames[0] ?? ''];
     }
 }

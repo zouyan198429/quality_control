@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\WebFront\Company\QualityControl;
 
 use App\Business\Controller\API\QualityControl\CTAPICourseBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIInvoiceBuyerBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIInvoiceProjectTemplateBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIInvoiceTemplateBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIOrderPayConfigBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIOrderPayMethodBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIOrdersBusiness;
@@ -117,6 +120,8 @@ class OrdersController extends BasicController
                             'company_name' => '',
                             'pay_company_name' => '',
                             'pay_name' => '',
+                            'invoice_template_name' => '',
+                            'invoice_buyer_name' => '',
                         ], []),
                     'listHandleKeyArr' => ['priceIntToFloat'],
                     ];
@@ -268,6 +273,8 @@ class OrdersController extends BasicController
                         'company_name' => '',
                         'pay_company_name' => '',
                         'pay_name' => '',
+                        'invoice_template_name' => '',
+                        'invoice_buyer_name' => '',
                     ], []),
                 'listHandleKeyArr' => ['priceIntToFloat'],
             ];
@@ -320,6 +327,8 @@ class OrdersController extends BasicController
                         'company_name' => '',
                         'pay_company_name' => '',
                         'pay_name' => '',
+                        'invoice_template_name' => '',
+                        'invoice_buyer_name' => '',
                     ], []),
                 'listHandleKeyArr' => ['priceIntToFloat'],
             ];
@@ -493,6 +502,17 @@ class OrdersController extends BasicController
         $reDataArr['defaultPayMethod'] = (!is_numeric($pay_method) || $pay_method <= 0 ) ? -1 : $pay_method;// 列表页默认状态
         // $reDataArr['payMethodDisable'] = OrderPayConfig::$payMethodDisable;// 不可用的--禁用
 
+        // 获得发票开票模板KV值
+        $reDataArr['invoice_template_kv'] = CTAPIInvoiceTemplateBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'template_name'], []);// ['sqlParams' => ['where' => [['open_status', 1]]]]
+        $reDataArr['defaultInvoiceTemplate'] = -1;// 默认
+
+        // 获得发票商品项目模板KV值
+//        $reDataArr['invoice_project_template_kv'] = CTAPIInvoiceProjectTemplateBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'template_name'], []);// ['sqlParams' => ['where' => [['open_status', 1]]]]
+//        $reDataArr['defaultInvoiceProjectTemplate'] = -1;// 默认
+
+        // 获得发票抬头KV值
+//        $reDataArr['invoice_buyer_kv'] = CTAPIInvoiceBuyerBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'gmf_mc'], ['sqlParams' => ['where' =>[['company_id' , $this->user_id]]]]);// ['sqlParams' => ['where' => [['open_status', 1]]]]
+//        $reDataArr['defaultInvoiceBuyer'] = -1;// 默认
 
         // 订单类型1面授培训2会员年费
         $order_type = CommonRequest::getInt($request, 'order_type');
@@ -569,6 +589,8 @@ class OrdersController extends BasicController
                         'company_name' => '',
                         'pay_company_name' => '',
                         'pay_name' => '',
+                        'invoice_template_name' => '',
+                        'invoice_buyer_name' => '',
                     ], []),
                 'listHandleKeyArr' => ['priceIntToFloat'],
             ];
@@ -588,6 +610,23 @@ class OrdersController extends BasicController
         $reDataArr['payMethod'] =  CTAPIOrderPayMethodBusiness::getListKV($request, $this, ['key' => 'pay_method', 'val' => 'pay_name']);
         $reDataArr['defaultPayMethod'] = $info['pay_method'] ?? -1;// 列表页默认状态
 
+        // 获得发票开票模板KV值
+        $reDataArr['invoice_template_kv'] = CTAPIInvoiceTemplateBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'template_name'], [
+            'sqlParams' => ['where' => [['open_status', 1]]]
+        ]);
+        $reDataArr['defaultInvoiceTemplate'] = $info['invoice_template_id'] ?? -1;// 默认
+
+        // 获得发票商品项目模板KV值
+//        $reDataArr['invoice_project_template_kv'] = CTAPIInvoiceProjectTemplateBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'template_name'], [
+//            'sqlParams' => ['where' => [['open_status', 1]]]
+//        ]);
+//        $reDataArr['defaultInvoiceProjectTemplate'] = $info['invoice_project_template_id'] ?? -1;// 默认
+
+        // 获得发票抬头KV值
+//        $reDataArr['invoice_buyer_kv'] = CTAPIInvoiceBuyerBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'gmf_mc'], [
+//            'sqlParams' => ['where' => [['open_status', 1],['company_id', $this->user_id]]]
+//        ]);
+//        $reDataArr['defaultInvoiceBuyer'] = $info['invoice_buyer_id'] ?? -1;// 默认
 
         // 订单类型1面授培训2会员年费
         $reDataArr['orderType'] =  Orders::$orderTypeArr;

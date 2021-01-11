@@ -63,9 +63,17 @@
                   <option value="{{ $k }}"  @if(isset($defaultHasRefund) && $defaultHasRefund == $k) selected @endif >{{ $txt }}</option>
               @endforeach
           </select>
+          <select class="wmini" name="invoice_template_id" style="width: 80px;">
+              <option value="">发票开票模板</option>
+              @foreach ($invoice_template_kv as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultInvoiceTemplate) && $defaultInvoiceTemplate == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
         <select style="width:80px; height:28px;" name="field">
             <option value="order_no">订单号</option>
-          <option value="remarks">买家备注</option>
+            <option value="remarks">买家备注</option>
+          <option value="invoic_blue_num">蓝票单据号</option>
+            <option value="invoic_red_num">红票单据号</option>
         </select>
         <input type="text" value=""    name="keyword"  placeholder="请输入关键字"/>
         <button class="btn btn-normal search_frm">搜索</button>
@@ -81,6 +89,7 @@
 {{--    <div style="display:none;" ><input type="file" class="import_file img_input"></div>{ {--导入file对象--} }--}}
       <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.sureOrder(this)" >确认[勾选]</button>
       <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.finishOrder(this)" >服务完成[勾选]</button>
+      <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.invoiceSelected(this)" >电子发票[勾选]</button>
   </div>
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
@@ -107,12 +116,12 @@
       </th>
 {{--      <th>ID</th>--}}
         <th>订单号<hr>所属企业</th>
-      <th>订单类型<hr/>订单备注</th>
+      <th>订单类型<hr/>订单备注<hr/>发票开票模板</th>
       <th>收款帐号<hr/>支付方式</th>
-      <th>商品数量<hr/>商品总价</th>
-       <th>应付金额<hr/>优惠金额</th>
+      <th>商品数量<hr/>商品总价<hr/>发票抬头</th>
+       <th>应付金额<hr/>优惠金额<hr/>开票状态</th>
         <th>下单时间<hr/>付款时间</th>
-        <th>退费状态<hr/>退费时间</th>
+        <th>退费状态<hr/>退费时间<hr/>开票结果</th>
         <th>已退金额<hr/>退费冻结</th>
         <th>支付金额<hr/>找零金额<hr/>实收金额</th>
         <th>确认时间<hr/>完成时间<hr/>作废时间</th>
@@ -165,8 +174,9 @@
 
       var SURE_ORDER_URL  = "{{ url('api/admin/orders/ajax_sure_order') }}";//操作(确认)
       var FINISH_ORDER_URL  = "{{ url('api/admin/orders/ajax_finish_order') }}";//操作(完成)
+      var INVOICE_URL  = "{{ url('admin/orders/invoices') }}";//操作(电子发票)
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/Orders.js') }}?8"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/Orders.js') }}?16"  type="text/javascript"></script>
 </body>
 </html>

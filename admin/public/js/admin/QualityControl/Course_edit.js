@@ -368,6 +368,22 @@ function ajax_form(){
         return false;
     }
 
+    var invoice_template_id = $('input[name=invoice_template_id]:checked').val() || '';
+    var judge_seled = judge_validate(1,'发票开票模板',invoice_template_id,true,'digit',"","");
+    if(judge_seled != ''){
+        layer_alert("请选择发票开票模板",3,0);
+        //err_alert('<font color="#000000">' + judge_seled + '</font>');
+        return false;
+    }
+
+    var invoice_project_template_id = $('input[name=invoice_project_template_id]:checked').val() || '';
+    var judge_seled = judge_validate(1,'发票商品项目模板',invoice_project_template_id,true,'digit',"","");
+    if(judge_seled != ''){
+        layer_alert("请选择发票商品项目模板",3,0);
+        //err_alert('<font color="#000000">' + judge_seled + '</font>');
+        return false;
+    }
+
     var status_online = $('input[name=status_online]:checked').val() || '';
     var judge_seled = judge_validate(1,'上架状态',status_online,true,'custom',/^[12]$/,"");
     if(judge_seled != ''){

@@ -170,7 +170,8 @@ class InvoiceTemplateController extends BasicController
                 // CommonRequest::judgeEmptyParams($request, 'id', $id);
                 $invoice_service = CommonRequest::getInt($request, 'invoice_service');
                 $template_name = CommonRequest::get($request, 'template_name');
-                $itype = CommonRequest::get($request, 'itype');
+                $zsfs = CommonRequest::get($request, 'zsfs');
+                $itype = "026";// CommonRequest::get($request, 'itype');
                 $tspz = CommonRequest::get($request, 'tspz');
                 $kpr = CommonRequest::get($request, 'kpr');
                 $skr = CommonRequest::get($request, 'skr');
@@ -181,6 +182,7 @@ class InvoiceTemplateController extends BasicController
                 $saveData = [
                     'invoice_service' => $invoice_service,
                     'template_name' => $template_name,
+                    'zsfs' => $zsfs,
                     'itype' => $itype,
                     'tspz' => $tspz,
                     'kpr' => $kpr,
@@ -453,6 +455,10 @@ class InvoiceTemplateController extends BasicController
         $reDataArr['invoiceService'] =  InvoiceTemplate::$invoiceServiceArr;
         $reDataArr['defaultInvoiceService'] = -1;// 列表页默认状态
 
+        // 征税方式0：普通征税 1: 减按计增 2：差额征税)
+        $reDataArr['zsfs'] =  InvoiceTemplate::$zsfsArr;
+        $reDataArr['defaultZsfs'] = -1;// 列表页默认状态
+
         // 发票类型(026=电票,004=专票,007=普票，025=卷票)
         $reDataArr['itype'] =  InvoiceTemplate::$itypeArr;
         $reDataArr['defaultItype'] = -1;// 列表页默认状态
@@ -522,6 +528,10 @@ class InvoiceTemplateController extends BasicController
         // 开票服务商1沪友
         $reDataArr['invoiceService'] =  InvoiceTemplate::$invoiceServiceArr;
         $reDataArr['defaultInvoiceService'] = $info['invoice_service'] ?? -1;// 列表页默认状态
+
+        // 征税方式0：普通征税 1: 减按计增 2：差额征税)
+        $reDataArr['zsfs'] =  InvoiceTemplate::$zsfsArr;
+        $reDataArr['defaultZsfs'] = $info['zsfs'] ?? -1;// 列表页默认状态
 
         // 发票类型(026=电票,004=专票,007=普票，025=卷票)
         $reDataArr['itype'] =  InvoiceTemplate::$itypeArr;

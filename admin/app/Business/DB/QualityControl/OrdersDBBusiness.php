@@ -3,6 +3,7 @@
 namespace App\Business\DB\QualityControl;
 
 use App\Services\DB\CommonDB;
+use App\Services\Invoice\hydzfp\InvoiceHydzfp;
 use App\Services\Tool;
 use Carbon\Carbon;
 
@@ -35,6 +36,8 @@ class OrdersDBBusiness extends BasePublicDBBusiness
      *      'total_price_goods' => $total_price_goods,// $total_price - $total_price_discount,// 商品应付金额--平台按量结算值(商品总价-实际/实时 total_price －　商品下单时优惠金额　total_price_discount)
      *      'payment_amount' => $payment_amount,// 总支付金额
      *      'change_amount' => $change_amount,// 找零金额
+     *      'invoice_template_id' => 0,// 发票开票模板id
+     *      'invoice_template_id_history' => 0,// 发票开票模板id历史
      *  ];
      * @param string  $order_no 生成的订单号
      * @param int $operate_staff_id 操作人id
@@ -71,6 +74,9 @@ class OrdersDBBusiness extends BasePublicDBBusiness
             'refund_price_frozen' => 0,// 退费冻结[申请时冻结，成功/失败时减掉]
             // 'refund_time' => 'aaa',// 退费时间-最后一次退款成功的时间
             'check_price' => $createOrder['total_price_goods'],// 真实收取费用（商品应付金额total_price_goods -  退费refund_price）
+            'invoice_template_id' => $createOrder['invoice_template_id'] ?? 0,// 发票开票模板id
+            'invoice_template_id_history' => $createOrder['invoice_template_id_history'] ?? 0,// 发票开票模板id历史
+
         ];
         $order_id = 0;
         static::replaceById($ordersInfo, $company_id, $order_id, $operate_staff_id, $modifAddOprate);
@@ -334,6 +340,214 @@ class OrdersDBBusiness extends BasePublicDBBusiness
             $modifyNum = static::save($updateData, $saveQueryParams);
         });
         return $modifyNum;
+    }
+
+    /**
+     * 根据订单id，获得订单信息并判断是否可以进行分班操作
+     *
+     * @param string $id 记录id，多个用逗号分隔 或一维数组
+     * @param int $operateType 操作类型 1：电子发票[蓝票] 【默认】；2：电子发票[红票]
+     * @return array 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function getOrdersAndJudge($id, $operateType = 1){
+        // 获得需要操作的数据
+        $fieldValParams = ['id' => $id];
+        // if(is_numeric($organize_id) && $organize_id > 0) $fieldValParams['company_id'] = $organize_id;
+        $dataList = static::getDBFVFormatList(1, 1, $fieldValParams, false);
+        if(empty($dataList))  throws("订单信息不存在");// 没有要操作的记录，便不进行操作了
+
+        foreach($dataList as $info){
+
+            $tem_order_status = $info['order_status'];// 状态1待支付2待确认4已确认8订单完成【服务完成】16取消[系统取消]32取消[用户取消]
+            $tem_invoice_result = $info['invoice_result'];// 开票结果1待开票1已开蓝票2已红冲
+            $tem_invoice_status = $info['invoice_status'];// 开票状态1待开票2开票中4已开票【冲红后重新走流程】
+            $tem_upload_status = $info['upload_status'];// 开票数据状态1待上传2已上传4已开票8已作废[不用]16已红冲[不用]
+            $tem_order_no = $info['order_no'];
+
+            switch($operateType) {
+                case 1:// 电子发票[蓝票]判断 【默认】
+                    if(! (($tem_order_status & (2 | 4 | 8)) > 0 && $tem_invoice_status == 1 )){
+                        throws('订单【' . $tem_order_no . '】非可开电子发票状态，不可以进行此操作');
+                    }
+                    break;
+                case 2:// 电子发票[红票]
+                    if(! $tem_invoice_status == 4 ){
+                        throws('订单【' . $tem_order_no . '】非已开发票状态，不可以进行此操作');
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        return $dataList;
+    }
+
+    /**
+     * 根据id开电子发票【蓝票】单条或多条数据
+     *
+     * @param int  $company_id 企业id
+     * @param int $organize_id 操作的所属企业id
+     * @param string/array $id id 数组或字符串
+     * @param int $invoice_buyer_id 开票抬头id
+     * @param int $operate_staff_id 操作人id
+     * @param int $modifAddOprate 修改时是否加操作人，1:加;0:不加[默认]
+     * @return  int 修改的数量   //  array 记录id值，--一维数组
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function operateInvoiceBlueById($company_id, $organize_id = 0, $id = 0, $invoice_buyer_id = 0, $operate_staff_id = 0, $modifAddOprate = 0){
+        // 获得订单列表
+        $dataList = static::getOrdersAndJudge($id, 1);
+        // 判断订单所属企业【同一企业，就可以开电子发票】
+        $companyIds = Tool::getArrFields($dataList, 'company_id');
+        if(count($companyIds) > 1){
+            throws('不同的企业，不可以一起进行开票！请分别开票！');
+        }
+        $companyNames = Tool::getArrFields($dataList, 'company_name');
+        if(is_numeric($organize_id) && $organize_id > 0 && !in_array($organize_id, $companyIds)){
+            throws('您没有操作此记录的权限！');
+        }
+
+        // 收款帐号
+        $payConfigIds = Tool::getArrFields($dataList, 'pay_config_id');
+        if(count($payConfigIds) > 1){
+            throws('不同的收款帐号，不可以一起进行开票！请分别开票！');
+        }
+        $pay_config_id = $payConfigIds[0];
+        $payConfigInfo = OrderPayConfigDBBusiness::getDBFVFormatList(4, 1, ['id' => $pay_config_id]
+            , false, '', []);
+        if(empty($payConfigInfo)) throws('收款帐号记录不存在！');
+        if(!in_array($payConfigInfo['open_status'], [1])) throws('收款帐号非开启状态！');
+
+        // 发票开票模板
+        $invoiceTemplateIds = Tool::getArrFields($dataList, 'invoice_template_id');
+        if(count($invoiceTemplateIds) > 1){
+            throws('不同的【发票开票模板】，不可以一起进行开票！请分别开票！');
+        }
+        $invoice_template_id = $invoiceTemplateIds[0];
+        $invoiceTemplateInfo = InvoiceTemplateDBBusiness::getDBFVFormatList(4, 1, ['id' => $invoice_template_id]
+            , false, '', []);
+        if(empty($invoiceTemplateInfo)) throws('【发票开票模板】记录不存在！');
+        if(!in_array($invoiceTemplateInfo['open_status'], [1])) throws('【发票开票模板】非开启状态！');
+
+        // 获得销售方信息
+        $invoiceSellerInfo = InvoiceSellerDBBusiness::getDBFVFormatList(4, 1, ['pay_config_id' => $pay_config_id]
+            , false, '', []);
+        if(empty($invoiceSellerInfo)) throws('【销售方开票信息】记录不存在！');
+        if(!in_array($invoiceSellerInfo['open_status'], [1])) throws('【销售方开票信息】非开启状态！');
+
+        // 获得购买方信息
+        $invoiceBuyerInfo = InvoiceBuyerDBBusiness::getDBFVFormatList(4, 1, ['id' => $invoice_buyer_id]
+            , false, '', []);
+        if(empty($invoiceBuyerInfo)) throws('【购买方开票信息】记录不存在！');
+        if($organize_id != $invoiceBuyerInfo['company_id'])  throws('您没有【购买方开票信息】操作此记录的权限！');
+        if(!in_array($invoiceBuyerInfo['open_status'], [1])) throws('【购买方开票信息】非开启状态！');
+
+        // 获得具体的商品信息
+        $dataOrderTypeList = Tool::arrUnderReset($dataList, 'order_type', 2, '_');
+        foreach($dataOrderTypeList as $tem_order_type => $tem_orderList){
+            switch($tem_order_type) {// 订单类型1面授培训2会员年费
+                case 1://  1面授培训
+                    $tem_order_nos = Tool::getArrFields($tem_orderList, 'order_no');
+                    // 获得订单的学员信息
+                    $courseOrderStaffList = CourseOrderStaffDBBusiness::getDBFVFormatList(1, 1, ['order_no' => $tem_order_nos], false);
+                    if(empty($courseOrderStaffList)) throws('【面授培训】学员记录不存在！');
+
+                    $invoiceProjectTemplateIds = Tool::getArrFields($courseOrderStaffList, 'invoice_project_template_id');
+                    $invoiceProjectTemplateList = InvoiceProjectTemplateDBBusiness::getDBFVFormatList(1, 1, ['id' => $invoiceProjectTemplateIds], false);
+                    if(empty($invoiceProjectTemplateList)) throws('【发票商品项目模板】记录不存在！');
+                    // 按id格式化数据
+                    $formatInvoiceProjectTemplateList = Tool::arrUnderReset($invoiceProjectTemplateList, 'id', 1, '_');
+
+
+                    $projectTemplateCourserStaffList = Tool::arrUnderReset($courseOrderStaffList, 'invoice_project_template_id', 2, '_');
+                    foreach($projectTemplateCourserStaffList as $tem_template_id => $tem_template_staff_list){
+                        $temTemplateInfo = $formatInvoiceProjectTemplateList[$tem_template_id] ?? [];
+                        if(empty($temTemplateInfo)) throws('【发票商品项目模板-' . $tem_template_id . '】记录不存在！');
+
+                        foreach($tem_template_staff_list as $temInfo){
+
+                        }
+
+                    }
+
+
+                    break;
+                case 2://  2会员年费
+                    break;
+                default:
+                    break;
+            }
+
+        }
+
+
+        $invoice_service = $invoiceTemplateInfo['invoice_service'];// 开票服务商1沪友
+        $order_num = '';
+
+        // 发票配置沪友
+        $invoiceConfigInfo = InvoiceConfigHydzfpDBBusiness::getDBFVFormatList(4, 1, ['pay_config_id' => $pay_config_id]
+            , false, '', []);
+        if(empty($invoiceConfigInfo)) throws('【发票配置信息】记录不存在！');
+
+
+        // $companyConfig = static::$companyConfig;
+        $data = [
+            "data_resources" => "API",// 是	string	4	固定参数 “API”
+            "nsrsbh" => $invoiceSellerInfo['xsf_nsrsbh'],// $companyConfig['tax_num'],// "1246546544654654",// 是	string	20	销售方纳税人识别号
+            "skph" => "",// "123213123212",// 否	string	12	税控盘号（使用税控盒子必填，其他设备为空）
+            "order_num" => $order_num,// "1120521299480004",// "order_num_1474873042826",// 是	string	200	业务单据号；必须是唯一的
+            "bmb_bbh" => "33.0", // "29.0",// 是	string	10	税收编码版本号，参数“29.0”，具体值请询问提供商-- ?
+            "zsfs" => $invoiceTemplateInfo['zsfs'],// "0",// 是	string	2	征税方式 0：普通征税 1: 减按计增 2：差额征税
+            "tspz" => $invoiceTemplateInfo['tspz'],// "00",// 否	string	2	特殊票种标识:“00”=正常票种,“01”=农产品销售,“02”=农产品收购
+            "xsf_nsrsbh" => $invoiceSellerInfo['xsf_nsrsbh'],// $companyConfig['tax_num'],// "1246546544654654",//是	string	20	销售方纳税人识别号
+            "xsf_mc" => $invoiceSellerInfo['xsf_mc'],// $companyConfig['pay_company_name'],// "\t自贡市有限公司",// 是	string	100	销售方名称
+            "xsf_dzdh" => $invoiceSellerInfo['xsf_dz'] . $invoiceSellerInfo['xsf_dh'],// "自贡市斯柯达将阿里是可大家是大家圣诞节阿拉斯加大开杀戒的拉开手机端 13132254",// 是	string	100	销售方地址、电话
+            "xsf_yhzh" =>  $invoiceSellerInfo['xsf_yh'] . $invoiceSellerInfo['xsf_yhzh'],// "124654654123154",// 是	string	100	销售方开户行名称与银行账号
+            "gmf_nsrsbh" => $invoiceBuyerInfo['gmf_nsrsbh'],//  "",// 否	string	100	购买方纳税人识别号(税务总局规定企业用户为必填项)
+            "gmf_mc" => $invoiceBuyerInfo['gmf_mc'],//  "个人",// 是	string	100	购买方名称
+            "gmf_dzdh" => $invoiceBuyerInfo['gmf_dz'] . $invoiceBuyerInfo['gmf_dh'],//  "",// 否	string	100	购买方地址、电话
+            "gmf_yhzh" =>  $invoiceBuyerInfo['gmf_yh'] . $invoiceBuyerInfo['gmf_yhzh'],//  "",// 否	string	100	购买方开户行名称与银行账号
+            "kpr" => $invoiceTemplateInfo['kpr'],// "开票员A",// 是	string	8	开票人
+            "skr" =>  $invoiceTemplateInfo['skr'],// "",// 否	string	8	收款人
+            "fhr" =>  $invoiceTemplateInfo['fhr'],// "",// 否	string	8	复核人
+            "yfp_dm" =>  "",// 否	string	12	原发票代码
+            "yfp_hm" =>  "",// 否	string	8	原发票号码
+            // 是	string	#.##	价税合计;单位：元（2位小数） 价税合计=合计金额(不含税)+合计税额
+            // 注意：不能使用商品的单价、数量、税率、税额来进行累加，最后四舍五入，只能是总合计金额+合计税额
+            "jshj" =>  "1.00",
+            "hjje" => "0.97",// "0.88",// 是	string	#.##	合计金额 注意：不含税，单位：元（2位小数）
+            "hjse" =>  "0.03",// "0.12",// 是	string	#.##	合计税额单位：元（2位小数）
+            "kce" =>  "",// 否	string	#.##	扣除额小数点后2位，当ZSFS为2时扣除额为必填项
+            "bz" =>  $invoiceTemplateInfo['bz'],// "备注啊哈哈哈哈",// 否	string	100	备注 (长度100字符)
+            // "kpzdbs" => "",// 否	string	20	已经失效，不再支持
+            "jff_phone" => $invoiceBuyerInfo['jff_phone'],//  "",// "手机号",// 否	string	11	手机号，针对税控盒子主动交付，需要填写
+            "jff_email" => $invoiceBuyerInfo['jff_email'],//  "",// "电子邮件",// 否	string	100	电子邮件，针对税控盒子主动交付，需要填写
+            "common_fpkj_xmxx" => [
+                [
+                    "fphxz" => "0",// 是	string	2	发票行性质 0正常行、1折扣行、2被折扣行
+                    "spbm" => "3070201020000000000",// "",// 是	string	19	商品编码(商品编码为税务总局颁发的19位税控编码)
+                    "zxbm" => "",// 否	string	20	自行编码(一般不建议使用自行编码)
+                    "yhzcbs" => "0",// "",//否	string	2	优惠政策标识 0：不使用，1：使用
+                    "lslbs" => "",// 否	string	2	零税率标识 空：非零税率， 1：免税，2：不征收，3普通零税率
+                    // 否	string	50	增值税特殊管理-如果yhzcbs为1时，此项必填，
+                    // 具体信息取《商品和服务税收分类与编码》中的增值税特殊管理列。(值为中文)
+                    "zzstsgl" => "",// aa  bbb
+                    // 是	string	90	项目名称 (必须与商品编码表一致;如果为折扣行，商品名称须与被折扣行的商品名称相同，不能多行折扣。
+                    // 如需按照税控编码开票，则项目名称可以自拟,但请按照税务总局税控编码规则拟定)
+                    "xmmc" => "培训费",// "更具自身业务决定",// aa  bbb
+                    "ggxh" => "",// 否	string	30	规格型号(折扣行请不要传)
+                    "dw" => "",// 否	string	20	计量单位(折扣行请不要传)
+                    "xmsl" => "1",// "",// 否	string	#.######	项目数量 小数点后6位,大于0的数字
+                    "xmdj" => "1.00",// 否	string	#.######	项目单价 小数点后6位 注意：单价是含税单价,大于0的数字
+                    "xmje" => "1.00",// 是	string	#.##	项目金额 注意：金额是含税，单位：元（2位小数）
+                    "sl" => "0.03",// "0.13",// 是	string	#.##	税率 例1%为0.01
+                    "se" => "0.03",// "0.12"// 是	string	#.##	税额 单位：元（2位小数）
+                ]
+            ]
+        ];
+        // A0001-开具蓝字发票
+         $result = InvoiceHydzfp::ebiInvoiceHandleNewBlueInvoice($invoiceConfigInfo['open_id'], $invoiceConfigInfo['app_secret'], 0,  false);
     }
 
     /**

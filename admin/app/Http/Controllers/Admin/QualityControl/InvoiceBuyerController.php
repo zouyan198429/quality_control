@@ -96,6 +96,22 @@ class InvoiceBuyerController extends BasicController
     }
 
     /**
+     * 详情页
+     *
+     * @param Request $request
+     * @param int $id
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function info(Request $request,$id = 0)
+    {
+        return $this->exeDoPublicFun($request, 17179869184, 1,'admin.QualityControl.InvoiceBuyer.info', true
+            , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
+
+            });
+    }
+
+    /**
      * @OA\Get(
      *     path="/api/admin/invoice_buyer/ajax_info",
      *     tags={"大后台-电子发票管理-发票配置购买方"},

@@ -297,7 +297,7 @@
   </div>
 
   <script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>
-  <script src="{{asset('static/js/custom/common.js')}}?2"></script>
+  <script src="{{asset('static/js/custom/common.js')}}?5"></script>
 
   <script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.js')}}"></script>
   {{--<script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.all.js')}}"></script>--}}

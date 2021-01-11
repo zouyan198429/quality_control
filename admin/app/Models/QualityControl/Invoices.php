@@ -302,4 +302,12 @@ class Invoices extends BasePublicModel
     {
         return $this->belongsTo('App\Models\QualityControl\Invoices', 'yfp_hm', 'fp_hm')->withDefault();
     }
+
+    /**
+     * 获取订单发票关联表--一维
+     */
+    public function invoiceOrder()
+    {
+        return $this->belongsTo('App\Models\QualityControl\InvoiceOrder', 'order_num', 'order_num');
+    }
 }

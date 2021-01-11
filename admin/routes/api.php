@@ -377,6 +377,7 @@ $api->version('v1', function ($api) {
 
         $api->post('admin/orders/ajax_sure_order', 'Admin\QualityControl\OrdersController@ajax_sure_order');// 操作(确认)
         $api->post('admin/orders/ajax_finish_order', 'Admin\QualityControl\OrdersController@ajax_finish_order');// 操作(服务完成)
+        $api->post('admin/orders/ajax_invoices_save', 'Admin\QualityControl\OrdersController@ajax_invoices_save');// 操作(开电子发票--蓝票)
 
         // 收款订单财务流水
         $api->any('admin/order_flow/ajax_alist', 'Admin\QualityControl\OrderFlowController@ajax_alist');//ajax获得列表数据

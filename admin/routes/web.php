@@ -376,6 +376,7 @@ Route::get('admin/orders/info/{id}', 'Admin\QualityControl\OrdersController@info
 // Route::get('admin/orders/select', 'Admin\QualityControl\OrdersController@select');// 选择-弹窗
 Route::get('admin/orders/export', 'Admin\QualityControl\OrdersController@export');// 导出
 // Route::get('admin/orders/import_template', 'Admin\QualityControl\OrdersController@import_template');// 导入模版
+Route::get('admin/orders/invoices', 'Admin\QualityControl\OrdersController@invoices');// 电子发票
 
 // 收款订单财务流水
 Route::get('admin/order_flow', 'Admin\QualityControl\OrderFlowController@index');// 列表
@@ -412,6 +413,7 @@ Route::get('admin/invoice_seller/import_template', 'Admin\QualityControl\Invoice
 // 发票配置购买方
 Route::get('admin/invoice_buyer', 'Admin\QualityControl\InvoiceBuyerController@index');// 列表
 Route::get('admin/invoice_buyer/add/{id}', 'Admin\QualityControl\InvoiceBuyerController@add');// 添加
+Route::get('admin/invoice_buyer/info/{id}', 'Admin\QualityControl\InvoiceBuyerController@info');// 查看-详情
 // Route::get('admin/invoice_buyer/select', 'Admin\QualityControl\InvoiceBuyerController@select');// 选择-弹窗
 Route::get('admin/invoice_buyer/export', 'Admin\QualityControl\InvoiceBuyerController@export');// 导出
 Route::get('admin/invoice_buyer/import_template', 'Admin\QualityControl\InvoiceBuyerController@import_template');// 导入模版
@@ -804,6 +806,7 @@ Route::get('company/order_pay/import_template', 'WebFront\Company\QualityControl
 // 发票配置购买方
 Route::get('company/invoice_buyer', 'WebFront\Company\QualityControl\InvoiceBuyerController@index');// 列表
 Route::get('company/invoice_buyer/add/{id}', 'WebFront\Company\QualityControl\InvoiceBuyerController@add');// 添加
+Route::get('company/invoice_buyer/info/{id}', 'WebFront\Company\QualityControl\InvoiceBuyerController@info');// 查看-详情
 // Route::get('company/invoice_buyer/select', 'WebFront\Company\QualityControl\InvoiceBuyerController@select');// 选择-弹窗
 Route::get('company/invoice_buyer/export', 'WebFront\Company\QualityControl\InvoiceBuyerController@export');// 导出
 Route::get('company/invoice_buyer/import_template', 'WebFront\Company\QualityControl\InvoiceBuyerController@import_template');// 导入模版

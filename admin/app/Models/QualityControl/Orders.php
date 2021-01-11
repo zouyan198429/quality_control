@@ -279,4 +279,12 @@ class Orders extends BasePublicModel
     {
         return $this->belongsTo('App\Models\QualityControl\Staff', 'company_id', 'id');
     }
+
+    /**
+     * 获取订单发票关联表--一维
+     */
+    public function invoiceOrder()
+    {
+        return $this->belongsTo('App\Models\QualityControl\InvoiceOrder', 'order_no', 'order_no');
+    }
 }

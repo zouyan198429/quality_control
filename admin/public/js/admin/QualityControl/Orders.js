@@ -82,6 +82,29 @@ var otheraction = {
         }, function(){
         });
         return false;
+    },
+    invoiceSelected: function(obj){// 电子发票--批量
+        var recordObj = $(obj);
+        var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+        otheraction.invoiceByIds(obj, ids);
+    },
+    invoiceByIds: function(obj, ids) {
+        if( ids == ''){
+            err_alert('请选择需要操作的数据');
+            return false;
+        }
+        //获得表单各name的值
+        var weburl = INVOICE_URL + '?id='+ ids;
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = '电子发票';//"查看供应商";
+        console.log('weburl', weburl);
+        layeriframe(weburl,tishi,950,510,5);
+        // commonaction.browse_file(weburl, tishi,950,510, 5);
+        return false;
     }
 };
 
@@ -237,12 +260,12 @@ function addCompany(company_id, company_name){
     document.write("            <\/td>");
     // document.write("            <td><%=item.id%><\/td>");
     document.write("            <td><%=item.order_no%><hr/><%=item.company_name%><\/td>");
-    document.write("            <td><%=item.order_type_text%><hr/><%=item.remarks%><\/td>");
+    document.write("            <td><%=item.order_type_text%><hr/><%=item.remarks%><hr/><%=item.invoice_template_name%><\/td>");
     document.write("            <td><%=item.pay_company_name%><hr/><%=item.pay_name%><\/td>");
-    document.write("            <td><%=item.total_amount%><hr/>￥<%=item.total_price%><\/td>");
-    document.write("            <td>￥<%=item.total_price_goods%><hr/>￥<%=item.total_price_discount%><\/td>");
+    document.write("            <td><%=item.total_amount%><hr/>￥<%=item.total_price%><hr/><%=item.invoice_buyer_name%><\/td>");
+    document.write("            <td>￥<%=item.total_price_goods%><hr/>￥<%=item.total_price_discount%><hr/><%=item.invoice_status_text%><\/td>");
     document.write("            <td><%=item.order_time%><hr/><%=item.pay_time%><\/td>");
-    document.write("            <td><%=item.has_refund_text%><hr/><%=item.refund_time%><\/td>");
+    document.write("            <td><%=item.has_refund_text%><hr/><%=item.refund_time%><hr/><%=item.invoice_result_text%><\/td>");
     document.write("            <td>￥<%=item.refund_price%><hr/>￥<%=item.refund_price_frozen%><\/td>");
     document.write("            <td>￥<%=item.payment_amount%><hr/>￥<%=item.change_amount%><hr/>￥<%=item.check_price%>(<%=item.order_status_text%>)<\/td>");
     document.write("            <td><%=item.sure_time%><hr/><%=item.check_time%><hr/><%=item.cancel_time%><\/td>");
@@ -260,6 +283,16 @@ function addCompany(company_id, company_name){
     document.write("                <%if(item.order_status == 4 ){%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.finishOrderByIds(this,<%=item.id%>)\">");
     document.write("                    <i class=\"ace-icon  fa fa-universal-access bigger-60\"> 服务完成<\/i>");
+    document.write("                <\/a>");
+    document.write("                <%}%>");
+    document.write("                <%if( (item.order_status & (2 | 4 | 8)) > 0  && item.invoice_status == 1){%>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.invoiceByIds(this,<%=item.id%>)\">");
+    document.write("                    <i class=\"ace-icon  fa fa-vcard-o bigger-60\"> 电子发票<\/i>");
+    document.write("                <\/a>");
+    document.write("                <%}%>");
+    document.write("                <%if( item.invoice_status == 4 ){%>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.invoiceByIds(this,<%=item.id%>)\">");
+    document.write("                    <i class=\"ace-icon  fa fa-vcard-o bigger-60\"> 电子发票【红冲】<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
     // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.iframeModify(<%=item.id%>)\">");

@@ -144,6 +144,24 @@ class CTAPICourseBusiness extends BasicPublicCTAPIBusiness
                         ,'','', [], [], '', []),
                 ]
                 , [], '', []),
+            // 获得发票开票模板名称
+            'invoice_template_name' => CTAPIInvoiceTemplateBusiness::getTableRelationConfigInfo($request, $controller
+                , ['invoice_template_id' => 'id']
+                , 1, 2
+                ,'','',
+                CTAPIInvoiceTemplateBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'invoice_template_name'),
+                    static::getUboundRelationExtendParams($extendParams, 'invoice_template_name')),
+                static::getRelationSqlParams([], $extendParams, 'invoice_template_name'), '', []),// 'where' => [['admin_type', 2]]
+            // 获得发票商品项目模板名称
+            'invoice_project_template_name' => CTAPIInvoiceProjectTemplateBusiness::getTableRelationConfigInfo($request, $controller
+                , ['invoice_project_template_id' => 'id']
+                , 1, 2
+                ,'','',
+                CTAPIInvoiceProjectTemplateBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'invoice_project_template_name'),
+                    static::getUboundRelationExtendParams($extendParams, 'invoice_project_template_name')),
+                static::getRelationSqlParams([], $extendParams, 'invoice_project_template_name'), '', []),// 'where' => [['admin_type', 2]]
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }

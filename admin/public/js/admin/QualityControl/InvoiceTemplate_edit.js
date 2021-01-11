@@ -100,13 +100,21 @@ function ajax_form(){
         return false;
     }
 
-    var itype = $('input[name=itype]:checked').val() || '';
-    var judge_seled = judge_validate(1,'发票类型',itype,true,'custom',/^(026|004|007|025)$/,"");
+    var zsfs = $('input[name=zsfs]:checked').val() || '';
+    var judge_seled = judge_validate(1,'征税方式',zsfs,true,'custom',/^([012])$/,"");
     if(judge_seled != ''){
-        layer_alert("请选择发票类型",3,0);
+        layer_alert("请选择征税方式",3,0);
         //err_alert('<font color="#000000">' + judge_seled + '</font>');
         return false;
     }
+
+    // var itype = $('input[name=itype]:checked').val() || '';
+    // var judge_seled = judge_validate(1,'发票类型',itype,true,'custom',/^(026|004|007|025)$/,"");
+    // if(judge_seled != ''){
+    //     layer_alert("请选择发票类型",3,0);
+    //     //err_alert('<font color="#000000">' + judge_seled + '</font>');
+    //     return false;
+    // }
 
     var tspz = $('input[name=tspz]:checked').val() || '';
     var judge_seled = judge_validate(1,'特殊票种标识',tspz,true,'custom',/^(00|01|02)$/,"");

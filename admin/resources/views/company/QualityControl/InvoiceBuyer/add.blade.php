@@ -20,7 +20,7 @@
         <input type="hidden" name="hidden_option"  value="{{ $hidden_option ?? 0 }}" />
         <input type="hidden" name="id" value="{{ $info['id'] ?? 0 }}"/>
         <table class="table1">
-            <tr  @if (isset($hidden_option) && $hidden_option == 1 ) style="display: none;"  @endif>
+            <tr  @if (isset($hidden_option) && ($hidden_option & 1) == 1 ) style="display: none;"  @endif>
                 <th>所属企业<span class="must">*</span></th>
                 <td>
                     <input type="hidden" class="select_id"  name="company_id"  value="{{ $info['company_id'] ?? '' }}" />

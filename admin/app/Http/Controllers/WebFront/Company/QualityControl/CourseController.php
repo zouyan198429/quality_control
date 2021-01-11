@@ -5,6 +5,7 @@ namespace App\Http\Controllers\WebFront\Company\QualityControl;
 use App\Business\Controller\API\QualityControl\CTAPICourseBusiness;
 use App\Business\Controller\API\QualityControl\CTAPICourseOrderBusiness;
 use App\Business\Controller\API\QualityControl\CTAPICourseOrderStaffBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIInvoiceBuyerBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIOrderPayConfigBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIOrderPayMethodBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIResourceBusiness;
@@ -306,6 +307,7 @@ class CourseController extends BasicController
                 // CommonRequest::judgeEmptyParams($request, 'id', $id);
                 $contacts = CommonRequest::get($request, 'contacts');
                 $tel = CommonRequest::get($request, 'tel');
+                $invoice_buyer_id = CommonRequest::getInt($request, 'invoice_buyer_id');
                 // 学员信息
                 $staff_ids = CommonRequest::get($request, 'staff_ids');
                 // 如果是字符，则转为数组
@@ -694,6 +696,12 @@ class CourseController extends BasicController
             'sqlParams' => ['where' => [['open_status', 1]]]
         ]);
         $reDataArr['defaultPayConfig'] = $info['pay_config_id'] ?? -1;// 默认
+
+        // 获得发票抬头KV值
+//        $reDataArr['invoice_buyer_kv'] = CTAPIInvoiceBuyerBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'gmf_mc'], [
+//            'sqlParams' => ['where' => [['open_status', 1], ['company_id', $this->user_id]]]
+//        ]);
+//        $reDataArr['defaultInvoiceBuyer'] = $info['invoice_buyer_id'] ?? -1;// 默认
 
         // 收款开通类型(1现金、2微信支付、4支付宝)
         $reDataArr['payMethod'] =  CTAPIOrderPayMethodBusiness::getListKV($request, $this, ['key' => 'pay_method', 'val' => 'pay_name']);

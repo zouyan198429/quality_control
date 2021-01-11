@@ -105,6 +105,22 @@
                 </td>
             </tr>
             <tr>
+                <th>发票开票模板<span class="must">*</span></th>
+                <td>
+                    @foreach ($invoice_template_kv as $k=>$txt)
+                        <label><input type="radio"  name="invoice_template_id"  value="{{ $k }}"  @if(isset($defaultInvoiceTemplate) && $defaultInvoiceTemplate == $k) checked="checked"  @endif />{{ $txt }} </label>
+                    @endforeach
+                </td>
+            </tr>
+            <tr>
+                <th>发票商品项目模板<span class="must">*</span></th>
+                <td>
+                    @foreach ($invoice_project_template_kv as $k=>$txt)
+                        <label><input type="radio"  name="invoice_project_template_id"  value="{{ $k }}"  @if(isset($defaultInvoiceProjectTemplate) && $defaultInvoiceProjectTemplate == $k) checked="checked"  @endif />{{ $txt }} </label>
+                    @endforeach
+                </td>
+            </tr>
+            <tr>
                 <th>上架状态<span class="must">*</span></th>
                 <td>
                     @foreach ($statusOnline as $k=>$txt)
@@ -175,7 +191,7 @@
 {{--<script src="{{asset('js/baguetteBox.js/highlight.min.js')}}" async></script>--}}
 <!-- zui js -->
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
-<script src="{{ asset('/js/admin/QualityControl/Course_edit.js') }}"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/Course_edit.js') }}?1"  type="text/javascript"></script>
 @component('component.upfileincludejsmany')
 @endcomponent
 </body>

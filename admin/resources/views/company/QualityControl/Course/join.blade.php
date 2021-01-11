@@ -105,6 +105,14 @@
                     <input type="text" class="inp wnormal"  name="tel" value="{{ $info['tel'] ?? '' }}" placeholder="请输入联络人电话"/>
                 </td>
             </tr>
+{{--            <tr>--}}
+{{--                <th>发票抬头<span class="must"></span></th>--}}
+{{--                <td>--}}
+{{--                    @foreach ($invoice_buyer_kv as $k=>$txt)--}}
+{{--                        <label><input type="radio"  name="invoice_buyer_id"  value="{{ $k }}"  @if(isset($defaultInvoiceBuyer) && $defaultInvoiceBuyer == $k) checked="checked"  @endif />{{ $txt }} </label>--}}
+{{--                    @endforeach--}}
+{{--                </td>--}}
+{{--            </tr>--}}
             <tr>
                 <th> </th>
                 <td><button class="btn btn-l wnormal"  id="submitBtn" >立即提交</button></td>
@@ -140,7 +148,7 @@
 {{--<script src="{{asset('js/baguetteBox.js/highlight.min.js')}}" async></script>--}}
 <!-- zui js -->
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
-<script src="{{ asset('/js/company/QualityControl/Course_join.js') }}?29"  type="text/javascript"></script>
+<script src="{{ asset('/js/company/QualityControl/Course_join.js') }}?31"  type="text/javascript"></script>
 @component('component.upfileincludejsmany')
 @endcomponent
 </body>

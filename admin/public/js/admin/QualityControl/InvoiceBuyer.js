@@ -135,7 +135,7 @@ function addCompany(company_id, company_name){
     document.write("            <td><%=item.jff_phone%><hr/><%=item.jff_email%><\/td>");
     document.write("            <td><%=item.created_at%><hr/><%=item.updated_at%><\/td>");
     document.write("            <td>");
-    document.write("                <%if( false){%>");
+    document.write("                <%if( true){%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"action.show(<%=item.id%>)\">");
     document.write("                    <i class=\"ace-icon  fa fa-eye  bigger-60\"> 查看<\/i>");
     document.write("                <\/a>");

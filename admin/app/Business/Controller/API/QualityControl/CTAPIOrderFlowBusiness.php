@@ -144,7 +144,6 @@ class CTAPIOrderFlowBusiness extends BasicPublicCTAPIBusiness
     }
     // ****表关系***需要重写的方法**********结束***********************************
 
-
     /**
      * 获得列表数据时，查询条件的参数拼接--有特殊的需要自己重写此方法--每个字类都有此方法
      *

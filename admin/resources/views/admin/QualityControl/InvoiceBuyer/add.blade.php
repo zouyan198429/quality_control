@@ -20,7 +20,7 @@
         <input type="hidden" name="hidden_option"  value="{{ $hidden_option ?? 0 }}" />
         <input type="hidden" name="id" value="{{ $info['id'] ?? 0 }}"/>
         <table class="table1">
-            <tr  @if (isset($hidden_option) && $hidden_option == 1 ) style="display: none;"  @endif>
+            <tr  @if (isset($hidden_option) && ($hidden_option & 1) == 1 ) style="display: none;"  @endif>
                 <th>所属企业<span class="must">*</span></th>
                 <td>
                     <input type="hidden" class="select_id"  name="company_id"  value="{{ $info['company_id'] ?? '' }}" />
@@ -104,9 +104,12 @@
 <script type="text/javascript">
     var SAVE_URL = "{{ url('api/admin/invoice_buyer/ajax_save') }}";// ajax保存记录地址
     var LIST_URL = "{{url('admin/invoice_buyer')}}";//保存成功后跳转到的地址
+    // hidden_option 8192:调用父窗品的方法：[public/js目录下的] 项目目录+数据功能目录+当前文件名称 【有_线，则去掉】
+    // 其它地方弹出此窗，保存完成时调用的父窗口方法名称 参数(obj:当前表单值对像, result:保存接口返回的结果，operateNum:自己定义的一个编号【页面有多处用到时用--通知父窗口调用位置】)
+    var PARENT_BUSINESS_FUN_NAME = "adminQualityControlInvoiceBuyeredit";
 
     var SELECT_COMPANY_URL = "{{url('admin/company/select')}}";// 选择所属企业
 </script>
-<script src="{{ asset('/js/admin/QualityControl/InvoiceBuyer_edit.js') }}"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/InvoiceBuyer_edit.js') }}?5"  type="text/javascript"></script>
 </body>
 </html>

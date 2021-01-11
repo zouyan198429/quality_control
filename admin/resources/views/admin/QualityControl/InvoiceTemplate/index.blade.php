@@ -38,10 +38,16 @@
                   <option value="{{ $k }}"  @if(isset($defaultInvoiceService) && $defaultInvoiceService == $k) selected @endif >{{ $txt }}</option>
               @endforeach
           </select>
-          <select class="wmini" name="itype">
-              <option value="">发票类型</option>
-              @foreach ($itype as $k=>$txt)
-                  <option value="{{ $k }}"  @if(isset($defaultItype) && $defaultItype == $k) selected @endif >{{ $txt }}</option>
+{{--          <select class="wmini" name="itype">--}}
+{{--              <option value="">发票类型</option>--}}
+{{--              @foreach ($itype as $k=>$txt)--}}
+{{--                  <option value="{{ $k }}"  @if(isset($defaultItype) && $defaultItype == $k) selected @endif >{{ $txt }}</option>--}}
+{{--              @endforeach--}}
+{{--          </select>--}}
+          <select class="wmini" name="zsfs">
+              <option value="">征税方式</option>
+              @foreach ($zsfs as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultZsfs) && $defaultZsfs == $k) selected @endif >{{ $txt }}</option>
               @endforeach
           </select>
           <select class="wmini" name="tspz">
@@ -102,7 +108,7 @@
 {{--      <th>ID</th>--}}
         <th>开票服务商</th>
       <th>发票模板名称</th>
-      <th>发票类型<hr/>特殊票种标识</th>
+      <th>征税方式<hr/>特殊票种标识</th>
         <th>开票人<hr/>收款人</th>
         <th>复核人<hr/>开启状态</th>
         <th>备注</th>
@@ -154,6 +160,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/InvoiceTemplate.js') }}?1"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/InvoiceTemplate.js') }}?2"  type="text/javascript"></script>
 </body>
 </html>

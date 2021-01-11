@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin\QualityControl;
 
 use App\Business\Controller\API\QualityControl\CTAPICourseBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIInvoiceBuyerBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIInvoiceProjectTemplateBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIInvoiceTemplateBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIOrderPayConfigBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIOrderPayMethodBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIOrdersBusiness;
@@ -117,6 +120,8 @@ class OrdersController extends BasicController
                             'company_name' => '',
                             'pay_company_name' => '',
                             'pay_name' => '',
+                            'invoice_template_name' => '',
+                            'invoice_buyer_name' => '',
                         ], []),
                     'listHandleKeyArr' => ['priceIntToFloat'],
                     ];
@@ -125,6 +130,88 @@ class OrdersController extends BasicController
                 $reDataArr['info'] = $info;
                 // pr($reDataArr);
             });
+    }
+
+    /**
+     * 电子发票
+     *
+     * @param Request $request
+     * @param int $company_id
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function invoices(Request $request)
+    {
+        return $this->exeDoPublicFun($request, 0, 1,'admin.QualityControl.Orders.invoices', false
+            , '', [], function (&$reDataArr) use ($request){
+
+                $id = CommonRequest::get($request, 'id');
+                if(is_string($id)) $id = explode(',', $id);
+                if(!is_array($id)) $id = [];
+                if(empty($id)) throws('请选择要开电子发票的订单');
+                $info = [
+                    'id'=> implode(',', $id),
+                    //   'department_id' => 0,
+                ];
+
+//                $course_id = CommonRequest::getInt($request, 'course_id');
+//                $class_id = CommonRequest::getInt($request, 'class_id');
+                $company_id = CommonRequest::getInt($request, 'company_id');// 报名用户所属的企业id
+
+                // 根据报名用户id,获得报名用户及支付信息
+                list($dataList, $company_id, $company_name) = CTAPIOrdersBusiness::getInvoiceByIds($request, $this, $id, $company_id, 1);
+
+                if(!is_numeric($company_id)  || $company_id <= 0){
+                    throws('参数【企业id】有误！');
+                }
+                $reDataArr['info'] = $info;
+                $reDataArr['data_list'] = $dataList;
+                $reDataArr['company_id'] = $company_id;
+                $reDataArr['company_name'] = $company_name;
+
+                // 获得发票抬头KV值
+                $reDataArr['invoice_buyer_kv'] = CTAPIInvoiceBuyerBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'gmf_mc'], [
+                    'sqlParams' => ['where' => [['open_status', 1], ['company_id', $company_id]]]
+                ]);
+                $reDataArr['defaultInvoiceBuyer'] = $info['invoice_buyer_id'] ?? -1;// 默认
+                // pr($reDataArr);
+            });
+    }
+
+    /**
+     * ajax保存数据--开电子发票
+     *
+     * @param int $id
+     * @return Response
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_invoices_save(Request $request)
+    {
+//        $this->InitParams($request);
+
+        return $this->exeDoPublicFun($request, 0, 4,'', true
+            , '', [], function (&$reDataArr) use ($request){
+                throws('正在调试开发中');
+
+                $id = CommonRequest::get($request, 'id');
+                if(is_string($id)) $id = explode(',', $id);
+                if(!is_array($id)) $id = [];
+                if(empty($id)) throws('请选择要开电子发票的订单');
+
+//                $course_id = CommonRequest::getInt($request, 'course_id');
+//                $class_id = CommonRequest::getInt($request, 'class_id');
+                $company_id = CommonRequest::getInt($request, 'company_id');// 报名用户所属的企业id
+                $invoice_buyer_id = CommonRequest::getInt($request, 'invoice_buyer_id');// 企业抬头
+
+                // 根据报名用户id,获得报名用户及支付信息
+                list($dataList, $company_id, $company_name) = CTAPIOrdersBusiness::getInvoiceByIds($request, $this, $id, $company_id, 1);
+
+                if(!is_numeric($company_id)  || $company_id <= 0){
+                    throws('参数【企业id】有误！');
+                }
+                $resultDatas = CTAPIOrdersBusiness::operateInvoiceBlueAjax($request, $this, $company_id, $id, $invoice_buyer_id);
+                return ajaxDataArr(1, $resultDatas, '');
+        });
     }
 
     /**
@@ -263,6 +350,8 @@ class OrdersController extends BasicController
                         'company_name' => '',
                         'pay_company_name' => '',
                         'pay_name' => '',
+                        'invoice_template_name' => '',
+                        'invoice_buyer_name' => '',
                     ], []),
                 'listHandleKeyArr' => ['priceIntToFloat'],
             ];
@@ -311,6 +400,8 @@ class OrdersController extends BasicController
                         'company_name' => '',
                         'pay_company_name' => '',
                         'pay_name' => '',
+                        'invoice_template_name' => '',
+                        'invoice_buyer_name' => '',
                     ], []),
                 'listHandleKeyArr' => ['priceIntToFloat'],
             ];
@@ -524,6 +615,17 @@ class OrdersController extends BasicController
         $reDataArr['defaultPayMethod'] = (!is_numeric($pay_method) || $pay_method <= 0 ) ? -1 : $pay_method;// 列表页默认状态
         // $reDataArr['payMethodDisable'] = OrderPayConfig::$payMethodDisable;// 不可用的--禁用
 
+        // 获得发票开票模板KV值
+        $reDataArr['invoice_template_kv'] = CTAPIInvoiceTemplateBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'template_name'], []);// ['sqlParams' => ['where' => [['open_status', 1]]]]
+        $reDataArr['defaultInvoiceTemplate'] = $info['invoice_template_id'] ?? -1;// 默认
+
+        // 获得发票商品项目模板KV值
+//        $reDataArr['invoice_project_template_kv'] = CTAPIInvoiceProjectTemplateBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'template_name'], []);// ['sqlParams' => ['where' => [['open_status', 1]]]]
+//        $reDataArr['defaultInvoiceProjectTemplate'] = -1;// 默认
+
+        // 获得发票抬头KV值
+//        $reDataArr['invoice_buyer_kv'] = CTAPIInvoiceBuyerBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'gmf_mc'], ['sqlParams' => ['where' =>[['company_id' , $this->user_id]]]]);// ['sqlParams' => ['where' => [['open_status', 1]]]]
+//        $reDataArr['defaultInvoiceBuyer'] = -1;// 默认
 
         // 订单类型1面授培训2会员年费
         $order_type = CommonRequest::getInt($request, 'order_type');
@@ -600,6 +702,8 @@ class OrdersController extends BasicController
                         'company_name' => '',
                         'pay_company_name' => '',
                         'pay_name' => '',
+                        'invoice_template_name' => '',
+                        'invoice_buyer_name' => '',
                     ], []),
                 'listHandleKeyArr' => ['priceIntToFloat'],
             ];
@@ -617,6 +721,23 @@ class OrdersController extends BasicController
         $reDataArr['payMethod'] =  CTAPIOrderPayMethodBusiness::getListKV($request, $this, ['key' => 'pay_method', 'val' => 'pay_name']);
         $reDataArr['defaultPayMethod'] = $info['pay_method'] ?? -1;// 列表页默认状态
 
+        // 获得发票开票模板KV值
+        $reDataArr['invoice_template_kv'] = CTAPIInvoiceTemplateBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'template_name'], [
+            'sqlParams' => ['where' => [['open_status', 1]]]
+        ]);
+        $reDataArr['defaultInvoiceTemplate'] = $info['invoice_template_id'] ?? -1;// 默认
+
+        // 获得发票商品项目模板KV值
+//        $reDataArr['invoice_project_template_kv'] = CTAPIInvoiceProjectTemplateBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'template_name'], [
+//            'sqlParams' => ['where' => [['open_status', 1]]]
+//        ]);
+//        $reDataArr['defaultInvoiceProjectTemplate'] = $info['invoice_project_template_id'] ?? -1;// 默认
+
+        // 获得发票抬头KV值
+//        $reDataArr['invoice_buyer_kv'] = CTAPIInvoiceBuyerBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'gmf_mc'], [
+//            'sqlParams' => ['where' => [['open_status', 1], ['company_id', $this->user_id]]]
+//        ]);
+//        $reDataArr['defaultInvoiceBuyer'] = $info['invoice_buyer_id'] ?? -1;// 默认
 
         // 订单类型1面授培训2会员年费
         $reDataArr['orderType'] =  Orders::$orderTypeArr;

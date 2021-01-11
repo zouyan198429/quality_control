@@ -106,7 +106,6 @@ class CertificateImportLogController extends BasicController
             });
     }
 
-
     /**
      * 详情页
      *
@@ -122,6 +121,7 @@ class CertificateImportLogController extends BasicController
 
             });
     }
+
     /**
      * @OA\Get(
      *     path="/api/admin/certificate_import_log/ajax_info",

@@ -35,13 +35,21 @@
                 </td>
             </tr>
             <tr>
-                <th>发票类型<span class="must">*</span></th>
+                <th>征税方式<span class="must">*</span></th>
                 <td>
-                    @foreach ($itype as $k=>$txt)
-                        <label><input type="radio"  name="itype"  value="{{ $k }}"  @if(isset($defaultItype) && $defaultItype == $k) checked="checked"  @endif />{{ $txt }} </label>
+                    @foreach ($zsfs as $k=>$txt)
+                        <label><input type="radio"  name="zsfs"  value="{{ $k }}"  @if(isset($defaultZsfs) && $defaultZsfs == $k) checked="checked"  @endif />{{ $txt }} </label>
                     @endforeach
                 </td>
             </tr>
+{{--            <tr>--}}
+{{--                <th>发票类型<span class="must">*</span></th>--}}
+{{--                <td>--}}
+{{--                    @foreach ($itype as $k=>$txt)--}}
+{{--                        <label><input type="radio"  name="itype"  value="{{ $k }}"  @if(isset($defaultItype) && $defaultItype == $k) checked="checked"  @endif />{{ $txt }} </label>--}}
+{{--                    @endforeach--}}
+{{--                </td>--}}
+{{--            </tr>--}}
             <tr>
                 <th>特殊票种标识<span class="must">*</span></th>
                 <td>
@@ -100,6 +108,6 @@
     var SAVE_URL = "{{ url('api/admin/invoice_template/ajax_save') }}";// ajax保存记录地址
     var LIST_URL = "{{url('admin/invoice_template')}}";//保存成功后跳转到的地址
 </script>
-<script src="{{ asset('/js/admin/QualityControl/InvoiceTemplate_edit.js') }}?1"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/InvoiceTemplate_edit.js') }}?2"  type="text/javascript"></script>
 </body>
 </html>

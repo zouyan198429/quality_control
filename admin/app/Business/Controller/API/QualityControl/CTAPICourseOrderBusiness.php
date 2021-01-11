@@ -124,6 +124,15 @@ class CTAPICourseOrderBusiness extends BasicPublicCTAPIBusiness
                     static::getUboundRelation($relationArr, 'course_order_staff_pay'),
                     static::getUboundRelationExtendParams($extendParams, 'course_order_staff_pay'))
                 , static::getRelationSqlParams(['where' => [['staff_status', '!=', 4], ['pay_status', '!=', 4]]], $extendParams, 'course_order_staff_pay'), '', ['extendConfig' => ['listHandleKeyArr' => ['priceIntToFloat']]]),
+            // 获得发票开票模板名称
+            'invoice_template_name' => CTAPIInvoiceTemplateBusiness::getTableRelationConfigInfo($request, $controller
+                , ['invoice_template_id' => 'id']
+                , 1, 2
+                ,'','',
+                CTAPIInvoiceTemplateBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'invoice_template_name'),
+                    static::getUboundRelationExtendParams($extendParams, 'invoice_template_name')),
+                static::getRelationSqlParams([], $extendParams, 'invoice_template_name'), '', []),// 'where' => [['admin_type', 2]]
 
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
@@ -200,6 +209,12 @@ class CTAPICourseOrderBusiness extends BasicPublicCTAPIBusiness
 
         $company_status = CommonRequest::get($request, 'company_status');
         if(strlen($company_status) > 0 && !in_array($company_status, [0, -1]))  Tool::appendParamQuery($queryParams, $company_status, 'company_status', [0, '0', ''], ',', false);
+
+        $invoice_template_id = CommonRequest::get($request, 'invoice_template_id');
+        if(strlen($invoice_template_id) > 0 && !in_array($invoice_template_id, [0, '-1']))  Tool::appendParamQuery($queryParams, $invoice_template_id, 'invoice_template_id', [0, '0', ''], ',', false);
+
+        $invoice_template_id_history = CommonRequest::get($request, 'invoice_template_id_history');
+        if(strlen($invoice_template_id_history) > 0 && !in_array($invoice_template_id_history, [0, '-1']))  Tool::appendParamQuery($queryParams, $invoice_template_id_history, 'invoice_template_id_history', [0, '0', ''], ',', false);
 
 //        $ids = CommonRequest::get($request, 'ids');
 //        if(strlen($ids) > 0 && $ids != 0)  Tool::appendParamQuery($queryParams, $ids, 'id', [0, '0', ''], ',', false);
@@ -337,6 +352,17 @@ class CTAPICourseOrderBusiness extends BasicPublicCTAPIBusiness
         $company_grade = $controller->user_info['company_grade'];
         $price = $info['price_general'];
         if($company_grade > 1) $price = $info['price_member'];// 会员价
+        $invoice_template_id = $info['invoice_template_id'];
+        $invoiceTemplateInfo = CTAPIInvoiceTemplateBusiness::getFVFormatList( $request,  $controller, 4, 1
+            , ['id' => $invoice_template_id], false, [], [], 1);
+        if(empty($invoiceTemplateInfo)) throws('发票开票模板不存在！请联系系统管理员。');
+        if(!in_array($invoiceTemplateInfo['open_status'], [1])) throws('发票开票模板非开启状态！请联系系统管理员。');
+
+        $invoice_project_template_id = $info['invoice_project_template_id'];
+        $invoiceProjectInfo = CTAPIInvoiceProjectTemplateBusiness::getFVFormatList( $request,  $controller, 4, 1
+            , ['id' => $invoice_project_template_id], false, [], [], 1);
+        if(empty($invoiceProjectInfo)) throws('发票商品项目模板不存在！请联系系统管理员。');
+        if(!in_array($invoiceProjectInfo['open_status'], [1])) throws('发票商品项目模板非开启状态！请联系系统管理员。');
         // $price = Tool::formatFloatVal($price, 2, 4);
 
         $join_num = count($staff_id);
@@ -369,6 +395,8 @@ class CTAPICourseOrderBusiness extends BasicPublicCTAPIBusiness
                 // 'pay_time' => date('Y-m-d H:i:s'),
                 // 'join_class_date' => '',
                 // 'join_class_time' => '',
+                 'invoice_template_id' => $invoice_template_id,
+                 'invoice_project_template_id' => $invoice_project_template_id,
             ]);
         }
 
@@ -392,6 +420,7 @@ class CTAPICourseOrderBusiness extends BasicPublicCTAPIBusiness
             // 'staff_id' => $staff_id[0] ?? 0,// 第一个图片资源的id
             // 'staff_ids' => $staff_ids,// 图片资源id串(逗号分隔-未尾逗号结束)
             // 'resourceIds' => $staff_id,// 此下标为图片资源关系
+            'invoice_template_id' => $invoice_template_id,
             'courseOrderStaff' => $courseOrderStaff
         ];
 //        if($id <= 0) {// 新加;要加入的特别字段
@@ -493,6 +522,8 @@ class CTAPICourseOrderBusiness extends BasicPublicCTAPIBusiness
         }
         $companyIds = Tool::getArrFields($courseOrderList, 'company_id');
         if(count($companyIds) > 1) throws('每次缴费，只能选择相同的企业，才能进行多条记录批量缴费！');
+        $invoiceTemplateIds = Tool::getArrFields($courseOrderList, 'invoice_template_id');
+        if(count($invoiceTemplateIds) > 1) throws('每次缴费，只能选择相同的【发票开票模板】，才能进行多条记录批量缴费！');
         $id = Tool::getArrFields($orderStaffArr, 'id');
         return $id;
     }

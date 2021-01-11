@@ -32,7 +32,7 @@
             {{--<option value="{{ $k }}"  @if(isset($province_id) && $province_id == $k) selected @endif >{{ $txt }}</option>--}}
           {{--@endforeach--}}
         {{--</select>--}}
-          <span   @if (isset($hidden_option) && $hidden_option == 1 ) style="display: none;"  @endif>
+          <span   @if (isset($hidden_option) && ($hidden_option & 1) == 1 ) style="display: none;"  @endif>
                 <input type="hidden" class="select_id" name="company_id"  value="{{ $info['company_id'] ?? '' }}" />
                 <span class="select_name company_name">{{ $info['user_company_name'] ?? '' }}</span>
                 <i class="close select_close company_id_close"  onclick="clearSelect(this)" style="display: none;">×</i>

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin\QualityControl;
 use App\Business\Controller\API\QualityControl\CTAPICourseBusiness;
 use App\Business\Controller\API\QualityControl\CTAPICourseOrderBusiness;
 use App\Business\Controller\API\QualityControl\CTAPICourseOrderStaffBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIInvoiceProjectTemplateBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIInvoiceTemplateBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIOrderPayMethodBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
 use App\Http\Controllers\WorksController;
@@ -122,7 +124,8 @@ class CourseOrderController extends BasicController
                                     'resource_list' => '',
                                 ],
 
-                            ]
+                            ],
+                            'invoice_template_name' => '',
                         ], []),
                     'listHandleKeyArr' => ['priceIntToFloat'],
                     ];
@@ -318,6 +321,7 @@ class CourseOrderController extends BasicController
                     [
                         'company_name' => '',
                         'course_name' => '',
+                        'invoice_template_name' => '',
                     ], []),
                 'listHandleKeyArr' => ['priceIntToFloat'],
             ];
@@ -365,6 +369,7 @@ class CourseOrderController extends BasicController
                     [
                         'company_name' => '',
                         'course_name' => '',
+                        'invoice_template_name' => '',
                     ], []),
                 'listHandleKeyArr' => ['priceIntToFloat'],
             ];
@@ -555,6 +560,10 @@ class CourseOrderController extends BasicController
         $reDataArr['info'] = $info;
         $reDataArr['company_hidden'] = $company_hidden;// =1 : 隐藏企业选择
 
+        // 获得发票开票模板KV值
+        $reDataArr['invoice_template_kv'] = CTAPIInvoiceTemplateBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'template_name'], []);// ['sqlParams' => ['where' => [['open_status', 1]]]]
+        $reDataArr['defaultInvoiceTemplate'] = -1;// 默认
+
         $reDataArr['hidden_option'] = $hiddenOption;
     }
 
@@ -601,6 +610,7 @@ class CourseOrderController extends BasicController
                     [
                         'company_name' => '',
                         'course_name' => '',
+                        'invoice_template_name' => '',
                     ], []),
                 'listHandleKeyArr' => ['priceIntToFloat'],
             ];
@@ -630,6 +640,24 @@ class CourseOrderController extends BasicController
 
         $company_hidden = CommonRequest::getInt($request, 'company_hidden');
         $reDataArr['company_hidden'] = $company_hidden;// =1 : 隐藏企业选择
+
+        // 获得发票开票模板KV值
+        $reDataArr['invoice_template_kv'] = CTAPIInvoiceTemplateBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'template_name'], [
+            'sqlParams' => ['where' => [['open_status', 1]]]
+        ]);
+        $reDataArr['defaultInvoiceTemplate'] = $info['invoice_template_id'] ?? -1;// 默认
+
+        // 获得发票开票模板KV值
+        $reDataArr['invoice_template_kv'] = CTAPIInvoiceTemplateBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'template_name'], [
+            'sqlParams' => ['where' => [['open_status', 1]]]
+        ]);
+        $reDataArr['defaultInvoiceTemplate'] = $info['invoice_template_id'] ?? -1;// 默认
+
+        // 获得发票商品项目模板KV值
+        $reDataArr['invoice_project_template_kv'] = CTAPIInvoiceProjectTemplateBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'template_name'], [
+            'sqlParams' => ['where' => [['open_status', 1]]]
+        ]);
+        $reDataArr['defaultInvoiceProjectTemplate'] = $info['invoice_project_template_id'] ?? -1;// 默认
 
         $reDataArr['hidden_option'] = $hiddenOption;
     }

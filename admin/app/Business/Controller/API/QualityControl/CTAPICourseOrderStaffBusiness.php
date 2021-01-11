@@ -225,6 +225,9 @@ class CTAPICourseOrderStaffBusiness extends BasicPublicCTAPIBusiness
         $invoice_project_template_id_history = CommonRequest::get($request, 'invoice_project_template_id_history');
         if(strlen($invoice_project_template_id_history) > 0 && !in_array($invoice_project_template_id_history, [0, '-1']))  Tool::appendParamQuery($queryParams, $invoice_project_template_id_history, 'invoice_project_template_id_history', [0, '0', ''], ',', false);
 
+        $invoice_buyer_id = CommonRequest::get($request, 'invoice_buyer_id');
+        if(strlen($invoice_buyer_id) > 0 && !in_array($invoice_buyer_id, [0, '-1']))  Tool::appendParamQuery($queryParams, $invoice_buyer_id, 'invoice_buyer_id', [0, '0', ''], ',', false);
+
 //        $ids = CommonRequest::get($request, 'ids');
 //        if(strlen($ids) > 0 && $ids != 0)  Tool::appendParamQuery($queryParams, $ids, 'id', [0, '0', ''], ',', false);
 
@@ -519,6 +522,10 @@ class CTAPICourseOrderStaffBusiness extends BasicPublicCTAPIBusiness
         // 判断人员是否可以一起缴费【同一收款帐号，就可以付费】
         $class_ids = Tool::getArrFields($dataList, 'class_id');
         $course_ids = Tool::getArrFields($dataList, 'course_id');
+        $invoice_template_id = Tool::getArrFields($dataList, 'invoice_template_id');
+        if(count($invoice_template_id) > 1){
+            throws('不同的【发票开票模板】的课程，不可以一起进行付款！请分别付款！');
+        }
 
         $classFormatList = CTAPICourseClassBusiness::getClassPayList($request, $controller, $class_ids);// 以班级id为下标的二维数组
         $courseFormatList = CTAPICourseBusiness::getCoursePayList($request, $controller, $course_ids);// 以课程id为下标的二维数组

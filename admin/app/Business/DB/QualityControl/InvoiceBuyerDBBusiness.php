@@ -20,8 +20,8 @@ class InvoiceBuyerDBBusiness extends BasePublicDBBusiness
     public static function getIdHistory($mainId = 0, &$mainDBObj = null, &$historyDBObj = null){
         // $mainDBObj = null ;
         // $historyDBObj = null ;
-        return static::getHistoryId($mainDBObj, $mainId, ResourceHistoryDBBusiness::$model_name
-            , ResourceHistoryDBBusiness::$table_name, $historyDBObj, ['invoice_buyer_id' => $mainId], static::$ignoreFields);
+        return static::getHistoryId($mainDBObj, $mainId, InvoiceBuyerHistoryDBBusiness::$model_name
+            , InvoiceBuyerHistoryDBBusiness::$table_name, $historyDBObj, ['invoice_buyer_id' => $mainId], static::$ignoreFields);
     }
 
     /**
@@ -40,8 +40,8 @@ class InvoiceBuyerDBBusiness extends BasePublicDBBusiness
         ];
         // $mainDBObj = null ;
         // $historyDBObj = null ;
-        return static::compareHistoryOrUpdateVersion($mainDBObj, $id, ResourceHistoryDBBusiness::$model_name
-            , ResourceHistoryDBBusiness::$table_name, $historyDBObj, $historySearch, static::$ignoreFields, $forceIncVersion);
+        return static::compareHistoryOrUpdateVersion($mainDBObj, $id, InvoiceBuyerHistoryDBBusiness::$model_name
+            , InvoiceBuyerHistoryDBBusiness::$table_name, $historyDBObj, $historySearch, static::$ignoreFields, $forceIncVersion);
     }
 
 

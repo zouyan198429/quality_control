@@ -44,6 +44,18 @@
                   <option value="{{ $k }}"  @if(isset($defaultPayMethod) && $defaultPayMethod == $k) selected @endif >{{ $txt }}</option>
               @endforeach
           </select>
+          <select class="wmini" name="invoice_template_id" style="width: 80px;">
+              <option value="">发票开票模板</option>
+              @foreach ($invoice_template_kv as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultInvoiceTemplate) && $defaultInvoiceTemplate == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
+          <select class="wmini" name="invoice_project_template_id" style="width: 80px;">
+              <option value="">发票商品项目模板</option>
+              @foreach ($invoice_project_template_kv as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultInvoiceProjectTemplate) && $defaultInvoiceProjectTemplate == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
         <select style="width:80px; height:28px;" name="field">
           <option value="course_name">课程名称</option>
           <option value="explain_remarks">简要概述</option>
@@ -75,7 +87,7 @@
         <col width="95">
         <col width="100">
         <col width="95">
-        <col width="140">
+        <col width="80">
     </colgroup>
     <thead>
     <tr>
@@ -86,7 +98,7 @@
 {{--        </label>--}}
 {{--      </th>--}}
 {{--      <th>ID</th>--}}
-      <th>课程名称</th>
+      <th>课程名称<hr/>发票开票模板<hr/>发票商品项目模板</th>
         <th>图片</th>
         <th>收款帐号<hr/>收款开通类型</th>
         <th>收费标准(会员)<hr/>收费标准<br/>(非会员)</th>
@@ -153,7 +165,7 @@
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
 
 <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/Course.js') }}?8"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/Course.js') }}?9"  type="text/javascript"></script>
 @component('component.upfileincludejsmany')
 @endcomponent
 </body>

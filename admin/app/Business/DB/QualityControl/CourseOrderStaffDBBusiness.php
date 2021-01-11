@@ -68,6 +68,14 @@ class CourseOrderStaffDBBusiness extends BasePublicDBBusiness
                 $tem_staff_id = $saveData['staff_id'];
                 $saveData['staff_id_history'] = static::getStaffHistoryId($tem_staff_id);;
             }
+            if(isset($saveData['invoice_template_id']) && is_numeric($saveData['invoice_template_id']) && $saveData['invoice_template_id'] > 0){
+                $tem_invoice_template_id = $saveData['invoice_template_id'];
+                $saveData['invoice_template_id_history'] = InvoiceTemplateDBBusiness::getIdHistory($tem_invoice_template_id);
+            }
+            if(isset($saveData['invoice_project_template_id']) && is_numeric($saveData['invoice_project_template_id']) && $saveData['invoice_project_template_id'] > 0){
+                $tem_invoice_project_template_id = $saveData['invoice_project_template_id'];
+                $saveData['invoice_project_template_id_history'] = InvoiceProjectTemplateDBBusiness::getIdHistory($tem_invoice_project_template_id);
+            }
             if($id > 0){
                 $isModify = true;
                 // 判断权限
@@ -676,6 +684,15 @@ class CourseOrderStaffDBBusiness extends BasePublicDBBusiness
         // 判断人员信息
         $courseStaffList = CourseOrderStaffDBBusiness::getDBFVFormatList(1, 1, ['id' => $ids]);
         if(empty($courseStaffList))  throws('缴费人员信息不能为空！');
+        $invoiceTemplateIds = Tool::getArrFields($courseStaffList, 'invoice_template_id');
+        if(count($invoiceTemplateIds) > 1) throws('只能选择相同的【发票开票模板】，才能进行多条记录操作！');
+        $invoice_template_id = $invoiceTemplateIds[0] ?? 0;
+
+        // 获得报名企业信息
+        $courseOrderIds = Tool::getArrFields($courseStaffList, 'course_order_id');
+        $courseOrderList = CourseOrderStaffDBBusiness::getDBFVFormatList(1, 1, ['id' => $courseOrderIds]);
+        if(empty($courseOrderList))  throws('企业报名信息不能为空！');
+
 
         // 获得订单号
         $orderNoArr = Tool::getArrFields($courseStaffList, 'order_no');
@@ -728,6 +745,7 @@ class CourseOrderStaffDBBusiness extends BasePublicDBBusiness
             'total_price_goods' => $total_price_goods,// $total_price - $total_price_discount,// 商品应付金额--平台按量结算值(商品总价-实际/实时 total_price －　商品下单时优惠金额　total_price_discount)
             'payment_amount' => $payment_amount,// 总支付金额
             'change_amount' => $change_amount,// 找零金额
+            'invoice_template_id' => $invoice_template_id,// 发票开票模板id
         ];
         $order_no = '';
         $return_params = [];// 返回的附加参数
@@ -737,14 +755,34 @@ class CourseOrderStaffDBBusiness extends BasePublicDBBusiness
         $operate_staff_id_history = 0;
         CommonDB::doTransactionFun(function() use(&$company_id, &$organize_id, &$ids, &$operate_staff_id, &$modifAddOprate
             , &$ownProperty, &$temNeedStaffIdOrHistoryId, &$operate_staff_id_history, &$order_no, &$createOrder
-            , &$pay_config_id, &$pay_method, &$return_params, &$orderPayConfigInfo, &$auth_code, &$operate_type){
+            , &$pay_config_id, &$pay_method, &$return_params, &$orderPayConfigInfo, &$auth_code, &$operate_type, &$invoice_template_id
+            , &$courseOrderList, &$courseOrderIds, &$courseStaffList){
+            $invoice_template_id_history = InvoiceTemplateDBBusiness::getIdHistory($invoice_template_id);
+            $createOrder['invoice_template_id_history'] = $invoice_template_id_history;
             // 生成订单
             OrdersDBBusiness::createOrder($company_id, $createOrder, $order_no, $operate_staff_id, $modifAddOprate);
             // 修改订单号
             $saveData = [
-                'order_no' => $order_no
+                'order_no' => $order_no,
+                'invoice_template_id_history' => $invoice_template_id_history,
             ];
             static::saveByIds($saveData, $ids);
+            // 修改订单发票商品项目模板id历史
+            $courseFormatOrderStaff = Tool::arrUnderReset($courseStaffList, 'invoice_project_template_id', 2, '_');
+            foreach($courseFormatOrderStaff as  $invoice_project_template_id => $temOrderStaff){
+                $invoice_project_template_id_history = InvoiceProjectTemplateDBBusiness::getIdHistory($invoice_project_template_id);
+                $temCourseOrderIds = Tool::getArrFields($temOrderStaff, 'id');
+                static::saveByIds([
+                    'invoice_project_template_id_history' => $invoice_project_template_id_history
+                ], $temCourseOrderIds);
+            }
+
+            // 修改企业报名信息
+            $saveOrderData = [
+                'invoice_template_id_history' => $invoice_template_id_history,
+            ];
+            CourseOrderDBBusiness::saveByIds($saveOrderData, $courseOrderIds);
+
             $payKey = $orderPayConfigInfo['pay_key'];// 'banner';
             $createPayOrder = [
                 'company_id' => $company_id,

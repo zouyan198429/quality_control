@@ -45,7 +45,7 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
     // document.write("            <td><%=item.id%><\/td>");
     document.write("            <td><%=item.invoice_service_text%><\/td>");
     document.write("            <td><%=item.template_name%><\/td>");
-    document.write("            <td><%=item.itype_text%><hr/><%=item.tspz_text%><\/td>");
+    document.write("            <td><%=item.zsfs_text%><hr/><%=item.tspz_text%><\/td>");
     document.write("            <td><%=item.kpr%><hr/><%=item.skr%><\/td>");
     document.write("            <td><%=item.fhr%><hr/><%=item.open_status_text%><\/td>");
     document.write("            <td><%=item.bz%><\/td>");
