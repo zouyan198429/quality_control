@@ -2,6 +2,7 @@
 // 发票项目明细
 namespace App\Business\Controller\API\QualityControl;
 
+use App\Models\QualityControl\InvoiceProject;
 use App\Services\DBRelation\RelationDB;
 use App\Services\Excel\ImportExport;
 use App\Services\Request\API\HttpRequest;
@@ -161,6 +162,31 @@ class CTAPIInvoiceProjectBusiness extends BasicPublicCTAPIBusiness
         // 方法最下面
         // 注意重写方法中，如果不是特殊的like，同样需要调起此默认like方法--特殊的写自己特殊的方法
         static::joinListParamsLike($request, $controller, $queryParams, $notLog);
+    }
+
+    /**
+     * 格式化关系数据 --如果有格式化，肯定会重写---本地数据库主要用这个来格式化数据
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $main_list 关系主记录要格式化的数据
+     * @param array $data_list 需要格式化的从记录数据---二维数组(如果是一维数组，是转成二维数组后的数据)
+     * @param array $handleKeyArr 其它扩展参数，// 一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。--名称关键字，尽可能与关系名一样
+     * @param array $returnFields  新加入的字段['字段名1' => '字段名1' ]
+     * @return array  新增的字段 一维数组
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function handleRelationDataFormat(Request $request, Controller $controller, &$main_list, &$data_list, $handleKeyArr, &$returnFields = []){
+        // if(empty($data_list)) return $returnFields;
+        // 重写开始
+
+        // 对外显示时，批量价格字段【整数转为小数】
+        if(in_array('priceIntToFloat', $handleKeyArr)){
+            Tool::bathPriceCutFloatInt($data_list, InvoiceProject::$IntPriceFields, InvoiceProject::$IntPriceIndex, 2, 2);
+        }
+
+        // 重写结束
+        return $returnFields;
     }
 
 }

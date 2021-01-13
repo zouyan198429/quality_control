@@ -314,6 +314,9 @@
                               <dd>
                                   <a lay-href="{{ url('admin/order_flow') }}">财务明细[流水帐]</a>
                               </dd>
+                              <dd>
+                                  <a lay-href="{{ url('admin/invoices') }}">电子发票</a>
+                              </dd>
                           </dl>
                       </dd>
                       <dd class="layui-nav-itemed">

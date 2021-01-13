@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\QualityControl;
 
 use App\Business\Controller\API\QualityControl\CTAPIInvoicesBusiness;
 use App\Http\Controllers\WorksController;
+use App\Models\QualityControl\Invoices;
 use App\Services\Request\CommonRequest;
 use App\Services\Tool;
 use Illuminate\Http\Request;
@@ -118,18 +119,18 @@ class InvoicesController extends BasicController
      * @author zouyan(305463219@qq.com)
      */
     public function ajax_info(Request $request){
-        $this->InitParams($request);
-        $id = CommonRequest::getInt($request, 'id');
-        if(!is_numeric($id) || $id <=0) return ajaxDataArr(0, null, '参数[id]有误！');
-        $info = CTAPIInvoicesBusiness::getInfoData($request, $this, $id, [], '', []);
-        $resultDatas = ['info' => $info];
-        return ajaxDataArr(1, $resultDatas, '');
-
+//        $this->InitParams($request);
 //        $id = CommonRequest::getInt($request, 'id');
 //        if(!is_numeric($id) || $id <=0) return ajaxDataArr(0, null, '参数[id]有误！');
-//        return $this->exeDoPublicFun($request, 128, 2,'', true, 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
-//
-//        });
+//        $info = CTAPIInvoicesBusiness::getInfoData($request, $this, $id, [], '', []);
+//        $resultDatas = ['info' => $info];
+//        return ajaxDataArr(1, $resultDatas, '');
+
+        $id = CommonRequest::getInt($request, 'id');
+        if(!is_numeric($id) || $id <=0) return ajaxDataArr(0, null, '参数[id]有误！');
+        return $this->exeDoPublicFun($request, 128, 2,'', true, 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
+
+        });
     }
 
     /**
@@ -224,9 +225,18 @@ class InvoicesController extends BasicController
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                 'relationFormatConfigs'=> CTAPIInvoicesBusiness::getRelationConfigs($request, $this,
                     [
-                        // 'pay_company_name' => '',
+                        'company_name' => '',
+                        // 'invoice_buyer' => '',
+                        'invoice_buyer_history' => '',
+                        // 'invoice_seller' => '',
+                        'invoice_seller_history' => '',
+                        // 'invoice_template' => '',
+                        'invoice_template_history' => '',
+                        'pay_config' => '',
+                        'config_hydzfp' => '',
+                        'resource_list' => '',
                     ], []),
-                // 'listHandleKeyArr' => ['priceIntToFloat'],
+                 'listHandleKeyArr' => ['priceIntToFloat'],
             ];
             return  CTAPIInvoicesBusiness::getList($request, $this, 2 + 4, [], [], $extParams);
         });
@@ -261,22 +271,31 @@ class InvoicesController extends BasicController
      * @return mixed
      * @author zouyan(305463219@qq.com)
      */
-//    public function export(Request $request){
-//        $this->InitParams($request);
-//        CTAPIInvoicesBusiness::getList($request, $this, 1 + 0);
-//        return $this->exeDoPublicFun($request, 4096, 8,'', true, '', [], function (&$reDataArr) use ($request){
-//
-//            $extParams = [
-//                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-//                'relationFormatConfigs'=> CTAPIInvoicesBusiness::getRelationConfigs($request, $this,
-//                    [
-//                        // 'pay_company_name' => '',
-//                    ], []),
-//                // 'listHandleKeyArr' => ['priceIntToFloat'],
-//            ];
-//            CTAPIInvoicesBusiness::getList($request, $this, 1 + 0, [], [], $extParams);
-//        });
-//    }
+    public function export(Request $request){
+        $this->InitParams($request);
+        CTAPIInvoicesBusiness::getList($request, $this, 1 + 0);
+        return $this->exeDoPublicFun($request, 4096, 8,'', true, '', [], function (&$reDataArr) use ($request){
+
+            $extParams = [
+                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+                'relationFormatConfigs'=> CTAPIInvoicesBusiness::getRelationConfigs($request, $this,
+                    [
+                        'company_name' => '',
+                        // 'invoice_buyer' => '',
+                        'invoice_buyer_history' => '',
+                        // 'invoice_seller' => '',
+                        'invoice_seller_history' => '',
+                        // 'invoice_template' => '',
+                        'invoice_template_history' => '',
+                        'pay_config' => '',
+                        'config_hydzfp' => '',
+                        'resource_list' => '',
+                    ], []),
+                 'listHandleKeyArr' => ['priceIntToFloat'],
+            ];
+            CTAPIInvoicesBusiness::getList($request, $this, 1 + 0, [], [], $extParams);
+        });
+    }
 
 
     /**
@@ -319,18 +338,18 @@ class InvoicesController extends BasicController
      * @return mixed
      * @author zouyan(305463219@qq.com)
      */
-    public function ajax_del(Request $request)
-    {
-//        $this->InitParams($request);
-//        return CTAPIInvoicesBusiness::delAjax($request, $this);
-
-        $tem_id = CommonRequest::get($request, 'id');
-        Tool::formatOneArrVals($tem_id, [null, ''], ',', 1 | 2 | 4 | 8);
-        $pageNum = (is_array($tem_id) && count($tem_id) > 1 ) ? 1024 : 512;
-        return $this->exeDoPublicFun($request, $pageNum, 4,'', true, '', [], function (&$reDataArr) use ($request){
-            return CTAPIInvoicesBusiness::delAjax($request, $this);
-        });
-    }
+//    public function ajax_del(Request $request)
+//    {
+////        $this->InitParams($request);
+////        return CTAPIInvoicesBusiness::delAjax($request, $this);
+//
+//        $tem_id = CommonRequest::get($request, 'id');
+//        Tool::formatOneArrVals($tem_id, [null, ''], ',', 1 | 2 | 4 | 8);
+//        $pageNum = (is_array($tem_id) && count($tem_id) > 1 ) ? 1024 : 512;
+//        return $this->exeDoPublicFun($request, $pageNum, 4,'', true, '', [], function (&$reDataArr) use ($request){
+//            return CTAPIInvoicesBusiness::delAjax($request, $this);
+//        });
+//    }
 
     /**
      * ajax根据部门id,小组id获得所属部门小组下的员工数组[kv一维数组]
@@ -432,6 +451,35 @@ class InvoicesController extends BasicController
 //        $reDataArr['adminType'] =  AbilityJoin::$adminTypeArr;
 //        $reDataArr['defaultAdminType'] = -1;// 列表页默认状态
 
+        // 开票状态1待开票2开票中4已开票
+        $reDataArr['invoiceStatus'] =  Invoices::$invoiceStatusArr;
+        $reDataArr['defaultInvoiceStatus'] = -1;// 列表页默认状态
+
+        // 开票数据状态1待上传2已上传4已开票8已作废16已红冲
+        $reDataArr['uploadStatus'] =  Invoices::$uploadStatusArr;
+        $reDataArr['defaultUploadStatus'] = -1;// 列表页默认状态
+
+        // 开票类型 0-蓝字发票；1-红字发票
+        $reDataArr['kplx'] =  Invoices::$kplxArr;
+        $reDataArr['defaultKplx'] = -1;// 列表页默认状态
+
+        // 开票服务商1沪友
+        $reDataArr['invoiceService'] =  Invoices::$invoiceServiceArr;
+        $reDataArr['defaultInvoiceService'] = -1;// 列表页默认状态
+
+        // 发票类型(026=电票,004=专票,007=普票，025=卷票)
+        $reDataArr['itype'] =  Invoices::$itypeArr;
+        $reDataArr['defaultItype'] = -1;// 列表页默认状态
+
+        // 特殊票种标识:“00”=正常票种,“01”=农产品销售,“02”=农产品收购
+        $reDataArr['tspz'] =  Invoices::$tspzArr;
+        $reDataArr['defaultTspz'] = -1;// 列表页默认状态
+
+        // 征税方式 0：普通征税 2：差额征税
+        $reDataArr['zsfs'] =  Invoices::$zsfsArr;
+        $reDataArr['defaultZsfs'] = -1;// 列表页默认状态
+
+
         $reDataArr['hidden_option'] = $hiddenOption;
     }
 
@@ -476,15 +524,52 @@ class InvoicesController extends BasicController
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                 'relationFormatConfigs'=> CTAPIInvoicesBusiness::getRelationConfigs($request, $this,
                     [
-                        // 'pay_company_name' => '',
+                        'company_name' => '',
+                        // 'invoice_buyer' => '',
+                        'invoice_buyer_history' => '',
+                        // 'invoice_seller' => '',
+                        'invoice_seller_history' => '',
+                        // 'invoice_template' => '',
+                        'invoice_template_history' => '',
+                        'pay_config' => '',
+                        'config_hydzfp' => '',
+                        'resource_list' => '',
                     ], []),
-                // 'listHandleKeyArr' => ['priceIntToFloat'],
+                 'listHandleKeyArr' => ['priceIntToFloat'],
             ];
             $info = CTAPIInvoicesBusiness::getInfoData($request, $this, $id, [], '', $extParams);
         }
         // $reDataArr = array_merge($reDataArr, $resultDatas);
         $reDataArr['info'] = $info;
         $reDataArr['operate'] = $operate;
+
+        // 开票状态1待开票2开票中4已开票
+        $reDataArr['invoiceStatus'] =  Invoices::$invoiceStatusArr;
+        $reDataArr['defaultInvoiceStatus'] = $info['invoice_status'] ?? -1;// 列表页默认状态
+
+        // 开票数据状态1待上传2已上传4已开票8已作废16已红冲
+        $reDataArr['uploadStatus'] =  Invoices::$uploadStatusArr;
+        $reDataArr['defaultUploadStatus'] = $info['upload_status'] ?? -1;// 列表页默认状态
+
+        // 开票类型 0-蓝字发票；1-红字发票
+        $reDataArr['kplx'] =  Invoices::$kplxArr;
+        $reDataArr['defaultKplx'] = $info['kplx'] ?? -1;// 列表页默认状态
+
+        // 开票服务商1沪友
+        $reDataArr['invoiceService'] =  Invoices::$invoiceServiceArr;
+        $reDataArr['defaultInvoiceService'] = $info['invoice_service'] ?? -1;// 列表页默认状态
+
+        // 发票类型(026=电票,004=专票,007=普票，025=卷票)
+        $reDataArr['itype'] =  Invoices::$itypeArr;
+        $reDataArr['defaultItype'] = $info['itype'] ?? -1;// 列表页默认状态
+
+        // 特殊票种标识:“00”=正常票种,“01”=农产品销售,“02”=农产品收购
+        $reDataArr['tspz'] =  Invoices::$tspzArr;
+        $reDataArr['defaultTspz'] = $info['tspz'] ?? -1;// 列表页默认状态
+
+        // 征税方式 0：普通征税 2：差额征税
+        $reDataArr['zsfs'] =  Invoices::$zsfsArr;
+        $reDataArr['defaultZsfs'] = $info['zsfs'] ?? -1;// 列表页默认状态
 
         $reDataArr['hidden_option'] = $hiddenOption;
     }

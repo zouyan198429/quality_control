@@ -456,7 +456,7 @@ class CourseOrderStaffController extends BasicController
 //                    'sort_num' => $sort_num,
                 ];
                  // 价格转为整型
-                Tool::bathPriceCutFloatInt($saveData, CourseOrderStaff::$IntPriceFields, 1);
+                Tool::bathPriceCutFloatInt($saveData, CourseOrderStaff::$IntPriceFields, CourseOrderStaff::$IntPriceIndex, 1);
 
 //        if($id <= 0) {// 新加;要加入的特别字段
 //            $addNewData = [

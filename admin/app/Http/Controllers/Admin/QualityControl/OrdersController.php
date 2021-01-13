@@ -191,7 +191,7 @@ class OrdersController extends BasicController
 
         return $this->exeDoPublicFun($request, 0, 4,'', true
             , '', [], function (&$reDataArr) use ($request){
-                throws('正在调试开发中');
+                // throws('正在调试开发中');
 
                 $id = CommonRequest::get($request, 'id');
                 if(is_string($id)) $id = explode(',', $id);
@@ -298,7 +298,7 @@ class OrdersController extends BasicController
 //                    'sort_num' => $sort_num,
 //                ];
 //                 // 价格转为整型
-//                Tool::bathPriceCutFloatInt($saveData, Orders::$IntPriceFields, 1);
+//                Tool::bathPriceCutFloatInt($saveData, Orders::$IntPriceFields, Orders::$IntPriceIndex, 1);
 //
 ////        if($id <= 0) {// 新加;要加入的特别字段
 ////            $addNewData = [

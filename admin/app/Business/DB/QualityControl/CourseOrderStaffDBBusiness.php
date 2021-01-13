@@ -723,7 +723,7 @@ class CourseOrderStaffDBBusiness extends BasePublicDBBusiness
             $total_price = bcadd($total_price, $price, 0);
         }
         // 价格转为整型
-        Tool::bathPriceCutFloatInt($otherParams, ['payment_amount', 'change_amount'], 1);
+        Tool::bathPriceCutFloatInt($otherParams, ['payment_amount', 'change_amount'], [], 1);
         $total_price_discount = $otherParams['total_price_discount'] ?? 0;
         $total_price_discount = Tool::formatFloadPriceToIntPrice($total_price_discount);// 商品下单时优惠金额
         $total_price_goods = bcsub($total_price, $total_price_discount, 0);// $total_price - $total_price_discount;
@@ -891,8 +891,10 @@ class CourseOrderStaffDBBusiness extends BasePublicDBBusiness
     public static function finishPay($company_id, $order_no = '', &$orderInfo, $operate_staff_id = 0, $modifAddOprate = 0){
         // 获得当前订单的所有学员信息
         $staffList = static::getDBFVFormatList(1, 1, ['order_no' => $order_no, 'pay_status' => [1,2]]);
+
         $ids = Tool::getArrFields($staffList, 'id');
         $total_amount = count($staffList);
+        // if($total_amount <= 0) return ;
         if($orderInfo['total_amount'] != $total_amount) throws('订单商品数量与学员数量有误！');
         // $ownProperty  自有属性值;
         // $temNeedStaffIdOrHistoryId 当只有自己会用到时操作员工id和历史id时，用来判断是否需要获取 true:需要获取； false:不需要获取

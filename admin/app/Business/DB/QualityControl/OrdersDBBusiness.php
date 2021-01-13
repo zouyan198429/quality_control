@@ -2,6 +2,8 @@
 // 收款订单
 namespace App\Business\DB\QualityControl;
 
+use App\Models\QualityControl\CourseOrderStaff;
+use App\Models\QualityControl\InvoiceProjectTemplate;
 use App\Services\DB\CommonDB;
 use App\Services\Invoice\hydzfp\InvoiceHydzfp;
 use App\Services\Tool;
@@ -397,19 +399,19 @@ class OrdersDBBusiness extends BasePublicDBBusiness
      */
     public static function operateInvoiceBlueById($company_id, $organize_id = 0, $id = 0, $invoice_buyer_id = 0, $operate_staff_id = 0, $modifAddOprate = 0){
         // 获得订单列表
-        $dataList = static::getOrdersAndJudge($id, 1);
+        $ordersList = static::getOrdersAndJudge($id, 1);
         // 判断订单所属企业【同一企业，就可以开电子发票】
-        $companyIds = Tool::getArrFields($dataList, 'company_id');
+        $companyIds = Tool::getArrFields($ordersList, 'company_id');
         if(count($companyIds) > 1){
             throws('不同的企业，不可以一起进行开票！请分别开票！');
         }
-        $companyNames = Tool::getArrFields($dataList, 'company_name');
+        $companyNames = Tool::getArrFields($ordersList, 'company_name');
         if(is_numeric($organize_id) && $organize_id > 0 && !in_array($organize_id, $companyIds)){
             throws('您没有操作此记录的权限！');
         }
 
         // 收款帐号
-        $payConfigIds = Tool::getArrFields($dataList, 'pay_config_id');
+        $payConfigIds = Tool::getArrFields($ordersList, 'pay_config_id');
         if(count($payConfigIds) > 1){
             throws('不同的收款帐号，不可以一起进行开票！请分别开票！');
         }
@@ -420,7 +422,7 @@ class OrdersDBBusiness extends BasePublicDBBusiness
         if(!in_array($payConfigInfo['open_status'], [1])) throws('收款帐号非开启状态！');
 
         // 发票开票模板
-        $invoiceTemplateIds = Tool::getArrFields($dataList, 'invoice_template_id');
+        $invoiceTemplateIds = Tool::getArrFields($ordersList, 'invoice_template_id');
         if(count($invoiceTemplateIds) > 1){
             throws('不同的【发票开票模板】，不可以一起进行开票！请分别开票！');
         }
@@ -435,6 +437,7 @@ class OrdersDBBusiness extends BasePublicDBBusiness
             , false, '', []);
         if(empty($invoiceSellerInfo)) throws('【销售方开票信息】记录不存在！');
         if(!in_array($invoiceSellerInfo['open_status'], [1])) throws('【销售方开票信息】非开启状态！');
+        $invoice_seller_id = $invoiceSellerInfo['id'];
 
         // 获得购买方信息
         $invoiceBuyerInfo = InvoiceBuyerDBBusiness::getDBFVFormatList(4, 1, ['id' => $invoice_buyer_id]
@@ -443,8 +446,20 @@ class OrdersDBBusiness extends BasePublicDBBusiness
         if($organize_id != $invoiceBuyerInfo['company_id'])  throws('您没有【购买方开票信息】操作此记录的权限！');
         if(!in_array($invoiceBuyerInfo['open_status'], [1])) throws('【购买方开票信息】非开启状态！');
 
+        $invoice_service = $invoiceTemplateInfo['invoice_service'];// 开票服务商1沪友
+        $nowTime = date('Y-m-d H:i:s');
+
         // 获得具体的商品信息
-        $dataOrderTypeList = Tool::arrUnderReset($dataList, 'order_type', 2, '_');
+        $dataOrderTypeList = Tool::arrUnderReset($ordersList, 'order_type', 2, '_');
+
+        $total_jshj = 0;// 注意：不能使用商品的单价、数量、税率、税额来进行累加，最后四舍五入，只能是总合计金额+合计税额
+        $total_hjje = 0;// "0.88",// 是	string	#.##	合计金额 注意：不含税，单位：元（2位小数）
+        $total_hjse = 0;// // "0.12",// 是	string	#.##	合计税额单位：元（2位小数）
+        // 商品列表
+        $goodsList = [];
+        $invoiceProjectList = [];// 发票项目
+
+        $invoiceProjectData = [];// 保存数据表项目时用
         foreach($dataOrderTypeList as $tem_order_type => $tem_orderList){
             switch($tem_order_type) {// 订单类型1面授培训2会员年费
                 case 1://  1面授培训
@@ -452,25 +467,28 @@ class OrdersDBBusiness extends BasePublicDBBusiness
                     // 获得订单的学员信息
                     $courseOrderStaffList = CourseOrderStaffDBBusiness::getDBFVFormatList(1, 1, ['order_no' => $tem_order_nos], false);
                     if(empty($courseOrderStaffList)) throws('【面授培训】学员记录不存在！');
+                    Tool::bathPriceCutFloatInt($courseOrderStaffList, CourseOrderStaff::$IntPriceFields, CourseOrderStaff::$IntPriceIndex, 2, 2);
 
-                    $invoiceProjectTemplateIds = Tool::getArrFields($courseOrderStaffList, 'invoice_project_template_id');
-                    $invoiceProjectTemplateList = InvoiceProjectTemplateDBBusiness::getDBFVFormatList(1, 1, ['id' => $invoiceProjectTemplateIds], false);
-                    if(empty($invoiceProjectTemplateList)) throws('【发票商品项目模板】记录不存在！');
+                    // 获得课程信息
+                    $courseIds = Tool::getArrFields($courseOrderStaffList, 'course_id');
+                    $courseList = CourseDBBusiness::getDBFVFormatList(1, 1, ['id' => $courseIds], false);
+                    if(empty($courseList)) throws('【课程】记录不存在！');
                     // 按id格式化数据
-                    $formatInvoiceProjectTemplateList = Tool::arrUnderReset($invoiceProjectTemplateList, 'id', 1, '_');
-
-
-                    $projectTemplateCourserStaffList = Tool::arrUnderReset($courseOrderStaffList, 'invoice_project_template_id', 2, '_');
-                    foreach($projectTemplateCourserStaffList as $tem_template_id => $tem_template_staff_list){
-                        $temTemplateInfo = $formatInvoiceProjectTemplateList[$tem_template_id] ?? [];
-                        if(empty($temTemplateInfo)) throws('【发票商品项目模板-' . $tem_template_id . '】记录不存在！');
-
-                        foreach($tem_template_staff_list as $temInfo){
-
-                        }
-
+                    $formatCourseList = Tool::arrUnderReset($courseList, 'id', 1, '_');
+                    foreach($courseOrderStaffList as $k => $v){
+                        $tem_course_id = $v['course_id'];
+                        $temCourseInfo = $formatCourseList[$tem_course_id] ?? [];
+                        if(empty($temCourseInfo)) throws('【课程-' . $tem_course_id . '】记录不存在！');
+                        array_push($goodsList, [
+                            'good_name' => $temCourseInfo['course_name'],
+                            'price' => $v['price'],
+                            'invoice_template_id' => $v['invoice_template_id'],
+                            'invoice_template_id_history' => $v['invoice_template_id_history'],
+                            'invoice_project_template_id' => $v['invoice_project_template_id'],
+                            'invoice_project_template_id_history' => $v['invoice_project_template_id_history'],
+                            'invoice_buyer_id' => $v['invoice_buyer_id'],
+                        ]);
                     }
-
 
                     break;
                 case 2://  2会员年费
@@ -479,75 +497,232 @@ class OrdersDBBusiness extends BasePublicDBBusiness
                     break;
             }
 
+
+            $invoiceProjectTemplateIds = Tool::getArrFields($goodsList, 'invoice_project_template_id');
+            $invoiceProjectTemplateList = InvoiceProjectTemplateDBBusiness::getDBFVFormatList(1, 1, ['id' => $invoiceProjectTemplateIds], false);
+            if(empty($invoiceProjectTemplateList)) throws('【发票商品项目模板】记录不存在！');
+            Tool::bathPriceCutFloatInt($invoiceProjectTemplateList, InvoiceProjectTemplate::$IntPriceFields, InvoiceProjectTemplate::$IntPriceIndex, 2, 2);
+
+            // 按id格式化数据
+            $formatInvoiceProjectTemplateList = Tool::arrUnderReset($invoiceProjectTemplateList, 'id', 1, '_');
+
+
+            $projectTemplateGoodsList = Tool::arrUnderReset($goodsList, 'invoice_project_template_id', 2, '_');
+            foreach($projectTemplateGoodsList as $tem_template_id => $tem_good_list){
+                $temTemplateInfo = $formatInvoiceProjectTemplateList[$tem_template_id] ?? [];
+                if(empty($temTemplateInfo)) throws('【发票商品项目模板-' . $tem_template_id . '】记录不存在！');
+                if(!in_array($temTemplateInfo['open_status'], [1])) throws('【发票商品项目模板-' . $tem_template_id . '】非开启状态！');
+                $tem_template_name = $temTemplateInfo['template_name'];// 发票模板名称
+                $tem_spbm = $temTemplateInfo['spbm'];// 商品编码(商品编码为税务总局颁发的19位税控编码)
+                $tem_zxbm = $temTemplateInfo['zxbm'];// 自行编码(一般不建议使用自行编码)
+                $tem_yhzcbs = $temTemplateInfo['yhzcbs'];// 优惠政策标识 0：不使用，1：使用
+                $tem_lslbs = $temTemplateInfo['lslbs'];// 零税率标识 空：非零税率， 1：免税，2：不征收，3普通零税率
+                $tem_zzstsgl = $temTemplateInfo['zzstsgl'];// 增值税特殊管理-如果yhzcbs为1时，此项必填，具体信息取《商品和服务税收分类与编码》中的增值税特殊管理列。(值为中文)
+                $tem_xmmc = $temTemplateInfo['xmmc'];// 项目名称 (必须与商品编码表一致;如果为折扣行，商品名称须与被折扣行的商品名称相同，不能多行折扣。如需按照税控编码开票，则项目名称可以自拟,但请按照税务总局税控编码规则拟定)
+                $tem_ggxh = $temTemplateInfo['ggxh'];// 规格型号(折扣行请不要传)
+                $tem_dw = $temTemplateInfo['dw'];// 计量单位(折扣行请不要传)
+                $tem_sl = $temTemplateInfo['sl'];// 税率 例1%为0.01
+
+                $tem_append_name = $temTemplateInfo['append_name'];// 名称后是否还要加具体商品名称1不补加商品名称2补加商品名称
+                $tem_merge_goods = $temTemplateInfo['merge_goods'];// 是否合并开票1分开开票--不合并2合并开票
+
+                switch($tem_merge_goods){
+                    case 1:// 1分开开票--不合并
+                        foreach($tem_good_list as $temInfo){
+                            $tem_amount = 1;// 数量
+                            $tem_price = $temInfo['price'];
+                            $tem_name = $temInfo['good_name'] ?? '';
+                            $tem_total_price = bcmul($tem_amount, $tem_price, 2);// $tem_amount * $tem_price;
+                            $tem_se = bcmul($tem_total_price, $tem_sl, 2);// $tem_total_price * $tem_sl;
+                            $tem_good_name = $tem_xmmc;// *非学历教育服务*培训费
+                            if($tem_append_name == 2 && $tem_name != ''){
+                                // 没有 * 加  *
+                                if(mb_substr($tem_good_name,-1) != '*'){
+                                    $tem_good_name .= '*';
+                                }
+                                $tem_good_name .= $tem_name;
+                            }
+                            // 发票项目
+                            $apiProjectInfo = [
+                                "fphxz" => "0",// 是	string	2	发票行性质 0正常行、1折扣行、2被折扣行
+                                "spbm" => $tem_spbm,// "3070201020000000000",// "",// 是	string	19	商品编码(商品编码为税务总局颁发的19位税控编码)
+                                "zxbm" => $tem_zxbm,// "",// 否	string	20	自行编码(一般不建议使用自行编码)
+                                "yhzcbs" => $tem_yhzcbs,// "0",// "",//否	string	2	优惠政策标识 0：不使用，1：使用
+                                "lslbs" => $tem_lslbs,// "",// 否	string	2	零税率标识 空：非零税率， 1：免税，2：不征收，3普通零税率
+                                // 否	string	50	增值税特殊管理-如果yhzcbs为1时，此项必填，
+                                // 具体信息取《商品和服务税收分类与编码》中的增值税特殊管理列。(值为中文)
+                                "zzstsgl" => $tem_zzstsgl,// "",// aa  bbb
+                                // 是	string	90	项目名称 (必须与商品编码表一致;如果为折扣行，商品名称须与被折扣行的商品名称相同，不能多行折扣。
+                                // 如需按照税控编码开票，则项目名称可以自拟,但请按照税务总局税控编码规则拟定)
+                                "xmmc" => $tem_good_name,// "培训费",// "更具自身业务决定",// aa  bbb
+                                "ggxh" => $tem_ggxh,// "",// 否	string	30	规格型号(折扣行请不要传)
+                                "dw" => $tem_dw,// "",// 否	string	20	计量单位(折扣行请不要传)
+                                "xmsl" => $tem_amount,//"1",// "",// 否	string	#.######	项目数量 小数点后6位,大于0的数字
+                                "xmdj" => $tem_price,// "1.00",// 否	string	#.######	项目单价 小数点后6位 注意：单价是含税单价,大于0的数字
+                                "xmje" => $tem_total_price,// "1.00",// 是	string	#.##	项目金额 注意：金额是含税，单位：元（2位小数）
+                                "sl" => $tem_sl,//"0.03",// "0.13",// 是	string	#.##	税率 例1%为0.01
+                                "se" => $tem_se,// "0.03",// "0.12"// 是	string	#.##	税额 单位：元（2位小数）
+                            ];
+                            array_push($invoiceProjectList, $apiProjectInfo);
+                            // $total_jshj = 0;// 注意：不能使用商品的单价、数量、税率、税额来进行累加，最后四舍五入，只能是总合计金额+合计税额
+                            $total_hjje = bcadd($total_hjje, bcsub($tem_total_price, $tem_se, 2), 2);// "0.88",// 是	string	#.##	合计金额 注意：不含税，单位：元（2位小数）
+                            $total_hjse = bcadd($total_hjse, $tem_se, 2);// // "0.12",// 是	string	#.##	合计税额单位：元（2位小数）
+
+                            array_push($invoiceProjectData, [
+                                'id' => 0,
+                                // 'invoice_id' => $aaa , // 发票主表id
+                                // 'order_num' => $order_num , // 业务单据号
+                                'invoice_project_template_id' => $tem_template_id , // 发票商品项目模板id
+                                // 'invoice_project_template_id_history' => $aaa , // 发票商品项目模板id历史
+                                'fphxz' => $apiProjectInfo['fphxz'] , // 发票行性质 0正常行、1折扣行、2被折扣行
+                                'spbm' => $apiProjectInfo['spbm'] , // 商品编码(商品编码为税务总局颁发的19位税控编码)
+                                'zxbm' => $apiProjectInfo['zxbm'] , // 自行编码(一般不建议使用自行编码)
+                                'yhzcbs' => $apiProjectInfo['yhzcbs'] , // 优惠政策标识 0：不使用，1：使用
+                                'lslbs' => $apiProjectInfo['lslbs'] , // 零税率标识 空：非零税率， 1：免税，2：不征收，3普通零税率
+                                'zzstsgl' => $apiProjectInfo['zzstsgl'] , // 增值税特殊管理-如果yhzcbs为1时，此项必填，具体信息取《商品和服务税收分类与编码》中的增值税特殊管理列。(值为中文)
+                                'xmmc' => $apiProjectInfo['xmmc'] , // 项目名称 (必须与商品编码表一致;如果为折扣行，商品名称须与被折扣行的商品名称相同，不能多行折扣。如需按照税控编码开票，则项目名称可以自拟,但请按照税务总局税控编码规则拟定)
+                                'ggxh' => $apiProjectInfo['ggxh'] , // 规格型号(折扣行请不要传)
+                                'dw' => $apiProjectInfo['dw'] , // 计量单位(折扣行请不要传)
+                                'xmsl' => $apiProjectInfo['xmsl'] , // 项目数量 小数点后6位,大于0的数字
+                                'xmdj' => $apiProjectInfo['xmdj'] , // 项目单价 小数点后6位 注意：单价是含税单价,大于0的数字
+                                'xmje' => $apiProjectInfo['xmje'] , // 项目金额 注意：金额是含税，单位：元（2位小数）
+                                'sl' => $apiProjectInfo['sl'] , // 税率 例1%为0.01
+                                'se' => $apiProjectInfo['se'] , // 税额 单位：元（2位小数）
+                            ]);
+                        }
+                        break;
+                    case 2:// 2合并开票
+                        $tem_all_amount = 0;// 数量
+                        $tem_total_price = 0;// 总价
+                        $tem_good_name = $tem_xmmc;// *非学历教育服务*培训费
+                        $tem_good_num = count($tem_good_list);
+                        foreach($tem_good_list as $temInfo){
+                            $tem_amount = 1;// 数量
+                            $tem_all_amount += $tem_amount;
+                            $tem_price = $temInfo['price'];
+                            $tem_name = $temInfo['good_name'] ?? '';
+                            $tem_total_price = bcadd($tem_total_price, bcmul($tem_amount, $tem_price, 2), 2);
+
+                            if($tem_append_name == 2 && $tem_name != '' && $tem_good_num <= 1){// 如果 只有一个商品，则可以拼接名称
+                                // 没有 * 加  *
+                                if(mb_substr($tem_good_name,-1) != '*'){
+                                    $tem_good_name .= '*';
+                                }
+                                $tem_good_name .= $tem_name;
+                            }
+                        }
+                        $tem_se = bcmul($tem_total_price, $tem_sl, 2);// $tem_total_price * $tem_sl;
+                        // 发票项目
+                        // 注意：合并时，数量为1:单位为总价
+                        // 发票项目
+                        $apiProjectInfo = [
+                            "fphxz" => "0",// 是	string	2	发票行性质 0正常行、1折扣行、2被折扣行
+                            "spbm" => $tem_spbm,// "3070201020000000000",// "",// 是	string	19	商品编码(商品编码为税务总局颁发的19位税控编码)
+                            "zxbm" => $tem_zxbm,// "",// 否	string	20	自行编码(一般不建议使用自行编码)
+                            "yhzcbs" => $tem_yhzcbs,// "0",// "",//否	string	2	优惠政策标识 0：不使用，1：使用
+                            "lslbs" => $tem_lslbs,// "",// 否	string	2	零税率标识 空：非零税率， 1：免税，2：不征收，3普通零税率
+                            // 否	string	50	增值税特殊管理-如果yhzcbs为1时，此项必填，
+                            // 具体信息取《商品和服务税收分类与编码》中的增值税特殊管理列。(值为中文)
+                            "zzstsgl" => $tem_zzstsgl,// "",// aa  bbb
+                            // 是	string	90	项目名称 (必须与商品编码表一致;如果为折扣行，商品名称须与被折扣行的商品名称相同，不能多行折扣。
+                            // 如需按照税控编码开票，则项目名称可以自拟,但请按照税务总局税控编码规则拟定)
+                            "xmmc" => $tem_good_name,// "培训费",// "更具自身业务决定",// aa  bbb
+                            "ggxh" => $tem_ggxh,// "",// 否	string	30	规格型号(折扣行请不要传)
+                            "dw" => $tem_dw,// "",// 否	string	20	计量单位(折扣行请不要传)
+                            "xmsl" => 1,// $tem_amount,//"1",// "",// 否	string	#.######	项目数量 小数点后6位,大于0的数字
+                            "xmdj" => $tem_total_price,// $tem_price,// "1.00",// 否	string	#.######	项目单价 小数点后6位 注意：单价是含税单价,大于0的数字
+                            "xmje" => $tem_total_price,// "1.00",// 是	string	#.##	项目金额 注意：金额是含税，单位：元（2位小数）
+                            "sl" => $tem_sl,//"0.03",// "0.13",// 是	string	#.##	税率 例1%为0.01
+                            "se" => $tem_se,// "0.03",// "0.12"// 是	string	#.##	税额 单位：元（2位小数）
+                        ];
+                        array_push($invoiceProjectList, $apiProjectInfo);
+                        // $total_jshj = 0;// 注意：不能使用商品的单价、数量、税率、税额来进行累加，最后四舍五入，只能是总合计金额+合计税额
+                        $total_hjje = bcadd($total_hjje, bcsub($tem_total_price, $tem_se, 2), 2);// "0.88",// 是	string	#.##	合计金额 注意：不含税，单位：元（2位小数）
+                        $total_hjse = bcadd($total_hjse, $tem_se, 2);// // "0.12",// 是	string	#.##	合计税额单位：元（2位小数）
+
+
+                        array_push($invoiceProjectData, [
+                            'id' => 0,
+                            // 'invoice_id' => $aaa , // 发票主表id
+                            // 'order_num' => $order_num , // 业务单据号
+                            'invoice_project_template_id' => $tem_template_id , // 发票商品项目模板id
+                            // 'invoice_project_template_id_history' => $aaa , // 发票商品项目模板id历史
+                            'fphxz' => $apiProjectInfo['fphxz'] , // 发票行性质 0正常行、1折扣行、2被折扣行
+                            'spbm' => $apiProjectInfo['spbm'] , // 商品编码(商品编码为税务总局颁发的19位税控编码)
+                            'zxbm' => $apiProjectInfo['zxbm'] , // 自行编码(一般不建议使用自行编码)
+                            'yhzcbs' => $apiProjectInfo['yhzcbs'] , // 优惠政策标识 0：不使用，1：使用
+                            'lslbs' => $apiProjectInfo['lslbs'] , // 零税率标识 空：非零税率， 1：免税，2：不征收，3普通零税率
+                            'zzstsgl' => $apiProjectInfo['zzstsgl'] , // 增值税特殊管理-如果yhzcbs为1时，此项必填，具体信息取《商品和服务税收分类与编码》中的增值税特殊管理列。(值为中文)
+                            'xmmc' => $apiProjectInfo['xmmc'] , // 项目名称 (必须与商品编码表一致;如果为折扣行，商品名称须与被折扣行的商品名称相同，不能多行折扣。如需按照税控编码开票，则项目名称可以自拟,但请按照税务总局税控编码规则拟定)
+                            'ggxh' => $apiProjectInfo['ggxh'] , // 规格型号(折扣行请不要传)
+                            'dw' => $apiProjectInfo['dw'] , // 计量单位(折扣行请不要传)
+                            'xmsl' => $apiProjectInfo['xmsl'] , // 项目数量 小数点后6位,大于0的数字
+                            'xmdj' => $apiProjectInfo['xmdj'] , // 项目单价 小数点后6位 注意：单价是含税单价,大于0的数字
+                            'xmje' => $apiProjectInfo['xmje'] , // 项目金额 注意：金额是含税，单位：元（2位小数）
+                            'sl' => $apiProjectInfo['sl'] , // 税率 例1%为0.01
+                            'se' => $apiProjectInfo['se'] , // 税额 单位：元（2位小数）
+                        ]);
+                        break;
+                    default:
+                        break;
+                }
+
+            }
         }
 
+        $total_jshj = bcadd($total_hjje, $total_hjse, 2);// 注意：不能使用商品的单价、数量、税率、税额来进行累加，最后四舍五入，只能是总合计金额+合计税额
 
-        $invoice_service = $invoiceTemplateInfo['invoice_service'];// 开票服务商1沪友
-        $order_num = '';
-
-        // 发票配置沪友
-        $invoiceConfigInfo = InvoiceConfigHydzfpDBBusiness::getDBFVFormatList(4, 1, ['pay_config_id' => $pay_config_id]
-            , false, '', []);
-        if(empty($invoiceConfigInfo)) throws('【发票配置信息】记录不存在！');
-
-
-        // $companyConfig = static::$companyConfig;
-        $data = [
-            "data_resources" => "API",// 是	string	4	固定参数 “API”
-            "nsrsbh" => $invoiceSellerInfo['xsf_nsrsbh'],// $companyConfig['tax_num'],// "1246546544654654",// 是	string	20	销售方纳税人识别号
-            "skph" => "",// "123213123212",// 否	string	12	税控盘号（使用税控盒子必填，其他设备为空）
-            "order_num" => $order_num,// "1120521299480004",// "order_num_1474873042826",// 是	string	200	业务单据号；必须是唯一的
-            "bmb_bbh" => "33.0", // "29.0",// 是	string	10	税收编码版本号，参数“29.0”，具体值请询问提供商-- ?
-            "zsfs" => $invoiceTemplateInfo['zsfs'],// "0",// 是	string	2	征税方式 0：普通征税 1: 减按计增 2：差额征税
-            "tspz" => $invoiceTemplateInfo['tspz'],// "00",// 否	string	2	特殊票种标识:“00”=正常票种,“01”=农产品销售,“02”=农产品收购
-            "xsf_nsrsbh" => $invoiceSellerInfo['xsf_nsrsbh'],// $companyConfig['tax_num'],// "1246546544654654",//是	string	20	销售方纳税人识别号
-            "xsf_mc" => $invoiceSellerInfo['xsf_mc'],// $companyConfig['pay_company_name'],// "\t自贡市有限公司",// 是	string	100	销售方名称
-            "xsf_dzdh" => $invoiceSellerInfo['xsf_dz'] . $invoiceSellerInfo['xsf_dh'],// "自贡市斯柯达将阿里是可大家是大家圣诞节阿拉斯加大开杀戒的拉开手机端 13132254",// 是	string	100	销售方地址、电话
-            "xsf_yhzh" =>  $invoiceSellerInfo['xsf_yh'] . $invoiceSellerInfo['xsf_yhzh'],// "124654654123154",// 是	string	100	销售方开户行名称与银行账号
-            "gmf_nsrsbh" => $invoiceBuyerInfo['gmf_nsrsbh'],//  "",// 否	string	100	购买方纳税人识别号(税务总局规定企业用户为必填项)
-            "gmf_mc" => $invoiceBuyerInfo['gmf_mc'],//  "个人",// 是	string	100	购买方名称
-            "gmf_dzdh" => $invoiceBuyerInfo['gmf_dz'] . $invoiceBuyerInfo['gmf_dh'],//  "",// 否	string	100	购买方地址、电话
-            "gmf_yhzh" =>  $invoiceBuyerInfo['gmf_yh'] . $invoiceBuyerInfo['gmf_yhzh'],//  "",// 否	string	100	购买方开户行名称与银行账号
-            "kpr" => $invoiceTemplateInfo['kpr'],// "开票员A",// 是	string	8	开票人
-            "skr" =>  $invoiceTemplateInfo['skr'],// "",// 否	string	8	收款人
-            "fhr" =>  $invoiceTemplateInfo['fhr'],// "",// 否	string	8	复核人
-            "yfp_dm" =>  "",// 否	string	12	原发票代码
-            "yfp_hm" =>  "",// 否	string	8	原发票号码
-            // 是	string	#.##	价税合计;单位：元（2位小数） 价税合计=合计金额(不含税)+合计税额
-            // 注意：不能使用商品的单价、数量、税率、税额来进行累加，最后四舍五入，只能是总合计金额+合计税额
-            "jshj" =>  "1.00",
-            "hjje" => "0.97",// "0.88",// 是	string	#.##	合计金额 注意：不含税，单位：元（2位小数）
-            "hjse" =>  "0.03",// "0.12",// 是	string	#.##	合计税额单位：元（2位小数）
-            "kce" =>  "",// 否	string	#.##	扣除额小数点后2位，当ZSFS为2时扣除额为必填项
-            "bz" =>  $invoiceTemplateInfo['bz'],// "备注啊哈哈哈哈",// 否	string	100	备注 (长度100字符)
-            // "kpzdbs" => "",// 否	string	20	已经失效，不再支持
-            "jff_phone" => $invoiceBuyerInfo['jff_phone'],//  "",// "手机号",// 否	string	11	手机号，针对税控盒子主动交付，需要填写
-            "jff_email" => $invoiceBuyerInfo['jff_email'],//  "",// "电子邮件",// 否	string	100	电子邮件，针对税控盒子主动交付，需要填写
-            "common_fpkj_xmxx" => [
-                [
-                    "fphxz" => "0",// 是	string	2	发票行性质 0正常行、1折扣行、2被折扣行
-                    "spbm" => "3070201020000000000",// "",// 是	string	19	商品编码(商品编码为税务总局颁发的19位税控编码)
-                    "zxbm" => "",// 否	string	20	自行编码(一般不建议使用自行编码)
-                    "yhzcbs" => "0",// "",//否	string	2	优惠政策标识 0：不使用，1：使用
-                    "lslbs" => "",// 否	string	2	零税率标识 空：非零税率， 1：免税，2：不征收，3普通零税率
-                    // 否	string	50	增值税特殊管理-如果yhzcbs为1时，此项必填，
-                    // 具体信息取《商品和服务税收分类与编码》中的增值税特殊管理列。(值为中文)
-                    "zzstsgl" => "",// aa  bbb
-                    // 是	string	90	项目名称 (必须与商品编码表一致;如果为折扣行，商品名称须与被折扣行的商品名称相同，不能多行折扣。
-                    // 如需按照税控编码开票，则项目名称可以自拟,但请按照税务总局税控编码规则拟定)
-                    "xmmc" => "培训费",// "更具自身业务决定",// aa  bbb
-                    "ggxh" => "",// 否	string	30	规格型号(折扣行请不要传)
-                    "dw" => "",// 否	string	20	计量单位(折扣行请不要传)
-                    "xmsl" => "1",// "",// 否	string	#.######	项目数量 小数点后6位,大于0的数字
-                    "xmdj" => "1.00",// 否	string	#.######	项目单价 小数点后6位 注意：单价是含税单价,大于0的数字
-                    "xmje" => "1.00",// 是	string	#.##	项目金额 注意：金额是含税，单位：元（2位小数）
-                    "sl" => "0.03",// "0.13",// 是	string	#.##	税率 例1%为0.01
-                    "se" => "0.03",// "0.12"// 是	string	#.##	税额 单位：元（2位小数）
-                ]
-            ]
+        // 保存发票信息
+        $invoicesInfo = [
+            'company_id' => $organize_id , // 企业id/学员id(无所属企业)
+            'invoice_buyer_id' => $invoice_buyer_id , // 发票配置购买方id
+            // 'invoice_buyer_id_history' => $aaa , // 发票配置购买方id历史
+            'pay_config_id' => $pay_config_id , // 收款帐号配置id
+            'invoice_seller_id' => $invoice_seller_id , // 发票配置销售方id
+            // 'invoice_seller_id_history' => $aaa , // 发票配置销售方id历史
+            'invoice_service' => $invoice_service , // 开票服务商1沪友
+            'invoice_template_id' => $invoice_template_id , // 发票开票模板id
+            // 'invoice_template_id_history' => $aaa , // 发票开票模板id历史
+            //'invoice_status' => 1 , // 开票状态1待开票2开票中4已开票
+            // 'upload_status' => 1 , // 开票数据状态1待上传2已上传4已开票8已作废16已红冲
+            // 'order_num' => $order_num , // 业务单据号
+            // 'kpzdbs' => $tem_v['kpzdbs'] ?? '', // 开票终端标识 已经失效，不再支持
+            // 'jqbh' => $invoiceConfigInfo['tax_num'] ?? '',// $tem_v['jqbh'] ?? '', // 税控设备机器编号
+            // 'kplx' => '0',// $tem_v['kplx'] ?? '0' , // 开票类型 0-蓝字发票；1-红字发票
+            // 'itype' => $tem_v['itype'] ?? '' , // 发票类型(026=电票,004=专票,007=普票，025=卷票)
+            'tspz' => $invoiceTemplateInfo['tspz'] ?? '00',// $tem_v['tspz'] ?? '00' , // 特殊票种标识:“00”=正常票种,“01”=农产品销售,“02”=农产品收购
+            'zsfs' => $invoiceTemplateInfo['zsfs'] ?? '0',// $tem_v['zsfs'] ?? '0' , // 征税方式 0：普通征税 2：差额征税
+            'kce' => 0,// "",// $tem_v['kce'] ?? '' , // 扣除额小数点后2位，当ZSFS为2【差额征税】时扣除额为必填项
+//                    'yfp_hm' => $tem_v['yfp_hm'] ?? '', // 原发票号码
+//                    'fp_hm' => $tem_v['fp_hm'] ?? '' , // 发票号码
+//                    'yfp_dm' => $tem_v['yfp_dm'] ?? '' , // 原发票代码
+//                    'fp_dm' => $tem_v['fp_dm'] ?? '' , // 发票代码
+            'hjse' => $total_hjse,// $tem_v['hjse'] ?? '0' , // 合计税额【税总额】
+            'hjje' => $total_hjje,// $tem_v['hjje'] ?? '0' , // 合计金额(不含税)
+            'jshj' => $total_jshj,// $tem_v['jshj'] ?? '0' , // 价税合计(含税)
+            'jff_phone' => $invoiceBuyerInfo['jff_phone'],//  $tem_v['jff_phone'] ?? '' , // 手机号，针对税控盒子主动交付，需要填写
+            'jff_email' => $invoiceBuyerInfo['jff_email'],//  $tem_v['jff_email'] ?? '' , // 电子邮件，针对税控盒子主动交付，需要填写
+            // 'jym' => $tem_v['jym'] ?? '' , // 校验码
+            // 'pdf_item_key' => $tem_v['pdf_item_key'] ?? '' , // 发票清单PDF文件获取key
+            // 'pdf_key' => $tem_v['pdf_key'] ?? '' , // 发票PDF文件获取key
+            // 'ext_code' => $tem_v['ext_code'] ?? '' , // 提取码
+            // 'fpqqlsh' => $tem_v['fpqqlsh'] ?? '' , // 发票请求流水号
+            // 'fp_mw' => $tem_v['fp_mw'] ?? '' , // 发票密文
+            // 'kprq' => date('YmdHis'),// $tem_v['kprq'] ?? '' , // 开票日期(20161107145525格式：yyyymmddhhmiss)
+            // 'create_time' => $nowTime , // 生成时间
+            // 'submit_time' => $nowTime , // 提交数据时间
+            // 'make_time' => $nowTime , // 开票时间
+            // 'closel_time' => $nowTime , // 作废时间
+            // 'cancel_time' => $nowTime , // 红冲时间
+            'invoice_project' => $invoiceProjectData,// 电子发票项目
+            // 'invoice_order' => $invoiceOrderData,// 订单发票关联表
         ];
-        // A0001-开具蓝字发票
-         $result = InvoiceHydzfp::ebiInvoiceHandleNewBlueInvoice($invoiceConfigInfo['open_id'], $invoiceConfigInfo['app_secret'], 0,  false);
+
+        // 生成电子发票订单信息
+        $order_num = InvoicesDBBusiness::createOrder($company_id, 1, $organize_id, $ordersList, $invoicesInfo, $operate_staff_id, $modifAddOprate);
+        // 生成蓝票
+        InvoicesDBBusiness::apiSendInvoice($company_id, $organize_id, $order_num, $operate_staff_id, $modifAddOprate);
+
     }
 
     /**

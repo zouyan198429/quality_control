@@ -2,6 +2,7 @@
 // 发票主表
 namespace App\Business\Controller\API\QualityControl;
 
+use App\Models\QualityControl\Invoices;
 use App\Services\DBRelation\RelationDB;
 use App\Services\Excel\ImportExport;
 use App\Services\Request\API\HttpRequest;
@@ -88,6 +89,97 @@ class CTAPIInvoicesBusiness extends BasicPublicCTAPIBusiness
 //                    static::getUboundRelation($relationArr, 'company_info'),
 //                    static::getUboundRelationExtendParams($extendParams, 'company_info')),
 //                ['where' => [['admin_type', 2]]], '', []),
+            // 获得企业名称
+            'company_name' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
+                , ['company_id' => 'id']
+                , 1, 2
+                ,'','',
+                CTAPIStaffBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'company_name'),
+                    static::getUboundRelationExtendParams($extendParams, 'company_name')),
+                static::getRelationSqlParams([], $extendParams, 'company_name'), '', []),
+            // 发票配置购买方
+            'invoice_buyer' => CTAPIInvoiceBuyerBusiness::getTableRelationConfigInfo($request, $controller
+                , ['invoice_buyer_id' => 'id']
+                , 1, 1
+                ,'','',
+                CTAPIInvoiceBuyerBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'invoice_buyer'),
+                    static::getUboundRelationExtendParams($extendParams, 'invoice_buyer')),
+                static::getRelationSqlParams([], $extendParams, 'invoice_buyer'), '', []),
+            // 发票配置购买方历史
+            'invoice_buyer_history' => CTAPIInvoiceBuyerHistoryBusiness::getTableRelationConfigInfo($request, $controller
+                , ['invoice_buyer_id_history' => 'id']
+                , 1, 1
+                ,'','',
+                CTAPIInvoiceBuyerHistoryBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'invoice_buyer_history'),
+                    static::getUboundRelationExtendParams($extendParams, 'invoice_buyer_history')),
+                static::getRelationSqlParams([], $extendParams, 'invoice_buyer_history'), '', []),
+            // 发票配置销售方
+            'invoice_seller' => CTAPIInvoiceSellerBusiness::getTableRelationConfigInfo($request, $controller
+                , ['invoice_seller_id' => 'id']
+                , 1, 1
+                ,'','',
+                CTAPIInvoiceSellerBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'invoice_seller'),
+                    static::getUboundRelationExtendParams($extendParams, 'invoice_seller')),
+                static::getRelationSqlParams([], $extendParams, 'invoice_seller'), '', []),
+            // 发票配置销售方历史
+            'invoice_seller_history' => CTAPIInvoiceSellerHistoryBusiness::getTableRelationConfigInfo($request, $controller
+                , ['invoice_seller_id_history' => 'id']
+                , 1, 1
+                ,'','',
+                CTAPIInvoiceSellerHistoryBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'invoice_seller_history'),
+                    static::getUboundRelationExtendParams($extendParams, 'invoice_seller_history')),
+                static::getRelationSqlParams([], $extendParams, 'invoice_seller_history'), '', []),
+            // 发票开票模板
+            'invoice_template' => CTAPIInvoiceTemplateBusiness::getTableRelationConfigInfo($request, $controller
+                , ['invoice_template_id' => 'id']
+                , 1, 1
+                ,'','',
+                CTAPIInvoiceTemplateBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'invoice_template'),
+                    static::getUboundRelationExtendParams($extendParams, 'invoice_template')),
+                static::getRelationSqlParams([], $extendParams, 'invoice_template'), '', []),
+            // 发票开票模板历史
+            'invoice_template_history' => CTAPIInvoiceTemplateHistoryBusiness::getTableRelationConfigInfo($request, $controller
+                , ['invoice_template_id_history' => 'id']
+                , 1, 1
+                ,'','',
+                CTAPIInvoiceTemplateHistoryBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'invoice_template_history'),
+                    static::getUboundRelationExtendParams($extendParams, 'invoice_template_history')),
+                static::getRelationSqlParams([], $extendParams, 'invoice_template_history'), '', []),
+            // 收款帐号配置
+            'pay_config' => CTAPIOrderPayConfigBusiness::getTableRelationConfigInfo($request, $controller
+                , ['pay_config_id' => 'id']
+                , 1, 1
+                ,'','',
+                CTAPIOrderPayConfigBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'pay_config'),
+                    static::getUboundRelationExtendParams($extendParams, 'pay_config')),
+                static::getRelationSqlParams([], $extendParams, 'pay_config'), '', []),
+            // 发票配置沪友
+            'config_hydzfp' => CTAPIInvoiceConfigHydzfpBusiness::getTableRelationConfigInfo($request, $controller
+                , ['pay_config_id' => 'pay_config_id']
+                , 1, 1
+                ,'','',
+                CTAPIInvoiceConfigHydzfpBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'config_hydzfp'),
+                    static::getUboundRelationExtendParams($extendParams, 'config_hydzfp')),
+                static::getRelationSqlParams([], $extendParams, 'config_hydzfp'), '', []),
+            // 获得封面图
+            'resource_list' => CTAPIResourceBusiness::getTableRelationConfigInfo($request, $controller
+                , ['resource_id' => 'id']
+                , 2, 0
+                ,'','',
+                CTAPIResourceBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'resource_list'),
+                    static::getUboundRelationExtendParams($extendParams, 'resource_list')),
+                static::getRelationSqlParams([], $extendParams, 'resource_list'), '', ['extendConfig' => ['listHandleKeyArr' => ['format_resource'], 'infoHandleKeyArr' => ['resource_list']]]),
+
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }
@@ -196,4 +288,28 @@ class CTAPIInvoicesBusiness extends BasicPublicCTAPIBusiness
         static::joinListParamsLike($request, $controller, $queryParams, $notLog);
     }
 
+    /**
+     * 格式化关系数据 --如果有格式化，肯定会重写---本地数据库主要用这个来格式化数据
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $main_list 关系主记录要格式化的数据
+     * @param array $data_list 需要格式化的从记录数据---二维数组(如果是一维数组，是转成二维数组后的数据)
+     * @param array $handleKeyArr 其它扩展参数，// 一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。--名称关键字，尽可能与关系名一样
+     * @param array $returnFields  新加入的字段['字段名1' => '字段名1' ]
+     * @return array  新增的字段 一维数组
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function handleRelationDataFormat(Request $request, Controller $controller, &$main_list, &$data_list, $handleKeyArr, &$returnFields = []){
+        // if(empty($data_list)) return $returnFields;
+        // 重写开始
+
+        // 对外显示时，批量价格字段【整数转为小数】
+        if(in_array('priceIntToFloat', $handleKeyArr)){
+            Tool::bathPriceCutFloatInt($data_list, Invoices::$IntPriceFields, Invoices::$IntPriceIndex, 2, 2);
+        }
+
+        // 重写结束
+        return $returnFields;
+    }
 }

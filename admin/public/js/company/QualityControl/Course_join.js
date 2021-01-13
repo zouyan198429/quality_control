@@ -66,6 +66,14 @@ $(function(){
 
 });
 
+// 通过父页面弹出支付页面
+function payOrderStaff(courseOrderId){
+    consoleLogs(['-payOrderStaff-courseOrderId-', courseOrderId]);
+    // 执行父类的支付方法
+    window.parent.otheraction.payByIds(null, courseOrderId);
+    // 关闭当前页面
+    parent_reset_list();
+}
 // 每次加入新的员工时，更新图片
 function resetPhone(){
     var layer_index = layer.load();
@@ -474,8 +482,12 @@ function ajax_save(id){
                     var courseOrderId = ret.result;
                     consoleLogs(['-courseOrderId-', courseOrderId]);
                     // 跳转到支付页
-                    var weburl = PAY_URL + '?course_order_id='+ courseOrderId;
-                    go(weburl);
+                    // var weburl = PAY_URL + '?course_order_id='+ courseOrderId;
+                    // go(weburl);
+
+                    // 通过父页面弹出支付页面
+                    payOrderStaff(courseOrderId);
+
                     // parent_reset_list_iframe_close(reset_total);// 刷新并关闭
                     //do something
                 });

@@ -1781,7 +1781,7 @@ class BaseDBBusiness extends BaseBusiness
             case 1:// 订单--不用
             case 11:// 面授培训
             case 12:// 会员年费
-            case 14:
+            case 14://
             case 18:
                 $userIdBack = str_pad(substr($user_id, -2), 2, '0', STR_PAD_LEFT);
                 $midFix = $userIdBack;
@@ -1800,6 +1800,16 @@ class BaseDBBusiness extends BaseBusiness
                 $userIdBack = str_pad(substr($user_id, -2), 2, '0', STR_PAD_LEFT);
                 $midFix = $userIdBack;
                 $namespace = 'orderPay' . $userIdBack;
+                $length = 4;
+                $needNum = 1 + 2 + 8;
+//                $expireNums = [
+//                  [1000,1100,365 * 24 * 60 * 60]  // 缓存的秒数365 * 24 * 60 * 60
+//                ];
+                break;
+            case 51: // 电子发票
+                $userIdBack = str_pad(substr($user_id, -2), 2, '0', STR_PAD_LEFT);
+                $midFix = $userIdBack;
+                $namespace = 'invoice' . $userIdBack;
                 $length = 4;
                 $needNum = 1 + 2 + 8;
 //                $expireNums = [

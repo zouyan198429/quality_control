@@ -1381,7 +1381,7 @@ class Tool
     }
 
     /**
-     * 二维数组中每个一维数组追加指定的一维数组值
+     * 二维数组中每个一维数组追加指定的一维数组值 也可以 是  array_merge()的替代方案---因为array_merge在下标值为数组时，会报错，可以用些方法解决
      *
      * @param array $dataList 源数据 一维/二维数组
      * @param array $appendArr 需要追加的一维数据 一维数组   ['is_multi' => 0, 'is_must' => 1]
@@ -3492,28 +3492,37 @@ class Tool
         $formatPrice = bcmul($num, $multiple, 2);// 先乘并保留2位小数
         return static::formatFloatVal($formatPrice, $decimalDigits, $type);
     }
+
     /**
      * 批量浮点数价格转整数 或 整数转为小数
      *
      * @param array $dataList 需要转换的数据--一维或二维数组
      * @param array $priceFields 需要转换的价格字段数组
+     * @param array $priceFieldsIndex 需要转换的价格字段对应的扩大陪数；没有配置默认为2  扩大或缩小倍数： pow(10,2)；格式：['sl' => 2,]；注：2的可不用配置【只配置特殊的】，因为默认就是2
      * @param int $operateType 操作类型 1：浮点数价格转整数 【默认】； 2 ：整数转为小数
-     * @param int $decimalDigits 保留小数位数 【默认0位】--放大后的小数位数 -- $operateType:值 为 2时，这里要用2--两位小数
+     * @param int $decimalDigits 保留小数位数 【默认0位】--放大后的小数位数 -- $operateType:值 为 2时，这里要用2--两位小数 ; 如果参数$priceFieldsIndex 有指定，则指定的纠正<的
      * @param int $type 类型 1 四舍五入[默认];2不四舍五入;3向下取[正:往小的数取;负:往大的负数取];4 向上取[正:往大的数取;负:往小的数负取];
-     * @param int $multiple 放大倍数 默认 100
+     * @param int $multiple 放大倍数 默认 100  如果参数$priceFieldsIndex 有指定，则有指定的
      * @return array
      */
-    public static function bathPriceCutFloatInt(&$dataList, $priceFields = [], $operateType = 1, $decimalDigits = 0, $type = 1, $multiple = 100){
+    public static function bathPriceCutFloatInt(&$dataList, $priceFields = [], $priceFieldsIndex = [], $operateType = 1, $decimalDigits = 0, $type = 1, $multiple = 100){
         if(empty($dataList) || empty($priceFields)) return $dataList;
 
         $isMulti = static::isMultiArr($dataList, true);
         foreach($dataList as $k => &$v){
             foreach($priceFields as $tField){
+                $indexNum = $priceFieldsIndex[$tField] ?? 2;
+                $temMultiple = $multiple;
+                if( isset($priceFieldsIndex[$tField]) ){
+                    $temMultiple = pow(10, $indexNum);
+                }
+                $temDecimalDigits = $decimalDigits;
                 if(isset($v[$tField]) && is_numeric($v[$tField])){
                     if($operateType == 1){// 浮点数价格转整数
-                        $v[$tField] = static::formatFloadPriceToIntPrice($v[$tField], $decimalDigits, $type, $multiple) ;
+                        $v[$tField] = static::formatFloadPriceToIntPrice($v[$tField], $temDecimalDigits, $type, $temMultiple) ;
                     }else{// 整数转为小数
-                        $v[$tField] = static::formatIntPriceToFloadPrice($v[$tField], $decimalDigits, $type, $multiple) ;
+                        if(isset($priceFieldsIndex[$tField]) && $temDecimalDigits < $indexNum) $temDecimalDigits = $indexNum;
+                        $v[$tField] = static::formatIntPriceToFloadPrice($v[$tField], $temDecimalDigits, $type, $temMultiple) ;
                     }
                 }
             }

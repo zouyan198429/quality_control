@@ -3,7 +3,7 @@ var SUBMIT_FORM = true;//防止多次点击提交
 
 $(function(){
 
-    $('.search_frm').trigger("click");// 触发搜索事件
+    // $('.search_frm').trigger("click");// 触发搜索事件
     // reset_list_self(false, false, true, 2);
 
     // window.location.href 返回 web 主机的域名，如：http://127.0.0.1:8080/testdemo/test.html?id=1&name=test
@@ -18,9 +18,36 @@ $(function(){
 function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
     console.log('is_read_page', typeof(is_read_page));
     console.log('ajax_async', typeof(ajax_async));
+    var layer_index = layer.load();
     reset_list(is_read_page, false, reset_total, do_num);
+
+    // 初始化列表文件显示功能
+    var uploadAttrObj = {
+        down_url:DOWN_FILE_URL,
+        del_url: DEL_FILE_URL,
+        del_fun_pre:'',
+        files_type: 1,
+        icon : 'file-o',
+        operate_auth:(1 | 2)
+    };
+    var resourceListObj = $('#data_list').find('tr');
+    initFileShow(uploadAttrObj, resourceListObj, 'resource_show', 'baidu_template_upload_file_show', 'baidu_template_upload_pic', 'resource_id[]');
+
     // initList();
+    initPic();
+    layer.close(layer_index);//手动关闭
 }
+
+window.onload = function() {
+    $('.search_frm').trigger("click");// 触发搜索事件
+    // reset_list_self(false, false, true, 2);
+//     initPic();
+};
+function initPic(){
+    baguetteBox.run('.baguetteBoxOne');
+    // baguetteBox.run('.baguetteBoxTwo');
+}
+
 (function() {
     document.write("");
     document.write("    <!-- 前端模板部分 -->");
@@ -36,32 +63,40 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
     document.write("        %>");
     document.write("");
     document.write("        <tr>");
-    // document.write("            <td>");
-    // document.write("                <label class=\"pos-rel\">");
-    // document.write("                    <input  onclick=\"action.seledSingle(this)\" type=\"checkbox\" class=\"ace check_item\" <%if( false &&  !can_modify){%> disabled <%}%>  value=\"<%=item.id%>\"\/>");
-    // document.write("                  <span class=\"lbl\"><\/span>");
-    // document.write("                <\/label>");
-    // document.write("            <\/td>");
-    // document.write("            <td><%=item.id%><\/td>");
-    document.write("            <td><%=item.industry_name%><\/td>");
-    document.write("            <td><%=item.simple_name%><\/td>");
-    document.write("            <td><%=item.created_at%><\/td>");
-    document.write("            <td><%=item.updated_at%><\/td>");
-    document.write("            <td><%=item.sort_num%><\/td>");
     document.write("            <td>");
-    document.write("                <%if( false){%>");
+    document.write("                <label class=\"pos-rel\">");
+    document.write("                    <input  onclick=\"action.seledSingle(this)\" type=\"checkbox\" class=\"ace check_item\" <%if( false &&  !can_modify){%> disabled <%}%>  value=\"<%=item.id%>\"\/>");
+    document.write("                  <span class=\"lbl\"><\/span>");
+    document.write("                <\/label>");
+    document.write("            <\/td>");
+    // document.write("            <td><%=item.id%><\/td>");
+    document.write("            <td><%=item.invoice_seller_history.xsf_mc%><hr/><%=item.invoice_seller_history.xsf_nsrsbh%><\/td>");
+    document.write("            <td><%=item.invoice_buyer_history.gmf_mc%><hr/><%=item.invoice_buyer_history.gmf_nsrsbh%><\/td>");
+    document.write("            <td><%=item.order_num%><hr/><%=item.invoice_service_text%><\/td>");
+    document.write("            <td><%=item.invoice_status_text%><hr/><%=item.upload_status_text%><\/td>");
+    document.write("            <td><%=item.yfp_hm%><hr/><%=item.fp_hm%><\/td>");
+    document.write("            <td><%=item.yfp_dm%><hr/><%=item.fp_dm%><\/td>");
+    document.write("            <td><%=item.hjje%><hr/><%=item.hjse%><\/td>");
+    document.write("            <td>");
+    document.write("               <span class=\"resource_list\"  style=\"display: none;\"><%=JSON.stringify(item.resource_list)%></span>");
+    document.write("               <span  class=\"resource_show\"></span>");
+    document.write("            <\/td>");
+    document.write("            <td><%=item.create_time%><hr/><%=item.submit_time%><\/td>");
+    document.write("            <td><%=item.make_time%><hr/><%=item.cancel_time%><\/td>");
+    document.write("            <td>");
+    document.write("                <%if( true){%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"action.show(<%=item.id%>)\">");
     document.write("                    <i class=\"ace-icon  fa fa-eye  bigger-60\"> 查看<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
-    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.iframeModify(<%=item.id%>)\">");
-    document.write("                    <i class=\"ace-icon fa fa-pencil bigger-60\"> 编辑<\/i>");
-    document.write("                <\/a>");
-    document.write("                <%if( can_modify){%>");
-    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.del(<%=item.id%>)\">");
-    document.write("                    <i class=\"ace-icon fa fa-trash-o bigger-60\"> 删除<\/i>");
-    document.write("                <\/a>");
-    document.write("                <%}%>");
+    // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.iframeModify(<%=item.id%>)\">");
+    // document.write("                    <i class=\"ace-icon fa fa-pencil bigger-60\"> 编辑<\/i>");
+    // document.write("                <\/a>");
+    // document.write("                <%if( can_modify){%>");
+    // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.del(<%=item.id%>)\">");
+    // document.write("                    <i class=\"ace-icon fa fa-trash-o bigger-60\"> 删除<\/i>");
+    // document.write("                <\/a>");
+    // document.write("                <%}%>");
     document.write("");
     document.write("            <\/td>");
     document.write("        <\/tr>");

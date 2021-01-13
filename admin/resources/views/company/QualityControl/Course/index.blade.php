@@ -116,6 +116,8 @@
 
       var JOIN_URL = "{{url('company/course/join/')}}/";//报名页面地址前缀 + id
 
+      var PAY_URL = "{{ url('company/course_order/pay') }}";//操作(缴费)
+
   </script>
 
 <link rel="stylesheet" href="{{asset('js/baguetteBox.js/baguetteBox.min.css')}}">
@@ -125,7 +127,7 @@
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
 
 <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/company/QualityControl/Course.js') }}?5"  type="text/javascript"></script>
+  <script src="{{ asset('js/company/QualityControl/Course.js') }}?8"  type="text/javascript"></script>
 @component('component.upfileincludejsmany')
 @endcomponent
 </body>

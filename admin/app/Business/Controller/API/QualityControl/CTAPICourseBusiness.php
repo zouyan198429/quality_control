@@ -256,7 +256,7 @@ class CTAPICourseBusiness extends BasicPublicCTAPIBusiness
 
         // 对外显示时，批量价格字段【整数转为小数】
         if(in_array('priceIntToFloat', $handleKeyArr)){
-            Tool::bathPriceCutFloatInt($data_list, Course::$IntPriceFields, 2, 2);
+            Tool::bathPriceCutFloatInt($data_list, Course::$IntPriceFields, Course::$IntPriceIndex, 2, 2);
         }
 
         // 重写结束

@@ -261,6 +261,7 @@ var paySuccessFun = function (ret, paramObj) {
 // ret 接口返回的对象
 // paramObj 对象 {order_no:order_no, pay_order_no:pay_order_no}
 var payFailFun = function payFail(ret, paramObj) {
+    var close_loop = getAttrVal(paramObj, 'close_loop', true, {});
     // 有错误时，先关闭自动执行代码
     console.log('==支付成功==', close_loop);
     close_loop.is_close = true; // -- 一般用这个控制开关

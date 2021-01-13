@@ -10,6 +10,7 @@ use App\Business\DB\QualityControl\AbilityJoinItemsDBBusiness;
 use App\Business\DB\QualityControl\AbilityJoinItemsResultsDBBusiness;
 use App\Business\DB\QualityControl\CertificateScheduleDBBusiness;
 use App\Business\DB\QualityControl\CompanyStatementDBBusiness;
+use App\Business\DB\QualityControl\InvoicesDBBusiness;
 use App\Business\DB\QualityControl\StaffDBBusiness;
 use App\Http\Controllers\WorksController;
 use App\Models\QualityControl\Staff;
@@ -50,6 +51,30 @@ class IndexController extends BasicController
     }
 
     public function test(Request $request){
+        $aaa = '{"fp_url":"http://web.hydzfp.com/ei_access/html/downloadMobilePdf.do?key=pdf&data=eyJuc3JzYmgiOiI5MTMyMDEwNjU5ODAzNTQ2OVciLCJvcmRlcl9udW0iOiI1MTIxMDE3MzEwMDEwMDA0IiwidGltZSI6IjE2MTA1MDQ5OTA3ODgiLCJjayI6ImVhNjRkNzlhYmVhYjBlOTBmNzAxYzFlODc4M2ZiZTc0In0=&pdfkey=pdf_znRtMq91610504989234","qd_url":""}';
+        $aaARR = json_decode($aaa, true);
+        // pr($aaARR);
+        $company_id = 0;
+        $organize_id = 48;
+        $order_num = "5121017310010004";
+        $nsrsbh = "91320106598035469W";
+        $invoiceConfigInfo = [
+            'open_id' => 'I9lhovOqS1bdamapbn17NYMxgLbwEq8HmLhRdrR4d3VHma6JC9C1493185737711',
+            'app_secret' => '6ocogiVdlv7G2jpYcNxmPDaQXDhoZvubxtrayaq3U4WwWOjRwUV1493185737714'
+        ];
+        InvoicesDBBusiness::getInvoiceFile($company_id, $organize_id, $order_num, $nsrsbh, $invoiceConfigInfo, 0, 0);
+
+        pr(date('YmdHis'));
+        $tem_append_name = '邹燕';
+        $tem_xmmc = '*非学历教育服务*培训费*';
+        $lastStr = mb_substr($tem_xmmc,-1);
+        pr($lastStr);
+        $tem_good_name = $tem_xmmc;// *非学历教育服务*培训费
+        if($tem_append_name == 2){
+
+            // $tem_good_name .= $temInfo['good_name'];
+        }
+
         vd(1);
            $aa = [
              '中化人吴三桂' => 1,

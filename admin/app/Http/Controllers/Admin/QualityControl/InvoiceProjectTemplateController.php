@@ -198,7 +198,7 @@ class InvoiceProjectTemplateController extends BasicController
                     'open_status' => $open_status,
                 ];
                 // 价格转为整型
-                Tool::bathPriceCutFloatInt($saveData, InvoiceProjectTemplate::$IntPriceFields, 1);
+                Tool::bathPriceCutFloatInt($saveData, InvoiceProjectTemplate::$IntPriceFields, InvoiceProjectTemplate::$IntPriceIndex, 1);
 
 //        if($id <= 0) {// 新加;要加入的特别字段
 //            $addNewData = [

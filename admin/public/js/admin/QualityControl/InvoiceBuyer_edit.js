@@ -198,7 +198,6 @@ function ajax_form(){
                         if(id > 0) reset_total = false;
                         parent_reset_list_iframe_close(reset_total);// 刷新并关闭
                     }else{
-
                         eval( 'window.parent.' + PARENT_BUSINESS_FUN_NAME + '(paramsToObj(decodeURIComponent(data), 1), ret.result, 2)');
                         parent_reset_list();// 关闭弹窗
                     }

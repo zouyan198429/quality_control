@@ -109,7 +109,7 @@
 <!-- zui js -->
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
 
-<script src="{{ asset('/js/company/QualityControl/CourseOrderStaff_pay_save.js') }}?69"  type="text/javascript"></script>
+<script src="{{ asset('/js/company/QualityControl/CourseOrderStaff_pay_save.js') }}?70"  type="text/javascript"></script>
 @component('component.upfileincludejsmany')
 @endcomponent
 </body>

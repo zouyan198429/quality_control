@@ -35,13 +35,14 @@ class OrderPayDBBusiness extends BasePublicDBBusiness
     public static function finishPay($company_id, $pay_order_no, $pay_no = '', $extendParams = [], $operate_staff_id = 0, $modifAddOprate = 0){
 
         // 查询支付单
-        $payInfo = static::getDBFVFormatList(4, 1, ['pay_order_no' => $pay_order_no]);
-        if(empty($payInfo)) throws('订单支付记录不存在', 10);// return '订单支付记录不存在';// 1; //记录不存在
-
-        $status = $payInfo->pay_status;// 付款状态  状态1已关闭2付款中4成功8失败
-        // if(in_array($status, [1,4])) throws('已关闭或已支付成功', 10);// return '已关闭或已支付成功';//  return 1;// 已关闭或成功
-        if($status == 1) throws('已关闭', 10);
-        if($status == 4) throws('已支付成功', 11);
+//        $payInfo = static::getDBFVFormatList(4, 1, ['pay_order_no' => $pay_order_no]);
+//        if(empty($payInfo)) throws('订单支付记录不存在', 10);// return '订单支付记录不存在';// 1; //记录不存在
+//
+//        $status = $payInfo->pay_status;// 付款状态  状态1已关闭2付款中4成功8失败
+//        // if(in_array($status, [1,4])) throws('已关闭或已支付成功', 10);// return '已关闭或已支付成功';//  return 1;// 已关闭或成功
+//        if($status == 1) throws('已关闭', 10);
+//        if($status == 4) throws('已支付成功', 11);
+        $payInfo =  static::judgePayed($pay_order_no);
 
         // $ownProperty  自有属性值;
         // $temNeedStaffIdOrHistoryId 当只有自己会用到时操作员工id和历史id时，用来判断是否需要获取 true:需要获取； false:不需要获取
@@ -62,6 +63,26 @@ class OrderPayDBBusiness extends BasePublicDBBusiness
             static::save($updateData, $saveQueryParams);
         });
 
+    }
+
+    /**
+     *  判断 订单是否已经 支付
+     *
+     * @param string  $pay_order_no 生成的支付订单号
+     * @return null 数组一维 订单支付信息 ； 错误码 10 -- 代表记录不存在或已处理---不用处理了 ; 11：已经是成功状态
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function judgePayed($pay_order_no){
+
+        // 查询支付单
+        $payInfo = static::getDBFVFormatList(4, 1, ['pay_order_no' => $pay_order_no]);
+        if(empty($payInfo)) throws('订单支付记录不存在', 10);// return '订单支付记录不存在';// 1; //记录不存在
+
+        $status = $payInfo->pay_status;// 付款状态  状态1已关闭2付款中4成功8失败
+        // if(in_array($status, [1,4])) throws('已关闭或已支付成功', 10);// return '已关闭或已支付成功';//  return 1;// 已关闭或成功
+        if($status == 1) throws('已关闭', 10);
+        if($status == 4) throws('已支付成功', 11);
+        return $payInfo;
     }
 
     /**
@@ -323,33 +344,61 @@ class OrderPayDBBusiness extends BasePublicDBBusiness
              */
             // 如trade_state不为 SUCCESS，则只返回out_trade_no（必传）和attach（选传）。
             $transaction_id = $resultWX['transaction_id'] ?? '';// 第三方单号[有则填]，---注意未支付成功不会返回此字段
-            switch($trade_state){
-                case 'SUCCESS':// SUCCESS—支付成功
-                    static::finishPay(0, $pay_order_no, $transaction_id, [], 0, 0);
-                    return 1;
-                    break;
-                case 'REFUND':// REFUND—转入退款
-                    break;
-                case 'NOTPAY':// NOTPAY—未支付
-                case 'USERPAYING':// USERPAYING--用户支付中（付款码支付）
-                    // 如果开启支付超过10分钟，则作失败处理
-                    $order_time = $order_pay_info['order_time'];
-                    $currentNow = Carbon::now()->toDateTimeString();
-                    if(Tool::diffDate($order_time, $currentNow, 1, '时间', 2) > (60 * 5 + 1)){
-                        static::failPay(0, $pay_order_no, $transaction_id, [], 0, 0);
-                        return 2;
+            return Tool::lockDoSomething('lock:' . Tool::getUniqueKey([Tool::getProjectKey(1 | 2 | 4, ':', ':'), Tool::getActionMethod(), __CLASS__, __FUNCTION__, $order_no, $pay_order_no]),
+                function()  use(&$pay_order_no, &$transaction_id, &$trade_state, &$order_pay_info){//
+
+                    try {
+                        switch($trade_state){
+                            case 'SUCCESS':// SUCCESS—支付成功
+                                static::finishPay(0, $pay_order_no, $transaction_id, [], 0, 0);
+                                return 1;
+                                break;
+                            case 'REFUND':// REFUND—转入退款
+                                break;
+                            case 'NOTPAY':// NOTPAY—未支付
+                            case 'USERPAYING':// USERPAYING--用户支付中（付款码支付）
+                                // 如果开启支付超过10分钟，则作失败处理
+                                $order_time = $order_pay_info['order_time'];
+                                $currentNow = Carbon::now()->toDateTimeString();
+                                if(Tool::diffDate($order_time, $currentNow, 1, '时间', 2) > (60 * 5 + 1)){
+                                    static::failPay(0, $pay_order_no, $transaction_id, [], 0, 0);
+                                    return 2;
+                                }
+                                break;
+                            case 'CLOSED':// CLOSED—已关闭
+                            case 'REVOKED':// REVOKED—已撤销（付款码支付）
+                            case 'PAYERROR':// PAYERROR--支付失败(其他原因，如银行返回失败)
+                                static::failPay(0, $pay_order_no, $transaction_id, [], 0, 0);
+                                return 2;
+                                break;
+                            default:
+                                break;
+                        }
+                    } catch ( \Exception $e) {
+                        $errStr = $e->getMessage();
+                        $errCode = $e->getCode();
+                        // 10 -- 代表记录不存在或已处理---不用处理了 ; 11：已经是成功状态
+                        // 返回值 1:支付成功  2: 支付失败 3：其它状态 或 throws 有误或 暂时没有支付结果
+                        if(in_array($errCode, [11])){
+                            // $returnStr = $errStr;
+                            return 1;// $returnStr;
+                        }else if(in_array($errCode, [10])){
+                            return 2;
+                        }else{
+                            //                    throws('操作失败；信息[' . $e->getMessage() . ']');
+                            throws($errStr, $errCode);
+                        }
+                        // throws($e->getMessage());
                     }
-                    break;
-                case 'CLOSED':// CLOSED—已关闭
-                case 'REVOKED':// REVOKED—已撤销（付款码支付）
-                case 'PAYERROR':// PAYERROR--支付失败(其他原因，如银行返回失败)
-                    static::failPay(0, $pay_order_no, $transaction_id, [], 0, 0);
-                    return 2;
-                    break;
-                default:
-                    break;
-            }
-            return 3;
+                    return 3;
+                }, function($errDo){
+                    // TODO
+//                            $errMsg = '获得字段失败，请稍后重试!';
+//                            if($errDo == 1) throws($errMsg);
+//                            return $errMsg;
+//                            // return null;
+                    throws('操作失败，请稍后重试!');
+                }, true, 1, 2000, 2000);
         }, 1);
     }
 

@@ -87,62 +87,62 @@ class InvoiceHydzfp extends BaseInvoice
      * @return array 一维数组
      *  ["expire_in" => 7200, 'access_token' => 'FfJPQjgxQGa2y0Snuuc4Q94iQpce3A6x']
      */
-    public static function ebiInvoiceHandleNewBlueInvoice($openid, $app_secret, $apiDataMode = 0, $forceApi = false){
-        $companyConfig = static::$companyConfig;
-        $data = [
-            "data_resources" => "API",// 是	string	4	固定参数 “API”
-            "nsrsbh" => $companyConfig['tax_num'],// "1246546544654654",// 是	string	20	销售方纳税人识别号
-            "skph" => "",// "123213123212",// 否	string	12	税控盘号（使用税控盒子必填，其他设备为空）
-            "order_num" => "1120521299480004",// "order_num_1474873042826",// 是	string	200	业务单据号；必须是唯一的
-            "bmb_bbh" => "33.0", // "29.0",// 是	string	10	税收编码版本号，参数“29.0”，具体值请询问提供商-- ?
-            "zsfs" => "0",// 是	string	2	征税方式 0：普通征税 1: 减按计增 2：差额征税
-            "tspz" => "00",// 否	string	2	特殊票种标识:“00”=正常票种,“01”=农产品销售,“02”=农产品收购
-            "xsf_nsrsbh" => $companyConfig['tax_num'],// "1246546544654654",//是	string	20	销售方纳税人识别号
-            "xsf_mc" => $companyConfig['pay_company_name'],// "\t自贡市有限公司",// 是	string	100	销售方名称
-            "xsf_dzdh" => "自贡市斯柯达将阿里是可大家是大家圣诞节阿拉斯加大开杀戒的拉开手机端 13132254",// 是	string	100	销售方地址、电话
-            "xsf_yhzh" =>  "124654654123154",// 是	string	100	销售方开户行名称与银行账号
-            "gmf_nsrsbh" =>  "",// 否	string	100	购买方纳税人识别号(税务总局规定企业用户为必填项)
-            "gmf_mc" =>  "个人",// 是	string	100	购买方名称
-            "gmf_dzdh" =>  "",// 否	string	100	购买方地址、电话
-            "gmf_yhzh" =>  "",// 否	string	100	购买方开户行名称与银行账号
-            "kpr" => "开票员A",// 是	string	8	开票人
-            "skr" =>  "",// 否	string	8	收款人
-            "fhr" =>  "",// 否	string	8	复核人
-            "yfp_dm" =>  "",// 否	string	12	原发票代码
-            "yfp_hm" =>  "",// 否	string	8	原发票号码
-            // 是	string	#.##	价税合计;单位：元（2位小数） 价税合计=合计金额(不含税)+合计税额
-            // 注意：不能使用商品的单价、数量、税率、税额来进行累加，最后四舍五入，只能是总合计金额+合计税额
-            "jshj" =>  "1.00",
-            "hjje" => "0.97",// "0.88",// 是	string	#.##	合计金额 注意：不含税，单位：元（2位小数）
-            "hjse" =>  "0.03",// "0.12",// 是	string	#.##	合计税额单位：元（2位小数）
-            "kce" =>  "",// 否	string	#.##	扣除额小数点后2位，当ZSFS为2时扣除额为必填项
-            "bz" =>  "备注啊哈哈哈哈",// 否	string	100	备注 (长度100字符)
-            // "kpzdbs" => "",// 否	string	20	已经失效，不再支持
-            "jff_phone" => "",// "手机号",// 否	string	11	手机号，针对税控盒子主动交付，需要填写
-            "jff_email" => "",// "电子邮件",// 否	string	100	电子邮件，针对税控盒子主动交付，需要填写
-            "common_fpkj_xmxx" => [
-                [
-                    "fphxz" => "0",// 是	string	2	发票行性质 0正常行、1折扣行、2被折扣行
-                    "spbm" => "3070201020000000000",// "",// 是	string	19	商品编码(商品编码为税务总局颁发的19位税控编码)
-                    "zxbm" => "",// 否	string	20	自行编码(一般不建议使用自行编码)
-                    "yhzcbs" => "0",// "",//否	string	2	优惠政策标识 0：不使用，1：使用
-                    "lslbs" => "",// 否	string	2	零税率标识 空：非零税率， 1：免税，2：不征收，3普通零税率
-                    // 否	string	50	增值税特殊管理-如果yhzcbs为1时，此项必填，
-                    // 具体信息取《商品和服务税收分类与编码》中的增值税特殊管理列。(值为中文)
-                    "zzstsgl" => "",// aa  bbb
-                    // 是	string	90	项目名称 (必须与商品编码表一致;如果为折扣行，商品名称须与被折扣行的商品名称相同，不能多行折扣。
-                    // 如需按照税控编码开票，则项目名称可以自拟,但请按照税务总局税控编码规则拟定)
-                    "xmmc" => "培训费",// "更具自身业务决定",// aa  bbb
-                    "ggxh" => "",// 否	string	30	规格型号(折扣行请不要传)
-                    "dw" => "",// 否	string	20	计量单位(折扣行请不要传)
-                    "xmsl" => "1",// "",// 否	string	#.######	项目数量 小数点后6位,大于0的数字
-                    "xmdj" => "1.00",// 否	string	#.######	项目单价 小数点后6位 注意：单价是含税单价,大于0的数字
-                    "xmje" => "1.00",// 是	string	#.##	项目金额 注意：金额是含税，单位：元（2位小数）
-                    "sl" => "0.03",// "0.13",// 是	string	#.##	税率 例1%为0.01
-                    "se" => "0.03",// "0.12"// 是	string	#.##	税额 单位：元（2位小数）
-                ]
-            ]
-        ];
+    public static function ebiInvoiceHandleNewBlueInvoice($data, $openid, $app_secret, $apiDataMode = 0, $forceApi = false){
+//        $companyConfig = static::$companyConfig;
+//        $data = [
+//            "data_resources" => "API",// 是	string	4	固定参数 “API”
+//            "nsrsbh" => $companyConfig['tax_num'],// "1246546544654654",// 是	string	20	销售方纳税人识别号
+//            "skph" => "",// "123213123212",// 否	string	12	税控盘号（使用税控盒子必填，其他设备为空）
+//            "order_num" => "1120521299480004",// "order_num_1474873042826",// 是	string	200	业务单据号；必须是唯一的
+//            "bmb_bbh" => "33.0", // "29.0",// 是	string	10	税收编码版本号，参数“29.0”，具体值请询问提供商-- ?
+//            "zsfs" => "0",// 是	string	2	征税方式 0：普通征税 1: 减按计增 2：差额征税
+//            "tspz" => "00",// 否	string	2	特殊票种标识:“00”=正常票种,“01”=农产品销售,“02”=农产品收购
+//            "xsf_nsrsbh" => $companyConfig['tax_num'],// "1246546544654654",//是	string	20	销售方纳税人识别号
+//            "xsf_mc" => $companyConfig['pay_company_name'],// "\t自贡市有限公司",// 是	string	100	销售方名称
+//            "xsf_dzdh" => "自贡市斯柯达将阿里是可大家是大家圣诞节阿拉斯加大开杀戒的拉开手机端 13132254",// 是	string	100	销售方地址、电话
+//            "xsf_yhzh" =>  "124654654123154",// 是	string	100	销售方开户行名称与银行账号
+//            "gmf_nsrsbh" =>  "",// 否	string	100	购买方纳税人识别号(税务总局规定企业用户为必填项)
+//            "gmf_mc" =>  "个人",// 是	string	100	购买方名称
+//            "gmf_dzdh" =>  "",// 否	string	100	购买方地址、电话
+//            "gmf_yhzh" =>  "",// 否	string	100	购买方开户行名称与银行账号
+//            "kpr" => "开票员A",// 是	string	8	开票人
+//            "skr" =>  "",// 否	string	8	收款人
+//            "fhr" =>  "",// 否	string	8	复核人
+//            "yfp_dm" =>  "",// 否	string	12	原发票代码
+//            "yfp_hm" =>  "",// 否	string	8	原发票号码
+//            // 是	string	#.##	价税合计;单位：元（2位小数） 价税合计=合计金额(不含税)+合计税额
+//            // 注意：不能使用商品的单价、数量、税率、税额来进行累加，最后四舍五入，只能是总合计金额+合计税额
+//            "jshj" =>  "1.00",
+//            "hjje" => "0.97",// "0.88",// 是	string	#.##	合计金额 注意：不含税，单位：元（2位小数）
+//            "hjse" =>  "0.03",// "0.12",// 是	string	#.##	合计税额单位：元（2位小数）
+//            "kce" =>  "",// 否	string	#.##	扣除额小数点后2位，当ZSFS为2时扣除额为必填项
+//            "bz" =>  "备注啊哈哈哈哈",// 否	string	100	备注 (长度100字符)
+//            // "kpzdbs" => "",// 否	string	20	已经失效，不再支持
+//            "jff_phone" => "",// "手机号",// 否	string	11	手机号，针对税控盒子主动交付，需要填写
+//            "jff_email" => "",// "电子邮件",// 否	string	100	电子邮件，针对税控盒子主动交付，需要填写
+//            "common_fpkj_xmxx" => [
+//                [
+//                    "fphxz" => "0",// 是	string	2	发票行性质 0正常行、1折扣行、2被折扣行
+//                    "spbm" => "3070201020000000000",// "",// 是	string	19	商品编码(商品编码为税务总局颁发的19位税控编码)
+//                    "zxbm" => "",// 否	string	20	自行编码(一般不建议使用自行编码)
+//                    "yhzcbs" => "0",// "",//否	string	2	优惠政策标识 0：不使用，1：使用
+//                    "lslbs" => "",// 否	string	2	零税率标识 空：非零税率， 1：免税，2：不征收，3普通零税率
+//                    // 否	string	50	增值税特殊管理-如果yhzcbs为1时，此项必填，
+//                    // 具体信息取《商品和服务税收分类与编码》中的增值税特殊管理列。(值为中文)
+//                    "zzstsgl" => "",// aa  bbb
+//                    // 是	string	90	项目名称 (必须与商品编码表一致;如果为折扣行，商品名称须与被折扣行的商品名称相同，不能多行折扣。
+//                    // 如需按照税控编码开票，则项目名称可以自拟,但请按照税务总局税控编码规则拟定)
+//                    "xmmc" => "培训费",// "更具自身业务决定",// aa  bbb
+//                    "ggxh" => "",// 否	string	30	规格型号(折扣行请不要传)
+//                    "dw" => "",// 否	string	20	计量单位(折扣行请不要传)
+//                    "xmsl" => "1",// "",// 否	string	#.######	项目数量 小数点后6位,大于0的数字
+//                    "xmdj" => "1.00",// 否	string	#.######	项目单价 小数点后6位 注意：单价是含税单价,大于0的数字
+//                    "xmje" => "1.00",// 是	string	#.##	项目金额 注意：金额是含税，单位：元（2位小数）
+//                    "sl" => "0.03",// "0.13",// 是	string	#.##	税率 例1%为0.01
+//                    "se" => "0.03",// "0.12"// 是	string	#.##	税额 单位：元（2位小数）
+//                ]
+//            ]
+//        ];
         $result = APIHYDZFPRequest::getAPI($openid, $app_secret, 'ebi_InvoiceHandle_newBlueInvoice', $data, $apiDataMode, $forceApi);
         return $result;
         /**
@@ -681,23 +681,27 @@ class InvoiceHydzfp extends BaseInvoice
 
     // **********发票查询*************开始********************************************************
     /**
-     * C0001-平台在线交付
+     * C0001-平台在线交付----会发电子邮件
      *  获取发票PDF下载地址
      * @param  string $openid 应用OPENID
      * @param  string  $app_secret 应用密匙
+     * @param string $order_num 订单号
+     * @param string $nsrsbh 开票商户纳税人识别号
+     * @param string $jff_phone 交付方手机号码
+     * @param string $jff_email 交付方电子邮件--会发电子邮件
      * @param  int  $apiDataMode 业务请求数据的方式 0 使用配置文件配置的 [默认]；1：通用 ；2  base64数据
      * @param  boolean  $forceApi 是否强制从api重新获取 true:强制重新获取， false:缓存优先[默认]
      * @return array 一维数组
      *  ["expire_in" => 7200, 'access_token' => 'FfJPQjgxQGa2y0Snuuc4Q94iQpce3A6x']
      */
-    public static function ebiInvoiceHandleNewInvoiceDelay($openid, $app_secret, $apiDataMode = 0, $forceApi = false)
+    public static function ebiInvoiceHandleNewInvoiceDelay($openid, $app_secret, $order_num = '', $nsrsbh = '', $jff_phone = '', $jff_email = '', $apiDataMode = 0, $forceApi = false)
     {
-        $companyConfig = static::$companyConfig;
+        // $companyConfig = static::$companyConfig;
         $data = [
-            "nsrsbh" => $companyConfig['tax_num'],//"51019806696139X",// 是	string	20	开发票方纳税人识别号
-            "order_num" => "1120521299480004",//"order_num_web1479345909208",// 是	string	200	发票业务单据号
-            "jff_phone" => "15829686962",// "1800000000",// 是	string	11	交付方手机号码
-            "jff_email" => "305463219@qq.com",// "1800000000@qq.com"// 否	string	200	交付方电子邮件--会发电子邮件
+            "nsrsbh" => $nsrsbh,// $companyConfig['tax_num'],//"51019806696139X",// 是	string	20	开发票方纳税人识别号
+            "order_num" => $order_num,// "1120521299480004",//"order_num_web1479345909208",// 是	string	200	发票业务单据号
+            "jff_phone" => $jff_phone,// "15829686962",// "1800000000",// 是	string	11	交付方手机号码
+            "jff_email" => $jff_email,// "305463219@qq.com",// "1800000000@qq.com"// 否	string	200	交付方电子邮件--会发电子邮件
         ];
         $result = APIHYDZFPRequest::getAPI($openid, $app_secret, 'ebi_InvoiceHandle_newInvoiceDelay', $data, $apiDataMode, $forceApi);
         // [
@@ -977,18 +981,21 @@ class InvoiceHydzfp extends BaseInvoice
      * <img src="data:image/png;base64,/9jxxxxxx" style="width:200px;height:200px;">
      * @param  string $openid 应用OPENID
      * @param  string  $app_secret 应用密匙
+     * @param string $order_num 订单号
+     * @param string $nsrsbh 开票商户纳税人识别号
+     * @param string $isimg isimg	否	string	10	是否需要二维码图片数据(如需要则值为“qrcode”，不需要则为空 );当值不为“qrcode”时，接口不返回 qrcode 数据
      * @param  int  $apiDataMode 业务请求数据的方式 0 使用配置文件配置的 [默认]；1：通用 ；2  base64数据
      * @param  boolean  $forceApi 是否强制从api重新获取 true:强制重新获取， false:缓存优先[默认]
      * @return array 一维数组
      *  ["expire_in" => 7200, 'access_token' => 'FfJPQjgxQGa2y0Snuuc4Q94iQpce3A6x']
      */
-    public static function ebiInvoiceHandleGetInvoiceDelayQRCode($openid, $app_secret, $apiDataMode = 0, $forceApi = false)
+    public static function ebiInvoiceHandleGetInvoiceDelayQRCode($openid, $app_secret, $order_num = '', $nsrsbh = '', $isimg = 'qrcode', $apiDataMode = 0, $forceApi = false)
     {
-        $companyConfig = static::$companyConfig;
+        // $companyConfig = static::$companyConfig;
         $data = [
-            "nsrsbh" => $companyConfig['tax_num'],//"51019806696139X",// 是	string	20	开发票方纳税人识别号
-            "order_num" => "1120521299480004",//"order_num_web1479345909208",// 是	string	200	发票业务单据号
-            "isimg" => "qrcode"// isimg	否	string	10	是否需要二维码图片数据(如需要则值为“qrcode”，不需要则为空 );当值不为“qrcode”时，接口不返回 qrcode 数据
+            "nsrsbh" => $nsrsbh, // $companyConfig['tax_num'],//"51019806696139X",// 是	string	20	开发票方纳税人识别号
+            "order_num" => $order_num ,// "1120521299480004",//"order_num_web1479345909208",// 是	string	200	发票业务单据号
+            "isimg" => $isimg,// "qrcode"// isimg	否	string	10	是否需要二维码图片数据(如需要则值为“qrcode”，不需要则为空 );当值不为“qrcode”时，接口不返回 qrcode 数据
         ];
         $result = APIHYDZFPRequest::getAPI($openid, $app_secret, 'ebi_InvoiceHandle_getInvoiceDelayQRCode', $data, $apiDataMode, $forceApi);
 //         [
@@ -1049,6 +1056,11 @@ class InvoiceHydzfp extends BaseInvoice
     /**
      * C0005-获取发票PDF下载地址
      *  获取发票PDF下载地址
+     * @param  array $data 查询用的数组
+     *    $data = [
+     *        "nsrsbh" => $companyConfig['tax_num'],//"开票商户纳税人识别号",// 是	string	20	开票商户纳税人识别号
+     *       "order_num" => "1120521299480004",//"业务单据号"// 是	string	200	业务单据号
+     *   ];
      * @param  string $openid 应用OPENID
      * @param  string  $app_secret 应用密匙
      * @param  int  $apiDataMode 业务请求数据的方式 0 使用配置文件配置的 [默认]；1：通用 ；2  base64数据
@@ -1056,13 +1068,13 @@ class InvoiceHydzfp extends BaseInvoice
      * @return array 一维数组
      *  ["expire_in" => 7200, 'access_token' => 'FfJPQjgxQGa2y0Snuuc4Q94iQpce3A6x']
      */
-    public static function ebiInvoiceHandleGetInvoiceDownloadUrl($openid, $app_secret, $apiDataMode = 0, $forceApi = false)
+    public static function ebiInvoiceHandleGetInvoiceDownloadUrl($data, $openid, $app_secret, $apiDataMode = 0, $forceApi = false)
     {
         $companyConfig = static::$companyConfig;
-        $data = [
-            "nsrsbh" => $companyConfig['tax_num'],//"开票商户纳税人识别号",// 是	string	20	开票商户纳税人识别号
-            "order_num" => "1120521299480004",//"业务单据号"// 是	string	200	业务单据号
-        ];
+//        $data = [
+//            "nsrsbh" => $companyConfig['tax_num'],//"开票商户纳税人识别号",// 是	string	20	开票商户纳税人识别号
+//            "order_num" => "1120521299480004",//"业务单据号"// 是	string	200	业务单据号
+//        ];
         $result = APIHYDZFPRequest::getAPI($openid, $app_secret, 'ebi_InvoiceHandle_getInvoiceDownloadUrl', $data, $apiDataMode, $forceApi);
         // ["fp_url" => "String	发票下载url，GET方式", 'qd_url' => 'String	清单下载url，没有清单字段为空']
         return $result;

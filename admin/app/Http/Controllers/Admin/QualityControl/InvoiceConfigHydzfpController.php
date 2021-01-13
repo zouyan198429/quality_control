@@ -34,7 +34,7 @@ class InvoiceConfigHydzfpController extends BasicController
         // $result = InvoiceHydzfp::esdSkdataQueryItemsList($companyConfig['open_id'], $companyConfig['app_secret'], $apiDataMode,  false);
 
         // A0001-开具蓝字发票
-        // $result = InvoiceHydzfp::ebiInvoiceHandleNewBlueInvoice($companyConfig['open_id'], $companyConfig['app_secret'], $apiDataMode,  false);
+        // $result = InvoiceHydzfp::ebiInvoiceHandleNewBlueInvoice([], $companyConfig['open_id'], $companyConfig['app_secret'], $apiDataMode,  false);
         // A0002-开具红字发票
         // $result = InvoiceHydzfp::ebiInvoiceHandleNewRedInvoice($companyConfig['open_id'], $companyConfig['app_secret'], $apiDataMode,  false);
         // A0003-获取发票或使用抬头开票

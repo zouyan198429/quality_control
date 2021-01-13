@@ -70,6 +70,23 @@ var otheraction = {
         tishi = operateText + tishi + '-' + course_name;
         layeriframe(weburl,tishi,950,510,IFRAME_MODIFY_CLOSE_OPERATE);
         return false;
+    },
+    payByIds: function(obj, ids) {
+        if( ids == ''){
+            err_alert('请选择需要操作的数据');
+            return false;
+        }
+        //获得表单各name的值
+        var weburl = PAY_URL + '?course_order_id='+ ids;
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = '缴费';//"查看供应商";
+        console.log('weburl', weburl);
+        layeriframe(weburl,tishi,700,450,5);
+        return false;
     }
 };
 

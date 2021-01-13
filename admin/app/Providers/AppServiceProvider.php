@@ -64,6 +64,7 @@ class AppServiceProvider extends ServiceProvider
             'apply'                 => 'App\Models\QualityControl\Apply',           // 256 应用图片
             'order_pay_method'                 => 'App\Models\QualityControl\OrderPayMethod',           // 512 收款方式配置
             'card_photo'                 => 'App\Models\QualityControl\Staff',           // 1024 个人证件照
+            'invoice'                 => 'App\Models\QualityControl\Invoices',           // 2048电子发票
         ]);
 
         DB::listen(function ($query) {

@@ -247,7 +247,7 @@ class CTAPIOrdersBusiness extends BasicPublicCTAPIBusiness
 
         // 对外显示时，批量价格字段【整数转为小数】
         if(in_array('priceIntToFloat', $handleKeyArr)){
-            Tool::bathPriceCutFloatInt($data_list, Orders::$IntPriceFields, 2, 2);
+            Tool::bathPriceCutFloatInt($data_list, Orders::$IntPriceFields, Orders::$IntPriceIndex, 2, 2);
         }
 
         // 重写结束
@@ -335,7 +335,7 @@ class CTAPIOrdersBusiness extends BasicPublicCTAPIBusiness
         $buyerInfo = CTAPIInvoiceBuyerBusiness::getFVFormatList( $request,  $controller, 4, 1
             , ['id' => $invoice_buyer_id], false, [], []);
         if(empty($buyerInfo)) throws('请选择发票抬头');
-        if($company_id != $buyerInfo['company_id'])  throws('您没有操作此记录的权限！');
+        if($organize_id != $buyerInfo['company_id'])  throws('您没有操作此记录的权限！');
         if(!in_array($buyerInfo['open_status'], [1]))  throws('发票抬头未启用，请开启或选择其它抬头！');
 
         // 调用新加或修改接口

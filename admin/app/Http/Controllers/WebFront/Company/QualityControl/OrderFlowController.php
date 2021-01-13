@@ -212,7 +212,7 @@ class OrderFlowController extends BasicController
 //                    'sort_num' => $sort_num,
 //                ];
 //                 // 价格转为整型
-//                Tool::bathPriceCutFloatInt($saveData, OrderFlow::$IntPriceFields, 1);
+//                Tool::bathPriceCutFloatInt($saveData, OrderFlow::$IntPriceFields, OrderFlow::$IntPriceIndex, 1);
 //
 ////        if($id <= 0) {// 新加;要加入的特别字段
 ////            $addNewData = [
