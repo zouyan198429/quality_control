@@ -305,7 +305,7 @@ function addCompany(company_id, company_name){
     document.write("                <%}%>");
     document.write("                <%if( (item.order_status & (2 | 4 | 8)) > 0  && item.invoice_status == 1){%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.invoiceByIds(this,<%=item.id%>)\">");
-    document.write("                    <i class=\"ace-icon  fa fa-vcard-o bigger-60\"> 电子发票<\/i>");
+    document.write("                    <i class=\"ace-icon  fa fa-vcard-o bigger-60\"> 开电子发票<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
     document.write("                <%if( (item.invoice_result & (2 | 4 )) > 0){%>");

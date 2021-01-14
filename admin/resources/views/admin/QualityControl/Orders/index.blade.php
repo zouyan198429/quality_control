@@ -180,6 +180,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/Orders.js') }}?22"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/Orders.js') }}?23"  type="text/javascript"></script>
 </body>
 </html>
