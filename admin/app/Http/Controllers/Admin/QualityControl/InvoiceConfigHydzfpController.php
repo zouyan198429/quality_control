@@ -41,7 +41,7 @@ class InvoiceConfigHydzfpController extends BasicController
         // $result = InvoiceHydzfp::ebiInvoiceHandleNewOrGetBlueInvoice($companyConfig['open_id'], $companyConfig['app_secret'], $apiDataMode,  false);
         // A0004-历史发票数据导入平台
         // $result = InvoiceHydzfp::ebiInvoiceHandleNewPDFInvoice($companyConfig['open_id'], $companyConfig['app_secret'], $apiDataMode,  false);
-        // A0005-开具红字发票(部分红冲)
+        // A0005-开具红字发票(部分冲红)
         // $result = InvoiceHydzfp::ebiInvoiceHandleNewRedApiInvoice($companyConfig['open_id'], $companyConfig['app_secret'], $apiDataMode,  false);
 
 

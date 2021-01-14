@@ -383,9 +383,9 @@ class CTAPIOrdersBusiness extends BasicPublicCTAPIBusiness
         foreach($dataList as $info){
 
             $tem_order_status = $info['order_status'];// 状态1待支付2待确认4已确认8订单完成【服务完成】16取消[系统取消]32取消[用户取消]
-            $tem_invoice_result = $info['invoice_result'];// 开票结果1待开票1已开蓝票2已红冲
+            $tem_invoice_result = $info['invoice_result'];// 开票结果1待开票1已开蓝票2已冲红
             $tem_invoice_status = $info['invoice_status'];// 开票状态1待开票2开票中4已开票【冲红后重新走流程】
-            $tem_upload_status = $info['upload_status'];// 开票数据状态1待上传2已上传4已开票8已作废[不用]16已红冲[不用]
+            $tem_upload_status = $info['upload_status'];// 开票数据状态1待上传2已上传4已开票8已作废[不用]16已冲红[不用]
             $tem_order_no = $info['order_no'];
 
             switch($operateType) {

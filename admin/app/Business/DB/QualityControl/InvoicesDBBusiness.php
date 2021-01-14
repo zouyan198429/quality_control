@@ -181,7 +181,7 @@ class InvoicesDBBusiness extends BasePublicDBBusiness
      * 生成订单
      *
      * @param int  $company_id 企业id 或用户id--无所属企业
-     * @param int  $invoice_result 开票结果1待开票1已开蓝票2已红冲
+     * @param int  $invoice_result 开票结果1待开票1已开蓝票2已冲红
      * @param int $organize_id 操作的所属企业id
      * @param array $ordersList 订单号数组 二维
      * @param array $invoiceOrderInfo 电子发票数据
@@ -214,7 +214,7 @@ class InvoicesDBBusiness extends BasePublicDBBusiness
 
         $invoiceNewFields = [
             'invoice_status' => 1 , // 开票状态1待开票2开票中4已开票
-            'upload_status' => 1 , // 开票数据状态1待上传2已上传4已开票8已作废16已红冲
+            'upload_status' => 1 , // 开票数据状态1待上传2已上传4已开票8已作废16已冲红
             'kprq' => date('YmdHis'),// $tem_v['kprq'] ?? '' , // 开票日期(20161107145525格式：yyyymmddhhmiss)
             'create_time' => $nowTime , // 生成时间
         ];
@@ -246,9 +246,9 @@ class InvoicesDBBusiness extends BasePublicDBBusiness
                 'invoice_buyer_id_history' => $invoice_buyer_id_history,// 发票配置购买方id历史【开票时更新】
                 'invoice_template_id' => $invoice_template_id,// 发票开票模板id
                 'invoice_template_id_history' => $invoice_template_id_history,// 发票开票模板id历史
-                'invoice_result' => $invoice_result,// 开票结果1待开票1已开蓝票2已红冲
+                'invoice_result' => $invoice_result,// 开票结果1待开票1已开蓝票2已冲红
                 'invoice_status' => $invoiceOrderInfo['invoice_status'],// 开票状态1待开票2开票中4已开票【冲红后重新走流程】
-                'upload_status' => $invoiceOrderInfo['upload_status'],// 开票数据状态1待上传2已上传4已开票8已作废[不用]16已红冲[不用]
+                'upload_status' => $invoiceOrderInfo['upload_status'],// 开票数据状态1待上传2已上传4已开票8已作废[不用]16已冲红[不用]
                 // 'invoic_blue_num' => $order_num,// 业务单据号【[蓝票--最近一次】
                 // 'invoic_red_num' => $order_num,// 业务单据号【[红票--最近一次】
                 // 'invoice_blue_time' => $nowTime,// 蓝票时间【最近一次】
@@ -476,7 +476,7 @@ class InvoicesDBBusiness extends BasePublicDBBusiness
                         if(!is_numeric($kce)) $kce = 0;
                         $updateInvoiceInfo = [
                             'invoice_status' => 4 , // 开票状态1待开票2开票中4已开票
-                            'upload_status' => 4 , // 开票数据状态1待上传2已上传4已开票8已作废16已红冲
+                            'upload_status' => 4 , // 开票数据状态1待上传2已上传4已开票8已作废16已冲红
                             'kpzdbs' => $tem_v['kpzdbs'] ?? '', // 开票终端标识 已经失效，不再支持
                             'jqbh' => $tem_v['jqbh'] ?? '', // 税控设备机器编号
                             'itype' => $tem_v['itype'] ?? '' , // 发票类型(026=电票,004=专票,007=普票，025=卷票)
@@ -501,7 +501,7 @@ class InvoicesDBBusiness extends BasePublicDBBusiness
                             'submit_time' => $nowTime , // 提交数据时间
                             'make_time' => $nowTime , // 开票时间
                             // 'closel_time' => $nowTime , // 作废时间
-                            // 'cancel_time' => $nowTime , // 红冲时间
+                            // 'cancel_time' => $nowTime , // 冲红时间
                             'qrcodeurl' => $qrcodeurl,// 二维码交付发票的链接地址
                             'resource_id' => $resource_id[0] ?? 0,// 第一个图片资源的id
                             'resource_ids' => $resource_ids,// 图片资源id串(逗号分隔-未尾逗号结束)
@@ -529,14 +529,14 @@ class InvoicesDBBusiness extends BasePublicDBBusiness
                     foreach($orderList as $orderInfo){
                         $invoice_result = $orderInfo['invoice_result'];
                         if($kplx == 0) {// 蓝票
-                            $invoice_result |= 1;
-                        }else{
                             $invoice_result |= 2;
+                        }else{
+                            $invoice_result |= 4;
                         }
                         $updateOrder = [
-                            'invoice_result' => $invoice_result,// 开票结果1待开票1已开蓝票2已红冲
+                            'invoice_result' => $invoice_result,// 开票结果1待开票1已开蓝票2已冲红
                             // 'invoice_status' => $invoiceOrderInfo['invoice_status'],// 开票状态1待开票2开票中4已开票【冲红后重新走流程】
-                            // 'upload_status' => $invoiceOrderInfo['upload_status'],// 开票数据状态1待上传2已上传4已开票8已作废[不用]16已红冲[不用]
+                            // 'upload_status' => $invoiceOrderInfo['upload_status'],// 开票数据状态1待上传2已上传4已开票8已作废[不用]16已冲红[不用]
                             // 'invoic_blue_num' => $order_num,// 业务单据号【[蓝票--最近一次】
                             // 'invoic_red_num' => $order_num,// 业务单据号【[红票--最近一次】
                             // 'invoice_blue_time' => $nowTime,// 蓝票时间【最近一次】
@@ -545,7 +545,7 @@ class InvoicesDBBusiness extends BasePublicDBBusiness
                         if($kplx == 0){// 蓝票
                             $updateOrder = array_merge($updateOrder,[
                                 'invoice_status' => 4,// 开票状态1待开票2开票中4已开票【冲红后重新走流程】
-                                'upload_status' => 4,// 开票数据状态1待上传2已上传4已开票8已作废[不用]16已红冲[不用]
+                                'upload_status' => 4,// 开票数据状态1待上传2已上传4已开票8已作废[不用]16已冲红[不用]
                                 'invoic_blue_num' => $order_num,// 业务单据号【[蓝票--最近一次】
                                 // 'invoic_red_num' => $order_num,// 业务单据号【[红票--最近一次】
                                 'invoice_blue_time' => $nowTime,// 蓝票时间【最近一次】
@@ -554,7 +554,7 @@ class InvoicesDBBusiness extends BasePublicDBBusiness
                         }else{// 红票
                             $updateOrder = array_merge($updateOrder,[
                                 'invoice_status' => 1,// 开票状态1待开票2开票中4已开票【冲红后重新走流程】
-                                'upload_status' => 1,// 开票数据状态1待上传2已上传4已开票8已作废[不用]16已红冲[不用]
+                                'upload_status' => 1,// 开票数据状态1待上传2已上传4已开票8已作废[不用]16已冲红[不用]
                                 // 'invoic_blue_num' => $order_num,// 业务单据号【[蓝票--最近一次】
                                 'invoic_red_num' => $order_num,// 业务单据号【[红票--最近一次】
                                 // 'invoice_blue_time' => $nowTime,// 蓝票时间【最近一次】

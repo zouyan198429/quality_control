@@ -362,9 +362,9 @@ class OrdersDBBusiness extends BasePublicDBBusiness
         foreach($dataList as $info){
 
             $tem_order_status = $info['order_status'];// 状态1待支付2待确认4已确认8订单完成【服务完成】16取消[系统取消]32取消[用户取消]
-            $tem_invoice_result = $info['invoice_result'];// 开票结果1待开票1已开蓝票2已红冲
+            $tem_invoice_result = $info['invoice_result'];// 开票结果1待开票1已开蓝票2已冲红
             $tem_invoice_status = $info['invoice_status'];// 开票状态1待开票2开票中4已开票【冲红后重新走流程】
-            $tem_upload_status = $info['upload_status'];// 开票数据状态1待上传2已上传4已开票8已作废[不用]16已红冲[不用]
+            $tem_upload_status = $info['upload_status'];// 开票数据状态1待上传2已上传4已开票8已作废[不用]16已冲红[不用]
             $tem_order_no = $info['order_no'];
 
             switch($operateType) {
@@ -684,7 +684,7 @@ class OrdersDBBusiness extends BasePublicDBBusiness
             'invoice_template_id' => $invoice_template_id , // 发票开票模板id
             // 'invoice_template_id_history' => $aaa , // 发票开票模板id历史
             //'invoice_status' => 1 , // 开票状态1待开票2开票中4已开票
-            // 'upload_status' => 1 , // 开票数据状态1待上传2已上传4已开票8已作废16已红冲
+            // 'upload_status' => 1 , // 开票数据状态1待上传2已上传4已开票8已作废16已冲红
             // 'order_num' => $order_num , // 业务单据号
             // 'kpzdbs' => $tem_v['kpzdbs'] ?? '', // 开票终端标识 已经失效，不再支持
             // 'jqbh' => $invoiceConfigInfo['tax_num'] ?? '',// $tem_v['jqbh'] ?? '', // 税控设备机器编号
@@ -713,7 +713,7 @@ class OrdersDBBusiness extends BasePublicDBBusiness
             // 'submit_time' => $nowTime , // 提交数据时间
             // 'make_time' => $nowTime , // 开票时间
             // 'closel_time' => $nowTime , // 作废时间
-            // 'cancel_time' => $nowTime , // 红冲时间
+            // 'cancel_time' => $nowTime , // 冲红时间
             'invoice_project' => $invoiceProjectData,// 电子发票项目
             // 'invoice_order' => $invoiceOrderData,// 订单发票关联表
         ];

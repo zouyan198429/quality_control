@@ -96,7 +96,7 @@ class CTAPIInvoiceBuyerBusiness extends BasicPublicCTAPIBusiness
                 CTAPIStaffBusiness::getRelationConfigs($request, $controller,
                     static::getUboundRelation($relationArr, 'company_info'),
                     static::getUboundRelationExtendParams($extendParams, 'company_info')),
-                static::getRelationSqlParams(['where' => [['admin_type', 2]]], $extendParams, 'company_info'), '', []),
+                static::getRelationSqlParams([], $extendParams, 'company_info'), '', []),// ['where' => [['admin_type', 2]]]
         ];
         return Tool::formatArrByKeys($relationFormatConfigs, $relationKeys, false);
     }

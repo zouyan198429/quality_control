@@ -34,6 +34,8 @@
             {{--<option value="{{ $k }}"  @if(isset($province_id) && $province_id == $k) selected @endif >{{ $txt }}</option>--}}
           {{--@endforeach--}}
         {{--</select>--}}
+          <input type="hidden" name="order_no"  value="{{ $order_no ?? '' }}" />
+
           <select class="wmini" name="invoice_service" style="width: 80px;">
               <option value="">开票服务商</option>
               @foreach ($invoiceService as $k=>$txt)
@@ -99,16 +101,14 @@
       </div>
     </form>
   </div>
-  {{--
   <div class="table-header">
-    { {--<button class="btn btn-danger  btn-xs batch_del"  onclick="action.batchDel(this)">批量删除</button>--} }
+    {{--<button class="btn btn-danger  btn-xs batch_del"  onclick="action.batchDel(this)">批量删除</button>--}}
     <button class="btn btn-success  btn-xs export_excel"  onclick="action.batchExportExcel(this)" >导出[按条件]</button>
     <button class="btn btn-success  btn-xs export_excel"  onclick="action.exportExcel(this)" >导出[勾选]</button>
-    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcelTemplate(this)">导入模版[EXCEL]</button>
-    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcel(this)">导入城市</button>
-    <div style="display:none;" ><input type="file" class="import_file img_input"></div>{ {--导入file对象--} }
+{{--    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcelTemplate(this)">导入模版[EXCEL]</button>--}}
+{{--    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcel(this)">导入城市</button>--}}
+{{--    <div style="display:none;" ><input type="file" class="import_file img_input"></div>{ {--导入file对象--} }--}}
   </div>
---}}
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
         <col width="50">
@@ -134,7 +134,7 @@
         </label>
       </th>
 {{--      <th>ID</th>--}}
-      <th>销售方名称<hr/>销售方纳税人识别号</th>
+      <th>销售方名称<hr/>销售方纳税人识别号<hr/>发票请求流水号</th>
       <th>购买方名称<hr>购买方纳税人识别号</th>
         <th>业务单据号<hr>开票服务商</th>
         <th>开票状态<hr>数据状态</th>
@@ -144,7 +144,7 @@
 {{--        <th>价税合计(含税)</th>--}}
         <th>电子发票</th>
       <th>生成时间<hr/>提交数据时间</th>
-        <th>开票时间<hr/>红冲时间</th>
+        <th>开票时间<hr/>冲红时间</th>
       <th>操作</th>
     </tr>
     </thead>
@@ -202,7 +202,7 @@
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
 
 <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/Invoices.js') }}?4"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/Invoices.js') }}?5"  type="text/javascript"></script>
 @component('component.upfileincludejsmany')
 @endcomponent
 </body>

@@ -110,7 +110,7 @@ var action = {
         // var weburl = SHOW_URL + id;
         // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
         var tishi = SHOW_URL_TITLE;//"查看供应商";
-        layeriframe(weburl,tishi,950,510,SHOW_CLOSE_OPERATE);
+        layeriframe(weburl,tishi,950,510,SHOW_CLOSE_OPERATE, undefined, null, 2);
         return false;
     },
     iframeModify : function(id){// 弹窗添加/修改

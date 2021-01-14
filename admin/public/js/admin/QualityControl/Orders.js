@@ -105,6 +105,24 @@ var otheraction = {
         layeriframe(weburl,tishi,950,510,5);
         // commonaction.browse_file(weburl, tishi,950,510, 5);
         return false;
+    },
+    showInvoices: function(obj, order_no) {
+        if( order_no == ''){
+            err_alert('请选择需要操作的数据');
+            return false;
+        }
+        //获得表单各name的值
+        var weburl = INVOICE_SHOW_URL + '?order_no='+ order_no;
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = '订单号【' + order_no + '】电子发票';//"查看供应商";
+        console.log('weburl', weburl);
+        layeriframe(weburl,tishi,950,510,0);
+        // commonaction.browse_file(weburl, tishi,950,510, 5);
+        return false;
     }
 };
 
@@ -290,9 +308,14 @@ function addCompany(company_id, company_name){
     document.write("                    <i class=\"ace-icon  fa fa-vcard-o bigger-60\"> 电子发票<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
+    document.write("                <%if( (item.invoice_result & (2 | 4 )) > 0){%>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"otheraction.showInvoices(this,'<%=item.order_no%>')\">");
+    document.write("                    <i class=\"ace-icon  fa fa-eye  bigger-60\"> 查看电子发票<\/i>");
+    document.write("                <\/a>");
+    document.write("                <%}%>");
     document.write("                <%if( item.invoice_status == 4 ){%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.invoiceByIds(this,<%=item.id%>)\">");
-    document.write("                    <i class=\"ace-icon  fa fa-vcard-o bigger-60\"> 电子发票【红冲】<\/i>");
+    document.write("                    <i class=\"ace-icon  fa fa-trash-o bigger-60\"> 发票全额冲红<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
     // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.iframeModify(<%=item.id%>)\">");

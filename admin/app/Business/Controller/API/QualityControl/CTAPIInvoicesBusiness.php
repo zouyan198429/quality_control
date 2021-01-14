@@ -98,6 +98,15 @@ class CTAPIInvoicesBusiness extends BasicPublicCTAPIBusiness
                     static::getUboundRelation($relationArr, 'company_name'),
                     static::getUboundRelationExtendParams($extendParams, 'company_name')),
                 static::getRelationSqlParams([], $extendParams, 'company_name'), '', []),
+            // 获得企业名称
+            'company_info' => CTAPIStaffBusiness::getTableRelationConfigInfo($request, $controller
+                , ['company_id' => 'id']
+                , 1, 16
+                ,'','',
+                CTAPIStaffBusiness::getRelationConfigs($request, $controller,
+                    static::getUboundRelation($relationArr, 'company_info'),
+                    static::getUboundRelationExtendParams($extendParams, 'company_info')),
+                static::getRelationSqlParams([], $extendParams, 'company_info'), '', []),// ['where' => [['admin_type', 2]]]
             // 发票配置购买方
             'invoice_buyer' => CTAPIInvoiceBuyerBusiness::getTableRelationConfigInfo($request, $controller
                 , ['invoice_buyer_id' => 'id']
@@ -244,8 +253,8 @@ class CTAPIInvoicesBusiness extends BasicPublicCTAPIBusiness
         $invoice_seller_id_history = CommonRequest::get($request, 'invoice_seller_id_history');
         if(strlen($invoice_seller_id_history) > 0 && !in_array($invoice_seller_id_history, [0, '-1']))  Tool::appendParamQuery($queryParams, $invoice_seller_id_history, 'invoice_seller_id_history', [0, '0', ''], ',', false);
 
-        $order_no = CommonRequest::get($request, 'order_no');
-        if(strlen($order_no) > 0 && !in_array($order_no, [0, '-1']))  Tool::appendParamQuery($queryParams, $order_no, 'order_no', [0, '0', ''], ',', false);
+//        $order_no = CommonRequest::get($request, 'order_no');
+//        if(strlen($order_no) > 0 && !in_array($order_no, [0, '-1']))  Tool::appendParamQuery($queryParams, $order_no, 'order_no', [0, '0', ''], ',', false);
 
         $invoice_template_id = CommonRequest::get($request, 'invoice_template_id');
         if(strlen($invoice_template_id) > 0 && !in_array($invoice_template_id, [0, '-1']))  Tool::appendParamQuery($queryParams, $invoice_template_id, 'invoice_template_id', [0, '0', ''], ',', false);
@@ -312,4 +321,63 @@ class CTAPIInvoicesBusiness extends BasicPublicCTAPIBusiness
         // 重写结束
         return $returnFields;
     }
+
+    /**
+     * 获得列表数据时，对查询结果进行导出操作--有特殊的需要自己重写此方法
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $queryParams 已有的查询条件数组
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  null 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function exportListData(Request $request, Controller $controller, &$data_list, $notLog = 0){
+        $formatList = [];
+        foreach($data_list as $info){
+
+
+            array_push($formatList, [
+                'fpqqlsh' => $info['fpqqlsh'] ?? '',// 发票请求流水号
+                'xsf_mc' => $info['invoice_seller_history']['xsf_mc'] ?? '',// 销售方名称
+                'xsf_nsrsbh' => $info['invoice_seller_history']['xsf_nsrsbh'] ?? '',// 销售方纳税人识别号
+                'gmf_mc' => $info['invoice_buyer_history']['gmf_mc'] ?? '',// 购买方名称
+                'gmf_nsrsbh' => $info['invoice_buyer_history']['gmf_nsrsbh'] ?? '',// 购买方纳税人识别号
+                'gmf_dz' => $info['invoice_buyer_history']['gmf_dz'] ?? '',// 购买方地址
+                'gmf_dh' => $info['invoice_buyer_history']['gmf_dh'] ?? '',// 购买方电话
+                'gmf_yh' => $info['invoice_buyer_history']['gmf_yh'] ?? '',// 购买方银行
+                'gmf_yhzh' => $info['invoice_buyer_history']['gmf_yhzh'] ?? '',// 购买方银行账号
+                'order_num' => $info['order_num'] ?? '',// 业务单据号
+                'invoice_service_text' => $info['invoice_service_text'] ?? '',// 开票服务商
+                'invoice_status_text' => $info['invoice_status_text'] ?? '',// 开票状态
+                'upload_status_text' => $info['upload_status_text'] ?? '',// 数据状态
+                'yfp_hm' => $info['fp_hm'] ?? '',// 原发票号码
+                'fp_hm' => $info['fp_hm'] ?? '',// 发票号码
+                'yfp_dm' => $info['yfp_dm'] ?? '',// 原发票代码
+                'fp_dm' => $info['fp_dm'] ?? '',// 发票代码
+                'hjje' => $info['hjje'] ?? '',// 合计金额(不含税)
+                'hjse' => $info['hjse'] ?? '',// 合计税额【税总额】
+                'jshj' => $info['jshj'] ?? '',// 价税合计(含税)
+                'qrcodeurl' => $info['qrcodeurl'] ?? '',// 交付发票的链接地址
+                'create_time' => $info['create_time'] ?? '',// 生成时间
+                'submit_time' => $info['submit_time'] ?? '',// 提交数据时间
+                'make_time' => $info['make_time'] ?? '',// 开票时间
+                'cancel_time' => $info['cancel_time'] ?? '',// 冲红时间
+            ]);
+        }
+        $headArr = ['fpqqlsh'=>'发票请求流水号', 'xsf_mc'=>'销售方名称', 'xsf_nsrsbh'=>'销售方纳税人识别号', 'gmf_mc'=>'购买方名称'
+            , 'gmf_nsrsbh'=>'购买方纳税人识别号', 'gmf_dz'=>'购买方地址' , 'gmf_dh'=>'购买方电话', 'gmf_yh'=>'购买方银行'
+            , 'gmf_yhzh'=>'购买方银行账号', 'order_num'=>'业务单据号', 'invoice_service_text'=>'开票服务商', 'invoice_status_text'=>'开票状态'
+            ,  'upload_status_text'=>'数据状态', 'yfp_hm'=>'原发票号码', 'fp_hm'=>'发票号码', 'yfp_dm'=>'原发票代码'
+            , 'fp_dm'=>'发票代码',  'hjje'=>'合计金额(不含税)',  'hjse'=>'合计税额【税总额】',  'jshj'=>'价税合计(含税)'
+            ,  'qrcodeurl'=>'交付发票的链接地址',  'create_time'=>'生成时间',  'submit_time'=>'提交数据时间',  'make_time'=>'开票时间',  'cancel_time'=>'冲红时间'];
+//        foreach($data_list as $k => $v){
+//            if(isset($v['method_name'])) $data_list[$k]['method_name'] =replace_enter_char($v['method_name'],2);
+//            if(isset($v['limit_range'])) $data_list[$k]['limit_range'] =replace_enter_char($v['limit_range'],2);
+//            if(isset($v['explain_text'])) $data_list[$k]['explain_text'] =replace_enter_char($v['explain_text'],2);
+//
+//        }
+        ImportExport::export('','电子发票' . date('YmdHis'),$formatList,1, $headArr, 0, ['sheet_title' => '电子发票']);
+    }
+
 }

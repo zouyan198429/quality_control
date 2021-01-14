@@ -119,7 +119,7 @@ class Orders extends BasePublicModel
 //        '8' => '已付款',
 //    ];
 
-    // 开票结果1待开票1已开蓝票2已红冲
+    // 开票结果1待开票1已开蓝票2已冲红
     public static $invoiceResultArr = [
         '1' => '待开票',
         '2' => '开票中',
@@ -133,13 +133,13 @@ class Orders extends BasePublicModel
         '4' => '已开票',
     ];
 
-    // 开票数据状态1待上传2已上传4已开票8已作废16已红冲
+    // 开票数据状态1待上传2已上传4已开票8已作废16已冲红
     public static $uploadStatusArr = [
         '1' => '待上传',
         '2' => '已上传',
         '4' => '已开票',
         '8' => '已作废',
-        '16' => '已红冲',
+        '16' => '已冲红',
     ];
 
     // 表里没有的字段

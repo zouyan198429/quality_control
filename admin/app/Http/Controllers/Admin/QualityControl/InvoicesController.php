@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\QualityControl;
 
+use App\Business\Controller\API\QualityControl\CTAPIInvoiceOrderBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIInvoicesBusiness;
 use App\Http\Controllers\WorksController;
 use App\Models\QualityControl\Invoices;
@@ -92,6 +93,22 @@ class InvoicesController extends BasicController
             , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
 
         });
+    }
+
+    /**
+     * 详情页
+     *
+     * @param Request $request
+     * @param int $id
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function info(Request $request,$id = 0)
+    {
+        return $this->exeDoPublicFun($request, 17179869184, 1,'admin.QualityControl.Invoices.info', true
+            , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
+
+            });
     }
 
     /**
@@ -221,11 +238,24 @@ class InvoicesController extends BasicController
 //        return  CTAPIInvoicesBusiness::getList($request, $this, 2 + 4);
         return $this->exeDoPublicFun($request, 4, 4,'', true, '', [], function (&$reDataArr) use ($request){
 
+            $order_no = CommonRequest::get($request, 'order_no');// 订单号
+            if(!empty($order_no)){// 订单号转成业务单号
+                $invoiceOrderList = $courseList = CTAPIInvoiceOrderBusiness::getFVFormatList( $request,  $this, 1, 1
+                    , ['order_no' => $order_no], false, [], []);
+                $order_num = Tool::getArrFields($invoiceOrderList, 'order_num');
+                $mergeParams = [
+                    'order_num' => implode(',',$order_num),// 数组转为逗号,分隔的字符
+                ];
+                CTAPIInvoicesBusiness::mergeRequest($request, $this, $mergeParams);
+
+            }
+
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                 'relationFormatConfigs'=> CTAPIInvoicesBusiness::getRelationConfigs($request, $this,
                     [
                         'company_name' => '',
+                        'company_info' => '',
                         // 'invoice_buyer' => '',
                         'invoice_buyer_history' => '',
                         // 'invoice_seller' => '',
@@ -272,15 +302,28 @@ class InvoicesController extends BasicController
      * @author zouyan(305463219@qq.com)
      */
     public function export(Request $request){
-        $this->InitParams($request);
-        CTAPIInvoicesBusiness::getList($request, $this, 1 + 0);
+//        $this->InitParams($request);
+//        CTAPIInvoicesBusiness::getList($request, $this, 1 + 0);
         return $this->exeDoPublicFun($request, 4096, 8,'', true, '', [], function (&$reDataArr) use ($request){
+
+            $order_no = CommonRequest::get($request, 'order_no');// 订单号
+            if(!empty($order_no)){// 订单号转成业务单号
+                $invoiceOrderList = $courseList = CTAPIInvoiceOrderBusiness::getFVFormatList( $request,  $this, 1, 1
+                    , ['order_no' => $order_no], false, [], []);
+                $order_num = Tool::getArrFields($invoiceOrderList, 'order_num');
+                $mergeParams = [
+                    'order_num' => implode(',',$order_num),// 数组转为逗号,分隔的字符
+                ];
+                CTAPIInvoicesBusiness::mergeRequest($request, $this, $mergeParams);
+
+            }
 
             $extParams = [
                 // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
                 'relationFormatConfigs'=> CTAPIInvoicesBusiness::getRelationConfigs($request, $this,
                     [
                         'company_name' => '',
+                        'company_info' => '',
                         // 'invoice_buyer' => '',
                         'invoice_buyer_history' => '',
                         // 'invoice_seller' => '',
@@ -451,11 +494,14 @@ class InvoicesController extends BasicController
 //        $reDataArr['adminType'] =  AbilityJoin::$adminTypeArr;
 //        $reDataArr['defaultAdminType'] = -1;// 列表页默认状态
 
+        $order_no = CommonRequest::get($request, 'order_no');// 订单号
+        $reDataArr['order_no'] = $order_no;
+
         // 开票状态1待开票2开票中4已开票
         $reDataArr['invoiceStatus'] =  Invoices::$invoiceStatusArr;
         $reDataArr['defaultInvoiceStatus'] = -1;// 列表页默认状态
 
-        // 开票数据状态1待上传2已上传4已开票8已作废16已红冲
+        // 开票数据状态1待上传2已上传4已开票8已作废16已冲红
         $reDataArr['uploadStatus'] =  Invoices::$uploadStatusArr;
         $reDataArr['defaultUploadStatus'] = -1;// 列表页默认状态
 
@@ -525,6 +571,7 @@ class InvoicesController extends BasicController
                 'relationFormatConfigs'=> CTAPIInvoicesBusiness::getRelationConfigs($request, $this,
                     [
                         'company_name' => '',
+                        'company_info' => '',
                         // 'invoice_buyer' => '',
                         'invoice_buyer_history' => '',
                         // 'invoice_seller' => '',
@@ -547,7 +594,7 @@ class InvoicesController extends BasicController
         $reDataArr['invoiceStatus'] =  Invoices::$invoiceStatusArr;
         $reDataArr['defaultInvoiceStatus'] = $info['invoice_status'] ?? -1;// 列表页默认状态
 
-        // 开票数据状态1待上传2已上传4已开票8已作废16已红冲
+        // 开票数据状态1待上传2已上传4已开票8已作废16已冲红
         $reDataArr['uploadStatus'] =  Invoices::$uploadStatusArr;
         $reDataArr['defaultUploadStatus'] = $info['upload_status'] ?? -1;// 列表页默认状态
 

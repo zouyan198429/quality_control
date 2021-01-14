@@ -435,6 +435,7 @@ Route::get('admin/invoice_project_template/import_template', 'Admin\QualityContr
 // 发票主表
 Route::get('admin/invoices', 'Admin\QualityControl\InvoicesController@index');// 列表
 Route::get('admin/invoices/add/{id}', 'Admin\QualityControl\InvoicesController@add');// 添加
+Route::get('admin/invoices/info/{id}', 'Admin\QualityControl\InvoicesController@info');// 查看-详情
 // Route::get('admin/invoices/select', 'Admin\QualityControl\InvoicesController@select');// 选择-弹窗
 Route::get('admin/invoices/export', 'Admin\QualityControl\InvoicesController@export');// 导出
 Route::get('admin/invoices/import_template', 'Admin\QualityControl\InvoicesController@import_template');// 导入模版
