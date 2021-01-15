@@ -1,11 +1,12 @@
 
 var SUBMIT_FORM = true;//防止多次点击提交
+var IS_LAYUI_PAGE = isLayuiIframePage();// 是否Layui的iframe弹出层；true: 是； false:不是
+var IS_FRAME_PAGE = isIframePage();// 是否iframe弹出层；true: 是； false:不是
 
 //获取当前窗口索引
-var PARENT_LAYER_INDEX = null;// parent.layer.getFrameIndex(window.name);
+var PARENT_LAYER_INDEX = null;// getParentLayerIndex();
 //让层自适应iframe
-////parent.layer.iframeAuto(PARENT_LAYER_INDEX);
-// parent.layer.full(PARENT_LAYER_INDEX);// 用这个
+// operateBathLayuiIframeSize(PARENT_LAYER_INDEX, [1], 500);// 最大化当前弹窗[layui弹窗时]
 //关闭iframe
 $(document).on("click",".closeIframe",function(){
     iframeclose(PARENT_LAYER_INDEX);
@@ -23,11 +24,11 @@ function parent_reset_list_iframe_close(reset_total){
     // window.parent.reset_list(true, true, reset_total, 2);//刷新父窗口列表
     let list_fun_name = window.parent.LIST_FUNCTION_NAME || 'reset_list';
     eval( 'window.parent.' + list_fun_name + '(' + true +', ' + true +', ' + reset_total +', 2)');
-    parent.layer.close(PARENT_LAYER_INDEX);
+    operateLayuiIframeSize(PARENT_LAYER_INDEX, 4);// 关闭弹窗
 }
 //关闭弹窗
 function parent_reset_list(){
-    parent.layer.close(PARENT_LAYER_INDEX);
+    operateLayuiIframeSize(PARENT_LAYER_INDEX, 4);// 关闭弹窗
 }
 
 

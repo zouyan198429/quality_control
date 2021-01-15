@@ -1,5 +1,8 @@
 var ADMIN_AJAX_TYPE_NUM = 1;// admin 后台请求标识
 var ADMIN_AJAX_HEADERS_ACCEPT = "application/vnd.myCUNwoApp.v1+json";
+// window.name的值，这个值很奇怪，在页面加载时值是正确的，但是加载完成后值就变了--iframe中的页面。
+// 当面有方法已经调用并赋值，其它地方就可以直接使用了；用这个方法 getWindowName() 或直接使用全局变量 WINDOW_NAME
+var WINDOW_NAME = null;
 // headers: {      //请求头
 //     Accept: "application/json; charset=utf-8",
 //         token: "" + token  //这是获取的token
@@ -326,6 +329,135 @@ function layuiGoIframe(href, text){
     parent.layui.index.openTabsPage(href, text); //这里要注意的是 parent 的层级关系
 }
 
+// 获得window.name
+function getWindowName(){
+    if(isEmpeyVal(WINDOW_NAME)){
+        WINDOW_NAME = window.name;// 是会有类似这样的值：layui-layer-iframe2
+    }
+    return WINDOW_NAME;
+}
+getWindowName();// 因为这个值很奇怪，js加载后，值就变了【iframe中】，所以先执行一下并赋值给全局变量
+
+// 判断是不是Layui的iframe弹出层
+// true: 是； false:不是
+function isLayuiIframePage(){
+    var windowName = getWindowName();// 是会有类似这样的值：layui-layer-iframe2
+    if(windowName.indexOf("layui-layer") != -1){// 包含
+        // consoleLogs(['&&&&&&&&&&包含&&&&&&&&', windowName]);
+        return true;
+    }else{// 不包含
+        // consoleLogs(['&&&&&&&&&&不包含&&&&&&&&', windowName]);
+        return false;
+    }
+}
+
+// 判断是否是iframe弹出层
+// true: 是； false:不是
+function isIframePage() {
+    // 1
+    if (self.frameElement && self.frameElement.tagName == "IFRAME") {
+        // alert('在iframe中');
+        return true;
+    }else{
+        return false;
+    }
+
+    // 2
+    // if (window.frames.length != parent.frames.length) {
+    //     // alert('在iframe中');
+    //     return true;
+    // }else{
+    //     return false;
+    // }
+
+    // 3
+    // if (self != top) {
+    //    // alert('在iframe中');
+    //     return true;
+    // }else{
+    //     return false;
+    // }
+}
+
+// 获取Laiui iframe 弹出层 当前窗口索引 PARENT_LAYER_INDEX; 如果不是 Laiui iframe 弹出层 返回null;
+function getParentLayerIndex(){
+    if(isLayuiIframePage()){
+        // return parent.layer.getFrameIndex(window.name)  ;
+        return parent.layer.getFrameIndex(getWindowName())  ;
+    }else{
+        return null;
+    }
+}
+
+// 让Laiui iframe 弹出层最大化、最小化、关闭
+// parentLayerIndex 父级弹出层的 index; 默认当前页面
+// operateType 操作类型 [] 1、最大化[默认] ； 2、最小化、 4、关闭;8、还原大小
+function operateLayuiIframeSize(parentLayerIndex, operateType) {
+    if(getParentLayerIndex() === null){
+        return ;// 不是Laiui iframe 弹出层 ，直接返回
+    }
+    parentLayerIndex = parentLayerIndex || getParentLayerIndex();
+
+    operateType = operateType || 1;
+    switch(operateType)
+    {
+        case 1:// 最大化[默认]
+            //让层自适应iframe
+            ////parent.layer.iframeAuto(parentLayerIndex);
+            parent.layer.full(parentLayerIndex);// 用这个
+            break;
+        case 2:// 2、最小化
+            parent.layer.min(parentLayerIndex);// 用这个
+            break;
+        case 4:// 4、关闭
+            parent.layer.close(parentLayerIndex);// 用这个
+            break;
+        case 8:// 8、还原大小
+            parent.layer.restore(parentLayerIndex);// 还原 后触发的回调
+            break;
+        default:
+            break;
+    }
+}
+
+// 批量连续执行 让Laiui iframe 弹出层最大化、最小化、关闭
+// parentLayerIndex 父级弹出层的 index; 默认当前页面
+// operateTypeArr 操作类型 数组 [1] 1、最大化 ； 2、最小化、 4、关闭、8、还原大小; 按数组指定的顺序执行
+// waitmillisecond 从第二个开始等待的毫秒数 1000 为 1秒 ； 500[默认]
+function operateBathLayuiIframeSize(parentLayerIndex, operateTypeArr, waitmillisecond) {
+    // consoleLogs(['******operateTypeArr******222**', parentLayerIndex, operateTypeArr, waitmillisecond, getParentLayerIndex()]);
+    if(getParentLayerIndex() === null){
+        return ;// 不是Laiui iframe 弹出层 ，直接返回
+    }
+    // consoleLogs(['******operateTypeArr******333**', parentLayerIndex, operateTypeArr, waitmillisecond]);
+    parentLayerIndex = parentLayerIndex || getParentLayerIndex();
+    waitmillisecond = waitmillisecond || 500;
+    operateTypeArr = operateTypeArr || [];
+    if(typeof operateTypeArr !== 'object'){
+        operateTypeArr = [];
+    }
+    // consoleLogs(['******operateTypeArr******444**', parentLayerIndex, operateTypeArr, waitmillisecond]);
+
+    if(isEmpeyVal(operateTypeArr)){
+        return ;
+    }
+
+    for (var i = 0 ; i< operateTypeArr.length ; i++) {
+        var operateType = operateTypeArr[i];
+        operateLayuiIframeSize(parentLayerIndex, operateType);
+        operateTypeArr.splice(i, 1);
+        break;
+    }
+    // consoleLogs(['******operateTypeArr********', operateTypeArr]);
+
+    if(!isEmpeyVal(operateTypeArr)){
+        setTimeout(function () {
+            // consoleLogs(['******operateTypeArr***qqqqq*****', parentLayerIndex, operateTypeArr, waitmillisecond]);
+            operateBathLayuiIframeSize(parentLayerIndex, operateTypeArr, waitmillisecond);
+        }, waitmillisecond);
+    }
+}
+
 // 获得ajax请求的headers
 // in_headers 传入的headers
 // type_num 类型 1 admin后台-- 后面扩展用
@@ -437,12 +569,13 @@ function btn_go(objThis, pageType){
 //            close_loop 对象 有 is_close 属性【可控制开关】 ：是否关闭循环 true：关闭 ;false不关闭
 //            loopedSec  记录已执行的毫秒数 [计时开始]
 //            loop_num  执行次数  1，2，3...
-// secFun 每一分钟循环要执行的方法
+// secFun 每一秒钟循环要执行的方法
 //        参数
 //            intervalLoopId setInterval执行的id
 //            close_loop 对象 有 is_close 属性【可控制开关】 ：是否关闭循环 true：关闭 ;false不关闭
 //            do_sec_num  倒记的秒数 如果10秒倒计时： 9，8，7，...0
 //            do_num 执行次数  1，2，3...
+// secFun_num secFun 参数循环执行的间隔时间  默认 1000（1秒 ）
 //样例 // 如：执行10秒，每一秒执行一次循环
 // loopDoingFun(10, 1000, function (intervalId, close_loop, loopedSec, loop_num) {
 //     console.log('===每次循环的方法开始==1=');
@@ -464,8 +597,8 @@ function btn_go(objThis, pageType){
 //         // clearInterval(intervalLoopId);
 //         // close_loop.is_close = true; // -- 一般用这个控制开关
 //     }
-// });
-function loopDoingFun(sec_num, each_sec_num, loopFun, secFun){
+// }, 1000);
+function loopDoingFun(sec_num, each_sec_num, loopFun, secFun, secFun_num){
     console.log('loopDoingFun begin');
     sec_num = sec_num || 0;
     var do_sec_num = sec_num;
@@ -473,6 +606,7 @@ function loopDoingFun(sec_num, each_sec_num, loopFun, secFun){
         do_sec_num = 0;
     }
     each_sec_num = each_sec_num || 1000;
+    secFun_num = secFun_num || 1000;
     var close_loop = { is_close: false};//是否关闭循环 true：关闭 ;false不关闭
     var autoLoopDoFunObj = new Object();
     var sec_i = 0;// 执行次数
@@ -497,7 +631,7 @@ function loopDoingFun(sec_num, each_sec_num, loopFun, secFun){
 
     // 记时
     // if(sec_num > 0){
-    var intervalLoopId =setInterval(autoLoopDoFunObj.eachSecFun,1000);
+    var intervalLoopId =setInterval(autoLoopDoFunObj.eachSecFun,secFun_num);// ,1000
     // }
 
     // 执行的代码-多少毫秒

@@ -31,32 +31,32 @@
 layui.use('layer', function(){
   var $ = layui.$
   ,layer = layui.layer
-  ,index = parent.layer.getFrameIndex(window.name); //获取窗口索引
-  
+  ,index = getParentLayerIndex(); //获取窗口索引
+
   var active = {
     //让层自适应iframe
     auto: function(){
       $('body').append('插入很多酱油。插入很多酱油。插入很多酱油。插入很多酱油。插入很多酱油。插入很多酱油。插入很多酱油。');
       parent.layer.iframeAuto(index);
     }
-    
+
     //在父层弹出一个层
     ,parentPopup: function(){
       top.layer.msg('Hi, man', {shade: 0.3})
     }
-    
+
     //给父页面传值
     ,setParent: function(){
       var id = '#LAY_layer_iframe_demo'
       ,mark = $('#LAY_mark')
       ,val = mark.val();
-      
+
       if(val === ''){
         mark.focus();
         parent.layer.msg('请填写标记');
         return true;
       }
-      
+
       parent.layer.msg('您将标记 [ ' +val + ' ] 成功传送给了父窗口');
       parent.layui.$(id).text('我被改变了');
       parent.layer.tips('Look here', id, {
@@ -64,14 +64,14 @@ layui.use('layer', function(){
       });
       parent.layer.close(index);
     }
-    
-    
+
+
     //在内部关闭iframe
     ,close: function(set){
       parent.layer.close(index);
     }
   }
-  
+
   $('.layui-btn-container .layui-btn').on('click', function(){
     var othis = $(this)
     ,type = othis.data('type');
