@@ -274,7 +274,7 @@
   </div>
 
   <script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>
-  <script src="{{asset('static/js/custom/common.js')}}?6"></script>
+  <script src="{{asset('static/js/custom/common.js')}}?7"></script>
 
   <script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.js')}}"></script>
 

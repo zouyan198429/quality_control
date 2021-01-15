@@ -242,5 +242,5 @@
 	</body>
 </html>
 
-<script src="{{asset('static/js/custom/common.js')}}?6"></script>
+<script src="{{asset('static/js/custom/common.js')}}?7"></script>
 <script src="{{ asset('/js/web/QualityControl/CertificateSchedule/info.js') }}?2"  type="text/javascript"></script>
