@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\QualityControl;
 
 use App\Business\Controller\API\QualityControl\CTAPIInvoiceOrderBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIInvoicesBusiness;
+use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
 use App\Http\Controllers\WorksController;
 use App\Models\QualityControl\Invoices;
 use App\Services\Request\CommonRequest;
@@ -390,7 +391,9 @@ class InvoicesController extends BasicController
 //        Tool::formatOneArrVals($tem_id, [null, ''], ',', 1 | 2 | 4 | 8);
 //        $pageNum = (is_array($tem_id) && count($tem_id) > 1 ) ? 1024 : 512;
 //        return $this->exeDoPublicFun($request, $pageNum, 4,'', true, '', [], function (&$reDataArr) use ($request){
-//            return CTAPIInvoicesBusiness::delAjax($request, $this);
+//            $organize_id = CommonRequest::getInt($request, 'company_id');// 可有此参数
+//            return CTAPIInvoicesBusiness::delCustomizeAjax($request,  $this, $organize_id, [], '');
+//            // return CTAPIInvoicesBusiness::delAjax($request, $this);
 //        });
 //    }
 
@@ -494,6 +497,19 @@ class InvoicesController extends BasicController
 //        $reDataArr['adminType'] =  AbilityJoin::$adminTypeArr;
 //        $reDataArr['defaultAdminType'] = -1;// 列表页默认状态
 
+        $company_id = CommonRequest::getInt($request, 'company_id');
+        // $hiddenOption |= 1;
+        $info = [];
+        if(is_numeric($company_id) && $company_id > 0){
+            // 获得企业信息
+            $companyInfo = CTAPIStaffBusiness::getInfoData($request, $this, $company_id);
+            if(empty($companyInfo)) throws('企业信息不存在！');
+            $info['company_id'] = $company_id;
+            $info['user_company_name'] = $companyInfo['company_name'] ?? '';
+        }
+        $reDataArr['info'] = $info;
+
+
         $order_no = CommonRequest::get($request, 'order_no');// 订单号
         $reDataArr['order_no'] = $order_no;
 
@@ -563,6 +579,15 @@ class InvoicesController extends BasicController
             //   'department_id' => 0,
         ];
         $operate = "添加";
+
+        // 如果是企业列表点《企业简介》
+        $company_id = CommonRequest::getInt($request, 'company_id');
+        if($id <= 0 && $company_id > 0){
+            $companyInfo = CTAPIStaffBusiness::getInfoData($request, $this, $company_id);
+            if(empty($companyInfo)) throws('企业信息不存在！');
+            $info['company_id'] = $company_id;
+            $info['user_company_name'] = $companyInfo['company_name'] ?? '';
+        }
 
         if ($id > 0) { // 获得详情数据
             $operate = "修改";

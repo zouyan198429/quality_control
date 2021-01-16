@@ -33,23 +33,64 @@ function parent_reset_list(){
 
 //业务逻辑部分
 var otheraction = {
-    selectCompany: function(obj){// 选择商家
+    addBuyer:function(obj){// 增加企业抬头
         var recordObj = $(obj);
+        // 所属企业
+        var company_id = $('input[name=company_id]').val();
+        var judge_seled = judge_validate(1,'所属企业',company_id,true,'positive_int','','');
+        if(judge_seled != ''){
+            layer_alert("请选择所属企业",3,0);
+            return false;
+        }
+        var hidden_option = 1 | 8192;
+        var url = ADD_INVOICE_BUYER_URL + '?hidden_option=' + hidden_option + '&company_id=' + company_id;
+        consoleLogs([url]);
+        var tishi = "发票抬头";
+        layeriframe(url,tishi,750,450,0);
+        // commonaction.browse_file(url, tishi,750,450, 0);
+        return false;
+    },
+    showInvoice : function(id){// 弹窗显示
         //获得表单各name的值
-        var weburl = SELECT_COMPANY_URL;
+        var data = {};// get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
+        console.log(INFO_INVOICE_BUYER_URL);
+        console.log(data);
+        var url_params = get_url_param(data);// parent.get_url_param(data);
+        var weburl = INFO_INVOICE_BUYER_URL + id + '?' + url_params;
         console.log(weburl);
-        // go(SHOW_URL + id);
+        // go(INFO_INVOICE_BUYER_URL + id);
         // location.href='/pms/Supplier/show?supplier_id='+id;
         // var weburl = SHOW_URL + id;
         // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
-        var tishi = '选择所属企业';//"查看供应商";
-        console.log('weburl', weburl);
-        layeriframe(weburl,tishi,700,450,0);
+        var tishi = "发票抬头";// SHOW_URL_TITLE;//"查看供应商";
+        layeriframe(weburl,tishi,750,450,0,'',null,2);
         return false;
     }
 };
+
+// 新加发票抬头保存成功后调用的方法
+// obj:当前表单值对像
+// result:保存接口返回的结果
+// operateNum:自己定义的一个编号【页面有多处用到时用--通知父窗口调用位置】2[默认]：新加保存成功时
+function companyQualityControlInvoiceBuyeredit(obj, result, operateNum){
+    operateNum = operateNum || 2;
+    consoleLogs(['obj:', obj, 'result:', result, 'operateNum:', operateNum]);
+    switch(operateNum){
+        case 1:
+            break;
+        case 2:
+            // break;
+        default://其它
+            if(obj.open_status == 1){
+                var invoice_buyer_id = result;
+                var html = '<label id="invoice_buyer_' + invoice_buyer_id + '"><input type="radio"  name="invoice_buyer_id"  value="' + invoice_buyer_id + '"   />' + obj.gmf_mc + '</label>';
+                $('#invoice_buyer_list').append(html);
+            }
+            break;
+    }
+}
+
 $(function(){
-    popSelectInit();// 初始化选择弹窗
     //提交
     $(document).on("click","#submitBtn",function(){
         //var index_query = layer.confirm('您确定提交保存吗？', {
@@ -60,7 +101,7 @@ $(function(){
         // }, function(){
         //});
         return false;
-    })
+    });
 
 });
 
@@ -70,12 +111,10 @@ function ajax_form(){
 
     // 验证信息
     var id = $('input[name=id]').val();
-    if(!judge_validate(4,'记录id',id,true,'digit','','')){
+    // if(!judge_validate(4,'记录id',id,true,'digit','','')){
+    if(!judge_validate(4,'记录id',id,true,'length',1,200)){
         return false;
     }
-
-
-
 
     // var work_num = $('input[name=work_num]').val();
     // if(!judge_validate(4,'工号',work_num,true,'length',1,30)){
@@ -114,51 +153,10 @@ function ajax_form(){
         return false;
     }
 
-
-    var gmf_mc = $('input[name=gmf_mc]').val();
-    if(!judge_validate(4,'抬头名称',gmf_mc,true,'length',1,100)){
-        return false;
-    }
-
-    var gmf_nsrsbh = $('input[name=gmf_nsrsbh]').val();
-    if(!judge_validate(4,'纳税人识别号',gmf_nsrsbh,false,'length',1,50)){
-        return false;
-    }
-
-    var gmf_dz = $('input[name=gmf_dz]').val();
-    if(!judge_validate(4,'企业地址',gmf_dz,false,'length',1,100)){
-        return false;
-    }
-
-    var gmf_dh = $('input[name=gmf_dh]').val();
-    if(!judge_validate(4,'企业电话',gmf_dh,false,'length',1,30)){
-        return false;
-    }
-
-    var gmf_yh = $('input[name=gmf_yh]').val();
-    if(!judge_validate(4,'企业银行',gmf_yh,false,'length',1,100)){
-        return false;
-    }
-
-    var gmf_yhzh = $('input[name=gmf_yhzh]').val();
-    if(!judge_validate(4,'企业银行账号',gmf_yhzh,false,'length',1,100)){
-        return false;
-    }
-
-    var jff_phone = $('input[name=jff_phone]').val();
-    if(!judge_validate(4,'手机号',jff_phone,false,'mobile')){
-        return false;
-    }
-
-    var jff_email = $('input[name=jff_email]').val();
-    if(!judge_validate(4,'电子邮件',jff_email,false,'email')){
-        return false;
-    }
-
-    var open_status = $('input[name=open_status]:checked').val() || '';
-    var judge_seled = judge_validate(1,'开启状态',open_status,true,'custom',/^[12]$/,"");
+    var invoice_buyer_id = $('input[name=invoice_buyer_id]:checked').val() || '';
+    var judge_seled = judge_validate(1,'发票抬头',invoice_buyer_id,true,'positive_int',"","");
     if(judge_seled != ''){
-        layer_alert("请选择开启状态",3,0);
+        layer_alert("请选择发票抬头",3,0);
         //err_alert('<font color="#000000">' + judge_seled + '</font>');
         return false;
     }
@@ -192,16 +190,9 @@ function ajax_form(){
                     shade: 0.3,
                     time: 3000 //2秒关闭（如果不配置，默认是3秒）
                 }, function(){
-                    // hidden_option 8192:调用父窗品的方法：[public/js目录下的] 项目目录+数据功能目录+当前文件名称 【有_线，则去掉】
-                    var hidden_option = $('input[name=hidden_option]').val() || 0;
-                    if( (hidden_option & 8192) != 8192){
-                        var reset_total = true; // 是否重新从数据库获取总页数 true:重新获取,false不重新获取
-                        if(id > 0) reset_total = false;
-                        parent_reset_list_iframe_close(reset_total);// 刷新并关闭
-                    }else{
-                        eval( 'window.parent.' + PARENT_BUSINESS_FUN_NAME + '(paramsToObj(decodeURIComponent(data), 1), ret.result, 2)');
-                        parent_reset_list();// 关闭弹窗
-                    }
+                    var reset_total = true; // 是否重新从数据库获取总页数 true:重新获取,false不重新获取
+                    if(id > 0) reset_total = false;
+                    parent_reset_list_iframe_close(reset_total);// 刷新并关闭
                     //do something
                 });
                 // var supplier_id = ret.result['supplier_id'];
@@ -215,70 +206,4 @@ function ajax_form(){
         }
     });
     return false;
-}
-
-// 初始化，来决定*是显示还是隐藏
-function popSelectInit(){
-
-    $('.select_close').each(function(){
-        let closeObj = $(this);
-        let idObj = closeObj.siblings(".select_id");
-        if(idObj.length > 0 && idObj.val() != '' && idObj.val() != '0'  ){
-            closeObj.show();
-        }else{
-            closeObj.hide();
-        }
-    });
-}
-
-// 清空
-function clearSelect(Obj){
-    let closeObj = $(Obj);
-    console.log('closeObj=' , closeObj);
-
-    var index_query = layer.confirm('确定移除？', {
-        btn: ['确定','取消'] //按钮
-    }, function(){
-        // 清空id
-        let idObj = closeObj.siblings(".select_id");
-        if(idObj.length > 0 ){
-            idObj.val('');
-        }
-        // 清空名称文字
-        let nameObj = closeObj.siblings(".select_name");
-        if(nameObj.length > 0 ){
-            nameObj.html('');
-        }
-        closeObj.hide();
-        layer.close(index_query);
-    }, function(){
-    });
-}
-
-// 获得选中的企业id 数组
-function getSelectedCompanyIds(){
-    var company_ids = [];
-    var company_id = $('input[name=company_id]').val();
-    company_ids.push(company_id);
-    console.log('company_ids' , company_ids);
-    return company_ids;
-}
-
-// 取消
-// company_id 企业id
-function removeCompany(company_id){
-    var seled_company_id = $('input[name=company_id]').val();
-    if(company_id == seled_company_id){
-        $('input[name=company_id]').val('');
-        $('.company_name').html('');
-        $('.company_id_close').hide();
-    }
-}
-
-// 增加
-// company_id 企业id, 多个用,号分隔
-function addCompany(company_id, company_name){
-    $('input[name=company_id]').val(company_id);
-    $('.company_name').html(company_name);
-    $('.company_id_close').show();
 }

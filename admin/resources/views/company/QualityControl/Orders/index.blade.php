@@ -87,6 +87,7 @@
 {{--    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcelTemplate(this)">导入模版[EXCEL]</button>--}}
 {{--    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcel(this)">导入城市</button>--}}
 {{--    <div style="display:none;" ><input type="file" class="import_file img_input"></div>{ {--导入file对象--} }--}}
+      <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.invoiceSelected(this)" >电子发票[勾选]</button>
   </div>
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
@@ -101,7 +102,7 @@
         <col width="80">
         <col width="95">
         <col width="95">
-{{--        <col width="80">--}}
+        <col width="10%">
     </colgroup>
     <thead>
     <tr>
@@ -122,7 +123,7 @@
         <th>已退金额<hr/>退费冻结</th>
         <th>支付金额<hr/>找零金额<hr/>实收金额</th>
         <th>确认时间<hr/>完成时间<hr/>作废时间</th>
-{{--      <th>操作</th>--}}
+      <th>操作</th>
     </tr>
     </thead>
     <tbody id="data_list">
@@ -163,14 +164,17 @@
       var IMPORT_EXCEL_URL = "{{ url('api/company/orders/import') }}";//导入EXCEL地址
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
 
-      var SELECT_COMPANY_URL = "{{url('admin/company/select')}}";// 选择所属企业
+      var SELECT_COMPANY_URL = "{{url('company/company/select')}}";// 选择所属企业
 
       // 列表数据每隔指定时间就去执行一次刷新【如果表有更新时】--定时执行
       var IFRAME_TAG_KEY = "";// "QualityControl\\CTAPIStaff";// 获得模型表更新时间的关键标签，可为空：不获取
       var IFRAME_TAG_TIMEOUT = 60000;// 获得模型表更新时间运行间隔 1000:1秒 ；可以不要此变量：默认一分钟
 
+      var INVOICE_URL  = "{{ url('company/orders/invoices') }}";//操作(电子发票)
+
+      var INVOICE_SHOW_URL  = "{{ url('company/invoices') }}";//操作(查看电子发票)
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/company/QualityControl/Orders.js') }}?7"  type="text/javascript"></script>
+  <script src="{{ asset('js/company/QualityControl/Orders.js') }}?9"  type="text/javascript"></script>
 </body>
 </html>

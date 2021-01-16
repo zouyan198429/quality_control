@@ -80,12 +80,12 @@
 @include('public.dynamic_list_foot')
 
 <script type="text/javascript">
-    var SAVE_URL = "{{ url('api/admin/orders/ajax_invoices_save') }}";// ajax保存记录地址
-    var LIST_URL = "{{url('admin/orders')}}";//保存成功后跳转到的地址
+    var SAVE_URL = "{{ url('api/company/orders/ajax_invoices_save') }}";// ajax保存记录地址
+    var LIST_URL = "{{url('company/orders')}}";//保存成功后跳转到的地址
 
-    var ADD_INVOICE_BUYER_URL = "{{ url('admin/invoice_buyer/add/0') }}"; //添加企业抬头url
-    var INFO_INVOICE_BUYER_URL = "{{ url('admin/invoice_buyer/info/') }}/"; //详情企业抬头url
+    var ADD_INVOICE_BUYER_URL = "{{ url('company/invoice_buyer/add/0') }}"; //添加企业抬头url
+    var INFO_INVOICE_BUYER_URL = "{{ url('company/invoice_buyer/info/') }}/"; //详情企业抬头url
 </script>
-<script src="{{ asset('/js/admin/QualityControl/Orders_invoices.js') }}?10"  type="text/javascript"></script>
+<script src="{{ asset('/js/company/QualityControl/Orders_invoices.js') }}?11"  type="text/javascript"></script>
 </body>
 </html>

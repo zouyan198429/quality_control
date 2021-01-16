@@ -71,6 +71,47 @@ var otheraction = {
         layeriframe(weburl,tishi,700,450,0);
         return false;
     },
+    invoiceSelected: function(obj){// 电子发票--批量
+        var recordObj = $(obj);
+        var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+        otheraction.invoiceByIds(obj, ids);
+    },
+    invoiceByIds: function(obj, ids) {
+        if( ids == ''){
+            err_alert('请选择需要操作的数据');
+            return false;
+        }
+        //获得表单各name的值
+        var weburl = INVOICE_URL + '?id='+ ids;
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = '电子发票';//"查看供应商";
+        console.log('weburl', weburl);
+        layeriframe(weburl,tishi,950,510,5);
+        // commonaction.browse_file(weburl, tishi,950,510, 5);
+        return false;
+    },
+    showInvoices: function(obj, order_no, company_id) {
+        if( order_no == ''){
+            err_alert('请选择需要操作的数据');
+            return false;
+        }
+        //获得表单各name的值
+        var weburl = INVOICE_SHOW_URL + '?hidden_option=1&company_id=' + company_id + '&order_no='+ order_no;
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = '订单号【' + order_no + '】电子发票';//"查看供应商";
+        console.log('weburl', weburl);
+        layeriframe(weburl,tishi,950,510,0);
+        // commonaction.browse_file(weburl, tishi,950,510, 5);
+        return false;
+    }
 };
 // 初始化，来决定*是显示还是隐藏
 function popSelectInit(){
@@ -170,27 +211,37 @@ function addCompany(company_id, company_name){
     document.write("            <td>￥<%=item.refund_price%><hr/>￥<%=item.refund_price_frozen%><\/td>");
     document.write("            <td>￥<%=item.payment_amount%><hr/>￥<%=item.change_amount%><hr/>￥<%=item.check_price%>(<%=item.order_status_text%>)<\/td>");
     document.write("            <td><%=item.sure_time%><hr/><%=item.check_time%><hr/><%=item.cancel_time%><\/td>");
-    // document.write("            <td>");
-    // // document.write("                <%if( true){%>");
-    // // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"action.show(<%=item.id%>)\">");
-    // // document.write("                    <i class=\"ace-icon  fa fa-eye  bigger-60\"> 查看<\/i>");
-    // // document.write("                <\/a>");
-    // // document.write("                <%}%>");
+    document.write("            <td>");
+    // document.write("                <%if( true){%>");
+    // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"action.show(<%=item.id%>)\">");
+    // document.write("                    <i class=\"ace-icon  fa fa-eye  bigger-60\"> 查看<\/i>");
+    // document.write("                <\/a>");
+    // document.write("                <%}%>");
     // document.write("                <%if( true){%>");
     // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"action.show(<%=item.id%>)\">");
     // document.write("                    <i class=\"ace-icon  fa fa-check-circle  bigger-60\"> 确认<\/i>");
     // document.write("                <\/a>");
     // document.write("                <%}%>");
-    // // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.iframeModify(<%=item.id%>)\">");
-    // // document.write("                    <i class=\"ace-icon fa fa-pencil bigger-60\"> 编辑<\/i>");
-    // // document.write("                <\/a>");
-    // // document.write("                <%if( can_modify){%>");
-    // // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.del(<%=item.id%>)\">");
-    // // document.write("                    <i class=\"ace-icon fa fa-trash-o bigger-60\"> 删除<\/i>");
-    // // document.write("                <\/a>");
-    // // document.write("                <%}%>");
-    // document.write("");
-    // document.write("            <\/td>");
+    document.write("                <%if( (item.order_status & (2 | 4 | 8)) > 0  && item.invoice_status == 1){%>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.invoiceByIds(this,<%=item.id%>)\">");
+    document.write("                    <i class=\"ace-icon  fa fa-vcard-o bigger-60\"> 开电子发票<\/i>");
+    document.write("                <\/a>");
+    document.write("                <%}%>");
+    document.write("                <%if( (item.invoice_result & (2 | 4 )) > 0){%>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"otheraction.showInvoices(this,'<%=item.order_no%>','<%=item.company_id%>')\">");
+    document.write("                    <i class=\"ace-icon  fa fa-eye  bigger-60\"> 查看电子发票<\/i>");
+    document.write("                <\/a>");
+    document.write("                <%}%>");
+    // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.iframeModify(<%=item.id%>)\">");
+    // document.write("                    <i class=\"ace-icon fa fa-pencil bigger-60\"> 编辑<\/i>");
+    // document.write("                <\/a>");
+    // document.write("                <%if( can_modify){%>");
+    // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.del(<%=item.id%>)\">");
+    // document.write("                    <i class=\"ace-icon fa fa-trash-o bigger-60\"> 删除<\/i>");
+    // document.write("                <\/a>");
+    // document.write("                <%}%>");
+    document.write("");
+    document.write("            <\/td>");
     document.write("        <\/tr>");
     document.write("    <%}%>");
     document.write("<\/script>");

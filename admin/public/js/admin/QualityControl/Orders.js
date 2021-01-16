@@ -138,13 +138,13 @@ var otheraction = {
         // commonaction.browse_file(weburl, tishi,950,510, 5);
         return false;
     },
-    showInvoices: function(obj, order_no) {
+    showInvoices: function(obj, order_no, company_id) {
         if( order_no == ''){
             err_alert('请选择需要操作的数据');
             return false;
         }
         //获得表单各name的值
-        var weburl = INVOICE_SHOW_URL + '?order_no='+ order_no;
+        var weburl = INVOICE_SHOW_URL + '?hidden_option=1&company_id=' + company_id + '&order_no='+ order_no;
         console.log(weburl);
         // go(SHOW_URL + id);
         // location.href='/pms/Supplier/show?supplier_id='+id;
@@ -341,7 +341,7 @@ function addCompany(company_id, company_name){
     document.write("                <\/a>");
     document.write("                <%}%>");
     document.write("                <%if( (item.invoice_result & (2 | 4 )) > 0){%>");
-    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"otheraction.showInvoices(this,'<%=item.order_no%>')\">");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"otheraction.showInvoices(this,'<%=item.order_no%>','<%=item.company_id%>')\">");
     document.write("                    <i class=\"ace-icon  fa fa-eye  bigger-60\"> 查看电子发票<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");

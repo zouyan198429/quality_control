@@ -173,32 +173,32 @@
       var OPERATE_TYPE = <?php echo isset($operate_type)?$operate_type:0; ?>;
       var AUTO_READ_FIRST = false;//自动读取第一页 true:自动读取 false:指定地方读取
       var LIST_FUNCTION_NAME = "reset_list_self";// 列表刷新函数名称, 需要列表刷新同步时，使用自定义方法reset_list_self；异步时没有必要自定义
-      var AJAX_URL = "{{ url('api/admin/invoices/ajax_alist') }}";//ajax请求的url
-      var ADD_URL = "{{ url('admin/invoices/add/0') }}"; //添加url
+      var AJAX_URL = "{{ url('api/company/invoices/ajax_alist') }}";//ajax请求的url
+      var ADD_URL = "{{ url('company/invoices/add/0') }}"; //添加url
 
-      var IFRAME_MODIFY_URL = "{{url('admin/invoices/add/')}}/";//添加/修改页面地址前缀 + id
+      var IFRAME_MODIFY_URL = "{{url('company/invoices/add/')}}/";//添加/修改页面地址前缀 + id
       var IFRAME_MODIFY_URL_TITLE = "发票" ;// 详情弹窗显示提示  [添加/修改] +  栏目/主题
       var IFRAME_MODIFY_CLOSE_OPERATE = 0 ;// 详情弹窗operate_num关闭时的操作0不做任何操作1刷新当前页面2刷新当前列表页面
 
-      var SHOW_URL = "{{url('admin/invoices/info/')}}/";//显示页面地址前缀 + id
+      var SHOW_URL = "{{url('company/invoices/info/')}}/";//显示页面地址前缀 + id
       var SHOW_URL_TITLE = "" ;// 详情弹窗显示提示
       var SHOW_CLOSE_OPERATE = 0 ;// 详情弹窗operate_num关闭时的操作0不做任何操作1刷新当前页面2刷新当前列表页面
-      var EDIT_URL = "{{url('admin/invoices/add/')}}/";//修改页面地址前缀 + id
-      var DEL_URL = "{{ url('api/admin/invoices/ajax_del') }}";//删除页面地址
-      var BATCH_DEL_URL = "{{ url('api/admin/invoices/ajax_del') }}";//批量删除页面地址
-      var EXPORT_EXCEL_URL = "{{ url('admin/invoices/export') }}";//导出EXCEL地址
-      var IMPORT_EXCEL_TEMPLATE_URL = "{{ url('admin/invoices/import_template') }}";//导入EXCEL模版地址
-      var IMPORT_EXCEL_URL = "{{ url('api/admin/invoices/import') }}";//导入EXCEL地址
+      var EDIT_URL = "{{url('company/invoices/add/')}}/";//修改页面地址前缀 + id
+      var DEL_URL = "{{ url('api/company/invoices/ajax_del') }}";//删除页面地址
+      var BATCH_DEL_URL = "{{ url('api/company/invoices/ajax_del') }}";//批量删除页面地址
+      var EXPORT_EXCEL_URL = "{{ url('company/invoices/export') }}";//导出EXCEL地址
+      var IMPORT_EXCEL_TEMPLATE_URL = "{{ url('company/invoices/import_template') }}";//导入EXCEL模版地址
+      var IMPORT_EXCEL_URL = "{{ url('api/company/invoices/import') }}";//导入EXCEL地址
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
 
-      var DOWN_FILE_URL = "{{ url('admin/down_file') }}";// 下载
-      var DEL_FILE_URL = "{{ url('api/admin/upload/ajax_del') }}";// 删除文件的接口地址
+      var DOWN_FILE_URL = "{{ url('company/down_file') }}";// 下载
+      var DEL_FILE_URL = "{{ url('api/company/upload/ajax_del') }}";// 删除文件的接口地址
 
       // 列表数据每隔指定时间就去执行一次刷新【如果表有更新时】--定时执行
       var IFRAME_TAG_KEY = "";// "QualityControl\\CTAPIStaff";// 获得模型表更新时间的关键标签，可为空：不获取
       var IFRAME_TAG_TIMEOUT = 60000;// 获得模型表更新时间运行间隔 1000:1秒 ；可以不要此变量：默认一分钟
 
-      var SELECT_COMPANY_URL = "{{url('admin/company/select')}}";// 选择所属企业
+      var SELECT_COMPANY_URL = "{{url('company/company/select')}}";// 选择所属企业
   </script>
 
 <link rel="stylesheet" href="{{asset('js/baguetteBox.js/baguetteBox.min.css')}}">
@@ -208,7 +208,7 @@
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
 
 <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/Invoices.js') }}?22"  type="text/javascript"></script>
+  <script src="{{ asset('js/company/QualityControl/Invoices.js') }}?22"  type="text/javascript"></script>
 @component('component.upfileincludejsmany')
 @endcomponent
 </body>

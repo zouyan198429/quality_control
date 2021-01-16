@@ -67,6 +67,7 @@ var otheraction = {
         return false;
     }
 };
+
 // 新加发票抬头保存成功后调用的方法
 // obj:当前表单值对像
 // result:保存接口返回的结果

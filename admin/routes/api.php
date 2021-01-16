@@ -990,6 +990,7 @@ $api->version('v1', function ($api) {
 
 //        $api->post('company/orders/import', 'WebFront\Company\QualityControl\OrdersController@import');// 导入excel
 //        $api->post('company/orders/ajax_get_ids', 'WebFront\Company\QualityControl\OrdersController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+        $api->post('company/orders/ajax_invoices_save', 'WebFront\Company\QualityControl\OrdersController@ajax_invoices_save');// 操作(开电子发票--蓝票)
 
         // 收款订单财务流水
         $api->any('company/order_flow/ajax_alist', 'WebFront\Company\QualityControl\OrderFlowController@ajax_alist');//ajax获得列表数据
@@ -1025,6 +1026,17 @@ $api->version('v1', function ($api) {
 
         $api->post('company/invoice_buyer/import', 'WebFront\Company\QualityControl\InvoiceBuyerController@import');// 导入excel
         $api->post('company/invoice_buyer/ajax_get_ids', 'WebFront\Company\QualityControl\InvoiceBuyerController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        // 发票主表
+        $api->any('company/invoices/ajax_alist', 'WebFront\Company\QualityControl\InvoicesController@ajax_alist');//ajax获得列表数据
+        $api->post('company/invoices/ajax_del', 'WebFront\Company\QualityControl\InvoicesController@ajax_del');// 删除
+        $api->post('company/invoices/ajax_save', 'WebFront\Company\QualityControl\InvoicesController@ajax_save');// 新加/修改
+        $api->post('company/invoices/ajax_get_child', 'WebFront\Company\QualityControl\InvoicesController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('company/invoices/ajax_get_areachild', 'WebFront\Company\QualityControl\InvoicesController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('company/invoices/ajax_import_staff','WebFront\Company\QualityControl\InvoicesController@ajax_import'); // 导入员工
+
+        $api->post('company/invoices/import', 'WebFront\Company\QualityControl\InvoicesController@import');// 导入excel
+        $api->post('company/invoices/ajax_get_ids', 'WebFront\Company\QualityControl\InvoicesController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
         // 用户中心 user
         // 验证码 -- ok

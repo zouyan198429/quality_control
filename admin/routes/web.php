@@ -787,6 +787,7 @@ Route::get('company/orders/info/{id}', 'WebFront\Company\QualityControl\OrdersCo
 // Route::get('company/orders/select', 'WebFront\Company\QualityControl\OrdersController@select');// 选择-弹窗
 Route::get('company/orders/export', 'WebFront\Company\QualityControl\OrdersController@export');// 导出
 // Route::get('company/orders/import_template', 'WebFront\Company\QualityControl\OrdersController@import_template');// 导入模版
+Route::get('company/orders/invoices', 'WebFront\Company\QualityControl\OrdersController@invoices');// 电子发票
 
 // 收款订单财务流水
 Route::get('company/order_flow', 'WebFront\Company\QualityControl\OrderFlowController@index');// 列表
@@ -812,6 +813,13 @@ Route::get('company/invoice_buyer/info/{id}', 'WebFront\Company\QualityControl\I
 Route::get('company/invoice_buyer/export', 'WebFront\Company\QualityControl\InvoiceBuyerController@export');// 导出
 Route::get('company/invoice_buyer/import_template', 'WebFront\Company\QualityControl\InvoiceBuyerController@import_template');// 导入模版
 
+// 发票主表
+Route::get('company/invoices', 'WebFront\Company\QualityControl\InvoicesController@index');// 列表
+Route::get('company/invoices/add/{id}', 'WebFront\Company\QualityControl\InvoicesController@add');// 添加
+Route::get('company/invoices/info/{id}', 'WebFront\Company\QualityControl\InvoicesController@info');// 查看-详情
+// Route::get('company/invoices/select', 'WebFront\Company\QualityControl\InvoicesController@select');// 选择-弹窗
+Route::get('company/invoices/export', 'WebFront\Company\QualityControl\InvoicesController@export');// 导出
+Route::get('company/invoices/import_template', 'WebFront\Company\QualityControl\InvoicesController@import_template');// 导入模版
 
 // 用户中心 user
 Route::get('user/login', 'WebFront\User\QualityControl\IndexController@login');// login.html 登录
