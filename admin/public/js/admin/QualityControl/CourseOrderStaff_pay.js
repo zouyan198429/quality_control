@@ -61,7 +61,7 @@ var otheraction = {
             console.log(weburl);
             var tishi = '缴费';//"查看供应商";
             console.log('weburl', weburl);
-            layeriframe(weburl,tishi,400,400,0);
+            layeriframe(weburl,tishi,400,450,0);
 
             layer.close(index_query);
         }, function(){

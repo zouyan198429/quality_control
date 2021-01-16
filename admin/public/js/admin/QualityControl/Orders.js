@@ -345,11 +345,11 @@ function addCompany(company_id, company_name){
     document.write("                    <i class=\"ace-icon  fa fa-eye  bigger-60\"> 查看电子发票<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
-    document.write("                <%if( item.invoice_status == 4 ){%>");
-    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.invoiceByIds(this,<%=item.id%>)\">");
-    document.write("                    <i class=\"ace-icon  fa fa-trash-o bigger-60\"> 发票全额冲红<\/i>");
-    document.write("                <\/a>");
-    document.write("                <%}%>");
+    // document.write("                <%if( item.invoice_status == 4 ){%>");
+    // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.invoiceByIds(this,<%=item.id%>)\">");
+    // document.write("                    <i class=\"ace-icon  fa fa-trash-o bigger-60\"> 发票全额冲红<\/i>");
+    // document.write("                <\/a>");
+    // document.write("                <%}%>");
     // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.iframeModify(<%=item.id%>)\">");
     // document.write("                    <i class=\"ace-icon fa fa-pencil bigger-60\"> 编辑<\/i>");
     // document.write("                <\/a>");

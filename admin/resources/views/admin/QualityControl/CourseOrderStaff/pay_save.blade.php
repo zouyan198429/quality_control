@@ -52,7 +52,7 @@
                         请扫条码：
                         <input type="text" name="auth_code" value="" placeholder="" style="width: 200px; ">
                     </div>
-                    <button class="layui-btn layui-btn-sm layui-btn-normal layui-btn-radius"  id="submitBtn" >确认收款</button>
+                    <button class="layui-btn layui-btn-sm layui-btn-normal layui-btn-radius"  id="submitBtn"  style="display: none;">确认收款</button>
                     <hr/>
                     收款帐号：{{ $pay_company_name ?? '' }}<br/>
                     收款方式：{{ $method_info['pay_name'] ?? '' }}<hr/>
@@ -109,7 +109,7 @@
 <!-- zui js -->
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
 
-<script src="{{ asset('/js/admin/QualityControl/CourseOrderStaff_pay_save.js') }}?69"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/CourseOrderStaff_pay_save.js') }}?70"  type="text/javascript"></script>
 @component('component.upfileincludejsmany')
 @endcomponent
 </body>

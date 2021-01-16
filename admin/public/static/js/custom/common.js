@@ -561,9 +561,9 @@ function btn_go(objThis, pageType){
 }
 
 //多少秒后关闭弹窗---间隔一定的时间循环执行一个方法或函数
-//sec_num 秒数-总共执行多少秒 ； 0 -没有限止
+//sec_num 秒数-总共执行多少秒[次] ； 0 -没有限止
 // each_sec_num 多少时间执行一次 毫秒--默认 1000[1秒]
-// loopFun 每次循环要执行的方法
+// loopFun 每次循环要执行的方法 ；如果 有ajax,请用同步的
 //        参数
 //            intervalId setInterval执行的id
 //            close_loop 对象 有 is_close 属性【可控制开关】 ：是否关闭循环 true：关闭 ;false不关闭
@@ -607,7 +607,7 @@ function loopDoingFun(sec_num, each_sec_num, loopFun, secFun, secFun_num){
     }
     each_sec_num = each_sec_num || 1000;
     secFun_num = secFun_num || 1000;
-    var close_loop = { is_close: false};//是否关闭循环 true：关闭 ;false不关闭
+    var close_loop = { is_close: false, is_doing: false};//is_close :是否关闭循环 true：关闭 ;false不关闭; is_doing :方法是否正在执行中 true:执行中，false;执行完毕
     var autoLoopDoFunObj = new Object();
     var sec_i = 0;// 执行次数
     autoLoopDoFunObj.eachSecFun = function(){// 每一分钟要执行的方法
@@ -615,17 +615,23 @@ function loopDoingFun(sec_num, each_sec_num, loopFun, secFun, secFun_num){
             clearInterval(intervalLoopId);
         }
         // 执行方法
-        sec_i += 1;// 执行次数
-        if(close_loop.is_close === false){
-            secFun && secFun(intervalLoopId, close_loop, do_sec_num - 1, sec_i);
-        }
-        if(sec_num > 0 && do_sec_num > 1){//是数字且大于0
-            do_sec_num--;
-        }else{//关闭弹窗
-            if(sec_num > 0){
-                close_loop.is_close = true;
-                clearInterval(intervalLoopId);
+        if(close_loop.is_doing !== true){// 如果 前一个还没有执行完，则自动跳过【不执行此次】
+            close_loop.is_doing = true;// 标记执行中
+            sec_i += 1;// 执行次数
+            if(close_loop.is_close === false){
+                secFun && secFun(intervalLoopId, close_loop, do_sec_num - 1, sec_i);// 如果 有ajax,请用同步的
             }
+
+            if(sec_num > 0 && do_sec_num > 1){//是数字且大于0
+                do_sec_num--;
+            }else{//关闭弹窗
+                if(sec_num > 0){
+                    close_loop.is_close = true;
+                    clearInterval(intervalLoopId);
+                }
+            }
+
+            close_loop.is_doing = false;// 标记执行完毕一个
         }
     };
 

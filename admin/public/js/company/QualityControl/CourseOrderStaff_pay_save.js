@@ -108,13 +108,17 @@ function initLoad() {
     $('.count_down_num').html(WAIT_SECOND_NUM);// 显示扫码支付倒计时的秒数
     if(pay_method == 2 || pay_method == 4){
         $('#submitBtn').html('显示付款码');
+        $('#submitBtn').show();
         // 用扫码枪扫用户的收款码的情况
     }else if(pay_method == 16 || pay_method == 64){
         $('.auth_code_block').show();
         $('input[name=auth_code]').select();// 实收金额自动选中
         $('input[name=auth_code]').focus();// 实收金额自动获得焦点
         $('#submitBtn').hide();
+    }else{
+        $('#submitBtn').show();
     }
+
 
 }
 //业务逻辑部分
@@ -264,7 +268,7 @@ var paySuccessFun = function (ret, paramObj) {
 var payFailFun = function payFail(ret, paramObj) {
     var close_loop = getAttrVal(paramObj, 'close_loop', true, {});
     // 有错误时，先关闭自动执行代码
-    console.log('==支付成功==', close_loop);
+    console.log('==支付错误==', close_loop);
     close_loop.is_close = true; // -- 一般用这个控制开关
 
     // 弹出错误提示

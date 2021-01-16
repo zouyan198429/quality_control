@@ -6,7 +6,7 @@ var IS_FRAME_PAGE = isIframePage();// 是否iframe弹出层；true: 是； false
 //获取当前窗口索引
 var PARENT_LAYER_INDEX = getParentLayerIndex();
 //让层自适应iframe
-// operateBathLayuiIframeSize(PARENT_LAYER_INDEX, [1], 500);// 最大化当前弹窗[layui弹窗时]
+operateBathLayuiIframeSize(PARENT_LAYER_INDEX, [1], 500);// 最大化当前弹窗[layui弹窗时]
 //关闭iframe
 $(document).on("click",".closeIframe",function(){
     iframeclose(PARENT_LAYER_INDEX);
@@ -61,7 +61,7 @@ var otheraction = {
             console.log(weburl);
             var tishi = '缴费';//"查看供应商";
             console.log('weburl', weburl);
-            layeriframe(weburl,tishi,400,400,0);
+            layeriframe(weburl,tishi,400,450,0);
 
             layer.close(index_query);
         }, function(){

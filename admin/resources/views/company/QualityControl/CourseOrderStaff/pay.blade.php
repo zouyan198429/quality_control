@@ -144,6 +144,6 @@
 
     var PAY_SAVE_URL = "{{url('company/course_order_staff/pay_save')}}";// 收款页面
 </script>
-<script src="{{ asset('/js/company/QualityControl/CourseOrderStaff_pay.js') }}?11"  type="text/javascript"></script>
+<script src="{{ asset('/js/company/QualityControl/CourseOrderStaff_pay.js') }}?13"  type="text/javascript"></script>
 </body>
 </html>

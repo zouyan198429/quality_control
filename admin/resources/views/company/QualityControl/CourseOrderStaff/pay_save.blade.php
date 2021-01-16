@@ -45,17 +45,21 @@
                     <input type="hidden" name="change_amount" value="0"/>{{--找零金额--}}
                     共{{ count($course_order_staff) }}人；
                     总计：￥{{ $totalPrice ?? '' }}元；<hr/>
+                    <span style="display: none;">
                     实收<input type="text" name="payment_amount" value="{{ $totalPrice ?? '' }}" placeholder="请输入实收金额" style="width: 80px;" @if (isset($pay_method) && $pay_method != 1 )  readonly="true"   @endif  onkeyup="numxs(this) " onafterpaste="numxs(this)" >元;
                     应找零<span style="color: red;"><strong class="change_amount">¥0</strong></span>元
+
+                    </span>
+
                     <div class="auth_code_block" style="display: none;">
 
                         请扫条码：
                         <input type="text" name="auth_code" value="" placeholder="" style="width: 200px; ">
                     </div>
-                    <button class="layui-btn layui-btn-sm layui-btn-normal layui-btn-radius"  id="submitBtn" >确认付款</button>
+                    <button class="layui-btn layui-btn-sm layui-btn-normal layui-btn-radius"  id="submitBtn" style="display: none;" >确认付款</button>
                     <hr/>
-                    收款帐号：{{ $pay_company_name ?? '' }}<br/>
-                    收款方式：{{ $method_info['pay_name'] ?? '' }}<hr/>
+{{--                    收款帐号：{{ $pay_company_name ?? '' }}<br/>--}}
+{{--                    收款方式：{{ $method_info['pay_name'] ?? '' }}<hr/>--}}
                     @if (isset($method_info['resource_list']) && !empty($method_info['resource_list']) )
                         收款图片：
                         @if (false)
@@ -78,7 +82,7 @@
                             <hr/>
                         </div>
                     @endif
-                    付款说明：<br/>{!!   $method_info['pay_remarks'] ?? '' !!}<hr/>
+{{--                    付款说明：<br/>{!!   $method_info['pay_remarks'] ?? '' !!}<hr/>--}}
                 </div>
             </form>
     @endforeach
@@ -109,7 +113,7 @@
 <!-- zui js -->
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
 
-<script src="{{ asset('/js/company/QualityControl/CourseOrderStaff_pay_save.js') }}?70"  type="text/javascript"></script>
+<script src="{{ asset('/js/company/QualityControl/CourseOrderStaff_pay_save.js') }}?75"  type="text/javascript"></script>
 @component('component.upfileincludejsmany')
 @endcomponent
 </body>

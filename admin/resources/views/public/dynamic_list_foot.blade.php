@@ -61,7 +61,7 @@
     {{--1，引入第三方的js库, math.js，--}}
     <script src="{{asset('static/js/math/8.1.0/math.min.js')}}"></script>
     <!-- 公共方法-->
-    <script src="{{ asset('/static/js/custom/common.js')}}?7"></script>
+    <script src="{{ asset('/static/js/custom/common.js')}}?8"></script>
     <!-- ajax翻页方法-->
     <script src="{{ asset('/static/js/custom/ajaxpage.js') }}"></script>
     <!-- 新加入 end-->
