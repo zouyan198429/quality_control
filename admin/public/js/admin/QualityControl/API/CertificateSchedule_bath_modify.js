@@ -187,9 +187,16 @@ function ajax_save(id) {
                     shade: 0.3,
                     time: 3000 //2秒关闭（如果不配置，默认是3秒）
                 }, function(){
-                    var reset_total = true; // 是否重新从数据库获取总页数 true:重新获取,false不重新获取
-                    if(id > 0) reset_total = false;
-                    parent_reset_list_iframe_close(reset_total);// 刷新并关闭
+                    // hidden_option 8192:调用父窗品的方法：[public/js目录下的] 项目目录+数据功能目录+当前文件名称 【有_线，则去掉】
+                    var hidden_option = $('input[name=hidden_option]').val() || 0;
+                    if( (hidden_option & 8192) != 8192){
+                        var reset_total = true; // 是否重新从数据库获取总页数 true:重新获取,false不重新获取
+                        if(id > 0) reset_total = false;
+                        parent_reset_list_iframe_close(reset_total);// 刷新并关闭
+                    }else{
+                        eval( 'window.parent.' + PARENT_BUSINESS_FUN_NAME + '(paramsToObj(decodeURIComponent(data), 1), ret.result, 2)');
+                        parent_reset_list();// 关闭弹窗
+                    }
                     //do something
                 });
                 // var supplier_id = ret.result['supplier_id'];

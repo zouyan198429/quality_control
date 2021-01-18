@@ -93,6 +93,11 @@ app_secret:<input type="text"   name="app_secret" value="" placeholder="请输�
 @include('public.dynamic_list_foot')
 
 <script type="text/javascript">
+
+    // hidden_option 8192:调用父窗品的方法：[public/js目录下的] 项目目录+数据功能目录+当前文件名称 【有_线，则去掉】
+    // 其它地方弹出此窗，保存完成时调用的父窗口方法名称 参数(obj:当前表单值对像, result:保存接口返回的结果，operateNum:自己定义的一个编号【页面有多处用到时用--通知父窗口调用位置】)
+    var PARENT_BUSINESS_FUN_NAME = "adminQualityControlrrrddddedit";
+
     var SAVE_URL = "{{ url('api/market/certificate_schedule/bath_save') }}";// "{ { url('api/admin/API/certificate_schedule/ajax_bath_save') }}";// ajax保存记录地址
     var LIST_URL = "{{url('admin/API/certificate_schedule')}}";//保存成功后跳转到的地址
 
