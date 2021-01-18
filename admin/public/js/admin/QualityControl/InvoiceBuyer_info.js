@@ -9,7 +9,7 @@ var PARENT_LAYER_INDEX = getParentLayerIndex();
 // operateBathLayuiIframeSize(PARENT_LAYER_INDEX, [1], 500);// 最大化当前弹窗[layui弹窗时]
 //关闭iframe
 $(document).on("click",".closeIframe",function(){
-    iframeclose(PARENT_LAYER_INDEX,0 , '', 2);
+    iframeclose(PARENT_LAYER_INDEX, 0, '', 2);
 });
 //刷新父窗口列表
 // reset_total 是否重新从数据库获取总页数 true:重新获取,false不重新获取

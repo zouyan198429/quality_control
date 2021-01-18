@@ -160,6 +160,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/InvoiceTemplate.js') }}?2"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/InvoiceTemplate.js') }}?3"  type="text/javascript"></script>
 </body>
 </html>

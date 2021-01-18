@@ -200,17 +200,11 @@ class StaffDBBusiness extends BasePublicDBBusiness
 
 
 //            // 省id历史
-//            if( isset($saveData['province_id']) && $saveData['province_id'] > 0 ){
-//                $saveData['province_id_history'] = CityDBBusiness::getIdHistory($saveData['province_id']);
-//            }
+//            CityDBBusiness::appendFieldIdHistory($saveData, 'province_id', 'province_id_history');
 //            // 市id历史
-//            if( isset($saveData['city_id']) && $saveData['city_id'] > 0 ){
-//                $saveData['city_id_history'] = CityDBBusiness::getIdHistory($saveData['city_id']);
-//            }
+//            CityDBBusiness::appendFieldIdHistory($saveData, 'city_id', 'city_id_history');
 //            // 区县id历史
-//            if( isset($saveData['area_id']) && $saveData['area_id'] > 0 ){
-//                $saveData['area_id_history'] = CityDBBusiness::getIdHistory($saveData['area_id']);
-//            }
+//            CityDBBusiness::appendFieldIdHistory($saveData, 'area_id', 'area_id_history');
 
             $isModify = false;
             $operate_staff_id_history = config('public.operate_staff_id_history', 0);// 0;--写上，不然后面要去取，但现在的系统不用历史表

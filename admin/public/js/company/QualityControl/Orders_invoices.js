@@ -83,7 +83,7 @@ function companyQualityControlInvoiceBuyeredit(obj, result, operateNum){
         default://其它
             if(obj.open_status == 1){
                 var invoice_buyer_id = result;
-                var html = '<label id="invoice_buyer_' + invoice_buyer_id + '"><input type="radio"  name="invoice_buyer_id"  value="' + invoice_buyer_id + '"   />' + obj.gmf_mc + '</label>';
+                var html = '<label id="invoice_buyer_' + invoice_buyer_id + '"><input type="radio"  name="invoice_buyer_id"  value="' + invoice_buyer_id + '"   />' + obj.gmf_mc + '<a href="javascript:void(0);" onclick="otheraction.showInvoice(' + invoice_buyer_id + ')">查看</a></label>';
                 $('#invoice_buyer_list').append(html);
             }
             break;

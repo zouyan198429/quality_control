@@ -188,7 +188,7 @@ function addCompany(company_id, company_name){
     document.write("            <\/td>");
     // document.write("            <td><%=item.id%><\/td>");
     document.write("            <td><%=item.invoice_seller_history.xsf_mc%><hr/><%=item.invoice_seller_history.xsf_nsrsbh%><hr/><%=item.fpqqlsh%><\/td>");
-    document.write("            <td><%=item.invoice_buyer_history.gmf_mc%><hr/><%=item.invoice_buyer_history.gmf_nsrsbh%><\/td>");
+    document.write("            <td><%=item.invoice_buyer_history.gmf_mc%><hr/><%=item.invoice_buyer_history.gmf_nsrsbh%><hr/><%=item.kplx_text%><\/td>");
     document.write("            <td><%=item.order_num%><hr/><%=item.invoice_service_text%><\/td>");
     document.write("            <td><%=item.invoice_status_text%><hr/><%=item.upload_status_text%><\/td>");
     document.write("            <td><%=item.yfp_hm%><hr/><%=item.fp_hm%><\/td>");

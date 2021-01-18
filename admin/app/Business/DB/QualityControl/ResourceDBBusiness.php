@@ -74,10 +74,8 @@ class ResourceDBBusiness extends BasePublicDBBusiness
 //        }
 
             // 根据类型自定义id,获得类型自定义历史id
-            $type_self_id = $saveData['type_self_id'] ?? 0;
-            if(is_numeric($type_self_id) && $type_self_id > 0 ){
-                $saveData['type_self_id_history'] = ResourceTypeSelfDBBusiness::getIdHistory($type_self_id);
-            }
+            ResourceTypeSelfDBBusiness::appendFieldIdHistory($saveData, 'type_self_id', 'type_self_id_history');
+
 
             $isModify = false;
             $operate_staff_id_history = config('public.operate_staff_id_history', 0);// 0;--写上，不然后面要去取，但现在的系统不用历史表

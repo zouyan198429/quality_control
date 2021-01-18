@@ -33,7 +33,7 @@ function parent_reset_list(){
 
 //业务逻辑部分
 var otheraction = {
-    addBuyer:function(obj){// 增加企业抬头
+    addTemplate:function(obj){// 增加企业抬头
         var recordObj = $(obj);
         // 所属企业
         var company_id = $('input[name=company_id]').val();
@@ -43,26 +43,26 @@ var otheraction = {
             return false;
         }
         var hidden_option = 1 | 8192;
-        var url = ADD_INVOICE_BUYER_URL + '?hidden_option=' + hidden_option + '&company_id=' + company_id;
+        var url = ADD_INVOICE_TEMPLATE_URL + '?hidden_option=' + hidden_option;//  + '&company_id=' + company_id;
         consoleLogs([url]);
-        var tishi = "发票抬头";
+        var tishi = "开票模板";
         layeriframe(url,tishi,750,450,0);
         // commonaction.browse_file(url, tishi,750,450, 0);
         return false;
     },
-    showInvoice : function(id){// 弹窗显示
+    showInvoiceTemplate : function(id){// 弹窗显示
         //获得表单各name的值
         var data = {};// get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
-        console.log(INFO_INVOICE_BUYER_URL);
+        console.log(INFO_INVOICE_TEMPLATE_URL);
         console.log(data);
         var url_params = get_url_param(data);// parent.get_url_param(data);
-        var weburl = INFO_INVOICE_BUYER_URL + id + '?' + url_params;
+        var weburl = INFO_INVOICE_TEMPLATE_URL + id + '?' + url_params;
         console.log(weburl);
-        // go(INFO_INVOICE_BUYER_URL + id);
+        // go(INFO_INVOICE_TEMPLATE_URL + id);
         // location.href='/pms/Supplier/show?supplier_id='+id;
         // var weburl = SHOW_URL + id;
         // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
-        var tishi = "发票抬头";// SHOW_URL_TITLE;//"查看供应商";
+        var tishi = "开票模板";// SHOW_URL_TITLE;//"查看供应商";
         layeriframe(weburl,tishi,750,450,0,'',null,2);
         return false;
     }
@@ -72,7 +72,7 @@ var otheraction = {
 // obj:当前表单值对像
 // result:保存接口返回的结果
 // operateNum:自己定义的一个编号【页面有多处用到时用--通知父窗口调用位置】2[默认]：新加保存成功时
-function adminQualityControlInvoiceBuyeredit(obj, result, operateNum){
+function adminQualityControlInvoiceTemplateedit(obj, result, operateNum){
     operateNum = operateNum || 2;
     consoleLogs(['obj:', obj, 'result:', result, 'operateNum:', operateNum]);
     switch(operateNum){
@@ -82,9 +82,9 @@ function adminQualityControlInvoiceBuyeredit(obj, result, operateNum){
             // break;
         default://其它
             if(obj.open_status == 1){
-                var invoice_buyer_id = result;
-                var html = '<label id="invoice_buyer_' + invoice_buyer_id + '"><input type="radio"  name="invoice_buyer_id"  value="' + invoice_buyer_id + '"   />' + obj.gmf_mc + '<a href="javascript:void(0);" onclick="otheraction.showInvoice(' + invoice_buyer_id + ')">查看</a></label>';
-                $('#invoice_buyer_list').append(html);
+                var invoice_template_id = result;
+                var html = '<label id="invoice_template_' + invoice_template_id + '"><input type="radio"  name="invoice_template_id"  value="' + invoice_template_id + '"   />' + obj.template_name + '<a href="javascript:void(0);" onclick="otheraction.showInvoiceTemplate(' + invoice_template_id + ')">查看</a></label>';
+                $('#invoice_template_list').append(html);
             }
             break;
     }
@@ -153,10 +153,10 @@ function ajax_form(){
         return false;
     }
 
-    var invoice_buyer_id = $('input[name=invoice_buyer_id]:checked').val() || '';
-    var judge_seled = judge_validate(1,'发票抬头',invoice_buyer_id,true,'positive_int',"","");
+    var invoice_template_id = $('input[name=invoice_template_id]:checked').val() || '';
+    var judge_seled = judge_validate(1,'开票模版',invoice_template_id,true,'positive_int',"","");
     if(judge_seled != ''){
-        layer_alert("请选择发票抬头",3,0);
+        layer_alert("请选择开票模版",3,0);
         //err_alert('<font color="#000000">' + judge_seled + '</font>');
         return false;
     }

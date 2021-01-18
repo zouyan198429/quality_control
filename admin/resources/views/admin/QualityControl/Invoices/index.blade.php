@@ -141,7 +141,7 @@
       </th>
 {{--      <th>ID</th>--}}
       <th>销售方名称<hr/>销售方纳税人识别号<hr/>发票请求流水号</th>
-      <th>购买方名称<hr>购买方纳税人识别号</th>
+      <th>购买方名称<hr>购买方纳税人识别号<hr/>开票类型</th>
         <th>业务单据号<hr>开票服务商</th>
         <th>开票状态<hr>数据状态</th>
         <th>原发票号码<hr>发票号码</th>
@@ -208,7 +208,7 @@
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
 
 <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/Invoices.js') }}?22"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/Invoices.js') }}?23"  type="text/javascript"></script>
 @component('component.upfileincludejsmany')
 @endcomponent
 </body>

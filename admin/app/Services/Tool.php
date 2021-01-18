@@ -1183,7 +1183,97 @@ class Tool
         return self::delRedis($redisKey); // 删除redis中的值
     }
 
+    /**
+     * 判断一个值的类型是否正确
+     *
+     * @param mixed $val 需要判断的值
+     * @param int $judgeNum 要判断的类型 2为数字 ；4* > 某值 ；8* == 某值 ； 16* === 某值； 32* < 某值; 64* >= 某值
+     *                     128* <= 某值  ；256* * & $compareVal =  $compareVal  ； 512 为is_bool ； 1024 为is_string
+     *                      2048 为is_array  ；4096 为is_null  ；  8192 为is_object
+     * @param mixed $compareVal 要比较的值
+     * @return boolean 返回 true:成功通过 ，false:有问题
+     */
+    public static function judgeVal($val, $judgeNum = 0, $compareVal = 0){
+        // 2为数字
+        if(($judgeNum & 2) == 2 && ( !( is_numeric($val))  ))  return false;
+
+        // 4 > 某值
+        if(($judgeNum & 4) == 4 && (  !( $val > $compareVal))) return false;
+
+        // 8 == 某值
+        if(($judgeNum & 8) == 8 && (  !( $val == $compareVal))) return false;
+
+        // 16 === 某值
+        if(($judgeNum & 16) == 16 && (  !( $val === $compareVal))) return false;
+
+        // 32 < 某值
+        if(($judgeNum & 32) == 32 && (  !( $val < $compareVal))) return false;
+
+        // 64 >= 某值
+        if(($judgeNum & 64) == 64 && (  !( $val >= $compareVal))) return false;
+
+        // 128 <= 某值
+        if(($judgeNum & 128) == 128 && (  !( $val <= $compareVal))) return false;
+
+        // 256 * & $compareVal =  $compareVal
+        if(($judgeNum & 256) == 256 && (  !( ($val & $compareVal) == $compareVal))) return false;
+
+        // 512 为is_bool
+        if(($judgeNum & 512) == 512 && ( !( is_bool($val))  ))  return false;
+
+        // 1024 为is_string
+        if(($judgeNum & 1024) == 1024 && ( !( is_string($val))  ))  return false;
+
+        // 2048 为is_array
+        if(($judgeNum & 2048) == 2048 && ( !( is_array($val))  ))  return false;
+
+        // 4096 为is_null
+        if(($judgeNum & 4096) == 4096 && ( !( is_null($val))  ))  return false;
+
+        // 8192 为is_object
+        if(($judgeNum & 8192) == 8192 && ( !( is_object($val))  ))  return false;
+        return true;
+    }
+
     // 数组操作
+
+    /**
+     * 判断数组值的类型是否正确
+     *
+     * @param array $data_list 需要判断的数组 一维或二维数组
+     * @param array $judgeFieldArr 判断的下标及值类型 一维数组 ['下标字段' => [ 'judgeNum' => 要判断的类型, 'compareVal' => 要比较的值]] 或 ['下标字段' => 要判断的类型]  ； compareVal ：默认 0
+     *                     1:判断是否存在下标 ;2为数字 ；4* > 某值 ；8* == 某值 ； 16* === 某值； 32* < 某值; 64* >= 某值
+     *                     128* <= 某值  ；256* * & $compareVal =  $compareVal  ； 512 为is_bool ； 1024 为is_string
+     *                      2048 为is_array  ；4096 为is_null  ；  8192 为is_object
+     * @param mixed $compareVal 要比较的值
+     * @return boolean 返回 true:成功通过 ，false:有问题
+     */
+    public static function judgeArrVal(&$data_list, $judgeFieldArr = []){
+        $result = true;
+        // 如果是一维数组,则转为二维数组
+        $isMulti = Tool::isMultiArr($data_list, true);
+        foreach($data_list as $v){
+            foreach($judgeFieldArr as $field => $f_v){
+                if(is_array($f_v)){
+                    $judgeNum = $f_v['judgeNum'] ?? 0;
+                    $compareVal = $f_v['compareVal'] ?? 0;
+                }else{
+                    $judgeNum = $f_v;
+                    $compareVal = 0;
+                }
+                if(($judgeNum & 1) == 1 && ( !( isset($v[$field]))  )){
+                    $result = false;
+                    break 2;
+                }
+                $val = $v[$field] ?? '';
+                $result = static::judgeVal($val, $judgeNum, $compareVal);
+                if(!$result) break 2;
+            }
+        }
+        if(!$isMulti) $data_list = $data_list[0] ?? [];
+        return $result;
+    }
+
     /**
      * 获得一维数组中的某个下标值【如果存在】及这个下标值是否存在
      *
@@ -4840,4 +4930,5 @@ class Tool
         $bitVal = (($bitVal & $removeBitVal ) == $removeBitVal) ? ($bitVal ^ $removeBitVal) : $bitVal;
         return $bitVal;
     }
+
 }

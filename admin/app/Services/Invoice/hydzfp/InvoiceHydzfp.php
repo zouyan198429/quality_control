@@ -214,6 +214,7 @@ class InvoiceHydzfp extends BaseInvoice
      *   开具红字发票
      *   只能开具在本系统中开具的蓝字发票对应的红字发票；
      *   电子发票的蓝字发票冲红，必须为整张发票全额冲红；系统自动将红字发票对应的蓝字发票全额冲红；
+     * @param  array $data 请求数据 一维数组
      * @param  string $openid 应用OPENID
      * @param  string  $app_secret 应用密匙
      * @param  int  $apiDataMode 业务请求数据的方式 0 使用配置文件配置的 [默认]；1：通用 ；2  base64数据
@@ -221,21 +222,21 @@ class InvoiceHydzfp extends BaseInvoice
      * @return array 一维数组
      *  ["expire_in" => 7200, 'access_token' => 'FfJPQjgxQGa2y0Snuuc4Q94iQpce3A6x']
      */
-    public static function ebiInvoiceHandleNewRedInvoice($openid, $app_secret, $apiDataMode = 0, $forceApi = false){
+    public static function ebiInvoiceHandleNewRedInvoice($data, $openid, $app_secret, $apiDataMode = 0, $forceApi = false){
         $companyConfig = static::$companyConfig;
-        $data = [
-            "data_resources" => "API",// 是	string	4	固定值 API
-            "nsrsbh" => $companyConfig['tax_num'],//"123123123",// 是	string	20	销货单位纳税人识别号
-            "skph" => "",// "123213123212",// 否	string	12	税控盘号（使用税控盒子必填，其他设备为空）
-            "order_num" => "1120521299480002",// "order_num_147486801",// 是	string	200	业务单据号；必须是唯一的
-            "yfp_dm" => "050003521270",// "150003529999",// 是	string	12	发票代码
-            "yfp_hm" => "69023540",// "65942490",// 是	string	8	发票号码
-            "bz" =>  "行行行存储",// 否	string	100	发票备注
-            "kpr" => "开票人1",// 否	string	8	开票人
-            "skr" => "收款人2",// 否	string	8	收款人
-            "fhr" => "复核人3",// 否	string	8	复核人
-            "kpzdbs" => ""// 否	string	20	已经失效，不再支持
-        ];
+//        $data = [
+//            "data_resources" => "API",// 是	string	4	固定值 API
+//            "nsrsbh" => $companyConfig['tax_num'],//"123123123",// 是	string	20	销货单位纳税人识别号
+//            "skph" => "",// "123213123212",// 否	string	12	税控盘号（使用税控盒子必填，其他设备为空）
+//            "order_num" => "1120521299480002",// "order_num_147486801",// 是	string	200	业务单据号；必须是唯一的
+//            "yfp_dm" => "050003521270",// "150003529999",// 是	string	12	发票代码
+//            "yfp_hm" => "69023540",// "65942490",// 是	string	8	发票号码
+//            "bz" =>  "行行行存储",// 否	string	100	发票备注
+//            "kpr" => "开票人1",// 否	string	8	开票人
+//            "skr" => "收款人2",// 否	string	8	收款人
+//            "fhr" => "复核人3",// 否	string	8	复核人
+//            "kpzdbs" => ""// 否	string	20	已经失效，不再支持
+//        ];
         $result = APIHYDZFPRequest::getAPI($openid, $app_secret, 'ebi_InvoiceHandle_newRedInvoice', $data, $apiDataMode, $forceApi);
         /**
          *

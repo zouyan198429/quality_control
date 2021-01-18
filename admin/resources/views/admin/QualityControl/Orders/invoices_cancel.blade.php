@@ -53,17 +53,47 @@
 
                 </td>
             </tr>
+            <tr>
+                <th>发票号码<span class="must">*</span></th>
+                <td>
+                    {{ $invoice_info['fp_hm'] ?? '' }}
+                </td>
+            </tr>
+            <tr>
+                <th>发票代码<span class="must">*</span></th>
+                <td>
+                    {{ $invoice_info['fp_dm'] ?? '' }}
+                </td>
+            </tr>
+            <tr>
+                <th>价税合计(含税)<span class="must">*</span></th>
+                <td>
+                    ￥{{ $invoice_info['jshj'] ?? '' }}
+                </td>
+            </tr>
+            <tr>
+                <th>合计金额(不含税)<span class="must">*</span></th>
+                <td>
+                    ￥{{ $invoice_info['hjje'] ?? '' }}
+                </td>
+            </tr>
+            <tr>
+                <th>合计税额【税总额】<span class="must">*</span></th>
+                <td>
+                    ￥{{ $invoice_info['hjse'] ?? '' }}
+                </td>
+            </tr>
             <tr >
-                <th>发票抬头<span class="must"></span></th>
+                <th>开票模版<span class="must"></span></th>
                 <td>
                     <span>
-                        <button class="btn btn-danger  btn-xs ace-icon fa fa-plus-circle bigger-60"  onclick="otheraction.addBuyer(this)">新加抬头</button>
+                        <button class="btn btn-danger  btn-xs ace-icon fa fa-plus-circle bigger-60"  onclick="otheraction.addTemplate(this)">新加开票模版</button>
                     </span>
-                    <span id="invoice_buyer_list">
-                    @foreach ($invoice_buyer_kv as $k=>$txt)
-                            <label id="invoice_buyer_{{ $k }}">
-                                <input type="radio"  name="invoice_buyer_id"  value="{{ $k }}"  @if(isset($defaultInvoiceBuyer) && $defaultInvoiceBuyer == $k) checked="checked"  @endif />{{ $txt }}
-                                <a href="javascript:void(0);" onclick="otheraction.showInvoice({{ $k }})">查看</a>
+                    <span id="invoice_template_list">
+                    @foreach ($invoice_template_kv as $k=>$txt)
+                            <label id="invoice_template_{{ $k }}">
+                                <input type="radio"  name="invoice_template_id"  value="{{ $k }}"  @if(isset($defaultInvoiceTemplate) && $defaultInvoiceTemplate == $k) checked="checked"  @endif />{{ $txt }}
+                                <a href="javascript:void(0);" onclick="otheraction.showInvoiceTemplate({{ $k }})">查看</a>
                             </label>
                     @endforeach
                     </span>
@@ -71,7 +101,7 @@
             </tr>
             <tr>
                 <th> </th>
-                <td><button class="btn btn-l wnormal"  id="submitBtn" >开电子发票</button></td>
+                <td><button class="btn btn-l wnormal"  id="submitBtn" >全额冲红电子发票</button></td>
             </tr>
 
         </table>
@@ -83,12 +113,12 @@
 @include('public.dynamic_list_foot')
 
 <script type="text/javascript">
-    var SAVE_URL = "{{ url('api/admin/orders/ajax_invoices_save') }}";// ajax保存记录地址
+    var SAVE_URL = "{{ url('api/admin/orders/ajax_invoices_cancel_save') }}";// ajax保存记录地址
     var LIST_URL = "{{url('admin/orders')}}";//保存成功后跳转到的地址
 
-    var ADD_INVOICE_BUYER_URL = "{{ url('admin/invoice_buyer/add/0') }}"; //添加企业抬头url
-    var INFO_INVOICE_BUYER_URL = "{{ url('admin/invoice_buyer/info/') }}/"; //详情企业抬头url
+    var ADD_INVOICE_TEMPLATE_URL = "{{ url('admin/invoice_template/add/0') }}"; //添加开票模板url
+    var INFO_INVOICE_TEMPLATE_URL = "{{ url('admin/invoice_template/info/') }}/"; //详情开票模板url
 </script>
-<script src="{{ asset('/js/admin/QualityControl/Orders_invoices.js') }}?11"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/Orders_invoices_cancel.js') }}?4"  type="text/javascript"></script>
 </body>
 </html>

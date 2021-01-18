@@ -175,11 +175,12 @@
       var SURE_ORDER_URL  = "{{ url('api/admin/orders/ajax_sure_order') }}";//操作(确认)
       var FINISH_ORDER_URL  = "{{ url('api/admin/orders/ajax_finish_order') }}";//操作(完成)
       var INVOICE_URL  = "{{ url('admin/orders/invoices') }}";//操作(电子发票)
+      var INVOICE_CANCEL_URL  = "{{ url('admin/orders/invoices_cancel') }}";//操作(电子发票全额冲红)
 
       var INVOICE_SHOW_URL  = "{{ url('admin/invoices') }}";//操作(查看电子发票)
 
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/Orders.js') }}?26"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/Orders.js') }}?27"  type="text/javascript"></script>
 </body>
 </html>

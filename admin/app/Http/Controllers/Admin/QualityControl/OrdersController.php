@@ -215,6 +215,88 @@ class OrdersController extends BasicController
     }
 
     /**
+     * 电子发票全额冲红
+     *
+     * @param Request $request
+     * @param int $company_id
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function invoices_cancel(Request $request)
+    {
+        return $this->exeDoPublicFun($request, 0, 1,'admin.QualityControl.Orders.invoices_cancel', false
+            , '', [], function (&$reDataArr) use ($request){
+
+                $id = CommonRequest::get($request, 'id');
+                if(is_string($id)) $id = explode(',', $id);
+                if(!is_array($id)) $id = [];
+                if(empty($id)) throws('请选择要全额冲红的电子发票的订单');
+                $info = [
+                    'id'=> implode(',', $id),
+                    //   'department_id' => 0,
+                ];
+
+//                $course_id = CommonRequest::getInt($request, 'course_id');
+//                $class_id = CommonRequest::getInt($request, 'class_id');
+                $company_id = CommonRequest::getInt($request, 'company_id');// 报名用户所属的企业id
+
+                // 根据报名用户id,获得报名用户及支付信息
+                list($dataList, $company_id, $company_name) = CTAPIOrdersBusiness::getInvoiceByIds($request, $this, $id, $company_id, 2);
+
+                if(!is_numeric($company_id)  || $company_id <= 0){
+                    throws('参数【企业id】有误！');
+                }
+                $reDataArr['info'] = $info;
+                $reDataArr['data_list'] = $dataList;
+                $reDataArr['company_id'] = $company_id;
+                $reDataArr['company_name'] = $company_name;
+                $invoice_blue = $dataList[0]['invoice_blue'] ?? [];
+                $reDataArr['invoice_info'] = $invoice_blue;
+                // 获得开票模板KV值
+                $reDataArr['invoice_template_kv'] = CTAPIInvoiceTemplateBusiness::getListKV($request, $this, ['key' => 'id', 'val' => 'template_name'], [
+                    'sqlParams' => ['where' => [['open_status', 1]]]
+                ]);
+                $reDataArr['defaultInvoiceTemplate'] = $invoice_blue['invoice_template_id'] ?? -1;// 默认
+            });
+    }
+
+    /**
+     * ajax保存数据--开电子全额冲红发票--红票
+     *
+     * @param int $id
+     * @return Response
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_invoices_cancel_save(Request $request)
+    {
+//        $this->InitParams($request);
+
+        return $this->exeDoPublicFun($request, 0, 4,'', true
+            , '', [], function (&$reDataArr) use ($request){
+                // throws('正在调试开发中');
+
+                $id = CommonRequest::get($request, 'id');
+                if(is_string($id)) $id = explode(',', $id);
+                if(!is_array($id)) $id = [];
+                if(empty($id)) throws('请选择要开电子发票的订单');
+
+//                $course_id = CommonRequest::getInt($request, 'course_id');
+//                $class_id = CommonRequest::getInt($request, 'class_id');
+                $company_id = CommonRequest::getInt($request, 'company_id');// 报名用户所属的企业id
+                $invoice_template_id = CommonRequest::getInt($request, 'invoice_template_id');// 开票模版
+
+                // 根据报名用户id,获得报名用户及支付信息
+                list($dataList, $company_id, $company_name) = CTAPIOrdersBusiness::getInvoiceByIds($request, $this, $id, $company_id, 2);
+
+                if(!is_numeric($company_id)  || $company_id <= 0){
+                    throws('参数【企业id】有误！');
+                }
+                $resultDatas = CTAPIOrdersBusiness::operateInvoiceRedAjax($request, $this, $company_id, $id, $invoice_template_id);
+                return ajaxDataArr(1, $resultDatas, '');
+            });
+    }
+
+    /**
      * @OA\Get(
      *     path="/api/admin/orders/ajax_info",
      *     tags={"大后台-订单管理-收款订单"},

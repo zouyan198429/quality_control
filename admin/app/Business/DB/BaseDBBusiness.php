@@ -1247,6 +1247,49 @@ class BaseDBBusiness extends BaseBusiness
         return  $historyObj->id;
     }
 
+    /**
+     * 对数据加上对应的，历史id字段值：如果历史字段id值已存在，则不重新获得历史字段id值
+     *
+     * @param array $saveData 一维或二维数组
+     * @param string $fieldIdName 原字段id字段名称
+     * @param string $fieldIdHistoryNmae 字段历史id字段名称
+     * @return  mixed 返回   二维数组：['原字段id值' => '历史id值'] --- 新获取的，原有的历史id不加入;        一维数组 ：历史id值
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function appendFieldIdHistory(&$saveData, $fieldIdName, $fieldIdHistoryNmae){
+        // 如果是一维数组,则转为二维数组
+        $isMulti = Tool::isMultiArr($saveData, true);
+
+        $fieldIdHistoryArr = [];
+        foreach($saveData as $k => &$info){
+            $tem_id = $info[$fieldIdName] ?? 0;
+            // 有原id值，且无有效的原id历史值
+            if(Tool::judgeArrVal($info, [$fieldIdName => 1 | 2 | 4]) && !Tool::judgeArrVal($info, [$fieldIdHistoryNmae => 1 | 2 | 4])){
+                if(!isset($fieldIdHistoryArr[$tem_id])){
+                    $fieldIdHistory = static::getIdHistory($tem_id);
+                    $fieldIdHistoryArr[$tem_id] = $fieldIdHistory;
+                }else{
+                    $fieldIdHistory = $fieldIdHistoryArr[$tem_id];
+                }
+                $info[$fieldIdHistoryNmae] = $fieldIdHistory;
+            }else{
+                // 有原id值，且有效的原id历史值
+//                if(Tool::judgeArrVal($info, [$fieldIdName => 1 | 2 | 4]) && Tool::judgeArrVal($info, [$fieldIdHistoryNmae => 1 | 2 | 4])){
+//                    if(!isset($fieldIdHistoryArr[$tem_id])){
+//                        $fieldIdHistory = $info[$fieldIdHistoryNmae];
+//                        $fieldIdHistoryArr[$tem_id] = $fieldIdHistory;
+//                    }
+//                }
+            }
+        }
+
+        if(!$isMulti){// 一维数组
+            $saveData = $saveData[0] ?? [];
+            return $saveData[$fieldIdHistoryNmae] ?? 0;
+        }else{// 二维数组
+            return $fieldIdHistoryArr;
+        }
+    }
 
     /**
      * 对比主表和历史表是否相同，相同：不更新版本号，不同：版本号+1

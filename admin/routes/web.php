@@ -377,6 +377,7 @@ Route::get('admin/orders/info/{id}', 'Admin\QualityControl\OrdersController@info
 Route::get('admin/orders/export', 'Admin\QualityControl\OrdersController@export');// 导出
 // Route::get('admin/orders/import_template', 'Admin\QualityControl\OrdersController@import_template');// 导入模版
 Route::get('admin/orders/invoices', 'Admin\QualityControl\OrdersController@invoices');// 电子发票
+Route::get('admin/orders/invoices_cancel', 'Admin\QualityControl\OrdersController@invoices_cancel');// 电子发票全额冲红
 
 // 收款订单财务流水
 Route::get('admin/order_flow', 'Admin\QualityControl\OrderFlowController@index');// 列表
@@ -421,6 +422,7 @@ Route::get('admin/invoice_buyer/import_template', 'Admin\QualityControl\InvoiceB
 // 发票开票模板
 Route::get('admin/invoice_template', 'Admin\QualityControl\InvoiceTemplateController@index');// 列表
 Route::get('admin/invoice_template/add/{id}', 'Admin\QualityControl\InvoiceTemplateController@add');// 添加
+Route::get('admin/invoice_template/info/{id}', 'Admin\QualityControl\InvoiceTemplateController@info');// 查看-详情
 // Route::get('admin/invoice_template/select', 'Admin\QualityControl\InvoiceTemplateController@select');// 选择-弹窗
 Route::get('admin/invoice_template/export', 'Admin\QualityControl\InvoiceTemplateController@export');// 导出
 Route::get('admin/invoice_template/import_template', 'Admin\QualityControl\InvoiceTemplateController@import_template');// 导入模版
@@ -787,7 +789,8 @@ Route::get('company/orders/info/{id}', 'WebFront\Company\QualityControl\OrdersCo
 // Route::get('company/orders/select', 'WebFront\Company\QualityControl\OrdersController@select');// 选择-弹窗
 Route::get('company/orders/export', 'WebFront\Company\QualityControl\OrdersController@export');// 导出
 // Route::get('company/orders/import_template', 'WebFront\Company\QualityControl\OrdersController@import_template');// 导入模版
-Route::get('company/orders/invoices', 'WebFront\Company\QualityControl\OrdersController@invoices');// 电子发票
+Route::get('company/orders/invoices', 'WebFront\Company\QualityControl\OrdersController@invoices');// 开电子发票
+Route::get('company/orders/invoices_cancel', 'WebFront\Company\QualityControl\OrdersController@invoices_cancel');// 电子发票全额冲红
 
 // 收款订单财务流水
 Route::get('company/order_flow', 'WebFront\Company\QualityControl\OrderFlowController@index');// 列表

@@ -63,10 +63,7 @@ class InvoiceProjectDBBusiness extends BasePublicDBBusiness
             list($ownProperty, $temNeedStaffIdOrHistoryId) = array_values(static::getNeedStaffIdOrHistoryId());
 
             // 发票商品项目模板id
-            if(isset($saveData['invoice_project_template_id']) && is_numeric($saveData['invoice_project_template_id']) && $saveData['invoice_project_template_id'] > 0){
-                $tem_invoice_project_template_id = $saveData['invoice_project_template_id'];
-                $saveData['invoice_project_template_id_history'] = InvoiceProjectTemplateDBBusiness::getIdHistory($tem_invoice_project_template_id);
-            }
+            InvoiceProjectTemplateDBBusiness::appendFieldIdHistory($saveData, 'invoice_project_template_id', 'invoice_project_template_id_history');
 
             if($id > 0){
                 $isModify = true;

@@ -44,7 +44,7 @@
                                <td>{{ $order_info['order_no'] ?? '' }}</td>
                                <td>{{ $order_info['order_type_text'] ?? '' }}</td>
                                <td>{{ $order_info['total_amount'] ?? '' }}</td>
-                               <td>{{ $order_info['check_price'] ?? '' }}</td>
+                               <td>￥{{ $order_info['check_price'] ?? '' }}</td>
                            </tr>
                         @endforeach
                         </tbody>
@@ -61,7 +61,10 @@
                     </span>
                     <span id="invoice_buyer_list">
                     @foreach ($invoice_buyer_kv as $k=>$txt)
-                            <label id="invoice_buyer_{{ $k }}"><input type="radio"  name="invoice_buyer_id"  value="{{ $k }}"  @if(isset($defaultInvoiceBuyer) && $defaultInvoiceBuyer == $k) checked="checked"  @endif />{{ $txt }} <a href="javascript:void(0);" onclick="otheraction.showInvoice({{ $k }})">查看</a></label>
+                            <label id="invoice_buyer_{{ $k }}">
+                                <input type="radio"  name="invoice_buyer_id"  value="{{ $k }}"  @if(isset($defaultInvoiceBuyer) && $defaultInvoiceBuyer == $k) checked="checked"  @endif />{{ $txt }}
+                                <a href="javascript:void(0);" onclick="otheraction.showInvoice({{ $k }})">查看</a>
+                            </label>
                     @endforeach
                     </span>
                 </td>
@@ -86,6 +89,6 @@
     var ADD_INVOICE_BUYER_URL = "{{ url('company/invoice_buyer/add/0') }}"; //添加企业抬头url
     var INFO_INVOICE_BUYER_URL = "{{ url('company/invoice_buyer/info/') }}/"; //详情企业抬头url
 </script>
-<script src="{{ asset('/js/company/QualityControl/Orders_invoices.js') }}?11"  type="text/javascript"></script>
+<script src="{{ asset('/js/company/QualityControl/Orders_invoices.js') }}?12"  type="text/javascript"></script>
 </body>
 </html>

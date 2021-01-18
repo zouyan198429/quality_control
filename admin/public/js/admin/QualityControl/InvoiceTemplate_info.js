@@ -9,7 +9,7 @@ var PARENT_LAYER_INDEX = getParentLayerIndex();
 // operateBathLayuiIframeSize(PARENT_LAYER_INDEX, [1], 500);// 最大化当前弹窗[layui弹窗时]
 //关闭iframe
 $(document).on("click",".closeIframe",function(){
-    iframeclose(PARENT_LAYER_INDEX);
+    iframeclose(PARENT_LAYER_INDEX, 0, '', 2);
 });
 //刷新父窗口列表
 // reset_total 是否重新从数据库获取总页数 true:重新获取,false不重新获取
@@ -31,65 +31,6 @@ function parent_reset_list(){
     operateLayuiIframeSize(PARENT_LAYER_INDEX, 4);// 关闭弹窗
 }
 
-//业务逻辑部分
-var otheraction = {
-    addBuyer:function(obj){// 增加企业抬头
-        var recordObj = $(obj);
-        // 所属企业
-        var company_id = $('input[name=company_id]').val();
-        var judge_seled = judge_validate(1,'所属企业',company_id,true,'positive_int','','');
-        if(judge_seled != ''){
-            layer_alert("请选择所属企业",3,0);
-            return false;
-        }
-        var hidden_option = 1 | 8192;
-        var url = ADD_INVOICE_BUYER_URL + '?hidden_option=' + hidden_option + '&company_id=' + company_id;
-        consoleLogs([url]);
-        var tishi = "发票抬头";
-        layeriframe(url,tishi,750,450,0);
-        // commonaction.browse_file(url, tishi,750,450, 0);
-        return false;
-    },
-    showInvoice : function(id){// 弹窗显示
-        //获得表单各name的值
-        var data = {};// get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
-        console.log(INFO_INVOICE_BUYER_URL);
-        console.log(data);
-        var url_params = get_url_param(data);// parent.get_url_param(data);
-        var weburl = INFO_INVOICE_BUYER_URL + id + '?' + url_params;
-        console.log(weburl);
-        // go(INFO_INVOICE_BUYER_URL + id);
-        // location.href='/pms/Supplier/show?supplier_id='+id;
-        // var weburl = SHOW_URL + id;
-        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
-        var tishi = "发票抬头";// SHOW_URL_TITLE;//"查看供应商";
-        layeriframe(weburl,tishi,750,450,0,'',null,2);
-        return false;
-    }
-};
-
-// 新加发票抬头保存成功后调用的方法
-// obj:当前表单值对像
-// result:保存接口返回的结果
-// operateNum:自己定义的一个编号【页面有多处用到时用--通知父窗口调用位置】2[默认]：新加保存成功时
-function adminQualityControlInvoiceBuyeredit(obj, result, operateNum){
-    operateNum = operateNum || 2;
-    consoleLogs(['obj:', obj, 'result:', result, 'operateNum:', operateNum]);
-    switch(operateNum){
-        case 1:
-            break;
-        case 2:
-            // break;
-        default://其它
-            if(obj.open_status == 1){
-                var invoice_buyer_id = result;
-                var html = '<label id="invoice_buyer_' + invoice_buyer_id + '"><input type="radio"  name="invoice_buyer_id"  value="' + invoice_buyer_id + '"   />' + obj.gmf_mc + '<a href="javascript:void(0);" onclick="otheraction.showInvoice(' + invoice_buyer_id + ')">查看</a></label>';
-                $('#invoice_buyer_list').append(html);
-            }
-            break;
-    }
-}
-
 $(function(){
     //提交
     $(document).on("click","#submitBtn",function(){
@@ -101,7 +42,7 @@ $(function(){
         // }, function(){
         //});
         return false;
-    });
+    })
 
 });
 
@@ -111,10 +52,12 @@ function ajax_form(){
 
     // 验证信息
     var id = $('input[name=id]').val();
-    // if(!judge_validate(4,'记录id',id,true,'digit','','')){
-    if(!judge_validate(4,'记录id',id,true,'length',1,200)){
+    if(!judge_validate(4,'记录id',id,true,'digit','','')){
         return false;
     }
+
+
+
 
     // var work_num = $('input[name=work_num]').val();
     // if(!judge_validate(4,'工号',work_num,true,'length',1,30)){
@@ -145,18 +88,72 @@ function ajax_form(){
     //     return false;
     // }
 
-    // 所属企业
-    var company_id = $('input[name=company_id]').val();
-    var judge_seled = judge_validate(1,'所属企业',company_id,true,'positive_int','','');
+    var invoice_service = $('input[name=invoice_service]:checked').val() || '';
+    var judge_seled = judge_validate(1,'开票服务商',invoice_service,true,'custom',/^([123456789]|16)$/,"");
     if(judge_seled != ''){
-        layer_alert("请选择所属企业",3,0);
+        layer_alert("请选择开票服务商",3,0);
+        //err_alert('<font color="#000000">' + judge_seled + '</font>');
         return false;
     }
 
-    var invoice_buyer_id = $('input[name=invoice_buyer_id]:checked').val() || '';
-    var judge_seled = judge_validate(1,'发票抬头',invoice_buyer_id,true,'positive_int',"","");
+    var template_name = $('input[name=template_name]').val();
+    if(!judge_validate(4,'发票模板名称',template_name,true,'length',1,50)){
+        return false;
+    }
+
+    var zsfs = $('input[name=zsfs]:checked').val() || '';
+    var judge_seled = judge_validate(1,'征税方式',zsfs,true,'custom',/^([012])$/,"");
     if(judge_seled != ''){
-        layer_alert("请选择发票抬头",3,0);
+        layer_alert("请选择征税方式",3,0);
+        //err_alert('<font color="#000000">' + judge_seled + '</font>');
+        return false;
+    }
+
+    // var itype = $('input[name=itype]:checked').val() || '';
+    // var judge_seled = judge_validate(1,'发票类型',itype,true,'custom',/^(026|004|007|025)$/,"");
+    // if(judge_seled != ''){
+    //     layer_alert("请选择发票类型",3,0);
+    //     //err_alert('<font color="#000000">' + judge_seled + '</font>');
+    //     return false;
+    // }
+
+    var tspz = $('input[name=tspz]:checked').val() || '';
+    var judge_seled = judge_validate(1,'特殊票种标识',tspz,true,'custom',/^(00|01|02)$/,"");
+    if(judge_seled != ''){
+        layer_alert("请选择特殊票种标识",3,0);
+        //err_alert('<font color="#000000">' + judge_seled + '</font>');
+        return false;
+    }
+
+    var kpr = $('input[name=kpr]').val();
+    if(!judge_validate(4,'开票人',kpr,true,'length',1,10)){
+        return false;
+    }
+
+    var skr = $('input[name=skr]').val();
+    if(!judge_validate(4,'收款人',skr,false,'length',1,10)){
+        return false;
+    }
+
+    var fhr = $('input[name=fhr]').val();
+    if(!judge_validate(4,'复核人',fhr,false,'length',1,10)){
+        return false;
+    }
+
+    var bz = $('textarea[name=bz]').val();
+    if(!judge_validate(4,'备注',bz,false,'length',2,1000)){
+        return false;
+    }
+
+    // var sort_num = $('input[name=sort_num]').val();
+    // if(!judge_validate(4,'排序',sort_num,false,'digit','','')){
+    //     return false;
+    // }
+
+    var open_status = $('input[name=open_status]:checked').val() || '';
+    var judge_seled = judge_validate(1,'开启状态',open_status,true,'custom',/^[12]$/,"");
+    if(judge_seled != ''){
+        layer_alert("请选择开启状态",3,0);
         //err_alert('<font color="#000000">' + judge_seled + '</font>');
         return false;
     }
