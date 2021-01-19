@@ -322,14 +322,25 @@ class CTAPIResourceBusiness extends BasicPublicCTAPIBusiness
 
                 if(empty($ext)) $ext = $extFirst;
                 // 修复是二进制文件的问题
+                $isGetExtByExt = false;// 是否通过文件获取过文件后缀
                 if(empty($ext) ||  in_array($ext, ['bin', 'g3'])  ){// g3 ：有分片上传时，$extFirst值为g3的，
+                    $isGetExtByExt = true;// 是否通过文件获取过文件后缀
                     $ext = DownFile::getLocalFileExt($name);
                     Log::info('上传文件日志-二进制文件后缀',[$ext]);// 文件后缀 ["jpg"]
                 }
 
                 // 根据扩展名，重新获得文件的操作类型
                 $resourceConfig = UploadFile::getResourceConfig($ext);
-                if(empty($resourceConfig)) throws('请选择正确的文件！');
+                // 有错误，则再纠错一次
+                if(empty($resourceConfig) && !$isGetExtByExt && $type == 'application/octet-stream'){//  && in_array($extFirst, ['bin', 'g3', 'zz'])
+                    $ext = DownFile::getLocalFileExt($name);
+                    Log::info('上传文件日志-纠错二进制文件后缀',[$ext]);// 文件后缀 ["jpg"]
+                    // 根据扩展名，重新获得文件的操作类型
+                    $resourceConfig = UploadFile::getResourceConfig($ext);
+                }
+
+                if(empty($resourceConfig))  throws('请选择正确的文件！');
+
                 $resourceType = $resourceConfig['resource_type'] ?? 0;
                 // 判断上传文件的类型，是否是允许的类型
                 if(($resource_type & $resourceType) !== $resourceType){
@@ -411,10 +422,12 @@ class CTAPIResourceBusiness extends BasicPublicCTAPIBusiness
                     array_push($tmpFiles, $path_name);
 
                     Tool::setRedis(static::getProjectKeyPre(1) . 'tmpFiles', md5($allBlockUuid), $tmpFiles, 60*20, 2); // 5分钟
-
+                    Log::info('上传文件日志-count($tmpFiles)',[count($tmpFiles)]);
+                    Log::info('上传文件日志-$count',[$count]);
                     //当分片上传完时 合并
                     // if(($num + 1) == $count){
                     if( count($tmpFiles) >= $count){// 因为可能是无序的，所以只能通过总数量来判断
+                        Log::info('上传文件日志-当分片上传完时 合并',[]);
                         // 扩展名和文件大小处理
                         $fileArr = array_merge($fileArr, [
                             'ext' => Tool::getRedis(static::getProjectKeyPre(1) . 'extend' . md5($allBlockUuid), 2),// 文件扩展名
