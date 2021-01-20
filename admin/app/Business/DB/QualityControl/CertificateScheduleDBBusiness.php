@@ -476,10 +476,11 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
             }
 
             // 判断证书是否存在
+            $certificateNOId = [];
             foreach($certificateNoArr as $temCertificateNo){
                 $certificateInfo = CertificateDBBusiness::getDBFVFormatList(4, 1, ['company_id' => $company_id, 'certificate_no' => $temCertificateNo]);
                 if(empty($certificateInfo)) throws('证书【' .$temCertificateNo . '】信息不存在！请先上传证书信息！');
-
+                $certificateNOId[$temCertificateNo] = $certificateInfo['id'];
             }
             // 保存地址信息
             $addrIdArr = [];
@@ -514,6 +515,8 @@ class CertificateScheduleDBBusiness extends BasePublicDBBusiness
                 if(isset($info['id'])) unset($info['id']);
                 $temAddr = $info['addr'] ?? '';
                 $company_id = $info['company_id'] ?? 0;
+                $tem_certificate_no = $info['certificate_no'] ?? '';
+                $info['certificate_id'] = $certificateNOId[$tem_certificate_no] ?? 0;
                 // 加入操作人员信息
                 if($temNeedStaffIdOrHistoryId) static::addOprate($info, $operate_staff_id,$operate_staff_id_history, 1);
                 $info['laboratory_id'] = $addrIdArr[$temAddr] ?? 0;
