@@ -302,6 +302,14 @@ class CertificateScheduleController extends BasicController
                 if(empty($resourceInfo))  throws('文件记录不存在');
                 $resource_url = $resourceInfo['resource_url'] ?? '';
 
+                if(empty($certificate_no)){
+                    $certificatInfo = CTAPICertificateScheduleBusiness::getFVFormatList( $request,  $this, 4, 1
+                        , ['company_id' => $company_id], false);
+                    if(empty($certificatInfo))  throws('所选企业还没有证书信息，请先维护证书信息。');
+                    $certificate_no = $certificatInfo['certificate_no'];
+                    if(empty($certificate_no))  throws('所选企业证书号不能为空。');
+                }
+
                 $mergeParams = [
                     'open_status' => $open_status,
                     'company_id' => $company_id,

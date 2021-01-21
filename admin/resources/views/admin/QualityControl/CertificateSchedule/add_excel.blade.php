@@ -37,7 +37,7 @@
                     @foreach ($openStatus as $k=>$txt)
                         <label><input type="radio"  name="open_status"  value="{{ $k }}"  @if(isset($defaultOpenStatus) && $defaultOpenStatus == $k) checked="checked"  @endif />{{ $txt }} </label>
                     @endforeach
-                        <br/>首次：证书起止日期必填[会更新到证书记录]；<br/>扩项：起止日期非必填[不会更新证书记录]
+                        <br/>首次：证书起止日期必填[会更新到证书记录]；<br/>扩项：起止日期非必填[不会更新证书记录];CMA证书号选填【企业已维护证书信息时】
                 </td>
             </tr>
             <tr>
@@ -123,7 +123,7 @@
 {{--<script src="{{asset('js/baguetteBox.js/highlight.min.js')}}" async></script>--}}
 <!-- zui js -->
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
-<script src="{{ asset('/js/admin/QualityControl/CertificateSchedule_excel.js') }}?1"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/CertificateSchedule_excel.js') }}?4"  type="text/javascript"></script>
 
 <link href="{{asset('dist/lib/uploader/zui.uploader.min.css') }}" rel="stylesheet">
 <script src="{{asset('dist/lib/uploader/zui.uploader.min.js') }}"></script>{{--此文件引用一次就可以了--}}

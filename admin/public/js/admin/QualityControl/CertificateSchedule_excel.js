@@ -6,7 +6,7 @@ var IS_FRAME_PAGE = isIframePage();// 是否iframe弹出层；true: 是； false
 //获取当前窗口索引
 var PARENT_LAYER_INDEX = getParentLayerIndex();
 //让层自适应iframe
-// operateBathLayuiIframeSize(PARENT_LAYER_INDEX, [1], 500);// 最大化当前弹窗[layui弹窗时]
+operateBathLayuiIframeSize(PARENT_LAYER_INDEX, [1], 500);// 最大化当前弹窗[layui弹窗时]
 //关闭iframe
 $(document).on("click",".closeIframe",function(){
     iframeclose(PARENT_LAYER_INDEX);
@@ -228,8 +228,14 @@ function ajax_form(){
     }
 
     var certificate_no = $('input[name=certificate_no]').val();
-    if(!judge_validate(4,'CMA证书号',certificate_no,true,'length',1,30)){
-        return false;
+    if(open_status == 1){
+        if(!judge_validate(4,'CMA证书号',certificate_no,true,'length',1,30)){
+            return false;
+        }
+    }else{
+        if(!judge_validate(4,'CMA证书号',certificate_no,false,'length',1,30)){
+            return false;
+        }
     }
 
     // 开始时间
