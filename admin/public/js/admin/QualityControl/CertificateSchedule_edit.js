@@ -6,7 +6,7 @@ var IS_FRAME_PAGE = isIframePage();// 是否iframe弹出层；true: 是； false
 //获取当前窗口索引
 var PARENT_LAYER_INDEX = getParentLayerIndex();
 //让层自适应iframe
-// operateBathLayuiIframeSize(PARENT_LAYER_INDEX, [1], 500);// 最大化当前弹窗[layui弹窗时]
+operateBathLayuiIframeSize(PARENT_LAYER_INDEX, [1], 500);// 最大化当前弹窗[layui弹窗时]
 //关闭iframe
 $(document).on("click",".closeIframe",function(){
     iframeclose(PARENT_LAYER_INDEX);
@@ -191,27 +191,27 @@ function ajax_form(){
     //     return false;
     // }
     //
-    // // 开始时间
-    // var begin_date = $('input[name=ratify_date]').val();
-    // if(!judge_validate(4,'批准日期',begin_date,true,'date','','')){
-    //     return false;
-    // }
-    //
-    // // 结束时间
-    // var end_date = $('input[name=valid_date]').val();
-    // if(!judge_validate(4,'有效期至',end_date,true,'date','','')){
-    //     return false;
-    // }
-    //
-    // if( end_date !== ''){
-    //     if(begin_date == ''){
-    //         layer_alert("请选择批准日期",3,0);
-    //         return false;
-    //     }
-    //     if( !judge_validate(4,'有效期至必须',end_date,true,'data_size',begin_date,5)){
-    //         return false;
-    //     }
-    // }
+    // 开始时间
+    var begin_date = $('input[name=ratify_date]').val();
+    if(!judge_validate(4,'批准日期',begin_date,false,'date','','')){
+        return false;
+    }
+
+    // 结束时间
+    var end_date = $('input[name=valid_date]').val();
+    if(!judge_validate(4,'有效期至',end_date,false,'date','','')){
+        return false;
+    }
+
+    if( end_date !== ''){
+        // if(begin_date == ''){
+        //     layer_alert("请选择批准日期",3,0);
+        //     return false;
+        // }
+        if( begin_date !== '' && !judge_validate(4,'有效期至必须',end_date,true,'data_size',begin_date,5)){
+            return false;
+        }
+    }
     //
     //
     // var addr = $('input[name=addr]').val();

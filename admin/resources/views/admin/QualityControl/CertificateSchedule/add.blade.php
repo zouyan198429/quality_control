@@ -39,10 +39,10 @@
             <tr>
                 <th>有效起止时间<span class="must">*</span></th>
                 <td>
-                    {{ $info['ratify_date'] ?? '' }} - {{ $info['valid_date'] ?? '' }}
-{{--                    <input type="text" class="inp wlong ratify_date" name="ratify_date" value="{{ $info['ratify_date'] ?? '' }}" placeholder="请选择批准日期" style="width: 150px;"  readonly="true"/>--}}
-{{--                    ---}}
-{{--                    <input type="text" class="inp wlong valid_date" name="valid_date" value="{{ $info['valid_date'] ?? '' }}" placeholder="请选择有效期至"  style="width: 150px;" readonly="true"/>--}}
+{{--                    {{ $info['ratify_date'] ?? '' }} - {{ $info['valid_date'] ?? '' }}--}}
+                    <input type="text" class="inp wlong ratify_date" name="ratify_date" value="{{ $info['ratify_date'] ?? '' }}" placeholder="请选择批准日期" style="width: 150px;"/> <!--  readonly="true"-->
+                    -
+                    <input type="text" class="inp wlong valid_date" name="valid_date" value="{{ $info['valid_date'] ?? '' }}" placeholder="请选择有效期至"  style="width: 150px;"/><!--  readonly="true"-->
                 </td>
             </tr>
             <tr>
@@ -132,6 +132,6 @@
 
     var SELECT_COMPANY_URL = "{{url('admin/company/select')}}";// 选择所属企业
 </script>
-<script src="{{ asset('/js/admin/QualityControl/CertificateSchedule_edit.js') }}?4"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/CertificateSchedule_edit.js') }}?6"  type="text/javascript"></script>
 </body>
 </html>
