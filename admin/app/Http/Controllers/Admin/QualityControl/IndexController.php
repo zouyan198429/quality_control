@@ -14,6 +14,7 @@ use App\Business\DB\QualityControl\InvoicesDBBusiness;
 use App\Business\DB\QualityControl\StaffDBBusiness;
 use App\Http\Controllers\WorksController;
 use App\Models\QualityControl\Staff;
+use App\Services\alipaySdk\alipayTest;
 use App\Services\Captcha\CaptchaCode;
 use App\Services\Code\QRCode;
 use App\Services\DB\CommonDB;
@@ -51,6 +52,8 @@ class IndexController extends BasicController
     }
 
     public function test(Request $request){
+        alipayTest::test();
+        die();
         $aaa = '{"fp_url":"http://web.hydzfp.com/ei_access/html/downloadMobilePdf.do?key=pdf&data=eyJuc3JzYmgiOiI5MTMyMDEwNjU5ODAzNTQ2OVciLCJvcmRlcl9udW0iOiI1MTIxMDE3MzEwMDEwMDA0IiwidGltZSI6IjE2MTA1MDQ5OTA3ODgiLCJjayI6ImVhNjRkNzlhYmVhYjBlOTBmNzAxYzFlODc4M2ZiZTc0In0=&pdfkey=pdf_znRtMq91610504989234","qd_url":""}';
         $aaARR = json_decode($aaa, true);
         // pr($aaARR);

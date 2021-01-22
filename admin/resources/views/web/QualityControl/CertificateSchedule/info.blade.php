@@ -176,9 +176,26 @@
 											<thead>
 												<tr align="center">
 													<th>ID</th>
-													<th>产品类别</th>
-													<th>检测产品</th>
-													<th>检测参数</th>
+													<th>
+{{--                                                        产品类别--}}
+                                                        一级名称
+                                                    </th>
+													<th>
+{{--                                                        检测产品--}}
+                                                        二级名称
+                                                    </th>
+                                                    <th>
+{{--                                                        检测产品--}}
+                                                        三级名称
+                                                    </th>
+                                                    <th>
+{{--                                                        检测产品--}}
+                                                        四级名称
+                                                    </th>
+													<th>
+{{--                                                        检测参数--}}
+                                                        项目名称
+                                                    </th>
 													<th>依据的标准（方法）</th>
 													<th>限制范围</th>
 							                        <th>说明</th>
@@ -196,6 +213,8 @@
 													<td  align="center" class="ID">{{ $i ?? '' }}</td>
 													<td  align="center" class="category_name">{{ $v['category_name'] ?? '' }}</td>
 													<td  align="center" class="project_name">{{ $v['project_name'] ?? '' }}</td>
+                                                    <td class="param_name">{{ $v['three_name'] ?? '' }}</td>
+                                                    <td class="param_name">{{ $v['four_name'] ?? '' }}</td>
 													<td class="param_name">{{ $v['param_name'] ?? '' }}</td>
 													<td class="method_name">{!! $v['method_name'] ?? '' !!}</td>
 													<td class="limit_range">{!! $v['limit_range'] ?? '' !!}</td>
