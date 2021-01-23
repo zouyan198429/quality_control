@@ -126,9 +126,12 @@ var otheraction = {
     document.write("                <\/label>");
     document.write("            <\/td>");
     document.write("            <td style=\"display: none;\"><%=item.id%><\/td>");
-    document.write("            <td><%=item.city_name%><\/td>");
-    document.write("            <td><%=item.company_name%><\/td>");
-    document.write("            <td><%=item.industry_name%><\/td>");
+	document.write("            <td><%=item.company_name%><\/td>");
+	document.write("            <td><%=item.company_certificate_no%><\/td>");
+	document.write("            <td><%=item.ratify_date%>-<%=item.valid_date%><\/td>"); 
+	
+    //document.write("            <td><%=item.city_name%><\/td>");
+    //document.write("            <td><%=item.industry_name%><\/td>");
     document.write("            <td>");
     document.write("            <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info add \" onclick=\"otheraction.add(<%=item.id%>,'<%=item.company_name%>')\">");
     document.write("                <i class=\"ace-icon fa fa-plus bigger-60\"> 选择<\/i>");

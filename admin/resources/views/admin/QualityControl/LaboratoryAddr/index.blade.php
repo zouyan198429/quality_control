@@ -63,7 +63,7 @@
 {{--        <col width="50">--}}
 {{--        <col width="60">--}}
         <col>
-        <col width="90">
+        <col>
         <col>
         <col>
         <col width="140">

@@ -67,8 +67,7 @@
 {{--        <col width="60">--}}
         <col width="50">
         <col width="10%">
-        <col>
-        <col width="95">
+        <col> 
         <col>
         <col>
         <col width="20%">
@@ -87,9 +86,8 @@
 {{--      <th>ID</th>--}}
       <th>所属企业</th>
       <th>CMA证书号<hr/>实验室地址</th>
-      <th>批准日期<hr/>有效期至</th>
-      <th>一级名称<hr/>二级名称</th>
-      <th>三级名称<hr/>四级名称</th>
+      <th>批准日期</th>
+      <th>类别</th> 
       <th>项目名称<hr/>标准（方法）名称</th>
         <th>限制范围<hr/>说明</th>
       <th>创建时间<hr/>更新时间</th>

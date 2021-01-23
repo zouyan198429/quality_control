@@ -46,20 +46,21 @@
                     <input type="text" class="inp wnormal"  name="certificate_no" value="{{ $info['certificate_no'] ?? '' }}" placeholder="请输入CMA证书号"/>
                 </td>
             </tr>
-            <tr>
-                <th>有效起止时间<span class="must">*</span></th>
-                <td>
-                    <input type="text" class="inp wlong ratify_date" name="ratify_date" value="{{ $info['ratify_date'] ?? '' }}" placeholder="请选择批准日期" style="width: 150px;"  readonly="true"/>
-                    -
-                    <input type="text" class="inp wlong valid_date" name="valid_date" value="{{ $info['valid_date'] ?? '' }}" placeholder="请选择有效期至"  style="width: 150px;" readonly="true"/>
-                </td>
-            </tr>
+            
             <tr>
                 <th>实验室地址<span class="must">*</span></th>
                 <td>
                     <input type="text" class="inp wnormal"  name="addr" value="{{ $info['addr'] ?? '' }}" placeholder="请输入实验室地址"/>
                 </td>
             </tr>
+			<tr>
+			    <th>有效起止时间<span class="must">*</span></th>
+			    <td>
+			        <input type="text" class="inp wlong ratify_date" name="ratify_date" value="{{ $info['ratify_date'] ?? '' }}" placeholder="请选择批准日期" style="width: 150px;"  readonly="true"/>
+			        -
+			        <input type="text" class="inp wlong valid_date" name="valid_date" value="{{ $info['valid_date'] ?? '' }}" placeholder="请选择有效期至"  style="width: 150px;" readonly="true"/>
+			    </td>
+			</tr>
             <tr>
                 <th>文件<span class="must">*</span></th>
                 <td>

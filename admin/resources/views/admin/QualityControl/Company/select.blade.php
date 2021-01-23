@@ -117,10 +117,10 @@
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
 
-        <col width="60">
         <col>
-        <col width="90">
-        <col width="200">
+        <col width="140">
+        <col width="140">
+        <col width="100">
 
     </colgroup>
     <thead>
@@ -131,10 +131,10 @@
           <!-- <span class="lbl">全选</span> -->
         </label>
       </th>
-      <th style="display: none;">ID</th>
-      <th>城市</th>
+      <th style="display: none;">ID</th>      
       <th>单位名称</th>
-      <th>行业</th>
+      <th>CMA证书号</th>
+	  <th>日期</th>
       <th>操作</th>
     </tr>
     </thead>
@@ -191,6 +191,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/company_select.js') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/company_select.js?8') }}"  type="text/javascript"></script>
 </body>
 </html>
