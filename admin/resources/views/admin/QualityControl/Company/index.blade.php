@@ -160,15 +160,14 @@
     <colgroup>
         <col width="30">
         <col width="60">
-        <col width="10%">
-        <col width="100">
+        <col >
+        <col width="150">
         <col width="115">
-        <col width="100">
-        <col width="80">
-{{--        <col width="75">--}}
-        <col width="45">
-        <col width="80">
-        <col width="20%">
+        <col width="140">
+        <col width="100"> 
+        <col width="100"> 
+        <col width="150"> 
+        <col width="25%">
     </colgroup>
     <thead>
     <tr>
@@ -178,16 +177,12 @@
           <!-- <span class="lbl">全选</span> -->
         </label>
       </th>
-      <th>ID</th>
-      <!-- <th>城市</th>-->
+      <th>ID</th> 
         <th>单位名称</th>
-        <th>行业<hr/>会员类型</th>
-        <!-- <th>员工</th> -->
+        <th>行业<hr/>会员类型</th> 
         <th>证书编号</th>
-        <th>联系人<hr/>手机</th>
-        <!-- <th>联系人</th> -->
-        <th>完善资料<hr/>续期配置</th>
-{{--        <th></th>--}}
+        <th>联系人</th> 
+        <th>完善资料<hr/>续期配置</th> 
         <th>审核<hr/>状态</th>
         <th>注册时间<hr/>到期时间</th>
       <th>操作</th>

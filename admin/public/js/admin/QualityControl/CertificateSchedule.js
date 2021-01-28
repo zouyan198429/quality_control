@@ -180,15 +180,16 @@ function addCompany(company_id, company_name){
     document.write("                  <span class=\"lbl\"><\/span>");
     document.write("                <\/label>");
     document.write("            <\/td>");
-    // document.write("            <td><%=item.id%><\/td>");
-    document.write("            <td><%=item.user_company_name%><\/td>");
-    document.write("            <td><%=item.certificate_no%><hr/><%=item.addr%><\/td>");
-    document.write("            <td><%=item.ratify_date%> <\/td>");
+    document.write("            <td><%=item.id%>(<%=i%>)<\/td>");
+    document.write("            <td><%=item.user_company_name%>(<%=item.certificate_no%>)<br /><%=item.addr%><\/td>");
+   // document.write("            <td><\/td>");
+    
 	//<%=item.valid_date%>
-    document.write("            <td><%=item.category_name%>--><%=item.project_name%>--><%=item.three_name%>--><%=item.four_name%><\/td>");
+    document.write("            <td><%=item.category_name%>/<%=item.project_name%>/<%=item.three_name%>/<%=item.four_name%><\/td>");
     //document.write("            <td><%=item.three_name%>--><%=item.four_name%><\/td>");
     document.write("            <td><%=item.param_name%><hr/><%=item.method_name%><\/td>");
-    document.write("            <td><%=item.limit_range%><hr/><%=item.explain_text%><\/td>");
+    //document.write("            <td><%=item.limit_range%><hr/><%=item.explain_text%><\/td>");
+	document.write("            <td><%=item.ratify_date%> <\/td>");
     document.write("            <td><%=item.created_at%><hr/><%=item.updated_at%><\/td>");
     // document.write("            <td><\/td>");
     // document.write("            <td><%=item.sort_num%><\/td>");
@@ -202,8 +203,8 @@ function addCompany(company_id, company_name){
     document.write("                    <i class=\"ace-icon fa fa-pencil bigger-60\"> 编辑<\/i>");
     document.write("                <\/a>");
     document.write("                <%if( can_modify){%>");
-    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.del(<%=item.id%>)\">");
-    document.write("                    <i class=\"ace-icon fa fa-trash-o bigger-60\"> 删除<\/i>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini layui-btn-danger\" onclick=\"action.del(<%=item.id%>)\">");
+    document.write("                    <i class=\"ace-icon fa fa-trash-o bigger-60\"><\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
     document.write("");

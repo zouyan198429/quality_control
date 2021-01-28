@@ -224,9 +224,9 @@ function addCompany(company_id, company_name){
     document.write("            <\/td>");
     document.write("            <td><%=item.id%><\/td>");
     // document.write("            <td><%=item.client_id%><\/td>");
-    document.write("            <td><%=item.user_company_name%><\/td>");
-    document.write("            <td><%=item.company_id%><\/td>");
+    document.write("            <td><%=item.user_company_name%>（<%=item.company_id%>）<\/td>");
     document.write("            <td><%=item.type_id_text%><\/td>");
+   // document.write("            <td><%=item.type_id_text%><\/td>");
     // document.write("           <td>");
     // document.write("            <%for(var j = 0; j<resource_pdf_list.length;j++){");
     // document.write("                var jitem = resource_pdf_list[j];");
