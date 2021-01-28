@@ -82,20 +82,17 @@
     </div>
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
-        <col width="50">
-{{--        <col width="60">--}}
+        <col width="50"> 
         <col>
-        <col width="85">
-        <col width="70">
-{{--        <col width="10%">--}}
-        <col width="10%">
-
-        <col width="105">
-        <col width="120">
-        <col width="95">
-        <col width="95">
-        <col width="95">
-        <col width="5%">
+        <col>
+        <col width="145"> 
+        <col>
+        <col width="145">
+        <col width="160">
+        <col width="150">
+        <col width="150">
+        <col width="150">
+        <col width="8%">
     </colgroup>
     <thead>
     <tr>
@@ -104,12 +101,11 @@
           <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>
           <!-- <span class="lbl">全选</span> -->
         </label>
-      </th>
-{{--      <th>ID</th>--}}
-        <th>课程<hr/>单位<hr/>证书所属单位</th>
-{{--        <th>证书所属单位</th>--}}
+      </th> 
+	  
+		<th>姓名<hr/>班级</th>
+        <th>单位<hr/>证书所属单位</th> 
         <th>证件照</th>
-        <th>姓名<hr/>班级</th>
         <th>手机号<hr/>身份证</th>
         <th>联络人<hr/>联络人电话</th>
         <th>单价<hr/>付款单号</th>
@@ -182,7 +178,7 @@
 <!-- zui js -->
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/CourseOrderStaff.js') }}?20"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/CourseOrderStaff.js') }}?544320"  type="text/javascript"></script>
 @component('component.upfileincludejsmany')
 @endcomponent
 </body>

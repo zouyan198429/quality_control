@@ -30,7 +30,7 @@
                 </td>
             </tr>
             <tr>
-                <th>抬头名称<span class="must">*</span></th>
+                <th>开户号<span class="must">*</span></th>
                 <td>
                     <input type="text" class="inp wnormal"  name="gmf_mc" value="{{ $info['gmf_mc'] ?? '' }}" placeholder="请输入抬头名称"/>
                     <p>[公司名称或个人]</p>
@@ -49,19 +49,19 @@
                 </td>
             </tr>
             <tr>
-                <th>企业电话<span class="must"></span></th>
+                <th>联系电话<span class="must"></span></th>
                 <td>
                     <input type="text" class="inp wnormal"  name="gmf_dh" value="{{ $info['gmf_dh'] ?? '' }}" placeholder="请输入企业电话"/>
                 </td>
             </tr>
             <tr>
-                <th>企业银行<span class="must"></span></th>
+                <th>开户行<span class="must"></span></th>
                 <td>
                     <input type="text" class="inp wnormal"  name="gmf_yh" value="{{ $info['gmf_yh'] ?? '' }}" placeholder="请输入企业银行"/>
                 </td>
             </tr>
             <tr>
-                <th>企业银行账号<span class="must"></span></th>
+                <th>银行账号<span class="must"></span></th>
                 <td>
                     <input type="text" class="inp wnormal"  name="gmf_yhzh" value="{{ $info['gmf_yhzh'] ?? '' }}" placeholder="请输入企业银行账号"/>
                 </td>

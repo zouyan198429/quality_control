@@ -160,7 +160,8 @@ function addCompany(company_id, company_name){
     // document.write("                <\/label>");
     // document.write("            <\/td>");
     // document.write("            <td><%=item.id%><\/td>");
-    document.write("            <td><%=item.user_company_name%><hr/><%=item.gmf_mc%><\/td>");
+    document.write("            <td><%=item.gmf_mc%><\/td>");
+	//<%=item.user_company_name%>
     document.write("            <td><%=item.gmf_nsrsbh%><\/td>");
     document.write("            <td><%=item.gmf_dz%><hr/><%=item.gmf_dh%><\/td>");
     document.write("            <td><%=item.gmf_yh%><hr/><%=item.gmf_yhzh%><\/td>");

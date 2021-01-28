@@ -59,16 +59,15 @@
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
         <col width="50">
-        <col  width="75">
-        <col width="50">
+        <col  width="75"> 
         <col width="105">
         <col>
         <col  width="7%">
         <col  width="7%">
         <col>
-        <col  width="75">
-        <col width="75" >
-        <col width="90">
+        <col width="125">
+        <col width="125" >
+        <col width="150">
         <col width="12%">
     </colgroup>
     <thead>
@@ -78,14 +77,12 @@
             <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>
           </label>
         </th>
-
-        <th>姓名</th>
-        <th>城市</th>
+        <th>姓名</th> 
         <th>手机号</th>
         <th>证件照</th>
         <th>职位</th>
         <th>角色</th>
-        <th>签字范围<hr/>签字审核状态</th>
+       <!-- <th>签字范围<hr/>签字审核状态</th> -->
         <th>完善资料<hr/>信息审核</th>
         <th>角色状态<hr/>冻结状态</th>
       <th>创建时间</th>
@@ -155,7 +152,7 @@
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
 
 <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/company/QualityControl/User.js?636') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/company/QualityControl/User.js?63556') }}"  type="text/javascript"></script>
 @component('component.upfileincludejsmany')
 @endcomponent
 </body>

@@ -18,31 +18,31 @@
             <div class="layui-carousel layadmin-carousel layadmin-backlog" lay-anim="" lay-arrow="none" style="width: 100%;">
                 <div carousel-item="">
                     <ul class="layui-row layui-col-space10 layui-this">
-                        <li class="layui-col-xs3">
+                        <li class="layui-col-xs2">
                             <a  class="layadmin-backlog-body">
                                 <h3>报名人数</h3>
                                 <p><cite>{{ $info['join_num'] ?? '0' }}</cite></p>
                             </a>
                         </li>
-                        <li class="layui-col-xs3">
+                        <li class="layui-col-xs2">
                             <a  class="layadmin-backlog-body">
                                 <h3>报名池人数</h3>
                                 <p><cite>{{ $info['wait_class_num'] ?? '0' }}</cite></p>
                             </a>
                         </li>
-                        <li class="layui-col-xs3">
+                        <li class="layui-col-xs2">
                             <a  class="layadmin-backlog-body">
                                 <h3>已分班人数</h3>
                                 <p><cite>{{ $info['joined_class_num'] ?? '0' }}</cite></p>
                             </a>
                         </li>
-                        <li class="layui-col-xs3">
+                        <li class="layui-col-xs2">
                             <a  class="layadmin-backlog-body">
                                 <h3>已结业人数</h3>
                                 <p><cite>{{ $info['finish_num'] ?? '0' }}</cite></p>
                             </a>
                         </li>
-                        <li class="layui-col-xs3">
+                        <li class="layui-col-xs2">
                             <a class="layadmin-backlog-body">
                                 <h3>已作废人数</h3>
                                 <p><cite>{{ $info['cancel_num']  ?? '0' }}</cite></p>
@@ -52,10 +52,14 @@
                 </div>
             </div>
 
-
+		<style>
+			.layui-form-label {
+				width: 180px;
+			}
+		</style>
 
             <div class="layui-form-item">
-                <label class="">课程名称</label>
+                <label class="layui-form-label">课程名称</label>
                 <div class="layui-form-mid layui-word-aux">
                     {{ $info['course_name'] ?? '' }}
                 </div>
@@ -96,13 +100,13 @@
                     {{ $info['status_online_text'] ?? '' }}
                 </div>
             </div>
-            <div class="layui-form-item baguetteBoxOne gallery"  id="resource_block">
+          <!--  <div class="layui-form-item baguetteBoxOne gallery"  id="resource_block">
                 <label class="layui-form-label">图片资源</label>
                 <div class="layui-form-mid layui-word-aux">
                     <span class="resource_list"  style="display: none;">@json($info['resource_list'] ?? [])</span>
                     <span  class="resource_show"></span>
                 </div>
-            </div>
+            </div> -->
             <div class="layui-form-item">
                 <label class="layui-form-label">课程介绍</label>
                 <div class="layui-form-mid layui-word-aux">

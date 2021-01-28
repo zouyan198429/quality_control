@@ -36,9 +36,9 @@
                 {{--                            <col width="75">--}}
                 <col>
                 <col>
-                <col width="80">
                 <col width="120">
-                <col width="85">
+                <col width="200">
+                <col width="120">
             </colgroup>
             <thead>
             <tr>
@@ -65,6 +65,7 @@
                 </th>
             </tr>
             </thead>
+			
             <tbody  id="data_list" >
             <?php
             $pay_method = $pay_config['pay_method'] ?? 0;
@@ -113,22 +114,25 @@
                 ?>
             @endforeach
             <tr>
-                <td colspan="2" style="text-align: right;" valign="top">
+                <td colspan="5" style="text-align: right;" valign="top">
                     共<?php echo count($company_course_order_staff)?>人；总计：￥{{ $totalPrice ?? '' }}元
                 </td>
-                <td colspan="3" style="text-align: left;">
+			</tr>
+			</tbody>
+			
+			</table> 
+			<div style="height: 30px;"></div>
+			<div>
                     <input type="hidden" name="pay_config_id" value="{{ $pay_config_id ?? 0 }}"/>
                     <input type="hidden" name="company_id" value="{{ $company_id ?? 0 }}"/>
                     <input type="hidden" name="ids" value="{{ implode(',', $staff_ids) }}"/>
-                    {{ $pay_company_name ?? '' }}<br/>
+                    <!-- {{ $pay_company_name ?? '' }}<br/> -->
                     @foreach ($payMethod as $k=>$txt)
                         <label><input type="radio"  name="pay_method"  value="{{ $k }}"  @if(isset($defaultPayMethod) && $defaultPayMethod > 0 && ($defaultPayMethod & $k) == $k) checked="checked"  @endif @if(isset($pay_method) && ($pay_method & $k) <=0 ) disabled   @endif/>{{ $txt }} </label><br/>
                     @endforeach
+					<div style="height: 30px;"></div>
                     <button class="layui-btn layui-btn-normal"  onclick="otheraction.paySave(this)">付款</button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+            </div>
         @endforeach
     @endforeach
 

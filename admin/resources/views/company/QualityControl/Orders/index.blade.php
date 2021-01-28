@@ -92,16 +92,14 @@
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
         <col width="50">
-        <col>
-        <col width="10%">
-        <col width="10%">
-        <col width="80">
-        <col width="80">
-        <col width="95">
-        <col width="95">
-        <col width="80">
-        <col width="95">
-        <col width="95">
+        <col width="190">
+        <col> 
+        <col width="120">
+        <col width="120"> 
+        <col width="160">
+        <col width="160">
+        <col width="160">
+        <col width="160">
         <col width="10%">
     </colgroup>
     <thead>
@@ -113,16 +111,21 @@
         </label>
       </th>
 {{--      <th>ID</th>--}}
-        <th>订单号<hr>所属企业</th>
-      <th>订单类型<hr/>订单备注<hr/>发票开票模板</th>
-      <th>收款帐号<hr/>支付方式</th>
-      <th>商品数量<hr/>商品总价<hr/>发票抬头</th>
-       <th>应付金额<hr/>优惠金额<hr/>开票状态</th>
+        <th>订单号</th>
+		<!-- <hr>所属企业 -->
+      <th>订单类型</th>
+      <!-- <th>收款帐号<hr/>支付方式</th> -->
+      <th>商品数量<hr/>商品总价</th>
+	  <!-- 发票抬头 -->
+       <th>应付金额<hr/>开票状态</th>
+	   <!-- 优惠金额 -->
         <th>下单时间<hr/>付款时间</th>
-        <th>退费状态<hr/>退费时间<hr/>开票结果</th>
-        <th>已退金额<hr/>退费冻结</th>
-        <th>支付金额<hr/>找零金额<hr/>实收金额</th>
-        <th>确认时间<hr/>完成时间<hr/>作废时间</th>
+        <!-- <th>退费状态<hr/>退费时间<hr/>开票结果</th>
+        <th>已退金额<hr/>退费冻结</th> -->
+        <th>支付金额<hr/>实收金额</th>
+		<!-- 找零金额 -->
+        <th>确认时间<hr/>完成时间</th>
+		<!-- 作废时间 -->
       <th>操作</th>
     </tr>
     </thead>
@@ -180,6 +183,6 @@
       var INVOICE_SHOW_URL  = "{{ url('company/invoices') }}";//操作(查看电子发票)
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/company/QualityControl/Orders.js') }}?9"  type="text/javascript"></script>
+  <script src="{{ asset('js/company/QualityControl/Orders.js') }}?5"  type="text/javascript"></script>
 </body>
 </html>

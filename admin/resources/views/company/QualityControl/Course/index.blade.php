@@ -44,25 +44,15 @@
 --}}
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
-{{--        <col width="50">--}}
-{{--        <col width="60">--}}
-        <col>
-        <col>
         <col>
         <col>
         <col width="140">
+        <col width="140">
+        <col width="140">
     </colgroup>
     <thead>
-    <tr>
-{{--      <th>--}}
-{{--        <label class="pos-rel">--}}
-{{--          <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>--}}
-{{--          <!-- <span class="lbl">全选</span> -->--}}
-{{--        </label>--}}
-{{--      </th>--}}
-{{--      <th>ID</th>--}}
-        <th>图片</th>
-      <th>课程名称</th>
+    <tr>         
+		<th>课程名称</th>
         <th>状态</th>
         <th>我的参与</th>
       <th>操作</th>
@@ -132,7 +122,7 @@
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
 
 <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/company/QualityControl/Course.js') }}?8"  type="text/javascript"></script>
+  <script src="{{ asset('js/company/QualityControl/Course.js') }}?28"  type="text/javascript"></script>
 @component('component.upfileincludejsmany')
 @endcomponent
 </body>

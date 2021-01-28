@@ -70,33 +70,24 @@
   </div>
 --}}
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
-    <colgroup>
-{{--        <col width="50">--}}
-{{--        <col width="60">--}}
+    <colgroup> 
         <col>
         <col>
         <col >
         <col >
-        <col width="100">
-        <col width="95">
+        <col width="180">
+        <col width="160">
         <col width="14%">
     </colgroup>
     <thead>
-    <tr>
-{{--      <th>--}}
-{{--        <label class="pos-rel">--}}
-{{--          <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>--}}
-{{--          <!-- <span class="lbl">全选</span> -->--}}
-{{--        </label>--}}
-{{--      </th>--}}
-{{--      <th>ID</th>--}}
-      <th>所属企业<hr/>抬头名称</th>
-      <th>纳税人识别号</th>
-      <th>企业地址<hr/>企业电话</th>
-      <th>企业银行<hr/>企业银行账号</th>
-        <th>手机号<hr/>电子邮件</th>
-        <th>创建时间<hr/>更新时间</th>
-      <th>操作</th>
+    <tr> 
+		<th>开户号</th>
+		<th>纳税人识别号</th>
+		<th>企业地址<hr/>联系电话</th>
+		<th>开户行<hr/>银行账号</th>
+		<th>手机号<hr/>电子邮件</th>
+		<th>创建时间<hr/>更新时间</th>
+		<th>操作</th>
     </tr>
     </thead>
     <tbody id="data_list">
@@ -150,6 +141,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/company/QualityControl/InvoiceBuyer.js') }}?1"  type="text/javascript"></script>
+  <script src="{{ asset('js/company/QualityControl/InvoiceBuyer.js') }}?143"  type="text/javascript"></script>
 </body>
 </html>

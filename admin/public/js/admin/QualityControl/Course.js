@@ -111,13 +111,16 @@ var otheraction = {
     // document.write("                <\/label>");
     // document.write("            <\/td>");
     // document.write("            <td><%=item.id%><\/td>");
-    document.write("            <td><%=item.course_name%><hr/><%=item.invoice_template_name%><hr/><%=item.invoice_project_template_name%><\/td>");
-    document.write("            <td>");
-    document.write("               <span class=\"resource_list\"  style=\"display: none;\"><%=JSON.stringify(item.resource_list)%></span>");
-    document.write("               <span  class=\"resource_show\"></span>");
-    document.write("            <\/td>");
-    document.write("            <td><%=item.pay_company_name%><hr/><%=item.pay_method_text%><\/td>");
-    document.write("            <td>¥<%=item.price_member%><hr/>¥<%=item.price_general%><\/td>");
+    document.write("            <td><h3><%=item.course_name%></h3><\/td>");
+	document.write("            <td>¥<%=item.price_member%><hr/>¥<%=item.price_general%><\/td>");
+	document.write("            <td><%=item.invoice_template_name%><hr/><%=item.invoice_project_template_name%><\/td>");
+    // document.write("            <td>");
+    // document.write("               <span class=\"resource_list\"  style=\"display: none;\"><%=JSON.stringify(item.resource_list)%></span>");
+    // document.write("               <span  class=\"resource_show\"></span>");
+    // document.write("            <\/td>");
+    document.write("            <td><%=item.pay_company_name%><\/td>");
+	//<hr/><%=item.pay_method_text%>
+    
     // document.write("           <td>");
     // document.write("            <%for(var j = 0; j<resource_list.length;j++){");
     // document.write("                var jitem = resource_list[j];");
@@ -131,8 +134,9 @@ var otheraction = {
     // document.write("            <td><\/td>");
     document.write("            <td><%=item.wait_class_num%><hr/><%=item.cancel_num%><\/td>");
     document.write("            <td><%=item.joined_class_num%><hr/><%=item.finish_num%><\/td>");
-    document.write("            <td><%=item.hits%><hr/><%=item.status_online_text%><\/td>");
-    document.write("            <td><%=item.created_at%><hr/><%=item.updated_at%><\/td>");
+    document.write("            <td><%=item.status_online_text%><\/td>");
+    document.write("            <td><%=item.updated_at%><\/td>");
+	//<%=item.created_at%><hr/><%=item.hits%><hr/>
     document.write("            <td>");
     document.write("                <%if( false){%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"action.show(<%=item.id%>)\">");

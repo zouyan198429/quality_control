@@ -145,10 +145,10 @@ var otheraction = {
     // document.write("                <\/label>");
     // document.write("            <\/td>");
     // document.write("            <td><%=item.id%><\/td>");
-    document.write("            <td>");
-    document.write("               <span class=\"resource_list\"  style=\"display: none;\"><%=JSON.stringify(item.resource_list)%></span>");
-    document.write("               <span  class=\"resource_show\"></span>");
-    document.write("            <\/td>");
+    // document.write("            <td>");
+    // document.write("               <span class=\"resource_list\"  style=\"display: none;\"><%=JSON.stringify(item.resource_list)%></span>");
+    // document.write("               <span  class=\"resource_show\"></span>");
+    // document.write("            <\/td>");
     document.write("            <td><%=item.course_name%><\/td>");
     document.write("            <td><%=item.status_online_text%><\/td>");
     document.write("            <td><%=item.is_joined_text%><\/td>");
