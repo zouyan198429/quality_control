@@ -353,12 +353,14 @@ function addCompany(company_id, company_name){
     document.write("                <\/label>");
     document.write("            <\/td>");
     // document.write("            <td><%=item.id%><\/td>");
-    document.write("            <td><%=item.course_name%><hr/><%=item.company_name%>(<%=item.company_grade_text%>)<hr/><%=item.certificate_company%><\/td>");
+	document.write("            <td><%=item.real_name%>(<%=item.sex_text%>)<hr/><%=item.class_name%><\/td>");
+    document.write("            <td><%=item.company_name%>(<%=item.company_grade_text%>)<hr/><%=item.certificate_company%><\/td>");
+	//<%=item.course_name%><hr/>
     document.write("            <td>");
     document.write("               <span class=\"resource_list\"  style=\"display: none;\"><%=JSON.stringify(item.resource_list)%></span>");
-    document.write("               <span  class=\"resource_show\"></span>");
+	document.write("               <span  class=\"resource_show\"></span>");
     document.write("            <\/td>");
-    document.write("            <td><%=item.real_name%>(<%=item.sex_text%>)<hr/><%=item.class_name%><\/td>");
+    
     document.write("            <td><%=item.mobile%><hr/><%=item.id_number%><\/td>");
     document.write("            <td><%=item.contacts%><hr/><%=item.tel%><\/td>");
     document.write("            <td>￥<%=item.price%><hr/><%=item.order_no%><\/td>");

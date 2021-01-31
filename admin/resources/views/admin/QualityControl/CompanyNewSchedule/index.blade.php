@@ -21,7 +21,7 @@
   <div class="mmhead" id="mywork">
 
     @include('common.pageParams')
-    <div class="tabbox" >
+    <div class="tabbox" style="padding-bottom: 10px;" >
       <a href="javascript:void(0);" class="" onclick="otheraction.upExcelFile(0)">上传excel文件</a>
       <a href="javascript:void(0);" class="on" onclick="action.iframeModify(0)">上传PDF文件</a>
     </div>
@@ -65,10 +65,11 @@
     <colgroup>
         <col width="50">
         <col width="60">
-        <col width="">
-        <col width="70">
-        <col width="">
-        <col width="">
+        <col>
+        <col width="100">
+        <col width="100">
+        <col width="150">
+        <col width="150">
         <col width="">
     </colgroup>
     <thead>
@@ -79,9 +80,8 @@
           <!-- <span class="lbl">全选</span> -->
         </label>
       </th>
-      <th>ID</th>
-      <th>所属企业</th>
-      <th>企业ID</th>
+      <th>文件ID</th>
+      <th>所属企业（企业ID）</th> 
       <th>文档类型</th>
       <th>文件</th>
       <th>创建时间</th>
@@ -154,7 +154,7 @@
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
 
 <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/CompanyNewSchedule.js') }}?8"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/CompanyNewSchedule.js') }}?58"  type="text/javascript"></script>
 
 @component('component.upfileincludejsmany')
 @endcomponent

@@ -305,7 +305,7 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
     // document.write("            <td><%=item.client_id%><\/td>");
 
     document.write("            <td><%=item.real_name%>(<%=item.sex_text%>)<\/td>");
-    document.write("            <td><%=item.city_name%><\/td>");
+   // document.write("            <td><%=item.city_name%><\/td>");
     document.write("            <td><%=item.mobile%><\/td>");
     //document.write("            <td><%=item.city_name%><\/td>");
     //document.write("            <td><%=item.email%><\/td>");
@@ -319,10 +319,10 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
     document.write("            <td>");
     document.write("            <%=item.role_num_text%>");
     document.write("            <\/td>");
-    document.write("            <td>");
-    document.write("            <%=item.sign_range%>(<%=item.sign_is_food_text%>)");
-    document.write("            <hr\/><%=item.sign_status_text%>");
-    document.write("            <\/td>");
+    // document.write("            <td>");
+    // document.write("            <%=item.sign_range%>(<%=item.sign_is_food_text%>)");
+    // document.write("            <hr\/><%=item.sign_status_text%>");
+    // document.write("            <\/td>");
     document.write("            <td><%=item.is_perfect_text%><hr/><%=item.open_status_text%><\/td>");
     document.write("            <td><%=item.role_status_text%><hr/><%=item.account_status_text%><\/td>");
     // document.write("            <td><%=item.lastlogintime%><\/td>");<%=item.lastlogintime%><hr/>

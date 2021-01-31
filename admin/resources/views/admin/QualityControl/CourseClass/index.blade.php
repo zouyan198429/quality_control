@@ -76,17 +76,16 @@
   </div>
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
-        <col width="50">
-{{--        <col width="60">--}}
+        <col width="50"> 
         <col>
-        <col width="75">
+        <col>
         <col width="75">
         <col width="10%">
         <col>
         <col width="15%">
-        <col width="75">
-        <col width="95">
-        <col width="12%">
+        <col width="90">
+        <col width="160">
+        <col>
     </colgroup>
     <thead>
     <tr>

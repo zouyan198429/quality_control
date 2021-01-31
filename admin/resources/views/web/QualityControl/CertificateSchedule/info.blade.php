@@ -166,31 +166,32 @@
 												  <col width="120">
 												  <col width="120">
 												  <col width="120">
-												  <col>
-												  <col width="150">
-												  <col width="150">
-												  <col width="180">
 												  <col width="120">
+												  <col width="150">
+												  <col >
 												  <col>
+												  <col>
+												  <col>
+												  <col width="100">
 											</colgroup>
 											<thead>
 												<tr align="center">
 													<th>ID</th>
 													<th>
 {{--                                                        产品类别--}}
-                                                        一级名称
+                                                        一级分类
                                                     </th>
 													<th>
 {{--                                                        检测产品--}}
-                                                        二级名称
+                                                        二级分类
                                                     </th>
                                                     <th>
 {{--                                                        检测产品--}}
-                                                        三级名称
+                                                        三级分类
                                                     </th>
                                                     <th>
 {{--                                                        检测产品--}}
-                                                        四级名称
+                                                        四级分类
                                                     </th>
 													<th>
 {{--                                                        检测参数--}}
@@ -211,7 +212,7 @@
 							                @foreach ($certificate_list as $k => $v)
 												<tr>
 													<td  align="center" class="ID">{{ $i ?? '' }}</td>
-													<td  align="center" class="category_name">{{ $v['category_name'] ?? '' }}</td>
+													<td  align="center" class="category_name">{{ $v['category_name'] ?? '' }}<span style="color: #fff;"> {{ $v['id'] ?? '' }}</span></td>
 													<td  align="center" class="project_name">{{ $v['project_name'] ?? '' }}</td>
                                                     <td class="param_name">{{ $v['three_name'] ?? '' }}</td>
                                                     <td class="param_name">{{ $v['four_name'] ?? '' }}</td>

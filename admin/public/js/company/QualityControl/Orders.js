@@ -201,16 +201,22 @@ function addCompany(company_id, company_name){
     document.write("                <\/label>");
     document.write("            <\/td>");
     // document.write("            <td><%=item.id%><\/td>");
-    document.write("            <td><%=item.order_no%><hr/><%=item.company_name%><\/td>");
-    document.write("            <td><%=item.order_type_text%><hr/><%=item.remarks%><hr/><%=item.invoice_template_name%><\/td>");
-    document.write("            <td><%=item.pay_company_name%><hr/><%=item.pay_name%><\/td>");
-    document.write("            <td><%=item.total_amount%><hr/>￥<%=item.total_price%><hr/><%=item.invoice_buyer_name%><\/td>");
-    document.write("            <td>￥<%=item.total_price_goods%><hr/>￥<%=item.total_price_discount%><hr/><%=item.invoice_status_text%><\/td>");
+    document.write("            <td><%=item.order_no%><\/td>");
+	//<%=item.company_name%>
+    document.write("            <td><%=item.order_type_text%><\/td>");
+	//<hr/><%=item.remarks%><hr/><%=item.invoice_template_name%>
+    //document.write("            <td><%=item.pay_company_name%><hr/><%=item.pay_name%><\/td>");
+    document.write("            <td><%=item.total_amount%><hr/>￥<%=item.total_price%><\/td>");
+	//<%=item.invoice_buyer_name%>
+    document.write("            <td>￥<%=item.total_price_goods%><hr/><%=item.invoice_status_text%><\/td>");
+	//<hr/>￥<%=item.total_price_discount%> 优惠金额
     document.write("            <td><%=item.order_time%><hr/><%=item.pay_time%><\/td>");
-    document.write("            <td><%=item.has_refund_text%><hr/><%=item.refund_time%><hr/><%=item.invoice_result_text%><\/td>");
-    document.write("            <td>￥<%=item.refund_price%><hr/>￥<%=item.refund_price_frozen%><\/td>");
-    document.write("            <td>￥<%=item.payment_amount%><hr/>￥<%=item.change_amount%><hr/>￥<%=item.check_price%>(<%=item.order_status_text%>)<\/td>");
-    document.write("            <td><%=item.sure_time%><hr/><%=item.check_time%><hr/><%=item.cancel_time%><\/td>");
+    //document.write("            <td><%=item.has_refund_text%><hr/><%=item.refund_time%><hr/><%=item.invoice_result_text%><\/td>");
+    //document.write("            <td>￥<%=item.refund_price%><hr/>￥<%=item.refund_price_frozen%><\/td>");
+    document.write("            <td>￥<%=item.payment_amount%><hr/>￥<%=item.check_price%>(<%=item.order_status_text%>)<\/td>");
+	//￥<%=item.change_amount%><hr/>找零金额
+    document.write("            <td><%=item.sure_time%><hr/><%=item.check_time%><\/td>");
+	//<hr/><%=item.cancel_time%> 作废时间
     document.write("            <td>");
     // document.write("                <%if( true){%>");
     // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"action.show(<%=item.id%>)\">");

@@ -62,18 +62,15 @@
 {{--    <div style="display:none;" ><input type="file" class="import_file img_input"></div>--}}{{--导入file对象--}}
   </div>
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
-    <colgroup>
-{{--        <col width="50">--}}
-{{--        <col width="60">--}}
+    <colgroup>        
         <col width="50">
-        <col width="10%">
-        <col> 
+		<col width="70"> 
         <col>
         <col>
-        <col width="20%">
-        <col width="8%">
-        <col width="95">
-        <col width="80">
+		<col>
+		<col width="120">
+        <col width="150">
+        <col width="140"> 
     </colgroup>
     <thead>
     <tr>
@@ -83,16 +80,14 @@
           <!-- <span class="lbl">全选</span> -->
         </label>
       </th>
-{{--      <th>ID</th>--}}
-      <th>所属企业</th>
-      <th>CMA证书号<hr/>实验室地址</th>
-      <th>批准日期</th>
-      <th>类别</th> 
-      <th>项目名称<hr/>标准（方法）名称</th>
-        <th>限制范围<hr/>说明</th>
-      <th>创建时间<hr/>更新时间</th>
-{{--      <th></th>--}}
-      <th>操作</th>
+		<th>ID</th> 
+		<th>所属企业(CMA证书号)<br />实验室地址</th> 
+		<th>类别</th> 
+		<th>项目名称<hr/>标准（方法）名称</th>
+		<!-- <th>限制范围<hr/>说明</th> -->
+		<th>批准日期</th>
+		<th>创建时间<hr/>更新时间</th> 
+		<th>操作</th>
     </tr>
     </thead>
     <tbody id="data_list">
@@ -149,6 +144,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/CertificateSchedule.js') }}?6"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/CertificateSchedule.js') }}?556395"  type="text/javascript"></script>
 </body>
 </html>

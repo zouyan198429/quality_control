@@ -55,11 +55,11 @@
                 <td>
                     {{ $info['pay_status_text'] ?? '' }}/{{ $info['join_class_status_text'] ?? '' }}
                 </td>
-            </tr>
-            <tr>
-                <th>报名学员</th>
-                <td>
-                    <table  lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
+            </tr> 
+			
+			</table>
+			<h3>报名学员</h3> 
+            <table  lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
                         <colgroup>
                             <col width="75">
                             <col>
@@ -140,11 +140,7 @@
                         @endforeach
                         </tbody>
                     </table>
-                </td>
-            </tr>
-
-
-        </table>
+               
 </div>
 <script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>
 <script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.all.js')}}"></script>
