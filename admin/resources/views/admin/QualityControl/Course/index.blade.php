@@ -29,7 +29,7 @@
         <select class="wmini" name="status_online">
           <option value="">上架状态</option>
           @foreach ($statusOnline as $k=>$txt)
-            <option value="{{ $k }}"  @if(isset($defaultStatusOnline) && $defaultStatusOnline == $k) selected @endif >{{ $txt }}</option>
+            <option value="{{ $k }}"  @if(isset($defaultGroupType) && $defaultGroupType == $k) selected @endif >{{ $txt }}</option>
           @endforeach
         </select>
           <select class="wmini" name="pay_config_id" style="width: 80px;">

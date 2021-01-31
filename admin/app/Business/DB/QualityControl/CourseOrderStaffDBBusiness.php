@@ -2,6 +2,7 @@
 // 报名学员
 namespace App\Business\DB\QualityControl;
 
+use App\Services\alipaySdk\AlipayPayAPI;
 use App\Services\DB\CommonDB;
 use App\Services\pay\weixin\easyWechatPay;
 use App\Services\Tool;
@@ -677,6 +678,13 @@ class CourseOrderStaffDBBusiness extends BasePublicDBBusiness
         if($orderPayConfigInfo['open_status'] != 1) throws('收款账号未开启');
         if(($orderPayConfigInfo['pay_method'] & $pay_method) != $pay_method) throws('收款账号未开启支付方式【' . $orderPayMethodInfo['pay_name'] . '】');
 
+        // 如果是支付宝二维码或支付宝扫码支付，则需要先获得授权信息
+        $alipayAuthTokenInfo = [];
+        if(in_array($pay_method, [4,64])){
+            $alipayAuthTokenInfo = AlipayAuthTokenDBBusiness::getDBFVFormatList(4, 1, ['pay_config_id' => $pay_config_id, 'operate_status' => 2]);
+            if(empty($alipayAuthTokenInfo)) throws('此收款帐号支付宝未授权，请先授权才能使用！');
+        }
+
         // 判断人员信息
         $courseStaffList = CourseOrderStaffDBBusiness::getDBFVFormatList(1, 1, ['id' => $ids]);
         if(empty($courseStaffList))  throws('缴费人员信息不能为空！');
@@ -752,7 +760,7 @@ class CourseOrderStaffDBBusiness extends BasePublicDBBusiness
         CommonDB::doTransactionFun(function() use(&$company_id, &$organize_id, &$ids, &$operate_staff_id, &$modifAddOprate
             , &$ownProperty, &$temNeedStaffIdOrHistoryId, &$operate_staff_id_history, &$order_no, &$createOrder
             , &$pay_config_id, &$pay_method, &$return_params, &$orderPayConfigInfo, &$auth_code, &$operate_type, &$invoice_template_id
-            , &$courseOrderList, &$courseOrderIds, &$courseStaffList){
+            , &$courseOrderList, &$courseOrderIds, &$courseStaffList, &$alipayAuthTokenInfo){
             $invoice_template_id_history = InvoiceTemplateDBBusiness::getIdHistory($invoice_template_id);
             $createOrder['invoice_template_id_history'] = $invoice_template_id_history;
             // 生成订单
@@ -763,6 +771,8 @@ class CourseOrderStaffDBBusiness extends BasePublicDBBusiness
                 'invoice_template_id_history' => $invoice_template_id_history,
             ];
             static::saveByIds($saveData, $ids);
+
+            info('生成支付订单日志:',[$order_no, $ids]);
             // 修改订单发票商品项目模板id历史
             $courseFormatOrderStaff = Tool::arrUnderReset($courseStaffList, 'invoice_project_template_id', 2, '_');
             foreach($courseFormatOrderStaff as  $invoice_project_template_id => $temOrderStaff){
@@ -818,7 +828,7 @@ class CourseOrderStaffDBBusiness extends BasePublicDBBusiness
                     $resultPay = OrdersDBBusiness::createOrderPay($company_id, $createPayOrder, $order_no, $operate_staff_id, $modifAddOprate);
                     $app = app('wechat.payment.' . $payKey);
                     $params = [
-                        'body' => '面授课--微信收款码支付费用',
+                        'body' => '面授课--微信收付款码支付费用',
                         'out_trade_no' => $resultPay['pay_order_no'],
                         'total_fee' => $createOrder['total_price_goods'],// ceil($createOrder['total_price_goods'] * 100),
                         // 'spbill_create_ip' => '123.12.12.123', // 可选，如不传该参数，SDK 将会自动获取相应 IP 地址
@@ -830,37 +840,140 @@ class CourseOrderStaffDBBusiness extends BasePublicDBBusiness
                     ];
                     try{
                         Tool::phpInitSet();// 可长时间执行
+                        $return_params['pay_order_no'] = $resultPay['pay_order_no'];
                         $result = easyWechatPay::microPay($app, $params, function ($resultWX) use(&$return_params,
                             &$order_no, &$resultPay, &$payKey){
 
                             $return_params['openid'] = $resultWX['openid'] ?? '';
-                            $return_params['pay_order_no'] = $resultPay['pay_order_no'];
+                            // 无论支付成功，都让前端去轮询结果
                             // 付款成功
-                            $orderPayInfo = OrderPayDBBusiness::getDBFVFormatList(4, 1, ['pay_order_no' => $resultPay['pay_order_no']]);
+//                            $orderPayInfo = OrderPayDBBusiness::getDBFVFormatList(4, 1, ['pay_order_no' => $resultPay['pay_order_no']]);
 
-                            try {
-                                // 先查一下接口，再改状态这样放心
-                                OrderPayDBBusiness::payWXJudgeThirdQuery($order_no, $resultPay['pay_order_no'], $payKey, $orderPayInfo);
-                            } catch ( \Exception $e) {
-                                $errStr = $e->getMessage();
-                                $errCode = $e->getCode();
-                                if(in_array($errCode, [11])){// 已付款成功
-//                                    $returnStr = $errStr;
-//                                    return $returnStr;
-                                }else{// 没有付款成功
-                                    //                    throws('操作失败；信息[' . $e->getMessage() . ']');
-                                    throws($errStr, $errCode);
-                                }
-                            }
-                            return $resultWX;
+//                            try {
+//                                // 先查一下接口，再改状态这样放心
+//                                OrderPayDBBusiness::payWXJudgeThirdQuery($order_no, $resultPay['pay_order_no'], $payKey, $orderPayInfo);
+//                            } catch ( \Exception $e) {
+//                                $errStr = $e->getMessage();
+//                                $errCode = $e->getCode();
+//                                if(in_array($errCode, [11])){// 已付款成功
+////                                    $returnStr = $errStr;
+////                                    return $returnStr;
+//                                }else{// 没有付款成功
+//                                    //                    throws('操作失败；信息[' . $e->getMessage() . ']');
+//                                    throws($errStr, $errCode);
+//                                }
+//                            }
+//                            return $resultWX;
                         });
+                    } catch ( \Exception $e) {
+                        $errStr = $e->getMessage();
+                        $errCode = $e->getCode();
+                        $errUpperCode = strtoupper($errCode);
+                        // SYSTEMERROR	接口返回错误	请立即调用被扫订单结果查询API，查询当前订单状态，并根据订单的状态决定下一步的操作。
+                        // BANKERROR	银行系统异常	请立即调用被扫订单结果查询API，查询当前订单的不同状态，决定下一步的操作。
+                        // USERPAYING	用户支付中，需要输入密码	等待5秒，然后调用被扫订单结果查询API，查询当前订单的不同状态，决定下一步的操作。
+                        $errArr = ['SYSTEMERROR', 'BANKERROR' , 'USERPAYING'];
+                        $isThrowErr = true;
+                        foreach($errArr as $errKey){
+                            if(strpos($errUpperCode, $errKey) !== false){// 包含
+                                $isThrowErr = false;
+                                break;
+                            }
+                        }
+                        if($isThrowErr) throws('失败；信息[' . $errStr . ']', $errCode);
+                    }
+                    break;
+                case 4:// 支付宝收款码【线上--网页生成】
+                    $resultPay = OrdersDBBusiness::createOrderPay($company_id, $createPayOrder, $order_no, $operate_staff_id, $modifAddOprate);
+                    $apiParams = [
+                        'out_trade_no' => $resultPay['pay_order_no'],// '20150320010101001',//String	必选	64 商户订单号,64个字符以内、只能包含字母、数字、下划线；需保证在商户端不重复
+                        'total_amount' => bcdiv($createOrder['total_price_goods'], '100', 2),// Price	必选	11 订单总金额，单位为人民币（元），取值范围为 0.01~100000000.00，精确到小数点后两位。
+                        // 'discountable_amount' => '8.88',// Price	可选	11 可打折金额. 参与优惠计算的金额，单位为人民币（元），取值范围为 0.01~100000000.00，精确到小数点后两位。
+                        'subject' => '面授课--支付宝收款码支付费用',// String	必选	256	商品的标题/交易标题/订单标题/订单关键字等。 注意：不可使用特殊字符，如 /，=，& 等。
+                        // 'product_code' => 'FACE_TO_FACE_PAYMENT',// String	可选	64 销售产品码。 如果签约的是当面付快捷版，则传 OFFLINE_PAYMENT；其它支付宝当面付产品传 FACE_TO_FACE_PAYMENT；不传默认使用 FACE_TO_FACE_PAYMENT。
+                         'operator_id' => $operate_staff_id,// 'yx_001',// String	可选	28	商户操作员编号
+                         'store_id' => $operate_staff_id,// 'NJ_001',// String	可选	32	商户门店编号
+                         'terminal_id' => $operate_staff_id,// 'NJ_T_001',// String	可选	32	商户机具终端编号
+                        'timeout_express' => '2m',// String	可选	6 该笔订单允许的最晚付款时间，逾期将关闭交易。取值范围：1m～15d。m-分钟，h-小时，d-天，1c-当天（1c-当天的情况下，无论交易何时创建，都在0点关闭）。该参数数值不接受小数点， 如 1.5h，可转换为 90m。
+                        // 'merchant_order_no' => '20161008001',// String	可选	32	商户原始订单号，最大长度限制32位
+                        'passback_params' => urlencode($resultPay['pay_order_no']),//  'merchantBizType%3d3C%26merchantBizNo%3d2016010101111',// String	可选	512 公用回传参数，如果请求时传递了该参数，则返回给商户时会回传该参数。支付宝只会在同步返回（包括跳转回商户网站）和异步通知时将该参数原样返回。本参数必须进行UrlEncode之后才可以发送给支付宝。
+                        'qr_code_timeout_express' => '90m',// String	可选	6该笔订单允许的最晚付款时间，逾期将关闭交易，从生成二维码开始计时，默认有效期2h。 取值范围：1m～15d。m-分钟，h-小时，d-天，1c-当天（1c-当天的情况下，无论交易何时创建，都在0点关闭）。该参数数值不接受小数点， 如 1.5h，可转换为 90m。当面付场景最大有效期为2h，该场景下本参数设置超过2h，订单将在2h时关闭。
+                    ];
+                    $alipayConfig = config('public.alipayConfig.APIConfig');
+                    $app_auth_token = $alipayAuthTokenInfo['app_auth_token'];
+                    $aplipayPID = config('public.alipayConfig.app.trmwebApp.pid');// $alipayAuthTokenInfo['user_id'];
+                    try{
+                        // 支付预生成订单
+                        $notifyUrl = config('public.alipayConfig.notifyUrl');// url('api/pay/alipay/alipayNotify');// String	否	256	支付宝服务器主动通知商户服务器里指定的页面http/https路径。	http://api.test.alipay.net/atinterface/receive_notify.htm
+                        $result = AlipayPayAPI::tradePrecreate($alipayConfig, $apiParams, $notifyUrl, $app_auth_token, $aplipayPID);
+                        $return_params['code_url'] = $result['qr_code'];
+                        $return_params['pay_order_no'] = $resultPay['pay_order_no'];
                     } catch ( \Exception $e) {
                         throws('失败；信息[' . $e->getMessage() . ']');
                     }
                     break;
-                case 4:// 支付宝收款码【线上--网页生成】
-                    break;
                 case 64:// 支付宝收付款码【线上--扫码枪】
+                    $resultPay = OrdersDBBusiness::createOrderPay($company_id, $createPayOrder, $order_no, $operate_staff_id, $modifAddOprate);
+
+                    $apiParams = [
+                        'out_trade_no' => $resultPay['pay_order_no'],// '20150320010101001',//String	必选	64 商户订单号,64个字符以内、只能包含字母、数字、下划线；需保证在商户端不重复
+                        'scene' => 'bar_code',// * String	必选	32	支付场景。 条码支付，取值：bar_code； 声波支付，取值：wave_code
+                        'auth_code' => $auth_code,// '28763443825664394',// *  String	必选	64	支付授权码。25~30开头的长度为16~24位的数字，实际字符串长度以开发者获取的付款码长度为准
+                        // 'product_code' => 'FACE_TO_FACE_PAYMENT',// String	可选	64 销售产品码，商家和支付宝签约的产品码。 当面付场景下， 如果签约的是当面付快捷版，则传 OFFLINE_PAYMENT; 其它支付宝当面付产品传 FACE_TO_FACE_PAYMENT；不传则默认使用FACE_TO_FACE_PAYMENT。
+                        'subject' => '面授课--支付宝收款码支付费用',// String	必选	256	商品的标题/交易标题/订单标题/订单关键字等。 注意：不可使用特殊字符，如 /，=，& 等。
+                        'total_amount' => bcdiv($createOrder['total_price_goods'], '100', 2),// Price	必选	11 订单总金额，单位为人民币（元），取值范围为 0.01~100000000.00，精确到小数点后两位。
+                        // 'discountable_amount' => '8.88',// Price	可选	11 可打折金额. 参与优惠计算的金额，单位为人民币（元），取值范围为 0.01~100000000.00，精确到小数点后两位。
+
+                        'operator_id' => $operate_staff_id,// 'yx_001',// String	可选	28	商户操作员编号
+                        'store_id' => $operate_staff_id,// 'NJ_001',// String	可选	32	商户门店编号
+                        'terminal_id' => $operate_staff_id,// 'NJ_T_001',// String	可选	32	商户机具终端编号
+                        'timeout_express' => '2m',// String	可选	6 该笔订单允许的最晚付款时间，逾期将关闭交易。取值范围：1m～15d。m-分钟，h-小时，d-天，1c-当天（1c-当天的情况下，无论交易何时创建，都在0点关闭）。该参数数值不接受小数点， 如 1.5h，可转换为 90m。
+
+                    ];
+                    $alipayConfig = config('public.alipayConfig.APIConfig');
+                    $app_auth_token = $alipayAuthTokenInfo['app_auth_token'];
+                    $aplipayPID = config('public.alipayConfig.app.trmwebApp.pid');// $alipayAuthTokenInfo['user_id'];
+
+
+                    try{
+                        Tool::phpInitSet();// 可长时间执行
+                        $return_params['pay_order_no'] = $resultPay['pay_order_no'];
+                        // 支付宝统一收单交易支付接口)
+                        $notifyUrl = config('public.alipayConfig.notifyUrl');// url('api/pay/alipay/alipayNotify');// String	否	256	支付宝服务器主动通知商户服务器里指定的页面http/https路径。	http://api.test.alipay.net/atinterface/receive_notify.htm
+
+                        try {
+                            $resultObj = AlipayPayAPI::tradePay($alipayConfig, $apiParams, $notifyUrl, $app_auth_token, $aplipayPID);
+                        } catch ( \Exception $e) {
+                            $errStr = $e->getMessage();
+                            $errCode = $e->getCode();//  支付成功（10000）， 支付失败（40004）， 等待用户付款（10003）和 未知异常（20000）。
+                            if(!in_array($errCode, [10000, 40004, 10003, 20000])){
+                                throws($errStr, $errCode);
+                            }
+                        }
+                        // $return_params['openid'] = $resultObj->buyer_logon_id;
+                        // 无论支付成功，都让前端去轮询结果
+
+//                        // 付款成功
+//                        $orderPayInfo = OrderPayDBBusiness::getDBFVFormatList(4, 1, ['pay_order_no' => $resultPay['pay_order_no']]);
+//
+//                        try {
+//                            // 先查一下接口，再改状态这样放心
+//                            OrderPayDBBusiness::payAlipayJudgeThirdQuery($order_no, $resultPay['pay_order_no'], $alipayConfig, $alipayAuthTokenInfo, $orderPayInfo);
+//                        } catch ( \Exception $e) {
+//                            $errStr = $e->getMessage();
+//                            $errCode = $e->getCode();
+//                            if(in_array($errCode, [11])){// 已付款成功
+////                                    $returnStr = $errStr;
+////                                    return $returnStr;
+//                            }else{// 没有付款成功
+//                                //                    throws('操作失败；信息[' . $e->getMessage() . ']');
+//                                throws($errStr, $errCode);
+//                            }
+//                        }
+                    } catch ( \Exception $e) {
+
+                        throws('失败；信息[' . $e->getMessage() . ']');
+                    }
                     break;
                 default:// 现金等直接确认收款完成的  订单完成支付 1、现金；8、微信收款码【个人-燕】；32、支付宝收款码【个人-燕】
                     OrdersDBBusiness::finishPay($company_id, $order_no, '', $operate_staff_id, $modifAddOprate);

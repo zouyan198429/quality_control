@@ -228,7 +228,7 @@ class OrderPayController extends BasicController
 //    }
 
     /**
-     * ajax查询微信扫码支付是否成功
+     * ajax查询微信扫码支付是否成功-还有支付宝扫码支付
      *
      * @param int $id
      * @return Response

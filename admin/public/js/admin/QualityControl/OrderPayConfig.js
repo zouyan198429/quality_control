@@ -90,8 +90,106 @@ var otheraction = {
         var tishi = pay_company_name + "-发票配置销售方";
         layeriframe(weburl,tishi,1050,535,5);
         return false;
+    },
+    alipayAuthBath : function(id, pay_company_name){// 批量授权URL拼接规则
+        //获得表单各name的值
+        var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
+        console.log(INVOICE_CONFIG_HYDZFP_EDIT_URL);
+        console.log(data);
+        var url_params = get_url_param(data);// parent.get_url_param(data);
+        var weburl = ALIPAY_AUTH_URL + "&state=" + encodeURIComponent($.base64.encode(id));// + url_params;// + id + '?' + url_params;
+        // var weburl = STAFF_SHOW_URL + '?company_id=' + id
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = pay_company_name + "-支付宝授权";
+        // layeriframe(weburl,tishi,1050,535,5);
+        // goOpenUrl(weburl,'_blank');
+        goTop(weburl);
+        return false;
+    },
+    // refreshAlipayToken: function(obj){// 刷新授权令牌 access_token--批量
+    //     var recordObj = $(obj);
+    //     var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+    //     otheraction.refreshAlipayTokenByIds(obj, ids);
+    // },
+    refreshAlipayTokenByIds: function(obj, ids) {//刷新授权令牌 access_token
+        if( ids == ''){
+            err_alert('请选择需要操作的数据');
+            return false;
+        }
+        var operateText = '刷新授权令牌';
+        var index_query = layer.confirm('确定' + operateText + '所选记录？操作后不可变更！', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            // var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+            //ajax开启数据
+            other_operate_ajax('refresh_alipay_token', ids, operateText, {});
+            layer.close(index_query);
+        }, function(){
+        });
+        return false;
     }
 };
+
+//操作
+// params 其它参数对象  {}
+function other_operate_ajax(operate_type, id, operate_txt, params){
+    params = params || {};
+    if(operate_type == '' || id == ''){
+        err_alert('请选择需要操作的数据');
+        return false;
+    }
+    operate_txt = operate_txt || "";
+    var data = params;// {};
+    var ajax_url = "";
+    var reset_total = true;// 是否重新从数据库获取总页数 true:重新获取,false不重新获取  ---ok
+    switch(operate_type)
+    {
+        case 'refresh_alipay_token'://刷新授权令牌
+            // operate_txt = "批量开启";
+            // data = {'id':id, 'activity_id': CURRENT_ACTIVITY_ID};
+            // 合并对象
+            objAppendProps(data, {'id':id}, true);
+            reset_total = false;
+            ajax_url = REFRESH_ALIPAY_TOKEN_URL;// "/pms/Supplier/ajax_del?operate_type=2";
+            break;
+        default:
+            break;
+    }
+    console.log('ajax_url:',ajax_url);
+    console.log('data:',data);
+    var layer_index = layer.load();//layer.msg('加载中', {icon: 16});
+    $.ajax({
+        'type' : 'POST',
+        'url' : ajax_url,//'/pms/Supplier/ajax_del',
+        'headers':get_ajax_headers({}, ADMIN_AJAX_TYPE_NUM),
+        'data' : data,
+        'dataType' : 'json',
+        'success' : function(ret){
+            console.log('ret:',ret);
+            if(!ret.apistatus){//失败
+                //alert('失败');
+                // countdown_alert(ret.errorMsg,0,5);
+                layer_alert(ret.errorMsg,3,0);
+            }else{//成功
+                var msg = ret.errorMsg;
+                if(msg === ""){
+                    msg = operate_txt+"成功";
+                }
+                // countdown_alert(msg,1,5);
+                layer_alert(msg,1,0);
+                // reset_list(true, true);
+                console.log(LIST_FUNCTION_NAME);
+                eval( LIST_FUNCTION_NAME + '(' + true +', ' + true +', ' + reset_total + ', 2)');
+            }
+            layer.close(layer_index);//手动关闭
+        }
+    });
+}
+
 (function() {
     document.write("");
     document.write("    <!-- 前端模板部分 -->");
@@ -118,6 +216,7 @@ var otheraction = {
     document.write("            <td><%=item.pay_key%><\/td>");
     document.write("            <td><%=item.pay_method_text%><\/td>");
     document.write("            <td><%=item.open_status_text%><\/td>");
+    document.write("            <td><%=item.alipay_auth_status_text%><\/td>");
     document.write("            <td><%=item.remarks%><\/td>");
     document.write("            <td><%=item.created_at%><\/td>");
     document.write("            <td><%=item.updated_at%><\/td>");
@@ -137,6 +236,16 @@ var otheraction = {
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.invoice_config_hydzfp(<%=item.id%>,'<%=item.pay_company_name%>')\">");
     document.write("                    <i class=\"ace-icon fa fa-cog bigger-60\"> 电子发票配置[沪友]<\/i>");
     document.write("                <\/a>");
+    document.write("                <%if( item.alipay_auth_status == 2){%>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"otheraction.alipayAuthBath(<%=item.id%>,'<%=item.pay_company_name%>')\">");
+    document.write("                    <i class=\"ace-icon fa  fa-handshake-o bigger-60\"> 支付宝授权<\/i>");
+    document.write("                <\/a>");
+    document.write("                <%}%>");
+    document.write("                <%if( false && item.alipay_auth_status == 1){%>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"otheraction.refreshAlipayTokenByIds(this,<%=item.id%>)\">");
+    document.write("                    <i class=\"ace-icon fa fa-refresh bigger-60\">刷新支付宝授权<\/i>");
+    document.write("                <\/a>");
+    document.write("                <%}%>");
     // document.write("                <%if( can_modify){%>");
     // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.del(<%=item.id%>)\">");
     // document.write("                    <i class=\"ace-icon fa fa-trash-o bigger-60\"> 删除<\/i>");

@@ -633,6 +633,9 @@ class easyWechatPay
                 }
             });
         } catch ( \Exception $e) {
+            // SYSTEMERROR	接口返回错误	请立即调用被扫订单结果查询API，查询当前订单状态，并根据订单的状态决定下一步的操作。
+            // BANKERROR	银行系统异常	请立即调用被扫订单结果查询API，查询当前订单的不同状态，决定下一步的操作。
+            // USERPAYING	用户支付中，需要输入密码	等待5秒，然后调用被扫订单结果查询API，查询当前订单的不同状态，决定下一步的操作。
             Log::info('微信支付日志 error-->' . __FUNCTION__, [$e->getMessage()]);
             throws('' . $e->getMessage() . '', $e->getCode());
             // return $fail($e->getMessage());
@@ -769,7 +772,8 @@ class easyWechatPay
                 }
 
             }else{
-                throws('错误代码【' . ($result['err_code'] ?? '') . '】；错误描述【' . ($result['err_code_des'] ?? '') . '】');
+                // 错误代码	err_code	string[1,32]
+                throws('错误代码【' . ($result['err_code'] ?? '') . '】；错误描述【' . ($result['err_code_des'] ?? '') . '】', $result['err_code'] ?? '');
             }
         } else {// if ($result['result_code'] === 'FAIL')
             throws($result['return_msg'] ?? '');

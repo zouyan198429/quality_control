@@ -298,6 +298,20 @@ Route::get('admin/user/export', 'Admin\QualityControl\UserController@export');//
 Route::get('admin/user/import_template', 'Admin\QualityControl\UserController@import_template');// 导入模版
 Route::get('admin/user/import_bath/{company_id}', 'Admin\QualityControl\UserController@import_bath');// 导入批量
 
+// 选民组表
+Route::get('admin/voter_group', 'Admin\QualityControl\VoterGroupController@index');// 列表
+Route::get('admin/voter_group/add/{id}', 'Admin\QualityControl\VoterGroupController@add');// 添加
+// Route::get('admin/voter_group/select', 'Admin\QualityControl\VoterGroupController@select');// 选择-弹窗
+Route::get('admin/voter_group/export', 'Admin\QualityControl\VoterGroupController@export');// 导出
+Route::get('admin/voter_group/import_template', 'Admin\QualityControl\VoterGroupController@import_template');// 导入模版
+
+// 选民表
+Route::get('admin/voters', 'Admin\QualityControl\VotersController@index');// 列表
+Route::get('admin/voters/add/{id}', 'Admin\QualityControl\VotersController@add');// 添加
+// Route::get('admin/voters/select', 'Admin\QualityControl\VotersController@select');// 选择-弹窗
+Route::get('admin/voters/export', 'Admin\QualityControl\VotersController@export');// 导出
+Route::get('admin/voters/import_template', 'Admin\QualityControl\VotersController@import_template');// 导入模版
+
 // 行业[一级分类]
 Route::get('admin/industry', 'Admin\QualityControl\IndustryController@index');// 列表
 Route::get('admin/industry/add/{id}', 'Admin\QualityControl\IndustryController@add');// 添加

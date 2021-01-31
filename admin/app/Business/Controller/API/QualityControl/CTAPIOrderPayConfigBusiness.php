@@ -165,6 +165,9 @@ class CTAPIOrderPayConfigBusiness extends BasicPublicCTAPIBusiness
         $pay_method = CommonRequest::get($request, 'pay_method');
         if(strlen($pay_method) > 0 && $pay_method != 0)  Tool::appendCondition($queryParams, 'pay_method',  $pay_method . '=' . $pay_method, '&');
 
+        $alipay_auth_status = CommonRequest::get($request, 'alipay_auth_status');
+        if(strlen($alipay_auth_status) > 0 && $alipay_auth_status != 0)  Tool::appendParamQuery($queryParams, $alipay_auth_status, 'alipay_auth_status', [0, '0', ''], ',', false);
+
 //        $ids = CommonRequest::get($request, 'ids');
 //        if(strlen($ids) > 0 && $ids != 0)  Tool::appendParamQuery($queryParams, $ids, 'id', [0, '0', ''], ',', false);
 

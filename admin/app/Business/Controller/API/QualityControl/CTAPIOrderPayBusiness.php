@@ -239,7 +239,7 @@ class CTAPIOrderPayBusiness extends BasicPublicCTAPIBusiness
     }
 
     /**
-     * 生成付款码后，用户扫码支付循环获取是否支付成功--微信
+     * 生成付款码后，用户扫码支付循环获取是否支付成功--微信--还有支付宝扫码支付
      *
      * @param Request $request 请求信息
      * @param Controller $controller 控制对象
@@ -266,6 +266,32 @@ class CTAPIOrderPayBusiness extends BasicPublicCTAPIBusiness
         return $result;
     }
 
+    /**
+     * 生成付款码后，用户扫码支付对回调内容进行验证
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $notifyParams 回调的参数数组
+     *   //  必有 out_trade_no 、 total_amount、 trade_status、notify_id ；  可能有 seller_id
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return   true 成功 或 throws 有误
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function payAlipayNotify(Request $request, Controller $controller, $notifyParams = [], $notLog = 0)
+    {
+
+        $company_id = 0;// $controller->company_id;
+        // $user_id = $controller->user_id;
+//        if(isset($saveData['real_name']) && empty($saveData['real_name'])  ){
+//            throws('联系人不能为空！');
+//        }
+        // 调用新加或修改接口
+        $apiParams = [
+            'notify_params' => $notifyParams,
+        ];
+        $result = static::exeDBBusinessMethodCT($request, $controller, '', 'alipayNotifyJudge', $apiParams, $company_id, $notLog);
+        return $result;
+    }
 
     /**
      * 格式化关系数据 --如果有格式化，肯定会重写---本地数据库主要用这个来格式化数据

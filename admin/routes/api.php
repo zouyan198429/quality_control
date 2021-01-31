@@ -152,6 +152,13 @@ $api->version('v1', function ($api) {
         $api->any('pay/wechat/operateRefundByNo', 'Pay\WeChatController@operateRefundByNo');// 退款--手动查询退单结果并操作记录
 
         $api->any('pay/wechat/test', 'Pay\WeChatController@test');// 统一下单
+
+
+
+        // 支付宝相关的
+        $api->any('pay/alipay/authRedirect', 'Pay\AlipayController@authRedirect');// 授权回调地址
+        $api->any('pay/alipay/alipayNotify', 'Pay\AlipayController@alipayNotify');// 支付结果通知--回调
+
         // ------后台
 
         // 验证码 -- ok
@@ -250,6 +257,29 @@ $api->version('v1', function ($api) {
         $api->post('admin/user/ajax_frozen', 'Admin\QualityControl\UserController@ajax_frozen');// 操作(冻结/解冻)
 
         $api->post('admin/user/up_file', 'Admin\QualityControl\UserController@up_file');// 上传文件地址
+
+        // 选民组表
+        $api->any('admin/voter_group/ajax_alist', 'Admin\QualityControl\VoterGroupController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/voter_group/ajax_del', 'Admin\QualityControl\VoterGroupController@ajax_del');// 删除
+        $api->post('admin/voter_group/ajax_save', 'Admin\QualityControl\VoterGroupController@ajax_save');// 新加/修改
+        $api->post('admin/voter_group/ajax_get_child', 'Admin\QualityControl\VoterGroupController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/voter_group/ajax_get_areachild', 'Admin\QualityControl\VoterGroupController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/voter_group/ajax_import_staff','Admin\QualityControl\VoterGroupController@ajax_import'); // 导入员工
+
+        $api->post('admin/voter_group/import', 'Admin\QualityControl\VoterGroupController@import');// 导入excel
+        $api->post('admin/voter_group/ajax_get_ids', 'Admin\QualityControl\VoterGroupController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+
+        // 选民表
+        $api->any('admin/voters/ajax_alist', 'Admin\QualityControl\VotersController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/voters/ajax_del', 'Admin\QualityControl\VotersController@ajax_del');// 删除
+        $api->post('admin/voters/ajax_save', 'Admin\QualityControl\VotersController@ajax_save');// 新加/修改
+        $api->post('admin/voters/ajax_get_child', 'Admin\QualityControl\VotersController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/voters/ajax_get_areachild', 'Admin\QualityControl\VotersController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/voters/ajax_import_staff','Admin\QualityControl\VotersController@ajax_import'); // 导入员工
+
+        $api->post('admin/voters/import', 'Admin\QualityControl\VotersController@import');// 导入excel
+        $api->post('admin/voters/ajax_get_ids', 'Admin\QualityControl\VotersController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
         // 行业[一级分类]
         $api->any('admin/industry/ajax_alist', 'Admin\QualityControl\IndustryController@ajax_alist');//ajax获得列表数据
@@ -363,6 +393,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/order_pay_config/ajax_get_ids', 'Admin\QualityControl\OrderPayConfigController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
         $api->any('admin/order_pay_config/ajax_info', 'Admin\QualityControl\OrderPayConfigController@ajax_info');//ajax获得详情数据
+        $api->any('admin/order_pay_config/ajax_refreshAlipayToken', 'Admin\QualityControl\OrderPayConfigController@ajax_refreshAlipayToken');//ajax刷新授权令牌 access_token
 
         // 收款订单
         $api->any('admin/orders/ajax_alist', 'Admin\QualityControl\OrdersController@ajax_alist');//ajax获得列表数据

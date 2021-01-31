@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\QualityControl;
 
+use App\Business\Controller\API\QualityControl\CTAPIAlipayAuthTokenBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIOrderPayConfigBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIOrderPayMethodBusiness;
 use App\Business\DB\QualityControl\OrderPayMethodDBBusiness;
@@ -132,6 +133,26 @@ class OrderPayConfigController extends BasicController
         if(!is_numeric($id) || $id <=0) return ajaxDataArr(0, null, '参数[id]有误！');
         return $this->exeDoPublicFun($request, 128, 2,'', true, 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
 
+        });
+    }
+
+    /**
+     * ajax刷新授权令牌 access_token
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_refreshAlipayToken(Request $request){
+        $id = CommonRequest::getInt($request, 'id');
+        if(!is_numeric($id) || $id <=0) return ajaxDataArr(0, null, '参数[id]有误！');
+        return $this->exeDoPublicFun($request, 0, 4,'', true, '', ['id' => $id], function (&$reDataArr) use ($request, &$id){
+            // 获得记录
+            $alipayTokenInfo = CTAPIAlipayAuthTokenBusiness::getFVFormatList( $request,  $this, 4, 1
+                , ['pay_config_id' => $id, 'operate_status' => 2], false, [], []);
+            $alipayTokenid = $alipayTokenInfo['id'] ?? 0;
+            $resultDatas = CTAPIAlipayAuthTokenBusiness::alipayRefreshAuthAjax($request, $this, $alipayTokenid);
+            return ajaxDataArr(1, $resultDatas, '');
         });
     }
 
@@ -455,6 +476,14 @@ class OrderPayConfigController extends BasicController
         $reDataArr['openStatus'] =  OrderPayConfig::$openStatusArr;
         $reDataArr['defaultOpenStatus'] = -1;// 列表页默认状态
 
+        // 支付宝授权状态(1已授权2未授权)
+        $reDataArr['alipayAuthStatus'] =  OrderPayConfig::$alipayAuthStatusArr;
+        $reDataArr['defaultAlipayAuthStatus'] = -1;// 列表页默认状态
+
+        // 支付宝授权网址
+        $alipayConfig = config('public.alipayConfig', []);
+        $appInfo = $alipayConfig['app']['trmwebApp'] ?? [];
+        $reDataArr['alipayAuthURL'] = $alipayConfig['authBathURL'] . '?app_id=' . $appInfo['appid'] . '&application_type=' . $appInfo['openauth']['application_type'] . '&redirect_uri=' . $appInfo['openauth']['redirect_url'];//
 
         $reDataArr['hidden_option'] = $hiddenOption;
     }
@@ -516,6 +545,10 @@ class OrderPayConfigController extends BasicController
         // 开启状态(1开启2关闭)
         $reDataArr['openStatus'] =  OrderPayConfig::$openStatusArr;
         $reDataArr['defaultOpenStatus'] = $info['open_status'] ?? -1;// 列表页默认状态
+
+        // 支付宝授权状态(1已授权2未授权)
+        $reDataArr['alipayAuthStatus'] =  OrderPayConfig::$alipayAuthStatusArr;
+        $reDataArr['defaultAlipayAuthStatus'] = $info['alipay_auth_status'] ?? -1;// 列表页默认状态
 
         $reDataArr['info'] = $info;
         $reDataArr['operate'] = $operate;

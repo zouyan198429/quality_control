@@ -205,7 +205,13 @@ function ajax_save(id){
                 var code_url = params['code_url'] || '';
                 var pay_order_no = params['pay_order_no'] || '';
                 if(code_url.length <= 0){
-                    paySuccessFun({result:1}, {order_no:order_no, pay_order_no:pay_order_no});// 支付成功
+                    if(pay_method == 16 || pay_method == 64){// 扫码枪支付
+                        // 每秒去查询一下付款码付款情况
+                        barcodePay(order_no,  pay_order_no);// 扫条形码收款
+                        SUBMIT_FORM = true;//标记为未提交过
+                    }else{
+                        paySuccessFun({result:1}, {order_no:order_no, pay_order_no:pay_order_no});// 支付成功
+                    }
                 }else{
                     scanPay(code_url, order_no,  pay_order_no);// 扫码支付-- 生成收款二维码
                     SUBMIT_FORM = true;//标记为未提交过
@@ -232,6 +238,18 @@ function scanPay(code_url, order_no, pay_order_no) {
     showQRCodeTable('qrcode', code_url, 250, 250);// 显示付款二维码
     $('.qrcode_block').show();// 显示 付款码
     $('#submitBtn').hide();// 隐藏按钮
+    // 每秒去查询一下付款码付款情况
+    loopQueryResult(order_no, pay_order_no);
+
+}
+
+// 扫码支付-- 扫条形码收款
+function barcodePay(order_no, pay_order_no) {
+
+    // console.log('--code_url--', code_url);
+    // showQRCodeTable('qrcode', code_url, 250, 250);// 显示付款二维码
+    // $('.qrcode_block').show();// 显示 付款码
+   // $('#submitBtn').hide();// 隐藏按钮
     // 每秒去查询一下付款码付款情况
     loopQueryResult(order_no, pay_order_no);
 

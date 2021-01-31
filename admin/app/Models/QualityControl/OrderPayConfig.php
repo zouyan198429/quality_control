@@ -27,7 +27,7 @@ class OrderPayConfig extends BasePublicModel
 
 //    public static $cacheSimple = 'U';// 表名简写,为空，则使用表名
 
-    public static $cacheVersion = 'V2';// 内容随意改[可0{空默认为0}开始自增]- 如果运行过程中，有直接对表记录进行修改，增加或修改字段名，则修改此值，使表记录的相关缓存过期。
+    public static $cacheVersion = 'V4';// 内容随意改[可0{空默认为0}开始自增]- 如果运行过程中，有直接对表记录进行修改，增加或修改字段名，则修改此值，使表记录的相关缓存过期。
     // $cacheExcludeFields 为空：则缓存所有字段值；排除字段可能是大小很大的字段，不适宜进行缓存
     public static $cacheExcludeFields = [];// 表字段中排除字段; 有值：要小心，如果想获取的字段有在排除字段中的，则不能使用缓存
 
@@ -102,8 +102,14 @@ class OrderPayConfig extends BasePublicModel
         '2' => '关闭',
     ];
 
+    // 支付宝授权状态(1已授权2未授权)
+    public static $alipayAuthStatusArr = [
+        '1' => '已授权',
+        '2' => '未授权',
+    ];
+
     // 表里没有的字段
-    protected $appends = ['open_status_text'];// 'pay_method_text',
+    protected $appends = ['open_status_text', 'alipay_auth_status_text'];// 'pay_method_text',
 
 
     /**
@@ -245,6 +251,16 @@ class OrderPayConfig extends BasePublicModel
     public function getOpenStatusTextAttribute()
     {
         return static::$openStatusArr[$this->open_status] ?? '';
+    }
+
+    /**
+     * 获取支付宝授权状态文字
+     *
+     * @return string
+     */
+    public function getAlipayAuthStatusTextAttribute()
+    {
+        return static::$alipayAuthStatusArr[$this->alipay_auth_status] ?? '';
     }
 
     /**

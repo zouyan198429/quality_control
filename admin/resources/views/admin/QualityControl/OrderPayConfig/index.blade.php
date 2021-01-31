@@ -25,18 +25,22 @@
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
           <input type="hidden" name="hidden_option"  value="{{ $hidden_option ?? 0 }}" />
-          收款开通类型:
           <select class="wmini" name="pay_method">
-              <option value="">全部</option>
+              <option value="">请选择收款开通类型</option>
               @foreach ($payMethod as $k=>$txt)
                   <option value="{{ $k }}"  @if(isset($defaultPayMethod) && $defaultPayMethod == $k) selected @endif >{{ $txt }}</option>
               @endforeach
           </select>
-          开启状态:
           <select class="wmini" name="open_status">
-              <option value="">全部</option>
+              <option value="">请选择开启状态</option>
               @foreach ($openStatus as $k=>$txt)
                   <option value="{{ $k }}"  @if(isset($defaultOpenStatus) && $defaultOpenStatus == $k) selected @endif >{{ $txt }}</option>
+              @endforeach
+          </select>
+          <select class="wmini" name="alipay_auth_status">
+              <option value="">请选择支付宝授权状态</option>
+              @foreach ($alipayAuthStatus as $k=>$txt)
+                  <option value="{{ $k }}"  @if(isset($defaultAlipayAuthStatus) && $defaultAlipayAuthStatus == $k) selected @endif >{{ $txt }}</option>
               @endforeach
           </select>
         <select style="width:80px; height:28px;" name="field">
@@ -48,6 +52,12 @@
       </div>
     </form>
   </div>
+
+    <div style="padding-bottom: 15px;">
+        <p>支付宝授权说明：</p>
+        <p>1、【支付宝授权】操作前，请完成企业支付宝账号注册和实名认证。具体操作请查看【<a href="https://opendocs.alipay.com/open/200/qyzfbsmrz" class="on" target="_blank">企业支付宝账号注册和实名认证指南</a>】。</p>
+        <p>2、完成【企业支付宝账号注册和实名认证】后，请点击收款账号列表【支付宝授权】按钮，打开并登录对应企业的支付宝【注：确认登录支付宝的帐号是当前要授权的企业，如不是，请先退出支付宝账号并重新登录，再操作】，按照提示完成支付宝相关授权</p>
+    </div>
   {{--
   <div class="table-header">
     { {--<button class="btn btn-danger  btn-xs batch_del"  onclick="action.batchDel(this)">批量删除</button>--} }
@@ -63,14 +73,15 @@
 {{--        <col width="50">--}}
 {{--        <col width="60">--}}
         <col>
+        <col width="7%">
+        <col>
+        <col width="5%">
+        <col width="7%">
         <col>
         <col>
         <col>
-        <col>
-        <col>
-        <col>
-        <col width="100">
-        <col width="140">
+        <col width="5%">
+        <col width="180">
     </colgroup>
     <thead>
     <tr>
@@ -85,6 +96,7 @@
       <th>收款关键字</th>
         <th>收款开通类型</th>
         <th>开启状态</th>
+        <th>支付宝授权状态</th>
         <th>备注</th>
       <th>创建时间</th>
       <th>更新时间</th>
@@ -107,7 +119,8 @@
   <script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.all.js')}}"></script>
   {{--<script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.js')}}"></script>--}}
   @include('public.dynamic_list_foot')
-
+{{--使用如下命令对数据进行base64的编码与解码：加密使用：$.base64.encode(aaa); url参数时-encodeURIComponent($.base64.encode(aaa))-处理+号，后端才能正常解密；解密使用：$.base64.decode(bbb);--}}
+<script src="{{ asset('/static/js/jquery.base64.js') }}"></script>
   <script type="text/javascript">
       var OPERATE_TYPE = <?php echo isset($operate_type)?$operate_type:0; ?>;
       var AUTO_READ_FIRST = false;//自动读取第一页 true:自动读取 false:指定地方读取
@@ -141,8 +154,10 @@
 
       var INVOICE_CONFIG_HYDZFP_EDIT_URL = "{{ url('admin/invoice_config_hydzfp/add/0') }}"; // 电子发票配置沪友修改/添加url
       var INVOICE_SELLER_EDIT_URL = "{{ url('admin/invoice_seller/add/0') }}"; // 发票配置销售方修改/添加url
+      var ALIPAY_AUTH_URL = "{!! $alipayAuthURL ?? '' !!}";
+      var REFRESH_ALIPAY_TOKEN_URL = "{{ url('api/admin/order_pay_config/ajax_refreshAlipayToken') }}"; // 刷新授权令牌 access_token
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/OrderPayConfig.js') }}?9"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/OrderPayConfig.js') }}?16"  type="text/javascript"></script>
 </body>
 </html>

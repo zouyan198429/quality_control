@@ -1238,6 +1238,39 @@ class Tool
     // 数组操作
 
     /**
+     * --- 参数中需要数组需要转为json格式的参数，自动完成转换
+     *
+     * @param array $params  源参数数组
+     * @param array $jsoinFields  需要转换为json格式的参数数组，--一维数组
+     * @return null
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function paramsArrToJson(&$params, $jsonFields = []){
+        if(!is_array($params) || !is_array($jsonFields) || empty($params) || empty($jsonFields)) return $params;
+        foreach($jsonFields as $field){
+            if(isset($params[$field]) && is_array($params[$field])) $params[$field] = json_encode($params[$field]);
+        }
+        return $params;
+    }
+
+    /**
+     * --- 参数中需要json格式需要转为数组的参数，自动完成转换
+     *
+     * @param array $params  源参数数组
+     * @param array $jsoinFields  需要转换为json格式的参数数组，--一维数组
+     * @return null
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function paramsJsonToArr(&$params, $jsonFields = []){
+        if(!is_array($params) || !is_array($jsonFields) || empty($params) || empty($jsonFields)) return $params;
+        foreach($jsonFields as $field){
+            // 下标存在，且是json数据
+            if(isset($params[$field]) && !is_null(json_decode($params[$field]))) $params[$field] = json_decode($params[$field], true);
+        }
+        return $params;
+    }
+
+    /**
      * 判断数组值的类型是否正确
      *
      * @param array $data_list 需要判断的数组 一维或二维数组
@@ -1901,6 +1934,7 @@ class Tool
      * @return string 当前的路由和方法  App\Http\Controllers\CompanyWorkController@addInit
      */
     public static function getActionMethod(){
+        if(static::isCLIDoing()) return 'cli';// 在cli模式运行
         // \Request::route()->getActionName()
         // web : App\Http\Controllers\Web\DogTools\ClassesController@add
         // api : Web\DogTools\ClassesController@ajax_add
@@ -4929,6 +4963,26 @@ class Tool
 //        $removeBitVal = 8;
         $bitVal = (($bitVal & $removeBitVal ) == $removeBitVal) ? ($bitVal ^ $removeBitVal) : $bitVal;
         return $bitVal;
+    }
+
+    /**
+     * laravel-判断是否在cli模式运行
+     * @return boolean 命令行： true; 非命令行 :false
+     */
+    public static function isCLIDoing(){
+        // 有时候，我们需要判断是否是在命令行环境中执行，可以使用：
+        // if(app()->runningInConsole()){// 命令行： true; 非命令行 :false
+        //     // 运行在命令行下
+        //     return true;
+        //  }
+        // return false;
+        //当然，在 PHP 中，你永远可以使用 PHP 原生的方法来检测：
+        // 命令行： "cli"; 非命令行 :"fpm-fcgi"
+        if(strpos(php_sapi_name(), 'cli') !== false){
+            // 运行在命令行下
+            return true;
+        }
+        return false;
     }
 
 }

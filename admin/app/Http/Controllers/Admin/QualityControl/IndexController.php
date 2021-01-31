@@ -8,13 +8,19 @@ use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
 use App\Business\DB\QualityControl\AbilityCodeDBBusiness;
 use App\Business\DB\QualityControl\AbilityJoinItemsDBBusiness;
 use App\Business\DB\QualityControl\AbilityJoinItemsResultsDBBusiness;
+use App\Business\DB\QualityControl\AbilitysDBBusiness;
 use App\Business\DB\QualityControl\CertificateScheduleDBBusiness;
+use App\Business\DB\QualityControl\CompanyGradeConfigDBBusiness;
 use App\Business\DB\QualityControl\CompanyStatementDBBusiness;
 use App\Business\DB\QualityControl\InvoicesDBBusiness;
+use App\Business\DB\QualityControl\OrderPayDBBusiness;
 use App\Business\DB\QualityControl\StaffDBBusiness;
 use App\Http\Controllers\WorksController;
 use App\Models\QualityControl\Staff;
+use App\Services\alipaySdk\AlipayBillAPI;
+use App\Services\alipaySdk\AlipayPayAPI;
 use App\Services\alipaySdk\alipayTest;
+use App\Services\alipaySdk\AlipayToolAPI;
 use App\Services\Captcha\CaptchaCode;
 use App\Services\Code\QRCode;
 use App\Services\DB\CommonDB;
@@ -52,8 +58,27 @@ class IndexController extends BasicController
     }
 
     public function test(Request $request){
-        alipayTest::test();
-        die();
+
+        $alipayConfig = config('public.alipayConfig.APIConfig');
+        // alipayTest::test($alipayConfig);
+        $app_auth_token = "202101BBa54ffe4585f54301a73361d3c9fb8A42";
+
+        $apiParams = [
+            'bill_type' => 'trade',
+            'bill_date' => '2021-01-30',
+        ];
+        // $alipayConfig['appId'] = '2021002125631695';
+
+        $url = AlipayBillAPI::getDownloadUrlByDate($alipayConfig, $apiParams, $app_auth_token);
+        $fileConfig = AlipayBillAPI::downBillFile($url);
+        pr(json_encode($fileConfig));
+        // $result = AlipayToolAPI::getOpenAuthTokenAppQuery($alipayConfig, $app_auth_token);
+        // 统一收单线下交易查询
+        $apiParams = [
+            'out_trade_no' => '20150320010101001'
+        ];
+        $result = AlipayPayAPI::getTradeQuery($alipayConfig, $apiParams, $app_auth_token);
+        pr($result);
         $aaa = '{"fp_url":"http://web.hydzfp.com/ei_access/html/downloadMobilePdf.do?key=pdf&data=eyJuc3JzYmgiOiI5MTMyMDEwNjU5ODAzNTQ2OVciLCJvcmRlcl9udW0iOiI1MTIxMDE3MzEwMDEwMDA0IiwidGltZSI6IjE2MTA1MDQ5OTA3ODgiLCJjayI6ImVhNjRkNzlhYmVhYjBlOTBmNzAxYzFlODc4M2ZiZTc0In0=&pdfkey=pdf_znRtMq91610504989234","qd_url":""}';
         $aaARR = json_decode($aaa, true);
         // pr($aaARR);

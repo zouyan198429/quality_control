@@ -180,7 +180,7 @@ class CourseOrderController extends BasicController
 
                 // 收款开通类型(1现金、2微信支付、4支付宝)
                 $reDataArr['payMethod'] =  CTAPIOrderPayMethodBusiness::getListKV($request, $this, ['key' => 'pay_method', 'val' => 'pay_name'], [
-                    'sqlParams' => ['where' => [['pay_method', 2]]]// ['whereIn' => ['pay_method' => [2, 4]]
+                    'sqlParams' => ['whereIn' => ['pay_method' => [2, 4]]]//  ['where' => [['pay_method', 2]]]
                 ]);
                 $reDataArr['defaultPayMethod'] = $info['pay_method'] ?? -1;// 列表页默认状态
 
