@@ -35,7 +35,7 @@ function parent_reset_list(){
 var otheraction = {
     paySave: function(obj) {
         var recordObj = $(obj);
-        var trObj = recordObj.closest('tr');
+        var trObj = recordObj.closest('.pay_block');// recordObj.closest('tr');
         var pay_config_id = trObj.find('input[name=pay_config_id]').val();
         var company_id = trObj.find('input[name=company_id]').val();
         var ids = trObj.find('input[name=ids]').val();

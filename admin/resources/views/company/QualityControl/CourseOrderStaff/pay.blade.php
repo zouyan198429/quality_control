@@ -65,7 +65,7 @@
                 </th>
             </tr>
             </thead>
-			
+
             <tbody  id="data_list" >
             <?php
             $pay_method = $pay_config['pay_method'] ?? 0;
@@ -119,10 +119,10 @@
                 </td>
 			</tr>
 			</tbody>
-			
-			</table> 
+
+			</table>
 			<div style="height: 30px;"></div>
-			<div>
+			<div class="pay_block">
                     <input type="hidden" name="pay_config_id" value="{{ $pay_config_id ?? 0 }}"/>
                     <input type="hidden" name="company_id" value="{{ $company_id ?? 0 }}"/>
                     <input type="hidden" name="ids" value="{{ implode(',', $staff_ids) }}"/>
@@ -153,6 +153,6 @@
 
     var PAY_SAVE_URL = "{{url('company/course_order_staff/pay_save')}}";// 收款页面
 </script>
-<script src="{{ asset('/js/company/QualityControl/CourseOrderStaff_pay.js') }}?13"  type="text/javascript"></script>
+<script src="{{ asset('/js/company/QualityControl/CourseOrderStaff_pay.js') }}?14"  type="text/javascript"></script>
 </body>
 </html>

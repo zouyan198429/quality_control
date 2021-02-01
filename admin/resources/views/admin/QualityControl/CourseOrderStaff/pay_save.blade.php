@@ -56,7 +56,7 @@
                     <hr/>
                     收款帐号：{{ $pay_company_name ?? '' }}<br/>
                     收款方式：{{ $method_info['pay_name'] ?? '' }}<hr/>
-                    @if (isset($method_info['resource_list']) && !empty($method_info['resource_list']) )
+                    @if (isset($method_info['resource_list']) && !empty($method_info['resource_list']) && !in_array($pay_method, [2,4,16,64]) )
                         收款图片：
                         @if (false)
                             <span class="resource_list"  style="display: none;">{{ json_encode($method_info['resource_list']) }}</span>
