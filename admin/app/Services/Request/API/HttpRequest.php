@@ -12,6 +12,231 @@ use Illuminate\Support\Facades\URL;
 class HttpRequest
 {
 
+
+
+    /**
+     *  获取响应的hearder数组信息
+     *
+     * @param array $header  接口返回的header信息
+     *  [
+     *      "Server" => [
+     *          "nginx"
+     *      ],
+     *      "Date" => [
+     *          "Fri, 05 Feb 2021 05:11:15 GMT"
+     *      ],
+     *      "Content-Type" => [
+     *          "application/json; charset=utf-8"
+     *      ],
+     *      "Content-Length" => [
+     *          "2168"
+     *      ],
+     *      "Connection" => [
+     *          "keep-alive"
+     *      ],
+     *      "Keep-Alive" => [
+     *          "timeout=8"
+     *      ],
+     *      "Cache-Control" => [
+     *          "no-cache, must-revalidate"
+     *      ],
+     *      "X-Content-Type-Options" => [
+     *          "nosniff"
+     *      ],
+     *      "Request-ID" => [
+     *          "08F3A6F38006101718A7B8B74C20F62528D7BF03-0"
+     *      ],
+     *      "Content-Language" => [
+     *          "zh-CN"
+     *      ],
+     *      "Wechatpay-Nonce" => [
+     *          "41ce8e57ec95f463e903e6423575ea3a"
+     *      ],
+     *      "Wechatpay-Signature" => [
+     *          "fQPj2vjG7jRDAgvJ1/oqpAZIfVcB+RE2Xki/254ZwaauR7fBOhHSFJpOfSiS3nckSupxY3MGD015U8V7z/GB1svEqVIkUWA8Iz01tJnkUArn17WdfiNpcUWNfnRfE99Z9Cz37pv56NalFSw38FqlSGKHnOCDiwbnWu2OHJwWxv99iirrdzemfJT6h+XORykMMCEt9xY4JJBJY7jEENP+U+k/raVlSVIDhe4R9XBxv+yrkVxF90TTBdMniQcZfCdOj7oN4LaaVktbmntyfvDQtlv5KIKk7V+8umbBqNkH7+JnJypQsxeNcFDPiTZ8y6Y2Mhgr8CxEBN9uAhRT7sdWYA=="
+     *      ],
+     *      "Wechatpay-Timestamp" => [
+     *          "1612501875"
+     *      ],
+     *      "Wechatpay-Serial" => [
+     *          "35B4105DBFB51A3845213F8FF5F79413A6E48304"
+     *      ]
+     *  ]
+     *
+     * @return array 请求的 hearder 数组
+     *   $extendParams = [
+     *      'Accept-Language' => 'zh-CN',// 应答中的错误描述使用的自然语言语种。如果有需要，设置请求的HTTP头Accept-Language。目前支持：  en  zh-CN  zh-HK  zh-TW
+     *      'Wechatpay-Serial' => 'aaaa',// 可能有【敏感信息时有】 上送敏感信息时使用微信支付平台公钥加密，证书序列号包含在请求HTTP头部的 Wechatpay-Serial
+     *  ];
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function getHearderArr($header = []){
+        $reHearders = [];
+        foreach ($header as $name => $values) {
+            // echo $name . ': ' . implode(', ', $values) . "\r\n";
+            if(is_array($values))  $values = implode(', ', $values);
+            $reHearders[$name] = $values;
+        }
+        return $reHearders;
+    }
+
+    /**
+     * 调用速通接口服务方法-是什么内容，返回什么内容  数组 HTTP协议状态码 及 接口返回的内容
+     *
+     * @param string $url 请求地址
+     * @param array/object $params 参数数组/对象
+     * @param array $urlParams url地址后面的参数数组 数据最终转换成-如:'?id='
+     * @param string $type 请求类型 'GET'、'POST'、'PUT'、'PATCH'、'DELETE'
+     * @param array $options 其它默认参数：如 ['headers' => ['Accept' => "application/vnd.myapp.v1+json"]]
+     * @return array
+     * [
+     *       'code' => $result->getStatusCode(), // HTTP协议状态码,
+     *      'reason' => '',// OK// 原因短语(reason phrase)：
+     *      'header' => [],// 获取头部信息；注意：下标的值还是一个数组
+     *      'response_content' => '',// 接口返回的内容 -- 主要用这个，可能是json 格式的字符串
+     *      'body' => object,// 获取html 返回的内容 对象
+     *      'response' => object,// 响应对象
+     *  ]
+     */
+    public static function sendHttpRequestUrl($url, $params = [], $urlParams = [], $type = 'POST', $options = [])
+    {
+
+        if (! empty($urlParams)) {
+            $url .= '?' . http_build_query($urlParams);
+        }
+
+        // 9位自增编号（每天重置）
+        // $number         = ToolsHelper::createSnDaily('BSuTong', 9);
+        // $dataExchangeId = date('Ymd') . $number;
+        // $logParams = self::getSimpleParams($params);
+
+        // Yii::info([$dataExchangeId, $method, $logParams, $url], 'curl\BSuTongHttp\request');
+
+        $http = new Client();
+
+        switch ($type) {
+            case 'POST':
+                $option = array_merge($options, ['json' => $params]);
+                $response = $http->post($url, $option);
+                break;
+            case 'GET':
+                $response = $http->get($url, $options);
+                break;
+        }
+
+//        if (200 != $response->getStatusCode()) {
+//            throws('速通：请求失败 StatusCode: ' . $response->getStatusCode());
+//        }
+
+        // $ret = $response->getBody()->getContents();
+
+
+        // Yii::info([$dataExchangeId, $method, $ret], 'curl\BSuTongHttp\response');
+
+        // https://phpartisan.cn/news/45.html  [ laravel爬虫实战--基础篇 ] guzzle使用响应,获取header以及页面代码
+        // 你可以获取这个响应的状态码和和原因短语(reason phrase)：
+        // $code = $response->getStatusCode(); // 200
+        // $reason = $response->getReasonPhrase(); // OK
+        // 你可以从响应获取头信息(header)，更多信息直接参考就可以了：
+
+        // 判断是否有请求头
+        // if ($response->hasHeader('Content-Length')) {
+        //    echo "It exists";
+        // }
+        // // 从请求头中获取一个参数.
+        // echo $response->getHeader('Content-Length');
+        // // 获取全部的请求头.
+        // foreach ($response->getHeaders() as $name => $values) {
+        //    echo $name . ': ' . implode(', ', $values) . "\r\n";
+        // }
+        // 使用getBody方法可以获取响应的主体部分(body)，主体可以当成一个字符串或流对象使用
+
+        // $body = $response->getBody();
+        // // Implicitly cast the body to a string and echo it
+        // echo $body;
+        // // Explicitly cast the body to a string
+        // $stringBody = (string) $body;
+        // // 获取body中的10个字节
+        // $tenBytes = $body->read(10);
+        // // 将正文的剩余内容作为字符串读取。
+        // $remainingBytes = $body->getContents();
+
+        // $client = new Client();
+        // $response = $client->request('GET',"https://phpartisan.cn");
+        // 获取头部信息
+        // $header = $response->getHeaders();
+
+        /**
+         *  获取响应的hearder数组信息
+         *
+         * @ param array $header  接口返回的header信息
+         *  [
+         *      "Server" => [
+         *          "nginx"
+         *      ],
+         *      "Date" => [
+         *          "Fri, 05 Feb 2021 05:11:15 GMT"
+         *      ],
+         *      "Content-Type" => [
+         *          "application/json; charset=utf-8"
+         *      ],
+         *      "Content-Length" => [
+         *          "2168"
+         *      ],
+         *      "Connection" => [
+         *          "keep-alive"
+         *      ],
+         *      "Keep-Alive" => [
+         *          "timeout=8"
+         *      ],
+         *      "Cache-Control" => [
+         *          "no-cache, must-revalidate"
+         *      ],
+         *      "X-Content-Type-Options" => [
+         *          "nosniff"
+         *      ],
+         *      "Request-ID" => [
+         *          "08F3A6F38006101718A7B8B74C20F62528D7BF03-0"
+         *      ],
+         *      "Content-Language" => [
+         *          "zh-CN"
+         *      ],
+         *      "Wechatpay-Nonce" => [
+         *          "41ce8e57ec95f463e903e6423575ea3a"
+         *      ],
+         *      "Wechatpay-Signature" => [
+         *          "fQPj2vjG7jRDAgvJ1/oqpAZIfVcB+RE2Xki/254ZwaauR7fBOhHSFJpOfSiS3nckSupxY3MGD015U8V7z/GB1svEqVIkUWA8Iz01tJnkUArn17WdfiNpcUWNfnRfE99Z9Cz37pv56NalFSw38FqlSGKHnOCDiwbnWu2OHJwWxv99iirrdzemfJT6h+XORykMMCEt9xY4JJBJY7jEENP+U+k/raVlSVIDhe4R9XBxv+yrkVxF90TTBdMniQcZfCdOj7oN4LaaVktbmntyfvDQtlv5KIKk7V+8umbBqNkH7+JnJypQsxeNcFDPiTZ8y6Y2Mhgr8CxEBN9uAhRT7sdWYA=="
+         *      ],
+         *      "Wechatpay-Timestamp" => [
+         *          "1612501875"
+         *      ],
+         *      "Wechatpay-Serial" => [
+         *          "35B4105DBFB51A3845213F8FF5F79413A6E48304"
+         *      ]
+         *  ]
+         */
+        // 获取html
+        // $body = $response->getBody();
+        // 如果你想直接输出代码，可以取消如下注视
+        // dd($header);
+        // echo $body;
+        // 转换为字符串
+        // $stringBody = (string) $body
+        // 从body中读取10字节
+        // $tenBytes = $body->read(10);
+        // 将body内容读取为字符串
+        // $remainingBytes = $body->getContents();
+
+        return [
+            'code' => $response->getStatusCode(), // 200,// $response->getStatusCode(), // HTTP协议状态码,状态码
+            'reason' => $response->getReasonPhrase(), // OK// 原因短语(reason phrase)：
+            'header' => $response->getHeaders(),// 获取头部信息
+            'response_content' => $response->getBody()->getContents(),// 接口返回的内容
+            'body' => $response->getBody(),// 获取html
+            'response' => $response,// 所有响应
+        ];
+    }
+
     /**
      * 调用速通接口服务方法-是什么内容，返回什么内容
      *
