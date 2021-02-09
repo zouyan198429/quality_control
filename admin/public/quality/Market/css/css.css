@@ -79,12 +79,12 @@ body {
 .searchbox label {
 	padding-right: 10px;
 }
-.slideTxtBox { width:100%; padding:20px 0;   }
-.slideTxtBox .hd { height:30px; line-height:30px;  position:relative; }
+.slideTxtBox { width:100%; padding:20px 0;  background-color: #fff;  }
+.slideTxtBox .hd { height:30px; line-height:30px;  position:relative;  }
 .slideTxtBox .hd ul{  text-align: center;  }
 .slideTxtBox .hd ul li{  display: inline-block;  cursor:pointer;   margin:0 5px;
  padding:0 10px;  position: relative;  font-size: 16px; }
-.slideTxtBox .hd ul li.on{ height:30px; background: #a3bde2;  }
+.slideTxtBox .hd ul li.on{ height:30px; background: #D1E0F7; border-radius: 3px 3px 0 0;  }
 .slideTxtBox .bd ul{ padding:0;  zoom:1;  }
 .slideTxtBox .bd li{ height:24px; line-height:24px;   }
 .slideTxtBox .bd li .date{ float:right; color:#999;  }
@@ -349,9 +349,11 @@ border-radius: 33px; }
 	padding-bottom: 50px;
 }
 
-.comlist {
-	width: 100%;
+.comlist,.mmfoot {
+	width:96%;
+	margin-left:2%;
 }
+
 .comlist td {
 	background-color: #fff; 
 	padding:5px 0; 
@@ -416,7 +418,7 @@ border-radius: 33px; }
 	width: 16em;
 }
 .content { 
-    min-width: 1300px;
+    min-width: 1100px;
     background-color: #fff;
     padding: 10px;
     margin: 0 auto !important; 

@@ -9,30 +9,14 @@
 {{--        @include('admin.layout_public.pagehead')--}}
         <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/css/layui.css')}}" media="all">
         <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/style/admin.css')}}" media="all">
-		<style>
-			.cominfo {
-				border:1px solid #333;
-				width: 90%;
-				margin:15px auto;
-				background-color: #fff;
-				border-collapse: collapse;
-			}
-			.cominfo td {
-				border:1px solid #333;
-				padding:15px 15px;
-			}
-			.cominfo th {
-				border:1px solid #333;
-				padding:15px 15px;
-			}
-		</style>
+		
 	</head>
-	<body>
+	<body style="padding:20px; background-color: #fff;">
 
 
-	<table class="cominfo">
+	<table   class="layui-table table2 tableWidthFixed" style="width: 96%;">
 		<tr>
-			<th>机构名称:</th>
+			<th width="120">机构名称:</th>
 			<td>{{ $info['company_name'] ?? '' }}</td>
 		</tr>
 		<tr>

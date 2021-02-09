@@ -22,14 +22,14 @@
 				<dl class="dv1 dva2">
 					<dt></dt>
 					<dd><span>可检测产品</span>
-						<strong>11552</strong>
+						<strong>23846</strong>
 					</dd>
 				</dl>
 				<dl class="dv1 dva3">
 					<dt></dt>
 					<dd>
 						<span>可检测项目</span>
-						<strong>195834</strong>
+						<strong>255548</strong>
 					</dd>
 				</dl>
 				<div class="c"></div>

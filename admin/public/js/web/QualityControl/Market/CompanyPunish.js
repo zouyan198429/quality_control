@@ -175,6 +175,7 @@ function addCompany(company_id, company_name){
     // document.write("            <td><%=item.id%><\/td>");
     // document.write("            <td><%=item.user_company_name%><\/td>");
     document.write("            <td><%=item.resource_name%><\/td>");
+	document.write("            <td><%=item.created_at_fmt%><\/td>");
     document.write("           <td>");
     document.write("            <%for(var j = 0; j<resource_list.length;j++){");
     document.write("                var jitem = resource_list[j];");
@@ -192,7 +193,7 @@ function addCompany(company_id, company_name){
     document.write("                <\/a></p>");
     document.write("            <%}%>");
     document.write("           <\/td>");
-    document.write("            <td><%=item.created_at_fmt%><\/td>");
+    
     // document.write("            <td><%=item.created_at%><\/td>");
     // document.write("            <td><%=item.updated_at%><\/td>");
     // document.write("            <td><\/td>");

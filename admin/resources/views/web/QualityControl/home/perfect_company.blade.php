@@ -182,12 +182,12 @@
 
                     </div>
                 </div>
-                <tr>
-                    <th>实验室地址<span class="must"></span></th>
-                    <td>
-                        <input type="text" class="inp wnormal"  name="laboratory_addr" value="{{ $info['laboratory_addr'] ?? '' }}" placeholder="请输入实验室地址"/>
-                    </td>
-                </tr>
+                <div class="form-item">
+                    <label for="text" class="form-label">实验室地址<span class="must"></span></label>
+                    <div class="form-input">
+                        <input type="text" class="form-control inp wnormal"  name="laboratory_addr" value="{{ $info['laboratory_addr'] ?? '' }}" placeholder="请输入实验室地址"/>
+                    </div>
+                </div>
                 <div class="form-item">
                     <label for="text" class="form-label">联系人<span class="red">*</span></label>
                     <div class="form-input"><input type="text" name="company_contact_name" class="form-control" autocomplete="off" value="{{ $info['company_contact_name'] ?? '' }}"></div>

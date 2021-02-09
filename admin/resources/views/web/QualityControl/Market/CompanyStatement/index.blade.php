@@ -20,13 +20,37 @@
 {{--		<div class="com-name">--}}
 {{--					 {{ $info['company_name'] ?? '' }}--}}
 {{--		</div>--}}
-		<div class="content-info">
+		<table class="layui-table table2 tableWidthFixed"> 
+			<tbody>
+				<tr>
+					<th width="120">机构名称</th>
+					<td>{{ $info['company_name'] ?? '' }}</td>
+				</tr>
+				<tr>
+					<th>联系地址</th>
+					<td> {{ $info['laboratory_addr'] ?? '' }}</td>
+				</tr>
+				<tr>
+					<th>CMA证书编号</th>
+					<td>{{ $info['company_certificate_no'] ?? '' }}</td>
+				</tr>
+				<tr>
+					<th>发证日期</th>
+					<td>{{ $info['ratify_date'] ?? '' }}</td>
+				</tr>
+				<tr>
+					<th>证书有效期</th>
+					<td>{{ $info['valid_date'] ?? '' }}</td>
+				</tr>
+			</tbody>
+		</table>
+		<!-- <div class="content-info">
 			<p>机构名称：<span>{{ $info['company_name'] ?? '' }}</span></p>
 			<p>CMA证书编号：<span>{{ $info['company_certificate_no'] ?? '' }}</span></p>
 			<p>发证日期：<span>{{ $info['ratify_date'] ?? '' }}</span></p>
 			<p>证书有效期：<span> {{ $info['valid_date'] ?? '' }}</span></p>
 			<p>联系地址：<span> {{ $info['laboratory_addr'] ?? '' }}</span></p>
-		</div>
+		</div> -->
 		<div class="c"></div>
 	</div>
 

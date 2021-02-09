@@ -19,25 +19,33 @@
 		</div> -->
 		<div class="list-wrap">
 			<div class="wrap">
-
 				<div class="list content">
-
 					<table class=" comlist">
+						<colgroup>
+						    <col>
+						    <col width="180"> 
+							<col width="140">
+							<col width="140">
+							<col width="140">
+						    <col width="140"> 
+						</colgroup>
 						<thead>
 							<tr>
-								<th style="width:750px;">机构名称</th>
+								<th>机构名称</th>
 								<th>资质认定证书编号</th>
 								<th>机构信息</th>
 								<th>资质认定证书附表</th>
-								<th>自我声明公告	</th>
-{{--								<th>监督检查信息	</th>--}}
-								<th>行政处罚信息</th>
+								<th>自我声明	</th>
+{{--							<th>监督检查信息	</th>--}}
+								<th>行政处罚</th>
 							</tr>
 						</thead>
                         @foreach ($company_list as $k => $v)
 						<tr>
-							<td class="com-name">
+							<td class="com-name" >
+								<p class="tl">
                                 {{ $v['company_name'] ?? '' }}
+								</p>
 							</td>
 							<td class="content-info">
 								{{ $v['company_certificate_no'] ?? '' }}

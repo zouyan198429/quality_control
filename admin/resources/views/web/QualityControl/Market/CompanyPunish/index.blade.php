@@ -48,15 +48,10 @@
 {{--    <div style="display:none;" ><input type="file" class="import_file img_input"></div>--}}{{--导入file对象--}}
   </div>
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
-    <colgroup>
-{{--        <col width="50">--}}
-{{--        <col width="60">--}}
-{{--        <col>--}}
+    <colgroup> 
         <col>
-        <col>
-{{--        <col width="95">--}}
-        <col>
-{{--        <col width="140">--}}
+        <col width="140"> 
+        <col width="180"> 
     </colgroup>
     <thead>
     <tr>
@@ -69,9 +64,10 @@
 {{--      <th>ID</th>--}}
 {{--      <th>所属企业</th>--}}
       <th>文件名</th>
-        <th>文件</th>
+	  <th>上传时间</th>
+        
 {{--      <th>创建时间</th>--}}
-        <th>上传时间</th>
+        <th>操作</th>
 {{--      <th></th>--}}
 {{--      <th>操作</th>--}}
     </tr>
@@ -129,6 +125,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/web/QualityControl/Market/CompanyPunish.js') }}?10"  type="text/javascript"></script>
+  <script src="{{ asset('js/web/QualityControl/Market/CompanyPunish.js') }}?784455640"  type="text/javascript"></script>
 </body>
 </html>
