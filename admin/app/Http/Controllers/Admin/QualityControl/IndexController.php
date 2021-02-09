@@ -29,6 +29,7 @@ use App\Services\Request\API\HttpRequest;
 use App\Services\Request\CommonRequest;
 use App\Services\SessionCustom\SessionCustom;
 use App\Services\Tool;
+use App\Services\Wechat\BasicWechat;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -58,6 +59,60 @@ class IndexController extends BasicController
     }
 
     public function test(Request $request){
+        $aa = BasicWechat::getCertificate(BasicWechat::$apiConfig['apiclient_cert_path']);
+        vd($aa);
+
+        // 平台公钥加密数据
+//        $str = '我是邹燕';
+//        $WechatpaySerial = '';
+//        $encryptStr = BasicWechat::getEncryptPublic(BasicWechat::$apiConfig, $str, $WechatpaySerial, function($certificates){
+//            print_r($certificates);
+//        } );
+//        echo $WechatpaySerial;
+//        vd($encryptStr);
+
+//        $effective_time = '2021-02-08 15:41:42';
+//        $expire_time = '2021-02-08 15:50:42';
+//        $keySerial = [
+//            'effective_time' => $effective_time,// 生效时间 2021-01-04 13:19:42
+//            'expire_time' => $expire_time,// 过期时间 2026-01-03 13:19:42
+//            // 'serial_no' => $serial_no, // 证书序列号 35B4105DBFB51A3845213F8FF5F79413A6E48304
+//        ];
+//        $aa = BasicWechat::judgeKeySerial($keySerial);
+//        vd($aa);
+
+//        $dateTime = '2021-01-04T13:19:42+08:00';
+//        $formatDateTime = BasicWechat::getFormatDateTime($dateTime);
+//        // die($formatDateTime);
+//        $dateFormatTime = judgeDate($formatDateTime,"Y-m-d H:i:s");
+//        vd($dateFormatTime);
+
+
+        // 加密解密测试
+//        $str = '我是邹燕。也是邹国松';
+//        // 公钥加密
+//        $encryptStr = BasicWechat::getEncryptPublicFile($str, BasicWechat::$apiConfig['apiclient_cert_path'], BasicWechat::$apiConfig['updated_at'], BasicWechat::$apiConfig['apiv3_secret']);
+//        // 私钥解密
+//        $decryptStr = BasicWechat::getDencryptPrivateFile($encryptStr, BasicWechat::$apiConfig['apiclient_key_path'], BasicWechat::$apiConfig['updated_at'], BasicWechat::$apiConfig['apiv3_secret']);
+//        pr($decryptStr);
+
+        // 获得私钥内容对象
+        // $apiConfig = BasicWechat::$apiConfig;
+        // $fileContent = BasicWechat::getPrivateKeyContent($apiConfig['apiclient_key_path'], $apiConfig['updated_at'], $apiConfig['apiv3_secret']);
+        // vd($fileContent);
+
+
+
+        //生成V3请求 header认证信息
+        // $url="https://api.mch.weixin.qq.com/v3/certificates";
+        // $header = BasicWechat::createAuthorization(BasicWechat::$apiConfig, $url );
+        // vd($header);
+        // $requestWechatpaySerial = '';
+        // $result = BasicWechat::getCertificates(BasicWechat::$apiConfig, $requestWechatpaySerial, '', []);//
+        // print_r($result);
+        // vd($requestWechatpaySerial);
+        // BasicWechat::aaa(BasicWechat::$apiConfig);
+        // pr(1222);
 
         $alipayConfig = config('public.alipayConfig.APIConfig');
         // alipayTest::test($alipayConfig);
