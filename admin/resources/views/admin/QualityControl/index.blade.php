@@ -293,6 +293,12 @@
                       <dd>
                           <a lay-href="{{ url('admin/company_punish') }}">机构处罚</a>
                       </dd>
+                      <dd>
+                          <a lay-href="{{ url('admin/company_inspect') }}">监督检查</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="{{ url('admin/company_news') }}">其它</a>
+                      </dd>
                   </dl>
               </li>
 

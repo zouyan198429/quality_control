@@ -303,6 +303,57 @@ var otheraction = {
         var tishi = company_name + "-电子发票地址管理";
         layeriframe(weburl,tishi,1050,535,5);
         return false;
+    },
+    company_ability_num : function(id, company_name){// 查看能力验证结果地址
+        //获得表单各name的值
+        var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
+        console.log(COMPANY_ABILITY_URL);
+        console.log(data);
+        var url_params = get_url_param(data);// parent.get_url_param(data);
+        var weburl = COMPANY_ABILITY_URL + '?hidden_option=1&company_id=' + id ;// + url_params;// + id + '?' + url_params;
+        // var weburl = STAFF_SHOW_URL + '?company_id=' + id
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = company_name + "-能力验证结果管理";
+        layeriframe(weburl,tishi,1050,535,5);
+        return false;
+    },
+    company_inspect_num : function(id, company_name){// 查看监督检查地址
+        //获得表单各name的值
+        var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
+        console.log(COMPANY_INSPECT_URL);
+        console.log(data);
+        var url_params = get_url_param(data);// parent.get_url_param(data);
+        var weburl = COMPANY_INSPECT_URL + '?hidden_option=1&company_id=' + id ;// + url_params;// + id + '?' + url_params;
+        // var weburl = STAFF_SHOW_URL + '?company_id=' + id
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = company_name + "-监督检查管理";
+        layeriframe(weburl,tishi,1050,535,5);
+        return false;
+    },
+    company_news_num : function(id, company_name){// 查看企业其它【新闻】
+        //获得表单各name的值
+        var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
+        console.log(COMPANY_NEWS_URL);
+        console.log(data);
+        var url_params = get_url_param(data);// parent.get_url_param(data);
+        var weburl = COMPANY_NEWS_URL + '?hidden_option=1&company_id=' + id ;// + url_params;// + id + '?' + url_params;
+        // var weburl = STAFF_SHOW_URL + '?company_id=' + id
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = company_name + "-企业其它管理";
+        layeriframe(weburl,tishi,1050,535,5);
+        return false;
     }
 
 };
@@ -488,6 +539,15 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
     document.write("                <\/a>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.invoice_buy_addr_num(<%=item.id%>,'<%=item.company_name%>')\">");
     document.write("                    <i class=\"ace-icon fa fa-vcard bigger-60\">电子发票抬头(<%=item.extend_info.invoice_addr_num%>)<\/i>");
+    document.write("                <\/a>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.company_ability_num(<%=item.id%>,'<%=item.company_name%>')\">");
+    document.write("                    <i class=\"ace-icon fa fa-thumbs-up bigger-60\">能力验证结果(<%=item.extend_info.ability_result_num%>)<\/i>");
+    document.write("                <\/a>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.company_inspect_num(<%=item.id%>,'<%=item.company_name%>')\">");
+    document.write("                    <i class=\"ace-icon fa fa-pencil-square bigger-60\">监督检查(<%=item.extend_info.inspect_num%>)<\/i>");
+    document.write("                <\/a>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.company_news_num(<%=item.id%>,'<%=item.company_name%>')\">");
+    document.write("                    <i class=\"ace-icon fa fa-newspaper-o bigger-60\">企业其它(<%=item.extend_info.news_num%>)<\/i>");
     document.write("                <\/a>");
     document.write("");
     document.write("            <\/td>");

@@ -87,7 +87,7 @@ class CTAPIInvoiceSellerBusiness extends BasicPublicCTAPIBusiness
 //                CTAPIStaffBusiness::getRelationConfigs($request, $controller,
 //                    static::getUboundRelation($relationArr, 'company_info'),
 //                    static::getUboundRelationExtendParams($extendParams, 'company_info')),
-//                ['where' => [['admin_type', 2]]], '', []),
+//                static::getRelationSqlParams(['where' => [['admin_type', 2]]], $extendParams, 'company_info'), '', []),
             // 获得收款帐号名称
             'pay_company_name' => CTAPIOrderPayConfigBusiness::getTableRelationConfigInfo($request, $controller
                 , ['pay_config_id' => 'id']

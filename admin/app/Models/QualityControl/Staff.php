@@ -546,6 +546,30 @@ class Staff extends BasePublicModel
     }
 
     /**
+     * 获取企业的能力验证-二维
+     */
+    public function companyAbility()
+    {
+        return $this->hasMany('App\Models\QualityControl\CompanyAbility', 'company_id', 'id');
+    }
+
+    /**
+     * 获取企业的监督检查-二维
+     */
+    public function companyInspect()
+    {
+        return $this->hasMany('App\Models\QualityControl\CompanyInspect', 'company_id', 'id');
+    }
+
+    /**
+     * 获取企业的企业其它【新闻】-二维
+     */
+    public function companyNews()
+    {
+        return $this->hasMany('App\Models\QualityControl\CompanyNews', 'company_id', 'id');
+    }
+
+    /**
      * 获取企业的机构处罚管理-二维
      */
     public function companyPunish()

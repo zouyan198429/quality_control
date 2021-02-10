@@ -646,6 +646,30 @@ Route::get('admin/company_statement/add/{id}', 'Admin\QualityControl\CompanyStat
 Route::get('admin/company_statement/export', 'Admin\QualityControl\CompanyStatementController@export');// 导出
 Route::get('admin/company_statement/import_template', 'Admin\QualityControl\CompanyStatementController@import_template');// 导入模版
 
+// 能力验证
+Route::get('admin/company_ability', 'Admin\QualityControl\CompanyAbilityController@index');// 列表
+Route::get('admin/company_ability/add/{id}', 'Admin\QualityControl\CompanyAbilityController@add');// 添加
+Route::get('admin/company_ability/info/{id}', 'Admin\QualityControl\CompanyAbilityController@info');// 查看-详情
+// Route::get('admin/company_ability/select', 'Admin\QualityControl\CompanyAbilityController@select');// 选择-弹窗
+Route::get('admin/company_ability/export', 'Admin\QualityControl\CompanyAbilityController@export');// 导出
+Route::get('admin/company_ability/import_template', 'Admin\QualityControl\CompanyAbilityController@import_template');// 导入模版
+
+// 监督检查
+Route::get('admin/company_inspect', 'Admin\QualityControl\CompanyInspectController@index');// 列表
+Route::get('admin/company_inspect/add/{id}', 'Admin\QualityControl\CompanyInspectController@add');// 添加
+Route::get('admin/company_inspect/info/{id}', 'Admin\QualityControl\CompanyInspectController@info');// 查看-详情
+// Route::get('admin/company_inspect/select', 'Admin\QualityControl\CompanyInspectController@select');// 选择-弹窗
+Route::get('admin/company_inspect/export', 'Admin\QualityControl\CompanyInspectController@export');// 导出
+Route::get('admin/company_inspect/import_template', 'Admin\QualityControl\CompanyInspectController@import_template');// 导入模版
+
+// 企业其它【新闻】
+Route::get('admin/company_news', 'Admin\QualityControl\CompanyNewsController@index');// 列表
+Route::get('admin/company_news/add/{id}', 'Admin\QualityControl\CompanyNewsController@add');// 添加
+Route::get('admin/company_news/info/{id}', 'Admin\QualityControl\CompanyNewsController@info');// 查看-详情
+// Route::get('admin/company_news/select', 'Admin\QualityControl\CompanyNewsController@select');// 选择-弹窗
+Route::get('admin/company_news/export', 'Admin\QualityControl\CompanyNewsController@export');// 导出
+Route::get('admin/company_news/import_template', 'Admin\QualityControl\CompanyNewsController@import_template');// 导入模版
+
 // 机构处罚
 Route::get('admin/company_punish', 'Admin\QualityControl\CompanyPunishController@index');// 列表
 Route::get('admin/company_punish/add/{id}', 'Admin\QualityControl\CompanyPunishController@add');// 添加
@@ -949,6 +973,13 @@ Route::get('web/market/platform_notices', 'WebFront\Web\QualityControl\Market\Pl
 
 // 表格下载
 Route::get('web/market/platform_down_files', 'WebFront\Web\QualityControl\Market\PlatformDownFilesController@index');// 列表
+
+// 监督检查
+Route::get('web/market/company_inspect', 'WebFront\Web\QualityControl\Market\CompanyInspectController@index');// 列表
+
+// 企业其它【新闻】
+Route::get('web/market/company_news', 'WebFront\Web\QualityControl\Market\CompanyNewsController@index');// 列表
+Route::get('web/market/company_news/info/{id}', 'WebFront\Web\QualityControl\Market\CompanyNewsController@info');// 查看-详情
 
 // 首页
 //Route::get('web/test', 'WebFront\Web\QualityControl\IndexController@test');// 测试

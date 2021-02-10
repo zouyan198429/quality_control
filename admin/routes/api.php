@@ -774,6 +774,39 @@ $api->version('v1', function ($api) {
 
         $api->post('admin/company_statement/up_file', 'Admin\QualityControl\CompanyStatementController@up_file');// 上传文件地址
 
+        // 能力验证
+        $api->any('admin/company_ability/ajax_alist', 'Admin\QualityControl\CompanyAbilityController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/company_ability/ajax_del', 'Admin\QualityControl\CompanyAbilityController@ajax_del');// 删除
+        $api->post('admin/company_ability/ajax_save', 'Admin\QualityControl\CompanyAbilityController@ajax_save');// 新加/修改
+        $api->post('admin/company_ability/ajax_get_child', 'Admin\QualityControl\CompanyAbilityController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/company_ability/ajax_get_areachild', 'Admin\QualityControl\CompanyAbilityController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/company_ability/ajax_import_staff','Admin\QualityControl\CompanyAbilityController@ajax_import'); // 导入员工
+
+        $api->post('admin/company_ability/import', 'Admin\QualityControl\CompanyAbilityController@import');// 导入excel
+        $api->post('admin/company_ability/ajax_get_ids', 'Admin\QualityControl\CompanyAbilityController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        // 监督检查
+        $api->any('admin/company_inspect/ajax_alist', 'Admin\QualityControl\CompanyInspectController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/company_inspect/ajax_del', 'Admin\QualityControl\CompanyInspectController@ajax_del');// 删除
+        $api->post('admin/company_inspect/ajax_save', 'Admin\QualityControl\CompanyInspectController@ajax_save');// 新加/修改
+        $api->post('admin/company_inspect/ajax_get_child', 'Admin\QualityControl\CompanyInspectController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/company_inspect/ajax_get_areachild', 'Admin\QualityControl\CompanyInspectController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/company_inspect/ajax_import_staff','Admin\QualityControl\CompanyInspectController@ajax_import'); // 导入员工
+
+        $api->post('admin/company_inspect/import', 'Admin\QualityControl\CompanyInspectController@import');// 导入excel
+        $api->post('admin/company_inspect/ajax_get_ids', 'Admin\QualityControl\CompanyInspectController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        // 企业其它【新闻】
+        $api->any('admin/company_news/ajax_alist', 'Admin\QualityControl\CompanyNewsController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/company_news/ajax_del', 'Admin\QualityControl\CompanyNewsController@ajax_del');// 删除
+        $api->post('admin/company_news/ajax_save', 'Admin\QualityControl\CompanyNewsController@ajax_save');// 新加/修改
+        $api->post('admin/company_news/ajax_get_child', 'Admin\QualityControl\CompanyNewsController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/company_news/ajax_get_areachild', 'Admin\QualityControl\CompanyNewsController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/company_news/ajax_import_staff','Admin\QualityControl\CompanyNewsController@ajax_import'); // 导入员工
+
+        $api->post('admin/company_news/import', 'Admin\QualityControl\CompanyNewsController@import');// 导入excel
+        $api->post('admin/company_news/ajax_get_ids', 'Admin\QualityControl\CompanyNewsController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
         // 机构处罚
         $api->any('admin/company_punish/ajax_alist', 'Admin\QualityControl\CompanyPunishController@ajax_alist');//ajax获得列表数据
         $api->post('admin/company_punish/ajax_del', 'Admin\QualityControl\CompanyPunishController@ajax_del');// 删除
@@ -1145,6 +1178,11 @@ $api->version('v1', function ($api) {
         // 表格下载
         $api->any('web/market/platform_down_files/ajax_alist', 'WebFront\Web\QualityControl\Market\PlatformDownFilesController@ajax_alist');//ajax获得列表数据
 
+        // 监督检查
+        $api->any('web/market/company_inspect/ajax_alist', 'WebFront\Web\QualityControl\Market\CompanyInspectController@ajax_alist');//ajax获得列表数据
+
+        // 企业其它【新闻】
+        $api->any('web/market/company_news/ajax_alist', 'WebFront\Web\QualityControl\Market\CompanyNewsController@ajax_alist');//ajax获得列表数据
 
 //        Route::middleware('auth:api')->get('/user', function (Request $request) {
 //            return $request->user();

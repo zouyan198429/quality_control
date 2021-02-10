@@ -23,11 +23,13 @@
 					<table class=" comlist">
 						<colgroup>
 						    <col>
-						    <col width="180"> 
-							<col width="140">
-							<col width="140">
-							<col width="140">
-						    <col width="140"> 
+						    <col width="180">
+							<col width="120">
+							<col width="130">
+							<col width="120">
+						    <col width="120">
+                            <col width="120">
+                            <col width="120">
 						</colgroup>
 						<thead>
 							<tr>
@@ -38,6 +40,8 @@
 								<th>自我声明	</th>
 {{--							<th>监督检查信息	</th>--}}
 								<th>行政处罚</th>
+                                <th>监督检查</th>
+                                <th>其它</th>
 							</tr>
 						</thead>
                         @foreach ($company_list as $k => $v)
@@ -74,6 +78,14 @@
                                 <a href="javascript:void(0);" onclick="otheraction.company_punish_num('{{ $v["id"] ?? "0" }}','{{ $v["company_name"] ?? "" }}')" alt="行政处罚信息"> <img src="{{asset('quality/Market/images/details12.png')}}" alt="" /> </a>
 								({{ $v['extend_info']['punish_num'] ?? '0' }})<!--  -->
 							</td>
+                            <td>
+                                <a href="javascript:void(0);" onclick="otheraction.company_inspect('{{ $v["id"] ?? "0" }}','{{ $v["company_name"] ?? "" }}')" alt="监督检查信息"> <img src="{{asset('quality/Market/images/details12.png')}}" alt="" /> </a>
+                                ({{ $v['extend_info']['inspect_num'] ?? '0' }})<!--  -->
+                            </td>
+                            <td>
+                                <a href="javascript:void(0);" onclick="otheraction.company_news('{{ $v["id"] ?? "0" }}','{{ $v["company_name"] ?? "" }}')" alt="其它信息"> <img src="{{asset('quality/Market/images/details12.png')}}" alt="" /> </a>
+                                ({{ $v['extend_info']['news_num'] ?? '0' }})<!--  -->
+                            </td>
 						</tr>
                         @endforeach
 
@@ -118,6 +130,8 @@
 
     var COMPANY_STATEMENT_URL = "{{ url('web/market/company_statement')}}/";// 查看机构自我声明
     var COMPANY_PUNISH_URL = "{{ url('web/market/company_punish')}}/";// 查看机构处罚
+    var COMPANY_INSPECT_URL = "{{ url('web/market/company_inspect')}}/";// 查看监督检查
+    var COMPANY_NEWS_URL = "{{ url('web/market/company_news')}}/";// 查看企业其它【新闻】
 
 </script>
 {{--<script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>--}}
@@ -127,4 +141,4 @@
 
 <script src="{{ asset('/js/web/QualityControl/Market/search.js') }}?4"  type="text/javascript"></script>
 
-<script src="{{ asset('/js/web/QualityControl/Market/company.js') }}?4"  type="text/javascript"></script>
+<script src="{{ asset('/js/web/QualityControl/Market/company.js') }}?8"  type="text/javascript"></script>

@@ -164,9 +164,9 @@
         <col width="150">
         <col width="115">
         <col width="140">
-        <col width="100"> 
-        <col width="100"> 
-        <col width="150"> 
+        <col width="100">
+        <col width="100">
+        <col width="150">
         <col width="25%">
     </colgroup>
     <thead>
@@ -177,12 +177,12 @@
           <!-- <span class="lbl">全选</span> -->
         </label>
       </th>
-      <th>ID</th> 
+      <th>ID</th>
         <th>单位名称</th>
-        <th>行业<hr/>会员类型</th> 
+        <th>行业<hr/>会员类型</th>
         <th>证书编号</th>
-        <th>联系人</th> 
-        <th>完善资料<hr/>续期配置</th> 
+        <th>联系人</th>
+        <th>完善资料<hr/>续期配置</th>
         <th>审核<hr/>状态</th>
         <th>注册时间<hr/>到期时间</th>
       <th>操作</th>
@@ -258,8 +258,12 @@
 
       var INVOICE_BUYER_ADDR_URL = "{{ url('admin/invoice_buyer')}}/";// 查看电子发票地址
 
+      var COMPANY_ABILITY_URL = "{{ url('admin/company_ability')}}/";// 查看能力验证结果地址
+      var COMPANY_INSPECT_URL = "{{ url('admin/company_inspect')}}/";// 查看监督检查地址
+      var COMPANY_NEWS_URL = "{{ url('admin/company_news')}}/";// 查看企业其它【新闻】地址
+
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/Company.js') }}?291"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/Company.js') }}?292"  type="text/javascript"></script>
 </body>
 </html>
