@@ -81,6 +81,23 @@ var otheraction = {
         layeriframe(weburl,tishi,1050,500,SHOW_CLOSE_OPERATE, undefined, null, 2);
         return false;
     },
+    company_ability : function(id, company_name){// 能力验证
+        //获得表单各name的值
+        // var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)
+        // console.log(COMPANY_PUNISH_URL);
+        // console.log(data);
+        // var url_params = get_url_param(data);// parent.get_url_param(data);
+        var weburl = COMPANY_ABILITY_URL + '?hidden_option=1&company_id=' + id ;// + url_params;// + id + '?' + url_params;
+        // var weburl = STAFF_SHOW_URL + '?company_id=' + id
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = company_name + "-能力验证";
+        layeriframe(weburl,tishi,1050,500,SHOW_CLOSE_OPERATE, undefined, null, 2);
+        return false;
+    },
     company_inspect : function(id, company_name){// 监督检查
         //获得表单各name的值
         // var data = get_frm_values(SURE_FRM_IDS);// {} parent.get_frm_values(SURE_FRM_IDS)

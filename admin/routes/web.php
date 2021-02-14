@@ -654,6 +654,8 @@ Route::get('admin/company_ability/info/{id}', 'Admin\QualityControl\CompanyAbili
 Route::get('admin/company_ability/export', 'Admin\QualityControl\CompanyAbilityController@export');// 导出
 Route::get('admin/company_ability/import_template', 'Admin\QualityControl\CompanyAbilityController@import_template');// 导入模版
 
+Route::get('admin/company_ability/add_excel/{id}', 'Admin\QualityControl\CompanyAbilityController@add_excel');// 添加--导入
+
 // 监督检查
 Route::get('admin/company_inspect', 'Admin\QualityControl\CompanyInspectController@index');// 列表
 Route::get('admin/company_inspect/add/{id}', 'Admin\QualityControl\CompanyInspectController@add');// 添加
@@ -973,6 +975,9 @@ Route::get('web/market/platform_notices', 'WebFront\Web\QualityControl\Market\Pl
 
 // 表格下载
 Route::get('web/market/platform_down_files', 'WebFront\Web\QualityControl\Market\PlatformDownFilesController@index');// 列表
+
+// 能力验证结果导入
+Route::get('web/market/company_ability', 'WebFront\Web\QualityControl\Market\CompanyAbilityController@index');// 列表
 
 // 监督检查
 Route::get('web/market/company_inspect', 'WebFront\Web\QualityControl\Market\CompanyInspectController@index');// 列表

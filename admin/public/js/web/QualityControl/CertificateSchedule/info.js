@@ -9,7 +9,27 @@ $(function(){
     //     }
     // })
     // initAttr();
+    //切换收款账号
+    $(document).on("change",'select[name=select_addr]',function(){
+        var addr_name = $(this).val();
+        console.log('==addr_name=', addr_name);
+        addrShorOrHidden(addr_name);
+    });
 });
+
+function addrShorOrHidden(addr_name) {
+    $('.certificate_list').find('tr').each(function () {
+        var trObj = $(this);
+        var addr = trObj.find('.addr').html() || '';
+        console.log('==addr=', addr);
+        if(addr == addr_name || addr_name == ''){
+            trObj.show();
+        }else{
+            trObj.hide();
+        }
+    });
+}
+
 function initAttr() {
     $('#data_list').find('tr').each(function () {
         var trObj = $(this);

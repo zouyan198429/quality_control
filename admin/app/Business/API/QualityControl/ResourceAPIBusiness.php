@@ -35,7 +35,8 @@ class ResourceAPIBusiness extends BasePublicAPIBusiness
 
         if(empty($info)){
             // throws('资源记录[' . $id . ']不存在!', $this->source);
-            throws('资源记录[' . $id . ']不存在!');
+            // throws('资源记录[' . $id . ']不存在!');
+            return 1;
         }
         // 删除文件---没有使用过，则删除
         $resourceHistory = $info['resource_history'] ?? [];

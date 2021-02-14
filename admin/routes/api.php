@@ -182,7 +182,7 @@ $api->version('v1', function ($api) {
 
         // 上传图片
         $api->post('admin/upload', 'Admin\QualityControl\UploadController@index');
-        $api->post('admin/upload/ajax_del', 'Admin\QualityControl\UploadController@ajax_del');// 根据id删除文件
+        $api->any('admin/upload/ajax_del', 'Admin\QualityControl\UploadController@ajax_del');// 根据id删除文件
 
         // 系统管理员
         $api->any('admin/staff/ajax_alist', 'Admin\QualityControl\StaffController@ajax_alist');//ajax获得列表数据
@@ -785,6 +785,9 @@ $api->version('v1', function ($api) {
         $api->post('admin/company_ability/import', 'Admin\QualityControl\CompanyAbilityController@import');// 导入excel
         $api->post('admin/company_ability/ajax_get_ids', 'Admin\QualityControl\CompanyAbilityController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
+        $api->post('admin/company_ability/up_excel', 'Admin\QualityControl\CompanyAbilityController@up_excel');// 上传excel地址
+        $api->post('admin/company_ability/ajax_excel_save', 'Admin\QualityControl\CompanyAbilityController@ajax_excel_save');// 上传excel--导入保存
+
         // 监督检查
         $api->any('admin/company_inspect/ajax_alist', 'Admin\QualityControl\CompanyInspectController@ajax_alist');//ajax获得列表数据
         $api->post('admin/company_inspect/ajax_del', 'Admin\QualityControl\CompanyInspectController@ajax_del');// 删除
@@ -1177,6 +1180,9 @@ $api->version('v1', function ($api) {
 
         // 表格下载
         $api->any('web/market/platform_down_files/ajax_alist', 'WebFront\Web\QualityControl\Market\PlatformDownFilesController@ajax_alist');//ajax获得列表数据
+
+        // 能力验证导入结果
+        $api->any('web/market/company_ability/ajax_alist', 'WebFront\Web\QualityControl\Market\CompanyAbilityController@ajax_alist');//ajax获得列表数据
 
         // 监督检查
         $api->any('web/market/company_inspect/ajax_alist', 'WebFront\Web\QualityControl\Market\CompanyInspectController@ajax_alist');//ajax获得列表数据

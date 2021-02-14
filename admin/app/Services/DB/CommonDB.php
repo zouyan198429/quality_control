@@ -490,13 +490,14 @@ class CommonDB
      */
     public static function resolveRelations(&$tbObj ,$relations = [])
     {
-        if (empty($relations)) {
+        if (empty($relations) || empty($tbObj)) {
             return $tbObj;
         }
 
         if (jsonStrToArr($relations , 2, '') === false){
             return $tbObj;
         }
+
 
         // 层关系
         $tbObj->load($relations);
