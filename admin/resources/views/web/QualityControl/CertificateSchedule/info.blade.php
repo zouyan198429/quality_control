@@ -163,15 +163,15 @@
 										<table border="" cellspacing="" cellpadding="" class="table wb100">
 											<colgroup>
 												  <col width="50">
-												  <col width="120">
-												  <col width="120">
-												  <col width="120">
-												  <col width="120">
+												  <col width="100">
+												  <col width="100">
+												  <col width="100">
+												  <col width="100">
 												  <col width="150">
 												  <col >
 												  <col>
 												  <col>
-												  <col>
+												  <col width="150">
 												  <col width="100">
 											</colgroup>
 											<thead>
