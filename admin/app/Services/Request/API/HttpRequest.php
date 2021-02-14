@@ -12,8 +12,6 @@ use Illuminate\Support\Facades\URL;
 class HttpRequest
 {
 
-
-
     /**
      *  获取响应的hearder数组信息
      *

@@ -46,7 +46,7 @@
                     <input type="text" class="inp wnormal"  name="certificate_no" value="{{ $info['certificate_no'] ?? '' }}" placeholder="请输入CMA证书号"/>
                 </td>
             </tr>
-            
+
             <tr>
                 <th>实验室地址<span class="must">*</span></th>
                 <td>
@@ -64,11 +64,9 @@
             <tr>
                 <th>文件<span class="must">*</span></th>
                 <td>
-                    <input type="hidden" name="resource_id" value=""/>
-
                     <div class="alert alert-warning alert-dismissable">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                        <p>请上传excel格式的文件</p>
+                        <p>请上传excel格式的文件；一次最多上传1个文件。</p>
                     </div>
                     <div class="row  baguetteBoxOne gallery ">
                         <div class="col-xs-6">
@@ -76,15 +74,45 @@
                                 @slot('fileList')
                                     large
                                 @endslot
+                                @slot('upload_id')
+                                    myUploaderLarge
+                                @endslot
                                 @slot('upload_url')
                                     {{ url('api/admin/upload') }}
                                 @endslot
                             @endcomponent
+                            {{--
+                            <input type="file" class="form-control" value="">
+                            --}}
                         </div>
                     </div>
-                    <span>请上传excel格式的文档</span>
+
                 </td>
             </tr>
+{{--            <tr>--}}
+{{--                <th>文件<span class="must">*</span></th>--}}
+{{--                <td>--}}
+{{--                    <input type="hidden" name="resource_id" value=""/>--}}
+
+{{--                    <div class="alert alert-warning alert-dismissable">--}}
+{{--                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>--}}
+{{--                        <p>请上传excel格式的文件</p>--}}
+{{--                    </div>--}}
+{{--                    <div class="row  baguetteBoxOne gallery ">--}}
+{{--                        <div class="col-xs-6">--}}
+{{--                            @component('component.upfileone.piconecode')--}}
+{{--                                @slot('fileList')--}}
+{{--                                    large--}}
+{{--                                @endslot--}}
+{{--                                @slot('upload_url')--}}
+{{--                                    {{ url('api/admin/upload') }}--}}
+{{--                                @endslot--}}
+{{--                            @endcomponent--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                    <span>请上传excel格式的文档</span>--}}
+{{--                </td>--}}
+{{--            </tr>--}}
             <tr>
                 <th> </th>
                 <td><button class="btn btn-l wnormal"  id="submitBtn" >提交</button></td>
@@ -108,15 +136,33 @@
     var SAVE_URL = "{{ url('api/admin/certificate_schedule/ajax_excel_save') }}";// ajax保存记录地址
     var LIST_URL = "{{url('admin/certificate_schedule')}}";//保存成功后跳转到的地址
 
-    var UPLOAD_EXCEL_URL = "{{ url('api/admin/certificate_schedule/up_excel') }}";//上传excel地址
+    // var UPLOAD_EXCEL_URL = "{{ url('api/admin/certificate_schedule/up_excel') }}";//上传excel地址
 
     var BEGIN_TIME = "{{ $info['ratify_date'] ?? '' }}" ;//批准日期
     var END_TIME = "{{ $info['valid_date'] ?? '' }}" ;//有效期至
 
     var SELECT_COMPANY_URL = "{{url('admin/company/select')}}";// 选择所属企业
 
+    // 文件上传相关的~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // var UPLOAD_COMMON_URL = "{ { url('api/admin/upload') }}";// 文件上传提交地址 'your/file/upload/url'
+    // var UPLOAD_WORD_URL = "{ { url('api/admin/course/up_word') }}";//上传word地址
+    var UPLOAD_LARGE_URL = "{{ url('api/admin/certificate_schedule/up_excel') }}";//上传excel地址
+    // var UPLOAD_GRID_URL = "{ { url('api/admin/course/up_pdf') }}";//上传pdf地址
+
+    var DOWN_FILE_URL = "{{ url('admin/down_file') }}";// 下载网页打印机驱动
+    var DEL_FILE_URL = "{{ url('api/admin/upload/ajax_del') }}";// 删除文件的接口地址
+
     var FLASH_SWF_URL = "{{asset('dist/lib/uploader/Moxie.swf') }}";// flash 上传组件地址  默认为 lib/uploader/Moxie.swf
     var SILVERLIGHT_XAP_URL = "{{asset('dist/lib/uploader/Moxie.xap') }}";// silverlight_xap_url silverlight 上传组件地址  默认为 lib/uploader/Moxie.xap  请确保在文件上传页面能够通过此地址访问到此文件。
+
+    // 初始化的资源信息
+    // var RESOURCE_LIST_COMMON = @ json($info['resource_list'] ?? []) ;
+    var RESOURCE_LIST_LARGE = @json($info['resource_list'] ?? []) ;
+    // var RESOURCE_LIST_GRID = @ json($info['resource_list'] ?? []) ;
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    {{--var FLASH_SWF_URL = "{{asset('dist/lib/uploader/Moxie.swf') }}";// flash 上传组件地址  默认为 lib/uploader/Moxie.swf--}}
+    {{--var SILVERLIGHT_XAP_URL = "{{asset('dist/lib/uploader/Moxie.xap') }}";// silverlight_xap_url silverlight 上传组件地址  默认为 lib/uploader/Moxie.xap  请确保在文件上传页面能够通过此地址访问到此文件。--}}
 
 </script>
 <link rel="stylesheet" href="{{asset('js/baguetteBox.js/baguetteBox.min.css')}}">
@@ -124,9 +170,11 @@
 {{--<script src="{{asset('js/baguetteBox.js/highlight.min.js')}}" async></script>--}}
 <!-- zui js -->
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
-<script src="{{ asset('/js/admin/QualityControl/CertificateSchedule_excel.js') }}?4"  type="text/javascript"></script>
+<script src="{{ asset('/js/admin/QualityControl/CertificateSchedule_excel.js') }}?6"  type="text/javascript"></script>
 
-<link href="{{asset('dist/lib/uploader/zui.uploader.min.css') }}" rel="stylesheet">
-<script src="{{asset('dist/lib/uploader/zui.uploader.min.js') }}"></script>{{--此文件引用一次就可以了--}}
+{{--<link href="{{asset('dist/lib/uploader/zui.uploader.min.css') }}" rel="stylesheet">--}}
+{{--<script src="{{asset('dist/lib/uploader/zui.uploader.min.js') }}"></script>--}}{{--此文件引用一次就可以了--}}
+@component('component.upfileincludejsmany')
+@endcomponent
 </body>
 </html>

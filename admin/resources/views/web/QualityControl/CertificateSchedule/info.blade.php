@@ -152,14 +152,25 @@
 
 						</ul>
 						<ul>
+                            <?php
+                            $i = 1;
+                            $certificate_list = $info['certificate_list'] ?? [];
+                            $addrArr = \App\Services\Tool::getArrFields($certificate_list, 'addr');
+                            ?>
 
 							<div class="wrap" style="width: 80%; margin-top:20px;">
+
+                                <select class="wmini"  name="select_addr"  style="display: block;">
+                                    <option value="">所有地址</option>
+                                    @foreach ($addrArr as $addr)
+                                        <option value="{{ $addr }}"  >{{ $addr }}</option>
+                                    @endforeach
+                                </select>
 								<div class="box1" style="min-height: 500px;">
 									<div class="hd">
 										检验检测能力表
 									</div>
 									<div class="bd">
-
 										<table border="" cellspacing="" cellpadding="" class="table wb100">
 											<colgroup>
 												  <col width="50">
@@ -204,11 +215,7 @@
 													<th>批准日期</th>
 												</tr>
 											</thead>
-											<tbody id="data_list">
-							                <?php
-											$i = 1;
-							                $certificate_list = $info['certificate_list'] ?? [];
-							                ?>
+											<tbody id="data_list" class="certificate_list">
 							                @foreach ($certificate_list as $k => $v)
 												<tr>
 													<td  align="center" class="ID">{{ $i ?? '' }}</td>
@@ -263,4 +270,4 @@
 </html>
 
 <script src="{{asset('static/js/custom/common.js')}}?8"></script>
-<script src="{{ asset('/js/web/QualityControl/CertificateSchedule/info.js') }}?2"  type="text/javascript"></script>
+<script src="{{ asset('/js/web/QualityControl/CertificateSchedule/info.js') }}?4"  type="text/javascript"></script>
