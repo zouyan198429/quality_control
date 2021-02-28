@@ -235,6 +235,7 @@ class CertificateScheduleController extends BasicController
      */
     public function info(Request $request,$id = 0)
     {
+	Tool::phpInitSet();
         return $this->exeDoPublicFun($request, 17179869184, 1,'web.QualityControl.CertificateSchedule.info', false
             , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
 

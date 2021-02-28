@@ -160,7 +160,7 @@
 
 							<div class="wrap" style="width: 80%; margin-top:20px;">
 
-                                <select class="wmini"  name="select_addr"  style="display: block;">
+                                <select class="wmini"  name="select_addr"  style="display: block; width:360px; margin-bottom: 20px;">
                                     <option value="">所有地址</option>
                                     @foreach ($addrArr as $addr)
                                         <option value="{{ $addr }}"  >{{ $addr }}</option>
