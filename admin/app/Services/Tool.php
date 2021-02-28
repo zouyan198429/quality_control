@@ -1377,6 +1377,24 @@ class Tool
         return $repStr;
     }
 
+
+    /**
+     * 将字符中的标签内容，获取到数组中
+     *  如：您在{test_input}报名{test_val}操作，成功！开学时间：{test_datetime}！如有任何问题请联系{mobile}
+     *  返回 ['test_input', 'test_val', 'test_datetime', 'mobile']
+     *   PHP实现正则匹配所有括号中的内容 https://www.jb51.net/article/142433.htm
+     * @param string $str 有标签的内容
+     * @param string $keyPre 字符中的标签前字符
+     * @param string $keyBack 字符中的标签后字符
+     * @return array 获取到数组
+     */
+    public static function getLabelArr($str, $keyPre = '{', $keyBack = '}'){
+        $strPattern = "/(?<=" . $keyPre . ")[^" . $keyBack . "]+/";
+        $arrMatches = [];// [0 => [ 0 => 'test_input',  1 => 'test_val',  2 => 'test_datetime',  3 => 'mobile']]
+        preg_match_all($strPattern, $str, $arrMatches);
+        return $arrMatches[0] ?? [];
+    }
+
     /**
      * 数组的所有值都为空 true:都为空 或 非数组 -- 默认，false:有值--任一下标有值
      * @param array $arr 需要判断的数组 -- 任一维数的数组
@@ -4966,6 +4984,53 @@ class Tool
     }
 
     /**
+     * 判断一个数是不是 1，2，4，8...
+     *   只是判断一次可用这个，如果有多次，则用 isBitNumByArr方法判断比较好
+     * @param int $val  需要判断的数
+     * @param int  $maxNum 最大执行的次数 如 int: 31  bigint: 63[默认]
+     * @param int  $bitNum 当前执行的次数 0[默认]，1，2，3，4，5... -- 通常不用传此值，用默认值 0 就可以从 2 0次方1开始
+     * @return boolean  true:是位数值; false:不是位数值
+     */
+    public static function isBitNum($val, $maxNum = 63, $bitNum = 0){
+        $recordJudgeNum = 2**$bitNum;// pow(2,$bitNum);
+        if( $val  == $recordJudgeNum) return true;
+
+        if( ($bitNum + 1) >= $maxNum) return false;// 已经达到最大执行次数
+
+        if(static::isBitNum($val, $maxNum, ++$bitNum)) return true;
+
+        return false;
+    }
+
+    /**
+     * 判断一个数是不是 1，2，4，8...,通过先获得所有的位一维数组
+     *   只是判断一次可用这个，如果有多次，则用 isBitNumByArr方法判断比较好
+     * @param int $val  需要判断的数
+     * @param array $bitNumArr   所有的位一维数组; 默认为空数组--会自动去获取数组值； 引用传值，可以获取到位数组后继续使用
+     * @param int  $maxNum 最大执行的次数 如 int: 31  bigint: 63[默认]
+     * @return boolean  true:是位数值; false:不是位数值
+     */
+    public static function isBitNumByArr($val, &$bitNumArr = [], $maxNum = 63){
+        if(empty($bitNumArr)) $bitNumArr = static::getBitArr($maxNum);
+        if(in_array($val, $bitNumArr)) return true;
+        return false;
+    }
+
+
+    /**
+     * 获得位数组 --一维 [1，2，4，8...]
+     * @param int  $maxNum 最大执行的次数 如 int: 31  bigint: 63[默认]
+     * @return array  位数组 --一维 [1，2，4，8...]
+     */
+    public static function getBitArr($maxNum = 63){
+        $reArr = [];
+        for($i = 0; $i< $maxNum; $i++){
+            array_push($reArr, 2**$i);
+        }
+        return $reArr;
+    }
+
+    /**
      * laravel-判断是否在cli模式运行
      * @return boolean 命令行： true; 非命令行 :false
      */
@@ -4985,4 +5050,46 @@ class Tool
         return false;
     }
 
+    /**
+     * 一个值如果不是数组，则转为数组
+     * @param mixed $paramVal 需要处理的值  可以是字符串；数组；字符
+     * @param string $splitText  如果值为字符是，转数组时的分隔符，默认逗号,
+     * @return array 转换好的数组
+     */
+    public static function paramToArrVal($paramVal, $splitText = ','){
+        // 如果是字符，则转为数组
+        if(is_string($paramVal) || is_numeric($paramVal)){
+            if(strlen(trim($paramVal)) > 0){
+                $paramVal = explode($splitText ,$paramVal);
+            }
+        }
+        if(!is_array($paramVal)) $paramVal = [];
+        return $paramVal;
+    }
+
+    // 引用处理 一个值如果不是数组，则转为数组
+    public static function valToArrVal(&$paramVal, $splitText = ','){
+        $paramVal = static::paramToArrVal($paramVal, $splitText);
+        return $paramVal;
+    }
+
+    /**
+     * 将位数组，合并为一个数值
+     * @param array $bitArr 位值数组 【1、2、、4、8...】
+     * @return int 合并后的数值
+     */
+    public static function bitJoinVal($bitArr){
+        $bitJoinVal = 0;
+        Tool::arrClsEmpty($bitArr);
+        foreach($bitArr as $bitVal){
+            $bitJoinVal = $bitJoinVal | $bitVal;
+        }
+        return $bitJoinVal;
+    }
+
+    // 引用处理 将位数组，合并为一个数值
+    public static function bitArrToInt(&$bitArr){
+        $bitArr = static::bitJoinVal($bitArr);
+        return $bitArr;
+    }
 }

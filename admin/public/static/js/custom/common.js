@@ -1831,6 +1831,7 @@ function decimal_numxs(obj){
         //digit:0+正整数 judge_judge_digit(value)
         //date [见意用这个]判断日期格式是否正确 judge_date(dateTime) 日期格式 2012-02-16或2012-02-16 23:59:59 2012-2-8或2012-02-16 23:59:59
         //time 判断时间格式是否正确 true正确 false 有误  时间格式 23:59:59
+        //bitint 判断值是否是位数字[1、2、4..] min_length 最大执行的次数 如 int: 31  bigint: 63[默认]  judge_validate(1,'参数类型',8,true,'bitint',63,"");
 //min_length 最小长度;为空则不判断
 //max_length 最大长度;为空则不判断
 //返回值 true：正确-通过;false:失败-有误
@@ -2028,6 +2029,12 @@ function judge_validate(err_type,tishi_name,value,is_must,reg_msg,min_length,max
             case "time"://time 判断时间格式是否正确 true正确 false 有误  时间格式 23:59:59
                 if(!judge_time(tem_value)){
                     back_err = "格式不是有效的时间格式!";
+                }
+                break;
+            case "bitint":// bitint 判断值是否是位数字[1、2、4..] min_length 最大执行的次数 如 int: 31  bigint: 63[默认]
+                min_length = min_length || 63;
+                if(!isBitNum(tem_value,min_length)){
+                    back_err = '必须为[' + '1、2、4、8、16...等位数值；且在' + min_length+'个占位以内]!';
                 }
                 break;
             default://其它正则表达式
@@ -2240,6 +2247,43 @@ function timeToDaySecond(err_type, timeVal, timeName){
         }
     }
     return intDaySecnd;
+}
+
+// 判断一个数是不是 1，2，4，8...,通过先获得所有的位一维数组
+// val  需要判断的数
+// maxNum 最大执行的次数 如 int: 31  bigint: 63[默认]
+function isBitNum(val, maxNum){
+    var bitNumArr = getBitArr(maxNum);
+    // console.log('val=', val);
+    // console.log('bitNumArr=', bitNumArr);
+    if(bitNumArr.indexOf(parseInt(val))>= 0) {//存在
+        return true;
+    }else{
+        return false;
+    }
+}
+
+// 判断一个数是不是 1，2，4，8...,通过先获得所有的位一维数组
+// val  需要判断的数
+// bitNumArr  所有的位一维数组; 默认为空数组--会自动去获取数组值； 可以获取到位数组后继续使用
+// maxNum 最大执行的次数 如 int: 31  bigint: 63[默认]
+function isBitNumByArr(val, bitNumArr, maxNum){
+    bitNumArr = bitNumArr || getBitArr(maxNum);
+    if(bitNumArr.indexOf(parseInt(val))>= 0) {//存在
+        return true;
+    }else{
+        return false;
+    }
+}
+
+// 获得位数组 --一维 [1，2，4，8...]
+function getBitArr(maxNum){
+    maxNum = maxNum || 63;
+    var reArr = [];
+    for(var i = 0; i < maxNum; i++){
+        reArr.push(Math.pow(2,i));
+    }
+    return reArr;
 }
 
 // 比较两个时间,返回  end_time 结束时间 - begin_time 开始时间

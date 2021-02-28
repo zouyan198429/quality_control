@@ -109,6 +109,10 @@ Class Validate{
                     case "custom": //正则验证 validator=“custom”  regexp=""
                         $this->validateparam[$k]['result'] = $this->check($judgeVal,$v['regexp']);
                         break;
+                    case "bitint": //判断值是否是位数字[1、2、4..]
+                        $bitmax = $v['bitmax'] ?? 63;
+                        $this->validateparam[$k]['result'] = $this->isBitNum($judgeVal, $bitmax);
+                        break;
                     case "compare"://比较 validator=“compare”  operator="比较符" to="被比较值"
                         if ($v['operator'] != ""){//比较符不为空
                             eval("\$result = '" . $judgeVal . "'" . $v['operator'] . "'" . $v['to'] . "'" . ";" );
@@ -176,6 +180,7 @@ Class Validate{
      * 其中Compare，Custom，Length,Range比较特殊。
      * Compare是用来比较2个字符串或数字，operator和to用来配合使用，operator是比较的操作符(==,>,<,>=,<=,!=)，to是用来比较的字符串；
      * Custom是定制验证的规则，regexp用来配合使用，regexp是正则表达试；
+     * Bitint 判断值是否是位数字[1、2、4..] , bitmax 最大可以判断的位的位数 63[默认]
      * Length是验证字符串或数字的长度是否在一顶的范围内，min和max用来配合使用，min是最小的长度，max是最大的长度，如果不写max则被认为是长度必须等于min;
      * Range是数字是否在某个范围内，min和max用来配合使用。
      * 值得注意的是，如果需要判断的规则比较复杂，建议直接写正则表达式。
@@ -254,5 +259,24 @@ Class Validate{
             //echo '变量不为空';
             return FALSE;
         }
+    }
+
+    /**
+     * 判断一个数是不是 1，2，4，8...
+     *   只是判断一次可用这个，如果有多次，则用 isBitNumByArr方法判断比较好
+     * @param int $val  需要判断的数
+     * @param int  $maxNum 最大执行的次数 如 int: 31  bigint: 63[默认]
+     * @param int  $bitNum 当前执行的次数 0[默认]，1，2，3，4，5... -- 通常不用传此值，用默认值 0 就可以从 2 0次方1开始
+     * @return boolean  true:是位数值; false:不是位数值
+     */
+    public function isBitNum($val, $maxNum = 63, $bitNum = 0){
+        $recordJudgeNum = 2**$bitNum;// pow(2,$bitNum);
+        if( $val  == $recordJudgeNum) return true;
+
+        if( ($bitNum + 1) >= $maxNum) return false;// 已经达到最大执行次数
+
+        if($this->isBitNum($val, $maxNum, ++$bitNum)) return true;
+
+        return false;
     }
 }

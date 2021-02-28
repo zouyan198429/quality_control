@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers\Admin\QualityControl;
 
-use App\Business\Controller\API\QualityControl\CTAPISmsCodeBusiness;
-use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
+use App\Business\Controller\API\QualityControl\CTAPISmsLimitBusiness;
 use App\Http\Controllers\WorksController;
-use App\Models\QualityControl\SmsCode;
 use App\Services\Request\CommonRequest;
 use App\Services\Tool;
 use Illuminate\Http\Request;
 
-class SmsCodeController extends BasicController
+class SmsLimitController extends BasicController
 {
     public $controller_id =0;// 功能小模块[控制器]id - controller_id  历史表 、正在进行表 与原表相同
 
@@ -30,11 +28,10 @@ class SmsCodeController extends BasicController
 //            $this->InitParams($request);
 //            // $reDataArr = $this->reDataArr;
 //            $reDataArr = array_merge($reDataArr, $this->reDataArr);
-//
-//            return view('admin.QualityControl.SmsCode.index', $reDataArr);
+//            return view('admin.QualityControl.SmsLimit.index', $reDataArr);
 //
 //        }, $this->errMethod, $reDataArr, $this->errorView);
-        return $this->exeDoPublicFun($request, 1, 1, 'admin.QualityControl.SmsCode.index', true
+        return $this->exeDoPublicFun($request, 1, 1, 'admin.QualityControl.SmsLimit.index', true
             , 'doListPage', [], function (&$reDataArr) use ($request){
 
             });
@@ -56,10 +53,10 @@ class SmsCodeController extends BasicController
 //            $this->InitParams($request);
 //            // $reDataArr = $this->reDataArr;
 //            $reDataArr = array_merge($reDataArr, $this->reDataArr);
-//            $reDataArr['province_kv'] = CTAPISmsCodeBusiness::getCityByPid($request, $this,  0);
-//            $reDataArr['province_kv'] = CTAPISmsCodeBusiness::getChildListKeyVal($request, $this, 0, 1 + 0, 0);
+//            $reDataArr['province_kv'] = CTAPISmsLimitBusiness::getCityByPid($request, $this,  0);
+//            $reDataArr['province_kv'] = CTAPISmsLimitBusiness::getChildListKeyVal($request, $this, 0, 1 + 0, 0);
 //            $reDataArr['province_id'] = 0;
-//            return view('admin.QualityControl.SmsCode.select', $reDataArr);
+//            return view('admin.QualityControl.SmsLimit.select', $reDataArr);
 //
 //        }, $this->errMethod, $reDataArr, $this->errorView);
 //        return $this->exeDoPublicFun($request, 2048, 1, 'admin.QualityControl.RrrDddd.select', true
@@ -85,33 +82,49 @@ class SmsCodeController extends BasicController
 //            $this->InitParams($request);
 //            // $reDataArr = $this->reDataArr;
 //            $reDataArr = array_merge($reDataArr, $this->reDataArr);
-//            return view('admin.QualityControl.SmsCode.add', $reDataArr);
+//            return view('admin.QualityControl.SmsLimit.add', $reDataArr);
 //
 //        }, $this->errMethod, $reDataArr, $this->errorView);
 
         $pageNum = ($id > 0) ? 64 : 16;
-        return $this->exeDoPublicFun($request, $pageNum, 1,'admin.QualityControl.SmsCode.add', true
+        return $this->exeDoPublicFun($request, $pageNum, 1,'admin.QualityControl.SmsLimit.add', true
             , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
 
         });
     }
 
     /**
+     * 详情页
+     *
+     * @param Request $request
+     * @param int $id
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function info(Request $request,$id = 0)
+    {
+        return $this->exeDoPublicFun($request, 17179869184, 1,'admin.QualityControl.SmsLimit.info', true
+            , 'doInfoPage', ['id' => $id], function (&$reDataArr) use ($request){
+
+            });
+    }
+
+    /**
      * @OA\Get(
-     *     path="/api/admin/sms_code/ajax_info",
-     *     tags={"大后台-短信管理-验证码"},
-     *     summary="验证码--详情",
+     *     path="/api/admin/sms_limit/ajax_info",
+     *     tags={"大后台-短信管理-限次配置"},
+     *     summary="限次配置--详情",
      *     description="根据单个id,查询详情记录......",
-     *     operationId="adminQualityControlSmsCodeAjax_info",
+     *     operationId="adminQualityControlSmsLimitAjax_info",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_sms_code_id_required"),
-     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_info_sms_code"),
+     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_sms_limit_id_required"),
+     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_info_sms_limit"),
      *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
      *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
-     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_sms_code"}
+     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_sms_limit"}
      */
     /**
      * ajax获得详情数据
@@ -124,7 +137,7 @@ class SmsCodeController extends BasicController
         $this->InitParams($request);
         $id = CommonRequest::getInt($request, 'id');
         if(!is_numeric($id) || $id <=0) return ajaxDataArr(0, null, '参数[id]有误！');
-        $info = CTAPISmsCodeBusiness::getInfoData($request, $this, $id, [], '', []);
+        $info = CTAPISmsLimitBusiness::getInfoData($request, $this, $id, [], '', []);
         $resultDatas = ['info' => $info];
         return ajaxDataArr(1, $resultDatas, '');
 
@@ -137,20 +150,20 @@ class SmsCodeController extends BasicController
 
     /**
      * @OA\Post(
-     *     path="/api/admin/sms_code/ajax_save",
-     *     tags={"大后台-短信管理-验证码"},
-     *     summary="验证码--新加/修改",
+     *     path="/api/admin/sms_limit/ajax_save",
+     *     tags={"大后台-短信管理-限次配置"},
+     *     summary="限次配置--新加/修改",
      *     description="根据单个id,新加/修改记录(id>0:修改；id=0:新加)......",
-     *     operationId="adminQualityControlSmsCodeAjax_save",
+     *     operationId="adminQualityControlSmsLimitAjax_save",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_sms_code_id_required"),
+     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_sms_limit_id_required"),
      *     @OA\Response(response=200,ref="#/components/responses/common_Response_modify"),
      *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
      *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
-     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_sms_code"}
+     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_sms_limit"}
      */
 
     /**
@@ -170,12 +183,18 @@ class SmsCodeController extends BasicController
             , '', [], function (&$reDataArr) use ($request){
                 $id = CommonRequest::getInt($request, 'id');
                 // CommonRequest::judgeEmptyParams($request, 'id', $id);
-                $type_name = CommonRequest::get($request, 'type_name');
-                $sort_num = CommonRequest::getInt($request, 'sort_num');
+                $limit_explain = CommonRequest::get($request, 'limit_explain');
+                $limit_key = CommonRequest::get($request, 'limit_key');
+                $limit_code = CommonRequest::getInt($request, 'limit_code');
+                $valid_second = CommonRequest::getInt($request, 'valid_second');
+                $limit_count = CommonRequest::getInt($request, 'limit_count');
 
                 $saveData = [
-                    'type_name' => $type_name,
-                    'sort_num' => $sort_num,
+                    'limit_explain' => $limit_explain,
+                    'limit_key' => $limit_key,
+                    'limit_code' => $limit_code,
+                    'valid_second' => $valid_second,
+                    'limit_count' => $limit_count,
                 ];
 
 //        if($id <= 0) {// 新加;要加入的特别字段
@@ -187,27 +206,27 @@ class SmsCodeController extends BasicController
                 $extParams = [
                     'judgeDataKey' => 'replace',// 数据验证的下标
                 ];
-                $resultDatas = CTAPISmsCodeBusiness::replaceById($request, $this, $saveData, $id, $extParams, true);
+                $resultDatas = CTAPISmsLimitBusiness::replaceById($request, $this, $saveData, $id, $extParams, true);
                 return ajaxDataArr(1, $resultDatas, '');
-            });
+        });
     }
 
     /**
      * @OA\Get(
-     *     path="/api/admin/sms_code/ajax_alist",
-     *     tags={"大后台-短信管理-验证码"},
-     *     summary="验证码--列表",
-     *     description="验证码--列表......",
-     *     operationId="adminQualityControlSmsCodeAjax_alist",
+     *     path="/api/admin/sms_limit/ajax_alist",
+     *     tags={"大后台-短信管理-限次配置"},
+     *     summary="限次配置--列表",
+     *     description="限次配置--列表......",
+     *     operationId="adminQualityControlSmsLimitAjax_alist",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_sms_code_id_optional"),
-     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_list_sms_code"),
+     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_sms_limit_id_optional"),
+     *     @OA\Response(response=200,ref="#/components/responses/Response_QualityControl_list_sms_limit"),
      *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
      *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
-     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_sms_code"}
+     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_sms_limit"}
      */
     /**
      * ajax获得列表数据
@@ -218,20 +237,9 @@ class SmsCodeController extends BasicController
      */
     public function ajax_alist(Request $request){
 //        $this->InitParams($request);
-//        $relations = [];//  ['siteResources']
-//        $extParams = [
-//           // 'handleKeyArr' => ['staff'],//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-//            'relationFormatConfigs'=> CTAPISmsCodeBusiness::getRelationConfigs($request, $this, ['staff_info'], []),
-//        ];
-//        return  CTAPISmsCodeBusiness::getList($request, $this, 2 + 4, [], $relations, $extParams);
+//        return  CTAPISmsLimitBusiness::getList($request, $this, 2 + 4);
         return $this->exeDoPublicFun($request, 4, 4,'', true, '', [], function (&$reDataArr) use ($request){
-
-            $relations = [];//  ['siteResources']
-            $extParams = [
-                // 'handleKeyArr' => ['staff'],//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
-                'relationFormatConfigs'=> CTAPISmsCodeBusiness::getRelationConfigs($request, $this, ['staff_info' => ''], []),
-            ];
-            return  CTAPISmsCodeBusiness::getList($request, $this, 2 + 4, [], $relations, $extParams);
+            return  CTAPISmsLimitBusiness::getList($request, $this, 2 + 4);
         });
     }
 
@@ -244,7 +252,7 @@ class SmsCodeController extends BasicController
      */
 //    public function ajax_get_ids(Request $request){
 //        $this->InitParams($request);
-//        $result = CTAPISmsCodeBusiness::getList($request, $this, 1 + 0);
+//        $result = CTAPISmsLimitBusiness::getList($request, $this, 1 + 0);
 //        $data_list = $result['result']['data_list'] ?? [];
 //        $ids = implode(',', array_column($data_list, 'id'));
 //        return ajaxDataArr(1, $ids, '');
@@ -266,7 +274,7 @@ class SmsCodeController extends BasicController
      */
 //    public function export(Request $request){
 //        $this->InitParams($request);
-//        CTAPISmsCodeBusiness::getList($request, $this, 1 + 0);
+//        CTAPISmsLimitBusiness::getList($request, $this, 1 + 0);
 //        return $this->exeDoPublicFun($request, 4096, 8,'', true, '', [], function (&$reDataArr) use ($request){
 //            CTAPIRrrDdddBusiness::getList($request, $this, 1 + 0);
 //        });
@@ -282,7 +290,7 @@ class SmsCodeController extends BasicController
      */
 //    public function import_template(Request $request){
 //        $this->InitParams($request);
-//        CTAPISmsCodeBusiness::importTemplate($request, $this);
+//        CTAPISmsLimitBusiness::importTemplate($request, $this);
 //        return $this->exeDoPublicFun($request, 16384, 8,'', true, '', [], function (&$reDataArr) use ($request){
 //            CTAPIRrrDdddBusiness::importTemplate($request, $this);
 //        });
@@ -291,20 +299,20 @@ class SmsCodeController extends BasicController
 
     /**
      * @OA\Post(
-     *     path="/api/admin/sms_code/ajax_del",
-     *     tags={"大后台-短信管理-验证码"},
-     *     summary="验证码--删除",
+     *     path="/api/admin/sms_limit/ajax_del",
+     *     tags={"大后台-短信管理-限次配置"},
+     *     summary="限次配置--删除",
      *     description="根据单个id,删除记录......",
-     *     operationId="adminQualityControlSmsCodeAjax_del",
+     *     operationId="adminQualityControlSmsLimitAjax_del",
      *     deprecated=false,
      *     @OA\Parameter(ref="#/components/parameters/Accept"),
-     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_sms_code_id_required"),
+     *     @OA\Parameter(ref="#/components/parameters/Schema_QualityControl_sms_limit_id_required"),
      *     @OA\Response(response=200,ref="#/components/responses/common_Response_del"),
      *     @OA\Response(response=400,ref="#/components/responses/common_Response_err_400"),
      *     @OA\Response(response=404,ref="#/components/responses/common_Response_err_404"),
      * )
      *     请求主体对象
-     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_sms_code"}
+     *     requestBody={"$ref": "#/components/requestBodies/RequestBody_QualityControl_info_sms_limit"}
      */
     /**
      * 子帐号管理-删除
@@ -316,13 +324,13 @@ class SmsCodeController extends BasicController
     public function ajax_del(Request $request)
     {
 //        $this->InitParams($request);
-//        return CTAPISmsCodeBusiness::delAjax($request, $this);
+//        return CTAPISmsLimitBusiness::delAjax($request, $this);
 
         $tem_id = CommonRequest::get($request, 'id');
         Tool::formatOneArrVals($tem_id, [null, ''], ',', 1 | 2 | 4 | 8);
         $pageNum = (is_array($tem_id) && count($tem_id) > 1 ) ? 1024 : 512;
         return $this->exeDoPublicFun($request, $pageNum, 4,'', true, '', [], function (&$reDataArr) use ($request){
-            return CTAPISmsCodeBusiness::delAjax($request, $this);
+            return CTAPISmsLimitBusiness::delAjax($request, $this);
         });
     }
 
@@ -337,8 +345,8 @@ class SmsCodeController extends BasicController
 //        $this->InitParams($request);
 //        $parent_id = CommonRequest::getInt($request, 'parent_id');
 //        // 获得一级城市信息一维数组[$k=>$v]
-//        $childKV = CTAPISmsCodeBusiness::getCityByPid($request, $this, $parent_id);
-//        // $childKV = CTAPISmsCodeBusiness::getChildListKeyVal($request, $this, $parent_id, 1 + 0);
+//        $childKV = CTAPISmsLimitBusiness::getCityByPid($request, $this, $parent_id);
+//        // $childKV = CTAPISmsLimitBusiness::getChildListKeyVal($request, $this, $parent_id, 1 + 0);
 //
 //        return  ajaxDataArr(1, $childKV, '');;
 //        return $this->exeDoPublicFun($request, 8589934592, 4,'', true, '', [], function (&$reDataArr) use ($request){
@@ -356,7 +364,7 @@ class SmsCodeController extends BasicController
 //    public function ajax_import(Request $request){
 //        $this->InitParams($request);
 //        $fileName = 'staffs.xlsx';
-//        $resultDatas = CTAPISmsCodeBusiness::importByFile($request, $this, $fileName);
+//        $resultDatas = CTAPISmsLimitBusiness::importByFile($request, $this, $fileName);
 //        return ajaxDataArr(1, $resultDatas, '');
 ///
 //        return $this->exeDoPublicFun($request, 32768, 4,'', true, '', [], function (&$reDataArr) use ($request){
@@ -381,7 +389,7 @@ class SmsCodeController extends BasicController
 //        if($result['apistatus'] == 0) return $result;
 //        // 文件上传成功
 //        $fileName = Tool::getPath('public') . '/' . $result['result']['filePath'];
-//        $resultDatas = CTAPISmsCodeBusiness::importByFile($request, $this, $fileName);
+//        $resultDatas = CTAPISmsLimitBusiness::importByFile($request, $this, $fileName);
 //        return ajaxDataArr(1, $resultDatas, '');
 //        return $this->exeDoPublicFun($request, 32768, 4,'', true, '', [], function (&$reDataArr) use ($request){
 //            // 上传并保存文件
@@ -389,7 +397,7 @@ class SmsCodeController extends BasicController
 //            if($result['apistatus'] == 0) return $result;
 //            // 文件上传成功
 //            $fileName = Tool::getPath('public') . '/' . $result['result']['filePath'];
-//            $resultDatas = CTAPISmsCodeBusiness::importByFile($request, $this, $fileName);
+//            $resultDatas = CTAPISmsLimitBusiness::importByFile($request, $this, $fileName);
 //            return ajaxDataArr(1, $resultDatas, '');
 //        });
 //    }
@@ -422,22 +430,9 @@ class SmsCodeController extends BasicController
         // $user_info = $this->user_info;
         // $id = $extendParams['params']['id'];
 
-        // 类型1登录/注册
-        $reDataArr['smsType'] =  SmsCode::$smsTypeArr;
-        $reDataArr['defaultSmsType'] = -1;// 列表页默认状态
-
-
-        // 状态 1待发送2已发送4已使用(登录)8发送失败
-        $reDataArr['smsStatus'] =  SmsCode::$smsStatusArr;
-        $reDataArr['defaultSmsStatus'] = -1;// 列表页默认状态
-
-        // 模板类型【1腾讯云SMS、2阿里云短信】
-        $reDataArr['templateType'] =  SmsCode::$templateTypeArr;
-        $reDataArr['defaultTemplateType'] = -1;// 列表页默认状态
-
-        // 发送类型【1系统发送、2手动发送】
-        $reDataArr['sendType'] =  SmsCode::$sendTypeArr;
-        $reDataArr['defaultSendType'] = -1;// 列表页默认状态
+//        // 拥有者类型1平台2企业4个人
+//        $reDataArr['adminType'] =  AbilityJoin::$adminTypeArr;
+//        $reDataArr['defaultAdminType'] = -1;// 列表页默认状态
 
         $reDataArr['hidden_option'] = $hiddenOption;
     }
@@ -479,28 +474,11 @@ class SmsCodeController extends BasicController
 
         if ($id > 0) { // 获得详情数据
             $operate = "修改";
-            $info = CTAPISmsCodeBusiness::getInfoData($request, $this, $id, [], '', []);
+            $info = CTAPISmsLimitBusiness::getInfoData($request, $this, $id, [], '', []);
         }
         // $reDataArr = array_merge($reDataArr, $resultDatas);
         $reDataArr['info'] = $info;
         $reDataArr['operate'] = $operate;
-
-        // 类型1登录/注册
-        $reDataArr['smsType'] =  SmsCode::$smsTypeArr;
-        $reDataArr['defaultSmsType'] = $info['sms_type'] ?? -1;// 列表页默认状态
-
-
-        // 状态 1待发送2已发送4已使用(登录)8发送失败
-        $reDataArr['smsStatus'] =  SmsCode::$smsStatusArr;
-        $reDataArr['defaultSmsStatus'] = $info['sms_status'] ?? -1;// 列表页默认状态
-
-        // 模板类型【1腾讯云SMS、2阿里云短信】
-        $reDataArr['templateType'] =  SmsCode::$templateTypeArr;
-        $reDataArr['defaultTemplateType'] = $info['template_type'] ?? -1;// 列表页默认状态
-
-        // 发送类型【1系统发送、2手动发送】
-        $reDataArr['sendType'] =  SmsCode::$sendTypeArr;
-        $reDataArr['defaultSendType'] = $info['send_type'] ?? -1;// 列表页默认状态
 
         $reDataArr['hidden_option'] = $hiddenOption;
     }

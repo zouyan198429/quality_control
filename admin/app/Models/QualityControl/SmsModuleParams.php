@@ -1,9 +1,9 @@
 <?php
-// 老师登录验证码
+// 短信模板所属模块参数
 
 namespace App\Models\QualityControl;
 
-class SmsCode extends BasePublicModel
+class SmsModuleParams extends BasePublicModel
 {
     //****************数据据缓存**相关的***开始********************************************
 //    public static $cachePre = 'cacheDB';// 缓存键最前面的关键字  cacheDb:U:{id值}_{email值}  中的 cacheDb
@@ -59,7 +59,7 @@ class SmsCode extends BasePublicModel
     //****************数据据缓存**相关的***结束********************************************
 
     // public static $IntPriceFields = [];//[有则设置] 表中整型表示价格的字段数组 -- 一维数组，目的：方便统一把数据中的字段转浮点数或转整数
-    // public static $IntPriceIndex = [];// $IntPriceFields 字段对应的扩大陪数；没有配置默认为2  扩大或缩小倍数： pow(10,2)；格式：['sl' => 2,]；注：2的可不用配置【只配置特殊的】，因为默认就是2
+    // public static $IntPriceIndex = [];//  $IntPriceFields 字段对应的扩大陪数；没有配置默认为2  扩大或缩小倍数： pow(10,2)；格式：['sl' => 2,]；注：2的可不用配置【只配置特殊的】，因为默认就是2
 
     // 自有属性
     // 0：都没有；
@@ -79,90 +79,34 @@ class SmsCode extends BasePublicModel
      *
      * @var string
      */
-    protected $table = 'sms_code';
+    protected $table = 'sms_module_params';
 
-    // 类型1登录/注册
-    public static $smsTypeArr = [
-        '1' => '登录/注册',
-    ];
-
-    // 状态 1待发送2已发送4已使用(登录)8发送失败
-    public static $smsStatusArr = [
-        '1' => '待发送',
-        '2' => '已发送',
-        '4' => '已使用',
-        '8' => '发送失败',
-    ];
-
-    // 模板类型【1腾讯云SMS、2阿里云短信】
-    public static $templateTypeArr = [
-        '1' => '腾讯云SMS',
-        '2' => '阿里云短信',
-    ];
-
-    // 发送类型【1系统发送、2手动发送】
-    public static $sendTypeArr = [
-        '1' => '系统发送',
-        '2' => '手动发送',
+    // 参数类型1日期时间、2固定值、4手动输入-发送时、8字段匹配
+    public static $paramTypeArr = [
+        '1' => '日期时间',
+        '2' => '固定值',
+        '4' => '手动输入',
+        '8' => '字段匹配',
     ];
 
     // 表里没有的字段
-    protected $appends = ['sms_status_text', 'sms_type_text', 'template_type_text', 'send_type_text'];
+    protected $appends = ['param_type_text'];
 
     /**
-     * 获取类型文字
+     * 获取参数类型文字
      *
      * @return string
      */
-    public function getSmsTypeTextAttribute()
+    public function getParamTypeTextAttribute()
     {
-        return static::$smsTypeArr[$this->sms_type] ?? '';
+        return static::$paramTypeArr[$this->param_type] ?? '';
     }
 
     /**
-     * 获取状态文字
-     *
-     * @return string
+     * 获取短信模板所属模块--一维
      */
-    public function getSmsStatusTextAttribute()
+    public function smsModule()
     {
-        return static::$smsStatusArr[$this->sms_status] ?? '';
-    }
-
-    /**
-     * 获取模板类型文字
-     *
-     * @return string
-     */
-    public function getTemplateTypeTextAttribute()
-    {
-        return static::$templateTypeArr[$this->template_type] ?? '';
-    }
-
-    /**
-     * 获取发送类型文字
-     *
-     * @return string
-     */
-    public function getSendTypeTextAttribute()
-    {
-        return static::$sendTypeArr[$this->send_type] ?? '';
-    }
-
-    /**
-     * 获取所属帐号--一维
-     */
-    public function staff()
-    {
-        return $this->belongsTo('App\Models\QualityControl\Staff', 'staff_id', 'id');
-    }
-
-
-    /**
-     * 获取短信模板--一维
-     */
-    public function smsTemplate()
-    {
-        return $this->belongsTo('App\Models\QualityControl\SmsTemplate', 'template_id', 'id');
+        return $this->belongsTo('App\Models\QualityControl\SmsModule', 'module_id', 'id');
     }
 }

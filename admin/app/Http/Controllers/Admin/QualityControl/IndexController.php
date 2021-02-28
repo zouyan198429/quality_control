@@ -59,6 +59,18 @@ class IndexController extends BasicController
     }
 
     public function test(Request $request){
+        $strSubject = "您在{test_input}报名{test_val}操作，成功！开学时间：{test_datetime}！如有任何问题请联系{mobile}";
+        // $strSubject = "您在【test_input】报名【test_val】操作，成功！开学时间：【test_datetime】！如有任何问题请联系【mobile】";
+        // $strSubject = "abc【111】abc【222】abc【333】abc";
+        // $strPattern = "/(?<=【)[^】]+/";
+//        $strPattern = "/(?<={)[^}]+/";
+//        $arrMatches = [];
+//        preg_match_all($strPattern, $strSubject, $arrMatches);
+//        pr($arrMatches);
+        // pr($aaa);
+        $aa = Tool::getLabelArr($strSubject);
+        pr($aa);
+
         $aa = BasicWechat::getCertificate(BasicWechat::$apiConfig['apiclient_cert_path']);
         vd($aa);
 

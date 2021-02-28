@@ -424,6 +424,29 @@
                       </dd>
                   </dl>
               </li>
+              <li data-name="user" class="layui-nav-item">
+                  <a href="javascript:;" lay-tips="短信管理" lay-direction="2">
+                      <i class="layui-icon layui-icon-user"></i>
+                      <cite>短信管理</cite>
+                  </a>
+                  <dl class="layui-nav-child">
+                      <dd>
+                          <a lay-href="{{ url('admin/sms_module_params_common') }}">短信常用参数管理</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="{{ url('admin/sms_limit') }}">短信限次配置</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="{{ url('admin/sms_module') }}">短信模块管理</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="{{ url('admin/sms_template') }}">短信模板管理</a>
+                      </dd>
+                      <dd>
+                          <a lay-href="{{ url('admin/sms_code') }}">短信日志管理</a>
+                      </dd>
+                  </dl>
+              </li>
             <li data-name="user" class="layui-nav-item">
               <a href="javascript:;" lay-tips="基础设置" lay-direction="2">
                 <i class="layui-icon layui-icon-user"></i>
@@ -457,9 +480,9 @@
                   <dd>
                       <a lay-href="{{ url('admin/company_certificate_type') }}">资质证书类型</a>
                   </dd>
-                  <dd>
-                      <a lay-href="{{ url('admin/sms_code') }}">短信日志管理</a>
-                  </dd>
+{{--                  <dd>--}}
+{{--                      <a lay-href="{{ url('admin/sms_code') }}">短信日志管理</a>--}}
+{{--                  </dd>--}}
               </dl>
             </li>
           </ul>

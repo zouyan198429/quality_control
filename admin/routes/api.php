@@ -746,6 +746,63 @@ $api->version('v1', function ($api) {
         $api->post('admin/api_log/import', 'Admin\QualityControl\ApiLogController@import');// 导入excel
         $api->post('admin/api_log/ajax_get_ids', 'Admin\QualityControl\ApiLogController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
+        // 短信相关的
+        // 短信模板所属模块
+        $api->any('admin/sms_module/ajax_alist', 'Admin\QualityControl\SmsModuleController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/sms_module/ajax_del', 'Admin\QualityControl\SmsModuleController@ajax_del');// 删除
+        $api->any('admin/sms_module/ajax_save', 'Admin\QualityControl\SmsModuleController@ajax_save');// 新加/修改
+        $api->post('admin/sms_module/ajax_get_child', 'Admin\QualityControl\SmsModuleController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/sms_module/ajax_get_areachild', 'Admin\QualityControl\SmsModuleController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/sms_module/ajax_import_staff','Admin\QualityControl\SmsModuleController@ajax_import'); // 导入员工
+
+        $api->post('admin/sms_module/import', 'Admin\QualityControl\SmsModuleController@import');// 导入excel
+        $api->post('admin/sms_module/ajax_get_ids', 'Admin\QualityControl\SmsModuleController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        // 快捷常用参数
+        $api->any('admin/sms_module_params_common/ajax_alist', 'Admin\QualityControl\SmsModuleParamsCommonController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/sms_module_params_common/ajax_del', 'Admin\QualityControl\SmsModuleParamsCommonController@ajax_del');// 删除
+        $api->post('admin/sms_module_params_common/ajax_save', 'Admin\QualityControl\SmsModuleParamsCommonController@ajax_save');// 新加/修改
+        $api->post('admin/sms_module_params_common/ajax_get_child', 'Admin\QualityControl\SmsModuleParamsCommonController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/sms_module_params_common/ajax_get_areachild', 'Admin\QualityControl\SmsModuleParamsCommonController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/sms_module_params_common/ajax_import_staff','Admin\QualityControl\SmsModuleParamsCommonController@ajax_import'); // 导入员工
+
+        $api->post('admin/sms_module_params_common/import', 'Admin\QualityControl\SmsModuleParamsCommonController@import');// 导入excel
+        $api->post('admin/sms_module_params_common/ajax_get_ids', 'Admin\QualityControl\SmsModuleParamsCommonController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        // 短信模板所属模块参数
+        $api->any('admin/sms_module_params/ajax_alist', 'Admin\QualityControl\SmsModuleParamsController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/sms_module_params/ajax_del', 'Admin\QualityControl\SmsModuleParamsController@ajax_del');// 删除
+        $api->post('admin/sms_module_params/ajax_save', 'Admin\QualityControl\SmsModuleParamsController@ajax_save');// 新加/修改
+        $api->post('admin/sms_module_params/ajax_get_child', 'Admin\QualityControl\SmsModuleParamsController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/sms_module_params/ajax_get_areachild', 'Admin\QualityControl\SmsModuleParamsController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/sms_module_params/ajax_import_staff','Admin\QualityControl\SmsModuleParamsController@ajax_import'); // 导入员工
+
+        $api->post('admin/sms_module_params/import', 'Admin\QualityControl\SmsModuleParamsController@import');// 导入excel
+        $api->post('admin/sms_module_params/ajax_get_ids', 'Admin\QualityControl\SmsModuleParamsController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        $api->any('admin/sms_module_params/ajax_alist_all', 'Admin\QualityControl\SmsModuleParamsController@ajax_alist_all');//ajax获得列表数据--所有的
+        // 限次配置
+        $api->any('admin/sms_limit/ajax_alist', 'Admin\QualityControl\SmsLimitController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/sms_limit/ajax_del', 'Admin\QualityControl\SmsLimitController@ajax_del');// 删除
+        $api->post('admin/sms_limit/ajax_save', 'Admin\QualityControl\SmsLimitController@ajax_save');// 新加/修改
+        $api->post('admin/sms_limit/ajax_get_child', 'Admin\QualityControl\SmsLimitController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/sms_limit/ajax_get_areachild', 'Admin\QualityControl\SmsLimitController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/sms_limit/ajax_import_staff','Admin\QualityControl\SmsLimitController@ajax_import'); // 导入员工
+
+        $api->post('admin/sms_limit/import', 'Admin\QualityControl\SmsLimitController@import');// 导入excel
+        $api->post('admin/sms_limit/ajax_get_ids', 'Admin\QualityControl\SmsLimitController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        // 短信模板
+        $api->any('admin/sms_template/ajax_alist', 'Admin\QualityControl\SmsTemplateController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/sms_template/ajax_del', 'Admin\QualityControl\SmsTemplateController@ajax_del');// 删除
+        $api->post('admin/sms_template/ajax_save', 'Admin\QualityControl\SmsTemplateController@ajax_save');// 新加/修改
+        $api->post('admin/sms_template/ajax_get_child', 'Admin\QualityControl\SmsTemplateController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/sms_template/ajax_get_areachild', 'Admin\QualityControl\SmsTemplateController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/sms_template/ajax_import_staff','Admin\QualityControl\SmsTemplateController@ajax_import'); // 导入员工
+
+        $api->post('admin/sms_template/import', 'Admin\QualityControl\SmsTemplateController@import');// 导入excel
+        $api->post('admin/sms_template/ajax_get_ids', 'Admin\QualityControl\SmsTemplateController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
 
         // 省局企业相关的
 

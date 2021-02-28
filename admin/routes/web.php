@@ -630,6 +630,48 @@ Route::get('admin/api_log/add/{id}', 'Admin\QualityControl\ApiLogController@add'
 Route::get('admin/api_log/export', 'Admin\QualityControl\ApiLogController@export');// 导出
 Route::get('admin/api_log/import_template', 'Admin\QualityControl\ApiLogController@import_template');// 导入模版
 
+// 短信相关的
+
+// 短信模板所属模块
+Route::get('admin/sms_module', 'Admin\QualityControl\SmsModuleController@index');// 列表
+Route::get('admin/sms_module/add/{id}', 'Admin\QualityControl\SmsModuleController@add');// 添加
+Route::get('admin/sms_module/info/{id}', 'Admin\QualityControl\SmsModuleController@info');// 查看-详情
+// Route::get('admin/sms_module/select', 'Admin\QualityControl\SmsModuleController@select');// 选择-弹窗
+Route::get('admin/sms_module/export', 'Admin\QualityControl\SmsModuleController@export');// 导出
+Route::get('admin/sms_module/import_template', 'Admin\QualityControl\SmsModuleController@import_template');// 导入模版
+
+// 快捷常用参数
+Route::get('admin/sms_module_params_common', 'Admin\QualityControl\SmsModuleParamsCommonController@index');// 列表
+Route::get('admin/sms_module_params_common/add/{id}', 'Admin\QualityControl\SmsModuleParamsCommonController@add');// 添加
+Route::get('admin/sms_module_params_common/info/{id}', 'Admin\QualityControl\SmsModuleParamsCommonController@info');// 查看-详情
+// Route::get('admin/sms_module_params_common/select', 'Admin\QualityControl\SmsModuleParamsCommonController@select');// 选择-弹窗
+Route::get('admin/sms_module_params_common/export', 'Admin\QualityControl\SmsModuleParamsCommonController@export');// 导出
+Route::get('admin/sms_module_params_common/import_template', 'Admin\QualityControl\SmsModuleParamsCommonController@import_template');// 导入模版
+
+// 短信模板所属模块参数
+Route::get('admin/sms_module_params', 'Admin\QualityControl\SmsModuleParamsController@index');// 列表
+Route::get('admin/sms_module_params/add/{id}', 'Admin\QualityControl\SmsModuleParamsController@add');// 添加
+Route::get('admin/sms_module_params/info/{id}', 'Admin\QualityControl\SmsModuleParamsController@info');// 查看-详情
+// Route::get('admin/sms_module_params/select', 'Admin\QualityControl\SmsModuleParamsController@select');// 选择-弹窗
+Route::get('admin/sms_module_params/export', 'Admin\QualityControl\SmsModuleParamsController@export');// 导出
+Route::get('admin/sms_module_params/import_template', 'Admin\QualityControl\SmsModuleParamsController@import_template');// 导入模版
+
+// 限次配置
+Route::get('admin/sms_limit', 'Admin\QualityControl\SmsLimitController@index');// 列表
+Route::get('admin/sms_limit/add/{id}', 'Admin\QualityControl\SmsLimitController@add');// 添加
+Route::get('admin/sms_limit/info/{id}', 'Admin\QualityControl\SmsLimitController@info');// 查看-详情
+// Route::get('admin/sms_limit/select', 'Admin\QualityControl\SmsLimitController@select');// 选择-弹窗
+Route::get('admin/sms_limit/export', 'Admin\QualityControl\SmsLimitController@export');// 导出
+Route::get('admin/sms_limit/import_template', 'Admin\QualityControl\SmsLimitController@import_template');// 导入模版
+
+// 短信模板
+Route::get('admin/sms_template', 'Admin\QualityControl\SmsTemplateController@index');// 列表
+Route::get('admin/sms_template/add/{id}', 'Admin\QualityControl\SmsTemplateController@add');// 添加
+Route::get('admin/sms_template/info/{id}', 'Admin\QualityControl\SmsTemplateController@info');// 查看-详情
+// Route::get('admin/sms_template/select', 'Admin\QualityControl\SmsTemplateController@select');// 选择-弹窗
+Route::get('admin/sms_template/export', 'Admin\QualityControl\SmsTemplateController@export');// 导出
+Route::get('admin/sms_template/import_template', 'Admin\QualityControl\SmsTemplateController@import_template');// 导入模版
+
 // 省局企业相关的
 
 // 监督检查信息管理
