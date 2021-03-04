@@ -185,12 +185,14 @@ function addCompany(company_id, company_name){
    // document.write("            <td><%=item.course_name%><hr/><%=item.invoice_template_name%><\/td>");
     document.write("            <td><%=item.company_name%>(<%=item.company_grade_text%>)<\/td>");
 	document.write("            <td><%=item.contacts%>（<%=item.tel%>）<\/td>");
-    document.write("            <td><%=item.join_num%><hr/><%=item.cancel_num%><\/td>");
-    document.write("            <td><%=item.joined_class_num%><hr/><%=item.finish_num%><\/td>");    
+    document.write("            <td><%=item.join_num%><\/td>");
+	// <hr/><%=item.cancel_num%>
+    // document.write("            <td><%=item.joined_class_num%><hr/><%=item.finish_num%><\/td>");    
     document.write("            <td>￥<%=item.price%><hr/>￥<%=item.price_total%><\/td>");
-    document.write("            <td><%=item.pay_status_text%><hr/><%=item.join_class_status_text%><\/td>");
-    document.write("            <td><%=item.company_status_text%><\/td>");
-    document.write("            <td><%=item.order_time%><hr/><%=item.pay_time%><\/td>");
+    document.write("            <td><%=item.join_class_status_text%><\/td>");
+    document.write("            <td><%=item.company_status_text%>-<%=item.order_time%><\/td>");
+    document.write("            <td><%=item.pay_status_text%><hr/><%=item.pay_time%><\/td>");
+	document.write("            <td> - <\/td>");
     document.write("            <td>");
     document.write("                <%if( true){%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"action.show(<%=item.id%>)\">");
@@ -202,6 +204,7 @@ function addCompany(company_id, company_name){
     document.write("                    <i class=\"ace-icon fa fa-jpy bigger-60\"> 缴费<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
+	 document.write("               <a href=\" \" class=\"btn btn-mini btn-info\" > 开票信息</a> ");
     // document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.iframeModify(<%=item.id%>)\">");
     // document.write("                    <i class=\"ace-icon fa fa-pencil bigger-60\"> 编辑<\/i>");
     // document.write("                <\/a>");

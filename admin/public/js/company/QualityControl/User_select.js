@@ -408,17 +408,18 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
     document.write("        %>");
     document.write("");
     document.write("        <tr>");
-    document.write("            <td>");
-    document.write("                <label class=\"pos-rel\">");
-    document.write("                    <input  onclick=\"action.seledSingle(this)\" type=\"checkbox\" class=\"ace check_item\" <%if( false &&  !can_modify){%> disabled <%}%>  value=\"<%=item.id%>\"\/>");
-    document.write("                  <span class=\"lbl\"><\/span>");
-    document.write("                <\/label>");
-    document.write("            <\/td>");
+    // document.write("            <td>");
+    // document.write("                <label class=\"pos-rel\">");
+    // document.write("                    <input  onclick=\"action.seledSingle(this)\" type=\"checkbox\" class=\"ace check_item\" <%if( false &&  !can_modify){%> disabled <%}%>  value=\"<%=item.id%>\"\/>");
+    // document.write("                  <span class=\"lbl\"><\/span>");
+    // document.write("                <\/label>");
+    // document.write("            <\/td>");
     // document.write("            <td><%=item.id%><\/td>");
     // document.write("            <td><%=item.client_id%><\/td>");
 
     document.write("            <td><%=item.real_name%>(<%=item.sex_text%>)<\/td>");
-    document.write("            <td><%=item.city_name%><hr/><%=item.mobile%><\/td>");
+    document.write("            <td><%=item.mobile%><\/td>");
+	// <%=item.city_name%><hr/>
     //document.write("            <td><%=item.city_name%><\/td>");
     //document.write("            <td><%=item.email%><\/td>");
     //document.write("            <td><%=item.qq_number%><\/td>");
@@ -427,15 +428,16 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
     document.write("               <span class=\"resource_list\"  style=\"display: none;\"><%=JSON.stringify(item.resource_list)%></span>");
     document.write("               <span  class=\"resource_show\"></span>");
     document.write("            <\/td>");
-    document.write("            <td><%=item.position_name%><hr/><%=item.role_num_text%><\/td>");
-    document.write("            <td>");
-    document.write("            <%=item.sign_range%>(<%=item.sign_is_food_text%>)");
-    document.write("            <hr\/><%=item.sign_status_text%>");
-    document.write("            <\/td>");
-    document.write("            <td><%=item.is_perfect_text%><hr/><%=item.open_status_text%><\/td>");
-    document.write("            <td><%=item.role_status_text%><hr/><%=item.account_status_text%><\/td>");
+    document.write("            <td><%=item.role_num_text%><\/td>");
+	// <%=item.position_name%><hr/>
+    // document.write("            <td>");
+    // document.write("            <%=item.sign_range%>(<%=item.sign_is_food_text%>)");
+    // document.write("            <hr\/><%=item.sign_status_text%>");
+    // document.write("            <\/td>");
+    // document.write("            <td><%=item.is_perfect_text%><hr/><%=item.open_status_text%><\/td>");
+    // document.write("            <td><%=item.role_status_text%><hr/><%=item.account_status_text%><\/td>");
     // document.write("            <td><%=item.lastlogintime%><\/td>");<%=item.lastlogintime%><hr/>
-    document.write("            <td><%=item.created_at%><\/td>");
+    // document.write("            <td><%=item.created_at%><\/td>");
     // document.write("            <td><%=item.updated_at%><\/td>");
     // document.write("            <td><%=item.sort_num%><\/td>");
     document.write("            <td>");

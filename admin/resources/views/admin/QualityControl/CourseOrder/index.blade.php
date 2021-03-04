@@ -12,9 +12,7 @@
   <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/css/layui.css')}}" media="all">
   <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/style/admin.css')}}" media="all">
 </head>
-<body>
-
-{{--<div id="crumb"><i class="fa fa-reorder fa-fw" aria-hidden="true"></i> 我的同事</div>--}}
+<body> 
 <div class="mm">
   <div class="mmhead" id="mywork">
 
@@ -86,13 +84,12 @@
         <col width="50"> 
         <col>		
 		<col>
-        <col width="140">
-        <col width="140">
+        <col width="140"> 
         <col width="150">
         <col width="95">
-        <col width="100">
         <col>
-        <col width="165"> 
+        <col>
+        <col> 
     </colgroup>
     <thead>
     <tr>
@@ -104,12 +101,13 @@
 		<th>单位</th>		
 		<th>联络人（电话）</th>
 		<!-- <th>课程<hr/>发票开票模板</th> -->
-		<th>报名人数<hr/>已作废人数</th>
-		<th>分班人数<hr/>结业人数</th>
+		<th>报名人数<!-- 已作废人数 --></th>
+		<!-- <th>分班人数<hr/>结业人数</th> -->
 		<th>单价<hr/>总价</th>
-		<th>缴费状态<hr/>分班状态</th>
-		<th>报名状态</th>
-		<th>报名时间<hr/>缴费时间</th>
+		<th>分班状态</th>
+		<th>报名状态<hr/>报名时间</th>
+		<th>缴费状态<hr/>缴费时间</th>
+		<th>开票状态<hr/>开票时间</th>
 		<th>操作</th>
     </tr>
     </thead>
@@ -165,6 +163,6 @@
       var PAY_URL = "{{ url('admin/course_order/pay') }}";//操作(缴费)
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/CourseOrder.js') }}?3833"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/CourseOrder.js') }}?55576443"  type="text/javascript"></script>
 </body>
 </html>

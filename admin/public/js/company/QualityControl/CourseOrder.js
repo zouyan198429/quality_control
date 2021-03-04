@@ -100,15 +100,20 @@ var otheraction = {
     document.write("                <\/label>");
     document.write("            <\/td>");
     // document.write("            <td><%=item.id%><\/td>");
-    document.write("            <td><%=item.course_name%><hr/><%=item.invoice_template_name%><\/td>");
-    // document.write("            <td><%=item.company_name%>(<%=item.company_grade_text%>)<\/td>");
-    document.write("            <td><%=item.join_num%><hr/><%=item.cancel_num%><\/td>");
-    document.write("            <td><%=item.joined_class_num%><hr/><%=item.finish_num%><\/td>");
-    document.write("            <td><%=item.contacts%><hr/><%=item.tel%><\/td>");
-    document.write("            <td>￥<%=item.price%><hr/>￥<%=item.price_total%><\/td>");
-    document.write("            <td><%=item.pay_status_text%><hr/><%=item.join_class_status_text%><\/td>");
+    document.write("            <td><%=item.course_name%><\/td>");
+    // document.write("            <td><%=item.invoice_template_name%><%=item.company_name%>(<%=item.company_grade_text%>)<\/td>");
+    document.write("            <td><%=item.join_num%><\/td>");
+	// <hr/><%=item.cancel_num%>
+    //document.write("            <td><%=item.finish_num%><\/td>");
+	// <%=item.joined_class_num%><hr/>
+    document.write("            <td><%=item.contacts%>-<%=item.tel%><\/td>");
+    document.write("            <td>￥<%=item.price%><\/td><td>￥<%=item.price_total%><\/td>");
+    
+	// <hr/><%=item.join_class_status_text%>
     document.write("            <td><%=item.company_status_text%><\/td>");
-    document.write("            <td><%=item.order_time%><hr/><%=item.pay_time%><\/td>");
+    document.write("            <td><%=item.order_time%><\/td>");
+	document.write("            <td><%=item.pay_status_text%><\/td>");
+	document.write("            <td><%=item.pay_time%><\/td>");
     document.write("            <td>");
     document.write("                <%if( true){%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"action.show(<%=item.id%>)\">");

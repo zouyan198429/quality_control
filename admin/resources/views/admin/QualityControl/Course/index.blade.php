@@ -79,8 +79,8 @@
     <colgroup> 
         <col> 
         <col width="150">
-        <col width="150">
-        <col width="195">
+        <col width="220">
+        <col width="145">
         <col width="95">
         <col width="100">
         <col width="95">
@@ -90,8 +90,7 @@
     <tr> 
 		<th>课程名称</th>  
 		<th>收费标准(会员)<hr/>收费标准(非会员)</th>
-		<th>发票开票模板<hr/>发票商品项目模板</th>         
-        <th>收款帐号</th>       
+		<th>收款帐号<hr/>发票开票模板<hr/>发票商品项目模板</th>
         <th>报名池人数<hr/>已作废人数</th>
         <th>已分班人数<hr/>已结业人数</th>
         <th>状态</th>
@@ -160,7 +159,7 @@
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
 
 <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/Course.js?834212') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/Course.js?8433312') }}"  type="text/javascript"></script>
 @component('component.upfileincludejsmany')
 @endcomponent
 </body>
