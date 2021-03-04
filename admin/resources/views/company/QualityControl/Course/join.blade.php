@@ -21,48 +21,55 @@
     <form class="am-form am-form-horizontal" method="post"  id="addForm" onsubmit="return false;">
         <input type="hidden" name="hidden_option"  value="{{ $hidden_option ?? 0 }}" />
         <input type="hidden" name="id" value="{{ $info['id'] ?? 0 }}"/>
+		<h1 style="color: #333;" class="tl">{{ $info['course_name'] ?? '' }} </h1>
         <table class="table1" >
-            <tr>
+          <!--  <tr>
                 <th>培训名称<span class="must"></span></th>
                 <td>
                     {{ $info['course_name'] ?? '' }}
                 </td>
-            </tr>
-            <tr>
+            </tr> -->
+            <!-- <tr>
                 <th>简要概述<span class="must"></span></th>
                 <td>
                     {!! $info['explain_remarks'] ?? '' !!}
                 </td>
-            </tr>
-            <tr>
+            </tr> -->
+           <!-- <tr>
                 <th>当前状态<span class="must"></span></th>
                 <td>
                     {{ $info['status_online_text'] ?? '' }}
                 </td>
-            </tr>
-            <tr class=" baguetteBoxOne gallery"   id="resource_block">
-                <th>图片资源<span class="must"></span></th>
-                <td>
+            </tr> -->
+          <!--  <tr class=" baguetteBoxOne gallery"   id="resource_block">
+                <th>
                     <span class="resource_list"  style="display: none;">@json($info['resource_list'] ?? [])</span>
                     <span  class="resource_show_course"></span>
-                </td>
-            </tr>
+                </th> 
+            </tr> -->
             <tr>
                 <th>课程介绍<span class="must"></span></th>
                 <td>
                     {!! $info['course_content'] ?? '' !!}
                 </td>
             </tr>
-            <tr>
-                <th>选择学员</th>
-                <td>
+			</table>
+			<fieldset class="layui-elem-field layui-field-title site-title">
+			      <legend>立即报名</legend>
+			</fieldset> 
+			<table class="table1" >
+            <tr> 
+				<th>选择学员</th>
+                <td >
+					<!--  colspan="2" -->
                     共 <span class="subject_num">{{ $subject_num ?? '0' }}</span> 人
                     <button class="btn btn-danger  btn-xs ace-icon fa fa-plus-circle bigger-60"  onclick="otheraction.selectUser(this)">选择人员</button>
                 </td>
             </tr>
             <tr>
-                <td colspan="2"  class="staff_td">
-                    <div class="table-header">
+				<th></th>
+                <td class="staff_td">
+                    <div class="table-header" style="background-color: #fff;">
                         <button class="btn btn-danger  btn-xs ace-icon fa fa-trash-o bigger-60"  onclick="otheraction.batchDel(this, '.staff_td', 'tr')">批量删除</button>
                     </div>
                     <table class="table2">

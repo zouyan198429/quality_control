@@ -71,13 +71,34 @@
                     <textarea class="kindeditor" name="course_content" rows="15" id="doc-ta-1" style=" width:770px;height:400px;">{!!  htmlspecialchars($info['course_content'] ?? '' )   !!}</textarea>
                 </td>
             </tr>
+			<tr>
+			    <th>收费标准(会员)<span class="must">*</span></th>
+			    <td>
+			        <input type="text" class="inp wnormal"  name="price_member" value="{{ $info['price_member'] ?? '' }}" placeholder="请输入收费标准(会员)"  onkeyup="numxs(this) " onafterpaste="numxs(this)" />
+			        元/人
+			    </td>
+			</tr>
+			
+			<tr>
+			    <th>收费标准(非会员)<span class="must">*</span></th>
+			    <td>
+			        <input type="text" class="inp wnormal"  name="price_general" value="{{ $info['price_general'] ?? '' }}" placeholder="请输入收费标准(非会员)"  onkeyup="numxs(this) " onafterpaste="numxs(this)" />
+			        元/人
+			    </td>
+			</tr>
+			<tr>
+				<th><hr></th>
+				<td>
+					<hr>
+				</td>
+			</tr>
             <tr>
                 <th>收款帐号<span class="must">*</span></th>
                 <td>
                     @foreach ($pay_config_kv as $k=>$txt)
                         <label><input type="radio"  name="pay_config_id"  value="{{ $k }}"  @if(isset($defaultPayConfig) && $defaultPayConfig == $k) checked="checked"  @endif />{{ $txt }} </label>
                     @endforeach
-                    <p>
+                    <p style="color: gray;">
                         课程必须设置收款账号信息，班级也可以再次设置，班级设置优先！
                     </p>
                 </td>
@@ -86,24 +107,11 @@
                 <th>收款开通类型<span class="must">*</span></th>
                 <td class="sel_pay_method">
                     @foreach ($payMethod as $k=>$txt)
-                        <label><input type="checkbox"  name="pay_method[]"  value="{{ $k }}"  @if(isset($defaultPayMethod) && $defaultPayMethod > 0 && ($defaultPayMethod & $k) == $k) checked="checked"  @endif @if(isset($info['allow_pay_method']) && ($info['allow_pay_method'] & $k) <=0 ) disabled   @endif/>{{ $txt }} </label>
+                        <label><input type="checkbox"  name="pay_method[]"  value="{{ $k }}"  @if(isset($defaultPayMethod) && $defaultPayMethod > 0 && ($defaultPayMethod & $k) == $k) checked="checked"  @endif @if(isset($info['allow_pay_method']) && ($info['allow_pay_method'] & $k) <=0 ) disabled   @endif/>{{ $txt }} </label> <br />
                     @endforeach
                 </td>
             </tr>
-            <tr>
-                <th>收费标准(会员)<span class="must">*</span></th>
-                <td>
-                    <input type="text" class="inp wnormal"  name="price_member" value="{{ $info['price_member'] ?? '' }}" placeholder="请输入收费标准(会员)"  onkeyup="numxs(this) " onafterpaste="numxs(this)" />
-                    元/人
-                </td>
-            </tr>
-            <tr>
-                <th>收费标准(非会员)<span class="must">*</span></th>
-                <td>
-                    <input type="text" class="inp wnormal"  name="price_general" value="{{ $info['price_general'] ?? '' }}" placeholder="请输入收费标准(非会员)"  onkeyup="numxs(this) " onafterpaste="numxs(this)" />
-                    元/人
-                </td>
-            </tr>
+           
             <tr>
                 <th>发票开票模板<span class="must">*</span></th>
                 <td>

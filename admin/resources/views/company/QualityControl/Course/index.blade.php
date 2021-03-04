@@ -14,8 +14,17 @@
 </head>
 <body>
 
-{{--<div id="crumb"><i class="fa fa-reorder fa-fw" aria-hidden="true"></i> 我的同事</div>--}}
-<div class="mm">
+
+<div class="layui-fluid">
+	<div class="layui-row">
+		<div class="layui-col-md12">
+			<div class="layui-card">
+				
+			
+	<div class="layui-card-header">
+	                    能力附表
+	</div>
+	<div class="layui-card-body">
   <div class="mmhead" id="mywork">
 
     @include('common.pageParams')
@@ -68,7 +77,10 @@
     <div class="pagination">
     </div>
   </div>
-
+</div>
+</div>
+</div>
+</div>
 </div>
 <a href="javascript:void(0);" class="btn btn-success  btn-xs  on" id="testBTN" style="display: none;">测试</a>
 

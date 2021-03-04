@@ -113,12 +113,12 @@ var otheraction = {
     // document.write("            <td><%=item.id%><\/td>");
     document.write("            <td><h3><%=item.course_name%></h3><\/td>");
 	document.write("            <td>¥<%=item.price_member%><hr/>¥<%=item.price_general%><\/td>");
-	document.write("            <td><%=item.invoice_template_name%><hr/><%=item.invoice_project_template_name%><\/td>");
+	document.write("            <td><%=item.pay_company_name%><hr/> <%=item.invoice_template_name%><hr/><%=item.invoice_project_template_name%><\/td>");
     // document.write("            <td>");
     // document.write("               <span class=\"resource_list\"  style=\"display: none;\"><%=JSON.stringify(item.resource_list)%></span>");
     // document.write("               <span  class=\"resource_show\"></span>");
     // document.write("            <\/td>");
-    document.write("            <td><%=item.pay_company_name%><\/td>");
+    // document.write("            <td><%=item.pay_company_name%><\/td>");
 	//<hr/><%=item.pay_method_text%>
 
     // document.write("           <td>");

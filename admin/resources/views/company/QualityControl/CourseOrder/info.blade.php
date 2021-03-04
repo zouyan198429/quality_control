@@ -19,97 +19,96 @@
 {{--<div id="crumb"><i class="fa fa-reorder fa-fw" aria-hidden="true"></i> {{ $operate ?? '' }}员工</div>--}}
 <div class="mm">
         <input type="hidden" name="id" value="{{ $info['id'] ?? 0 }}"/>
-        <table class="table1">
+		<div>
+			<h3> {{ $info['course_name'] ?? '' }}</h3>
+		</div>
+        <!--  <table class="table1">
             <tr>
                 <th>课程</th>
                 <td>
-                    {{ $info['course_name'] ?? '' }}
+                    { { $info['course_name'] ?? '' }}
                 </td>
             </tr>
-            <tr>
+          <tr>
                 <th>报名状态</th>
                 <td>
-                    {{ $info['company_status_text'] ?? '' }}
+                    { { $info['company_status_text'] ?? '' }}
                 </td>
             </tr>
-{{--            <tr>--}}
-{{--                <th>企业名称</th>--}}
-{{--                <td>--}}
-{{--                    {{ $info['company_name'] ?? '' }}--}}
-{{--                </td>--}}
-{{--            </tr>--}}
-            <tr>
+				<tr>
+					<th>企业名称</th>
+					<td>
+						{ { $info['company_name'] ?? '' }}
+					</td>
+				</tr>
+               <tr>
                 <th>联络人</th>
                 <td>
-                    {{ $info['contacts'] ?? '' }}({{ $info['tel'] ?? '' }})
+                    { { $info['contacts'] ?? '' }}({ { $info['tel'] ?? '' }})
                 </td>
             </tr>
-            <tr>
+          <tr>
                 <th>单价/总价</th>
                 <td>
-                    ￥{{ $info['price'] ?? '' }}/￥{{ $info['price_total'] ?? '' }}
+                    ￥{ { $info['price'] ?? '' }}/￥{ { $info['price_total'] ?? '' }}
                 </td>
             </tr>
             <tr>
-                <th>缴费状态/分班状态</th>
+                <th>缴费状态</th>
                 <td>
-                    {{ $info['pay_status_text'] ?? '' }}/{{ $info['join_class_status_text'] ?? '' }}
+                    { { $info['pay_status_text'] ?? '' }}
+					<! -- 分班状态{ { $info['join_class_status_text'] ?? '' }}
                 </td>
-            </tr> 
-			
-			</table>
-			<h3>报名学员</h3> 
+            </tr>
+
+			</table> -->
+			<hr>
+			<h3>报名学员</h3>
             <table  lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
                         <colgroup>
-                            <col width="75">
                             <col>
                             <col>
                             <col>
-                            <col width="80">
-                            <col width="120">
-                            <col width="85">
+                            <col>
+                            <col>
+                            <col>
                         </colgroup>
                         <thead>
                         <tr>
-                            <th>
+                          <!--  <th>
                                     <label class="pos-rel">
                                         <input type="checkbox" class="ace check_all" value="" onclick="otheraction.seledAll(this)">
                                         <span>全选</span>
                                     </label>
-                            </th>
-                            <th >
-                                <span>姓名<hr/>证书所属单位</span>
-                            </th>
-                            <th >
-                                <span>证件照</span>
-                            </th>
-                            <th>
-                                    <span>手机号<hr/>身份证</span>
-                            </th>
-                            <th>
-                                    <span>单价<hr/>人员状态</span>
-                            </th>
-                            <th>
+                            </th> -->
+                            <th >姓名</th>
+                            <th >证书所属单位</th>
+                            <th >证件照</th>
+                            <th>手机号</th>
+							<th>身份证</th>
+                            <th>状态</th>
+                            <!-- <th>
                                     <span> 缴费状态<hr/>支付单号</span>
-                            </th>
-                            <th>
+                            </th> -->
+                            <!-- <th>
                                     <span> 分班状态<hr/>班级</span>
-                            </th>
+                            </th> -->
                         </tr>
                         </thead>
                         <tbody  id="data_list"   class=" baguetteBoxOne gallery">
                         @foreach ($info['course_order_staff'] as $k => $staff_info)
                             <tr>
-                                <td >
+                               <!-- <td >
                                     <label>
                                         <input onclick="otheraction.seledSingle(this)" type="checkbox" class="ace check_item"  name="staff_id[]"   value="{{ $staff_info['id'] ?? '' }}" @if(isset($staff_info['is_joined']) && ($staff_info['is_joined'] & 1) == 1)  disabled @endif>
                                         <span class="lbl"></span>
                                     </label>
 
-                                </td>
+                                </td> -->
                                 <td>
                                         {{ $staff_info['real_name'] ?? '' }}({{ $staff_info['sex_text'] ?? '' }})
-                                    <hr/>
+                                </td>
+                                <td>
                                         {{ $staff_info['certificate_company'] ?? '' }}
                                 </td>
                                 <td>
@@ -118,29 +117,30 @@
                                 </td>
                                 <td>
                                         {{ $staff_info['mobile'] ?? '' }}
-                                    <hr/>
+                                </td>
+                                <td>
                                     {{ $staff_info['id_number'] ?? '' }}
                                 </td>
                                 <td>
-                                        ￥{{ $staff_info['price'] ?? '' }}
-                                    <hr/>
+                                       <!-- ￥{{ $staff_info['price'] ?? '' }} -->
+
                                     {{ $staff_info['staff_status_text'] ?? '' }}
                                 </td>
-                                <td>
+                               <!-- <td>
                                         {{ $staff_info['pay_status_text'] ?? '' }}
                                     <hr/>
                                     {{ $staff_info['order_no'] ?? '' }}
-                                </td>
-                                <td>
+                                </td> -->
+                               <!-- <td>
                                         {{ $staff_info['join_class_status_text'] ?? '' }}
                                     <hr/>
                                     {{ $staff_info['class_name'] ?? '' }}
-                                </td>
+                                </td> -->
                             </tr>
                         @endforeach
                         </tbody>
                     </table>
-               
+
 </div>
 <script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>
 <script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.all.js')}}"></script>

@@ -26,9 +26,6 @@
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
           <input type="hidden" name="hidden_option"  value="{{ $hidden_option ?? 0 }}" />
-
-
-
           <select class="wmini" name="role_num" style="width: 80px;">
               <option value="">角色</option>
               @foreach ($roleNum as $k=>$txt)
@@ -51,6 +48,7 @@
       </div>
     </form>
   </div>
+  <div class="c"></div>
   <div class="table-header">
 {{--    <button class="btn btn-danger  btn-xs batch_del"  onclick="action.batchDel(this)">批量删除</button>--}}
 {{--    <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcelTemplate(this)">导入模版[EXCEL]</button>--}}
@@ -60,33 +58,30 @@
   </div>
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
-        <col width="50">
-        <col  width="75">
-        <col width="105">
+        <!-- <col width="50"> -->
+        <col width="125">
+        <col width="125">
+        <col> 
         <col>
-        <col  width="7%">
-        <col>
-        <col  width="75">
-        <col width="75" >
-        <col width="90">
-        <col width="75">
+        <col width="90" > 
     </colgroup>
     <thead>
     <tr>
-        <th>
+       <!-- <th>
           <label class="pos-rel">
             <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>
           </label>
-        </th>
-
+        </th> -->
         <th>姓名</th>
-        <th>城市<hr/>手机号</th>
+        <th>手机号</th>
+		<!-- 城市<hr/> -->
         <th>证件照</th>
-        <th>职位<hr/>角色</th>
-        <th>签字范围<hr/>签字审核状态</th>
-        <th>完善资料<hr/>信息审核</th>
-        <th>角色状态<hr/>冻结状态</th>
-      <th>创建时间</th>
+        <th>角色</th>
+		<!-- 职位<hr/> -->
+      <!--  <th>签字范围<hr/>签字审核状态</th> -->
+      <!--  <th>完善资料<hr/>信息审核</th> -->
+      <!--  <th>角色状态<hr/>冻结状态</th> -->
+      <!-- <th>创建时间</th> -->
       <th>操作</th>
     </tr>
     </thead>
@@ -159,7 +154,7 @@
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
 
 <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/company/QualityControl/User_select.js?4') }}"  type="text/javascript"></script>
+  <script src="{{ asset('js/company/QualityControl/User_select.js?465544') }}"  type="text/javascript"></script>
 @component('component.upfileincludejsmany')
 @endcomponent
 </body>

@@ -32,13 +32,11 @@
             ?>
             {{ $company_name ?? '' }}：
         <table  lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
-            <colgroup>
-                {{--                            <col width="75">--}}
+            <colgroup> 
                 <col>
                 <col>
                 <col width="120">
-                <col width="200">
-                <col width="120">
+                <col width="200"> 
             </colgroup>
             <thead>
             <tr>
@@ -52,17 +50,21 @@
                     <span>姓名</span>
                 </th>
                 <th>
-                    <span>手机号<hr/>身份证</span>
+                    <span>手机号</span>
                 </th>
+				<th>
+					身份证
+				</th>
                 <th>
-                    <span>单价<hr/>人员状态</span>
+                    <span>单价</span>
+					<!-- <hr/>人员状态 -->
                 </th>
-                <th>
+                <!-- <th>
                     <span> 缴费状态<hr/>支付单号</span>
-                </th>
-                <th>
+                </th> -->
+               <!-- <th>
                     <span> 分班状态<hr/>班级</span>
-                </th>
+                </th> -->
             </tr>
             </thead>
 
@@ -88,15 +90,16 @@
                     </td>
                     <td>
                         {{ $staff_info['mobile'] ?? '' }}
-                        <hr/>
+                    </td>
+                    <td>
                         {{ $staff_info['id_number'] ?? '' }}
                     </td>
                     <td>
                         ￥{{ $staff_info['price'] ?? '' }}
-                        <hr/>
-                        {{ $staff_info['staff_status_text'] ?? '' }}
+                        
+                       <!-- {{ $staff_info['staff_status_text'] ?? '' }} -->
                     </td>
-                    <td>
+                   <!-- <td>
                         {{ $staff_info['pay_status_text'] ?? '' }}
                         <hr/>
                         {{ $staff_info['order_no'] ?? '' }}
@@ -105,7 +108,7 @@
                         {{ $staff_info['join_class_status_text'] ?? '' }}
                         <hr/>
                         {{ $staff_info['class_name'] ?? '' }}
-                    </td>
+                    </td> -->
                 </tr>
                 <?php
                 // $totalPrice += $staff_info['price'];
@@ -114,7 +117,7 @@
                 ?>
             @endforeach
             <tr>
-                <td colspan="5" style="text-align: right;" valign="top">
+                <td colspan="4" style="text-align: right;" valign="top">
                     共<?php echo count($company_course_order_staff)?>人；总计：￥{{ $totalPrice ?? '' }}元
                 </td>
 			</tr>

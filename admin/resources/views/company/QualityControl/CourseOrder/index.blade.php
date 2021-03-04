@@ -66,16 +66,20 @@
     </div>
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
+{{--        <col width="50">--}}
+{{--        <col>--}}
+{{--        <col width="100">--}}
         <col width="50">
         <col>
-        <col width="100">
         <col width="80">
-        <col width="105">
-        <col width="95">
+        <col width="180">
         <col width="100">
-        <col width="50">
-        <col width="95">
+        <col width="100">
+        <col width="100">
+        <col width="160">
         <col width="80">
+		<col width="140">
+		<col width="140">
     </colgroup>
     <thead>
     <tr>
@@ -84,16 +88,30 @@
           <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>
           <!-- <span class="lbl">全选</span> -->
         </label>
+{{--      </th>--}}
+{{--        <th>课程<hr/>发票开票模板</th>--}}
+{{--      <th>报名人数<hr/>已作废人数</th>--}}
+{{--      <th>分班人数<hr/>结业人数</th>--}}
+{{--       <th>联络人<hr/>联络人电话</th>--}}
+{{--        <th>单价<hr/>总价</th>--}}
+{{--        <th>缴费状态<hr/>分班状态</th>--}}
       </th>
-        <th>课程<hr/>发票开票模板</th>
-      <th>报名人数<hr/>已作废人数</th>
-      <th>分班人数<hr/>结业人数</th>
-       <th>联络人<hr/>联络人电话</th>
-        <th>单价<hr/>总价</th>
-        <th>缴费状态<hr/>分班状态</th>
+        <th>课程</th>
+				<!-- <hr/>发票开票模板 -->
+		<th>报名人数</th>
+	  <!-- <hr/>已作废人数 -->
+      <!-- <th>结业人数</th> -->
+	  <!-- 分班人数<hr/> -->
+        <th>联络人</th>
+        <th>单价</th>
+		<th>总价</th>
+
+		<!-- <hr/>分班状态 -->
         <th>报名状态</th>
-        <th>报名时间<hr/>缴费时间</th>
-      <th>操作</th>
+        <th>报名时间</th>
+		<th>缴费状态</th>
+		<th>缴费时间</th>
+		<th>操作</th>
     </tr>
     </thead>
     <tbody id="data_list">
@@ -148,6 +166,6 @@
       var PAY_URL = "{{ url('company/course_order/pay') }}";//操作(缴费)
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/company/QualityControl/CourseOrder.js') }}?7"  type="text/javascript"></script>
+  <script src="{{ asset('js/company/QualityControl/CourseOrder.js') }}?73443"  type="text/javascript"></script>
 </body>
 </html>
