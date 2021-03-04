@@ -228,7 +228,7 @@ class CTAPICertificateScheduleBusiness extends BasicPublicCTAPIBusiness
     public static function importTemplateExcel(Request $request, Controller $controller, $data_list = [], $notLog = 0){
         $data_list = [];
         $headArr = ['category_name'=>'一级', 'project_name'=>'二级', 'three_name'=>'三级', 'four_name'=>'四级', 'param_name'=>'项目'
-            , 'method_name'=>'标准（方法）名称', 'limit_range'=>'限制范围', 'explain_text'=>'说明'];
+            , 'method_name'=>'标准（方法）名称', 'limit_range'=>'限制范围', 'explain_text'=>'说明', 'ratify_date'=>'批准日期'];
         ImportExport::export('','能力范围导入模版',$data_list,1, $headArr, 0, ['sheet_title' => '能力范围导入模版']);
     }
 
@@ -291,6 +291,7 @@ class CTAPICertificateScheduleBusiness extends BasicPublicCTAPIBusiness
             '标准（方法）名称' => 'method_name',
             '限制范围' => 'limit_range',
             '说明' => 'explain_text',
+            '批准日期' => 'ratify_date',
         ];
 //        $headArr = [
 //            '1' => 'name',
@@ -346,6 +347,10 @@ class CTAPICertificateScheduleBusiness extends BasicPublicCTAPIBusiness
         if($ratify_date != '') $params['ratify_date'] = $ratify_date;
         if($valid_date != '') $params['valid_date'] = $valid_date;
         foreach($saveData as $k => $v){
+            // 对 ratify_date 进行处理， excel文件中有则按文件的，文件为空，则按填入的
+            if(isset($v['ratify_date']) && judgeDate($v['ratify_date']) === false ){// 有下标且不是日期-- 用填写的 isset($params['ratify_date']) &&
+                unset($v['ratify_date']);
+            }
             $saveData[$k] = array_merge($params, $v);
         }
         $certificate_info = [];

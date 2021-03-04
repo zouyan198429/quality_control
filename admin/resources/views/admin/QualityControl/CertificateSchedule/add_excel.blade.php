@@ -59,6 +59,11 @@
 			        <input type="text" class="inp wlong ratify_date" name="ratify_date" value="{{ $info['ratify_date'] ?? '' }}" placeholder="请选择批准日期" style="width: 150px;"  readonly="true"/>
 			        -
 			        <input type="text" class="inp wlong valid_date" name="valid_date" value="{{ $info['valid_date'] ?? '' }}" placeholder="请选择有效期至"  style="width: 150px;" readonly="true"/>
+
+                    <p>注：</p>
+                    <p>1、首次操作时，excel文件中的【批准日期】列请为空</p>
+                    <p>2、扩项操作时，excel文件中的【批准日期】可以指定具体日期，如果为空，则用此页面填写的值。--excel文件中的优先</p>
+                    <p>3、excel文件中的【批准日期】列必须在<span style="color: red;">excel中格式化为日期格式</span>，否则日期列值导入不成功。--<span style="color: red;">特别注意</span></p>
 			    </td>
 			</tr>
             <tr>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\QualityControl;
 
+use App\Business\Controller\API\QualityControl\CTAPICertificateBusiness;
 use App\Business\Controller\API\QualityControl\CTAPICertificateScheduleBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIResourceBusiness;
 use App\Business\Controller\API\QualityControl\CTAPISmsTemplateBusiness;
@@ -305,7 +306,9 @@ class CertificateScheduleController extends BasicController
                 $resource_url = $resourceInfo['resource_url'] ?? '';
 
                 if(empty($certificate_no)){
-                    $certificatInfo = CTAPICertificateScheduleBusiness::getFVFormatList( $request,  $this, 4, 1
+//                    $certificatInfo = CTAPICertificateScheduleBusiness::getFVFormatList( $request,  $this, 4, 1
+//                        , ['company_id' => $company_id], false);
+                    $certificatInfo = CTAPICertificateBusiness::getFVFormatList( $request,  $this, 4, 1
                         , ['company_id' => $company_id], false);
                     if(empty($certificatInfo))  throws('所选企业还没有证书信息，请先维护证书信息。');
                     $certificate_no = $certificatInfo['certificate_no'];
