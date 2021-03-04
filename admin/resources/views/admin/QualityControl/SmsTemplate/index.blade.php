@@ -156,7 +156,7 @@
 
       var SMS_LIMIT_KV = @json($sms_limit_kv ?? []) ;// {"4":"\u4e00\u5c0f\u65f6 8\u6b21","2":"\u4e00\u5929 50\u6b21","1":"\u4e00\u6708\u301030\u5929\u3011 1000\u6b21"}
   </script>
-  <script src="{{asset('js/common/list.js')}}?1"></script>
+  <script src="{{asset('js/common/list.js')}}?2"></script>
   <script src="{{ asset('js/admin/QualityControl/SmsTemplate.js') }}?7"  type="text/javascript"></script>
 </body>
 </html>

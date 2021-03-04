@@ -144,7 +144,7 @@
       var SELECT_COMPANY_URL = "{{url('admin/company/select')}}";// 选择所属企业
 
   </script>
-  <script src="{{asset('js/common/list.js')}}?1"></script>
+  <script src="{{asset('js/common/list.js')}}?2"></script>
   <script src="{{ asset('js/company/QualityControl/InvoiceBuyer.js') }}?143"  type="text/javascript"></script>
 </body>
 </html>

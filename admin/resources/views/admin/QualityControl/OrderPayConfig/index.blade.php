@@ -161,7 +161,7 @@
       var ALIPAY_AUTH_URL = "{!! $alipayAuthURL ?? '' !!}";
       var REFRESH_ALIPAY_TOKEN_URL = "{{ url('api/admin/order_pay_config/ajax_refreshAlipayToken') }}"; // 刷新授权令牌 access_token
   </script>
-  <script src="{{asset('js/common/list.js')}}?1"></script>
+  <script src="{{asset('js/common/list.js')}}?2"></script>
   <script src="{{ asset('js/admin/QualityControl/OrderPayConfig.js') }}?16"  type="text/javascript"></script>
 </body>
 </html>

@@ -174,7 +174,7 @@
       var SCHEDULE_BAIDU_TELPLETE = 'baidu_template_data_list_schedule';
 
   </script>
-  <script src="{{asset('js/common/list.js')}}?1"></script>
+  <script src="{{asset('js/common/list.js')}}?2"></script>
   <script src="{{ asset('js/web/QualityControl/Market/CompanyStatement.js') }}?898"  type="text/javascript"></script>
 </body>
 </html>

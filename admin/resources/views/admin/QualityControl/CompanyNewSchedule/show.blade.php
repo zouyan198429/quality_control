@@ -146,7 +146,7 @@
 
 
   </script>
-  <script src="{{asset('js/common/list.js')}}?1"></script>
+  <script src="{{asset('js/common/list.js')}}?2"></script>
   <script src="{{ asset('js/admin/QualityControl/CompanyNewSchedule_show.js') }}?3"  type="text/javascript"></script>
 </body>
 </html>

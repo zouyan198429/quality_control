@@ -115,7 +115,7 @@
 
 
   </script>
-  <script src="{{asset('js/common/list.js')}}?1"></script>
+  <script src="{{asset('js/common/list.js')}}?2"></script>
   <script src="{{ asset('js/web/QualityControl/Market/PlatformNotices.js') }}?6"  type="text/javascript"></script>
 </body>
 </html>

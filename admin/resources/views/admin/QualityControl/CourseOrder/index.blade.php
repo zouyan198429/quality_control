@@ -167,7 +167,7 @@
 
       var PAY_URL = "{{ url('admin/course_order/pay') }}";//操作(缴费)
   </script>
-  <script src="{{asset('js/common/list.js')}}?1"></script>
+  <script src="{{asset('js/common/list.js')}}?2"></script>
   <script src="{{ asset('js/admin/QualityControl/CourseOrder.js') }}?55576443"  type="text/javascript"></script>
 </body>
 </html>

@@ -227,7 +227,7 @@
 
       var APP_URL = "{{ url('admin/apply')}}/";// 查应用
   </script>
-  <script src="{{asset('js/common/list.js')}}?1"></script>
+  <script src="{{asset('js/common/list.js')}}?2"></script>
   <script src="{{ asset('js/admin/QualityControl/ThirdService.js') }}?4"  type="text/javascript"></script>
 </body>
 </html>

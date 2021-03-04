@@ -164,7 +164,7 @@
       var CANCEL_CLASS_URL = "{{ url('api/admin/course_class/ajax_cancel_class') }}";//操作(作废)
       var FINISH_CLASS_URL = "{{ url('api/admin/course_class/ajax_finish_class') }}";//操作(结业)
   </script>
-  <script src="{{asset('js/common/list.js')}}?1"></script>
+  <script src="{{asset('js/common/list.js')}}?2"></script>
   <script src="{{ asset('js/admin/QualityControl/CourseClass.js') }}?10"  type="text/javascript"></script>
 </body>
 </html>

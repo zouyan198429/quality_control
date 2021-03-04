@@ -123,7 +123,7 @@
 
 
   </script>
-  <script src="{{asset('js/common/list.js')}}?1"></script>
+  <script src="{{asset('js/common/list.js')}}?2"></script>
   <script src="{{ asset('js/admin/QualityControl/Abilitys_select.js') }}"  type="text/javascript"></script>
 </body>
 </html>

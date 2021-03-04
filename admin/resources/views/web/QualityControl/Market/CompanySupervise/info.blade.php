@@ -33,6 +33,6 @@
 {{--<script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.js')}}"></script>--}}
 @include('public.dynamic_list_foot')
 
-{{--<script src="{{asset('js/common/list.js')}}?1"></script>--}}
+{{--<script src="{{asset('js/common/list.js')}}?2"></script>--}}
 <script src="{{ asset('js/web/QualityControl/Market/supervise_info.js') }}?3"  type="text/javascript"></script>
 

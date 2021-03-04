@@ -61,9 +61,9 @@
         <!-- <col width="50"> -->
         <col width="125">
         <col width="125">
-        <col> 
         <col>
-        <col width="90" > 
+        <col>
+        <col width="90" >
     </colgroup>
     <thead>
     <tr>
@@ -153,7 +153,7 @@
 <!-- zui js -->
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
 
-<script src="{{asset('js/common/list.js')}}?1"></script>
+<script src="{{asset('js/common/list.js')}}?2"></script>
   <script src="{{ asset('js/company/QualityControl/User_select.js?465544') }}"  type="text/javascript"></script>
 @component('component.upfileincludejsmany')
 @endcomponent

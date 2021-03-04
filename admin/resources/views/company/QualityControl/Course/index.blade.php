@@ -19,8 +19,8 @@
 	<div class="layui-row">
 		<div class="layui-col-md12">
 			<div class="layui-card">
-				
-			
+
+
 	<div class="layui-card-header">
 	                    能力附表
 	</div>
@@ -137,7 +137,7 @@
 <!-- zui js -->
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
 
-<script src="{{asset('js/common/list.js')}}?1"></script>
+<script src="{{asset('js/common/list.js')}}?2"></script>
   <script src="{{ asset('js/company/QualityControl/Course.js') }}?28"  type="text/javascript"></script>
 @component('component.upfileincludejsmany')
 @endcomponent

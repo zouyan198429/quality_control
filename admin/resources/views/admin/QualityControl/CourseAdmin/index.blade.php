@@ -98,7 +98,7 @@
           </div>
 
           <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
-            
+
 
               <li data-name="user" class="layui-nav-item">
                   <a  lay-href="{{ url('admin/course_admin/' . ($course_id ?? 0)  . '/basic') }}" lay-tips="概况" lay-direction="2">
@@ -206,7 +206,7 @@
   </div>
 
   <script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>
-  <script src="{{asset('static/js/custom/common.js')}}?8"></script>
+  <script src="{{asset('static/js/custom/common.js')}}?9"></script>
 
   <script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.js')}}"></script>
   {{--<script src="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/layui.all.js')}}"></script>--}}

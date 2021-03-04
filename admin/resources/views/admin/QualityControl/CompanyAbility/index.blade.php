@@ -150,7 +150,7 @@
       var IFRAME_UPEXCEL_URL_TITLE = "导入能力验证结果" ;// 详情弹窗显示提示  [添加/修改] +  栏目/主题
 
   </script>
-  <script src="{{asset('js/common/list.js')}}?1"></script>
+  <script src="{{asset('js/common/list.js')}}?2"></script>
   <script src="{{ asset('js/admin/QualityControl/CompanyAbility.js') }}?5"  type="text/javascript"></script>
 </body>
 </html>

@@ -140,7 +140,7 @@
 
 
   </script>
-  <script src="{{asset('js/common/list.js')}}?1"></script>
+  <script src="{{asset('js/common/list.js')}}?2"></script>
   <script src="{{ asset('js/admin/QualityControl/InvoiceConfigHydzfp.js') }}?2"  type="text/javascript"></script>
 </body>
 </html>

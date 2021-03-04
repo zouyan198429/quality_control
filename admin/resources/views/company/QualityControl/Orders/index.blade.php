@@ -186,7 +186,7 @@
 
       var INVOICE_SHOW_URL  = "{{ url('company/invoices') }}";//操作(查看电子发票)
   </script>
-  <script src="{{asset('js/common/list.js')}}?1"></script>
+  <script src="{{asset('js/common/list.js')}}?2"></script>
   <script src="{{ asset('js/company/QualityControl/Orders.js') }}?5"  type="text/javascript"></script>
 </body>
 </html>

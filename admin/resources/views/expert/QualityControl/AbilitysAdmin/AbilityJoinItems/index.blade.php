@@ -173,7 +173,7 @@
 
 
   </script>
-  <script src="{{asset('js/common/list.js')}}?1"></script>
+  <script src="{{asset('js/common/list.js')}}?2"></script>
   <script src="{{ asset('js/expert/QualityControl/AbilitysAdmin/AbilityJoinItems.js') }}?12"  type="text/javascript"></script>
 </body>
 </html>

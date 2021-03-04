@@ -166,7 +166,7 @@
       var OPEN_OPERATE_URL = "{{ url('api/admin/company_grade_config/ajax_open') }}";//审核操作(通过/不通过)
 
   </script>
-  <script src="{{asset('js/common/list.js')}}?1"></script>
+  <script src="{{asset('js/common/list.js')}}?2"></script>
   <script src="{{ asset('js/admin/QualityControl/CompanyGradeConfig.js') }}?14"  type="text/javascript"></script>
 </body>
 </html>

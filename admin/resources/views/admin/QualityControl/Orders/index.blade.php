@@ -189,7 +189,7 @@
       var INVOICE_SHOW_URL  = "{{ url('admin/invoices') }}";//操作(查看电子发票)
 
   </script>
-  <script src="{{asset('js/common/list.js')}}?1"></script>
+  <script src="{{asset('js/common/list.js')}}?2"></script>
   <script src="{{ asset('js/admin/QualityControl/Orders.js') }}?27"  type="text/javascript"></script>
 </body>
 </html>

@@ -157,7 +157,7 @@
 <!-- zui js -->
 <script src="{{asset('dist/js/zui.min.js') }}"></script>
 
-  <script src="{{asset('js/common/list.js')}}?1"></script>
+  <script src="{{asset('js/common/list.js')}}?2"></script>
   <script src="{{ asset('js/admin/QualityControl/Apply.js') }}?8"  type="text/javascript"></script>
 
 @component('component.upfileincludejsmany')

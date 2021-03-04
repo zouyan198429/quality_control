@@ -267,7 +267,7 @@
       var COMPANY_NEWS_URL = "{{ url('admin/company_news')}}/";// 查看企业其它【新闻】地址
 
   </script>
-  <script src="{{asset('js/common/list.js')}}?1"></script>
+  <script src="{{asset('js/common/list.js')}}?2"></script>
   <script src="{{ asset('js/admin/QualityControl/Company.js') }}?293"  type="text/javascript"></script>
 </body>
 </html>
