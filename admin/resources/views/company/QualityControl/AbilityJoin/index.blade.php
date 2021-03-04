@@ -115,6 +115,8 @@
       var IMPORT_EXCEL_TEMPLATE_URL = "{{ url('company/ability_join/import_template') }}";//导入EXCEL模版地址
       var IMPORT_EXCEL_URL = "{{ url('api/company/ability_join/import') }}";//导入EXCEL地址
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
+      var SMS_SEND_PAGE_URL = "{{url('admin/rrr_dddd/sms_send')}}";// 选择短信模板页面
+      var SMS_SEND_URL = "{{url('api/admin/rrr_dddd/ajax_sms_send')}}";// 短信模板发送短信
 
       // 列表数据每隔指定时间就去执行一次刷新【如果表有更新时】--定时执行
       var IFRAME_TAG_KEY = "";// "QualityControl\\CTAPIStaff";// 获得模型表更新时间的关键标签，可为空：不获取

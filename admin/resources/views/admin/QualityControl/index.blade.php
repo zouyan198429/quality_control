@@ -293,7 +293,7 @@
                       <dd>
                           <a lay-href="{{ url('admin/company_statement') }}">机构自我声明</a>
                       </dd>
-                      
+
                       <dd>
                           <a lay-href="{{ url('admin/company_inspect') }}">监督检查</a>
                       </dd>
@@ -434,9 +434,9 @@
                       <dd>
                           <a lay-href="{{ url('admin/sms_module_params_common') }}">短信常用参数管理</a>
                       </dd>
-                      <dd>
-                          <a lay-href="{{ url('admin/sms_limit') }}">短信限次配置</a>
-                      </dd>
+{{--                      <dd>--}}
+{{--                          <a lay-href="{{ url('admin/sms_limit') }}">短信限次配置</a>--}}
+{{--                      </dd>--}}
                       <dd>
                           <a lay-href="{{ url('admin/sms_module') }}">短信模块管理</a>
                       </dd>
@@ -444,7 +444,7 @@
                           <a lay-href="{{ url('admin/sms_template') }}">短信模板管理</a>
                       </dd>
                       <dd>
-                          <a lay-href="{{ url('admin/sms_code') }}">短信日志管理</a>
+                          <a lay-href="{{ url('admin/sms_log') }}">短信日志管理</a>
                       </dd>
                   </dl>
               </li>
@@ -481,9 +481,9 @@
                   <dd>
                       <a lay-href="{{ url('admin/company_certificate_type') }}">资质证书类型</a>
                   </dd>
-{{--                  <dd>--}}
-{{--                      <a lay-href="{{ url('admin/sms_code') }}">短信日志管理</a>--}}
-{{--                  </dd>--}}
+                  <dd>
+                      <a lay-href="{{ url('admin/sms_code') }}">短信验证码日志管理</a>
+                  </dd>
               </dl>
             </li>
           </ul>

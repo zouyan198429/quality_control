@@ -125,6 +125,14 @@ class SmsTemplate extends BasePublicModel
     }
 
     /**
+     * 获取短信日志-二维
+     */
+    public function smsLog()
+    {
+        return $this->hasMany('App\Models\QualityControl\SmsLog', 'template_id', 'id');
+    }
+
+    /**
      * 获取限次配置--一维
      */
     public function smsLimit()

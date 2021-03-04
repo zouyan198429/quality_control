@@ -2,14 +2,249 @@
 namespace App\Services\SMS;
 // 发送短信
 
+use App\Notifications\SMSSendNotification;
 use App\Services\AlibabaCloud\AlibabaAPI;
 use App\Services\Response\Data\CommonAPIFromDBBusiness;
 use App\Services\Tencent\API30SDK\CloudSMS;
 use App\Services\Tencent\QcloudSMS;
 use App\Services\Tool;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Log;
 
 class SendSMS
 {
+
+    // *****************下面是发送短信通用的********************************************************************************
+
+
+    /**
+     * 模板发送短信-- 一次默认发100条---按手机号批量或单个发送
+     *
+     * @param int $send_type 发送类型【1系统发送、2手动发送】
+     * @param array $templateInfo 模板记录信息 --- 一维数组
+     * @param array $smsConfigList 短信配置信息
+     * @param array $gateways 默认可用的发送网关 ['yunpian:云片', 'aliyun:阿里云短信', 'qcloud:腾讯云']
+     * @param string $templateContent 内容--内容中的参数都已经替换过的了
+     * @param array $templateParams 参数值 ['参数下标' => '参数值', ...]
+     * @param array $mobileArr 需要发送短信的手机数组；// [15829686962] 或  字符，多个用逗号分隔 15829686962,15829686962
+     * @param string $countryCode 国家码 86
+     * @param string $smsType 类型类型 配置文件 config('easysms.gateways') 里看具体的 verification_code_params  验证码
+     * @param boolean $shuffle 如果配置文件config('easysms.default.gateways')有多个 值时，是否重新排序。 true:重新排序； false:不重新排序[默认]。
+     * @return  null
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function sendSmsCommonBath($send_type = 1, $templateInfo = [], $smsConfigList = [], $gateways = ['aliyun', 'qcloud'], $templateContent = '',
+                                             $templateParams = [], $mobileArr = [], $countryCode = 86, $smsType = 'verification_code_params',
+                                             $shuffle = true){
+        Tool::valToArrVal($mobileArr, ',');// 不是数组，则转为数组
+        $chunkMobiles = array_chunk($mobileArr, 100);
+        $currentNow = Carbon::now();
+        foreach($chunkMobiles as $mobile){
+            // 创建日志记录
+            $smsData = [
+                'country_code' => $countryCode,
+                'mobile' => is_array($mobile) ? implode(',', $mobile) : $mobile,
+                'sms_status' => 1,
+                'count_date' => $currentNow->toDateString(),
+                'count_year' => $currentNow->year,
+                'count_month' => $currentNow->month,
+                'count_day' => $currentNow->day,
+                'template_id' => $templateInfo['id'] ?? 0,// 短信模板id
+                'template_type' => $templateInfo['template_type'] ?? 0,// 模板类型【1腾讯云SMS、2阿里云短信】
+                'send_type' => $send_type,// 发送类型【1系统发送、2手动发送】
+                'sms_content' => $templateContent,
+            ];
+            $smsLogId = static::sendCommonSmsLogCreateOperate($smsData);
+
+            // 手机验证码
+            // $mobile = [15829686962];// 发送的手机号 , 15686165567
+            // $shuffle = true;// 如果配置文件config('easysms.default.gateways')有多个 值时，是否重新排序。 true:重新排序； false:不重新排序[默认]。
+            // $smsType = 'verification_code_params';// // 类型类型 配置文件 config('easysms.gateways') 里看具体的 verification_code_params  验证码
+            // $countryCode = 86;
+            // $sms_key = 'reg';  // --去掉不要了
+            // $operate_type = '注册';  // --去掉不要了
+            // 发送验证码
+            // $mobile_vercode = Tool::generatePassword(4, 1);
+            // $templateParams = [];
+            // $templateParams = array_merge($templateParams, [
+            // 'code' => $mobile_vercode,// '78658', // 验证码
+            //'validMinute' => 4// 有效时间(单位分钟) // 有缓存时间[有此下标]，则缓存
+            // ]);
+
+            if( !is_array($mobile) ) $mobile = explode(',', $mobile);
+
+            $dataParams = [
+                'shuffle' => $shuffle,// true,// 如果配置文件config('easysms.default.gateways')有多个 值时，是否重新排序。 true:重新排序； false:不重新排序[默认]。
+                'smsType' => $smsType,// 'verification_code_params',// 类型类型 配置文件 config('easysms.gateways') 里看具体的 verification_code_params  验证码
+                'countryCode' => $countryCode,// 86,// 有的需要 国家码 '86' 阿里的暂时无用
+                'mobile' => $mobile, // ['15591017827']  ,
+                // 'operateKey' => $sms_key,// 'reg',// 验证证码缓存的键关键字 --去掉不要了
+                'dataParams' => [
+                    // 'operateType' => $operate_type,// '注册',// '注册', //操作类型 注册--- 腾讯验证码的模板参数不能有中文及字母，只能是<=6位的数字
+                    // 'code' => $mobile_vercode,// '78658', // 验证码
+                    // 'validMinute' => $limit_minute,// 4// 有效时间(单位分钟) // 有缓存时间[有此下标]，则缓存
+                ],
+                'gateways' => $gateways,// 默认可用的发送网关 ['yunpian:云片', 'aliyun:阿里云短信', 'qcloud:腾讯云']
+                'smsConfig' => $smsConfigList,
+                'smsLogId' => $smsLogId,
+            ];
+
+            if(is_array($templateParams) && (!empty($templateParams))) $dataParams['dataParams'] = array_merge($dataParams['dataParams'], $templateParams);
+            Notification::send((object) $dataParams, new SMSSendNotification());
+        }
+    }
+
+    //~~~~~~~~~~~~~~~~ 如果需要对发送成功或失败，进行业务操作，可以再这里进行，--不需要则不用写代码~~~~~~~~~~~~~~~~~~~~~~~~
+
+    // 发送成功时对发送记录的操作--
+
+    // $notifiable
+    /**
+     * [
+     *   {
+     *      "stdClass":{
+     *          "shuffle":true,
+     *          "smsType":"verification_code_params",
+     *           "countryCode":"86",
+     *           "mobile":["15829686962"],
+     *           "operateKey":"reg",
+     *            "dataParams":{
+     *                  "operateType":"注册",
+     *                  "code":"1849",
+     *                  "validMinute":3
+     *             }
+     *         }
+     *     }
+     * ]
+     *
+     */
+
+    /**
+     * 发送验证码成功/失败时的业务逻辑操作--通用短信
+     *
+     * @param object $notifiable
+     * @param int $smsLogId 日志记录id
+     * @param int $operate_type 操作类型 1 成功 2 失败
+     * @param string $failReason 失败的原因
+     * @return null
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function sendCommonSmsLogStatusOperate(&$notifiable = null, $smsLogId = 0, $operate_type = 1, $failReason = ''){
+
+        // $smsConfig = config('easysms');
+        // 默认可用的发送网关
+        // $gateways = $smsConfig['default']['gateways'] ?? [];
+        // $configs = $smsConfig['gateways'] ?? [];
+        // if(empty($gateways) || empty($configs)) return true;
+        // $mobiles = $notifiable->mobile ?? [];// $SMSParams['mobile'] ?? [];// [15829686962];
+        // $dataParams = $notifiable->dataParams?? [];// $SMSParams['dataParams'] ?? [];// ['code' => '87654'];
+        // $smsType = $notifiable->smsType ?? '';;// $SMSParams['smsType'] ?? '';// 'verification_code_params';
+        // $operateKey = $notifiable->operateKey ?? '';
+        // $countryCode = $notifiable->countryCode ?? '86'; // 有的需要 国家码 '86' 阿里的暂时无用
+        // $code = $dataParams['code'] ?? '';//
+        // $validMinute = $dataParams['validMinute'] ?? 3;// 有缓存时间[有此下标]，则缓存 单位分钟
+        // $needCache = false;
+        // if(isset($dataParams['validMinute'])) $needCache = true;
+        // $shuffle = $notifiable->shuffle ?? false;// 如果配置文件config('easysms.default.gateways')有多个 值时，是否重新排序。 true:重新排序； false:不重新排序[默认]。
+        // if(!is_bool($shuffle)) $shuffle = false;
+
+        // 分钟转为秒数
+        // $validSecond = 0 ;// 缓存 单位秒
+        // if(!is_numeric($validMinute) || $validMinute <= 0){
+        //    $validMinute = 3;
+        // }
+        // $validSecond = $validMinute * 60;
+
+        // ~~~~~~~~~~~处理短信记录表中的状态~~~TODO~~在这里写业务处理逻辑~~~~~~~~~~~~~~~~~~~~~~~
+        // 短信配置信息
+        // $smsTypeConfig = config('public.sms', []);
+        // $smsConfigInfo = $smsTypeConfig[$operateKey] ?? '';
+        // 配置为空，则直接返回
+        // if(empty($smsConfigInfo)) return true;
+
+        // $sms_type = $smsConfigInfo['sms_type'] ?? 0;
+
+        // 修改验证码为已使用
+        $sms_status = 2;
+
+        // 失败
+        if($operate_type == 2){
+            $sms_status = 8;
+        }
+
+        $saveData = [
+            'sms_status' => $sms_status,
+        ];
+        // 失败原因
+        if($operate_type == 2) $saveData['fail_reason'] = $failReason;
+
+        $smsQueryParams = [
+            'where' => [
+                 ['id', $smsLogId],
+                // ['id', '&' , '16=16'],
+                // ['country_code', $countryCode],
+                // ['mobile', '=', $mobile],
+                // ['sms_code', '=', $code],
+                // ['sms_type', $sms_type],
+                //['admin_type',self::$admin_type],
+                // ['sms_status', 1],
+            ],
+            'whereIn' => [ 'sms_status' => [1,2,8]]
+        ];
+//        if(is_array($mobiles)){
+//            $smsQueryParams['whereIn']['mobile'] = $mobiles;
+//        }else{
+//            if(!isset($smsQueryParams['where'])) $smsQueryParams['where'] = [];
+//            array_push($smsQueryParams['where'], ['mobile', $mobiles]);
+//        }
+
+        $modelObj = null;
+        $model_name = config('public.dbModelsDir') . '\SmsLog';// 'DogTools\SmsCode';
+
+        CommonAPIFromDBBusiness::exeUpdate($saveData, $smsQueryParams, $model_name, $modelObj);
+        return true;
+
+    }
+
+    /**
+     * 创建短信日志
+     *
+     * @param object $notifiable
+     * @param array $smsData 操作类型 1 成功 2 失败
+     * @param string $failReason 失败的原因
+     * @return int 日志记录id
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function sendCommonSmsLogCreateOperate($smsData = [])
+    {
+        // 记录发送短信记录
+//        $currentNow = Carbon::now();
+//        $smsData = [
+//            'country_code' => $countryCode,
+//            'mobile' => $mobile,
+//            'sms_status' => 1,
+//            'count_date' => $currentNow->toDateString(),
+//            'count_year' => $currentNow->year,
+//            'count_month' => $currentNow->month,
+//            'count_day' => $currentNow->day,
+//            'template_id' => 1,
+//            'template_type' => 1,
+//            'send_type' => 1,
+//            'sms_content' => 1,
+//        ];
+        // $sms_id = 0;
+        $modelObj = null;
+        $model_name = config('public.dbModelsDir') . '\SmsLog';// 'DogTools\SmsCode';
+        $infoObj = CommonAPIFromDBBusiness::exeCreate($smsData, $model_name, $modelObj);
+        Log::info('消息通知日志 --发送短信记录日志--新加->'  . date('Y-m-d H:i:s') . __CLASS__ . '->' . __FUNCTION__, [$smsData, $infoObj]);
+        return $infoObj->id ?? 0;
+
+    }
+
+    //~~~~~~~~~~~~~~~~~业务~~~结束~~~~~~~~~~~~~~~~~~~~~~~~~
+    // *****************下面是发送短信验证码的********************************************************************************
+
     //~~~~~~~~~~~~~~~~ 如果需要对发送成功或失败，进行业务操作，可以再这里进行，--不需要则不用写代码~~~~~~~~~~~~~~~~~~~~~~~~
 
     // 发送成功时对发送记录的操作--
@@ -553,6 +788,7 @@ class SendSMS
 
         try {
             $result = CloudSMS::SendSms($appid, $SecretId, $SecretKey, $regionId, $params, $errDo);
+            // Log::info('消息通知日志 --腾讯发送短信-->'  . date('Y-m-d H:i:s') . __CLASS__ . '->' . __FUNCTION__, [$appid, $SecretId, $SecretKey, $regionId, $params, $errDo, $result]);
             if(is_string($result)) {
                 $errMsg = $result;
                 if($errDo == 1) throws($errMsg);

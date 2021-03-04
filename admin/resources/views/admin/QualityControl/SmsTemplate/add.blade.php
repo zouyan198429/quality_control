@@ -88,7 +88,7 @@
                     <p>格式如：您在{test_input}报名{test_val}操作，成功！开学时间：{test_datetime}！如有任何问题请联系{mobile}</p>
                 </td>
             </tr>
-            <tr>
+            <tr style="display: none;">
                 <th>限次编号<span class="must"></span></th>
                 <td class="sel_limit_code">
                     @foreach ($sms_limit_kv as $k=>$txt)

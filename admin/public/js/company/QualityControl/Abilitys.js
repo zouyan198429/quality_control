@@ -63,7 +63,7 @@ var otheraction = {
         // // var index_query = layer.confirm('确定' + operateText + '当前记录？', {
         // //     btn: ['确定','取消'] //按钮
         // // }, function(){
-        //     var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+        //     var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1,'check_item');// 注意：checkbox有 class : check_item
         //     if(ids == ''){
         //         err_alert('请选择需要' + operateText + '的项目');
         //         return false;
@@ -142,7 +142,7 @@ var otheraction = {
 function joinPage(){
     var operateText = '报名';
 
-    var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+    var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1,'check_item');// 注意：checkbox有 class : check_item
     if(ids == ''){
         err_alert('请选择需要' + operateText + '的项目');
         return false;

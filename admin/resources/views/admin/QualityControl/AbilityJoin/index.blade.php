@@ -81,6 +81,9 @@
         <button class="btn btn-success  btn-xs export_excel ace-icon fa fa-cloud-download"  onclick="otheraction.downDrive(this)" >下载网页打印机驱动</button>
         <button class="btn btn-success  btn-xs export_excel ace-icon fa fa-print"  onclick="otheraction.printSearch(this)" >打印证书[按条件]</button>
         <button class="btn btn-success  btn-xs export_excel ace-icon fa fa-print"  onclick="otheraction.printSelected(this)" >打印证书[勾选]</button>
+
+        <button class="btn btn-success  btn-xs export_excel"  onclick="action.smsByIds(this, 0, 0, 1, 0, 0)" >发送短信[按条件]</button>
+        <button class="btn btn-success  btn-xs export_excel"  onclick="action.smsSelected(this, 0, 2, 0, 0)" >发送短信[勾选]</button>
     </div>
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
@@ -158,6 +161,8 @@
       var IMPORT_EXCEL_TEMPLATE_URL = "{{ url('admin/ability_join/import_template') }}";//导入EXCEL模版地址
       var IMPORT_EXCEL_URL = "{{ url('api/admin/ability_join/import') }}";//导入EXCEL地址
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
+      var SMS_SEND_PAGE_URL = "{{url('admin/ability_join/sms_send')}}";// 选择短信模板页面
+      var SMS_SEND_URL = "{{url('api/admin/ability_join/ajax_sms_send')}}";// 短信模板发送短信
 
       var IFRAME_SAMPLE_URL = "{{url('admin/ability_join/get_sample/')}}/";//添加/修改页面地址前缀 + id
       var SELECT_COMPANY_URL = "{{url('admin/company/select')}}";// 选择所属企业
@@ -206,6 +211,6 @@
 
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/AbilityJoin.js') }}?15"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/AbilityJoin.js') }}?16"  type="text/javascript"></script>
 </body>
 </html>

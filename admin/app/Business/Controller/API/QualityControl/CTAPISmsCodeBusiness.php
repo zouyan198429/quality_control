@@ -44,13 +44,15 @@ class CTAPISmsCodeBusiness extends BasicPublicCTAPIBusiness
         if(is_numeric($sms_type) && $sms_type > 0 )  array_push($queryParams['where'], ['sms_type', '=', $sms_type]);
 
         $sms_status = CommonRequest::getInt($request, 'sms_status');
-        if(is_numeric($sms_status) && $sms_status > 0 )  array_push($queryParams['where'], ['sms_status', '=', $sms_status]);
+        // if(is_numeric($sms_status) && $sms_status > 0 )  array_push($queryParams['where'], ['sms_status', '=', $sms_status]);
+        if(strlen($sms_status) > 0 &&  !in_array($sms_status, [0, '-1']))  Tool::appendCondition($queryParams, 'sms_status',  $sms_status . '=' . $sms_status, '&');
+
 
         $template_type = CommonRequest::get($request, 'template_type');
-        if(strlen($template_type) > 0 && $template_type != 0)  Tool::appendCondition($queryParams, 'template_type',  $template_type . '=' . $template_type, '&');
+        if(strlen($template_type) > 0 && !in_array($template_type, [0, '-1']))  Tool::appendCondition($queryParams, 'template_type',  $template_type . '=' . $template_type, '&');
 
         $send_type = CommonRequest::get($request, 'send_type');
-        if(strlen($send_type) > 0 && $send_type != 0)  Tool::appendCondition($queryParams, 'send_type',  $send_type . '=' . $send_type, '&');
+        if(strlen($send_type) > 0 && !in_array($send_type, [0, '-1']))  Tool::appendCondition($queryParams, 'send_type',  $send_type . '=' . $send_type, '&');
 
         // 方法最下面
         // 注意重写方法中，如果不是特殊的like，同样需要调起此默认like方法--特殊的写自己特殊的方法

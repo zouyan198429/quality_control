@@ -151,7 +151,7 @@ var otheraction = {
         // var index_query = layer.confirm('确定' + operateText + '？', {
         //     btn: ['确定','取消'] //按钮
         // }, function(){
-            var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+            var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1,'check_item');// 注意：checkbox有 class : check_item
             printSelecedRecord(ids);
         //     layer.close(index_query);
         // }, function(){
@@ -453,7 +453,7 @@ function addCompany(company_id, company_name){
     document.write("        <%for(var i = 0; i<data_list.length;i++){");
     document.write("        var item = data_list[i];");
     document.write("        var can_modify = false;");
-   document.write("        if( (item.status == 16 || item.status == 64) ){");// 可以打印证书
+   document.write("        if( true || (item.status == 16 || item.status == 64) ){");// 可以打印证书
     document.write("        can_modify = true;");
     document.write("        }");
     document.write("        %>");
@@ -513,6 +513,11 @@ function addCompany(company_id, company_name){
     // document.write("                    <i class=\"ace-icon fa fa-trash-o bigger-60\"> 删除<\/i>");
     // document.write("                <\/a>");
     // document.write("                <%}%>");
+    document.write("                <%if( true){%>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"action.smsByIds(this, <%=item.id%>, 0, 4, 0, 0)\">");
+    document.write("                    <i class=\"ace-icon  fa fa-mobile bigger-60\"> 发送短信<\/i>");
+    document.write("                <\/a>");
+    document.write("                <%}%>");
     document.write("");
     document.write("            <\/td>");
     document.write("        <\/tr>");

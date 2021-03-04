@@ -73,7 +73,7 @@ var otheraction = {
     },
     paySelected: function(obj){// 缴费--批量
         var recordObj = $(obj);
-        var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+        var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1,'check_item');// 注意：checkbox有 class : check_item
         otheraction.payByIds(obj, ids);
     },
     payByIds: function(obj, ids) {
@@ -186,7 +186,7 @@ function addCompany(company_id, company_name){
     document.write("            <td><%=item.company_name%>(<%=item.company_grade_text%>)<\/td>");
 	document.write("            <td><%=item.contacts%>（<%=item.tel%>）<\/td>");
     document.write("            <td><%=item.join_num%><hr/><%=item.cancel_num%><\/td>");
-    document.write("            <td><%=item.joined_class_num%><hr/><%=item.finish_num%><\/td>");    
+    document.write("            <td><%=item.joined_class_num%><hr/><%=item.finish_num%><\/td>");
     document.write("            <td>￥<%=item.price%><hr/>￥<%=item.price_total%><\/td>");
     document.write("            <td><%=item.pay_status_text%><hr/><%=item.join_class_status_text%><\/td>");
     document.write("            <td><%=item.company_status_text%><\/td>");
@@ -210,6 +210,11 @@ function addCompany(company_id, company_name){
     // document.write("                    <i class=\"ace-icon fa fa-trash-o bigger-60\"> 删除<\/i>");
     // document.write("                <\/a>");
     // document.write("                <%}%>");
+    document.write("                <%if( false){%>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"action.smsByIds(this, <%=item.id%>, 0, 4, 0, 0)\">");
+    document.write("                    <i class=\"ace-icon  fa fa-mobile bigger-60\"> 发送短信<\/i>");
+    document.write("                <\/a>");
+    document.write("                <%}%>");
     document.write("");
     document.write("            <\/td>");
     document.write("        <\/tr>");

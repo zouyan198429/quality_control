@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\QualityControl;
 
 use App\Business\Controller\API\QualityControl\CTAPICompanyStatementBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIResourceBusiness;
+use App\Business\Controller\API\QualityControl\CTAPISmsTemplateBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
 use App\Http\Controllers\WorksController;
 use App\Services\Request\CommonRequest;
@@ -261,6 +262,54 @@ class CompanyStatementController extends BasicController
                 'relationFormatConfigs'=> CTAPICompanyStatementBusiness::getRelationConfigs($request, $this, $handleKeyConfigArr, []),
             ];
             return  CTAPICompanyStatementBusiness::getList($request, $this, 2 + 4, [], [], $extParams);
+        });
+    }
+
+    /**
+     * 选择短信模板页面
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function sms_send(Request $request)
+    {
+        return $this->exeDoPublicFun($request, 34359738368, 8, 'admin.QualityControl.SmsTemplate.sms_send', true
+            , '', [], function (&$reDataArr) use ($request){
+                $sms_operate_type = 1;// 操作类型 1 发送短信  ; 2测试发送短信
+                $reDataArr['sms_operate_type'] = $sms_operate_type;
+                // 设置参数
+                $mergeParams = [// template_id 与 module_id 二选一
+                    // 'sms_template_id' => 1,// 短信模板id;--可为0 ；
+                    'sms_module_id' => 1,// 短信模块id
+                ];
+                CTAPISmsTemplateBusiness::mergeRequest($request, $this, $mergeParams);
+
+                $smsMobileFieldKV = ['mobile' => '手机号'];// 可以发送短信的手机号字段
+                $smsMobileField = 'mobile';// 默认的发送短信的手机号字段
+                $reDataArr['smsMobileFieldKV'] = $smsMobileFieldKV;
+                $reDataArr['defaultSmsMobileField'] = $smsMobileField;
+                CTAPISmsTemplateBusiness::smsSend($request,  $this, $reDataArr);
+            });
+    }
+
+    /**
+     * ajax发送手机短信
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zouyan(305463219@qq.com)
+     */
+    public function ajax_sms_send(Request $request){
+        return $this->exeDoPublicFun($request, 68719476736, 4,'', true, '', [], function (&$reDataArr) use ($request){
+
+            $extParams = [
+                // 'handleKeyArr' => $handleKeyArr,//一维数组，数数据需要处理的标记，每一个或类处理，根据情况 自定义标记，然后再处理函数中处理数据。
+//                'relationFormatConfigs'=> CTAPICourseOrderStaffBusiness::getRelationConfigs($request, $this,
+//                    ['company_name' => '', 'course_name' =>'', 'class_name' =>'', 'staff_info' => ['resource_list' => ''], 'course_order_info' => ''], []),
+//                'listHandleKeyArr' => ['priceIntToFloat'],
+            ];
+            return CTAPIRrrDdddBusiness::getList($request, $this, 1 + 0, [], [], $extParams);
         });
     }
 

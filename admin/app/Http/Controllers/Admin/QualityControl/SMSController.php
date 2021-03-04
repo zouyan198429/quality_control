@@ -87,4 +87,6 @@ class SMSController extends BasicController
         CTAPIStaffBusiness::SMSCodeVerify($request, $this, 'reg', $mobile, $countryCode,  $mobile_vercode, false);
         return ajaxDataArr(1, ['data' => 1], '');
     }
+
+
 }

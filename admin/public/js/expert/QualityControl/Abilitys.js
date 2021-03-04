@@ -103,7 +103,7 @@ var otheraction = {
         var index_query = layer.confirm('确定导出当前记录报名企业信息？', {
             btn: ['确定','取消'] //按钮
         }, function(){
-            // var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+            // var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1,'check_item');// 注意：checkbox有 class : check_item
             // console.log('ids',ids);
             // if( ids==''){
             //     err_alert('请选择需要操作的数据');

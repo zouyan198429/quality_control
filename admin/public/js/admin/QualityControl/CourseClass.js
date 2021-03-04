@@ -63,7 +63,7 @@ var otheraction = {
     },
     openClass: function(obj){// 开班--批量
         var recordObj = $(obj);
-        var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+        var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1,'check_item');// 注意：checkbox有 class : check_item
         otheraction.openClassByIds(obj, ids);
     },
     openClassByIds: function(obj, ids) {
@@ -75,7 +75,7 @@ var otheraction = {
         var index_query = layer.confirm('确定' + operateText + '所选记录？操作后不可变更！', {
             btn: ['确定','取消'] //按钮
         }, function(){
-            // var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+            // var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1,'check_item');// 注意：checkbox有 class : check_item
             //ajax开启数据
             other_operate_ajax('open_class', ids, operateText, {});
             layer.close(index_query);
@@ -85,7 +85,7 @@ var otheraction = {
     },
     cancelClass: function(obj){// 作废[没有学员的班-待开班、开班中]--批量
         var recordObj = $(obj);
-        var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+        var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1,'check_item');// 注意：checkbox有 class : check_item
         otheraction.cancelClassByIds(obj, ids);
     },
     cancelClassByIds: function(obj, ids) {
@@ -97,7 +97,7 @@ var otheraction = {
         var index_query = layer.confirm('确定' + operateText + '所选记录？操作后不可变更！', {
             btn: ['确定','取消'] //按钮
         }, function(){
-            // var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+            // var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1,'check_item');// 注意：checkbox有 class : check_item
             //ajax开启数据
             other_operate_ajax('cancel_class', ids, operateText, {});
             layer.close(index_query);
@@ -107,7 +107,7 @@ var otheraction = {
     },
     finishClass: function(obj){// 结业--批量
         var recordObj = $(obj);
-        var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+        var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1,'check_item');// 注意：checkbox有 class : check_item
         otheraction.finishClassByIds(obj, ids);
     },
     finishClassByIds: function(obj, ids) {
@@ -119,7 +119,7 @@ var otheraction = {
         var index_query = layer.confirm('确定' + operateText + '所选记录？操作后不可变更！', {
             btn: ['确定','取消'] //按钮
         }, function(){
-            // var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+            // var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1,'check_item');// 注意：checkbox有 class : check_item
             //ajax开启数据
             other_operate_ajax('finish_class', ids, operateText, {});
             layer.close(index_query);
@@ -260,6 +260,11 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
     document.write("                <%if(item.class_status == 2){%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.finishClassByIds(this,<%=item.id%>)\">");
     document.write("                    <i class=\"ace-icon fa fa-universal-access bigger-60\"> 结业<\/i>");
+    document.write("                <\/a>");
+    document.write("                <%}%>");
+    document.write("                <%if( false){%>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"action.smsByIds(this, <%=item.id%>, 0, 4, 0, 0)\">");
+    document.write("                    <i class=\"ace-icon  fa fa-mobile bigger-60\"> 发送短信<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
     document.write("            <\/td>");

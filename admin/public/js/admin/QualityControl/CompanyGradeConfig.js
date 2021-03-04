@@ -79,7 +79,7 @@ var otheraction = {
         var index_query = layer.confirm('确定' + operateText + '当前记录？', {
             btn: ['确定','取消'] //按钮
         }, function(){
-            var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+            var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1,'check_item');// 注意：checkbox有 class : check_item
             //ajax开启数据
             other_operate_ajax('batch_open', ids, operateText, {'open_status': open_status});
             layer.close(index_query);
@@ -284,6 +284,11 @@ function addCompany(company_id, company_name){
     document.write("                <\/a>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"otheraction.open(<%=item.id%>, 4)\">");
     document.write("                    <i class=\"ace-icon fa fa-window-close bigger-60\">审核不通过<\/i>");
+    document.write("                <\/a>");
+    document.write("                <%}%>");
+    document.write("                <%if( false){%>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"action.smsByIds(this, <%=item.id%>, 0, 4, 0, 0)\">");
+    document.write("                    <i class=\"ace-icon  fa fa-mobile bigger-60\"> 发送短信<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
     document.write("");

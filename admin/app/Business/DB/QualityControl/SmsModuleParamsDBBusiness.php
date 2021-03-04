@@ -46,8 +46,9 @@ class SmsModuleParamsDBBusiness extends BasePublicDBBusiness
 //        }
 
         // 参数代码--唯一
-        if( isset($saveData['param_code']) && static::judgeFieldExist($company_id, $id ,"param_code", $saveData['param_code'], [],1)){
-            throws('参数代码已存在！');
+        $module_id = $saveData['module_id'] ?? 0;
+        if( isset($saveData['param_code']) && static::judgeFieldExist($company_id, $id ,"param_code", $saveData['param_code'], [['module_id', $module_id]],1)){
+            throws('参数代码【' . $saveData['param_code'] . '】已存在！');
         }
 
         $operate_staff_id_history = config('public.operate_staff_id_history', 0);// 0;--写上，不然后面要去取，但现在的系统不用历史表

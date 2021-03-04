@@ -79,6 +79,8 @@
 {{--        <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.joinClass(this)" >分班[勾选]</button>--}}
 {{--        <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.joinClassCancel(this)" >取消分班[勾选]</button>--}}
 {{--        <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.paySelected(this)" >缴费[勾选]</button>--}}
+{{--        <button class="btn btn-success  btn-xs export_excel"  onclick="action.smsByIds(this, 0, 0, 1, 0, 0)" >发送短信[按条件]</button>--}}
+{{--        <button class="btn btn-success  btn-xs export_excel"  onclick="action.smsSelected(this, 0, 2, 0, 0)" >发送短信[勾选]</button>--}}
     </div>
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
@@ -155,6 +157,8 @@
       var IMPORT_EXCEL_TEMPLATE_URL = "{{ url('company/course_order_staff/import_template') }}";//导入EXCEL模版地址
       var IMPORT_EXCEL_URL = "{{ url('api/company/course_order_staff/import') }}";//导入EXCEL地址
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
+      var SMS_SEND_PAGE_URL = "{{url('admin/rrr_dddd/sms_send')}}";// 选择短信模板页面
+      var SMS_SEND_URL = "{{url('api/admin/rrr_dddd/ajax_sms_send')}}";// 短信模板发送短信
 
       var SELECT_COMPANY_URL = "{{url('admin/company/select')}}";// 选择所属企业
 

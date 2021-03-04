@@ -81,6 +81,7 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
     document.write("            <td><%=item.template_code%><hr/><%=item.sign_name%><\/td>");
     document.write("            <td><%=item.template_content%><\/td>");
     // document.write("            <td><%=item.limit_code%><\/td>");
+    document.write("                <%if( false){%>");
     document.write("           <td>");
     document.write("            <%for(var key in SMS_LIMIT_KV){");
     document.write("                var limitText = SMS_LIMIT_KV[key];");
@@ -90,6 +91,7 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
     document.write("                <%}%>");
     document.write("            <%}%>");
     document.write("           <\/td>");
+    document.write("                <%}%>");
     document.write("            <td><%=item.created_at%><hr/><%=item.updated_at%><\/td>");
     document.write("            <td>");
     document.write("                <%if( false){%>");
@@ -103,6 +105,11 @@ function reset_list_self(is_read_page, ajax_async, reset_total, do_num){
     document.write("                <%if( can_modify){%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.del(<%=item.id%>)\">");
     document.write("                    <i class=\"ace-icon fa fa-trash-o bigger-60\"> 删除<\/i>");
+    document.write("                <\/a>");
+    document.write("                <%}%>");
+    document.write("                <%if( item.open_status == 1){%>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"action.smsByIds(this, <%=item.id%>, 0, 4, <%=item.id%>, <%=item.module_id%>)\">");
+    document.write("                    <i class=\"ace-icon  fa fa-mobile bigger-60\"> 短信测试<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
     document.write("");

@@ -105,6 +105,8 @@
       var IMPORT_EXCEL_TEMPLATE_URL = "{{ url('web/market/platform_down_files/import_template') }}";//导入EXCEL模版地址
       var IMPORT_EXCEL_URL = "{{ url('api/web/market/platform_down_files/import') }}";//导入EXCEL地址
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
+      var SMS_SEND_PAGE_URL = "{{url('admin/rrr_dddd/sms_send')}}";// 选择短信模板页面
+      var SMS_SEND_URL = "{{url('api/admin/rrr_dddd/ajax_sms_send')}}";// 短信模板发送短信
 
       var DOWN_FILE_URL = "{{ url('web/market/down_file') }}";// 下载
 

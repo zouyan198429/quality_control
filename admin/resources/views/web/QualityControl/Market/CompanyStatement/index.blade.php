@@ -20,7 +20,7 @@
 {{--		<div class="com-name">--}}
 {{--					 {{ $info['company_name'] ?? '' }}--}}
 {{--		</div>--}}
-		<table class="layui-table table2 tableWidthFixed"> 
+		<table class="layui-table table2 tableWidthFixed">
 			<tbody>
 				<tr>
 					<th width="120">机构名称</th>
@@ -158,6 +158,8 @@
       var IMPORT_EXCEL_TEMPLATE_URL = "{{ url('web/market/company_statement/import_template') }}";//导入EXCEL模版地址
       var IMPORT_EXCEL_URL = "{{ url('api/web/market/company_statement/import') }}";//导入EXCEL地址
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
+      var SMS_SEND_PAGE_URL = "{{url('admin/rrr_dddd/sms_send')}}";// 选择短信模板页面
+      var SMS_SEND_URL = "{{url('api/admin/rrr_dddd/ajax_sms_send')}}";// 短信模板发送短信
 
       var SELECT_COMPANY_URL = "{{url('web/market/company/select')}}";// 选择所属企业
 

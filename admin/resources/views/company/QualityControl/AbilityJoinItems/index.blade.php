@@ -110,6 +110,8 @@
       var IMPORT_EXCEL_TEMPLATE_URL = "{{ url('company/ability_join_item/import_template') }}";//导入EXCEL模版地址
       var IMPORT_EXCEL_URL = "{{ url('api/company/ability_join_item/import') }}";//导入EXCEL地址
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
+      var SMS_SEND_PAGE_URL = "{{url('admin/rrr_dddd/sms_send')}}";// 选择短信模板页面
+      var SMS_SEND_URL = "{{url('api/admin/rrr_dddd/ajax_sms_send')}}";// 短信模板发送短信
 
       var IFRAME_SAMPLE_RESULT_URL = "{{url('company/ability_join_item/sample_result/')}}/";//上报数据页面地址前缀 + id
       var IFRAME_SAMPLE_RESULT_INFO_URL = "{{url('company/ability_join_item/sample_result_info/')}}/"; // 获得指定测试序号的 单次测试数据 + id + retry_no

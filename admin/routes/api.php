@@ -93,6 +93,7 @@ $api->version('v1', function ($api) {
         $api->post('expert/company/ajax_get_child', 'Expert\QualityControl\CompanyController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('expert/company/ajax_get_areachild', 'Expert\QualityControl\CompanyController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('expert/company/ajax_import_staff','Expert\QualityControl\CompanyController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
 //        $api->post('expert/company/import', 'Expert\QualityControl\CompanyController@import');// 导入excel
         $api->post('expert/company/ajax_get_ids', 'Expert\QualityControl\CompanyController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -107,6 +108,7 @@ $api->version('v1', function ($api) {
         $api->post('expert/abilitys/ajax_get_child', 'Expert\QualityControl\AbilitysController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('expert/abilitys/ajax_get_areachild', 'Expert\QualityControl\AbilitysController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('expert/abilitys/ajax_import_staff','Expert\QualityControl\AbilitysController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('expert/abilitys/import', 'Expert\QualityControl\AbilitysController@import');// 导入excel
         $api->post('expert/abilitys/ajax_get_ids', 'Expert\QualityControl\AbilitysController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -122,6 +124,7 @@ $api->version('v1', function ($api) {
 //        $api->post('expert/abilitys_admin/{ability_id}/ability_join_items/ajax_get_child', 'Expert\QualityControl\Abilitys\AbilityJoinItemsController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
 //        $api->post('expert/abilitys_admin/{ability_id}/ability_join_items/ajax_get_areachild', 'Expert\QualityControl\Abilitys\AbilityJoinItemsController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
 //        $api->post('expert/abilitys_admin/{ability_id}/ability_join_items/ajax_import_staff','Expert\QualityControl\Abilitys\AbilityJoinItemsController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
 //        $api->post('expert/abilitys_admin/{ability_id}/ability_join_items/import', 'Expert\QualityControl\Abilitys\AbilityJoinItemsController@import');// 导入excel
 //        $api->post('expert/abilitys_admin/{ability_id}/ability_join_items/ajax_get_ids', 'Expert\QualityControl\Abilitys\AbilityJoinItemsController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -191,6 +194,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/staff/ajax_get_child', 'Admin\QualityControl\StaffController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/staff/ajax_get_areachild', 'Admin\QualityControl\StaffController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/staff/ajax_import_staff','Admin\QualityControl\StaffController@ajax_import'); // 导入员工
+        $api->post('admin/staff/ajax_sms_send', 'Admin\QualityControl\StaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/staff/import', 'Admin\QualityControl\StaffController@import');// 导入excel
         $api->post('admin/staff/ajax_get_ids', 'Admin\QualityControl\StaffController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -205,6 +209,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/expert/ajax_get_child', 'Admin\QualityControl\ExpertController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/expert/ajax_get_areachild', 'Admin\QualityControl\ExpertController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/expert/ajax_import_staff','Admin\QualityControl\ExpertController@ajax_import'); // 导入员工
+        $api->post('admin/expert/ajax_sms_send', 'Admin\QualityControl\ExpertController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/expert/import', 'Admin\QualityControl\ExpertController@import');// 导入excel
         $api->post('admin/expert/ajax_get_ids', 'Admin\QualityControl\ExpertController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -219,6 +224,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/third_service/ajax_get_child', 'Admin\QualityControl\ThirdServiceController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/third_service/ajax_get_areachild', 'Admin\QualityControl\ThirdServiceController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/third_service/ajax_import_staff','Admin\QualityControl\ThirdServiceController@ajax_import'); // 导入员工
+        $api->post('admin/third_service/ajax_sms_send', 'Admin\QualityControl\ThirdServiceController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/third_service/import', 'Admin\QualityControl\ThirdServiceController@import');// 导入excel
         $api->post('admin/third_service/ajax_get_ids', 'Admin\QualityControl\ThirdServiceController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -233,6 +239,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/company/ajax_get_child', 'Admin\QualityControl\CompanyController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/company/ajax_get_areachild', 'Admin\QualityControl\CompanyController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/company/ajax_import_staff','Admin\QualityControl\CompanyController@ajax_import'); // 导入员工
+        $api->post('admin/company/ajax_sms_send', 'Admin\QualityControl\CompanyController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/company/import', 'Admin\QualityControl\CompanyController@import');// 导入excel
         $api->post('admin/company/ajax_get_ids', 'Admin\QualityControl\CompanyController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -247,6 +254,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/user/ajax_get_child', 'Admin\QualityControl\UserController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/user/ajax_get_areachild', 'Admin\QualityControl\UserController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/user/ajax_import_staff','Admin\QualityControl\UserController@ajax_import'); // 导入员工
+        $api->post('admin/user/ajax_sms_send', 'Admin\QualityControl\UserController@ajax_sms_send');// 短信模板发送短信
 
         $api->any('admin/user/import', 'Admin\QualityControl\UserController@import');// 导入excel
         $api->post('admin/user/ajax_get_ids', 'Admin\QualityControl\UserController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -265,6 +273,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/voter_group/ajax_get_child', 'Admin\QualityControl\VoterGroupController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/voter_group/ajax_get_areachild', 'Admin\QualityControl\VoterGroupController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/voter_group/ajax_import_staff','Admin\QualityControl\VoterGroupController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/voter_group/import', 'Admin\QualityControl\VoterGroupController@import');// 导入excel
         $api->post('admin/voter_group/ajax_get_ids', 'Admin\QualityControl\VoterGroupController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -277,6 +286,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/voters/ajax_get_child', 'Admin\QualityControl\VotersController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/voters/ajax_get_areachild', 'Admin\QualityControl\VotersController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/voters/ajax_import_staff','Admin\QualityControl\VotersController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/voters/import', 'Admin\QualityControl\VotersController@import');// 导入excel
         $api->post('admin/voters/ajax_get_ids', 'Admin\QualityControl\VotersController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -288,6 +298,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/industry/ajax_get_child', 'Admin\QualityControl\IndustryController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/industry/ajax_get_areachild', 'Admin\QualityControl\IndustryController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/industry/ajax_import_staff','Admin\QualityControl\IndustryController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/industry/import', 'Admin\QualityControl\IndustryController@import');// 导入excel
         $api->post('admin/industry/ajax_get_ids', 'Admin\QualityControl\IndustryController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -299,6 +310,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/course/ajax_get_child', 'Admin\QualityControl\CourseController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/course/ajax_get_areachild', 'Admin\QualityControl\CourseController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/course/ajax_import_staff','Admin\QualityControl\CourseController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/course/import', 'Admin\QualityControl\CourseController@import');// 导入excel
         $api->post('admin/course/ajax_get_ids', 'Admin\QualityControl\CourseController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -312,6 +324,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/course_class/ajax_get_child', 'Admin\QualityControl\CourseClassController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/course_class/ajax_get_areachild', 'Admin\QualityControl\CourseClassController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/course_class/ajax_import_staff','Admin\QualityControl\CourseClassController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/course_class/import', 'Admin\QualityControl\CourseClassController@import');// 导入excel
         $api->post('admin/course_class/ajax_get_ids', 'Admin\QualityControl\CourseClassController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -327,6 +340,7 @@ $api->version('v1', function ($api) {
 //        $api->post('admin/course_order/ajax_get_child', 'Admin\QualityControl\CourseOrderController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
 //        $api->post('admin/course_order/ajax_get_areachild', 'Admin\QualityControl\CourseOrderController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
 //        $api->post('admin/course_order/ajax_import_staff','Admin\QualityControl\CourseOrderController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
 //        $api->post('admin/course_order/import', 'Admin\QualityControl\CourseOrderController@import');// 导入excel
 //        $api->post('admin/course_order/ajax_get_ids', 'Admin\QualityControl\CourseOrderController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -338,6 +352,7 @@ $api->version('v1', function ($api) {
 //        $api->post('admin/course_class_company/ajax_get_child', 'Admin\QualityControl\CourseClassCompanyController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
 //        $api->post('admin/course_class_company/ajax_get_areachild', 'Admin\QualityControl\CourseClassCompanyController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
 //        $api->post('admin/course_class_company/ajax_import_staff','Admin\QualityControl\CourseClassCompanyController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
 //        $api->post('admin/course_class_company/import', 'Admin\QualityControl\CourseClassCompanyController@import');// 导入excel
 //        $api->post('admin/course_class_company/ajax_get_ids', 'Admin\QualityControl\CourseClassCompanyController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -349,6 +364,7 @@ $api->version('v1', function ($api) {
 //        $api->post('admin/course_order_staff/ajax_get_child', 'Admin\QualityControl\CourseOrderStaffController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
 //        $api->post('admin/course_order_staff/ajax_get_areachild', 'Admin\QualityControl\CourseOrderStaffController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
 //        $api->post('admin/course_order_staff/ajax_import_staff','Admin\QualityControl\CourseOrderStaffController@ajax_import'); // 导入员工
+        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 //
 //        $api->post('admin/course_order_staff/import', 'Admin\QualityControl\CourseOrderStaffController@import');// 导入excel
 //        $api->post('admin/course_order_staff/ajax_get_ids', 'Admin\QualityControl\CourseOrderStaffController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -364,6 +380,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/course_log/ajax_get_child', 'Admin\QualityControl\CourseLogController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/course_log/ajax_get_areachild', 'Admin\QualityControl\CourseLogController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/course_log/ajax_import_staff','Admin\QualityControl\CourseLogController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/course_log/import', 'Admin\QualityControl\CourseLogController@import');// 导入excel
         $api->post('admin/course_log/ajax_get_ids', 'Admin\QualityControl\CourseLogController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -375,6 +392,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/order_pay_method/ajax_get_child', 'Admin\QualityControl\OrderPayMethodController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/order_pay_method/ajax_get_areachild', 'Admin\QualityControl\OrderPayMethodController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/order_pay_method/ajax_import_staff','Admin\QualityControl\OrderPayMethodController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/order_pay_method/import', 'Admin\QualityControl\OrderPayMethodController@import');// 导入excel
         $api->post('admin/order_pay_method/ajax_get_ids', 'Admin\QualityControl\OrderPayMethodController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -388,6 +406,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/order_pay_config/ajax_get_child', 'Admin\QualityControl\OrderPayConfigController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/order_pay_config/ajax_get_areachild', 'Admin\QualityControl\OrderPayConfigController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/order_pay_config/ajax_import_staff','Admin\QualityControl\OrderPayConfigController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/order_pay_config/import', 'Admin\QualityControl\OrderPayConfigController@import');// 导入excel
         $api->post('admin/order_pay_config/ajax_get_ids', 'Admin\QualityControl\OrderPayConfigController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -402,6 +421,7 @@ $api->version('v1', function ($api) {
 //        $api->post('admin/orders/ajax_get_child', 'Admin\QualityControl\OrdersController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
 //        $api->post('admin/orders/ajax_get_areachild', 'Admin\QualityControl\OrdersController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
 //        $api->post('admin/orders/ajax_import_staff','Admin\QualityControl\OrdersController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
 //        $api->post('admin/orders/import', 'Admin\QualityControl\OrdersController@import');// 导入excel
 //        $api->post('admin/orders/ajax_get_ids', 'Admin\QualityControl\OrdersController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -418,6 +438,7 @@ $api->version('v1', function ($api) {
 //        $api->post('admin/order_flow/ajax_get_child', 'Admin\QualityControl\OrderFlowController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
 //        $api->post('admin/order_flow/ajax_get_areachild', 'Admin\QualityControl\OrderFlowController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
 //        $api->post('admin/order_flow/ajax_import_staff','Admin\QualityControl\OrderFlowController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
 //        $api->post('admin/order_flow/import', 'Admin\QualityControl\OrderFlowController@import');// 导入excel
 //        $api->post('admin/order_flow/ajax_get_ids', 'Admin\QualityControl\OrderFlowController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -429,6 +450,7 @@ $api->version('v1', function ($api) {
 //        $api->post('admin/order_pay/ajax_get_child', 'Admin\QualityControl\OrderPayController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
 //        $api->post('admin/order_pay/ajax_get_areachild', 'Admin\QualityControl\OrderPayController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
 //        $api->post('admin/order_pay/ajax_import_staff','Admin\QualityControl\OrderPayController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
 //        $api->post('admin/order_pay/import', 'Admin\QualityControl\OrderPayController@import');// 导入excel
 //        $api->post('admin/order_pay/ajax_get_ids', 'Admin\QualityControl\OrderPayController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -442,6 +464,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/invoice_config_hydzfp/ajax_get_child', 'Admin\QualityControl\InvoiceConfigHydzfpController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/invoice_config_hydzfp/ajax_get_areachild', 'Admin\QualityControl\InvoiceConfigHydzfpController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/invoice_config_hydzfp/ajax_import_staff','Admin\QualityControl\InvoiceConfigHydzfpController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/invoice_config_hydzfp/import', 'Admin\QualityControl\InvoiceConfigHydzfpController@import');// 导入excel
         $api->post('admin/invoice_config_hydzfp/ajax_get_ids', 'Admin\QualityControl\InvoiceConfigHydzfpController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -455,6 +478,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/invoice_seller/ajax_get_child', 'Admin\QualityControl\InvoiceSellerController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/invoice_seller/ajax_get_areachild', 'Admin\QualityControl\InvoiceSellerController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/invoice_seller/ajax_import_staff','Admin\QualityControl\InvoiceSellerController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/invoice_seller/import', 'Admin\QualityControl\InvoiceSellerController@import');// 导入excel
         $api->post('admin/invoice_seller/ajax_get_ids', 'Admin\QualityControl\InvoiceSellerController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -466,6 +490,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/invoice_buyer/ajax_get_child', 'Admin\QualityControl\InvoiceBuyerController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/invoice_buyer/ajax_get_areachild', 'Admin\QualityControl\InvoiceBuyerController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/invoice_buyer/ajax_import_staff','Admin\QualityControl\InvoiceBuyerController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/invoice_buyer/import', 'Admin\QualityControl\InvoiceBuyerController@import');// 导入excel
         $api->post('admin/invoice_buyer/ajax_get_ids', 'Admin\QualityControl\InvoiceBuyerController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -477,6 +502,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/invoice_template/ajax_get_child', 'Admin\QualityControl\InvoiceTemplateController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/invoice_template/ajax_get_areachild', 'Admin\QualityControl\InvoiceTemplateController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/invoice_template/ajax_import_staff','Admin\QualityControl\InvoiceTemplateController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/invoice_template/import', 'Admin\QualityControl\InvoiceTemplateController@import');// 导入excel
         $api->post('admin/invoice_template/ajax_get_ids', 'Admin\QualityControl\InvoiceTemplateController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -488,6 +514,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/invoice_project_template/ajax_get_child', 'Admin\QualityControl\InvoiceProjectTemplateController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/invoice_project_template/ajax_get_areachild', 'Admin\QualityControl\InvoiceProjectTemplateController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/invoice_project_template/ajax_import_staff','Admin\QualityControl\InvoiceProjectTemplateController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/invoice_project_template/import', 'Admin\QualityControl\InvoiceProjectTemplateController@import');// 导入excel
         $api->post('admin/invoice_project_template/ajax_get_ids', 'Admin\QualityControl\InvoiceProjectTemplateController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -499,6 +526,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/invoices/ajax_get_child', 'Admin\QualityControl\InvoicesController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/invoices/ajax_get_areachild', 'Admin\QualityControl\InvoicesController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/invoices/ajax_import_staff','Admin\QualityControl\InvoicesController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/invoices/import', 'Admin\QualityControl\InvoicesController@import');// 导入excel
         $api->post('admin/invoices/ajax_get_ids', 'Admin\QualityControl\InvoicesController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -510,6 +538,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/company_expire/ajax_get_child', 'Admin\QualityControl\CompanyExpireController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/company_expire/ajax_get_areachild', 'Admin\QualityControl\CompanyExpireController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/company_expire/ajax_import_staff','Admin\QualityControl\CompanyExpireController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/company_expire/import', 'Admin\QualityControl\CompanyExpireController@import');// 导入excel
         $api->post('admin/company_expire/ajax_get_ids', 'Admin\QualityControl\CompanyExpireController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -521,6 +550,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/company_grade_config/ajax_get_child', 'Admin\QualityControl\CompanyGradeConfigController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/company_grade_config/ajax_get_areachild', 'Admin\QualityControl\CompanyGradeConfigController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/company_grade_config/ajax_import_staff','Admin\QualityControl\CompanyGradeConfigController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/company_grade_config/import', 'Admin\QualityControl\CompanyGradeConfigController@import');// 导入excel
         $api->post('admin/company_grade_config/ajax_get_ids', 'Admin\QualityControl\CompanyGradeConfigController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -534,6 +564,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/citys/ajax_get_child', 'Admin\QualityControl\CitysController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/citys/ajax_get_areachild', 'Admin\QualityControl\CitysController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/citys/ajax_import_staff','Admin\QualityControl\CitysController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/citys/import', 'Admin\QualityControl\CitysController@import');// 导入excel
         $api->post('admin/citys/ajax_get_ids', 'Admin\QualityControl\CitysController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -546,6 +577,7 @@ $api->version('v1', function ($api) {
 //        $api->post('admin/ability_code/ajax_get_child', 'Admin\QualityControl\AbilityCodeController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
 //        $api->post('admin/ability_code/ajax_get_areachild', 'Admin\QualityControl\AbilityCodeController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
 //        $api->post('admin/ability_code/ajax_import_staff','Admin\QualityControl\AbilityCodeController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 //
 //        $api->post('admin/ability_code/import', 'Admin\QualityControl\AbilityCodeController@import');// 导入excel
 //        $api->post('admin/ability_code/ajax_get_ids', 'Admin\QualityControl\AbilityCodeController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -557,6 +589,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/sms_code/ajax_get_child', 'Admin\QualityControl\SmsCodeController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/sms_code/ajax_get_areachild', 'Admin\QualityControl\SmsCodeController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/sms_code/ajax_import_staff','Admin\QualityControl\SmsCodeController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/sms_code/import', 'Admin\QualityControl\SmsCodeController@import');// 导入excel
         $api->post('admin/sms_code/ajax_get_ids', 'Admin\QualityControl\SmsCodeController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -569,6 +602,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/certificate/ajax_get_child', 'Admin\QualityControl\CertificateController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/certificate/ajax_get_areachild', 'Admin\QualityControl\CertificateController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/certificate/ajax_import_staff','Admin\QualityControl\CertificateController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/certificate/import', 'Admin\QualityControl\CertificateController@import');// 导入excel
         $api->post('admin/certificate/ajax_get_ids', 'Admin\QualityControl\CertificateController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -580,6 +614,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/laboratory_addr/ajax_get_child', 'Admin\QualityControl\LaboratoryAddrController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/laboratory_addr/ajax_get_areachild', 'Admin\QualityControl\LaboratoryAddrController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/laboratory_addr/ajax_import_staff','Admin\QualityControl\LaboratoryAddrController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/laboratory_addr/import', 'Admin\QualityControl\LaboratoryAddrController@import');// 导入excel
         $api->post('admin/laboratory_addr/ajax_get_ids', 'Admin\QualityControl\LaboratoryAddrController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -592,6 +627,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/certificate_schedule/ajax_get_child', 'Admin\QualityControl\CertificateScheduleController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/certificate_schedule/ajax_get_areachild', 'Admin\QualityControl\CertificateScheduleController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/certificate_schedule/ajax_import_staff','Admin\QualityControl\CertificateScheduleController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/certificate_schedule/import', 'Admin\QualityControl\CertificateScheduleController@import');// 导入excel
         $api->post('admin/certificate_schedule/ajax_get_ids', 'Admin\QualityControl\CertificateScheduleController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -607,6 +643,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/certificate_import_log/ajax_get_child', 'Admin\QualityControl\CertificateImportLogController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/certificate_import_log/ajax_get_areachild', 'Admin\QualityControl\CertificateImportLogController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/certificate_import_log/ajax_import_staff','Admin\QualityControl\CertificateImportLogController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/certificate_import_log/import', 'Admin\QualityControl\CertificateImportLogController@import');// 导入excel
         $api->post('admin/certificate_import_log/ajax_get_ids', 'Admin\QualityControl\CertificateImportLogController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -618,6 +655,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/company_certificate_type/ajax_get_child', 'Admin\QualityControl\CompanyCertificateTypeController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/company_certificate_type/ajax_get_areachild', 'Admin\QualityControl\CompanyCertificateTypeController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/company_certificate_type/ajax_import_staff','Admin\QualityControl\CompanyCertificateTypeController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/company_certificate_type/import', 'Admin\QualityControl\CompanyCertificateTypeController@import');// 导入excel
         $api->post('admin/company_certificate_type/ajax_get_ids', 'Admin\QualityControl\CompanyCertificateTypeController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -629,6 +667,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/ability_type/ajax_get_child', 'Admin\QualityControl\AbilityTypeController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/ability_type/ajax_get_areachild', 'Admin\QualityControl\AbilityTypeController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/ability_type/ajax_import_staff','Admin\QualityControl\AbilityTypeController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/ability_type/import', 'Admin\QualityControl\AbilityTypeController@import');// 导入excel
         $api->post('admin/ability_type/ajax_get_ids', 'Admin\QualityControl\AbilityTypeController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -640,6 +679,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/company_content/ajax_get_child', 'Admin\QualityControl\CompanyContentController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/company_content/ajax_get_areachild', 'Admin\QualityControl\CompanyContentController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/company_content/ajax_import_staff','Admin\QualityControl\CompanyContentController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/company_content/import', 'Admin\QualityControl\CompanyContentController@import');// 导入excel
         $api->post('admin/company_content/ajax_get_ids', 'Admin\QualityControl\CompanyContentController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -651,6 +691,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/abilitys/ajax_get_child', 'Admin\QualityControl\AbilitysController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/abilitys/ajax_get_areachild', 'Admin\QualityControl\AbilitysController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/abilitys/ajax_import_staff','Admin\QualityControl\AbilitysController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/abilitys/import', 'Admin\QualityControl\AbilitysController@import');// 导入excel
         $api->post('admin/abilitys/ajax_get_ids', 'Admin\QualityControl\AbilitysController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -666,6 +707,7 @@ $api->version('v1', function ($api) {
 //        $api->post('admin/abilitys_admin/{ability_id}/ability_join_items/ajax_get_child', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
 //        $api->post('admin/abilitys_admin/{ability_id}/ability_join_items/ajax_get_areachild', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
 //        $api->post('admin/abilitys_admin/{ability_id}/ability_join_items/ajax_import_staff','Admin\QualityControl\Abilitys\AbilityJoinItemsController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
 //        $api->post('admin/abilitys_admin/{ability_id}/ability_join_items/import', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@import');// 导入excel
 //        $api->post('admin/abilitys_admin/{ability_id}/ability_join_items/ajax_get_ids', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -676,6 +718,8 @@ $api->version('v1', function ($api) {
         $api->any('admin/abilitys_admin/{ability_id}/ability_join_items_results/ajax_save_sample', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@ajax_save_sample');// 新加/修改--取样
 
         $api->any('admin/abilitys_admin/{ability_id}/ability_join_items_results/ajax_save_dissatisfied', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@ajax_save_dissatisfied');// 已领样，未上传数据的--可以手动直接判断为不满意
+
+        $api->post('admin/abilitys_admin/{ability_id}/ability_join_items_results/ajax_sms_send', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@ajax_sms_send');// 短信模板发送短信
         //****************************************************************************
 
         // 能力验证--报名管理
@@ -685,6 +729,7 @@ $api->version('v1', function ($api) {
 //        $api->post('admin/ability_join/ajax_get_child', 'Admin\QualityControl\AbilityJoinController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
 //        $api->post('admin/ability_join/ajax_get_areachild', 'Admin\QualityControl\AbilityJoinController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
 //        $api->post('admin/ability_join/ajax_import_staff','Admin\QualityControl\AbilityJoinController@ajax_import'); // 导入员工
+        $api->post('admin/ability_join/ajax_sms_send', 'Admin\QualityControl\AbilityJoinController@ajax_sms_send');// 短信模板发送短信
 
 //        $api->post('admin/ability_join/import', 'Admin\QualityControl\AbilityJoinController@import');// 导入excel
 //        $api->post('admin/ability_join/ajax_get_ids', 'Admin\QualityControl\AbilityJoinController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -700,6 +745,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/company_schedule/ajax_get_child', 'Admin\QualityControl\CompanyScheduleController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/company_schedule/ajax_get_areachild', 'Admin\QualityControl\CompanyScheduleController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/company_schedule/ajax_import_staff','Admin\QualityControl\CompanyScheduleController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/company_schedule/import', 'Admin\QualityControl\CompanyScheduleController@import');// 导入excel
         $api->post('admin/company_schedule/ajax_get_ids', 'Admin\QualityControl\CompanyScheduleController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -712,6 +758,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/company_new_schedule/ajax_get_child', 'Admin\QualityControl\CompanyNewScheduleController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/company_new_schedule/ajax_get_areachild', 'Admin\QualityControl\CompanyNewScheduleController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/company_new_schedule/ajax_import_staff','Admin\QualityControl\CompanyNewScheduleController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/company_new_schedule/import', 'Admin\QualityControl\CompanyNewScheduleController@import');// 导入excel
         $api->post('admin/company_new_schedule/ajax_get_ids', 'Admin\QualityControl\CompanyNewScheduleController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -729,6 +776,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/apply/ajax_get_child', 'Admin\QualityControl\ApplyController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/apply/ajax_get_areachild', 'Admin\QualityControl\ApplyController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/apply/ajax_import_staff','Admin\QualityControl\ApplyController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/apply/import', 'Admin\QualityControl\ApplyController@import');// 导入excel
         $api->post('admin/apply/ajax_get_ids', 'Admin\QualityControl\ApplyController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -742,6 +790,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/api_log/ajax_get_child', 'Admin\QualityControl\ApiLogController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/api_log/ajax_get_areachild', 'Admin\QualityControl\ApiLogController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/api_log/ajax_import_staff','Admin\QualityControl\ApiLogController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/api_log/import', 'Admin\QualityControl\ApiLogController@import');// 导入excel
         $api->post('admin/api_log/ajax_get_ids', 'Admin\QualityControl\ApiLogController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -754,6 +803,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/sms_module/ajax_get_child', 'Admin\QualityControl\SmsModuleController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/sms_module/ajax_get_areachild', 'Admin\QualityControl\SmsModuleController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/sms_module/ajax_import_staff','Admin\QualityControl\SmsModuleController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/sms_module/import', 'Admin\QualityControl\SmsModuleController@import');// 导入excel
         $api->post('admin/sms_module/ajax_get_ids', 'Admin\QualityControl\SmsModuleController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -765,6 +815,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/sms_module_params_common/ajax_get_child', 'Admin\QualityControl\SmsModuleParamsCommonController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/sms_module_params_common/ajax_get_areachild', 'Admin\QualityControl\SmsModuleParamsCommonController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/sms_module_params_common/ajax_import_staff','Admin\QualityControl\SmsModuleParamsCommonController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/sms_module_params_common/import', 'Admin\QualityControl\SmsModuleParamsCommonController@import');// 导入excel
         $api->post('admin/sms_module_params_common/ajax_get_ids', 'Admin\QualityControl\SmsModuleParamsCommonController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -776,6 +827,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/sms_module_params/ajax_get_child', 'Admin\QualityControl\SmsModuleParamsController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/sms_module_params/ajax_get_areachild', 'Admin\QualityControl\SmsModuleParamsController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/sms_module_params/ajax_import_staff','Admin\QualityControl\SmsModuleParamsController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/sms_module_params/import', 'Admin\QualityControl\SmsModuleParamsController@import');// 导入excel
         $api->post('admin/sms_module_params/ajax_get_ids', 'Admin\QualityControl\SmsModuleParamsController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -788,6 +840,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/sms_limit/ajax_get_child', 'Admin\QualityControl\SmsLimitController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/sms_limit/ajax_get_areachild', 'Admin\QualityControl\SmsLimitController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/sms_limit/ajax_import_staff','Admin\QualityControl\SmsLimitController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/sms_limit/import', 'Admin\QualityControl\SmsLimitController@import');// 导入excel
         $api->post('admin/sms_limit/ajax_get_ids', 'Admin\QualityControl\SmsLimitController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -799,9 +852,22 @@ $api->version('v1', function ($api) {
         $api->post('admin/sms_template/ajax_get_child', 'Admin\QualityControl\SmsTemplateController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/sms_template/ajax_get_areachild', 'Admin\QualityControl\SmsTemplateController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/sms_template/ajax_import_staff','Admin\QualityControl\SmsTemplateController@ajax_import'); // 导入员工
+        $api->post('admin/sms_template/ajax_sms_send', 'Admin\QualityControl\SmsTemplateController@ajax_sms_send');// 短信模板发送短信测试
 
         $api->post('admin/sms_template/import', 'Admin\QualityControl\SmsTemplateController@import');// 导入excel
         $api->post('admin/sms_template/ajax_get_ids', 'Admin\QualityControl\SmsTemplateController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
+
+        // 短信日志
+        $api->any('admin/sms_log/ajax_alist', 'Admin\QualityControl\SmsLogController@ajax_alist');//ajax获得列表数据
+        $api->post('admin/sms_log/ajax_del', 'Admin\QualityControl\SmsLogController@ajax_del');// 删除
+        $api->post('admin/sms_log/ajax_save', 'Admin\QualityControl\SmsLogController@ajax_save');// 新加/修改
+        $api->post('admin/sms_log/ajax_get_child', 'Admin\QualityControl\SmsLogController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
+        $api->post('admin/sms_log/ajax_get_areachild', 'Admin\QualityControl\SmsLogController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
+        $api->post('admin/sms_log/ajax_import_staff','Admin\QualityControl\SmsLogController@ajax_import'); // 导入员工
+        // $api->post('admin/sms_log/ajax_sms_send', 'Admin\QualityControl\SmsLogController@ajax_sms_send');// 短信模板发送短信测试
+
+        $api->post('admin/sms_log/import', 'Admin\QualityControl\SmsLogController@import');// 导入excel
+        $api->post('admin/sms_log/ajax_get_ids', 'Admin\QualityControl\SmsLogController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
 
 
         // 省局企业相关的
@@ -813,6 +879,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/company_supervise/ajax_get_child', 'Admin\QualityControl\CompanySuperviseController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/company_supervise/ajax_get_areachild', 'Admin\QualityControl\CompanySuperviseController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/company_supervise/ajax_import_staff','Admin\QualityControl\CompanySuperviseController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/company_supervise/import', 'Admin\QualityControl\CompanySuperviseController@import');// 导入excel
         $api->post('admin/company_supervise/ajax_get_ids', 'Admin\QualityControl\CompanySuperviseController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -825,6 +892,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/company_statement/ajax_get_child', 'Admin\QualityControl\CompanyStatementController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/company_statement/ajax_get_areachild', 'Admin\QualityControl\CompanyStatementController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/company_statement/ajax_import_staff','Admin\QualityControl\CompanyStatementController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/company_statement/import', 'Admin\QualityControl\CompanyStatementController@import');// 导入excel
         $api->post('admin/company_statement/ajax_get_ids', 'Admin\QualityControl\CompanyStatementController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -838,6 +906,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/company_ability/ajax_get_child', 'Admin\QualityControl\CompanyAbilityController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/company_ability/ajax_get_areachild', 'Admin\QualityControl\CompanyAbilityController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/company_ability/ajax_import_staff','Admin\QualityControl\CompanyAbilityController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/company_ability/import', 'Admin\QualityControl\CompanyAbilityController@import');// 导入excel
         $api->post('admin/company_ability/ajax_get_ids', 'Admin\QualityControl\CompanyAbilityController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -852,6 +921,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/company_inspect/ajax_get_child', 'Admin\QualityControl\CompanyInspectController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/company_inspect/ajax_get_areachild', 'Admin\QualityControl\CompanyInspectController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/company_inspect/ajax_import_staff','Admin\QualityControl\CompanyInspectController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/company_inspect/import', 'Admin\QualityControl\CompanyInspectController@import');// 导入excel
         $api->post('admin/company_inspect/ajax_get_ids', 'Admin\QualityControl\CompanyInspectController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -863,6 +933,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/company_news/ajax_get_child', 'Admin\QualityControl\CompanyNewsController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/company_news/ajax_get_areachild', 'Admin\QualityControl\CompanyNewsController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/company_news/ajax_import_staff','Admin\QualityControl\CompanyNewsController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/company_news/import', 'Admin\QualityControl\CompanyNewsController@import');// 导入excel
         $api->post('admin/company_news/ajax_get_ids', 'Admin\QualityControl\CompanyNewsController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -875,6 +946,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/company_punish/ajax_get_child', 'Admin\QualityControl\CompanyPunishController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/company_punish/ajax_get_areachild', 'Admin\QualityControl\CompanyPunishController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/company_punish/ajax_import_staff','Admin\QualityControl\CompanyPunishController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/company_punish/import', 'Admin\QualityControl\CompanyPunishController@import');// 导入excel
         $api->post('admin/company_punish/ajax_get_ids', 'Admin\QualityControl\CompanyPunishController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -889,6 +961,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/platform_notices/ajax_get_child', 'Admin\QualityControl\PlatformNoticesController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/platform_notices/ajax_get_areachild', 'Admin\QualityControl\PlatformNoticesController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/platform_notices/ajax_import_staff','Admin\QualityControl\PlatformNoticesController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/platform_notices/import', 'Admin\QualityControl\PlatformNoticesController@import');// 导入excel
         $api->post('admin/platform_notices/ajax_get_ids', 'Admin\QualityControl\PlatformNoticesController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -903,6 +976,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/platform_down_files/ajax_get_child', 'Admin\QualityControl\PlatformDownFilesController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/platform_down_files/ajax_get_areachild', 'Admin\QualityControl\PlatformDownFilesController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/platform_down_files/ajax_import_staff','Admin\QualityControl\PlatformDownFilesController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/platform_down_files/import', 'Admin\QualityControl\PlatformDownFilesController@import');// 导入excel
         $api->post('admin/platform_down_files/ajax_get_ids', 'Admin\QualityControl\PlatformDownFilesController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -919,6 +993,7 @@ $api->version('v1', function ($api) {
         $api->post('market/certificate_schedule/ajax_get_child', 'Admin\QualityControl\API\CertificateScheduleController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('market/certificate_schedule/ajax_get_areachild', 'Admin\QualityControl\API\CertificateScheduleController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('market/certificate_schedule/ajax_import_staff','Admin\QualityControl\API\CertificateScheduleController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('market/certificate_schedule/import', 'Admin\QualityControl\API\CertificateScheduleController@import');// 导入excel
         $api->post('market/certificate_schedule/ajax_get_ids', 'Admin\QualityControl\API\CertificateScheduleController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -940,6 +1015,7 @@ $api->version('v1', function ($api) {
         $api->post('admin/API/certificate_schedule/ajax_get_child', 'Admin\QualityControl\API\CertificateScheduleController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('admin/API/certificate_schedule/ajax_get_areachild', 'Admin\QualityControl\API\CertificateScheduleController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('admin/API/certificate_schedule/ajax_import_staff','Admin\QualityControl\API\CertificateScheduleController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('admin/API/certificate_schedule/import', 'Admin\QualityControl\API\CertificateScheduleController@import');// 导入excel
         $api->post('admin/API/certificate_schedule/ajax_get_ids', 'Admin\QualityControl\API\CertificateScheduleController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -977,6 +1053,7 @@ $api->version('v1', function ($api) {
         $api->post('company/user/ajax_get_child', 'WebFront\Company\QualityControl\UserController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('company/user/ajax_get_areachild', 'WebFront\Company\QualityControl\UserController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('company/user/ajax_import_staff','WebFront\Company\QualityControl\UserController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->any('company/user/import', 'WebFront\Company\QualityControl\UserController@import');// 导入excel
         $api->post('company/user/ajax_get_ids', 'WebFront\Company\QualityControl\UserController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -993,6 +1070,7 @@ $api->version('v1', function ($api) {
         $api->post('company/company_content/ajax_get_child', 'WebFront\Company\QualityControl\CompanyContentController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('company/company_content/ajax_get_areachild', 'WebFront\Company\QualityControl\CompanyContentController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('company/company_content/ajax_import_staff','WebFront\Company\QualityControl\CompanyContentController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('company/company_content/import', 'WebFront\Company\QualityControl\CompanyContentController@import');// 导入excel
         $api->post('company/company_content/ajax_get_ids', 'WebFront\Company\QualityControl\CompanyContentController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -1008,6 +1086,7 @@ $api->version('v1', function ($api) {
 //        $api->post('company/abilitys/ajax_get_child', 'WebFront\Company\QualityControl\AbilitysController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
 //        $api->post('company/abilitys/ajax_get_areachild', 'WebFront\Company\QualityControl\AbilitysController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
 //        $api->post('company/abilitys/ajax_import_staff','WebFront\Company\QualityControl\AbilitysController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 //
 //        $api->post('company/abilitys/import', 'WebFront\Company\QualityControl\AbilitysController@import');// 导入excel
 //        $api->post('company/abilitys/ajax_get_ids', 'WebFront\Company\QualityControl\AbilitysController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -1019,6 +1098,7 @@ $api->version('v1', function ($api) {
 //        $api->post('company/ability_join/ajax_get_child', 'WebFront\Company\QualityControl\AbilityJoinController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
 //        $api->post('company/ability_join/ajax_get_areachild', 'WebFront\Company\QualityControl\AbilityJoinController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
 //        $api->post('company/ability_join/ajax_import_staff','WebFront\Company\QualityControl\AbilityJoinController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
 //        $api->post('company/ability_join/import', 'WebFront\Company\QualityControl\AbilityJoinController@import');// 导入excel
 //        $api->post('company/ability_join/ajax_get_ids', 'WebFront\Company\QualityControl\AbilityJoinController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -1030,6 +1110,7 @@ $api->version('v1', function ($api) {
 //        $api->post('company/ability_join_item/ajax_get_child', 'WebFront\Company\QualityControl\AbilityJoinItemsController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
 //        $api->post('company/ability_join_item/ajax_get_areachild', 'WebFront\Company\QualityControl\AbilityJoinItemsController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
 //        $api->post('company/ability_join_item/ajax_import_staff','WebFront\Company\QualityControl\AbilityJoinItemsController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
 //        $api->post('company/ability_join_item/import', 'WebFront\Company\QualityControl\AbilityJoinItemsController@import');// 导入excel
 //        $api->post('company/ability_join_item/ajax_get_ids', 'WebFront\Company\QualityControl\AbilityJoinItemsController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -1043,6 +1124,7 @@ $api->version('v1', function ($api) {
 //        $api->post('company/company_schedule/ajax_get_child', 'WebFront\Company\QualityControl\CompanyScheduleController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
 //        $api->post('company/company_schedule/ajax_get_areachild', 'WebFront\Company\QualityControl\CompanyScheduleController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
 //        $api->post('company/company_schedule/ajax_import_staff','WebFront\Company\QualityControl\CompanyScheduleController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('company/company_schedule/import', 'WebFront\Company\QualityControl\CompanyScheduleController@import');// 导入excel
 //        $api->post('company/company_schedule/ajax_get_ids', 'WebFront\Company\QualityControl\CompanyScheduleController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -1055,6 +1137,7 @@ $api->version('v1', function ($api) {
 //        $api->post('company/company_new_schedule/ajax_get_child', 'WebFront\Company\QualityControl\CompanyNewScheduleController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
 //        $api->post('company/company_new_schedule/ajax_get_areachild', 'WebFront\Company\QualityControl\CompanyNewScheduleController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
 //        $api->post('company/company_new_schedule/ajax_import_staff','WebFront\Company\QualityControl\CompanyNewScheduleController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('company/company_new_schedule/import', 'WebFront\Company\QualityControl\CompanyNewScheduleController@import');// 导入excel
 //        $api->post('company/company_new_schedule/ajax_get_ids', 'WebFront\Company\QualityControl\CompanyNewScheduleController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -1071,6 +1154,7 @@ $api->version('v1', function ($api) {
 //        $api->post('company/course/ajax_get_child', 'WebFront\Company\QualityControl\CourseController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
 //        $api->post('company/course/ajax_get_areachild', 'WebFront\Company\QualityControl\CourseController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
 //        $api->post('company/course/ajax_import_staff','WebFront\Company\QualityControl\CourseController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
 //        $api->post('company/course/import', 'WebFront\Company\QualityControl\CourseController@import');// 导入excel
 //        $api->post('company/course/ajax_get_ids', 'WebFront\Company\QualityControl\CourseController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -1085,6 +1169,7 @@ $api->version('v1', function ($api) {
 //        $api->post('company/course_order/ajax_get_child', 'WebFront\Company\QualityControl\CourseOrderController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
 //        $api->post('company/course_order/ajax_get_areachild', 'WebFront\Company\QualityControl\CourseOrderController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
 //        $api->post('company/course_order/ajax_import_staff','WebFront\Company\QualityControl\CourseOrderController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
 //        $api->post('company/course_order/import', 'WebFront\Company\QualityControl\CourseOrderController@import');// 导入excel
 //        $api->post('company/course_order/ajax_get_ids', 'WebFront\Company\QualityControl\CourseOrderController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -1096,6 +1181,7 @@ $api->version('v1', function ($api) {
 //        $api->post('company/course_order_staff/ajax_get_child', 'WebFront\Company\QualityControl\CourseOrderStaffController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
 //        $api->post('company/course_order_staff/ajax_get_areachild', 'WebFront\Company\QualityControl\CourseOrderStaffController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
 //        $api->post('company/course_order_staff/ajax_import_staff','WebFront\Company\QualityControl\CourseOrderStaffController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 //
 //        $api->post('company/course_order_staff/import', 'WebFront\Company\QualityControl\CourseOrderStaffController@import');// 导入excel
 //        $api->post('company/course_order_staff/ajax_get_ids', 'WebFront\Company\QualityControl\CourseOrderStaffController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -1112,6 +1198,7 @@ $api->version('v1', function ($api) {
 //        $api->post('company/orders/ajax_get_child', 'WebFront\Company\QualityControl\OrdersController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
 //        $api->post('company/orders/ajax_get_areachild', 'WebFront\Company\QualityControl\OrdersController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
 //        $api->post('company/orders/ajax_import_staff','WebFront\Company\QualityControl\OrdersController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
 //        $api->post('company/orders/import', 'WebFront\Company\QualityControl\OrdersController@import');// 导入excel
 //        $api->post('company/orders/ajax_get_ids', 'WebFront\Company\QualityControl\OrdersController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -1124,6 +1211,7 @@ $api->version('v1', function ($api) {
 //        $api->post('company/order_flow/ajax_get_child', 'WebFront\Company\QualityControl\OrderFlowController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
 //        $api->post('company/order_flow/ajax_get_areachild', 'WebFront\Company\QualityControl\OrderFlowController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
 //        $api->post('company/order_flow/ajax_import_staff','WebFront\Company\QualityControl\OrderFlowController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
 //        $api->post('company/order_flow/import', 'WebFront\Company\QualityControl\OrderFlowController@import');// 导入excel
 //        $api->post('company/order_flow/ajax_get_ids', 'WebFront\Company\QualityControl\OrderFlowController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -1135,6 +1223,7 @@ $api->version('v1', function ($api) {
 //        $api->post('company/order_pay/ajax_get_child', 'WebFront\Company\QualityControl\OrderPayController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
 //        $api->post('company/order_pay/ajax_get_areachild', 'WebFront\Company\QualityControl\OrderPayController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
 //        $api->post('company/order_pay/ajax_import_staff','WebFront\Company\QualityControl\OrderPayController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
 //        $api->post('company/order_pay/import', 'WebFront\Company\QualityControl\OrderPayController@import');// 导入excel
 //        $api->post('company/order_pay/ajax_get_ids', 'WebFront\Company\QualityControl\OrderPayController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -1148,6 +1237,7 @@ $api->version('v1', function ($api) {
         $api->post('company/invoice_buyer/ajax_get_child', 'WebFront\Company\QualityControl\InvoiceBuyerController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('company/invoice_buyer/ajax_get_areachild', 'WebFront\Company\QualityControl\InvoiceBuyerController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('company/invoice_buyer/ajax_import_staff','WebFront\Company\QualityControl\InvoiceBuyerController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('company/invoice_buyer/import', 'WebFront\Company\QualityControl\InvoiceBuyerController@import');// 导入excel
         $api->post('company/invoice_buyer/ajax_get_ids', 'WebFront\Company\QualityControl\InvoiceBuyerController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔
@@ -1159,6 +1249,7 @@ $api->version('v1', function ($api) {
         $api->post('company/invoices/ajax_get_child', 'WebFront\Company\QualityControl\InvoicesController@ajax_get_child');// 根据部门id,小组id获得子类员工数组[kv一维数组]
         $api->post('company/invoices/ajax_get_areachild', 'WebFront\Company\QualityControl\InvoicesController@ajax_get_areachild');// 根据区县id,街道id获得子类员工数组[kv一维数组]
         $api->post('company/invoices/ajax_import_staff','WebFront\Company\QualityControl\InvoicesController@ajax_import'); // 导入员工
+//        $api->post('admin/course_order_staff/ajax_sms_send', 'Admin\QualityControl\CourseOrderStaffController@ajax_sms_send');// 短信模板发送短信
 
         $api->post('company/invoices/import', 'WebFront\Company\QualityControl\InvoicesController@import');// 导入excel
         $api->post('company/invoices/ajax_get_ids', 'WebFront\Company\QualityControl\InvoicesController@ajax_get_ids');// 获得查询所有记录的id字符串，多个逗号分隔

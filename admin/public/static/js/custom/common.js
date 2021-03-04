@@ -3382,8 +3382,9 @@ function judge_list_checked(body_data_id,ele_type){
 //body_data_id 动太表格 内容列表id
 //ele_type 元素类型 1:id,2class,3 body_data_id就是外面对象
 //check_type 选择类型[位操作] 1:选中,2未选中的
+// has_class_name 默认为空，不为空，则需要判断有此class，才是我要的对象
 //返回 选中的值,多个用,号分隔
-function get_list_checked(body_data_id,ele_type,check_type){
+function get_list_checked(body_data_id,ele_type,check_type, has_class_name){
     // console.log('数组', ele_type);
     var body_obj = null;
     if(ele_type == "1" || ele_type == 1){
@@ -3395,6 +3396,7 @@ function get_list_checked(body_data_id,ele_type,check_type){
     }
     var seled_ids = '';
     body_obj.find('input:checkbox').each(function(){
+        var checkObj = $(this);
         var tem_val = $(this).val();
         var is_need = false;
         console.log('disabled', $(this).prop('disabled'));
@@ -3406,8 +3408,15 @@ function get_list_checked(body_data_id,ele_type,check_type){
             }
         }
         if(is_need){
-            if(seled_ids != ''){seled_ids+=',';}
-            seled_ids+=tem_val;
+            if(!isEmpeyVal(has_class_name)){
+                if(!checkObj.hasClass(has_class_name)){
+                    is_need = false;
+                }
+            }
+            if(is_need){
+                if(seled_ids != ''){seled_ids+=',';}
+                seled_ids+=tem_val;
+            }
         }
     });
     return seled_ids;

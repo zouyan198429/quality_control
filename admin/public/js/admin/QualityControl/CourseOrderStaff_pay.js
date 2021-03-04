@@ -56,7 +56,7 @@ var otheraction = {
         var index_query = layer.confirm('确定' + operateText + '吗？', {
             btn: ['确定','取消'] //按钮
         }, function(){
-            // var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+            // var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1,'check_item');// 注意：checkbox有 class : check_item
             var weburl = PAY_SAVE_URL + '?id='+ ids + '&company_id=' + company_id + '&pay_config_id=' + pay_config_id + '&pay_method=' + pay_method;
             console.log(weburl);
             var tishi = '缴费';//"查看供应商";

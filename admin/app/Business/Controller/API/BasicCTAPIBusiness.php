@@ -2,14 +2,21 @@
 
 namespace App\Business\Controller\API;
 
+use App\Business\Controller\API\QualityControl\CTAPISmsModuleBusiness;
+use App\Business\Controller\API\QualityControl\CTAPISmsModuleParamsBusiness;
+use App\Business\Controller\API\QualityControl\CTAPISmsModuleParamsCommonBusiness;
+use App\Business\Controller\API\QualityControl\CTAPISmsTemplateBusiness;
+use App\Notifications\SMSSendNotification;
 use App\Services\DBRelation\RelationDB;
 use App\Services\Excel\ImportExport;
 use App\Services\Request\API\HttpRequest;
 use App\Services\Request\CommonRequest;
 use App\Services\Response\Data\CommonAPIFromBusiness;
+use App\Services\SMS\SendSMS;
 use App\Services\Tool;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController as Controller;
+use Illuminate\Support\Facades\Notification;
 
 class BasicCTAPIBusiness extends APIOperate
 {
@@ -514,10 +521,346 @@ class BasicCTAPIBusiness extends APIOperate
 //            $headArr = ['work_num'=>'工号', 'department_name'=>'部门'];
 //            ImportExport::export('','excel文件名称',$data_list,1, $headArr, 0, ['sheet_title' => 'sheet名称']);
             die;
+        }elseif($isExport == 2){// 发送短信
+            $countryCode = 86;// 国家码
+            $send_type = 2;// 发送类型【1系统发送、2手动发送】
+            static::commonSmsRequest( $request,  $controller, $data_list, $countryCode, $send_type, $notLog);
+            $result = true;
         }
         // 非导出功能
         return ajaxDataArr(1, $result, '');
     }
+
+    /**
+     * 通用请求模板发送短信
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param array $data_list 需要发送短信的记录 一维或二维数组 -- 测试时可以传空数组
+     * @param string $countryCode 国家码 86
+     * @param int $send_type 发送类型【1系统发送、2手动发送】
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  mixed 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+    public static function commonSmsRequest(Request $request, Controller $controller, $data_list, $countryCode = 86, $send_type = 1, $notLog = 0){
+
+        $sms_operate_type = CommonRequest::getInt($request, 'sms_operate_type');// 操作类型 1 发送短信  ; 2测试发送短信
+        $sms_template_id = CommonRequest::getInt($request, 'sms_template_id');// 发短信的模板id
+        $sms_mobile = CommonRequest::get($request, 'sms_mobile');// 测试短信时，接收短信的手机号--正常下不用，只有在测试发送时用到
+
+        $sendMobileField = CommonRequest::get($request, 'sms_mobile_field');// 'mobile';// 发送手机号字段
+        if(empty($sendMobileField)) $sendMobileField = 'mobile';
+
+        $inputParamsArr = [];// 手动输入的参数值  ['参数代码' => '参数值'] -- 可为空数组：没有手动输入参数
+        $input_param_code = CommonRequest::get($request, 'sms_param_code');// 参数 sms_param_code[] 或 ,,,
+        Tool::valToArrVal($input_param_code, ',');// 不是数组，则转为数组
+        $sms_param_type = CommonRequest::get($request, 'sms_param_type');// 参数 sms_param_type[] 或 ,,,  参数类型1日期时间、2固定值、4手动输入-发送时、8字段匹配
+        Tool::valToArrVal($sms_param_type, ',');// 不是数组，则转为数组
+        $input_param_val = CommonRequest::get($request, 'sms_param_val');// 参数 sms_param_val[] 或 ,,,
+        Tool::valToArrVal($input_param_val, ',');// 不是数组，则转为数组
+        foreach($input_param_code as $k => $tem_input_param_code){
+            $tem_sms_param_type = $sms_param_type[$k] ?? 0;
+            if($tem_sms_param_type != 4) continue;
+            $inputParamsArr[$tem_input_param_code] = $input_param_val[$k] ?? '';
+        }
+
+        // $countryCode = 86;// 国家码
+        // $send_type = 2;// 发送类型【1系统发送、2手动发送】
+
+        // if(isset($data_list[0])) $data_list[0]['mobile'] = '15829686962'; // TODO
+        // if(isset($data_list[1])) $data_list[1]['mobile'] = '15686165567'; // TODO
+
+        if($sms_operate_type == 2){// 是测试
+            $data_list = [];
+            $data_list[$sendMobileField] = $sms_mobile;
+            foreach($input_param_code as $k => $tem_input_param_code){
+                $tem_sms_param_type = $sms_param_type[$k] ?? 0;
+                if($tem_sms_param_type != 8) continue;
+                $data_list[$tem_input_param_code] = $input_param_val[$k] ?? '';
+            }
+
+        }
+
+        $company_id = $controller->company_id;
+        $user_id = $controller->user_id;
+        // 调用新加或修改接口
+        $apiParams = [
+//            'organize_id' => $organize_id,
+//            'admin_type' => $admin_type,
+            'sms_template_id' => $sms_template_id,
+            'data_list' => $data_list,
+            'inputParamsArr' => $inputParamsArr,
+            'sendMobileField' => $sendMobileField,
+            'countryCode' => $countryCode,
+            'send_type' => $send_type,
+             'company_id' => $company_id,
+            'operate_staff_id' => $user_id,
+            'modifAddOprate' => 1,
+        ];
+        $methodName = 'sendSms';
+//        if(isset($saveData['mini_openid']))  $methodName = 'replaceByIdWX';
+        CTAPISmsTemplateBusiness::exeDBBusinessMethodCT($request, $controller, '',  $methodName, $apiParams, $company_id, $notLog);
+        // static::sendSms($request, $controller, $sms_template_id, $data_list, $inputParamsArr, $sendMobileField, $countryCode, $send_type, $notLog);
+
+    }
+
+    /**
+     * 模板发送短信
+     *
+     * @param Request $request 请求信息
+     * @param Controller $controller 控制对象
+     * @param int $sms_template_id 选择发短信的模板id
+     * @param array $data_list 需要发送短信的记录 一维或二维数组
+     * @param array $inputParamsArr 手动输入的参数值  ['参数代码' => '参数值'] -- 可为空数组：没有手动输入参数
+     * @param string $sendMobileField 发送手机号字段
+     * @param string $countryCode 国家码 86
+     * @param int $send_type 发送类型【1系统发送、2手动发送】
+     * @param int $notLog 是否需要登陆 0需要1不需要
+     * @return  mixed 列表数据
+     * @author zouyan(305463219@qq.com)
+     */
+//    public static function sendSms(Request $request, Controller $controller, $sms_template_id, $data_list, $inputParamsArr = [], $sendMobileField = 'mobile', $countryCode = 86, $send_type = 1, $notLog = 0){
+//
+//        // 手动输入的参数值
+//        // $inputParamsArr = [];// ['参数代码' => '参数值']
+//        // 发送手机号字段
+//        // $sendMobileField = 'mobile';
+//        if(empty($sendMobileField)) return true;
+//
+//        // 如果是一维数组,则转为二维数组
+//        $isMulti = Tool::isMultiArr($data_list, true);
+//        // 去掉不是手机号的记录
+//        foreach($data_list as $k => $info){
+//            if(!isset($info[$sendMobileField])) throws('发送手机号字段指定有误，请重新选择！');
+//            $temMobile = $info[$sendMobileField] ?? '';
+//            if(empty($temMobile)){
+//                unset($data_list[$k]);
+//                continue;
+//            }
+//            // 判断手机号
+//            $valiDateParam = [
+//                ["var_name" => "mobile" ,"input" => $temMobile, "require"=>"true", "validator"=>"mobile", "message"=>'手机号格式有误！'],
+//            ];
+//            $errMsgArr = Tool::dataValid($valiDateParam, 2);
+//            if(is_array($errMsgArr) && isset($errMsgArr['errMsg']) && !empty($errMsgArr['errMsg'])){
+//                $recordErrText = implode('<br/>', $errMsgArr['errMsg']);
+//                unset($data_list[$k]);
+//                continue;
+//            }
+//        }
+//        if(empty($data_list)) return true;
+//
+//        // 选择发短信的模板id
+//        // $sms_template_id = 1;
+//        $templateInfo = CTAPISmsTemplateBusiness::getInfoData($request, $controller, $sms_template_id, [], '', [], $notLog);
+//        if(empty($templateInfo)) throws('短信模板【' . $sms_template_id . '】记录不存在！');
+//        $template_name = $templateInfo['template_name'] ?? '';
+//        if($templateInfo['open_status'] != 1) throws('短信模板【' . $template_name . '】非启用状态，不可发送短信！');
+//        $template_content = $templateInfo['template_content'] ?? '';
+//        $template_type = $templateInfo['template_type'] ?? 0;// 模板类型【1腾讯云SMS、2阿里云短信】
+//        $template_code = $templateInfo['template_code'] ?? '';// 模板ID【第三方】
+//        $sign_name = $templateInfo['sign_name'] ?? '';// 签名名称【第三方】
+//        $template_key = 'sms_params';// $templateInfo['template_key'] ?? '';// 模板关键字【唯一】---这里手动指定，因为用户指定的值可能会有中文的情况
+//        $smsType = $template_key;
+//        $configCodeArr = [
+//            'SignName' => $sign_name,
+//            'TemplateCode' => $template_code,
+//        ];
+//
+//        // 获得发短信的模块id
+//        $module_id = $templateInfo['module_id'] ?? 0;
+//        $moduleInfo = CTAPISmsModuleBusiness::getInfoData($request, $controller, $module_id, [], '', [], $notLog);
+//        if(empty($moduleInfo)) throws('短信模块【' . $module_id . '】记录不存在！');
+//        $module_name = $moduleInfo['module_name'] ?? '';
+//        if($moduleInfo['open_status'] != 1) throws('短信模块【' . $module_name . '】非启用状态，不可发送短信！');
+//
+//        // 获得模板内容参数
+//        $paramsArr = Tool::getLabelArr($template_content, '{', '}');
+//
+//        // $countryCode = 86;
+//        $shuffle = false;// true;
+//        // 短信配置相关的信息
+//        $smsConfig = config('easysms');
+//        $configs = $smsConfig['gateways'] ?? [];
+//        $smsConfigList = [
+//            'aliyun' => [
+//                'access_key_id' => $configs['aliyun']['access_key_id'],
+//                'access_key_secret' => $configs['aliyun']['access_key_secret'],
+//                'sign_name' => $configs['aliyun']['sign_name'],//  签名名称
+//                'regionId' => $configs['aliyun']['regionId'],// 地域和可用区 https://help.aliyun.com/document_detail/40654.html?spm=a2c6h.13066369.0.0.54a120f89HVXHt
+//                // 尊敬的用户，您的验证码${code}，请在3分钟内使用，工作人员不会索取，请勿泄漏。
+//                // 参数必须是 [a-zA-Z0-9]
+////                'verification_code_params' => [// 验证码相关参数
+////                    'SignName' => env('ALIYUN_SMS_VERIFICATION_SIGN_NAME', ''),// 值为空或没有此下标，会自动使用上层的sign_name值。 短信签名名称。请在控制台签名管理页面签名名称一列查看。
+////                    'TemplateCode' => env('ALIYUN_SMS_VERIFICATION_TEMPLATE_CODE', ''),// 短信模板ID。请在控制台模板管理页面模板CODE一列查看。
+////
+////                ],
+////                'template_params' => [// 短信模板替换参数
+////                    'verification_code_params' => ['code'],// 验证码模板 参数必须是 [a-zA-Z0-9]
+////                ]
+//            ],
+//            'qcloud'   => [// 短信内容使用 content。
+//                'sdk_app_id' => $configs['qcloud']['sdk_app_id'], // SDK APP ID '腾讯云短信平台sdk_app_id'
+//                'app_key'    => $configs['qcloud']['app_key'], // APP KEY '腾讯云短信平台app_key'
+//                'secret_id' => $configs['qcloud']['secret_id'], // 通过接口访问时的 SecretId 密钥
+//                'secret_key' => $configs['qcloud']['secret_key'], // 通过接口访问时的 SecretKey 密钥
+//                'sign_name'  => $configs['qcloud']['sign_name'],// '可以不填写', // 对应的是短信签名中的内容（非id） '腾讯云短信平太签名'  (此处可设置为空，默认签名)
+//                /***
+//                 *
+//                 *
+//                 *  # 请选择大区 https://console.cloud.tencent.com/api/explorer?Product=sms&Version=2019-07-11&Action=SendSms&SignVersion=
+//                 *  # ap-beijing 华北地区(北京)
+//                 *  # ap-chengdu 西南地区(成都)
+//                 *  # ap-chongqing 西南地区(重庆)
+//                 *  # ap-guangzhou 华南地区(广州)
+//                 *  # ap-guangzhou-open 华南地区(广州Open)
+//                 *  # ap-hongkong 港澳台地区(中国香港)
+//                 *  # ap-seoul 亚太地区(首尔)
+//                 *  # ap-shanghai 华东地区(上海)
+//                 *  #
+//                 *  # ap-singapore 东南亚地区(新加坡)
+//                 *  # eu-frankfurt 欧洲地区(法兰克福)
+//                 *  # na-siliconvalley 美国西部(硅谷)
+//                 *  # na-toronto 北美地区(多伦多)
+//                 *  # ap-mumbai 亚太地区(孟买)
+//                 *  # na-ashburn 美国东部(弗吉尼亚)
+//                 *  # ap-bangkok 亚太地区(曼谷)
+//                 *  # eu-moscow 欧洲地区(莫斯科)
+//                 *  # ap-tokyo 亚太地区(东京)
+//                 *  # 金融区
+//                 *  # ap-shanghai-fsi 华东地区(上海金融)
+//                 *  # ap-shenzhen-fsi 华南地区(深圳金融)
+//                 *
+//                 */
+//                'regionId' => $configs['qcloud']['regionId'],// 地域和可用区
+//                // ID 468796  --- 作废，因为第一个参数不能传中文。所以不用了
+//                // 尊敬的用户：您的{1}验证码{2}，请在{3}分钟内使用，工作人员不会索取，请勿泄漏。
+//                // 1: operateType 操作类型 如：注册--用不了  ； 2： code 如：验证码 2456  ； 3 ：有效时间(单位分钟) validMinute 如 3
+//
+//                // ID 470052
+//                // 内容 尊敬的用户：您的{1}验证码{2}，请在{3}分钟内使用，工作人员不会索取，请勿泄漏。
+//                // 1： code 如：验证码 2456  ； 2 ：有效时间(单位分钟) validMinute 如 3
+////                'verification_code_params' => [// 验证码相关参数
+////                    'SignName' => env('QCLOUD_SMS_VERIFICATION_SIGN_NAME', ''),// 值为空或没有此下标，会自动使用上层的sign_name值。 签名参数使用的是`签名内容`，而不是`签名ID`。这里的签名"腾讯云"只是示例，真实的签名需要在短信控制台申请
+////                    'TemplateCode' => env('QCLOUD_SMS_VERIFICATION_TEMPLATE_CODE', ''),// 这里的模板 ID`7839`只是示例，真实的模板 ID 需要在短信控制台中申请
+////                ],
+////                'template_params' => [// 短信模板替换参数
+////                    'verification_code_params' => ['code', 'validMinute'],// 'operateType', 验证码模板--注意验证码模板变量参数只能是<=6的数字，不能是中文及字母。
+////                ]
+//            ],
+//        ];
+//        // pr($smsConfigList);
+//        // 默认可用的发送网关
+////        [
+////            // 'yunpian',//云片
+////            // 'aliyun',// 阿里云短信
+////            'qcloud', //腾讯云
+////        ]
+//        $gateways = [];// ['qcloud'];//  $smsConfig['default']['gateways'] ?? [];
+//        if($template_type == 1 ){// 1腾讯云SMS
+//            array_push($gateways, 'qcloud');
+//            $smsConfigList['qcloud'][$smsType] = $configCodeArr;
+//            $smsConfigList['qcloud']['template_params'][$smsType] = $paramsArr;
+//        }
+//        if($template_type == 2 ){// 2阿里云短信
+//            array_push($gateways, 'aliyun');
+//            $smsConfigList['aliyun'][$smsType] = $configCodeArr;
+//            $smsConfigList['aliyun']['template_params'][$smsType] = $paramsArr;
+//        }
+//        if(empty($paramsArr)){// 没有参数，直接发送短信
+//            $mobileArr = Tool::getArrFields($data_list, $sendMobileField);
+//            SendSMS::sendSmsCommonBath($send_type, $templateInfo, $smsConfigList, $gateways, $template_content, [], $mobileArr, $countryCode, $smsType, $shuffle);
+//            return true;
+//        }
+//
+//        $needParamsList = [];// 需要替换的参数
+//        // 获得短信模块参数
+//        $smsModuleParamsList = CTAPISmsModuleParamsBusiness::getFVFormatList( $request,  $controller, 1, 1
+//            , ['module_id' => $module_id], false, [], ['sqlParams' => ['orderBy' =>['sort_num' => 'desc', 'id' => 'desc']]], $notLog);
+//        $smsModuleParamsFormatList = Tool::arrUnderReset($smsModuleParamsList, 'param_code', 1, '_');// 转为参数代码为下标的数组
+//        //$needParamsList = Tool::getArrFormatFields($smsModuleParamsFormatList, $paramsArr, false);// 获得指定下标的参数
+//        $temArr = $smsModuleParamsFormatList;
+//        $needParamsList = Tool::formatArrByKeys($temArr, $paramsArr, false);// 获得指定下标的参数
+//
+//        $commonParamsArr = array_diff($paramsArr, array_keys($needParamsList));
+//
+//        // 获得所有的常用参数
+//        if(!empty($commonParamsArr)){
+//            $smsCommonParamsList = CTAPISmsModuleParamsCommonBusiness::getFVFormatList( $request,  $controller, 1, 1
+//                , [], true, [], ['sqlParams' => ['orderBy' =>['sort_num' => 'desc', 'id' => 'desc']]], $notLog);
+//
+//            $smsCommonParamsFormatList = Tool::arrUnderReset($smsCommonParamsList, 'param_code', 1, '_');// 转为参数代码为下标的数组
+//            // $needCommonParamsList = Tool::getArrFormatFields($smsCommonParamsFormatList, $commonParamsArr, false);// 获得指定下标的参数
+//            $temCommonArr = $smsCommonParamsFormatList;
+//            $needCommonParamsList = Tool::formatArrByKeys($temCommonArr, $commonParamsArr, false);// 获得指定下标的参数
+//
+//            $lessParamsArr = array_diff($commonParamsArr, array_keys($needCommonParamsList));
+//            if(!empty($lessParamsArr)){
+//                throws('参数【' . implode('、', $lessParamsArr) . '】未配置！');
+//            }
+//            $needParamsList = array_merge($needParamsList, $needCommonParamsList);
+//        }
+//
+//        // 对参数进行处理
+//        $publicDataParams = [];// 所有的参数值，字段的默认给空--可以占顺序
+//        $nowDateTime = date('Y-m-d H:i:s');
+//        // $hasFieldParams = false;// 是否有字段记录匹配参数 ； true:有--需要一条记录一条记录替换； false：没有--可以批量发送
+//        $fieldParamsArr = [];// 字段记录匹配参数数组
+//        foreach($paramsArr as $keyName){
+//            $paramConfigInfo = $needParamsList[$keyName] ?? [];
+//            if(empty($paramConfigInfo)) throws('参数【' . $keyName . '】配置不能为空！');
+//            $temParamName = $paramConfigInfo['param_name'];
+//            $temParamType = $paramConfigInfo['param_type'];
+//            $temDateTimeFormat = $paramConfigInfo['date_time_format'];
+//            $temFixedVal = $paramConfigInfo['fixed_val'];
+//            $temParamVal = '';
+//            switch($temParamType){// 参数类型1日期时间、2固定值、4手动输入-发送时、8字段匹配
+//                case 1:// 1日期时间
+//                    if(!empty($temDateTimeFormat)) $temParamVal = judgeDate($nowDateTime, $temDateTimeFormat);
+//                    break;
+//                case 2:// 2固定值
+//                    $temParamVal = $temFixedVal;
+//                    break;
+//                case 4:// 4手动输入-发送时
+//                    $temParamVal = $inputParamsArr[$keyName] ?? '';
+//                    break;
+//                case 8:// 8字段匹配
+//                    $temParamVal = '';
+//                    // $hasFieldParams = true;
+//                    array_push($fieldParamsArr, $keyName);
+//                    break;
+//                default:
+//                    break;
+//            }
+//            $publicDataParams[$keyName] = $temParamVal;
+//        }
+//
+//        if(empty($fieldParamsArr)){// 可以 批量发送  !$hasFieldParams
+//            $mobileArr = Tool::getArrFields($data_list, $sendMobileField);
+//            // 替换共有的参数
+//            if(!empty($publicDataParams)) Tool::strReplaceKV($template_content, $publicDataParams, '{', '}');
+//            SendSMS::sendSmsCommonBath($send_type, $templateInfo, $smsConfigList, $gateways, $template_content, $publicDataParams, $mobileArr, $countryCode, $smsType, $shuffle);
+//            return true;
+//        }
+//
+//        // 有第条记录单独的参数
+//        foreach($data_list as $k => $tInfo){
+//            $temParamsArr = $publicDataParams;
+//            $sendTemplateContent = $template_content;
+//            $temFieldValArr = Tool::getArrFormatFields($tInfo, $fieldParamsArr, true);// 获得指定下标的参数
+//            $temParamsArr = array_merge($temParamsArr, $temFieldValArr);
+//            // 替换共有的参数
+//            if(!empty($temParamsArr)) Tool::strReplaceKV($sendTemplateContent, $temParamsArr, '{', '}');
+//
+//            $temMobileArr = [];
+//            $temMobile = $tInfo[$sendMobileField] ?? '';
+//            if(!is_array($temMobile) && !empty($temMobile)) $temMobileArr = explode(',', $temMobile);
+//            SendSMS::sendSmsCommonBath($send_type, $templateInfo, $smsConfigList, $gateways, $sendTemplateContent, $temParamsArr, $temMobileArr, $countryCode, $smsType, $shuffle);
+//
+//        }
+//        return true;
+//    }
 
     /**
      * 根据参数的名称，获得参数传入值，并加入查询条件中。

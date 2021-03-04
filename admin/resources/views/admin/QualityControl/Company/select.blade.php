@@ -131,7 +131,7 @@
           <!-- <span class="lbl">全选</span> -->
         </label>
       </th>
-      <th style="display: none;">ID</th>      
+      <th style="display: none;">ID</th>
       <th>单位名称</th>
       <th>CMA证书号</th>
 	  <th>日期</th>
@@ -175,6 +175,8 @@
       var IMPORT_EXCEL_TEMPLATE_URL = "{{ url('admin/company/import_template') }}";//导入EXCEL模版地址
       var IMPORT_EXCEL_URL = "{{ url('api/admin/company/import') }}";//导入EXCEL地址
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
+      var SMS_SEND_PAGE_URL = "{{url('admin/rrr_dddd/sms_send')}}";// 选择短信模板页面
+      var SMS_SEND_URL = "{{url('api/admin/rrr_dddd/ajax_sms_send')}}";// 短信模板发送短信
 
       var OPEN_OPERATE_URL = "{{ url('api/admin/company/ajax_open') }}";//审核操作(通过/不通过)
       var ACCOUNT_STATUS_URL = "{{ url('api/admin/company/ajax_frozen') }}";//操作(冻结/解冻)

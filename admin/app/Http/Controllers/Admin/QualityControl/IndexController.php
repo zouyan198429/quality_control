@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin\QualityControl;
 
 use App\Business\Controller\API\QualityControl\CTAPICertificateScheduleBusiness;
+use App\Business\Controller\API\QualityControl\CTAPISmsModuleParamsCommonBusiness;
+use App\Business\Controller\API\QualityControl\CTAPISmsTemplateBusiness;
 use App\Business\Controller\API\QualityControl\CTAPIStaffBusiness;
 // use App\Business\Controller\API\RunBuy\CTAPITablesBusiness;
 use App\Business\DB\QualityControl\AbilityCodeDBBusiness;
@@ -17,6 +19,8 @@ use App\Business\DB\QualityControl\OrderPayDBBusiness;
 use App\Business\DB\QualityControl\StaffDBBusiness;
 use App\Http\Controllers\WorksController;
 use App\Models\QualityControl\Staff;
+use App\Notifications\SMSSendNotification;
+use App\Notifications\SMSVerificationCodeNotification;
 use App\Services\alipaySdk\AlipayBillAPI;
 use App\Services\alipaySdk\AlipayPayAPI;
 use App\Services\alipaySdk\alipayTest;
@@ -33,6 +37,7 @@ use App\Services\Wechat\BasicWechat;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Notification;
 
 class IndexController extends BasicController
 {
@@ -59,20 +64,9 @@ class IndexController extends BasicController
     }
 
     public function test(Request $request){
-        $strSubject = "您在{test_input}报名{test_val}操作，成功！开学时间：{test_datetime}！如有任何问题请联系{mobile}";
-        // $strSubject = "您在【test_input】报名【test_val】操作，成功！开学时间：【test_datetime】！如有任何问题请联系【mobile】";
-        // $strSubject = "abc【111】abc【222】abc【333】abc";
-        // $strPattern = "/(?<=【)[^】]+/";
-//        $strPattern = "/(?<={)[^}]+/";
-//        $arrMatches = [];
-//        preg_match_all($strPattern, $strSubject, $arrMatches);
-//        pr($arrMatches);
-        // pr($aaa);
-        $aa = Tool::getLabelArr($strSubject);
-        pr($aa);
+        pr(1);
 
-        $aa = BasicWechat::getCertificate(BasicWechat::$apiConfig['apiclient_cert_path']);
-        vd($aa);
+
 
         // 平台公钥加密数据
 //        $str = '我是邹燕';

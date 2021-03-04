@@ -205,6 +205,7 @@ Route::get('expert/company', 'Expert\QualityControl\CompanyController@index');//
 Route::get('expert/company/select', 'Expert\QualityControl\CompanyController@select');// 选择-弹窗
 //Route::get('expert/company/export', 'Expert\QualityControl\CompanyController@export');// 导出
 //Route::get('expert/company/import_template', 'Expert\QualityControl\CompanyController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 //Route::get('expert/company/grade_area', 'Expert\QualityControl\CompanyController@grade_area');// 会员地区分布统计
 //Route::get('expert/company/grade_industry', 'Expert\QualityControl\CompanyController@grade_industry');// 会员行业分布统计
@@ -217,6 +218,7 @@ Route::get('expert/abilitys/select', 'Expert\QualityControl\AbilitysController@s
 Route::get('expert/abilitys/export', 'Expert\QualityControl\AbilitysController@export');// 导出
 Route::get('expert/abilitys/export_join/{ability_id}', 'Expert\QualityControl\AbilitysController@export_join');// 导出报名的企业信息
 Route::get('expert/abilitys/import_template', 'Expert\QualityControl\AbilitysController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 //Route::get('expert/abilitys/publish/{id}', 'Expert\QualityControl\AbilitysController@publish');// 公布结果页面
 
 //****************************************************************************
@@ -231,6 +233,7 @@ Route::get('expert/abilitys_admin/{ability_id}/ability_join_items', 'Expert\Qual
 // Route::get('expert/abilitys_admin/{ability_id}/ability_join_items/select', 'Expert\QualityControl\Abilitys\AbilityJoinItemsController@select');// 选择-弹窗
 //Route::get('expert/abilitys_admin/{ability_id}/ability_join_items/export', 'Expert\QualityControl\Abilitys\AbilityJoinItemsController@export');// 导出
 //Route::get('expert/abilitys_admin/{ability_id}/ability_join_items/import_template', 'Expert\QualityControl\Abilitys\AbilityJoinItemsController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 Route::get('expert/abilitys_admin/{ability_id}/ability_join_items/sample_result_info/{item_id}/{retry_no}', 'Expert\QualityControl\Abilitys\AbilityJoinItemsController@sample_result_info');// 查看上传的数据
 
@@ -264,6 +267,7 @@ Route::get('admin/staff/add/{id}', 'Admin\QualityControl\StaffController@add');/
 // Route::get('admin/staff/select', 'Admin\QualityControl\StaffController@select');// 选择-弹窗
 Route::get('admin/staff/export', 'Admin\QualityControl\StaffController@export');// 导出
 Route::get('admin/staff/import_template', 'Admin\QualityControl\StaffController@import_template');// 导入模版
+Route::get('admin/staff/sms_send', 'Admin\QualityControl\StaffController@sms_send');// 选择短信模板页面
 
 // 专家
 Route::get('admin/expert', 'Admin\QualityControl\ExpertController@index');// 列表
@@ -271,6 +275,7 @@ Route::get('admin/expert/add/{id}', 'Admin\QualityControl\ExpertController@add')
 // Route::get('admin/expert/select', 'Admin\QualityControl\ExpertController@select');// 选择-弹窗
 Route::get('admin/expert/export', 'Admin\QualityControl\ExpertController@export');// 导出
 Route::get('admin/expert/import_template', 'Admin\QualityControl\ExpertController@import_template');// 导入模版
+Route::get('admin/expert/sms_send', 'Admin\QualityControl\ExpertController@sms_send');// 选择短信模板页面
 
 // 第三方服务商
 Route::get('admin/third_service', 'Admin\QualityControl\ThirdServiceController@index');// 列表
@@ -278,6 +283,7 @@ Route::get('admin/third_service/add/{id}', 'Admin\QualityControl\ThirdServiceCon
 Route::get('admin/third_service/select', 'Admin\QualityControl\ThirdServiceController@select');// 选择-弹窗
 Route::get('admin/third_service/export', 'Admin\QualityControl\ThirdServiceController@export');// 导出
 Route::get('admin/third_service/import_template', 'Admin\QualityControl\ThirdServiceController@import_template');// 导入模版
+Route::get('admin/third_service/sms_send', 'Admin\QualityControl\ThirdServiceController@sms_send');// 选择短信模板页面
 
 // 企业帐号管理
 Route::get('admin/company', 'Admin\QualityControl\CompanyController@index');// 列表
@@ -285,6 +291,7 @@ Route::get('admin/company/add/{id}', 'Admin\QualityControl\CompanyController@add
  Route::get('admin/company/select', 'Admin\QualityControl\CompanyController@select');// 选择-弹窗
 Route::get('admin/company/export', 'Admin\QualityControl\CompanyController@export');// 导出
 Route::get('admin/company/import_template', 'Admin\QualityControl\CompanyController@import_template');// 导入模版
+Route::get('admin/company/sms_send', 'Admin\QualityControl\CompanyController@sms_send');// 选择短信模板页面
 
 Route::get('admin/company/grade_area', 'Admin\QualityControl\CompanyController@grade_area');// 会员地区分布统计
 Route::get('admin/company/grade_industry', 'Admin\QualityControl\CompanyController@grade_industry');// 会员行业分布统计
@@ -296,6 +303,7 @@ Route::get('admin/user/show_add/{id}', 'Admin\QualityControl\UserController@show
 // Route::get('admin/user/select', 'Admin\QualityControl\UserController@select');// 选择-弹窗
 Route::get('admin/user/export', 'Admin\QualityControl\UserController@export');// 导出
 Route::get('admin/user/import_template', 'Admin\QualityControl\UserController@import_template');// 导入模版
+Route::get('admin/user/sms_send', 'Admin\QualityControl\UserController@sms_send');// 选择短信模板页面
 Route::get('admin/user/import_bath/{company_id}', 'Admin\QualityControl\UserController@import_bath');// 导入批量
 
 // 选民组表
@@ -304,6 +312,7 @@ Route::get('admin/voter_group/add/{id}', 'Admin\QualityControl\VoterGroupControl
 // Route::get('admin/voter_group/select', 'Admin\QualityControl\VoterGroupController@select');// 选择-弹窗
 Route::get('admin/voter_group/export', 'Admin\QualityControl\VoterGroupController@export');// 导出
 Route::get('admin/voter_group/import_template', 'Admin\QualityControl\VoterGroupController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 选民表
 Route::get('admin/voters', 'Admin\QualityControl\VotersController@index');// 列表
@@ -311,6 +320,7 @@ Route::get('admin/voters/add/{id}', 'Admin\QualityControl\VotersController@add')
 // Route::get('admin/voters/select', 'Admin\QualityControl\VotersController@select');// 选择-弹窗
 Route::get('admin/voters/export', 'Admin\QualityControl\VotersController@export');// 导出
 Route::get('admin/voters/import_template', 'Admin\QualityControl\VotersController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 行业[一级分类]
 Route::get('admin/industry', 'Admin\QualityControl\IndustryController@index');// 列表
@@ -318,6 +328,7 @@ Route::get('admin/industry/add/{id}', 'Admin\QualityControl\IndustryController@a
 // Route::get('admin/industry/select', 'Admin\QualityControl\IndustryController@select');// 选择-弹窗
 Route::get('admin/industry/export', 'Admin\QualityControl\IndustryController@export');// 导出
 Route::get('admin/industry/import_template', 'Admin\QualityControl\IndustryController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 课程管理
 Route::get('admin/course', 'Admin\QualityControl\CourseController@index');// 列表
@@ -325,6 +336,7 @@ Route::get('admin/course/add/{id}', 'Admin\QualityControl\CourseController@add')
 // Route::get('admin/course/select', 'Admin\QualityControl\CourseController@select');// 选择-弹窗
 Route::get('admin/course/export', 'Admin\QualityControl\CourseController@export');// 导出
 Route::get('admin/course/import_template', 'Admin\QualityControl\CourseController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 培训班管理
 Route::get('admin/course_class', 'Admin\QualityControl\CourseClassController@index');// 列表
@@ -332,6 +344,7 @@ Route::get('admin/course_class/add/{id}', 'Admin\QualityControl\CourseClassContr
 // Route::get('admin/course_class/select', 'Admin\QualityControl\CourseClassController@select');// 选择-弹窗
 Route::get('admin/course_class/export', 'Admin\QualityControl\CourseClassController@export');// 导出
 Route::get('admin/course_class/import_template', 'Admin\QualityControl\CourseClassController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 报名企业(主表)
 Route::get('admin/course_order', 'Admin\QualityControl\CourseOrderController@index');// 列表
@@ -340,6 +353,7 @@ Route::get('admin/course_order/info/{id}', 'Admin\QualityControl\CourseOrderCont
 // Route::get('admin/course_order/select', 'Admin\QualityControl\CourseOrderController@select');// 选择-弹窗
 Route::get('admin/course_order/export', 'Admin\QualityControl\CourseOrderController@export');// 导出
 // Route::get('admin/course_order/import_template', 'Admin\QualityControl\CourseOrderController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 Route::get('admin/course_order/pay', 'Admin\QualityControl\CourseOrderController@pay');// 缴费
 
@@ -350,6 +364,7 @@ Route::get('admin/course_class_company/info/{id}', 'Admin\QualityControl\CourseC
 // Route::get('admin/course_class_company/select', 'Admin\QualityControl\CourseClassCompanyController@select');// 选择-弹窗
 Route::get('admin/course_class_company/export', 'Admin\QualityControl\CourseClassCompanyController@export');// 导出
 // Route::get('admin/course_class_company/import_template', 'Admin\QualityControl\CourseClassCompanyController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 报名学员
 Route::get('admin/course_order_staff', 'Admin\QualityControl\CourseOrderStaffController@index');// 列表
@@ -357,10 +372,12 @@ Route::get('admin/course_order_staff/add/{id}', 'Admin\QualityControl\CourseOrde
 // Route::get('admin/course_order_staff/select', 'Admin\QualityControl\CourseOrderStaffController@select');// 选择-弹窗
 Route::get('admin/course_order_staff/export', 'Admin\QualityControl\CourseOrderStaffController@export');// 导出
 //Route::get('admin/course_order_staff/import_template', 'Admin\QualityControl\CourseOrderStaffController@import_template');// 导入模版
+Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 Route::get('admin/course_order_staff/join_class', 'Admin\QualityControl\CourseOrderStaffController@join_class');// 分班
 Route::get('admin/course_order_staff/pay', 'Admin\QualityControl\CourseOrderStaffController@pay');// 缴费
 Route::get('admin/course_order_staff/pay_save', 'Admin\QualityControl\CourseOrderStaffController@pay_save');// 缴费页面
+Route::get('admin/course_order_staff/test', 'Admin\QualityControl\CourseOrderStaffController@test');// 测试
 
 // 面授操作日志
 Route::get('admin/course_log', 'Admin\QualityControl\CourseLogController@index');// 列表
@@ -368,6 +385,7 @@ Route::get('admin/course_log/add/{id}', 'Admin\QualityControl\CourseLogControlle
 // Route::get('admin/course_log/select', 'Admin\QualityControl\CourseLogController@select');// 选择-弹窗
 Route::get('admin/course_log/export', 'Admin\QualityControl\CourseLogController@export');// 导出
 Route::get('admin/course_log/import_template', 'Admin\QualityControl\CourseLogController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 //  收款方式配置
 Route::get('admin/order_pay_method', 'Admin\QualityControl\OrderPayMethodController@index');// 列表
@@ -375,6 +393,7 @@ Route::get('admin/order_pay_method/add/{id}', 'Admin\QualityControl\OrderPayMeth
 // Route::get('admin/order_pay_method/select', 'Admin\QualityControl\OrderPayMethodController@select');// 选择-弹窗
 Route::get('admin/order_pay_method/export', 'Admin\QualityControl\OrderPayMethodController@export');// 导出
 Route::get('admin/order_pay_method/import_template', 'Admin\QualityControl\OrderPayMethodController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 收款帐号配置
 Route::get('admin/order_pay_config', 'Admin\QualityControl\OrderPayConfigController@index');// 列表
@@ -382,6 +401,7 @@ Route::get('admin/order_pay_config/add/{id}', 'Admin\QualityControl\OrderPayConf
 // Route::get('admin/order_pay_config/select', 'Admin\QualityControl\OrderPayConfigController@select');// 选择-弹窗
 Route::get('admin/order_pay_config/export', 'Admin\QualityControl\OrderPayConfigController@export');// 导出
 Route::get('admin/order_pay_config/import_template', 'Admin\QualityControl\OrderPayConfigController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 收款订单
 Route::get('admin/orders', 'Admin\QualityControl\OrdersController@index');// 列表
@@ -390,6 +410,7 @@ Route::get('admin/orders/info/{id}', 'Admin\QualityControl\OrdersController@info
 // Route::get('admin/orders/select', 'Admin\QualityControl\OrdersController@select');// 选择-弹窗
 Route::get('admin/orders/export', 'Admin\QualityControl\OrdersController@export');// 导出
 // Route::get('admin/orders/import_template', 'Admin\QualityControl\OrdersController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 Route::get('admin/orders/invoices', 'Admin\QualityControl\OrdersController@invoices');// 电子发票
 Route::get('admin/orders/invoices_cancel', 'Admin\QualityControl\OrdersController@invoices_cancel');// 电子发票全额冲红
 
@@ -400,6 +421,7 @@ Route::get('admin/order_flow/info/{id}', 'Admin\QualityControl\OrderFlowControll
 // Route::get('admin/order_flow/select', 'Admin\QualityControl\OrderFlowController@select');// 选择-弹窗
 Route::get('admin/order_flow/export', 'Admin\QualityControl\OrderFlowController@export');// 导出
 // Route::get('admin/order_flow/import_template', 'Admin\QualityControl\OrderFlowController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 第三方对帐单
 Route::get('admin/order_pay', 'Admin\QualityControl\OrderPayController@index');// 列表
@@ -408,6 +430,7 @@ Route::get('admin/order_pay/info/{id}', 'Admin\QualityControl\OrderPayController
 // Route::get('admin/order_pay/select', 'Admin\QualityControl\OrderPayController@select');// 选择-弹窗
 Route::get('admin/order_pay/export', 'Admin\QualityControl\OrderPayController@export');// 导出
 Route::get('admin/order_pay/import_template', 'Admin\QualityControl\OrderPayController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 发票配置沪友
 Route::get('admin/invoice_config_hydzfp', 'Admin\QualityControl\InvoiceConfigHydzfpController@index');// 列表
@@ -415,6 +438,7 @@ Route::get('admin/invoice_config_hydzfp/add/{id}', 'Admin\QualityControl\Invoice
 // Route::get('admin/invoice_config_hydzfp/select', 'Admin\QualityControl\InvoiceConfigHydzfpController@select');// 选择-弹窗
 Route::get('admin/invoice_config_hydzfp/export', 'Admin\QualityControl\InvoiceConfigHydzfpController@export');// 导出
 Route::get('admin/invoice_config_hydzfp/import_template', 'Admin\QualityControl\InvoiceConfigHydzfpController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 Route::get('admin/invoice_config_hydzfp/test', 'Admin\QualityControl\InvoiceConfigHydzfpController@test');// 测试
 
@@ -424,6 +448,7 @@ Route::get('admin/invoice_seller/add/{id}', 'Admin\QualityControl\InvoiceSellerC
 // Route::get('admin/invoice_seller/select', 'Admin\QualityControl\InvoiceSellerController@select');// 选择-弹窗
 Route::get('admin/invoice_seller/export', 'Admin\QualityControl\InvoiceSellerController@export');// 导出
 Route::get('admin/invoice_seller/import_template', 'Admin\QualityControl\InvoiceSellerController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 发票配置购买方
 Route::get('admin/invoice_buyer', 'Admin\QualityControl\InvoiceBuyerController@index');// 列表
@@ -432,6 +457,7 @@ Route::get('admin/invoice_buyer/info/{id}', 'Admin\QualityControl\InvoiceBuyerCo
 // Route::get('admin/invoice_buyer/select', 'Admin\QualityControl\InvoiceBuyerController@select');// 选择-弹窗
 Route::get('admin/invoice_buyer/export', 'Admin\QualityControl\InvoiceBuyerController@export');// 导出
 Route::get('admin/invoice_buyer/import_template', 'Admin\QualityControl\InvoiceBuyerController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 发票开票模板
 Route::get('admin/invoice_template', 'Admin\QualityControl\InvoiceTemplateController@index');// 列表
@@ -440,6 +466,7 @@ Route::get('admin/invoice_template/info/{id}', 'Admin\QualityControl\InvoiceTemp
 // Route::get('admin/invoice_template/select', 'Admin\QualityControl\InvoiceTemplateController@select');// 选择-弹窗
 Route::get('admin/invoice_template/export', 'Admin\QualityControl\InvoiceTemplateController@export');// 导出
 Route::get('admin/invoice_template/import_template', 'Admin\QualityControl\InvoiceTemplateController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 发票商品项目模板
 Route::get('admin/invoice_project_template', 'Admin\QualityControl\InvoiceProjectTemplateController@index');// 列表
@@ -447,6 +474,7 @@ Route::get('admin/invoice_project_template/add/{id}', 'Admin\QualityControl\Invo
 // Route::get('admin/invoice_project_template/select', 'Admin\QualityControl\InvoiceProjectTemplateController@select');// 选择-弹窗
 Route::get('admin/invoice_project_template/export', 'Admin\QualityControl\InvoiceProjectTemplateController@export');// 导出
 Route::get('admin/invoice_project_template/import_template', 'Admin\QualityControl\InvoiceProjectTemplateController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 发票主表
 Route::get('admin/invoices', 'Admin\QualityControl\InvoicesController@index');// 列表
@@ -455,6 +483,7 @@ Route::get('admin/invoices/info/{id}', 'Admin\QualityControl\InvoicesController@
 // Route::get('admin/invoices/select', 'Admin\QualityControl\InvoicesController@select');// 选择-弹窗
 Route::get('admin/invoices/export', 'Admin\QualityControl\InvoicesController@export');// 导出
 Route::get('admin/invoices/import_template', 'Admin\QualityControl\InvoicesController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 企业到期配置
 Route::get('admin/company_expire', 'Admin\QualityControl\CompanyExpireController@index');// 列表
@@ -462,6 +491,7 @@ Route::get('admin/company_expire/add/{id}', 'Admin\QualityControl\CompanyExpireC
 // Route::get('admin/company_expire/select', 'Admin\QualityControl\CompanyExpireController@select');// 选择-弹窗
 Route::get('admin/company_expire/export', 'Admin\QualityControl\CompanyExpireController@export');// 导出
 Route::get('admin/company_expire/import_template', 'Admin\QualityControl\CompanyExpireController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 企业会员等级配置
 Route::get('admin/company_grade_config', 'Admin\QualityControl\CompanyGradeConfigController@index');// 列表
@@ -469,6 +499,7 @@ Route::get('admin/company_grade_config/add/{id}', 'Admin\QualityControl\CompanyG
 // Route::get('admin/company_grade_config/select', 'Admin\QualityControl\CompanyGradeConfigController@select');// 选择-弹窗
 Route::get('admin/company_grade_config/export', 'Admin\QualityControl\CompanyGradeConfigController@export');// 导出
 Route::get('admin/company_grade_config/import_template', 'Admin\QualityControl\CompanyGradeConfigController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 城市[一级分类]
 Route::get('admin/citys', 'Admin\QualityControl\CitysController@index');// 列表
@@ -476,6 +507,7 @@ Route::get('admin/citys/add/{id}', 'Admin\QualityControl\CitysController@add');/
 // Route::get('admin/citys/select', 'Admin\QualityControl\CitysController@select');// 选择-弹窗
 Route::get('admin/citys/export', 'Admin\QualityControl\CitysController@export');// 导出
 Route::get('admin/citys/import_template', 'Admin\QualityControl\CitysController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 证书设置[一级分类]
 Route::get('admin/ability_code', 'Admin\QualityControl\AbilityCodeController@index');// 列表
@@ -483,6 +515,7 @@ Route::get('admin/ability_code/add/{id}', 'Admin\QualityControl\AbilityCodeContr
 // Route::get('admin/ability_code/select', 'Admin\QualityControl\AbilityCodeController@select');// 选择-弹窗
 //Route::get('admin/ability_code/export', 'Admin\QualityControl\AbilityCodeController@export');// 导出
 //Route::get('admin/ability_code/import_template', 'Admin\QualityControl\AbilityCodeController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 登录验证码 验证码
 Route::get('admin/sms_code', 'Admin\QualityControl\SmsCodeController@index');// 列表
@@ -490,6 +523,7 @@ Route::get('admin/sms_code/add/{id}', 'Admin\QualityControl\SmsCodeController@ad
 // Route::get('admin/sms_code/select', 'Admin\QualityControl\SmsCodeController@select');// 选择-弹窗
 Route::get('admin/sms_code/export', 'Admin\QualityControl\SmsCodeController@export');// 导出
 Route::get('admin/sms_code/import_template', 'Admin\QualityControl\SmsCodeController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 证书
 Route::get('admin/certificate', 'Admin\QualityControl\CertificateController@index');// 列表
@@ -497,6 +531,7 @@ Route::get('admin/certificate/add/{id}', 'Admin\QualityControl\CertificateContro
 // Route::get('admin/certificate/select', 'Admin\QualityControl\CertificateController@select');// 选择-弹窗
 Route::get('admin/certificate/export', 'Admin\QualityControl\CertificateController@export');// 导出
 Route::get('admin/certificate/import_template', 'Admin\QualityControl\CertificateController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 实验室地址
 Route::get('admin/laboratory_addr', 'Admin\QualityControl\LaboratoryAddrController@index');// 列表
@@ -504,6 +539,7 @@ Route::get('admin/laboratory_addr/add/{id}', 'Admin\QualityControl\LaboratoryAdd
 // Route::get('admin/laboratory_addr/select', 'Admin\QualityControl\LaboratoryAddrController@select');// 选择-弹窗
 Route::get('admin/laboratory_addr/export', 'Admin\QualityControl\LaboratoryAddrController@export');// 导出
 Route::get('admin/laboratory_addr/import_template', 'Admin\QualityControl\LaboratoryAddrController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 证书-能力范围
 Route::get('admin/certificate_schedule', 'Admin\QualityControl\CertificateScheduleController@index');// 列表
@@ -511,6 +547,7 @@ Route::get('admin/certificate_schedule/add/{id}', 'Admin\QualityControl\Certific
 // Route::get('admin/certificate_schedule/select', 'Admin\QualityControl\CertificateScheduleController@select');// 选择-弹窗
 Route::get('admin/certificate_schedule/export', 'Admin\QualityControl\CertificateScheduleController@export');// 导出
 Route::get('admin/certificate_schedule/import_template', 'Admin\QualityControl\CertificateScheduleController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 Route::get('admin/certificate_schedule/add_excel/{id}', 'Admin\QualityControl\CertificateScheduleController@add_excel');// 添加--导入
 
@@ -521,6 +558,7 @@ Route::get('admin/certificate_import_log/info/{id}', 'Admin\QualityControl\Certi
 // Route::get('admin/certificate_import_log/select', 'Admin\QualityControl\CertificateImportLogController@select');// 选择-弹窗
 Route::get('admin/certificate_import_log/export', 'Admin\QualityControl\CertificateImportLogController@export');// 导出
 Route::get('admin/certificate_import_log/import_template', 'Admin\QualityControl\CertificateImportLogController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 资质证书类型[一级分类]
 Route::get('admin/company_certificate_type', 'Admin\QualityControl\CompanyCertificateTypeController@index');// 列表
@@ -529,6 +567,7 @@ Route::get('admin/company_certificate_type/info/{id}', 'Admin\QualityControl\Com
 // Route::get('admin/company_certificate_type/select', 'Admin\QualityControl\CompanyCertificateTypeController@select');// 选择-弹窗
 Route::get('admin/company_certificate_type/export', 'Admin\QualityControl\CompanyCertificateTypeController@export');// 导出
 Route::get('admin/company_certificate_type/import_template', 'Admin\QualityControl\CompanyCertificateTypeController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 能力验证行业分类[一级分类]
 Route::get('admin/ability_type', 'Admin\QualityControl\AbilityTypeController@index');// 列表
@@ -536,6 +575,7 @@ Route::get('admin/ability_type/add/{id}', 'Admin\QualityControl\AbilityTypeContr
 // Route::get('admin/ability_type/select', 'Admin\QualityControl\AbilityTypeController@select');// 选择-弹窗
 Route::get('admin/ability_type/export', 'Admin\QualityControl\AbilityTypeController@export');// 导出
 Route::get('admin/ability_type/import_template', 'Admin\QualityControl\AbilityTypeController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 企业内容管理
 Route::get('admin/company_content', 'Admin\QualityControl\CompanyContentController@index');// 列表
@@ -543,6 +583,7 @@ Route::get('admin/company_content/add/{id}', 'Admin\QualityControl\CompanyConten
 // Route::get('admin/company_content/select', 'Admin\QualityControl\CompanyContentController@select');// 选择-弹窗
 Route::get('admin/company_content/export', 'Admin\QualityControl\CompanyContentController@export');// 导出
 Route::get('admin/company_content/import_template', 'Admin\QualityControl\CompanyContentController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 能力验证
 Route::get('admin/abilitys', 'Admin\QualityControl\AbilitysController@index');// 列表
@@ -552,6 +593,7 @@ Route::get('admin/abilitys/select', 'Admin\QualityControl\AbilitysController@sel
 Route::get('admin/abilitys/export', 'Admin\QualityControl\AbilitysController@export');// 导出
 Route::get('admin/abilitys/export_join/{ability_id}', 'Admin\QualityControl\AbilitysController@export_join');// 导出报名的企业信息
 Route::get('admin/abilitys/import_template', 'Admin\QualityControl\AbilitysController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 Route::get('admin/abilitys/publish/{id}', 'Admin\QualityControl\AbilitysController@publish');// 公布结果页面
 //****************************************************************************
 // 能力验证管理
@@ -565,6 +607,7 @@ Route::get('admin/abilitys_admin/{ability_id}/ability_join_items', 'Admin\Qualit
 // Route::get('admin/abilitys_admin/{ability_id}/ability_join_items/select', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@select');// 选择-弹窗
 //Route::get('admin/abilitys_admin/{ability_id}/ability_join_items/export', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@export');// 导出
 //Route::get('admin/abilitys_admin/{ability_id}/ability_join_items/import_template', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 Route::get('admin/abilitys_admin/{ability_id}/ability_join_items/sample_result_info/{item_id}/{retry_no}', 'Admin\QualityControl\Abilitys\AbilityJoinItemsController@sample_result_info');// 查看上传的数据
 
@@ -572,6 +615,7 @@ Route::get('admin/abilitys_admin/{ability_id}/ability_join_items/sample_result_i
 Route::get('admin/abilitys_admin/{ability_id}/ability_join_items_results', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@index');// 列表
 Route::get('admin/abilitys_admin/{ability_id}/ability_join_items_results/add/{id}', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@add');// 添加--判定
 Route::get('admin/abilitys_admin/{ability_id}/ability_join_items_results/export', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@export');// 导出
+Route::get('admin/abilitys_admin/{ability_id}/ability_join_items_results/sms_send', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@sms_send');// 选择短信模板页面
 Route::get('admin/abilitys_admin/{ability_id}/ability_join_items_results/get_sample/{id}', 'Admin\QualityControl\Abilitys\AbilityJoinItemsResultsController@get_sample');// 取样
 
 //****************************************************************************
@@ -590,6 +634,7 @@ Route::get('admin/ability_join/info/{id}', 'Admin\QualityControl\AbilityJoinCont
 // Route::get('admin/ability_join/select', 'Admin\QualityControl\AbilityJoinController@select');// 选择-弹窗
 //Route::get('admin/ability_join/export', 'Admin\QualityControl\AbilityJoinController@export');// 导出
 //Route::get('admin/ability_join/import_template', 'Admin\QualityControl\AbilityJoinController@import_template');// 导入模版
+Route::get('admin/ability_join/sms_send', 'Admin\QualityControl\AbilityJoinController@sms_send');// 选择短信模板页面
 
 Route::get('admin/ability_join/get_sample/{id}', 'Admin\QualityControl\AbilityJoinController@get_sample');// 取样
 Route::get('admin/ability_join/print/{id}', 'Admin\QualityControl\AbilityJoinController@print');// 打印证书
@@ -601,6 +646,7 @@ Route::get('admin/company_schedule/add/{id}', 'Admin\QualityControl\CompanySched
 // Route::get('admin/company_schedule/select', 'Admin\QualityControl\CompanyScheduleController@select');// 选择-弹窗
 Route::get('admin/company_schedule/export', 'Admin\QualityControl\CompanyScheduleController@export');// 导出
 Route::get('admin/company_schedule/import_template', 'Admin\QualityControl\CompanyScheduleController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 企业能力附表-最新
 Route::get('admin/company_new_schedule/test/{id}', 'Admin\QualityControl\CompanyNewScheduleController@test');// 测试上传
@@ -611,6 +657,7 @@ Route::get('admin/company_new_schedule/add_excel/{id}', 'Admin\QualityControl\Co
 // Route::get('admin/company_new_schedule/select', 'Admin\QualityControl\CompanyNewScheduleController@select');// 选择-弹窗
 Route::get('admin/company_new_schedule/export', 'Admin\QualityControl\CompanyNewScheduleController@export');// 导出
 Route::get('admin/company_new_schedule/import_template', 'Admin\QualityControl\CompanyNewScheduleController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 Route::get('admin/company_new_schedule/list', 'Admin\QualityControl\CompanyNewScheduleController@list');// 列表--按企业id降序
 
 Route::get('admin/company_new_schedule/down_moban', 'Admin\QualityControl\CompanyNewScheduleController@down_moban');// 下载文件模板
@@ -622,6 +669,7 @@ Route::get('admin/apply/add/{id}', 'Admin\QualityControl\ApplyController@add');/
 // Route::get('admin/apply/select', 'Admin\QualityControl\ApplyController@select');// 选择-弹窗
 Route::get('admin/apply/export', 'Admin\QualityControl\ApplyController@export');// 导出
 Route::get('admin/apply/import_template', 'Admin\QualityControl\ApplyController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 接口日志
 Route::get('admin/api_log', 'Admin\QualityControl\ApiLogController@index');// 列表
@@ -629,6 +677,7 @@ Route::get('admin/api_log/add/{id}', 'Admin\QualityControl\ApiLogController@add'
 // Route::get('admin/api_log/select', 'Admin\QualityControl\ApiLogController@select');// 选择-弹窗
 Route::get('admin/api_log/export', 'Admin\QualityControl\ApiLogController@export');// 导出
 Route::get('admin/api_log/import_template', 'Admin\QualityControl\ApiLogController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 短信相关的
 
@@ -639,6 +688,7 @@ Route::get('admin/sms_module/info/{id}', 'Admin\QualityControl\SmsModuleControll
 // Route::get('admin/sms_module/select', 'Admin\QualityControl\SmsModuleController@select');// 选择-弹窗
 Route::get('admin/sms_module/export', 'Admin\QualityControl\SmsModuleController@export');// 导出
 Route::get('admin/sms_module/import_template', 'Admin\QualityControl\SmsModuleController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 快捷常用参数
 Route::get('admin/sms_module_params_common', 'Admin\QualityControl\SmsModuleParamsCommonController@index');// 列表
@@ -647,6 +697,7 @@ Route::get('admin/sms_module_params_common/info/{id}', 'Admin\QualityControl\Sms
 // Route::get('admin/sms_module_params_common/select', 'Admin\QualityControl\SmsModuleParamsCommonController@select');// 选择-弹窗
 Route::get('admin/sms_module_params_common/export', 'Admin\QualityControl\SmsModuleParamsCommonController@export');// 导出
 Route::get('admin/sms_module_params_common/import_template', 'Admin\QualityControl\SmsModuleParamsCommonController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 短信模板所属模块参数
 Route::get('admin/sms_module_params', 'Admin\QualityControl\SmsModuleParamsController@index');// 列表
@@ -655,6 +706,7 @@ Route::get('admin/sms_module_params/info/{id}', 'Admin\QualityControl\SmsModuleP
 // Route::get('admin/sms_module_params/select', 'Admin\QualityControl\SmsModuleParamsController@select');// 选择-弹窗
 Route::get('admin/sms_module_params/export', 'Admin\QualityControl\SmsModuleParamsController@export');// 导出
 Route::get('admin/sms_module_params/import_template', 'Admin\QualityControl\SmsModuleParamsController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 限次配置
 Route::get('admin/sms_limit', 'Admin\QualityControl\SmsLimitController@index');// 列表
@@ -663,6 +715,7 @@ Route::get('admin/sms_limit/info/{id}', 'Admin\QualityControl\SmsLimitController
 // Route::get('admin/sms_limit/select', 'Admin\QualityControl\SmsLimitController@select');// 选择-弹窗
 Route::get('admin/sms_limit/export', 'Admin\QualityControl\SmsLimitController@export');// 导出
 Route::get('admin/sms_limit/import_template', 'Admin\QualityControl\SmsLimitController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 短信模板
 Route::get('admin/sms_template', 'Admin\QualityControl\SmsTemplateController@index');// 列表
@@ -671,6 +724,16 @@ Route::get('admin/sms_template/info/{id}', 'Admin\QualityControl\SmsTemplateCont
 // Route::get('admin/sms_template/select', 'Admin\QualityControl\SmsTemplateController@select');// 选择-弹窗
 Route::get('admin/sms_template/export', 'Admin\QualityControl\SmsTemplateController@export');// 导出
 Route::get('admin/sms_template/import_template', 'Admin\QualityControl\SmsTemplateController@import_template');// 导入模版
+Route::get('admin/sms_template/sms_send', 'Admin\QualityControl\SmsTemplateController@sms_send');// 选择短信模板页面 -- 测试短信页面
+
+// 短信日志
+Route::get('admin/sms_log', 'Admin\QualityControl\SmsLogController@index');// 列表
+Route::get('admin/sms_log/add/{id}', 'Admin\QualityControl\SmsLogController@add');// 添加
+Route::get('admin/sms_log/info/{id}', 'Admin\QualityControl\SmsLogController@info');// 查看-详情
+// Route::get('admin/sms_log/select', 'Admin\QualityControl\SmsLogController@select');// 选择-弹窗
+Route::get('admin/sms_log/export', 'Admin\QualityControl\SmsLogController@export');// 导出
+Route::get('admin/sms_log/import_template', 'Admin\QualityControl\SmsLogController@import_template');// 导入模版
+Route::get('admin/sms_log/sms_send', 'Admin\QualityControl\SmsLogController@sms_send');// 选择短信模板页面 -- 测试短信页面
 
 // 省局企业相关的
 
@@ -680,6 +743,7 @@ Route::get('admin/company_supervise/add/{id}', 'Admin\QualityControl\CompanySupe
 // Route::get('admin/company_supervise/select', 'Admin\QualityControl\CompanySuperviseController@select');// 选择-弹窗
 Route::get('admin/company_supervise/export', 'Admin\QualityControl\CompanySuperviseController@export');// 导出
 Route::get('admin/company_supervise/import_template', 'Admin\QualityControl\CompanySuperviseController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 机构自我声明
 Route::get('admin/company_statement', 'Admin\QualityControl\CompanyStatementController@index');// 列表
@@ -687,6 +751,7 @@ Route::get('admin/company_statement/add/{id}', 'Admin\QualityControl\CompanyStat
 // Route::get('admin/company_statement/select', 'Admin\QualityControl\CompanyStatementController@select');// 选择-弹窗
 Route::get('admin/company_statement/export', 'Admin\QualityControl\CompanyStatementController@export');// 导出
 Route::get('admin/company_statement/import_template', 'Admin\QualityControl\CompanyStatementController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 能力验证
 Route::get('admin/company_ability', 'Admin\QualityControl\CompanyAbilityController@index');// 列表
@@ -695,6 +760,7 @@ Route::get('admin/company_ability/info/{id}', 'Admin\QualityControl\CompanyAbili
 // Route::get('admin/company_ability/select', 'Admin\QualityControl\CompanyAbilityController@select');// 选择-弹窗
 Route::get('admin/company_ability/export', 'Admin\QualityControl\CompanyAbilityController@export');// 导出
 Route::get('admin/company_ability/import_template', 'Admin\QualityControl\CompanyAbilityController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 Route::get('admin/company_ability/add_excel/{id}', 'Admin\QualityControl\CompanyAbilityController@add_excel');// 添加--导入
 
@@ -705,6 +771,7 @@ Route::get('admin/company_inspect/info/{id}', 'Admin\QualityControl\CompanyInspe
 // Route::get('admin/company_inspect/select', 'Admin\QualityControl\CompanyInspectController@select');// 选择-弹窗
 Route::get('admin/company_inspect/export', 'Admin\QualityControl\CompanyInspectController@export');// 导出
 Route::get('admin/company_inspect/import_template', 'Admin\QualityControl\CompanyInspectController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 企业其它【新闻】
 Route::get('admin/company_news', 'Admin\QualityControl\CompanyNewsController@index');// 列表
@@ -713,6 +780,7 @@ Route::get('admin/company_news/info/{id}', 'Admin\QualityControl\CompanyNewsCont
 // Route::get('admin/company_news/select', 'Admin\QualityControl\CompanyNewsController@select');// 选择-弹窗
 Route::get('admin/company_news/export', 'Admin\QualityControl\CompanyNewsController@export');// 导出
 Route::get('admin/company_news/import_template', 'Admin\QualityControl\CompanyNewsController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 机构处罚
 Route::get('admin/company_punish', 'Admin\QualityControl\CompanyPunishController@index');// 列表
@@ -720,6 +788,7 @@ Route::get('admin/company_punish/add/{id}', 'Admin\QualityControl\CompanyPunishC
 // Route::get('admin/company_punish/select', 'Admin\QualityControl\CompanyPunishController@select');// 选择-弹窗
 Route::get('admin/company_punish/export', 'Admin\QualityControl\CompanyPunishController@export');// 导出
 Route::get('admin/company_punish/import_template', 'Admin\QualityControl\CompanyPunishController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 通知公告
 Route::get('admin/platform_notices', 'Admin\QualityControl\PlatformNoticesController@index');// 列表
@@ -727,6 +796,7 @@ Route::get('admin/platform_notices/add/{id}', 'Admin\QualityControl\PlatformNoti
 // Route::get('admin/platform_notices/select', 'Admin\QualityControl\PlatformNoticesController@select');// 选择-弹窗
 Route::get('admin/platform_notices/export', 'Admin\QualityControl\PlatformNoticesController@export');// 导出
 Route::get('admin/platform_notices/import_template', 'Admin\QualityControl\PlatformNoticesController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 // 表格下载
 Route::get('admin/platform_down_files', 'Admin\QualityControl\PlatformDownFilesController@index');// 列表
@@ -734,6 +804,7 @@ Route::get('admin/platform_down_files/add/{id}', 'Admin\QualityControl\PlatformD
 // Route::get('admin/platform_down_files/select', 'Admin\QualityControl\PlatformDownFilesController@select');// 选择-弹窗
 Route::get('admin/platform_down_files/export', 'Admin\QualityControl\PlatformDownFilesController@export');// 导出
 Route::get('admin/platform_down_files/import_template', 'Admin\QualityControl\PlatformDownFilesController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 
 // 对外提供接口
@@ -743,6 +814,7 @@ Route::get('admin/API/certificate_schedule/add/{id}', 'Admin\QualityControl\API\
 // Route::get('admin/API/certificate_schedule/select', 'Admin\QualityControl\API\CertificateScheduleController@select');// 选择-弹窗
 //Route::get('admin/API/certificate_schedule/export', 'Admin\QualityControl\API\CertificateScheduleController@export');// 导出
 //Route::get('admin/API/certificate_schedule/import_template', 'Admin\QualityControl\API\CertificateScheduleController@import_template');// 导入模版
+// Route::get('admin/course_order_staff/sms_send', 'Admin\QualityControl\CourseOrderStaffController@sms_send');// 选择短信模板页面
 
 //Route::get('admin/API/certificate_schedule/add_excel/{id}', 'Admin\QualityControl\API\CertificateScheduleController@add_excel');// 添加--导入
 
@@ -779,6 +851,7 @@ Route::get('company/user/add/{id}', 'WebFront\Company\QualityControl\UserControl
 Route::get('company/user/select', 'WebFront\Company\QualityControl\UserController@select');// 选择-弹窗
 Route::get('company/user/export', 'WebFront\Company\QualityControl\UserController@export');// 导出
 Route::get('company/user/import_template', 'WebFront\Company\QualityControl\UserController@import_template');// 导入模版
+// Route::get('company/user/sms_send', 'WebFront\Company\QualityControl\UserController@sms_send');// 选择短信模板页面
 Route::get('company/user/import_bath/{company_id}', 'WebFront\Company\QualityControl\UserController@import_bath');// 导入批量
 
 // 企业内容管理
@@ -787,6 +860,7 @@ Route::get('company/company_content/add/{id}', 'WebFront\Company\QualityControl\
 // Route::get('company/company_content/select', 'WebFront\Company\QualityControl\CompanyContentController@select');// 选择-弹窗
 Route::get('company/company_content/export', 'WebFront\Company\QualityControl\CompanyContentController@export');// 导出
 Route::get('company/company_content/import_template', 'WebFront\Company\QualityControl\CompanyContentController@import_template');// 导入模版
+// Route::get('company/user/sms_send', 'WebFront\Company\QualityControl\UserController@sms_send');// 选择短信模板页面
 
 Route::get('company/company_content/basic/{id}', 'WebFront\Company\QualityControl\CompanyContentController@basic');// 添加
 // 能力验证
@@ -797,6 +871,7 @@ Route::get('company/abilitys/join/{ids}', 'WebFront\Company\QualityControl\Abili
 // Route::get('company/abilitys/select', 'WebFront\Company\QualityControl\AbilitysController@select');// 选择-弹窗
 //Route::get('company/abilitys/export', 'WebFront\Company\QualityControl\AbilitysController@export');// 导出
 //Route::get('company/abilitys/import_template', 'WebFront\Company\QualityControl\AbilitysController@import_template');// 导入模版
+// Route::get('company/user/sms_send', 'WebFront\Company\QualityControl\UserController@sms_send');// 选择短信模板页面
 
 // 能力验证--报名管理
 Route::get('company/ability_join', 'WebFront\Company\QualityControl\AbilityJoinController@index');// 列表
@@ -805,6 +880,7 @@ Route::get('company/ability_join/info/{id}', 'WebFront\Company\QualityControl\Ab
 // Route::get('company/ability_join/select', 'WebFront\Company\QualityControl\AbilityJoinController@select');// 选择-弹窗
 //Route::get('company/ability_join/export', 'WebFront\Company\QualityControl\AbilityJoinController@export');// 导出
 //Route::get('company/ability_join/import_template', 'WebFront\Company\QualityControl\AbilityJoinController@import_template');// 导入模版
+// Route::get('company/user/sms_send', 'WebFront\Company\QualityControl\UserController@sms_send');// 选择短信模板页面
 
 // 能力验证--项目管理
 Route::get('company/ability_join_item', 'WebFront\Company\QualityControl\AbilityJoinItemsController@index');// 列表
@@ -813,6 +889,7 @@ Route::get('company/ability_join_item', 'WebFront\Company\QualityControl\Ability
 // Route::get('company/ability_join_item/select', 'WebFront\Company\QualityControl\AbilityJoinItemsController@select');// 选择-弹窗
 //Route::get('company/ability_join_item/export', 'WebFront\Company\QualityControl\AbilityJoinItemsController@export');// 导出
 //Route::get('company/ability_join_item/import_template', 'WebFront\Company\QualityControl\AbilityJoinItemsController@import_template');// 导入模版
+// Route::get('company/user/sms_send', 'WebFront\Company\QualityControl\UserController@sms_send');// 选择短信模板页面
 
 Route::get('company/ability_join_item/sample_result/{id}', 'WebFront\Company\QualityControl\AbilityJoinItemsController@sample_result');// 数据上报
 Route::get('company/ability_join_item/sample_result_info/{id}/{retry_no}', 'WebFront\Company\QualityControl\AbilityJoinItemsController@sample_result_info');// 获得指定测试序号的 单次测试数据
@@ -823,6 +900,7 @@ Route::get('company/company_schedule/add/{id}', 'WebFront\Company\QualityControl
 // Route::get('company/company_schedule/select', 'WebFront\Company\QualityControl\CompanyScheduleController@select');// 选择-弹窗
 //Route::get('company/company_schedule/export', 'WebFront\Company\QualityControl\CompanyScheduleController@export');// 导出
 //Route::get('company/company_schedule/import_template', 'WebFront\Company\QualityControl\CompanyScheduleController@import_template');// 导入模版
+// Route::get('company/user/sms_send', 'WebFront\Company\QualityControl\UserController@sms_send');// 选择短信模板页面
 
 // 企业能力附表
 Route::get('company/company_new_schedule', 'WebFront\Company\QualityControl\CompanyNewScheduleController@index');// 列表
@@ -831,6 +909,7 @@ Route::get('company/company_new_schedule/add_excel/{id}', 'WebFront\Company\Qual
 // Route::get('company/company_new_schedule/select', 'WebFront\Company\QualityControl\CompanyNewScheduleController@select');// 选择-弹窗
 //Route::get('company/company_new_schedule/export', 'WebFront\Company\QualityControl\CompanyNewScheduleController@export');// 导出
 //Route::get('company/company_new_schedule/import_template', 'WebFront\Company\QualityControl\CompanyNewScheduleController@import_template');// 导入模版
+// Route::get('company/user/sms_send', 'WebFront\Company\QualityControl\UserController@sms_send');// 选择短信模板页面
 
 Route::get('company/company_new_schedule/down_moban', 'WebFront\Company\QualityControl\CompanyNewScheduleController@down_moban');// 下载文件模板
 
@@ -841,6 +920,7 @@ Route::get('company/course', 'WebFront\Company\QualityControl\CourseController@i
 // Route::get('company/course/select', 'WebFront\Company\QualityControl\CourseController@select');// 选择-弹窗
 //Route::get('company/course/export', 'WebFront\Company\QualityControl\CourseController@export');// 导出
 //Route::get('company/course/import_template', 'WebFront\Company\QualityControl\CourseController@import_template');// 导入模版
+// Route::get('company/user/sms_send', 'WebFront\Company\QualityControl\UserController@sms_send');// 选择短信模板页面
 Route::get('company/course/join/{id}', 'WebFront\Company\QualityControl\CourseController@join');// 报名
 
 // 报名企业(主表)
@@ -850,6 +930,7 @@ Route::get('company/course_order/info/{id}', 'WebFront\Company\QualityControl\Co
 // Route::get('company/course_order/select', 'WebFront\Company\QualityControl\CourseOrderController@select');// 选择-弹窗
 Route::get('company/course_order/export', 'WebFront\Company\QualityControl\CourseOrderController@export');// 导出
 // Route::get('company/course_order/import_template', 'WebFront\Company\QualityControl\CourseOrderController@import_template');// 导入模版
+// Route::get('company/user/sms_send', 'WebFront\Company\QualityControl\UserController@sms_send');// 选择短信模板页面
 
 Route::get('company/course_order/pay', 'WebFront\Company\QualityControl\CourseOrderController@pay');// 缴费
 
@@ -859,6 +940,7 @@ Route::get('company/course_order_staff', 'WebFront\Company\QualityControl\Course
 // Route::get('company/course_order_staff/select', 'WebFront\Company\QualityControl\CourseOrderStaffController@select');// 选择-弹窗
 Route::get('company/course_order_staff/export', 'WebFront\Company\QualityControl\CourseOrderStaffController@export');// 导出
 //Route::get('company/course_order_staff/import_template', 'WebFront\Company\QualityControl\CourseOrderStaffController@import_template');// 导入模版
+// Route::get('company/user/sms_send', 'WebFront\Company\QualityControl\UserController@sms_send');// 选择短信模板页面
 
 // Route::get('company/course_order_staff/join_class', 'WebFront\Company\QualityControl\CourseOrderStaffController@join_class');// 分班
 Route::get('company/course_order_staff/pay', 'WebFront\Company\QualityControl\CourseOrderStaffController@pay');// 缴费
@@ -871,6 +953,7 @@ Route::get('company/orders/info/{id}', 'WebFront\Company\QualityControl\OrdersCo
 // Route::get('company/orders/select', 'WebFront\Company\QualityControl\OrdersController@select');// 选择-弹窗
 Route::get('company/orders/export', 'WebFront\Company\QualityControl\OrdersController@export');// 导出
 // Route::get('company/orders/import_template', 'WebFront\Company\QualityControl\OrdersController@import_template');// 导入模版
+// Route::get('company/user/sms_send', 'WebFront\Company\QualityControl\UserController@sms_send');// 选择短信模板页面
 Route::get('company/orders/invoices', 'WebFront\Company\QualityControl\OrdersController@invoices');// 开电子发票
 Route::get('company/orders/invoices_cancel', 'WebFront\Company\QualityControl\OrdersController@invoices_cancel');// 电子发票全额冲红
 
@@ -881,6 +964,7 @@ Route::get('company/order_flow/info/{id}', 'WebFront\Company\QualityControl\Orde
 // Route::get('company/order_flow/select', 'WebFront\Company\QualityControl\OrderFlowController@select');// 选择-弹窗
 Route::get('company/order_flow/export', 'WebFront\Company\QualityControl\OrderFlowController@export');// 导出
 // Route::get('company/order_flow/import_template', 'WebFront\Company\QualityControl\OrderFlowController@import_template');// 导入模版
+// Route::get('company/user/sms_send', 'WebFront\Company\QualityControl\UserController@sms_send');// 选择短信模板页面
 
 // 第三方对帐单
 Route::get('company/order_pay', 'WebFront\Company\QualityControl\OrderPayController@index');// 列表
@@ -889,6 +973,7 @@ Route::get('company/order_pay/info/{id}', 'WebFront\Company\QualityControl\Order
 // Route::get('company/order_pay/select', 'WebFront\Company\QualityControl\OrderPayController@select');// 选择-弹窗
 Route::get('company/order_pay/export', 'WebFront\Company\QualityControl\OrderPayController@export');// 导出
 Route::get('company/order_pay/import_template', 'WebFront\Company\QualityControl\OrderPayController@import_template');// 导入模版
+// Route::get('company/user/sms_send', 'WebFront\Company\QualityControl\UserController@sms_send');// 选择短信模板页面
 
 // 发票配置购买方
 Route::get('company/invoice_buyer', 'WebFront\Company\QualityControl\InvoiceBuyerController@index');// 列表
@@ -897,6 +982,7 @@ Route::get('company/invoice_buyer/info/{id}', 'WebFront\Company\QualityControl\I
 // Route::get('company/invoice_buyer/select', 'WebFront\Company\QualityControl\InvoiceBuyerController@select');// 选择-弹窗
 Route::get('company/invoice_buyer/export', 'WebFront\Company\QualityControl\InvoiceBuyerController@export');// 导出
 Route::get('company/invoice_buyer/import_template', 'WebFront\Company\QualityControl\InvoiceBuyerController@import_template');// 导入模版
+// Route::get('company/user/sms_send', 'WebFront\Company\QualityControl\UserController@sms_send');// 选择短信模板页面
 
 // 发票主表
 Route::get('company/invoices', 'WebFront\Company\QualityControl\InvoicesController@index');// 列表
@@ -905,6 +991,7 @@ Route::get('company/invoices/info/{id}', 'WebFront\Company\QualityControl\Invoic
 // Route::get('company/invoices/select', 'WebFront\Company\QualityControl\InvoicesController@select');// 选择-弹窗
 Route::get('company/invoices/export', 'WebFront\Company\QualityControl\InvoicesController@export');// 导出
 Route::get('company/invoices/import_template', 'WebFront\Company\QualityControl\InvoicesController@import_template');// 导入模版
+// Route::get('company/user/sms_send', 'WebFront\Company\QualityControl\UserController@sms_send');// 选择短信模板页面
 
 // 用户中心 user
 Route::get('user/login', 'WebFront\User\QualityControl\IndexController@login');// login.html 登录

@@ -44,7 +44,7 @@
                   <option value="{{ $k }}"  @if(isset($defaultSmsModule) && $defaultSmsModule == $k) selected @endif >{{ $txt }}</option>
               @endforeach
           </select>
-          <select class="wmini" name="limit_code">
+          <select class="wmini" name="limit_code" style="display: none;">
               <option value="">限次</option>
               @foreach ($sms_limit_kv as $k=>$txt)
                   <option value="{{ $k }}"  @if(isset($defaultSmsLimit) && (($defaultSmsLimit & $k)  == $k)) selected @endif >{{ $txt }}</option>
@@ -70,6 +70,8 @@
     <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcelTemplate(this)">导入模版[EXCEL]</button>
     <button class="btn btn-success  btn-xs import_excel"  onclick="action.importExcel(this)">导入城市</button>
     <div style="display:none;" ><input type="file" class="import_file img_input"></div>{ {--导入file对象--} }
+        <button class="btn btn-success  btn-xs export_excel"  onclick="action.smsByIds(this, 0, 0, 1, 0, 0)" >发送短信[按条件]</button>
+        <button class="btn btn-success  btn-xs export_excel"  onclick="action.smsSelected(this, 0, 2, 0, 0)" >发送短信[勾选]</button>
   </div>
 --}}
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
@@ -81,9 +83,9 @@
         <col>
         <col>
         <col>
-        <col>
+{{--        <col>--}}
         <col width="90">
-        <col width="80">
+        <col width="110">
     </colgroup>
     <thead>
     <tr>
@@ -99,7 +101,7 @@
         <th>模板类型</th>
         <th>模板ID<hr/>签名名称</th>
         <th>模板内容</th>
-        <th>限次编号</th>
+{{--        <th>限次编号</th>--}}
       <th>创建时间<hr/>更新时间</th>
       <th>操作</th>
     </tr>
@@ -141,6 +143,8 @@
       var IMPORT_EXCEL_TEMPLATE_URL = "{{ url('admin/sms_template/import_template') }}";//导入EXCEL模版地址
       var IMPORT_EXCEL_URL = "{{ url('api/admin/sms_template/import') }}";//导入EXCEL地址
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
+      var SMS_SEND_PAGE_URL = "{{url('admin/sms_template/sms_send')}}";// 选择短信模板页面
+      var SMS_SEND_URL = "{{url('api/admin/sms_template/ajax_sms_send')}}";// 短信模板发送短信
 
       // 列表数据每隔指定时间就去执行一次刷新【如果表有更新时】--定时执行
       var IFRAME_TAG_KEY = "";// "QualityControl\\CTAPIStaff";// 获得模型表更新时间的关键标签，可为空：不获取
@@ -153,6 +157,6 @@
       var SMS_LIMIT_KV = @json($sms_limit_kv ?? []) ;// {"4":"\u4e00\u5c0f\u65f6 8\u6b21","2":"\u4e00\u5929 50\u6b21","1":"\u4e00\u6708\u301030\u5929\u3011 1000\u6b21"}
   </script>
   <script src="{{asset('js/common/list.js')}}?1"></script>
-  <script src="{{ asset('js/admin/QualityControl/SmsTemplate.js') }}?5"  type="text/javascript"></script>
+  <script src="{{ asset('js/admin/QualityControl/SmsTemplate.js') }}?7"  type="text/javascript"></script>
 </body>
 </html>

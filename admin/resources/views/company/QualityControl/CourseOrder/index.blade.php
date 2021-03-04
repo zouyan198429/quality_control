@@ -12,11 +12,11 @@
   <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/layui/css/layui.css')}}" media="all">
   <link rel="stylesheet" href="{{asset('layui-admin-v1.2.1/src/layuiadmin/style/admin.css')}}" media="all">
 </head>
-<body> 
+<body>
 <div class="mm">
   <div class="mmhead" id="mywork">
 
-    @include('common.pageParams') 
+    @include('common.pageParams')
     <form onsubmit="return false;" class="form-horizontal" style="display: block;" role="form" method="post" id="search_frm" action="#">
       <div class="msearch fr">
           <input type="hidden" name="hidden_option"  value="{{ $hidden_option ?? 0 }}" />
@@ -59,15 +59,15 @@
       </div>
     </form>
   </div>
-    <div class="table-header"> 
+    <div class="table-header">
         <button class="btn btn-success  btn-xs export_excel"  onclick="action.batchExportExcel(this)" >导出[按条件]</button>
-        <button class="btn btn-success  btn-xs export_excel"  onclick="action.exportExcel(this)" >导出[勾选]</button> 
+        <button class="btn btn-success  btn-xs export_excel"  onclick="action.exportExcel(this)" >导出[勾选]</button>
         <button class="btn btn-success  btn-xs export_excel"  onclick="otheraction.paySelected(this)" >缴费[勾选]</button>
     </div>
   <table lay-even class="layui-table table2 tableWidthFixed"  lay-size="lg"  id="dynamic-table">
     <colgroup>
-        <col width="50"> 
-        <col> 
+        <col width="50">
+        <col>
         <col width="100">
         <col width="80">
         <col width="105">
@@ -84,8 +84,8 @@
           <input type="checkbox"  class="ace check_all"  value="" onclick="action.seledAll(this)"/>
           <!-- <span class="lbl">全选</span> -->
         </label>
-      </th> 
-        <th>课程<hr/>发票开票模板</th> 
+      </th>
+        <th>课程<hr/>发票开票模板</th>
       <th>报名人数<hr/>已作废人数</th>
       <th>分班人数<hr/>结业人数</th>
        <th>联络人<hr/>联络人电话</th>
@@ -133,6 +133,8 @@
       var IMPORT_EXCEL_TEMPLATE_URL = "{{ url('company/course_order/import_template') }}";//导入EXCEL模版地址
       var IMPORT_EXCEL_URL = "{{ url('api/company/course_order/import') }}";//导入EXCEL地址
       var IMPORT_EXCEL_CLASS = "import_file";// 导入EXCEL的file的class
+      var SMS_SEND_PAGE_URL = "{{url('admin/rrr_dddd/sms_send')}}";// 选择短信模板页面
+      var SMS_SEND_URL = "{{url('api/admin/rrr_dddd/ajax_sms_send')}}";// 短信模板发送短信
 
       // 列表数据每隔指定时间就去执行一次刷新【如果表有更新时】--定时执行
       var IFRAME_TAG_KEY = "";// "QualityControl\\CTAPIStaff";// 获得模型表更新时间的关键标签，可为空：不获取

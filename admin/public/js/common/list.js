@@ -85,7 +85,7 @@ function reset_list(is_read_page, ajax_async, reset_total, do_num){
 /*
 function batch_del(){
     sure_cancel_cancel();//隐藏弹出层显示对象
-    var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+    var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1,'check_item');// 注意：checkbox有 class : check_item
     //ajax删除数据
     operate_ajax('batch_del',ids);
 }
@@ -237,7 +237,7 @@ var action = {
         var index_query = layer.confirm('确定删除当前记录？删除后不可恢复!', {
             btn: ['确定','取消'] //按钮
         }, function(){
-            var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+            var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1,'check_item');// 注意：checkbox有 class : check_item
             //ajax删除数据
             operate_ajax('batch_del',ids);
             layer.close(index_query);
@@ -273,7 +273,7 @@ var action = {
         var index_query = layer.confirm('确定导出当前选择记录？', {
             btn: ['确定','取消'] //按钮
         }, function(){
-            var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+            var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1,'check_item');// 注意：checkbox有 class : check_item
             console.log('ids',ids);
             if( ids==''){
                 err_alert('请选择需要操作的数据');
@@ -294,6 +294,35 @@ var action = {
         });
         return false;
     },
+    // sms_operate_no 操作来源： 1、按条件[用smsByIds方法，ids 传 0]；2：选中的[用smsSelected方法]； 4：单条记录的[用smsByIds方法，ids 传 对应的id]
+    // sms_template_id 指定的短信模板id
+    // sms_module_id 指定的短信模块id
+    smsSelected: function(obj, operate_num, sms_operate_no, sms_template_id, sms_module_id){// 发送短信--批量-- 勾选; operate_num:参数值请查看 layeriframe中的说明
+        var recordObj = $(obj);
+        var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1,'check_item');// 注意：checkbox有 class : check_item
+        console.log('==ids==', ids);
+        action.smsByIds(obj, ids, operate_num, sms_operate_no, sms_template_id, sms_module_id);
+    },
+    smsByIds: function(obj, ids, operate_num, sms_operate_no, sms_template_id, sms_module_id) {// 发送短信--指定记录 ; operate_num:参数值请查看 layeriframe中的说明
+        if((sms_operate_no == 2 || sms_operate_no == 4) && ids == ''){
+            err_alert('请选择需要操作的数据');
+            return false;
+        }
+        sms_template_id = sms_template_id || 0;
+        sms_module_id = sms_module_id || 0;
+        //获得表单各name的值
+        var weburl = SMS_SEND_PAGE_URL + '?sms_operate_no=' + sms_operate_no + '&sms_template_id=' + sms_template_id + '&sms_module_id=' + sms_module_id + '&ids='+ ids;
+        console.log(weburl);
+        // go(SHOW_URL + id);
+        // location.href='/pms/Supplier/show?supplier_id='+id;
+        // var weburl = SHOW_URL + id;
+        // var weburl = '/pms/Supplier/show?supplier_id='+id+"&operate_type=1";
+        var tishi = '发送短信';//"查看供应商";
+        console.log('weburl', weburl);
+        layeriframe(weburl,tishi,950,510,operate_num);
+        // commonaction.browse_file(weburl, tishi,950,510, 5);
+        return false;
+    },
     importExcelTemplate:function(obj) {// 导入EXCEL--模版
         var recordObj = $(obj);
         go(IMPORT_EXCEL_TEMPLATE_URL);
@@ -307,29 +336,84 @@ var action = {
     },
 };
 
+// 同步ajax发送短信
+// smsParams 短信发送页面传递过来的参数 ；格式：operate_no=2&id=394%2C393%2C392%2C391%2C398%2C421%2C393%2C392%2C420%2C421&sms_operate_type=1...
+// childWin 子窗口对象
+function ajax_send_sms(smsParams, childWin) {// layer_index,
+    //获得搜索表单的值
+    append_sure_form(SURE_FRM_IDS,FRM_IDS);//把搜索表单值转换到可以查询用的表单中
+    //获得表单各name的值
+    var data = get_frm_values(SURE_FRM_IDS);// {}
+    data['is_export'] = 2;
+    console.log(SMS_SEND_URL);
+    console.log(data);
+    // var url_params = get_url_param(data);
+    var url = SMS_SEND_URL + '?' + smsParams;// url_params;
+    console.log(url);
+    // ajax请求数据
+    // 成功了：弹出，并关闭弹窗
+    operate_ajax('sms_send', 1, data, '发送短信', url, 2, false, 'POST', function(){
+        // childWin.operateLayuiIframeSize(layer_index, 4);// 关闭弹窗// PARENT_LAYER_INDEX
+        childWin.parent_reset_list();// 关闭弹窗
+    }, '');
+
+}
+
 //操作
-function operate_ajax(operate_type,id){
+// operate_type 操作类型
+//   del：通过 id值删除；batch_del 批量删除
+// id  具体操作的记录，--不需要可以随便传一个 如 1
+// data 参数对象 {}
+// operate_txt 操作名称
+// ajax_url 请求的url
+// operate_num 操作编号  1:执行列表刷新 ; 2：操作失败/成功了提示
+// async 同步、异步  false:同步[默认];true:异步
+// ajax_type 请求方式 ：POST[默认]、GET
+// successFun 执行成功执行的函数 successFun(ret, operate_type, id, data, operate_txt)// 参数说明看，同前面的
+// failFun 执行失败执行的函数 failFun(ret, operate_type, id, data, operate_txt)// 参数说明看，同前面的
+function operate_ajax(operate_type, id, data, operate_txt, ajax_url, operate_num, async, ajax_type, successFun, failFun){
     if(operate_type=='' || id==''){
         err_alert('请选择需要操作的数据');
         return false;
     }
-    var operate_txt = "";
-    var data ={};
-    var ajax_url = "";
+    // var operate_txt = "";
+    operate_txt = operate_txt || "";
+    // var data ={};
+    data = data || {};
+    ajax_url = ajax_url || "";
+    if(operate_num !== 0){
+        operate_num = operate_num || (1 | 2);
+    }
+    if (typeof async !== "boolean"){
+        async = false;
+    }
+    ajax_type = ajax_type || "POST";
+    successFun = successFun || "";
+    failFun = failFun || "";
     var reset_total = true;// 是否重新从数据库获取总页数 true:重新获取,false不重新获取  ---ok
     switch(operate_type)
     {
         case 'del'://删除
-            operate_txt = "删除";
-            data = {'id':id}
-            ajax_url = DEL_URL;// /pms/Supplier/ajax_del?operate_type=1
+            if(isEmpeyVal(operate_txt)){
+                operate_txt = "删除";
+            }
+            // data = {'id':id};
+            data.id = id;
+            if(isEmpeyVal(ajax_url)){
+                ajax_url = DEL_URL;// /pms/Supplier/ajax_del?operate_type=1
+            }
             reset_total = false;
             break;
         case 'batch_del'://批量删除
-            operate_txt = "批量删除";
-            data = {'id':id}
+            if(isEmpeyVal(operate_txt)){
+                operate_txt = "批量删除";
+            }
+            // data = {'id':id}
+            data.id = id;
             reset_total = false;
-            ajax_url = BATCH_DEL_URL;// "/pms/Supplier/ajax_del?operate_type=2";
+            if(isEmpeyVal(ajax_url)){
+                ajax_url = BATCH_DEL_URL;// "/pms/Supplier/ajax_del?operate_type=2";
+            }
             break;
         default:
             break;
@@ -338,7 +422,8 @@ function operate_ajax(operate_type,id){
     console.log('data:',data);
     var layer_index = layer.load();//layer.msg('加载中', {icon: 16});
     $.ajax({
-        'type' : 'POST',
+        'async': async,// true,//false:同步;true:异步
+        'type' : ajax_type,// 'POST',
         'url' : ajax_url,//'/pms/Supplier/ajax_del',
         'headers':get_ajax_headers({}, ADMIN_AJAX_TYPE_NUM),
         'data' : data,
@@ -348,17 +433,25 @@ function operate_ajax(operate_type,id){
             if(!ret.apistatus){//失败
                 //alert('失败');
                 // countdown_alert(ret.errorMsg,0,5);
-                layer_alert(ret.errorMsg,3,0);
+                if((operate_num & 2) === 2){
+                    layer_alert(ret.errorMsg,3,0);
+                }
+                failFun && failFun(ret, operate_type, id, data, operate_txt);
             }else{//成功
                 var msg = ret.errorMsg;
                 if(msg === ""){
                     msg = operate_txt+"成功";
                 }
                 // countdown_alert(msg,1,5);
-                layer_alert(msg,1,0);
+                if((operate_num & 2) === 2){
+                    layer_alert(msg,1,0);
+                }
+                successFun && successFun(ret, operate_type, id, data, operate_txt);
                 // reset_list(true, true);
-                console.log(LIST_FUNCTION_NAME);
-                eval( LIST_FUNCTION_NAME + '(' + true +', ' + true +', ' + reset_total + ', 2)');
+                if((operate_num & 1) === 1){
+                    console.log(LIST_FUNCTION_NAME);
+                    eval( LIST_FUNCTION_NAME + '(' + true +', ' + true +', ' + reset_total + ', 2)');
+                }
             }
             layer.close(layer_index);//手动关闭
         }

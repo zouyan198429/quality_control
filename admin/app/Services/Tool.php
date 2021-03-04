@@ -1377,7 +1377,6 @@ class Tool
         return $repStr;
     }
 
-
     /**
      * 将字符中的标签内容，获取到数组中
      *  如：您在{test_input}报名{test_val}操作，成功！开学时间：{test_datetime}！如有任何问题请联系{mobile}

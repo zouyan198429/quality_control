@@ -73,7 +73,7 @@ var otheraction = {
     },
     sureOrder: function(obj){// 确认--批量
         var recordObj = $(obj);
-        var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+        var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1,'check_item');// 注意：checkbox有 class : check_item
         otheraction.sureOrderByIds(obj, ids);
     },
     sureOrderByIds: function(obj, ids) {
@@ -85,7 +85,7 @@ var otheraction = {
         var index_query = layer.confirm('确定' + operateText + '所选记录？操作后不可变更！', {
             btn: ['确定','取消'] //按钮
         }, function(){
-            // var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+            // var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1,'check_item');// 注意：checkbox有 class : check_item
             //ajax开启数据
             other_operate_ajax('sure_order', ids, operateText, {});
             layer.close(index_query);
@@ -95,7 +95,7 @@ var otheraction = {
     },
     finishOrder: function(obj){// 服务完成--批量
         var recordObj = $(obj);
-        var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+        var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1,'check_item');// 注意：checkbox有 class : check_item
         otheraction.finishOrderByIds(obj, ids);
     },
     finishOrderByIds: function(obj, ids) {
@@ -107,7 +107,7 @@ var otheraction = {
         var index_query = layer.confirm('确定' + operateText + '所选记录？操作后不可变更！', {
             btn: ['确定','取消'] //按钮
         }, function(){
-            // var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+            // var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1,'check_item');// 注意：checkbox有 class : check_item
             //ajax开启数据
             other_operate_ajax('finish_order', ids, operateText, {});
             layer.close(index_query);
@@ -117,7 +117,7 @@ var otheraction = {
     },
     invoiceSelected: function(obj){// 电子发票--批量
         var recordObj = $(obj);
-        var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+        var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1,'check_item');// 注意：checkbox有 class : check_item
         otheraction.invoiceByIds(obj, ids);
     },
     invoiceByIds: function(obj, ids) {
@@ -376,6 +376,11 @@ function addCompany(company_id, company_name){
     // document.write("                    <i class=\"ace-icon fa fa-trash-o bigger-60\"> 删除<\/i>");
     // document.write("                <\/a>");
     // document.write("                <%}%>");
+    document.write("                <%if( false){%>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"action.smsByIds(this, <%=item.id%>, 0, 4, 0, 0)\">");
+    document.write("                    <i class=\"ace-icon  fa fa-mobile bigger-60\"> 发送短信<\/i>");
+    document.write("                <\/a>");
+    document.write("                <%}%>");
     document.write("");
     document.write("            <\/td>");
     document.write("        <\/tr>");

@@ -120,7 +120,7 @@ var otheraction = {
     // document.write("            <\/td>");
     document.write("            <td><%=item.pay_company_name%><\/td>");
 	//<hr/><%=item.pay_method_text%>
-    
+
     // document.write("           <td>");
     // document.write("            <%for(var j = 0; j<resource_list.length;j++){");
     // document.write("                var jitem = resource_list[j];");
@@ -152,6 +152,11 @@ var otheraction = {
     document.write("                <%if( can_modify && item.join_num <= 0){%>");
     document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-info\" onclick=\"action.del(<%=item.id%>)\">");
     document.write("                    <i class=\"ace-icon fa fa-trash-o bigger-60\"> 删除<\/i>");
+    document.write("                <\/a>");
+    document.write("                <%}%>");
+    document.write("                <%if( false){%>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"action.smsByIds(this, <%=item.id%>, 0, 4, 0, 0)\">");
+    document.write("                    <i class=\"ace-icon  fa fa-mobile bigger-60\"> 发送短信<\/i>");
     document.write("                <\/a>");
     document.write("                <%}%>");
     document.write("");

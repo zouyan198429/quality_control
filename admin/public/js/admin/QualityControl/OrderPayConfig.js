@@ -112,7 +112,7 @@ var otheraction = {
     },
     // refreshAlipayToken: function(obj){// 刷新授权令牌 access_token--批量
     //     var recordObj = $(obj);
-    //     var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+    //     var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1,'check_item');// 注意：checkbox有 class : check_item
     //     otheraction.refreshAlipayTokenByIds(obj, ids);
     // },
     refreshAlipayTokenByIds: function(obj, ids) {//刷新授权令牌 access_token
@@ -124,7 +124,7 @@ var otheraction = {
         var index_query = layer.confirm('确定' + operateText + '所选记录？操作后不可变更！', {
             btn: ['确定','取消'] //按钮
         }, function(){
-            // var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1);
+            // var ids = get_list_checked(DYNAMIC_TABLE_BODY,1,1,'check_item');// 注意：checkbox有 class : check_item
             //ajax开启数据
             other_operate_ajax('refresh_alipay_token', ids, operateText, {});
             layer.close(index_query);
@@ -251,6 +251,11 @@ function other_operate_ajax(operate_type, id, operate_txt, params){
     // document.write("                    <i class=\"ace-icon fa fa-trash-o bigger-60\"> 删除<\/i>");
     // document.write("                <\/a>");
     // document.write("                <%}%>");
+    document.write("                <%if( false){%>");
+    document.write("                <a href=\"javascript:void(0);\" class=\"btn btn-mini btn-success\"  onclick=\"action.smsByIds(this, <%=item.id%>, 0, 4, 0, 0)\">");
+    document.write("                    <i class=\"ace-icon  fa fa-mobile bigger-60\"> 发送短信<\/i>");
+    document.write("                <\/a>");
+    document.write("                <%}%>");
     document.write("");
     document.write("            <\/td>");
     document.write("        <\/tr>");
