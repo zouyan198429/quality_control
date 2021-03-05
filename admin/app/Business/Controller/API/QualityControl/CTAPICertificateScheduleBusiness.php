@@ -346,7 +346,12 @@ class CTAPICertificateScheduleBusiness extends BasicPublicCTAPIBusiness
         ];
         if($ratify_date != '') $params['ratify_date'] = $ratify_date;
         if($valid_date != '') $params['valid_date'] = $valid_date;
+
         foreach($saveData as $k => $v){
+            // 如果 ratify_date 内容是 2021年03月05日，则进行处理
+            if(isset($v['ratify_date']) && strpos($v['ratify_date'], '年') !== false){
+                $v['ratify_date'] = str_replace(['年', '月', '日'], ['-', '-', ''], $v['ratify_date']);
+            }
             // 对 ratify_date 进行处理， excel文件中有则按文件的，文件为空，则按填入的
             if(isset($v['ratify_date']) && judgeDate($v['ratify_date']) === false ){// 有下标且不是日期-- 用填写的 isset($params['ratify_date']) &&
                 unset($v['ratify_date']);

@@ -429,8 +429,7 @@ class ImportExport
 
             // 下面的处理还是有问题，数字也处理了，
             if($formatCode !== "General") { #判断是否是日期格式
-
-                if(in_array($formatCode, ['dd/mm/yyyy', 'm/d/yyyy'])){
+                if(in_array($formatCode, ['dd/mm/yyyy', 'm/d/yyyy', 'yyyy/m/d', 'yyyy/m/d;@'])){
                     $data = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToTimestamp($data); #将Excel表里的日期格式转换成php的时间戳
                     if(!empty($format)) $data = date($format, $data); #转换成2016/03/03格式
                 }else{// 其它的案显示样式来
