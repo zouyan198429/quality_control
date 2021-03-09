@@ -64,6 +64,12 @@ class IndexController extends BasicController
     }
 
     public function test(Request $request){
+
+        $v['ratify_date'] = "2021/03/05";
+        if(isset($v['ratify_date']) && strpos($v['ratify_date'], '/') !== false){
+            $v['ratify_date'] = str_replace(['/'], ['-'], $v['ratify_date']);
+        }
+        pr($v);
         $v['ratify_date'] = "2021年03月05";
         if(isset($v['ratify_date']) && strpos($v['ratify_date'], '年') !== false){
             $v['ratify_date'] = str_replace(['年', '月', '日'], ['-', '-', ''], $v['ratify_date']);

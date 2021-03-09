@@ -348,6 +348,10 @@ class CTAPICertificateScheduleBusiness extends BasicPublicCTAPIBusiness
         if($valid_date != '') $params['valid_date'] = $valid_date;
 
         foreach($saveData as $k => $v){
+            // 优化下，如果含有 / ，则转为 -
+            if(isset($v['ratify_date']) && strpos($v['ratify_date'], '/') !== false){
+                $v['ratify_date'] = str_replace(['/'], ['-'], $v['ratify_date']);
+            }
             // 如果 ratify_date 内容是 2021年03月05日，则进行处理
             if(isset($v['ratify_date']) && strpos($v['ratify_date'], '年') !== false){
                 $v['ratify_date'] = str_replace(['年', '月', '日'], ['-', '-', ''], $v['ratify_date']);
